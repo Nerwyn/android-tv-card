@@ -29,7 +29,7 @@ This card is for [Lovelace](https://www.home-assistant.io/lovelace) on [Home Ass
 
 ### Step 1
 
-Install `roku-card` by copying `roku-card.js`from this repo to `<config directory>/www/roku-card.js` on your Home Assistant instanse.
+Save [roku-card](https://github.com/custom-cards/roku-card/raw/master/roku-card.js) to `<config directory>/www/roku-card.js` on your Home Assistant instanse.
 
 **Example:**
 
