@@ -58,3 +58,5 @@ Add a custom element in your `ui-lovelace.yaml`
         title: Bedroom TV
         ip_address: 'http://192.168.1.4'
 ```
+
+[Troubleshooting](https://github.com/thomasloven/hass-config/wiki/Lovelace-Plugins)
