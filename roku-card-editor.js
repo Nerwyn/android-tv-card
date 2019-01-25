@@ -146,7 +146,7 @@ export class RokuCardEditor extends LitElement {
         this._config = {
           ...this._config,
           [target.configValue]:
-            target.checked !== undefined ? target.checked : value
+            target.checked !== undefined ? target.checked : target.value
         };
       }
     }
