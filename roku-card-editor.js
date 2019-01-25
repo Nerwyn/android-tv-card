@@ -38,6 +38,10 @@ export class RokuCardEditor extends LitElement {
     return this._config.entity || "";
   }
 
+  get _remote() {
+    return this._config.remote || "";
+  }
+
   get _theme() {
     return this._config.theme;
   }
@@ -56,7 +60,7 @@ export class RokuCardEditor extends LitElement {
       <div class="card-config">
         <div class="side-by-side">
           <paper-input
-            label="Name"
+            label="Name (Optional)"
             .value="${this._name}"
             .configValue="${"name"}"
             @value-changed="${this._valueChanged}"
@@ -82,6 +86,27 @@ export class RokuCardEditor extends LitElement {
                   ></paper-input>
                 `
           }
+          ${
+            customElements.get("ha-entity-picker")
+              ? html`
+                  <ha-entity-picker
+                    .hass="${this.hass}"
+                    .value="${this._remote}"
+                    .configValue=${"remote"}
+                    domain-filter="remote"
+                    @change="${this._valueChanged}"
+                    allow-custom-entity
+                  ></ha-entity-picker>
+                `
+              : html`
+                  <paper-input
+                    label="Remote (Optional)"
+                    .value="${this._remote}"
+                    .configValue="${"remote"}"
+                    @value-changed="${this._valueChanged}"
+                  ></paper-input>
+                `
+          }
           </div>
           <div class="side-by-side">
           ${
@@ -96,7 +121,7 @@ export class RokuCardEditor extends LitElement {
                 `
               : html`
                   <paper-input
-                    label="Theme"
+                    label="Theme (Optional)"
                     .value="${this._theme}"
                     .configValue="${"theme"}"
                     @value-changed="${this._valueChanged}"

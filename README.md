@@ -1,6 +1,6 @@
 
 
-[![Version](https://img.shields.io/badge/version-0.0.4-green.svg?style=for-the-badge)](#) [![mantained](https://img.shields.io/maintenance/yes/2019.svg?style=for-the-badge)](#)
+[![Version](https://img.shields.io/badge/version-0.0.5-green.svg?style=for-the-badge)](#) [![mantained](https://img.shields.io/maintenance/yes/2019.svg?style=for-the-badge)](#)
 
 [![maintainer](https://img.shields.io/badge/maintainer-Ian%20Richardson%20%40iantrich-blue.svg?style=for-the-badge)](#)
 
@@ -23,6 +23,7 @@ This card is for [Lovelace](https://www.home-assistant.io/lovelace) on [Home Ass
 | ---- | ---- | ------- | -----------
 | type | string | **Required** | `custom:roku-card`
 | entity | string | **Required** | `media_player` entity of Roku device
+| remote | string | **Optional** | `remote` entity of Roku device. Default assume named like `entity`
 | name | string | **Optional** | Card name
 | theme | string | **Optional** | Card theme
 | tv | boolean | **Optional** | If `true` shows volume and power buttons. Default `false`

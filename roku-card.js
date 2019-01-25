@@ -234,7 +234,7 @@ class RokuCard extends LitElement {
   }
 
   handleActionClick(e) {
-    let remote = this._config.entity.split(".")[1];
+    let remote = this._config.remote ? this._config.remote : this._config.entity.split(".")[1];
     this.hass.callService("remote", "send_command", {
       entity_id: "remote." + remote,
       command: e.currentTarget.action
