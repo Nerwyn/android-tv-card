@@ -1,6 +1,6 @@
 
 
-[![Version](https://img.shields.io/badge/version-0.0.3-green.svg?style=for-the-badge)](#) [![mantained](https://img.shields.io/maintenance/yes/2019.svg?style=for-the-badge)](#)
+[![Version](https://img.shields.io/badge/version-0.0.4-green.svg?style=for-the-badge)](#) [![mantained](https://img.shields.io/maintenance/yes/2019.svg?style=for-the-badge)](#)
 
 [![maintainer](https://img.shields.io/badge/maintainer-Ian%20Richardson%20%40iantrich-blue.svg?style=for-the-badge)](#)
 
@@ -15,6 +15,7 @@ Hey dude! Help me out for a couple of :beers: or a :coffee:!
 This card is for [Lovelace](https://www.home-assistant.io/lovelace) on [Home Assistant](https://www.home-assistant.io/) that display a [Roku](https://www.roku.com/) remote.
 
 ![example](example.png)
+![example2](example2.png)
 
 ## Options
 
@@ -24,6 +25,7 @@ This card is for [Lovelace](https://www.home-assistant.io/lovelace) on [Home Ass
 | entity | string | **Required** | `media_player` entity of Roku device
 | name | string | **Optional** | Card name
 | theme | string | **Optional** | Card theme
+| tv | boolean | **Optional** | If `true` shows volume and power buttons. Default `false`
 
 ## Installation
 
@@ -58,6 +60,7 @@ Add a custom element in your `ui-lovelace.yaml`
         entity: media_player.bedroom_tv
         name: Bedroom TV
         theme: darkpurple
+        tv: true
 ```
 
 [Troubleshooting](https://github.com/thomasloven/hass-config/wiki/Lovelace-Plugins)

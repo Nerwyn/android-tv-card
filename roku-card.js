@@ -66,6 +66,12 @@ class RokuCard extends LitElement {
                 }
               </paper-listbox>
             </paper-dropdown-menu>
+            <paper-icon-button
+              .action="${"power"}"
+              @click="${this.handleActionClick}"
+              icon="mdi:power"
+              title="Power"
+            ></paper-icon-button>
           </div>
           <div class="row">
             <paper-icon-button
@@ -147,6 +153,33 @@ class RokuCard extends LitElement {
               title="Fast-Forward"
             ></paper-icon-button>
           </div>
+
+          ${
+            this._config.tv
+              ? html`
+                  <div class="row">
+                    <paper-icon-button
+                      .action="${"volume_mute"}"
+                      @click="${this.handleActionClick}"
+                      icon="mdi:volume-mute"
+                      title="Volume Mute"
+                    ></paper-icon-button>
+                    <paper-icon-button
+                      .action="${"volume_down"}"
+                      @click="${this.handleActionClick}"
+                      icon="mdi:volume-minus"
+                      title="Volume Down"
+                    ></paper-icon-button>
+                    <paper-icon-button
+                      .action="${"volume_up"}"
+                      @click="${this.handleActionClick}"
+                      icon="mdi:volume-plus"
+                      title="Volume Up"
+                    ></paper-icon-button>
+                  </div>
+                `
+              : ""
+          }
         </div>
       </ha-card>
     `;
@@ -169,18 +202,19 @@ class RokuCard extends LitElement {
         .remote {
           padding: 16px 0px 16px 0px;
         }
-
         img,
         paper-icon-button {
           width: 64px;
           height: 64px;
           cursor: pointer;
         }
-
         .row {
           display: flex;
           padding: 8px 36px 8px 36px;
           justify-content: space-evenly;
+        }
+        .diagonal {
+          background-color: var(--light-primary-color);
         }
       </style>
     `;

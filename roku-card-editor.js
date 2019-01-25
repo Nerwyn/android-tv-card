@@ -39,7 +39,11 @@ export class RokuCardEditor extends LitElement {
   }
 
   get _theme() {
-    return this._config.theme || "default";
+    return this._config.theme;
+  }
+
+  get _tv() {
+    return this._config.tv || false;
   }
 
   render() {
@@ -48,6 +52,7 @@ export class RokuCardEditor extends LitElement {
     }
 
     return html`
+      ${this.renderStyle()}
       <div class="card-config">
         <div class="side-by-side">
           <paper-input
@@ -77,6 +82,8 @@ export class RokuCardEditor extends LitElement {
                   ></paper-input>
                 `
           }
+          </div>
+          <div class="side-by-side">
           ${
             customElements.get("hui-theme-select-editor")
               ? html`
@@ -96,8 +103,31 @@ export class RokuCardEditor extends LitElement {
                   ></paper-input>
                 `
           }
+          <paper-toggle-button
+            ?checked="${this._tv !== false}"
+            .configValue="${"tv"}"
+            @change="${this._valueChanged}"
+            >Roku TV?</paper-toggle-button
+          >
         </div>
       </div>
+    `;
+  }
+
+  renderStyle() {
+    return html`
+      <style>
+        paper-toggle-button {
+          padding-top: 16px;
+        }
+        .side-by-side {
+          display: flex;
+        }
+        .side-by-side > * {
+          flex: 1;
+          padding-right: 4px;
+        }
+      </style>
     `;
   }
 
@@ -115,7 +145,8 @@ export class RokuCardEditor extends LitElement {
       } else {
         this._config = {
           ...this._config,
-          [target.configValue]: target.value
+          [target.configValue]:
+            target.checked !== undefined ? target.checked : value
         };
       }
     }
