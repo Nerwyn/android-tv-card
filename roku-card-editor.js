@@ -135,6 +135,7 @@ export class RokuCardEditor extends LitElement {
             >Roku TV?</paper-toggle-button
           >
         </div>
+        <div>Use the YAML editor if you need to specify custom services</div>
       </div>
     `;
   }

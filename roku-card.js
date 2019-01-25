@@ -67,7 +67,7 @@ class RokuCard extends LitElement {
               </paper-listbox>
             </paper-dropdown-menu>
             ${
-              this._config.tv
+              this._config.tv || this._config.power
                 ? html`
                     <paper-icon-button
                       .action="${"power"}"
@@ -161,7 +161,10 @@ class RokuCard extends LitElement {
           </div>
 
           ${
-            this._config.tv
+            this._config.tv ||
+            this._config.volume_up ||
+            this._config.volume_down ||
+            this._config.volume_mute
               ? html`
                   <div class="row">
                     <paper-icon-button
@@ -234,11 +237,36 @@ class RokuCard extends LitElement {
   }
 
   handleActionClick(e) {
-    let remote = this._config.remote ? this._config.remote : "remote." + this._config.entity.split(".")[1];
-    this.hass.callService("remote", "send_command", {
-      entity_id: remote,
-      command: e.currentTarget.action
-    });
+    const custom_services = [
+      "power",
+      "volume_up",
+      "volume_down",
+      "volume_mute"
+    ];
+
+    if (
+      custom_services.indexOf(e.currentTarget.action) >= 0 &&
+      this._config[e.currentTarget.action]
+    ) {
+      const [domain, service] = this._config[
+        e.currentTarget.action
+      ].service.split(".", 2);
+      this.hass.callService(
+        domain,
+        service,
+        this._config[e.currentTarget.action].service_data
+          ? this._config[e.currentTarget.action].service_data
+          : null
+      );
+    } else {
+      let remote = this._config.remote
+        ? this._config.remote
+        : "remote." + this._config.entity.split(".")[1];
+      this.hass.callService("remote", "send_command", {
+        entity_id: remote,
+        command: e.currentTarget.action
+      });
+    }
   }
 
   applyThemesOnElement(element, themes, localTheme) {

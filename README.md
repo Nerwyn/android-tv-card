@@ -1,6 +1,6 @@
 
 
-[![Version](https://img.shields.io/badge/version-0.0.5-green.svg?style=for-the-badge)](#) [![mantained](https://img.shields.io/maintenance/yes/2019.svg?style=for-the-badge)](#)
+[![Version](https://img.shields.io/badge/version-0.0.6-green.svg?style=for-the-badge)](#) [![mantained](https://img.shields.io/maintenance/yes/2019.svg?style=for-the-badge)](#)
 
 [![maintainer](https://img.shields.io/badge/maintainer-Ian%20Richardson%20%40iantrich-blue.svg?style=for-the-badge)](#)
 
@@ -27,6 +27,17 @@ This card is for [Lovelace](https://www.home-assistant.io/lovelace) on [Home Ass
 | name | string | **Optional** | Card name
 | theme | string | **Optional** | Card theme
 | tv | boolean | **Optional** | If `true` shows volume and power buttons. Default `false`
+| power | `service` | **Optional**| service to call when power button pressed
+| volume_up | `service` | **Optional**| service to call when volume_up button pressed
+| volume_down | `service` | **Optional**| service to call when volume_down button pressed
+| volume_mute | `service` | **Optional**| service to call when volume_mute button pressed
+
+## `service` Options
+| Name | Type | Requirement | Description
+| ---- | ---- | ------- | -----------
+| service | string | **Required** | Service to call
+| service_data | string | **Optional** | Service data to use
+
 
 ## Installation
 
@@ -62,6 +73,10 @@ Add a custom element in your `ui-lovelace.yaml`
         name: Bedroom TV
         theme: darkpurple
         tv: true
+        power:
+          service: switch.turn_on
+          service_data:
+            entity_id: switch.bedroom_tv_power
 ```
 
 [Troubleshooting](https://github.com/thomasloven/hass-config/wiki/Lovelace-Plugins)
