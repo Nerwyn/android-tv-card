@@ -57,3 +57,5 @@ Add a custom element in your `ui-lovelace.yaml`
         entity: media_player.bedroom_tv
         name: Bedroom TV
 ```
+
+[Troubleshooting](https://github.com/thomasloven/hass-config/wiki/Lovelace-Plugins)
