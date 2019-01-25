@@ -31,7 +31,7 @@ class RokuCard extends LitElement {
       return;
     }
 
-    this._config = config;
+    this._config = { theme: "default", ...config };
   }
 
   render() {
@@ -152,6 +152,17 @@ class RokuCard extends LitElement {
     `;
   }
 
+  updated(changedProps) {
+    if (!this._config) {
+      return;
+    }
+
+    const oldHass = changedProps.get("hass");
+    if (!oldHass || oldHass.themes !== this.hass.themes) {
+      this.applyThemesOnElement(this, this.hass.themes, this._config.theme);
+    }
+  }
+
   renderStyle() {
     return html`
       <style>
@@ -188,6 +199,44 @@ class RokuCard extends LitElement {
       entity_id: "remote." + remote,
       command: e.currentTarget.action
     });
+  }
+
+  applyThemesOnElement(element, themes, localTheme) {
+    if (!element._themes) {
+      element._themes = {};
+    }
+    let themeName = themes.default_theme;
+    if (localTheme === "default" || (localTheme && themes.themes[localTheme])) {
+      themeName = localTheme;
+    }
+    const styles = Object.assign({}, element._themes);
+    if (themeName !== "default") {
+      var theme = themes.themes[themeName];
+      Object.keys(theme).forEach(key => {
+        var prefixedKey = "--" + key;
+        element._themes[prefixedKey] = "";
+        styles[prefixedKey] = theme[key];
+      });
+    }
+    if (element.updateStyles) {
+      element.updateStyles(styles);
+    } else if (window.ShadyCSS) {
+      // implement updateStyles() method of Polemer elements
+      window.ShadyCSS.styleSubtree(
+        /** @type {!HTMLElement} */ (element),
+        styles
+      );
+    }
+
+    const meta = document.querySelector("meta[name=theme-color]");
+    if (meta) {
+      if (!meta.hasAttribute("default-content")) {
+        meta.setAttribute("default-content", meta.getAttribute("content"));
+      }
+      const themeColor =
+        styles["--primary-color"] || meta.getAttribute("default-content");
+      meta.setAttribute("content", themeColor);
+    }
   }
 }
 

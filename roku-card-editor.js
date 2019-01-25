@@ -34,9 +34,12 @@ export class RokuCardEditor extends LitElement {
     return this._config.name || "";
   }
 
-
   get _entity() {
     return this._config.entity || "";
+  }
+
+  get _theme() {
+    return this._config.theme || "default";
   }
 
   render() {
@@ -70,6 +73,25 @@ export class RokuCardEditor extends LitElement {
                     label="Entity"
                     .value="${this._entity}"
                     .configValue="${"entity"}"
+                    @value-changed="${this._valueChanged}"
+                  ></paper-input>
+                `
+          }
+          ${
+            customElements.get("hui-theme-select-editor")
+              ? html`
+                  <hui-theme-select-editor
+                    .hass="${this.hass}"
+                    .value="${this._theme}"
+                    .configValue="${"theme"}"
+                    @theme-changed="${this._valueChanged}"
+                  ></hui-theme-select-editor>
+                `
+              : html`
+                  <paper-input
+                    label="Theme"
+                    .value="${this._theme}"
+                    .configValue="${"theme"}"
                     @value-changed="${this._valueChanged}"
                   ></paper-input>
                 `
