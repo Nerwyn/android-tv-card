@@ -66,12 +66,18 @@ class RokuCard extends LitElement {
                 }
               </paper-listbox>
             </paper-dropdown-menu>
-            <paper-icon-button
-              .action="${"power"}"
-              @click="${this.handleActionClick}"
-              icon="mdi:power"
-              title="Power"
-            ></paper-icon-button>
+            ${
+              this._config.tv
+                ? html`
+                    <paper-icon-button
+                      .action="${"power"}"
+                      @click="${this.handleActionClick}"
+                      icon="mdi:power"
+                      title="Power"
+                    ></paper-icon-button>
+                  `
+                : ""
+            }
           </div>
           <div class="row">
             <paper-icon-button
