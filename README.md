@@ -22,20 +22,20 @@ This card is for [Lovelace](https://www.home-assistant.io/lovelace) on [Home Ass
 | ---- | ---- | ------- | -----------
 | type | string | **Required** | `custom:roku-card`
 | entity | string | **Required** | `media_player` entity of Roku device
-| ip_address | string | **Required** | IP address of the Roku device
-| title | string | **Optional** | Card title
+| name | string | **Optional** | Card name
 
 ## Installation
 
 ### Step 1
 
-Save [roku-card](https://github.com/custom-cards/roku-card/raw/master/roku-card.js) to `<config directory>/www/roku-card.js` on your Home Assistant instanse.
+Install `roku-card` by copying `roku-card.js` and `roku-card-editor.js` from this repo to `<config directory>/www/roku-card.js` on your Home Assistant instance.
 
 **Example:**
 
 ```bash
 wget https://raw.githubusercontent.com/custom-cards/roku-card/master/roku-card.js
-mv roku-card.js /config/www/
+wget https://raw.githubusercontent.com/custom-cards/roku-card/master/roku-card-editor.js
+mv roku-card* /config/www/
 ```
 
 ### Step 2
@@ -55,8 +55,7 @@ Add a custom element in your `ui-lovelace.yaml`
 ```yaml
       - type: custom:roku-card
         entity: media_player.bedroom_tv
-        title: Bedroom TV
-        ip_address: 'http://192.168.1.4'
+        name: Bedroom TV
 ```
 
 [Troubleshooting](https://github.com/thomasloven/hass-config/wiki/Lovelace-Plugins)
