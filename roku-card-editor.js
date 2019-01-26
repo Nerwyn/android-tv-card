@@ -55,6 +55,19 @@ export class RokuCardEditor extends LitElement {
       return html``;
     }
 
+    const themes = ["Backend-selected", "default"].concat(
+      Object.keys(this.hass.themes.themes).sort()
+    );
+
+    const entities = Object.keys(this.hass.states).filter(
+      eid => eid.substr(0, eid.indexOf(".")) === "media_player"
+    );
+    const remotes = [""].concat(
+      Object.keys(this.hass.states).filter(
+        eid => eid.substr(0, eid.indexOf(".")) === "remote"
+      )
+    );
+
     return html`
       ${this.renderStyle()}
       <div class="card-config">
@@ -65,69 +78,63 @@ export class RokuCardEditor extends LitElement {
             .configValue="${"name"}"
             @value-changed="${this._valueChanged}"
           ></paper-input>
-          ${
-            customElements.get("ha-entity-picker")
-              ? html`
-                  <ha-entity-picker
-                    .hass="${this.hass}"
-                    .value="${this._entity}"
-                    .configValue=${"entity"}
-                    domain-filter="media_player"
-                    @change="${this._valueChanged}"
-                    allow-custom-entity
-                  ></ha-entity-picker>
-                `
-              : html`
-                  <paper-input
-                    label="Entity"
-                    .value="${this._entity}"
-                    .configValue="${"entity"}"
-                    @value-changed="${this._valueChanged}"
-                  ></paper-input>
-                `
-          }
-          ${
-            customElements.get("ha-entity-picker")
-              ? html`
-                  <ha-entity-picker
-                    .hass="${this.hass}"
-                    .value="${this._remote}"
-                    .configValue=${"remote"}
-                    domain-filter="remote"
-                    @change="${this._valueChanged}"
-                    allow-custom-entity
-                  ></ha-entity-picker>
-                `
-              : html`
-                  <paper-input
-                    label="Remote (Optional)"
-                    .value="${this._remote}"
-                    .configValue="${"remote"}"
-                    @value-changed="${this._valueChanged}"
-                  ></paper-input>
-                `
-          }
-          </div>
-          <div class="side-by-side">
-          ${
-            customElements.get("hui-theme-select-editor")
-              ? html`
-                  <hui-theme-select-editor
-                    .hass="${this.hass}"
-                    .value="${this._theme}"
-                    .configValue="${"theme"}"
-                    @theme-changed="${this._valueChanged}"
-                  ></hui-theme-select-editor>
-                `
-              : html`
-                  <paper-input
-                    label="Theme (Optional)"
-                    .value="${this._theme}"
-                    .configValue="${"theme"}"
-                    @value-changed="${this._valueChanged}"
-                  ></paper-input>
-                `
-          }
+          <paper-dropdown-menu
+            label="Entity"
+            @value-changed="${this._valueChanged}"
+            .configValue="${"entity"}"
+          >
+            <paper-listbox
+              slot="dropdown-content"
+              .selected="${entities.indexOf(this._entity)}"
+            >
+              ${
+                entities.map(entity => {
+                  return html`
+                    <paper-item>${entity}</paper-item>
+                  `;
+                })
+              }
+            </paper-listbox>
+          </paper-dropdown-menu>
+        </div>
+        <div class="side-by-side">
+          <paper-dropdown-menu
+            label="Remote (Optional)"
+            @value-changed="${this._valueChanged}"
+            .configValue="${"remote"}"
+          >
+            <paper-listbox
+              slot="dropdown-content"
+              .selected="${remotes.indexOf(this._remote)}"
+            >
+              ${
+                remotes.map(remote => {
+                  return html`
+                    <paper-item>${remote}</paper-item>
+                  `;
+                })
+              }
+            </paper-listbox>
+          </paper-dropdown-menu>
+
+          <paper-dropdown-menu
+            label="Theme (Optional)"
+            @value-changed="${this._valueChanged}"
+            .configValue="${"theme"}"
+          >
+            <paper-listbox
+              slot="dropdown-content"
+              .selected="${themes.indexOf(this._theme)}"
+            >
+              ${
+                themes.map(theme => {
+                  return html`
+                    <paper-item>${theme}</paper-item>
+                  `;
+                })
+              }
+            </paper-listbox>
+          </paper-dropdown-menu>
           <paper-toggle-button
             ?checked="${this._tv !== false}"
             .configValue="${"tv"}"
