@@ -14,6 +14,9 @@ Hey dude! Help me out for a couple of :beers: or a :coffee:!
 
 This card is for [Lovelace](https://www.home-assistant.io/lovelace) on [Home Assistant](https://www.home-assistant.io/) that display a [Roku](https://www.roku.com/) remote.
 
+# NOTE: Firefox releases before 67 are not supported
+https://twitter.com/_developit/status/1090364879377260544
+
 ![example](example.png)
 ![example2](example2.png)
 
