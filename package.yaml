@@ -1,0 +1,14 @@
+name: Roku Card
+description: 📺 Roku Remote Card
+type: lovelace
+keywords:
+  - roku
+  - remote
+  - tv
+  - television
+author:
+  name: Ian Richardson
+license: Apache License, Version 2.0
+files:
+  - roku-card.js
+  - roku-card-editor.js
