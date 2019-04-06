@@ -22,7 +22,7 @@ class RokuCard extends LitElement {
   }
 
   getCardSize() {
-    return 1;
+    return 7;
   }
 
   setConfig(config) {
