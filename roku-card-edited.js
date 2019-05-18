@@ -3,7 +3,7 @@ const LitElement = Object.getPrototypeOf(
 );
 const html = LitElement.prototype.html;
 
-class RokuCard extends LitElement {
+class RokuCardServices extends LitElement {
   static get properties() {
     return {
       hass: {},
@@ -13,8 +13,8 @@ class RokuCard extends LitElement {
   }
 
   static async getConfigElement() {
-    await import("./roku-card--edited-editor.js");
-    return document.createElement("roku-card--edited-editor");
+    await import("./roku-card-edited-editor.js");
+    return document.createElement("roku-card-editor");
   }
 
   static getStubConfig() {
@@ -317,4 +317,4 @@ class RokuCard extends LitElement {
   }
 }
 
-customElements.define("roku-card-edited", RokuCard services);
+customElements.define("roku-card", RokuCardServices);
