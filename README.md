@@ -52,7 +52,7 @@ https://twitter.com/_developit/status/1090364879377260544
 
 ### Step 1
 
-Install `roku-card` by copying `roku-card.js` and `roku-card-editor.js` from this repo to `<config directory>/www/roku-card.js` on your Home Assistant instance.
+Install `roku-card` by copying `roku-card^-edited.js` and `roku-card-edited-editor.js` from this repo to `<config directory>/www/roku-card.js` on your Home Assistant instance.
 
 **Example:**
 
