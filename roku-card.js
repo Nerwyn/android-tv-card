@@ -43,7 +43,6 @@ class RokuCard extends LitElement {
     return html`
       ${this.renderStyle()}
       <ha-card .header="${this._config.name}">
-        <div class="remote">
           <div class="row">
             <paper-dropdown-menu
               label="Input Source"
@@ -241,7 +240,17 @@ class RokuCard extends LitElement {
       "power",
       "volume_up",
       "volume_down",
-      "volume_mute"
+      "volume_mute",
+      "back",
+      "info",
+      "home",
+      "up",
+      "left",
+      "select",
+      "right",
+      "down",
+      "reverse",
+      "play"
     ];
 
     if (
