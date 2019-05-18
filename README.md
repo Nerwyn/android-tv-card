@@ -1,5 +1,5 @@
-# Roku Remote Card
-📺 Roku Remote Lovelace Card editited by mar_robHD
+# TV Remote Card
+📺 TV Lovelace Card editited by mar_robHD
 
 [![GitHub Release][releases-shield]][releases]
 [![License][license-shield]](LICENSE.md)
@@ -16,15 +16,14 @@
 ## Support
 Hey dude! Help me out for a couple of :beers: or a :coffee:!
 
-[![coffee](https://www.buymeacoffee.com/assets/img/custom_images/black_img.png)](https://www.buymeacoffee.com/zJtVxUAgH)
+//[![coffee](https://www.buymeacoffee.com/assets/img/custom_images/black_img.png)](https://www.buymeacoffee.com/zJtVxUAgH)
 
-This card is for [Lovelace](https://www.home-assistant.io/lovelace) on [Home Assistant](https://www.home-assistant.io/) that display a [Roku](https://www.roku.com/) remote.
+This card is for [Lovelace](https://www.home-assistant.io/lovelace) on [Home Assistant](https://www.home-assistant.io/) that display a [TV]() remote.
 
 # NOTE: Firefox releases before 67 are not supported
 https://twitter.com/_developit/status/1090364879377260544
 
-![example](example.png)
-![example2](example2.png)
+![ex](https://i.imgur.com/fUKI5Xm.png)
 
 ## Options
 
@@ -39,7 +38,20 @@ https://twitter.com/_developit/status/1090364879377260544
 | power | `service` | **Optional**| service to call when power button pressed
 | volume_up | `service` | **Optional**| service to call when volume_up button pressed
 | volume_down | `service` | **Optional**| service to call when volume_down button pressed
-| volume_mute | `service` | **Optional**| service to call when volume_mute button pressed
+| back | `service` | **Optional**| service to call when back button pressed
+| info        | `service` | **Optional**| service to call when info button pressed
+| home | `service` | **Optional**| service to call when home button pressed
+| up | `service` | **Optional**| service to call when up button pressed
+| left | `service` | **Optional**| service to call when left button pressed
+| select | `service` | **Optional**| service to call when select button pressed
+| right | `service` | **Optional**| service to call when right button pressed
+| down | `service` | **Optional**| service to call when down button pressed
+| reverse | `service` | **Optional**| service to call when reverse button pressed
+| play | `service` | **Optional**| service to call when play button pressed
+| forward | `service` | **Optional**| service to call when forward button pressed
+| source | `service` | **Optional**| service to call when source button pressed
+| channelup | `service` | **Optional**| service to call when channelup button pressed
+| channeldown | `service` | **Optional**| service to call when channeldown button pressed
 
 ## `service` Options
 | Name | Type | Requirement | Description
@@ -52,23 +64,23 @@ https://twitter.com/_developit/status/1090364879377260544
 
 ### Step 1
 
-Install `roku-card` by copying `roku-card^-edited.js` and `roku-card-edited-editor.js` from this repo to `<config directory>/www/roku-card.js` on your Home Assistant instance.
+Install `tv-card` by copying `roku-card-edited.js` and `roku-card-edited-editor.js` from this repo to `<config directory>/www/tv-card.js` on your Home Assistant instance.
 
 **Example:**
 
 ```bash
-wget https://raw.githubusercontent.com/marrobHD/roku-card/master/roku-card-edited.js
-wget https://raw.githubusercontent.com/marrobHD/roku-card/master/roku-card-edited-editor.js
-mv roku-card* /config/www/
+wget https://raw.githubusercontent.com/marrobHD/roku-card/master/tv-card.js
+wget https://raw.githubusercontent.com/marrobHD/roku-card/master/tv-card-editor.js
+mv tv-card* /config/www/
 ```
 
 ### Step 2
 
-Link `roku-card-edited` inside your `ui-lovelace.yaml`.
+Link `tv-card` inside your `ui-lovelace.yaml`.
 
 ```yaml
 resources:
-  - url: /local/roku-card-edited.js?v=0
+  - url: /local/tv-card.js?v=0
     type: module
 ```
 
@@ -77,7 +89,7 @@ resources:
 Add a custom element in your `ui-lovelace.yaml`
 
 ```yaml
-      - type: custom:roku-card-edited
+      - type: custom:tv-card
         entity: media_player.bedroom_tv
         name: Bedroom TV
         theme: darkpurple
