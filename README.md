@@ -57,18 +57,18 @@ Install `roku-card` by copying `roku-card.js` and `roku-card-editor.js` from thi
 **Example:**
 
 ```bash
-wget https://raw.githubusercontent.com/custom-cards/roku-card/master/roku-card.js
-wget https://raw.githubusercontent.com/custom-cards/roku-card/master/roku-card-editor.js
+wget https://raw.githubusercontent.com/marrobHD/roku-card/master/roku-card-edited.js
+wget https://raw.githubusercontent.com/marrobHD/roku-card/master/roku-card-edited-editor.js
 mv roku-card* /config/www/
 ```
 
 ### Step 2
 
-Link `roku-card` inside your `ui-lovelace.yaml`.
+Link `roku-card-edited` inside your `ui-lovelace.yaml`.
 
 ```yaml
 resources:
-  - url: /local/roku-card.js?v=0
+  - url: /local/roku-card-edited.js?v=0
     type: module
 ```
 
@@ -77,7 +77,7 @@ resources:
 Add a custom element in your `ui-lovelace.yaml`
 
 ```yaml
-      - type: custom:roku-card
+      - type: custom:roku-card-edited
         entity: media_player.bedroom_tv
         name: Bedroom TV
         theme: darkpurple
