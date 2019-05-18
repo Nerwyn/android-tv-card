@@ -21,7 +21,7 @@ const LitElement = Object.getPrototypeOf(
 );
 const html = LitElement.prototype.html;
 
-export class RokuCardEditor extends LitElement {
+export class RokuCardEditedEditor extends LitElement {
   setConfig(config) {
     this._config = config;
   }
@@ -187,4 +187,4 @@ export class RokuCardEditor extends LitElement {
   }
 }
 
-customElements.define("roku-card-editor", RokuCardEditor);
+customElements.define("roku-card-editor", RokuCardEditedEditor);
