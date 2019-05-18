@@ -1,5 +1,5 @@
 # Roku Remote Card
-📺 Roku Remote Lovelace Card
+📺 Roku Remote Lovelace Card editited by mar_robHD
 
 [![GitHub Release][releases-shield]][releases]
 [![License][license-shield]](LICENSE.md)
