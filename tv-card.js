@@ -111,8 +111,8 @@ class TVCardServices extends LitElement {
             <paper-icon-button
               .action="${"info"}"
               @click="${this.handleActionClick}"
-              icon="mdi:information-variant"
-              title="Info"
+              icon="mdi:television-guide"
+              title="Guide"
             ></paper-icon-button>
             <paper-icon-button
               .action="${"channeldown"}"
