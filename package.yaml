@@ -1,14 +1,14 @@
-name: Roku Card services
-description: 📺 Roku Remote Card edited
+name: TV Card
+description: 📺 TV Remote Card
 type: lovelace
 keywords:
-  - rokued
-  - remoteed
-  - tved
-  - televisioned
+  - tvcard
+  - remote
+  - tv
+  - television
 author:
   name: mar_robHD
 license: Apache License, Version 2.0
 files:
-  - roku-card-edited.js
-  - roku-card-edited-editor.js
+  - tv-card.js
+  - tv-card-editor.js
