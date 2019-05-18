@@ -61,13 +61,13 @@ https://twitter.com/_developit/status/1090364879377260544
 
 ### Step 1
 
-Install `tv-card` by copying `roku-card-edited.js` and `roku-card-edited-editor.js` from this repo to `<config directory>/www/tv-card.js` on your Home Assistant instance.
+Install `tv-card` by copying `tv-card.js` and `tv-card-editor.js` from this repo to `<config directory>/www/tv-card.js` on your Home Assistant instance.
 
 **Example:**
 
 ```bash
-wget https://raw.githubusercontent.com/marrobHD/roku-card/master/tv-card.js
-wget https://raw.githubusercontent.com/marrobHD/roku-card/master/tv-card-editor.js
+wget https://raw.githubusercontent.com/marrobHD/tv-card/master/tv-card.js
+wget https://raw.githubusercontent.com/marrobHD/tv-card/master/tv-card-editor.js
 mv tv-card* /config/www/
 ```
 
