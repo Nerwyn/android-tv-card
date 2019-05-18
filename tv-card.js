@@ -3,7 +3,7 @@ const LitElement = Object.getPrototypeOf(
 );
 const html = LitElement.prototype.html;
 
-class RokuCardServices extends LitElement {
+class TVCardServices extends LitElement {
   static get properties() {
     return {
       hass: {},
@@ -13,8 +13,8 @@ class RokuCardServices extends LitElement {
   }
 
   static async getConfigElement() {
-    await import("./roku-card-edited-editor.js");
-    return document.createElement("roku-card-editor");
+    await import("./tv-card-editor.js");
+    return document.createElement("tv-card-editor");
   }
 
   static getStubConfig() {
@@ -86,10 +86,10 @@ class RokuCardServices extends LitElement {
               title="Back"
             ></paper-icon-button>
             <paper-icon-button
-              .action="${"info"}"
+              .action="${"source"}"
               @click="${this.handleActionClick}"
-              icon="mdi:asterisk"
-              title="Info"
+              icon="mdi:video-input-hdmi"
+              title="Source"
             ></paper-icon-button>
             <paper-icon-button
               .action="${"home"}"
@@ -97,6 +97,30 @@ class RokuCardServices extends LitElement {
               icon="mdi:home"
               title="Home"
             ></paper-icon-button>
+
+
+          </div>
+
+          <div class="row">
+            <paper-icon-button
+              .action="${"channelup"}"
+              @click="${this.handleActionClick}"
+              icon="mdi:arrow-up"
+              title="Channelup"
+            ></paper-icon-button>
+            <paper-icon-button
+              .action="${"info"}"
+              @click="${this.handleActionClick}"
+              icon="mdi:information-variant"
+              title="Info"
+            ></paper-icon-button>
+            <paper-icon-button
+              .action="${"channeldown"}"
+              @click="${this.handleActionClick}"
+              icon="mdi:arrow-down"
+              title="Channeldown"
+            ></paper-icon-button>
+
           </div>
 
           <div class="row">
@@ -242,15 +266,19 @@ class RokuCardServices extends LitElement {
       "volume_down",
       "volume_mute",
       "back",
+	  "source",
       "info",
       "home",
+	  "channelup",
+	  "channeldown",
       "up",
       "left",
       "select",
       "right",
       "down",
       "reverse",
-      "play"
+      "play",
+	  "forward"
     ];
 
     if (
@@ -317,4 +345,4 @@ class RokuCardServices extends LitElement {
   }
 }
 
-customElements.define("roku-card", RokuCardServices);
+customElements.define("tv-card", TVCardServices);
