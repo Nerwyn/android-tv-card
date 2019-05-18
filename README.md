@@ -1,5 +1,5 @@
 # TV Remote Card
-📺 TV Lovelace Card editited by mar_robHD
+📺 [Roku Lovelace Card](https://github.com/custom-cards/roku-card) editited by mar_robHD
 
 [![GitHub Release][releases-shield]][releases]
 [![License][license-shield]](LICENSE.md)
@@ -14,9 +14,6 @@
 [![Github][github]][github]
 
 ## Support
-Hey dude! Help me out for a couple of :beers: or a :coffee:!
-
-//[![coffee](https://www.buymeacoffee.com/assets/img/custom_images/black_img.png)](https://www.buymeacoffee.com/zJtVxUAgH)
 
 This card is for [Lovelace](https://www.home-assistant.io/lovelace) on [Home Assistant](https://www.home-assistant.io/) that display a [TV]() remote.
 
