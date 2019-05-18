@@ -13,8 +13,8 @@ class RokuCard extends LitElement {
   }
 
   static async getConfigElement() {
-    await import("./roku-card-editor.js");
-    return document.createElement("roku-card-editor");
+    await import("./roku-card--edited-editor.js");
+    return document.createElement("roku-card--edited-editor");
   }
 
   static getStubConfig() {
@@ -317,4 +317,4 @@ class RokuCard extends LitElement {
   }
 }
 
-customElements.define("roku-card", RokuCard);
+customElements.define("roku-card-edited", RokuCard services);
