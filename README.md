@@ -77,7 +77,7 @@ Link `tv-card` inside your `ui-lovelace.yaml`.
 
 ```yaml
 resources:
-  - url: /local/tv-card.js?v=0
+  - url: /local/tv-card.js?v=1
     type: module
 ```
 
