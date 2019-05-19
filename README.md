@@ -120,5 +120,5 @@ custom_updater:
 [maintenance-shield]: https://img.shields.io/badge/maintainer-marrobHD-blue.svg?style=for-the-badge
 [releases-shield]: https://img.shields.io/github/release/marrobHD/tv-card.svg?style=for-the-badge
 [releases]: https://github.com/marrobHD/tv-card/releases
-[twitter]: https://img.shields.io/twitter/follow/marrobHD.svg?style=social
+[twitter]: https://img.shields.io/twitter/follow/mar_robHD.svg?style=social
 [github]: https://img.shields.io/github/followers/marrobHD.svg?style=social
