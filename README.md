@@ -26,7 +26,7 @@ https://twitter.com/_developit/status/1090364879377260544
 
 | Name | Type | Requirement | Description
 | ---- | ---- | ------- | -----------
-| type | string | **Required** | `custom:roku-card`
+| type | string | **Required** | `custom:tv-card`
 | entity | string | **Required** | `media_player` entity of Roku device
 | remote | string | **Optional** | `remote` entity of Roku device. Default assume named like `entity`
 | name | string | **Optional** | Card name
