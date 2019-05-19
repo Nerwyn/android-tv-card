@@ -97,6 +97,17 @@ Add a custom element in your `ui-lovelace.yaml`
             entity_id: switch.bedroom_tv_power
 ```
 
+**Custom Updater:**
+
+Add this to your `configuration.yaml`
+
+```
+custom_updater:
+  card_urls:
+    - https://raw.githubusercontent.com/marrobHD/tv-card/master/tracker.json
+```
+
+
 [Troubleshooting](https://github.com/thomasloven/hass-config/wiki/Lovelace-Plugins)
 
 [commits-shield]: https://img.shields.io/github/commit-activity/y/custom-cards/roku-card.svg?style=for-the-badge
