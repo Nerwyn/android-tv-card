@@ -49,6 +49,9 @@ https://twitter.com/_developit/status/1090364879377260544
 | source | `service` | **Optional**| service to call when source button pressed
 | channelup | `service` | **Optional**| service to call when channelup button pressed
 | channeldown | `service` | **Optional**| service to call when channeldown button pressed
+| volume_up | `service` | **Optional**| service to call when volume up button pressed
+| volume_down | `service` | **Optional**| service to call when volume down button pressed
+| volume_mute | `service` | **Optional**| service to call when volume mute button pressed
 
 ## `service` Options
 | Name | Type | Requirement | Description
