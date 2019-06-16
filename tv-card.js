@@ -34,7 +34,7 @@ class TVCardServices extends LitElement {
     this._config = { theme: "default", ...config };
   }
 
-  render() {
+render() {
     if (!this._config || !this.hass) {
       return html``;
     }
@@ -44,39 +44,6 @@ class TVCardServices extends LitElement {
       ${this.renderStyle()}
       <ha-card .header="${this._config.name}">
           <div class="row">
-            <paper-dropdown-menu
-              label="Input Source"
-              @value-changed="${this.launchApp}"
-            >
-              <paper-listbox
-                slot="dropdown-content"
-                .selected="${
-                  stateObj.attributes.source_list.indexOf(
-                    stateObj.attributes.source
-                  )
-                }"
-              >
-                ${
-                  stateObj.attributes.source_list.map(source => {
-                    return html`
-                      <paper-item>${source}</paper-item>
-                    `;
-                  })
-                }
-              </paper-listbox>
-            </paper-dropdown-menu>
-            ${
-              this._config.tv || this._config.power
-                ? html`
-                    <paper-icon-button
-                      .action="${"power"}"
-                      @click="${this.handleActionClick}"
-                      icon="mdi:power"
-                      title="Power"
-                    ></paper-icon-button>
-                  `
-                : ""
-            }
           </div>
           <div class="row">
             <paper-icon-button
