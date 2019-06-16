@@ -34,7 +34,7 @@ class TVCardServices extends LitElement {
     this._config = { theme: "default", ...config };
   }
 
-render() {
+  render() {
     if (!this._config || !this.hass) {
       return html``;
     }
@@ -44,6 +44,28 @@ render() {
       ${this.renderStyle()}
       <ha-card .header="${this._config.name}">
           <div class="row">
+
+          </div>
+          <div class="row">
+            <paper-icon-button
+              .action="${"power"}"
+              @click="${this.handleActionClick}"
+              icon="mdi:power"
+              title="Power"
+            ></paper-icon-button>
+            <paper-icon-button
+              .action="${""}"
+              @click="${this.handleActionClick}"
+              icon=""
+              title=""
+            ></paper-icon-button>
+            <paper-icon-button
+              .action="${"power"}"
+              @click="${this.handleActionClick}"
+              icon="mdi:power"
+              title="Power"
+            ></paper-icon-button>
+
           </div>
           <div class="row">
             <paper-icon-button
