@@ -111,6 +111,119 @@ Add a custom element in your `ui-lovelace.yaml`
             entity_id: switch.bedroom_tv_power
 ```
 
+### Example 1:
+
+You can use the card in combination with the [browser mod integration](https://github.com/thomasloven/hass-browser_mod).
+That means that you can create a ex. input_boolean which opens when you click on its icon:
+
+```
+type: entities
+entities:
+  - entity: input_boolean.tv
+    name: TV
+    tap_action:
+      action: call-service
+      service: browser_mod.popup
+      service_data:
+        style:
+          border-radius: 20px
+          '--ha-card-border-radius': 0px
+        title: TV Fernbedienung
+        card:
+          type: 'custom:tv-card'
+          back:
+            service: broadlink.send
+            service_data:
+              host: 192.168.1.53
+              packet: >-
+                JgBGAJOVEzcROBI4ERQRFBEUERQRFBE5ETgSOBEUERQRFBEUEhMRFBEUERQROBI4ERQROBITEjgROBI4EhMSExI4ERQROBIADQUAAA==
+          backs:
+            service: androidtv.adb_command
+            service_data:
+              command: BACK
+              entity_id: media_player.firetv
+          channeldown:
+            service: broadlink.send
+            service_data:
+              host: 192.168.1.53
+              packet: >-
+                JgBGAJOVEjgSNxI4EhMRFBEUERQRFBE5ETgSOBEUERQRFBEUERQRFBEUERQRFBE4EhMSExITEjgROBI4ETgSExI4ETgSOBIADQUAAA==
+          channelup:
+            service: broadlink.send
+            service_data:
+              host: 192.168.1.53
+              packet: >-
+                JgBGAJKWETgSOBE5ERQRFBETEhMSExI4ETkROBITEhMSExEUERQRFBE5ERQRFBE4EhMSExITETkSExE4EjgRFBE4EjgROBIADQUAAA==
+          down:
+            service: broadlink.send
+            service_data:
+              host: 192.168.1.53
+              packet: >-
+                JgBGAJOVEzcSOBE4EhMSExITEhMSExI4ETgSOBITERQRFBEUERQROBITExISExITEjgROBITExISOBE4EjgROREUEhMROBEADQUAAA==
+          entity: media_player.spotify
+          forward:
+            service: broadlink.send
+            service_data:
+              host: 192.168.1.53
+              packet: >-
+                JgBGAJOVEjgSOBI3EhMSExITEhMSExI4ETgSOBEUERQRFBEUERQRFBEUERQSNxMSExISOBITETgTNxI4ERQROBI3EhQSNxIADQUAAA==
+          home:
+            service: broadlink.send
+            service_data:
+              host: 192.168.1.53
+              packet: >-
+                JgBGAJSUEjgROBI4ERQRFBEUERQRFBE4EjgSNxITExISExITExISOBITETgSOBEUETgSExMSEhMSOBEUERQROBITEjgROBIADQUAAA==
+          info:
+            service: broadlink.send
+            service_data:
+              host: 192.168.1.53
+              packet: >-
+                JgBGAJOVETgSOBE4EhMSExITEhMSExI4ETgTNxEUERQRFBEUERQROBI4EjgROBITEhMSOBEUERQRFBITERQROBI4ERQSNxEADQUAAA==
+          left:
+            service: broadlink.send
+            service_data:
+              host: 192.168.1.53
+              packet: >-
+                JgBGAJOVEzcSOBE4EhMSExITEhMSExE5ETgSOBITERQSExEUERQROBITEjgRFBEUETgSOBEUERQRORETEjgSOBEUERQROBIADQUAAA==
+          play:
+            service: broadlink.send
+            service_data:
+              host: 192.168.1.53
+              packet: >-
+                JgBGAJOVEjgSOBE4EhMSExITEhMSExI4ETgSOBITERQRFBEUERQROBI4EjcSExITEhMTNxEUERQRFBEUETgSOBE4EhMSOBIADQUAAA==
+          power:
+            service: broadlink.send
+            service_data:
+              host: 192.168.1.53
+              packet: >-
+                JgBGAJOWEjcSOBI3EhMTEhITEhMSExI4ETgSOBEUERQRFBEUERQRFBI3EhMSFBETEhMSExMSEjgSExE4EzcRORI3ETkROBIADQUAAA==
+          remote: input_select.tv_input
+          reverse:
+            service: broadlink.send
+            service_data:
+              host: 192.168.1.53
+              packet: >-
+                JgBGAJOVETYUOBE5ERQRFBEUERQRFBE4ETkROBITEhMSExITEhMSOBEUETgSExITEhMSOBEUERQROBITEjgROBI4ERQROBMADQUAAA==
+          right:
+            service: broadlink.send
+            service_data:
+              host: 192.168.1.53
+              packet: >-
+                JgBGAJOVETkROBI4EhMRFBEUERQRFBE4EjgROBITEhMSExITEhMSExI4ERQRFBEUETgSOBEUETgSExI4ETgSOBEUERQROBIADQUAAA==
+          select:
+            service: broadlink.send
+            service_data:
+              host: 192.168.1.53
+              packet: >-
+                JgBGAJSVETgSOBE4EhMSExITEhMSExI4ETgSOBEUERQSExEUERQRFBEUERQROBITEjgROBMSEjgSNxM3EhMSOBEUERQROBEADQUAAA==
+          source:
+            service: broadlink.send
+            service_data:
+              host: 192.168.1.53
+              packet: >-
+                JgBGAJKXEDkRORA4EhQSExETEBYRFRA5EDgTOBAVDxcPFRAVEBURNxMTERQRFBITERQRFBEUERQQOhI2EjkQORE5EDkSNxEADQUAAA==
+```
+
 **Custom Updater:**
 
 Add this to your `configuration.yaml`
