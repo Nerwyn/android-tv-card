@@ -12,10 +12,10 @@ class TVCardServices extends LitElement {
     };
   }
 
-  static async getConfigElement() {
-    await import("./tv-card-editor.js");
-    return document.createElement("tv-card-editor");
-  }
+//  static async getConfigElement() {
+//    await import("./tv-card-editor.js");
+//    return document.createElement("tv-card-editor");
+//  }
 
   static getStubConfig() {
     return {};
