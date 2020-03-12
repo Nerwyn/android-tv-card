@@ -6,7 +6,7 @@ Add this to your lovelace configuration:
 
 ```yaml
 type: custom:tv-card
-entity: media_player.bedroom_tv
+entity: sun.sun
 name: Bedroom TV
 theme: darkpurple
 tv: true
