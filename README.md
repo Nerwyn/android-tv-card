@@ -116,7 +116,7 @@ Add a custom element in your `ui-lovelace.yaml`
 You can use the card in combination with the [browser mod integration](https://github.com/thomasloven/hass-browser_mod).
 That means that you can create a ex. input_boolean which opens when you click on its icon:
 
-```
+```yaml
 type: entities
 entities:
   - entity: input_boolean.tv
