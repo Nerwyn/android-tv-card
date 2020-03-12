@@ -8,7 +8,6 @@ Add this to your lovelace configuration:
 type: custom:tv-card
 entity: sun.sun
 name: Bedroom TV
-theme: darkpurple
 tv: true
 power:
   service: switch.turn_on
