@@ -27,7 +27,7 @@ https://twitter.com/_developit/status/1090364879377260544
 | Name | Type | Requirement | Description
 | ---- | ---- | ------- | -----------
 | type | string | **Required** | `custom:tv-card`
-| entity | string | **Required** | `media_player` entity of Roku device
+| entity | string | **Required** | `random` entity
 | remote | string | **Optional** | `remote` entity of Roku device. Default assume named like `entity`
 | name | string | **Optional** | Card name
 | theme | string | **Optional** | Card theme
@@ -101,7 +101,7 @@ Add a custom element in your `ui-lovelace.yaml`
 
 ```yaml
       - type: custom:tv-card
-        entity: media_player.bedroom_tv
+        entity: sun.sun
         name: Bedroom TV
         theme: darkpurple
         tv: true
@@ -160,7 +160,7 @@ entities:
               host: 192.168.1.53
               packet: >-
                 JgBGAJOVEzcSOBE4EhMSExITEhMSExI4ETgSOBITERQRFBEUERQROBITExISExITEjgROBITExISOBE4EjgROREUEhMROBEADQUAAA==
-          entity: media_player.spotify
+          entity: sun.sun
           forward:
             service: broadlink.send
             service_data:
