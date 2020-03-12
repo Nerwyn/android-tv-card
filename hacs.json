@@ -1,4 +1,5 @@
 {
   "name": "TV Remote Card",
   "content_in_root": true,
+  "render_readme": true
 }
