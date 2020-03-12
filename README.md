@@ -130,6 +130,7 @@ entities:
         title: TV Fernbedienung
         card:
           type: 'custom:tv-card'
+          entity: sun.sun
           back:
             service: broadlink.send
             service_data:
@@ -159,7 +160,6 @@ entities:
               host: 192.168.1.53
               packet: >-
                 JgBGAJOVEzcSOBE4EhMSExITEhMSExI4ETgSOBITERQRFBEUERQROBITExISExITEjgROBITExISOBE4EjgROREUEhMROBEADQUAAA==
-          entity: sun.sun
           forward:
             service: broadlink.send
             service_data:
