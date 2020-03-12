@@ -20,7 +20,7 @@ This card is for [Lovelace](https://www.home-assistant.io/lovelace) on [Home Ass
 # NOTE: Firefox releases before 67 are not supported
 https://twitter.com/_developit/status/1090364879377260544
 
-![ex](https://i.imgur.com/fUKI5Xm.png)
+![ex](KOLwmt1vGh.png)
 
 ## Options
 
