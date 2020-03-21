@@ -285,13 +285,16 @@ class TVCardServices extends LitElement {
           : null
       );
     } else {
-      let remote = this._config.remote
-        ? this._config.remote
-        : "remote." + this._config.entity.split(".")[1];
-      this.hass.callService("remote", "send_command", {
-        entity_id: remote,
-        command: e.currentTarget.action
-      });
+      const [domain, service] = this._config[
+        e.currentTarget.action
+      ].service.split(".", 2);
+      this.hass.callService(
+        domain,
+        service,
+        this._config[e.currentTarget.action].service_data
+          ? this._config[e.currentTarget.action].service_data
+          : null
+      );
     }
   }
 
