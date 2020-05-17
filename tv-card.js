@@ -12,10 +12,10 @@ class TVCardServices extends LitElement {
     };
   }
 
-//  static async getConfigElement() {
-//    await import("./tv-card-editor.js");
-//    return document.createElement("tv-card-editor");
-//  }
+  //  static async getConfigElement() {
+  //    await import("./tv-card-editor.js");
+  //    return document.createElement("tv-card-editor");
+  //  }
 
   static getStubConfig() {
     return {};
@@ -40,77 +40,123 @@ class TVCardServices extends LitElement {
     }
 
     const stateObj = this.hass.states[this._config.entity];
+
+    const emptyButton = html`
+      <paper-icon-button
+        .action="${""}"
+        @click="${this.handleActionClick}"
+        icon=""
+        title=""
+      ></paper-icon-button>
+    `;
+
     return html`
       ${this.renderStyle()}
       <ha-card .header="${this._config.name}">
           <div class="row">
 
           </div>
-          <div class="row">
-            <paper-icon-button
-              .action="${"power"}"
-              @click="${this.handleActionClick}"
-              icon="mdi:power"
-              title="Power"
-            ></paper-icon-button>
-            <paper-icon-button
-              .action="${""}"
-              @click="${this.handleActionClick}"
-              icon=""
-              title=""
-            ></paper-icon-button>
-            <paper-icon-button
-              .action="${"power"}"
-              @click="${this.handleActionClick}"
-              icon="mdi:power"
-              title="Power"
-            ></paper-icon-button>
+          ${
+            this._config.power
+              ? html`
+                  <div class="row">
+                    <paper-icon-button
+                      .action="${"power"}"
+                      @click="${this.handleActionClick}"
+                      icon="mdi:power"
+                      title="Power"
+                    ></paper-icon-button>
+                    ${emptyButton}
+                    <paper-icon-button
+                      .action="${"power"}"
+                      @click="${this.handleActionClick}"
+                      icon="mdi:power"
+                      title="Power"
+                    ></paper-icon-button>
+                  </div>
+                `
+              : ""
+          }
 
-          </div>
-          <div class="row">
-            <paper-icon-button
-              .action="${"back"}"
-              @click="${this.handleActionClick}"
-              icon="mdi:arrow-left"
-              title="Back"
-            ></paper-icon-button>
-            <paper-icon-button
-              .action="${"source"}"
-              @click="${this.handleActionClick}"
-              icon="mdi:video-input-hdmi"
-              title="Source"
-            ></paper-icon-button>
-            <paper-icon-button
-              .action="${"home"}"
-              @click="${this.handleActionClick}"
-              icon="mdi:home"
-              title="Home"
-            ></paper-icon-button>
+          ${
+            this._config.back || this._config.source || this._config.home
+              ? html`
+                  <div class="row">
+                    ${this._config.back
+                      ? html`
+                          <paper-icon-button
+                            .action="${"back"}"
+                            @click="${this.handleActionClick}"
+                            icon="mdi:arrow-left"
+                            title="Back"
+                          ></paper-icon-button>
+                        `
+                      : emptyButton}
+                    ${this._config.source
+                      ? html`
+                          <paper-icon-button
+                            .action="${"source"}"
+                            @click="${this.handleActionClick}"
+                            icon="mdi:video-input-hdmi"
+                            title="Source"
+                          ></paper-icon-button>
+                        `
+                      : emptyButton}
+                    ${this._config.home
+                      ? html`
+                          <paper-icon-button
+                            .action="${"home"}"
+                            @click="${this.handleActionClick}"
+                            icon="mdi:home"
+                            title="Home"
+                          ></paper-icon-button>
+                        `
+                      : emptyButton}
+                  </div>
+                `
+              : ""
+          }
 
-
-          </div>
-
-          <div class="row">
-            <paper-icon-button
-              .action="${"channelup"}"
-              @click="${this.handleActionClick}"
-              icon="mdi:arrow-up"
-              title="Channelup"
-            ></paper-icon-button>
-            <paper-icon-button
-              .action="${"info"}"
-              @click="${this.handleActionClick}"
-              icon="mdi:television-guide"
-              title="Guide"
-            ></paper-icon-button>
-            <paper-icon-button
-              .action="${"channeldown"}"
-              @click="${this.handleActionClick}"
-              icon="mdi:arrow-down"
-              title="Channeldown"
-            ></paper-icon-button>
-
-          </div>
+          ${
+            this._config.channelup ||
+            this._config.info ||
+            this._config.channeldown
+              ? html`
+                  <div class="row">
+                    ${this._config.channelup
+                      ? html`
+                          <paper-icon-button
+                            .action="${"channelup"}"
+                            @click="${this.handleActionClick}"
+                            icon="mdi:arrow-up"
+                            title="Channelup"
+                          ></paper-icon-button>
+                        `
+                      : emptyButton}
+                    ${this._config.info
+                      ? html`
+                          <paper-icon-button
+                            .action="${"info"}"
+                            @click="${this.handleActionClick}"
+                            icon="mdi:television-guide"
+                            title="Guide"
+                          ></paper-icon-button>
+                        `
+                      : emptyButton}
+                    ${this._config.channeldown
+                      ? html`
+                          <paper-icon-button
+                            .action="${"channeldown"}"
+                            @click="${this.handleActionClick}"
+                            icon="mdi:arrow-down"
+                            title="Channeldown"
+                          ></paper-icon-button>
+                        `
+                      : emptyButton}
+                  </div>
+                `
+              : ""
+          }
 
           <div class="row">
             <paper-icon-button
@@ -151,26 +197,44 @@ class TVCardServices extends LitElement {
             ></paper-icon-button>
           </div>
 
-          <div class="row">
-            <paper-icon-button
-              .action="${"reverse"}"
-              @click="${this.handleActionClick}"
-              icon="mdi:rewind"
-              title="Rewind"
-            ></paper-icon-button>
-            <paper-icon-button
-              .action="${"play"}"
-              @click="${this.handleActionClick}"
-              icon="mdi:play-pause"
-              title="Play/Pause"
-            ></paper-icon-button>
-            <paper-icon-button
-              .action="${"forward"}"
-              @click="${this.handleActionClick}"
-              icon="mdi:fast-forward"
-              title="Fast-Forward"
-            ></paper-icon-button>
-          </div>
+          ${
+            this._config.reverse || this._config.play || this._config.forward
+              ? html`
+                  <div class="row">
+                    ${this._config.reverse
+                      ? html`
+                          <paper-icon-button
+                            .action="${"reverse"}"
+                            @click="${this.handleActionClick}"
+                            icon="mdi:rewind"
+                            title="Rewind"
+                          ></paper-icon-button>
+                        `
+                      : emptyButton}
+                    ${this._config.play
+                      ? html`
+                          <paper-icon-button
+                            .action="${"play"}"
+                            @click="${this.handleActionClick}"
+                            icon="mdi:play-pause"
+                            title="Play/Pause"
+                          ></paper-icon-button>
+                        `
+                      : emptyButton}
+                    ${this._config.forward
+                      ? html`
+                          <paper-icon-button
+                            .action="${"forward"}"
+                            @click="${this.handleActionClick}"
+                            icon="mdi:fast-forward"
+                            title="Fast-Forward"
+                          ></paper-icon-button>
+                        `
+                      : emptyButton}
+                  </div>
+                `
+              : ""
+          }
 
           ${
             this._config.tv ||
@@ -255,11 +319,11 @@ class TVCardServices extends LitElement {
       "volume_down",
       "volume_mute",
       "back",
-	  "source",
+      "source",
       "info",
       "home",
-	  "channelup",
-	  "channeldown",
+      "channelup",
+      "channeldown",
       "up",
       "left",
       "select",
@@ -267,7 +331,7 @@ class TVCardServices extends LitElement {
       "down",
       "reverse",
       "play",
-	  "forward"
+      "forward"
     ];
 
     if (
