@@ -38,6 +38,7 @@ https://twitter.com/_developit/status/1090364879377260544
 | back | `service` | **Optional**| service to call when back button pressed
 | info        | `service` | **Optional**| service to call when info button pressed
 | home | `service` | **Optional**| service to call when home button pressed
+| menu | `service` | **Optional**| service to call when menu button pressed
 | up | `service` | **Optional**| service to call when up button pressed
 | left | `service` | **Optional**| service to call when left button pressed
 | select | `service` | **Optional**| service to call when select button pressed
