@@ -32,9 +32,9 @@ https://twitter.com/_developit/status/1090364879377260544
 | name | string | **Optional** | Card name
 | theme | string | **Optional** | Card theme
 | tv | boolean | **Optional** | If `true` shows volume and power buttons. Default `false`
-| power | `service` | **Optional**| service to call when power button pressed
-| volume_up | `service` | **Optional**| service to call when volume_up button pressed
-| volume_down | `service` | **Optional**| service to call when volume_down button pressed
+| power | `service` | **Optional, Exclusive**| service to call when power button pressed. When `power` defined, `power_on` and `power_off` are disabled, even when defined
+| power_on | `service` | **Optional, Exclusive**| service to call when power_on button pressed. Only enabled if no `power` defined.
+| power_off | `service` | **Optional, Exclusive**| service to call when power_off button pressed. Only enabled if no `power` defined.
 | back | `service` | **Optional**| service to call when back button pressed
 | info        | `service` | **Optional**| service to call when info button pressed
 | home | `service` | **Optional**| service to call when home button pressed
