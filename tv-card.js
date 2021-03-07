@@ -280,6 +280,28 @@ class TVCardServices extends LitElement {
                 `
               : ""
           }
+
+          ${
+            this._config.netflix ||
+            this._config.prime_video
+              ? html`
+                  <div class="row">
+                    <ha-icon-button
+                      .action="${"netflix"}"
+                      @click="${this.handleActionClick}"
+                      icon="mdi:netflix"
+                      title="Netflix"
+                    ></ha-icon-button>
+                    <ha-icon-button
+                      .action="${"prime_video"}"
+                      @click="${this.handleActionClick}"
+                      icon="mdi:amazon"
+                      title="Prime Video"
+                    ></ha-icon-button>
+                  </div>
+                `
+              : ""
+          }
         </div>
       </ha-card>
     `;
@@ -349,7 +371,9 @@ class TVCardServices extends LitElement {
       "down",
       "reverse",
       "play",
-      "forward"
+      "forward",
+      "netflix",
+      "prime_video"
     ];
 
     if (
