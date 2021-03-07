@@ -66,13 +66,6 @@ class TVCardServices extends LitElement {
                       icon="mdi:power"
                       title="Power"
                     ></ha-icon-button>
-                    ${emptyButton}
-                    <ha-icon-button
-                      .action="${"power"}"
-                      @click="${this.handleActionClick}"
-                      icon="mdi:power"
-                      title="Power"
-                    ></ha-icon-button>
                   </div>
                 `
               : ""
