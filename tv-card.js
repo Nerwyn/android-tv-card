@@ -283,21 +283,40 @@ class TVCardServices extends LitElement {
 
           ${
             this._config.netflix ||
-            this._config.prime_video
+            this._config.prime_video ||
+            this._config.youtube
               ? html`
                   <div class="row">
-                    <ha-icon-button
-                      .action="${"netflix"}"
-                      @click="${this.handleActionClick}"
-                      icon="mdi:netflix"
-                      title="Netflix"
-                    ></ha-icon-button>
-                    <ha-icon-button
-                      .action="${"prime_video"}"
-                      @click="${this.handleActionClick}"
-                      icon="mdi:amazon"
-                      title="Prime Video"
-                    ></ha-icon-button>
+                    ${this._config.netflix ?
+                      html`
+                        <ha-icon-button
+                          .action="${"netflix"}"
+                          @click="${this.handleActionClick}"
+                          icon="mdi:netflix"
+                          title="Netflix"
+                        ></ha-icon-button>
+                      `
+                    : emptyButton}
+                    ${this._config.prime_video ?
+                      html`
+                        <ha-icon-button
+                          .action="${"prime_video"}"
+                          @click="${this.handleActionClick}"
+                          icon="mdi:amazon"
+                          title="Prime Video"
+                        ></ha-icon-button>
+                      `
+                    : emptyButton}
+                    ${this._config.youtube ?
+                      html`
+                        <ha-icon-button
+                          .action="${"youtube"}"
+                          @click="${this.handleActionClick}"
+                          icon="mdi:youtube"
+                          title="Youtube"
+                        ></ha-icon-button>
+                      `
+                    : emptyButton}
                   </div>
                 `
               : ""
@@ -373,7 +392,8 @@ class TVCardServices extends LitElement {
       "play",
       "forward",
       "netflix",
-      "prime_video"
+      "prime_video",
+      "youtube"
     ];
 
     if (
