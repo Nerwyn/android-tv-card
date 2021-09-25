@@ -123,9 +123,9 @@ entities:
   - entity: input_boolean.tv
     name: TV
     tap_action:
-      action: call-service
-      service: browser_mod.popup
-      service_data:
+      action: fire-dom-event
+      browser_mod:
+        command: popup
         style:
           border-radius: 20px
           '--ha-card-border-radius': 0px
