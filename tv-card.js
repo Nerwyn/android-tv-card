@@ -209,6 +209,50 @@ class TVCardServices extends LitElement {
               : ""
           }
 
+          ${
+            this._config.netflix ||
+            this._config.prime_video ||
+            this._config.youtube
+              ? html`
+                  <div class="row">
+                    ${this._config.netflix ?
+                      html`
+                        <ha-icon-button
+                          .action="${"netflix"}"
+                          @click="${this.handleActionClick}"
+                          icon="mdi:netflix"
+                          .path=${mdiNetflix}
+                          title="Netflix"
+                        ></ha-icon-button>
+                      `
+                    : emptyButton}
+                    ${this._config.prime_video ?
+                      html`
+                        <ha-icon-button
+                          .action="${"prime_video"}"
+                          @click="${this.handleActionClick}"
+                          icon="mdi:amazon"
+                          .path=${AMAZON_ICON_PATH}
+                          title="Prime Video"
+                        ></ha-icon-button>
+                      `
+                    : emptyButton}
+                    ${this._config.youtube ?
+                      html`
+                        <ha-icon-button
+                          .action="${"youtube"}"
+                          @click="${this.handleActionClick}"
+                          icon="mdi:youtube"
+                          .path=${mdiYoutube}
+                          title="Youtube"
+                        ></ha-icon-button>
+                      `
+                    : emptyButton}
+                  </div>
+                `
+              : ""
+          }
+
           <div class="row">
             <ha-icon-button
               .action="${"up"}"
@@ -323,50 +367,6 @@ class TVCardServices extends LitElement {
                       .path=${mdiVolumePlus}
                       title="Volume Up"
                     ></ha-icon-button>
-                  </div>
-                `
-              : ""
-          }
-
-          ${
-            this._config.netflix ||
-            this._config.prime_video ||
-            this._config.youtube
-              ? html`
-                  <div class="row">
-                    ${this._config.netflix ?
-                      html`
-                        <ha-icon-button
-                          .action="${"netflix"}"
-                          @click="${this.handleActionClick}"
-                          icon="mdi:netflix"
-                          .path=${mdiNetflix}
-                          title="Netflix"
-                        ></ha-icon-button>
-                      `
-                    : emptyButton}
-                    ${this._config.prime_video ?
-                      html`
-                        <ha-icon-button
-                          .action="${"prime_video"}"
-                          @click="${this.handleActionClick}"
-                          icon="mdi:amazon"
-                          .path=${AMAZON_ICON_PATH}
-                          title="Prime Video"
-                        ></ha-icon-button>
-                      `
-                    : emptyButton}
-                    ${this._config.youtube ?
-                      html`
-                        <ha-icon-button
-                          .action="${"youtube"}"
-                          @click="${this.handleActionClick}"
-                          icon="mdi:youtube"
-                          .path=${mdiYoutube}
-                          title="Youtube"
-                        ></ha-icon-button>
-                      `
-                    : emptyButton}
                   </div>
                 `
               : ""

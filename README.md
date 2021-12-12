@@ -1,5 +1,4 @@
 # TV Remote Card
-📺 [Roku Lovelace Card](https://github.com/custom-cards/roku-card) editited by mar_robHD
 
 [![GitHub Release][releases-shield]][releases]
 [![License][license-shield]](LICENSE.md)
@@ -12,14 +11,9 @@
 
 [![Github][github]][github]
 
-## Support
 
-This card is for [Lovelace](https://www.home-assistant.io/lovelace) on [Home Assistant](https://www.home-assistant.io/) that display a [TV]() remote.
-
-# NOTE: Firefox releases before 67 are not supported
-https://twitter.com/_developit/status/1090364879377260544
-
-![ex](KOLwmt1vGh.png)
+## Demo:
+<img src="KOLwmt1vGh.png" alt="ex" width="200"/>
 
 ## Options
 
@@ -64,40 +58,10 @@ https://twitter.com/_developit/status/1090364879377260544
 
 ## Installation
 
-### HACS:
+### Step 1:
+Install using HACS or [see this guide](https://github.com/thomasloven/hass-config/wiki/Lovelace-Plugins).
 
-1.
-
-Add this to your `HACS settings tab`:
-
-```
-https://github.com/marrobHD/tv-card
-```
-![example](https://i.imgur.com/2urg4m2.png)
-
-### Step 1
-
-Install `tv-card` by copying `tv-card.js` and `tv-card-editor.js` from this repo to `<config directory>/www/tv-card.js` on your Home Assistant instance.
-
-**Example:**
-
-```bash
-wget https://raw.githubusercontent.com/marrobHD/tv-card/master/tv-card.js
-wget https://raw.githubusercontent.com/marrobHD/tv-card/master/tv-card-editor.js
-mv tv-card* /config/www/
-```
-
-### Step 2
-
-Link `tv-card` inside your `ui-lovelace.yaml`.
-
-```yaml
-resources:
-  - url: /local/tv-card.js?v=1
-    type: module
-```
-
-### Step 3
+### Step 2:
 
 Add a custom element in your `ui-lovelace.yaml`
 
@@ -115,7 +79,7 @@ Add a custom element in your `ui-lovelace.yaml`
 ### Example 1:
 
 You can use the card in combination with the [browser mod integration](https://github.com/thomasloven/hass-browser_mod).
-That means that you can create a ex. input_boolean which opens when you click on its icon:
+That means that you can create an input_boolean which opens a popup when you click its icon:
 
 ```yaml
 type: entities
@@ -225,18 +189,6 @@ entities:
                 JgBGAJKXEDkRORA4EhQSExETEBYRFRA5EDgTOBAVDxcPFRAVEBURNxMTERQRFBITERQRFBEUERQQOhI2EjkQORE5EDkSNxEADQUAAA==
 ```
 
-**Custom Updater:**
-
-Add this to your `configuration.yaml`
-
-```
-custom_updater:
-  card_urls:
-    - https://raw.githubusercontent.com/marrobHD/tv-card/master/tracker.json
-```
-
-
-[Troubleshooting](https://github.com/thomasloven/hass-config/wiki/Lovelace-Plugins)
 
 [commits-shield]: https://img.shields.io/github/commit-activity/y/marrobHD/tv-card.svg?style=for-the-badge
 [commits]: https://github.com/marrobHD/tv-card/commits/master
