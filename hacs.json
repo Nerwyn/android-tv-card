@@ -1,4 +1,5 @@
 {
   "name": "TV Remote Card",
-  "content_in_root": true
+  "content_in_root": true,
+  "homeassistant": "2022.4.0"
 }
