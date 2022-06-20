@@ -9,10 +9,10 @@
 
 [![Github][github]][github]
 
-This repo is a fork of [tv-card](https://github.com/marrobHD/tv-card) and includes a bunch of new features and improvements, like:
+📦 This repo is a fork of [tv-card](https://github.com/marrobHD/tv-card) and includes a bunch of new features and improvements, like:
 
-- Fully functional touchpad for navigation (thanks to [iablon's Touchpad Card](https://github.com/iablon/HomeAssistant-Touchpad-Card))
-- Slider for volume (thanks to [AnthonMS's Slider Card](https://github.com/AnthonMS/my-cards#slider-card))
+- Fully functional touchpad for navigation (thanks to [iablon's Touchpad Card](https://github.com/iablon/HomeAssistant-Touchpad-Card)) ❤️
+- Slider for volume (thanks to [AnthonMS's Slider Card](https://github.com/AnthonMS/my-cards#slider-card)) ❤️
 - Makes use of [ollo69's SamsungTV Smart Component](https://github.com/ollo69/ha-samsungtv-smart)
 - Much easier setup
 - Implements haptics feedback
@@ -21,7 +21,7 @@ This repo is a fork of [tv-card](https://github.com/marrobHD/tv-card) and includ
 
 ## Notice
 
-**Currently this fork probably works only with Samsung Smart TVs (Tizen)**, since i made it first for my personal use.
+⚠️ **Currently this fork probably works only with Samsung Smart TVs (Tizen)**, since i made it first for my personal use.
 
 ## Demo
 
