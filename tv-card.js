@@ -5,9 +5,8 @@ const html = LitElement.prototype.html;
 
 import {
     mdiPower,
-    mdiPowerOn,
-    mdiPowerOff,
     mdiArrowLeft,
+    mdiArrowRight,
     mdiVideoInputHdmi,
     mdiHome,
     mdiArrowUp,
@@ -25,27 +24,33 @@ import {
     mdiSpotify,
 } from "https://unpkg.com/@mdi/js@6.4.95/mdi.js?module";
 
-var icons_paths = {
-    power: mdiPower,
-    power_on: mdiPowerOn,
-    power_off: mdiPowerOff,
-    left: mdiArrowLeft,
-    input: mdiVideoInputHdmi,
-    home: mdiHome,
-    up: mdiArrowUp,
-    guide: mdiTelevisionGuide,
-    down: mdiArrowDown,
-    rewind: mdiRewind,
-    play: mdiPlay,
-    pause: mdiPause,
-    fast_forward: mdiFastForward,
-    mute: mdiVolumeMute,
-    volume_minus: mdiVolumeMinus,
-    volume_plus: mdiVolumePlus,
-    netflix: mdiNetflix,
-    youtube: mdiYoutube,
-    spotify: mdiSpotify,
-}
+const custom_keys = {
+    "power": ["KEY_POWER", mdiPower],
+    "volume_up": ["KEY_VOLUP", mdiVolumePlus],
+    "volume_down": ["KEY_VOLDOWN", mdiVolumeMinus],
+    "volume_mute": ["KEY_MUTE", mdiVolumeMute],
+    "return": ["KEY_RETURN", mdiArrowLeft],
+    "source": ["KEY_SOURCE", mdiVideoInputHdmi],
+    "info": ["KEY_INFO", mdiTelevisionGuide],
+    "home": ["KEY_HOME", mdiHome],
+    "channel_up": ["KEY_CHUP", mdiArrowUp],
+    "channel_down": ["KEY_CHDOWN", mdiArrowDown],
+    "up": ["KEY_UP", mdiArrowUp],
+    "left": ["KEY_LEFT", mdiArrowLeft],
+    "enter": ["KEY_ENTER", mdiArrowLeft],
+    "right": ["KEY_RIGHT", mdiArrowRight],
+    "down": ["KEY_DOWN", mdiArrowDown],
+    "rewind": ["KEY_REWIND", mdiRewind],
+    "play": ["KEY_PLAY", mdiPlay],
+    "pause": ["KEY_PAUSE", mdiPause],
+    "fast_forward": ["KEY_FF", mdiFastForward],
+};
+
+const custom_sources = {
+    "netflix": ["Netflix", mdiNetflix],
+    "spotify": ["Spotify", mdiSpotify],
+    "youtube": ["YouTube", mdiYoutube],
+};
 
 var fireEvent = function(node, type, detail, options) {
     options = options || {};
@@ -91,6 +96,12 @@ class TVCardServices extends LitElement {
         this.loadCardHelpers();
         this.renderVolumeSlider();
     }
+
+    isButtonEnabled(row, button) {
+        if (!(this._config[row] instanceof Array)) return false;
+        
+        return this._config[row].includes(button);
+    }
     
     set hass(hass) {
         this._hass = hass;
@@ -111,7 +122,7 @@ class TVCardServices extends LitElement {
         this._helpersResolve = undefined;
         this._hassResolve = undefined;
 
-        let slide_config = {
+        let slider_config = {
             "type": "custom:my-slider",
             "entity": "media_player.tv",
             "height": "50px",
@@ -123,8 +134,12 @@ class TVCardServices extends LitElement {
             "thumbHorizontalPadding": "0px",
             "radius": "25px",
         }
+
+        if (this._config.slider_config instanceof Array) {
+            slider_config = { ...slider_config, ...this._config.slider_config };
+        }
         
-        this.volume_slider = await this._helpers.createCardElement(slide_config);
+        this.volume_slider = await this._helpers.createCardElement(slider_config);
         this.volume_slider.style = "flex: 0.9;";
         this.volume_slider.ontouchstart = (e) => {
             e.stopImmediatePropagation();
@@ -234,14 +249,20 @@ class TVCardServices extends LitElement {
         initialY = null;
     }
 
-    buildIconButton(icon, action) {
+    buildIconButton(action) {
+        let icon = "";
+        if (custom_keys.hasOwnProperty(action)) {
+            icon = custom_keys[action][1];
+        } else if (custom_sources.hasOwnProperty(action)) {
+            icon = custom_sources[action][1];
+        }
+
         return html`
             <ha-icon-button
                 .action="${action}"
                 @click="${this.handleActionClick}"
-                icon="${icon}"
-                title="${icon}"
-                .path="${icons_paths[icon]}"
+                title="${action}"
+                .path="${icon}"
             </ha-icon-button>
         `;
     }
@@ -251,104 +272,104 @@ class TVCardServices extends LitElement {
             return html ``;
         }
 
-        const emptyButton = this.buildIconButton("", "");
+        const emptyButton = this.buildIconButton("");
         
         var power_row = [];
-        if (this._config.power) {
-            power_row.push(this.buildIconButton("power", "power"));
+        if (this.isButtonEnabled("power_row", "power")) {
+            power_row.push(this.buildIconButton("power"));
         } else if (this._config.use_empty_buttons) {
             power_row.push(emptyButton);
         }
 
         var channel_row = [];
-        if (this._config.channel_up) {
+        if (this.isButtonEnabled("channel_row", "channel_up")) {
             channel_row.push(
-                this.buildIconButton("up", "channel_up")
+                this.buildIconButton("up")
             );
         } else if (this._config.use_empty_buttons) {
             channel_row.push(emptyButton);
         }
         
-        if (this._config.guide) {
+        if (this.isButtonEnabled("channel_row", "info")) {
             channel_row.push(
-                this.buildIconButton("guide", "info")
+                this.buildIconButton("info")
             );
         } else if (this._config.use_empty_buttons) {
             channel_row.push(emptyButton);
         }
 
-        if (this._config.channel_down) {
+        if (this.isButtonEnabled("channel_row", "channel_down")) {
             channel_row.push(
-                this.buildIconButton("down", "channel_down")
+                this.buildIconButton("down")
             );
         } else if (this._config.use_empty_buttons) {
             channel_row.push(emptyButton);
         }
 
         var apps_row = [];
-        if (this._config.netflix) {
-            apps_row.push(this.buildIconButton("netflix", "netflix"));
+        if (this.isButtonEnabled("apps_row", "netflix")) {
+            apps_row.push(this.buildIconButton("netflix"));
         } else if (this._config.use_empty_buttons) {
             apps_row.push(emptyButton);
         }
 
-        if (this._config.spotify) {
+        if (this.isButtonEnabled("apps_row", "spotify")) {
             apps_row.push(
-                this.buildIconButton("spotify", "spotify")
+                this.buildIconButton("spotify")
             );
         } else if (this._config.use_empty_buttons) {
             apps_row.push(emptyButton);
         }
         
-        if (this._config.youtube) {
+        if (this.isButtonEnabled("apps_row", "youtube")) {
             apps_row.push(
-                this.buildIconButton("youtube", "youtube")
+                this.buildIconButton("youtube")
             );
         } else if (this._config.use_empty_buttons) {
             apps_row.push(emptyButton);
         }
 
         var media_control_row = [];
-        if (this._config.reverse) {
+        if (this.isButtonEnabled("media_control_row", "rewind")) {
             media_control_row.push(
-                this.buildIconButton("rewind", "rewind")
+                this.buildIconButton("rewind")
             );
         } else if (this._config.use_empty_buttons) {
             media_control_row.push(emptyButton);
         }
 
-        if (this._config.play) {
+        if (this.isButtonEnabled("media_control_row", "play")) {
             media_control_row.push(
-                this.buildIconButton("play", "play")
+                this.buildIconButton("play")
             );
         } else if (this._config.use_empty_buttons) {
             media_control_row.push(emptyButton);
         }
 
-        if (this._config.pause) {
+        if (this.isButtonEnabled("media_control_row", "pause")) {
             media_control_row.push(
-                this.buildIconButton("pause", "pause")
+                this.buildIconButton("pause")
             );
         } else if (this._config.use_empty_buttons) {
             media_control_row.push(emptyButton);
         }
 
-        if (this._config.forward) {
+        if (this.isButtonEnabled("media_control_row", "forward")) {
             media_control_row.push(
-                this.buildIconButton("fast_forward", "forward")
+                this.buildIconButton("fast_forward")
             );
         } else if (this._config.use_empty_buttons) {
             media_control_row.push(emptyButton);
         }
 
         var volume_row = [];
-        if (this._config.volume == "buttons") {
+        if (this._config.volume_row == "buttons") {
             volume_row = [
-                this.buildIconButton("volume_minus", "volume_down"),
-                this.buildIconButton("mute", "volume_mute"),
-                this.buildIconButton("volume_plus", "volume_up")
+                this.buildIconButton("volume_minus"),
+                this.buildIconButton("mute"),
+                this.buildIconButton("volume_plus")
             ];
-        } else if (this._config.volume == "slider") {
+        } else if (this._config.volume_row == "slider") {
             volume_row = [this.volume_slider];
         }
 
@@ -364,21 +385,21 @@ class TVCardServices extends LitElement {
         `];
 
         var navigation_row = [];
-
-        if (this._config.return) {
-            navigation_row.push(this.buildIconButton("left", "return"));
+        
+        if (this.isButtonEnabled("navigation_row", "return")) {
+            navigation_row.push(this.buildIconButton("left"));
         } else if (this._config.use_empty_buttons) {
             navigation_row.push(emptyButton);
         }
         
-        if (this._config.home) {
-            navigation_row.push(this.buildIconButton("home", "home"));
+        if (this.isButtonEnabled("navigation_row", "home")) {
+            navigation_row.push(this.buildIconButton("home"));
         } else if (this._config.use_empty_buttons) {
             navigation_row.push(emptyButton);
         }
 
-        if (this._config.source) {
-            navigation_row.push(this.buildIconButton("input", "source"));
+        if (this.isButtonEnabled("navigation_row", "source")) {
+            navigation_row.push(this.buildIconButton("source"));
         } else if (this._config.use_empty_buttons) {
             navigation_row.push(emptyButton);
         }
@@ -455,34 +476,6 @@ class TVCardServices extends LitElement {
     }
 
     handleActionClick(e) {
-        const custom_keys = {
-            "power": "KEY_POWER",
-            "volume_up": "KEY_VOLUP",
-            "volume_down": "KEY_VOLDOWN",
-            "volume_mute": "KEY_MUTE",
-            "return": "KEY_RETURN",
-            "source": "KEY_SOURCE",
-            "info": "KEY_INFO",
-            "home": "KEY_HOME",
-            "channel_up": "KEY_CHUP",
-            "channel_down": "KEY_CHDOWN",
-            "up": "KEY_UP",
-            "left": "KEY_LEFT",
-            "enter": "KEY_ENTER",
-            "right": "KEY_RIGHT",
-            "down": "KEY_DOWN",
-            "rewind": "KEY_REWIND",
-            "play": "KEY_PLAY",
-            "pause": "KEY_PAUSE",
-            "forward": "KEY_FF",
-        };
-
-        const custom_sources = {
-            "netflix": "Netflix",
-            "spotify": "Spotify",
-            "youtube": "YouTube",
-        };
-
         let action = e.currentTarget.action;
         
         if (custom_keys[action]) {
