@@ -148,10 +148,10 @@ class TVCardServices extends LitElement {
         this.volume_slider.style = "flex: 0.9;";
         this.volume_slider.ontouchstart = (e) => {
             e.stopImmediatePropagation();
-            if (this._config.enable_button_feedback) fireEvent(window, "haptic", "light");
+            if (this._config.enable_button_feedback === undefined || this._config.enable_button_feedback) fireEvent(window, "haptic", "light");
         }
         this.volume_slider.addEventListener("input", (e) => {
-            if (this._config.enable_slider_feedback) fireEvent(window, "haptic", "light");
+            if (this._config.enable_slider_feedback === undefined || this._config.enable_slider_feedback) fireEvent(window, "haptic", "light");
         }, true);
 
         this.volume_slider.hass = this._hass;
@@ -179,7 +179,7 @@ class TVCardServices extends LitElement {
         event.stopImmediatePropagation();
         let click_action = () => {
             this.sendKey("KEY_ENTER");
-            if (this._config.enable_button_feedback) fireEvent(window, "haptic", "light");
+            if (this._config.enable_button_feedback === undefined || this._config.enable_button_feedback) fireEvent(window, "haptic", "light");
         }
         if (this._config.enable_double_click) {
             timer = setTimeout(click_action, 200);
@@ -189,7 +189,7 @@ class TVCardServices extends LitElement {
     }
 
     onDoubleClick(event) {
-        if (!this._config.enable_double_click) return;
+        if (this._config.enable_double_click !== undefined && !this._config.enable_double_click) return;
 
         event.stopImmediatePropagation();
 
@@ -197,7 +197,7 @@ class TVCardServices extends LitElement {
         timer = null;
 
         this.sendKey(this._config.double_click_keycode ? this._config.double_click_keycode : "KEY_RETURN");
-        if (this._config.enable_button_feedback) fireEvent(window, "haptic", "success");
+        if (this._config.enable_button_feedback === undefined || this._config.enable_button_feedback) fireEvent(window, "haptic", "success");
     }
 
     onTouchStart(event) {
@@ -208,7 +208,7 @@ class TVCardServices extends LitElement {
             //hold
             holdinterval = setInterval(() => {
                 this.sendKey(holdaction);
-                if (this._config.enable_button_feedback) fireEvent(window, "haptic", "light");
+                if (this._config.enable_button_feedback === undefined || this._config.enable_button_feedback) fireEvent(window, "haptic", "light");
             }, 200);
         }, 700);
         window.initialX = event.touches[0].clientX;
@@ -249,7 +249,7 @@ class TVCardServices extends LitElement {
             this.sendKey(key);
         }
 
-        if (this._config.enable_button_feedback) fireEvent(window, "haptic", "selection");
+        if (this._config.enable_button_feedback === undefined || this._config.enable_button_feedback) fireEvent(window, "haptic", "selection");
         initialX = null;
         initialY = null;
     }
@@ -263,7 +263,7 @@ class TVCardServices extends LitElement {
             this.changeSource(custom_sources[action]);
         }
 
-        if (this._config.enable_button_feedback) fireEvent(window, "haptic", "light");
+        if (this._config.enable_button_feedback === undefined || this._config.enable_button_feedback) fireEvent(window, "haptic", "light");
     }
 
     buildIconButton(action) {
@@ -311,9 +311,9 @@ class TVCardServices extends LitElement {
                     let volume_row = [];
                     if (this._config.volume_row == "buttons") {
                         volume_row = [
-                            this.buildIconButton("volume_minus"),
-                            this.buildIconButton("mute"),
-                            this.buildIconButton("volume_plus")
+                            this.buildIconButton("volume_down"),
+                            this.buildIconButton("volume_mute"),
+                            this.buildIconButton("volume_up")
                         ];
                     } else if (this._config.volume_row == "slider") {
                         volume_row = [this.volume_slider];
