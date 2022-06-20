@@ -5,6 +5,11 @@ const html = LitElement.prototype.html;
 
 import {
     mdiPower,
+    mdiChevronUp,
+    mdiChevronLeft,
+    mdiCheckboxBlankCircle,
+    mdiChevronRight,
+    mdiChevronDown,
     mdiArrowLeft,
     mdiArrowRight,
     mdiVideoInputHdmi,
@@ -35,11 +40,11 @@ const custom_keys = {
     "home": ["KEY_HOME", mdiHome],
     "channel_up": ["KEY_CHUP", mdiArrowUp],
     "channel_down": ["KEY_CHDOWN", mdiArrowDown],
-    "up": ["KEY_UP", mdiArrowUp],
-    "left": ["KEY_LEFT", mdiArrowLeft],
-    "enter": ["KEY_ENTER", mdiArrowLeft],
-    "right": ["KEY_RIGHT", mdiArrowRight],
-    "down": ["KEY_DOWN", mdiArrowDown],
+    "up": ["KEY_UP", mdiChevronUp],
+    "left": ["KEY_LEFT", mdiChevronLeft],
+    "enter": ["KEY_ENTER", mdiCheckboxBlankCircle],
+    "right": ["KEY_RIGHT", mdiChevronRight],
+    "down": ["KEY_DOWN", mdiChevronDown],
     "rewind": ["KEY_REWIND", mdiRewind],
     "play": ["KEY_PLAY", mdiPlay],
     "pause": ["KEY_PAUSE", mdiPause],
@@ -278,20 +283,31 @@ class TVCardServices extends LitElement {
             </ha-icon-button>
         `;
     }
-
+    
+    buildRow(content) {
+        return html `
+            <div class="row">
+                ${content}
+            </div>
+        `;
+    }
+    buildButtonsFromActions(actions) {
+        return actions.map((action) => this.buildIconButton(action));
+    }
+    
     render() {
         if (!this._config || !this._hass || !this.volume_slider) {
             return html ``;
         }
 
-        const row_names = ["power_row", "channel_row", "apps_row", "source_row", "volume_row", "media_control_row", "touchpad"];
+        const row_names = ["power_row", "channel_row", "apps_row", "source_row", "volume_row", "media_control_row", "navigation_row"];
 
         var content = [];
-        Object.keys(this._config).forEach((key) => {
-            if (row_names.includes(key)) {
-                let row_config = this._config[key];
+        Object.keys(this._config).forEach((row_name) => {
+            if (row_names.includes(row_name)) {
+                let row_actions = this._config[row_name];
 
-                if (key === "volume_row") {
+                if (row_name === "volume_row") {
                     let volume_row = [];
                     if (this._config.volume_row == "buttons") {
                         volume_row = [
@@ -303,32 +319,36 @@ class TVCardServices extends LitElement {
                         volume_row = [this.volume_slider];
                     }
                     content.push(volume_row);
-                } else if (key === "touchpad") {
-                    var touchpad = [html `
-                        <toucharea
-                            id="toucharea"
-                            @click="${this.onClick}"
-                            @dblclick="${this.onDoubleClick}"
-                            @touchstart="${this.onTouchStart}"
-                            @touchmove="${this.onTouchMove}"
-                            @touchend="${this.onTouchEnd}">
-                        </toucharea>
-                    `];
-                    content.push([touchpad]);
+                } else if (row_name === "navigation_row") {
+                    let navigation_row = [];
+
+                    if (this._config.navigation_row == "buttons") {
+                        let up_row = [this.buildIconButton("up")];
+                        let middle_row = [this.buildIconButton("left"), this.buildIconButton("enter"), this.buildIconButton("right")];
+                        let down_row = [this.buildIconButton("down")];
+                        navigation_row = [up_row, middle_row, down_row];
+                    } else if (this._config.navigation_row == "touchpad") {
+                        var touchpad = [html `
+                            <toucharea
+                                id="toucharea"
+                                @click="${this.onClick}"
+                                @dblclick="${this.onDoubleClick}"
+                                @touchstart="${this.onTouchStart}"
+                                @touchmove="${this.onTouchMove}"
+                                @touchend="${this.onTouchEnd}">
+                            </toucharea>
+                        `];
+                        navigation_row = [touchpad];
+                    }
+                    content.push(...navigation_row);
                 } else {
-                    let row_content = row_config.map((action) => {
-                        return this.buildIconButton(action);
-                    });
+                    let row_content = this.buildButtonsFromActions(row_actions);
                     content.push(row_content);
                 }
             }
         });
 
-        var content = content.map(row => html `
-            <div class="row">
-                ${row}
-            </div>
-        `);
+        var content = content.map(this.buildRow);
 
         var output = html `
             ${this.renderStyle()}
