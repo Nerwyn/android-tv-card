@@ -4,7 +4,7 @@
 [![License][license-shield]](LICENSE.md)
 
 ![Project Maintenance][maintenance-shield]
-[![GitHub Activity][commits-shield]][commits]
+[![GitHub Activity][last-commit-shield]][commits]
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg?style=for-the-badge)](https://github.com/custom-components/hacs)
 
 [![Github][github]][github]
@@ -213,7 +213,7 @@ media_control_row:
 
 <img src="empty_buttons.png" alt="empty buttons example" width="300"/>
 
-[commits-shield]: https://img.shields.io/github/commit-activity/y/marrobHD/tv-card.svg?style=for-the-badge
+[last-commit-shield]: https://img.shields.io/github/last-commit/usernein/tv-card?style=for-the-badge
 [commits]: https://github.com/usernein/tv-card/commits/master
 [forum-shield]: https://img.shields.io/badge/community-forum-brightgreen.svg?style=for-the-badge
 [forum]: https://community.home-assistant.io/t/lovelace-tv-remote-card/91476
