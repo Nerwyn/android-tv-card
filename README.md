@@ -132,6 +132,7 @@ media_control_row:
 ```
 
 Result:
+
 <img src="disorder.png" alt="disorder example" width="300"/>
 
 ### Example 2
@@ -166,6 +167,7 @@ media_control_row:
 ```
 
 Result:
+
 <img src="buttons_everywhere.png" alt="buttons example" width="300"/>
 
 ### Example 3
@@ -190,6 +192,7 @@ source_row:
 ```
 
 Result:
+
 <img src="using_less.png" alt="less example" width="300"/>
 
 ### Extra
