@@ -84,36 +84,36 @@ class TVCardServices extends LitElement {
     getCardSize() {
         return 7;
     }
-    
+
     setConfig(config) {
         if (!config.entity) {
             console.log("Invalid configuration");
             return;
         }
-        
+
         this._config = { theme: "default", ...config };
-        
+
         this.loadCardHelpers();
         this.renderVolumeSlider();
     }
 
     isButtonEnabled(row, button) {
         if (!(this._config[row] instanceof Array)) return false;
-        
+
         return this._config[row].includes(button);
     }
-    
+
     set hass(hass) {
         this._hass = hass;
         if (this.volume_slider) this.volume_slider.hass = hass;
         if (this._hassResolve) this._hassResolve();
     }
-    
+
     async loadCardHelpers() {
         this._helpers = await (window).loadCardHelpers();
         if (this._helpersResolve) this._helpersResolve();
     }
-    
+
     async renderVolumeSlider() {
         if (this._helpers === undefined)
             await new Promise((resolve) => (this._helpersResolve = resolve));
@@ -136,9 +136,9 @@ class TVCardServices extends LitElement {
         }
 
         if (this._config.slider_config instanceof Array) {
-            slider_config = { ...slider_config, ...this._config.slider_config };
+            slider_config = {...slider_config, ...this._config.slider_config };
         }
-        
+
         this.volume_slider = await this._helpers.createCardElement(slider_config);
         this.volume_slider.style = "flex: 0.9;";
         this.volume_slider.ontouchstart = (e) => {
@@ -191,7 +191,7 @@ class TVCardServices extends LitElement {
         clearTimeout(timer);
         timer = null;
 
-        this.sendKey(this._config.double_click_keycode? this._config.double_click_keycode : "KEY_RETURN");
+        this.sendKey(this._config.double_click_keycode ? this._config.double_click_keycode : "KEY_RETURN");
         if (this._config.enable_button_feedback) fireEvent(window, "haptic", "success");
     }
 
@@ -220,18 +220,18 @@ class TVCardServices extends LitElement {
         holdinterval = null;
         holdaction = null;
     }
-    
+
     onTouchMove(event) {
         if (!initialX || !initialY) {
             return;
         }
-    
+
         var currentX = event.touches[0].clientX;
         var currentY = event.touches[0].clientY;
-    
+
         var diffX = initialX - currentX;
         var diffY = initialY - currentY;
-    
+
         if (Math.abs(diffX) > Math.abs(diffY)) {
             // sliding horizontally
             let key = diffX > 0 ? "KEY_LEFT" : "KEY_RIGHT";
@@ -249,6 +249,18 @@ class TVCardServices extends LitElement {
         initialY = null;
     }
 
+    handleActionClick(e) {
+        let action = e.currentTarget.action;
+
+        if (custom_keys[action]) {
+            this.sendKey(custom_keys[action]);
+        } else if (custom_sources[action]) {
+            this.changeSource(custom_sources[action]);
+        }
+
+        if (this._config.enable_button_feedback) fireEvent(window, "haptic", "light");
+    }
+
     buildIconButton(action) {
         let icon = "";
         if (custom_keys.hasOwnProperty(action)) {
@@ -257,7 +269,7 @@ class TVCardServices extends LitElement {
             icon = custom_sources[action][1];
         }
 
-        return html`
+        return html `
             <ha-icon-button
                 .action="${action}"
                 @click="${this.handleActionClick}"
@@ -272,178 +284,62 @@ class TVCardServices extends LitElement {
             return html ``;
         }
 
-        const emptyButton = this.buildIconButton("");
-        
-        var power_row = [];
-        if (this.isButtonEnabled("power_row", "power")) {
-            power_row.push(this.buildIconButton("power"));
-        } else if (this._config.use_empty_buttons) {
-            power_row.push(emptyButton);
-        }
+        const row_names = ["power_row", "channel_row", "apps_row", "source_row", "volume_row", "media_control_row", "touchpad"];
 
-        var channel_row = [];
-        if (this.isButtonEnabled("channel_row", "channel_up")) {
-            channel_row.push(
-                this.buildIconButton("up")
-            );
-        } else if (this._config.use_empty_buttons) {
-            channel_row.push(emptyButton);
-        }
-        
-        if (this.isButtonEnabled("channel_row", "info")) {
-            channel_row.push(
-                this.buildIconButton("info")
-            );
-        } else if (this._config.use_empty_buttons) {
-            channel_row.push(emptyButton);
-        }
+        var content = [];
+        Object.keys(this._config).forEach((key) => {
+            if (row_names.includes(key)) {
+                let row_config = this._config[key];
 
-        if (this.isButtonEnabled("channel_row", "channel_down")) {
-            channel_row.push(
-                this.buildIconButton("down")
-            );
-        } else if (this._config.use_empty_buttons) {
-            channel_row.push(emptyButton);
-        }
+                if (key === "volume_row") {
+                    let volume_row = [];
+                    if (this._config.volume_row == "buttons") {
+                        volume_row = [
+                            this.buildIconButton("volume_minus"),
+                            this.buildIconButton("mute"),
+                            this.buildIconButton("volume_plus")
+                        ];
+                    } else if (this._config.volume_row == "slider") {
+                        volume_row = [this.volume_slider];
+                    }
+                    content.push(volume_row);
+                } else if (key === "touchpad") {
+                    var touchpad = [html `
+                        <toucharea
+                            id="toucharea"
+                            @click="${this.onClick}"
+                            @dblclick="${this.onDoubleClick}"
+                            @touchstart="${this.onTouchStart}"
+                            @touchmove="${this.onTouchMove}"
+                            @touchend="${this.onTouchEnd}">
+                        </toucharea>
+                    `];
+                    content.push([touchpad]);
+                } else {
+                    let row_content = row_config.map((action) => {
+                        return this.buildIconButton(action);
+                    });
+                    content.push(row_content);
+                }
+            }
+        });
 
-        var apps_row = [];
-        if (this.isButtonEnabled("apps_row", "netflix")) {
-            apps_row.push(this.buildIconButton("netflix"));
-        } else if (this._config.use_empty_buttons) {
-            apps_row.push(emptyButton);
-        }
-
-        if (this.isButtonEnabled("apps_row", "spotify")) {
-            apps_row.push(
-                this.buildIconButton("spotify")
-            );
-        } else if (this._config.use_empty_buttons) {
-            apps_row.push(emptyButton);
-        }
-        
-        if (this.isButtonEnabled("apps_row", "youtube")) {
-            apps_row.push(
-                this.buildIconButton("youtube")
-            );
-        } else if (this._config.use_empty_buttons) {
-            apps_row.push(emptyButton);
-        }
-
-        var media_control_row = [];
-        if (this.isButtonEnabled("media_control_row", "rewind")) {
-            media_control_row.push(
-                this.buildIconButton("rewind")
-            );
-        } else if (this._config.use_empty_buttons) {
-            media_control_row.push(emptyButton);
-        }
-
-        if (this.isButtonEnabled("media_control_row", "play")) {
-            media_control_row.push(
-                this.buildIconButton("play")
-            );
-        } else if (this._config.use_empty_buttons) {
-            media_control_row.push(emptyButton);
-        }
-
-        if (this.isButtonEnabled("media_control_row", "pause")) {
-            media_control_row.push(
-                this.buildIconButton("pause")
-            );
-        } else if (this._config.use_empty_buttons) {
-            media_control_row.push(emptyButton);
-        }
-
-        if (this.isButtonEnabled("media_control_row", "forward")) {
-            media_control_row.push(
-                this.buildIconButton("fast_forward")
-            );
-        } else if (this._config.use_empty_buttons) {
-            media_control_row.push(emptyButton);
-        }
-
-        var volume_row = [];
-        if (this._config.volume_row == "buttons") {
-            volume_row = [
-                this.buildIconButton("volume_minus"),
-                this.buildIconButton("mute"),
-                this.buildIconButton("volume_plus")
-            ];
-        } else if (this._config.volume_row == "slider") {
-            volume_row = [this.volume_slider];
-        }
-
-        var touchpad = [html`
-            <toucharea
-                id="toucharea"
-                @click="${this.onClick}"
-                @dblclick="${this.onDoubleClick}"
-                @touchstart="${this.onTouchStart}"
-                @touchmove="${this.onTouchMove}"
-                @touchend="${this.onTouchEnd}">
-            </toucharea>
-        `];
-
-        var navigation_row = [];
-        
-        if (this.isButtonEnabled("navigation_row", "return")) {
-            navigation_row.push(this.buildIconButton("left"));
-        } else if (this._config.use_empty_buttons) {
-            navigation_row.push(emptyButton);
-        }
-        
-        if (this.isButtonEnabled("navigation_row", "home")) {
-            navigation_row.push(this.buildIconButton("home"));
-        } else if (this._config.use_empty_buttons) {
-            navigation_row.push(emptyButton);
-        }
-
-        if (this.isButtonEnabled("navigation_row", "source")) {
-            navigation_row.push(this.buildIconButton("source"));
-        } else if (this._config.use_empty_buttons) {
-            navigation_row.push(emptyButton);
-        }
-        
-        var layout_map = {
-            "power_row": power_row,
-            "channel_row": channel_row,
-            "apps_row": apps_row,
-            "media_control_row": media_control_row,
-            "volume_row": volume_row,
-            "touchpad": touchpad,
-            "navigation_row": navigation_row
-        };
-
-        var layout = (this._config.layout instanceof Array)? this._config.layout : [
-            "power_row",
-            "channel_row",
-            "apps_row",
-            "volume_row",
-            "touchpad",
-            "navigation_row",
-            "media_control_row",
-        ];
-
-        var rows = layout.map(row => layout_map[row]);
-        
-        var rowIsEmpty = (arr) => (arr instanceof Array? arr.every(el => el === emptyButton) : false);
-        var content = rows.filter(row => !rowIsEmpty(row));
-        var content = content.map(row => html`
+        var content = content.map(row => html `
             <div class="row">
                 ${row}
             </div>
         `);
 
-        var output = html`
+        var output = html `
             ${this.renderStyle()}
             <ha-card .header="${this._config.title}">${content}</ha-card>
         `;
 
-        return html`${output}`;
+        return html `${output}`;
     }
 
     renderStyle() {
-        return html`
+        return html `
             <style>
                 .remote {
                     padding: 16px 0px 16px 0px;
@@ -475,18 +371,6 @@ class TVCardServices extends LitElement {
         `;
     }
 
-    handleActionClick(e) {
-        let action = e.currentTarget.action;
-        
-        if (custom_keys[action]) {
-            this.sendKey(custom_keys[action]);
-        } else if (custom_sources[action]) {
-            this.changeSource(custom_sources[action]);
-        }
-
-        if (this._config.enable_button_feedback) fireEvent(window, "haptic", "light");
-    }
-
     applyThemesOnElement(element, themes, localTheme) {
         if (!element._themes) {
             element._themes = {};
@@ -499,9 +383,9 @@ class TVCardServices extends LitElement {
         if (themeName !== "default") {
             var theme = themes.themes[themeName];
             Object.keys(theme).forEach((key) => {
-            var prefixedKey = "--" + key;
-            element._themes[prefixedKey] = "";
-            styles[prefixedKey] = theme[key];
+                var prefixedKey = "--" + key;
+                element._themes[prefixedKey] = "";
+                styles[prefixedKey] = theme[key];
             });
         }
         if (element.updateStyles) {
@@ -509,18 +393,19 @@ class TVCardServices extends LitElement {
         } else if (window.ShadyCSS) {
             // implement updateStyles() method of Polemer elements
             window.ShadyCSS.styleSubtree(
-            /** @type {!HTMLElement} */ (element),
-            styles
+                /** @type {!HTMLElement} */
+                (element),
+                styles
             );
         }
 
         const meta = document.querySelector("meta[name=theme-color]");
         if (meta) {
             if (!meta.hasAttribute("default-content")) {
-            meta.setAttribute("default-content", meta.getAttribute("content"));
+                meta.setAttribute("default-content", meta.getAttribute("content"));
             }
             const themeColor =
-            styles["--primary-color"] || meta.getAttribute("default-content");
+                styles["--primary-color"] || meta.getAttribute("default-content");
             meta.setAttribute("content", themeColor);
         }
     }
