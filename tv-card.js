@@ -258,9 +258,9 @@ class TVCardServices extends LitElement {
         let action = e.currentTarget.action;
 
         if (custom_keys[action]) {
-            this.sendKey(custom_keys[action]);
+            this.sendKey(custom_keys[action][0]);
         } else if (custom_sources[action]) {
-            this.changeSource(custom_sources[action]);
+            this.changeSource(custom_sources[action][0]);
         }
 
         if (this._config.enable_button_feedback === undefined || this._config.enable_button_feedback) fireEvent(window, "haptic", "light");
