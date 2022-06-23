@@ -5,6 +5,7 @@
 
 ![Project Maintenance][maintenance-shield]
 [![GitHub Activity][last-commit-shield]][commits]
+[![Community Forum][forum-shield]][forum]
 
 [![Github][github]][github]
 
@@ -306,7 +307,7 @@ media_control_row:
 [last-commit-shield]: https://img.shields.io/github/last-commit/usernein/tv-card?style=for-the-badge
 [commits]: https://github.com/usernein/tv-card/commits/master
 [forum-shield]: https://img.shields.io/badge/community-forum-brightgreen.svg?style=for-the-badge
-[forum]: https://community.home-assistant.io/t/lovelace-tv-remote-card/91476
+[forum]: https://community.home-assistant.io/t/lovelace-an-awesome-modified-tv-card-with-touchpad-and-haptic-feedback/432791
 [license-shield]: https://img.shields.io/github/license/usernein/tv-card.svg?style=for-the-badge
 [maintenance-shield]: https://img.shields.io/badge/maintainer-usernein-blue.svg?style=for-the-badge
 [releases-shield]: https://img.shields.io/github/release/usernein/tv-card.svg?style=for-the-badge
