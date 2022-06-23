@@ -12,3 +12,7 @@ jobs:
     steps:
         - uses: "actions/checkout@v2"
         - uses: "home-assistant/actions/hassfest@master"
+        - name: HACS Action
+          uses: "hacs/action@main"
+          with:
+            category: "plugin"
