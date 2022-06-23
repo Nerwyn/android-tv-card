@@ -301,7 +301,7 @@ media_control_row:
   - fast-forward
 ```
 
-<img src="empty_buttons.png" alt="empty buttons example" width="300"/>
+<img src="assets/empty_buttons.png" alt="empty buttons example" width="300"/>
 
 [last-commit-shield]: https://img.shields.io/github/last-commit/usernein/tv-card?style=for-the-badge
 [commits]: https://github.com/usernein/tv-card/commits/master
