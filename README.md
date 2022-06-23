@@ -108,7 +108,7 @@ power_row:
   - browser
   - power
   - input_tv
-media_contol_row:
+media_control_row:
   - rewind
   - play
   - pause

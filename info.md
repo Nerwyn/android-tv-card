@@ -1,18 +1,39 @@
+
+# TV Remote Card
+
 **Sample overview:**
 
-![Sample overview](https://github.com/marrobHD/tv-card/blob/master/KOLwmt1vGh.png)
+![Sample overview](https://github.com/usernein/tv-card/blob/master/assets/screenshot.png)
 
-Add this to your lovelace configuration:
+Add this to your lovelace configuration if your tv is a Samsung Smart TV:
 
 ```yaml
 type: custom:tv-card
-entity: sun.sun
-name: Bedroom TV
-tv: true
-power:
-  service: switch.turn_on
-  service_data:
-    entity_id: switch.bedroom_tv_power
+entity: media_player.tv
+title: Example 2
+power_row:
+  - power
+channel_row:
+  - channel_up
+  - info
+  - channel_down
+apps_row:
+  - netflix
+  - youtube
+  - spotify
+volume_row: slider
+navigation_row: touchpad
+source_row:
+  - return
+  - home
+  - source
+media_control_row:
+  - rewind
+  - play
+  - pause
+  - fast_forward
 ```
 
-Look at [README](https://github.com/marrobHD/tv-card/blob/master/README.md) for more information
+If you're not using Samsung, you may want to set custom buttons for your tv. [Check it out](https://github.com/usernein/tv-card/blob/master/README.md#notice).
+
+Look at [README](https://github.com/usernein/tv-card/blob/master/README.md) for more information
