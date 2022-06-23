@@ -20,7 +20,7 @@
 
 ## Demo
 
-<img src="screenshot.png" alt="ex" width="300"/>
+<img src="assets/screenshot.png" alt="ex" width="300"/>
 
 ## Options
 
@@ -116,7 +116,7 @@ media_contol_row:
   - toggle_light
 ```
 
-<img src="custom_keys.png" alt="guide" width="300"/>
+<img src="assets/custom_keys.png" alt="guide" width="300"/>
 
 With custom buttons you can override existing buttons for changing its icon or even its functionality. Here i do both:
 
@@ -141,7 +141,7 @@ Inside each button you may define either `key`, `source` or `service`, as you've
 In the option `icon` you must pass the name of the javascript object that represents the icon using MDI. You can get those [here](https://materialdesignicons.com/).
 Searching for "guide", you'll find `television-guide`:
 
-<img src="television_guide.png" alt="guide" width="300"/>
+<img src="assets/television_guide.png" alt="guide" width="300"/>
 
 See that pretty line of code in there? There's the name of the icon we want: `mdiTelevisionGuide`
 
@@ -223,7 +223,7 @@ media_control_row:
 
 Result:
 
-<img src="disorder.png" alt="disorder example" width="300"/>
+<img src="assets/disorder.png" alt="disorder example" width="300"/>
 
 ### Example 2
 
@@ -258,7 +258,7 @@ media_control_row:
 
 Result:
 
-<img src="buttons_everywhere.png" alt="buttons example" width="300"/>
+<img src="assets/buttons_everywhere.png" alt="buttons example" width="300"/>
 
 ### Example 3
 
@@ -283,7 +283,7 @@ source_row:
 
 Result:
 
-<img src="using_less.png" alt="less example" width="300"/>
+<img src="assets/using_less.png" alt="less example" width="300"/>
 
 ### Extra
 
