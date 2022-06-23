@@ -12,19 +12,15 @@
 
 - Fully functional touchpad for navigation (thanks to [iablon's Touchpad Card](https://github.com/iablon/HomeAssistant-Touchpad-Card)) ❤️
 - Slider for volume (thanks to [AnthonMS's Slider Card](https://github.com/AnthonMS/my-cards#slider-card)) ❤️
-- Makes use of [ollo69's SamsungTV Smart Component](https://github.com/ollo69/ha-samsungtv-smart)
+- Supports [ollo69's SamsungTV Smart Component](https://github.com/ollo69/ha-samsungtv-smart)
 - Much easier setup
 - Implements haptics feedback
 - Customizable layout, you can choose the order of the rows and buttons
-- All rows and buttons are optional
-
-## Notice
-
-⚠️ **Currently this fork probably works only with Samsung Smart TVs (Tizen)**, since i made it first for my personal use.
+- All rows and buttons are optional, you can change whatever you *(don't)* like
 
 ## Demo
 
-<img src="card_screenshot.png" alt="ex" width="300"/>
+<img src="screenshot.png" alt="ex" width="300"/>
 
 ## Options
 
@@ -38,6 +34,8 @@
 | enable_button_feedback | boolean | **Optional** | Shall clicks on the buttons return a vibration feedback? Defaults to `true`.
 | enable_slider_feedback | boolean | **Optional** | Shall the volume slider return a vibration feedback when you slide through it? Defaults to `true`.
 | slider_config | object | **Optional** | Custom configuration for the volume slider. See [slider-card](https://github.com/AnthonMS/my-cards)
+| custom_keys | object | **Optional** | Custom keys for the remote control. Each item is an object that should have `icon` and at least one of the following properties: `key`, `source`, `service`.
+| custom_sources | object | **Optional** | Custom sources for the remote control. Same object as above, but letting you split keys and sources.
 
 Using only these options you will get an empty card (or almost empty, if you set a title).
 In order to include the buttons, you need to specify in the config the rows you want and which buttons you want in it.
@@ -60,6 +58,99 @@ There also `volume_row` and `navigation_row`, but these requires a string as val
 | ---- | ---- | -------
 | volume_row | string | Can be either `slider` or `buttons`. This defines the mode you want for setting the volume (you'll see them soon below).
 | navigation_row | string | Can be either `touchpad` or `buttons`. This defines the mode you want for navigating around your tv (you'll also see them soon below).
+
+## **Notice**
+
+This card uses `media_player.play_media` to send keys to the TV.
+This is the way [ollo69's SamsungTV Smart Component](https://github.com/ollo69/ha-samsungtv-smart) (which i based this card on) works, but don't worry: if your TV is from another brand or simply the TV integration does not use `media_player.play_media` for sending keys, you can still use this card by setting [custom buttons](#custom-buttons) with services to send keys to your TV (or do whatever you want) in your way (just like the original [tv-card](https://github.com/marrobHD/tv-card)).
+
+## Custom buttons
+
+If you want to add custom buttons to the remote control (of if you want to reconfigure the existing buttons), you can do it by adding an object to the `custom_keys` option:
+
+```yaml
+custom_keys:
+  input_tv:
+    icon: "mdiTelevisionBox"
+    key: KEY_TV
+  browser:
+    icon: "mdiWeb"
+    source: "browser"
+  toggle_light:
+    icon: "mdiLightbulb"
+    service: light.toggle
+    service_data:
+      entity_id: light.bedroom
+```
+
+The `custom_sources` exists for the same purpose, but you can use it to split the keys and sources.
+
+```yaml
+custom_keys:
+  input_tv:
+    icon: "mdiTelevisionBox"
+    key: KEY_TV
+  toggle_light:
+    icon: "mdiLightbulb"
+    service: light.toggle
+    service_data:
+      entity_id: light.bedroom
+custom_sources:
+  browser:
+    icon: "mdiWeb"
+    source: "browser"
+```
+
+Then you can easily use these buttons in your card:
+
+```yaml
+power_row:
+  - browser
+  - power
+  - input_tv
+media_contol_row:
+  - rewind
+  - play
+  - pause
+  - fast_forward
+  - toggle_light
+```
+
+<img src="custom_keys.png" alt="guide" width="300"/>
+
+With custom buttons you can override existing buttons for changing its icon or even its functionality. Here i do both:
+
+```yaml
+custom_keys:
+  power:
+    icon: "mdiPowerCycle"
+    service: media_player.toggle
+    service_data:
+      entity_id: media_player.tv
+```
+
+Inside each button you may define either `key`, `source` or `service`, as you've seen.
+
+| Option | internal function | Description
+| ---- | ---- | -------
+| key | `media_player.play_media(media_content_id=key, media_content_type="send_key")` | The key to send to the TV via `media_player.play_media`
+| source | `media_player.select_source(source=source)` | The source to switch to via `media_player.select_source`
+| service | `_hass.callService(domain, service, service_data)` | A string representing service to call. Use the format `domain.service`, e.g. `"light.turn_on"`
+| service_data | passed with `service` | The data to pass to the service. May be an object depending on the service you are using.
+
+In the option `icon` you must pass the name of the javascript object that represents the icon using MDI. You can get those [here](https://materialdesignicons.com/).
+Searching for "guide", you'll find `television-guide`:
+
+<img src="television_guide.png" alt="guide" width="300"/>
+
+See that pretty line of code in there? There's the name of the icon we want: `mdiTelevisionGuide`
+
+```yaml
+custom_keys:
+  guide:
+    icon: "mdiTelevisionGuide"
+    key: KEY_GUIDE
+```
 
 ## Installation
 

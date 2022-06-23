@@ -3,59 +3,38 @@ const LitElement = Object.getPrototypeOf(
 );
 const html = LitElement.prototype.html;
 
-import {
-    mdiPower,
-    mdiChevronUp,
-    mdiChevronLeft,
-    mdiCheckboxBlankCircle,
-    mdiChevronRight,
-    mdiChevronDown,
-    mdiArrowLeft,
-    mdiArrowRight,
-    mdiVideoInputHdmi,
-    mdiHome,
-    mdiArrowUp,
-    mdiTelevisionGuide,
-    mdiArrowDown,
-    mdiRewind,
-    mdiPlay,
-    mdiPause,
-    mdiFastForward,
-    mdiVolumeMute,
-    mdiVolumeMinus,
-    mdiVolumePlus,
-    mdiNetflix,
-    mdiYoutube,
-    mdiSpotify,
-} from "https://unpkg.com/@mdi/js@6.4.95/mdi.js?module";
+import * as mdiIcons from "https://unpkg.com/@mdi/js@6.4.95/mdi.js?module";
 
-const custom_keys = {
-    "power": ["KEY_POWER", mdiPower],
-    "volume_up": ["KEY_VOLUP", mdiVolumePlus],
-    "volume_down": ["KEY_VOLDOWN", mdiVolumeMinus],
-    "volume_mute": ["KEY_MUTE", mdiVolumeMute],
-    "return": ["KEY_RETURN", mdiArrowLeft],
-    "source": ["KEY_SOURCE", mdiVideoInputHdmi],
-    "info": ["KEY_INFO", mdiTelevisionGuide],
-    "home": ["KEY_HOME", mdiHome],
-    "channel_up": ["KEY_CHUP", mdiArrowUp],
-    "channel_down": ["KEY_CHDOWN", mdiArrowDown],
-    "up": ["KEY_UP", mdiChevronUp],
-    "left": ["KEY_LEFT", mdiChevronLeft],
-    "enter": ["KEY_ENTER", mdiCheckboxBlankCircle],
-    "right": ["KEY_RIGHT", mdiChevronRight],
-    "down": ["KEY_DOWN", mdiChevronDown],
-    "rewind": ["KEY_REWIND", mdiRewind],
-    "play": ["KEY_PLAY", mdiPlay],
-    "pause": ["KEY_PAUSE", mdiPause],
-    "fast_forward": ["KEY_FF", mdiFastForward],
+const keys = {
+    "power": {"key": "KEY_POWER", "icon": "mdiPower"},
+    "volume_up": {"key": "KEY_VOLUP", "icon": "mdiVolumePlus"},
+    "volume_down": {"key": "KEY_VOLDOWN", "icon": "mdiVolumeMinus"},
+    "volume_mute": {"key": "KEY_MUTE", "icon": "mdiVolumeMute"},
+    "return": {"key": "KEY_RETURN", "icon": "mdiArrowLeft"},
+    "source": {"key": "KEY_SOURCE", "icon": "mdiVideoInputHdmi"},
+    "info": {"key": "KEY_INFO", "icon": "mdiTelevisionGuide"},
+    "home": {"key": "KEY_HOME", "icon": "mdiHome"},
+    "channel_up": {"key": "KEY_CHUP", "icon": "mdiArrowUp"},
+    "channel_down": {"key": "KEY_CHDOWN", "icon": "mdiArrowDown"},
+    "up": {"key": "KEY_UP", "icon": "mdiChevronUp"},
+    "left": {"key": "KEY_LEFT", "icon": "mdiChevronLeft"},
+    "enter": {"key": "KEY_ENTER", "icon": "mdiCheckboxBlankCircle"},
+    "right": {"key": "KEY_RIGHT", "icon": "mdiChevronRight"},
+    "down": {"key": "KEY_DOWN", "icon": "mdiChevronDown"},
+    "rewind": {"key": "KEY_REWIND", "icon": "mdiRewind"},
+    "play": {"key": "KEY_PLAY", "icon": "mdiPlay"},
+    "pause": {"key": "KEY_PAUSE", "icon": "mdiPause"},
+    "fast_forward": {"key": "KEY_FF", "icon": "mdiFastForward"},
 };
 
-const custom_sources = {
-    "netflix": ["Netflix", mdiNetflix],
-    "spotify": ["Spotify", mdiSpotify],
-    "youtube": ["YouTube", mdiYoutube],
+const sources = {
+    "netflix": {"source": "Netflix", "icon": "mdiNetflix"},
+    "spotify": {"source": "Spotify", "icon": "mdiSpotify"},
+    "youtube": {"source": "YouTube", "icon": "mdiYoutube"},
 };
+
+var custom_keys = {};
+var custom_sources = {};
 
 var fireEvent = function(node, type, detail, options) {
     options = options || {};
@@ -97,6 +76,8 @@ class TVCardServices extends LitElement {
         }
 
         this._config = { theme: "default", ...config };
+        custom_keys = config.custom_keys || {};
+        custom_sources = config.custom_sources || {};
 
         this.loadCardHelpers();
         this.renderVolumeSlider();
@@ -256,30 +237,32 @@ class TVCardServices extends LitElement {
 
     handleActionClick(e) {
         let action = e.currentTarget.action;
+        let info = custom_keys[action] || custom_sources[action] || keys[action] || sources[action];
 
-        if (custom_keys[action]) {
-            this.sendKey(custom_keys[action][0]);
-        } else if (custom_sources[action]) {
-            this.changeSource(custom_sources[action][0]);
+        if (info.key) {
+            this.sendKey(info.key);
+        }
+        else if (info.source) {
+            this.changeSource(info.source);
+        }
+        else if (info.service) {
+            const [domain, service] = info.service.split(".", 2);
+            this._hass.callService(domain, service, info.service_data);
         }
 
         if (this._config.enable_button_feedback === undefined || this._config.enable_button_feedback) fireEvent(window, "haptic", "light");
     }
 
     buildIconButton(action) {
-        let icon = "";
-        if (custom_keys.hasOwnProperty(action)) {
-            icon = custom_keys[action][1];
-        } else if (custom_sources.hasOwnProperty(action)) {
-            icon = custom_sources[action][1];
-        }
+        let info = custom_keys[action] || custom_sources[action] || keys[action] || sources[action];
+        let icon = info? info.icon : "";
 
         return html `
             <ha-icon-button
                 .action="${action}"
                 @click="${this.handleActionClick}"
                 title="${action}"
-                .path="${icon}"
+                .path="${icon? mdiIcons[icon] : ""}"
             </ha-icon-button>
         `;
     }
