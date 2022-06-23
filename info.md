@@ -3,7 +3,7 @@
 
 **Sample overview:**
 
-![Sample overview](https://github.com/usernein/tv-card/blob/master/assets/screenshot.png)
+<img src="https://github.com/usernein/tv-card/blob/master/assets/screenshot.png" alt="screenshot" width="300"/>
 
 Add this to your lovelace configuration if your tv is a Samsung Smart TV:
 
