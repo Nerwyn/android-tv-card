@@ -157,7 +157,7 @@ custom_keys:
 
 ### Step 1
 
-~~Install using HACS~~ or [see this guide](https://github.com/thomasloven/hass-config/wiki/Lovelace-Plugins).
+Install using HACS or [see this guide](https://github.com/thomasloven/hass-config/wiki/Lovelace-Plugins).
 
 ### Step 2
 
