@@ -1,5 +1,5 @@
 {
-  "name": "TV Remote Card",
+  "name": "TV Remote Card (with touchpad and haptic feedback)",
   "content_in_root": true,
   "homeassistant": "2022.4.0"
 }
