@@ -35,6 +35,7 @@ const sources = {
 
 var custom_keys = {};
 var custom_sources = {};
+var custom_icons = {};
 
 var fireEvent = function(node, type, detail, options) {
     options = options || {};
@@ -78,6 +79,7 @@ class TVCardServices extends LitElement {
         this._config = { theme: "default", ...config };
         custom_keys = config.custom_keys || {};
         custom_sources = config.custom_sources || {};
+        custom_icons = config.custom_icons || {};
 
         this.loadCardHelpers();
         this.renderVolumeSlider();
@@ -93,6 +95,10 @@ class TVCardServices extends LitElement {
         this._hass = hass;
         if (this.volume_slider) this.volume_slider.hass = hass;
         if (this._hassResolve) this._hassResolve();
+    }
+
+    get hass() {
+        return this._hass;
     }
 
     async loadCardHelpers() {
@@ -119,9 +125,9 @@ class TVCardServices extends LitElement {
             "thumbWidth": "0px",
             "thumbHorizontalPadding": "0px",
             "radius": "25px",
-        }
+        };
 
-        if (this._config.slider_config instanceof Array) {
+        if (this._config.slider_config instanceof Object) {
             slider_config = {...slider_config, ...this._config.slider_config };
         }
 
@@ -130,7 +136,7 @@ class TVCardServices extends LitElement {
         this.volume_slider.ontouchstart = (e) => {
             e.stopImmediatePropagation();
             if (this._config.enable_button_feedback === undefined || this._config.enable_button_feedback) fireEvent(window, "haptic", "light");
-        }
+        };
         this.volume_slider.addEventListener("input", (e) => {
             if (this._config.enable_slider_feedback === undefined || this._config.enable_slider_feedback) fireEvent(window, "haptic", "light");
         }, true);
@@ -161,7 +167,7 @@ class TVCardServices extends LitElement {
         let click_action = () => {
             this.sendKey("KEY_ENTER");
             if (this._config.enable_button_feedback === undefined || this._config.enable_button_feedback) fireEvent(window, "haptic", "light");
-        }
+        };
         if (this._config.enable_double_click) {
             timer = setTimeout(click_action, 200);
         } else {
@@ -255,14 +261,20 @@ class TVCardServices extends LitElement {
 
     buildIconButton(action) {
         let info = custom_keys[action] || custom_sources[action] || keys[action] || sources[action];
-        let icon = info? info.icon : "";
+        let custom_icon_path = custom_icons[action];
+        let icon = (
+            custom_icon_path? custom_icon_path :
+            info? mdiIcons[info.icon] :
+            ""
+        );
+        console.debug(icon);
 
         return html `
             <ha-icon-button
                 .action="${action}"
                 @click="${this.handleActionClick}"
                 title="${action}"
-                .path="${icon? mdiIcons[icon] : ""}"
+                .path="${icon}"
             </ha-icon-button>
         `;
     }
@@ -331,7 +343,7 @@ class TVCardServices extends LitElement {
             }
         });
 
-        var content = content.map(this.buildRow);
+        content = content.map(this.buildRow);
 
         var output = html `
             ${this.renderStyle()}
