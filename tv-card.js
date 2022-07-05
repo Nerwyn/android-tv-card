@@ -261,7 +261,7 @@ class TVCardServices extends LitElement {
 
     buildIconButton(action) {
         let info = custom_keys[action] || custom_sources[action] || keys[action] || sources[action];
-        let custom_icon_path = custom_icons[action] || info? custom_icons[info.icon] : null;
+        let custom_icon_path = info? custom_icons[info.icon] : custom_icons[action];
         let icon = (
             custom_icon_path? custom_icon_path :
             info? mdiIcons[info.icon] :
