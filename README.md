@@ -57,7 +57,7 @@ There also `volume_row` and `navigation_row`, but these requires a string as val
 
 | Name | Type | Description
 | ---- | ---- | -------
-| volume_row | string | Can be either `slider` or `buttons`. This defines the mode you want for setting the volume (you'll see them soon below).
+| volume_row | string | Can be either `slider` or `buttons`. This defines the mode you want for setting the volume (you'll see them soon below). You need to have [slider-card](https://github.com/AnthonMS/my-cards) installed in order to use `slider`.
 | navigation_row | string | Can be either `touchpad` or `buttons`. This defines the mode you want for navigating around your tv (you'll also see them soon below).
 
 ## **Notice**
@@ -72,13 +72,13 @@ If you want to add custom buttons to the remote control (of if you want to recon
 ```yaml
 custom_keys:
   input_tv:
-    icon: "mdiTelevisionBox"
+    icon: mdi:television-box
     key: KEY_TV
   browser:
-    icon: "mdiWeb"
-    source: "browser"
+    icon: mdi:web
+    source: browser
   toggle_light:
-    icon: "mdiLightbulb"
+    icon: mdi:lightbulb
     service: light.toggle
     service_data:
       entity_id: light.bedroom
@@ -89,17 +89,17 @@ The `custom_sources` exists for the same purpose, but you can use it to split th
 ```yaml
 custom_keys:
   input_tv:
-    icon: "mdiTelevisionBox"
+    icon: mdi:television-box
     key: KEY_TV
   toggle_light:
-    icon: "mdiLightbulb"
+    icon: mdi:lightbulb
     service: light.toggle
     service_data:
       entity_id: light.bedroom
 custom_sources:
   browser:
-    icon: "mdiWeb"
-    source: "browser"
+    icon: mdi:web
+    source: browser
 ```
 
 Then you can easily use these buttons in your card:
@@ -124,38 +124,25 @@ With custom buttons you can override existing buttons for changing its icon or e
 ```yaml
 custom_keys:
   power:
-    icon: "mdiPowerCycle"
+    icon: mdi:power-cycle
     service: media_player.toggle
     service_data:
       entity_id: media_player.tv
 ```
 
-Inside each button you may define either `key`, `source` or `service`, as you've seen.
+Inside each button you may define `icon` and either `key`, `source` or `service`, as you've seen.
 
 | Option | internal function | Description
 | ---- | ---- | -------
+| icon |  | The icon to show in the button. If empty, the button will be blank.
 | key | `media_player.play_media(media_content_id=key, media_content_type="send_key")` | The key to send to the TV via `media_player.play_media`
 | source | `media_player.select_source(source=source)` | The source to switch to via `media_player.select_source`
 | service | `_hass.callService(domain, service, service_data)` | A string representing service to call. Use the format `domain.service`, e.g. `"light.turn_on"`
 | service_data | passed with `service` | The data to pass to the service. May be an object depending on the service you are using.
 
-In the option `icon` you must pass the name of the javascript object that represents the icon using MDI. You can get those [here](https://materialdesignicons.com/).
-Searching for "guide", you'll find `television-guide`:
-
-<img src="assets/television_guide.png" alt="guide" width="300"/>
-
-See that pretty line of code in there? There's the name of the icon we want: `mdiTelevisionGuide`
-
-```yaml
-custom_keys:
-  guide:
-    icon: "mdiTelevisionGuide"
-    key: KEY_GUIDE
-```
-
 ## Custom icons
 
-You can customize any icon with a custom svg path using the `custom_icons`option. This is very useful when you want to add buttons for sources that doesn't have icons in MaterialDesign.
+You can customize any icon with a custom svg path using the `custom_icons` option.
 
 Usage:
 
@@ -182,7 +169,16 @@ custom_icons:
     0 3.872Z
 ```
 
-The svg path was copied from [SimpleIcon](https://simpleicons.org/?q=hbo).
+The svg path was copied from [SimpleIcon](https://simpleicons.org/?q=hbo). Although you can use [this integration](https://github.com/vigonotion/hass-simpleicons) for using icons from SimpleIcons (there's also one for [fontawesome](https://github.com/thomasloven/hass-fontawesome)).
+
+Having defined the custom icon, you can use it on any custom button:
+
+```yaml
+custom_sources:
+  hbomax:
+    icon: hbo
+    source: HBO Max
+```
 
 ## Installation
 
