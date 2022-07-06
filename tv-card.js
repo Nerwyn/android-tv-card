@@ -3,34 +3,32 @@ const LitElement = Object.getPrototypeOf(
 );
 const html = LitElement.prototype.html;
 
-import * as mdiIcons from "https://unpkg.com/@mdi/js@6.4.95/mdi.js?module";
-
 const keys = {
-    "power": {"key": "KEY_POWER", "icon": "mdiPower"},
-    "volume_up": {"key": "KEY_VOLUP", "icon": "mdiVolumePlus"},
-    "volume_down": {"key": "KEY_VOLDOWN", "icon": "mdiVolumeMinus"},
-    "volume_mute": {"key": "KEY_MUTE", "icon": "mdiVolumeMute"},
-    "return": {"key": "KEY_RETURN", "icon": "mdiArrowLeft"},
-    "source": {"key": "KEY_SOURCE", "icon": "mdiVideoInputHdmi"},
-    "info": {"key": "KEY_INFO", "icon": "mdiTelevisionGuide"},
-    "home": {"key": "KEY_HOME", "icon": "mdiHome"},
-    "channel_up": {"key": "KEY_CHUP", "icon": "mdiArrowUp"},
-    "channel_down": {"key": "KEY_CHDOWN", "icon": "mdiArrowDown"},
-    "up": {"key": "KEY_UP", "icon": "mdiChevronUp"},
-    "left": {"key": "KEY_LEFT", "icon": "mdiChevronLeft"},
-    "enter": {"key": "KEY_ENTER", "icon": "mdiCheckboxBlankCircle"},
-    "right": {"key": "KEY_RIGHT", "icon": "mdiChevronRight"},
-    "down": {"key": "KEY_DOWN", "icon": "mdiChevronDown"},
-    "rewind": {"key": "KEY_REWIND", "icon": "mdiRewind"},
-    "play": {"key": "KEY_PLAY", "icon": "mdiPlay"},
-    "pause": {"key": "KEY_PAUSE", "icon": "mdiPause"},
-    "fast_forward": {"key": "KEY_FF", "icon": "mdiFastForward"},
+    "power": {"key": "KEY_POWER", "icon": "mdi:power"},
+    "volume_up": {"key": "KEY_VOLUP", "icon": "mdi:volume-plus"},
+    "volume_down": {"key": "KEY_VOLDOWN", "icon": "mdi:volume-minus"},
+    "volume_mute": {"key": "KEY_MUTE", "icon": "mdi:volume-mute"},
+    "return": {"key": "KEY_RETURN", "icon": "mdi:arrow-left"},
+    "source": {"key": "KEY_SOURCE", "icon": "mdi:video-input-hdmi"},
+    "info": {"key": "KEY_INFO", "icon": "mdi:television-guide"},
+    "home": {"key": "KEY_HOME", "icon": "mdi:home"},
+    "channel_up": {"key": "KEY_CHUP", "icon": "mdi:arrow-up"},
+    "channel_down": {"key": "KEY_CHDOWN", "icon": "mdi:arrow-down"},
+    "up": {"key": "KEY_UP", "icon": "mdi:chevron-up"},
+    "left": {"key": "KEY_LEFT", "icon": "mdi:chevron-left"},
+    "enter": {"key": "KEY_ENTER", "icon": "mdi:checkbox-blank-circle"},
+    "right": {"key": "KEY_RIGHT", "icon": "mdi:chevron-right"},
+    "down": {"key": "KEY_DOWN", "icon": "mdi:chevron-down"},
+    "rewind": {"key": "KEY_REWIND", "icon": "mdi:rewind"},
+    "play": {"key": "KEY_PLAY", "icon": "mdi:play"},
+    "pause": {"key": "KEY_PAUSE", "icon": "mdi:pause"},
+    "fast_forward": {"key": "KEY_FF", "icon": "mdi:fast-forward"},
 };
 
 const sources = {
-    "netflix": {"source": "Netflix", "icon": "mdiNetflix"},
-    "spotify": {"source": "Spotify", "icon": "mdiSpotify"},
-    "youtube": {"source": "YouTube", "icon": "mdiYoutube"},
+    "netflix": {"source": "Netflix", "icon": "mdi:netflix"},
+    "spotify": {"source": "Spotify", "icon": "mdi:spotify"},
+    "youtube": {"source": "YouTube", "icon": "mdi:youtube"},
 };
 
 var custom_keys = {};
@@ -59,6 +57,7 @@ class TVCardServices extends LitElement {
             _hass: {},
             _config: {},
             _apps: {},
+            trigger: {},
         };
     }
 
@@ -142,6 +141,7 @@ class TVCardServices extends LitElement {
         }, true);
 
         this.volume_slider.hass = this._hass;
+        this.triggerRender();
     }
 
     sendKey(key) {
@@ -260,20 +260,20 @@ class TVCardServices extends LitElement {
     }
 
     buildIconButton(action) {
-        let info = custom_keys[action] || custom_sources[action] || keys[action] || sources[action];
-        let custom_icon_path = info? custom_icons[info.icon] : custom_icons[action];
-        let icon = (
-            custom_icon_path? custom_icon_path :
-            info? mdiIcons[info.icon] :
-            ""
-        );
+        let button_info = custom_keys[action] || custom_sources[action] || keys[action] || sources[action] || {};
+        let icon = button_info.icon;
+        let custom_svg_path = custom_icons[icon];
 
-        return html `
+        return html`
             <ha-icon-button
                 .action="${action}"
                 @click="${this.handleActionClick}"
                 title="${action}"
-                .path="${icon}"
+                .path="${custom_svg_path ? custom_svg_path : ""}"
+                >
+                <ha-icon
+                    .icon="${!custom_svg_path? icon : ""}"
+                </ha-icon>
             </ha-icon-button>
         `;
     }
@@ -287,6 +287,10 @@ class TVCardServices extends LitElement {
     }
     buildButtonsFromActions(actions) {
         return actions.map((action) => this.buildIconButton(action));
+    }
+
+    triggerRender() {
+        this.trigger = Math.random();
     }
     
     render() {
