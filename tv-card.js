@@ -115,7 +115,7 @@ class TVCardServices extends LitElement {
 
         let slider_config = {
             "type": "custom:my-slider",
-            "entity": "media_player.tv",
+            "entity": this._config.entity,
             "height": "50px",
             "mainSliderColor": "white",
             "secondarySliderColor": "rgb(60, 60, 60)",
