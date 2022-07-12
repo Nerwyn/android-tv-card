@@ -31,10 +31,6 @@ const sources = {
     "youtube": {"source": "YouTube", "icon": "mdi:youtube"},
 };
 
-var custom_keys = {};
-var custom_sources = {};
-var custom_icons = {};
-
 var fireEvent = function(node, type, detail, options) {
     options = options || {};
     detail = detail === null || detail === undefined ? {} : detail;
@@ -46,12 +42,20 @@ var fireEvent = function(node, type, detail, options) {
     return event;
 };
 
-var holdtimer = null;
-var holdaction = null;
-var holdinterval = null;
-var timer = null;
-
 class TVCardServices extends LitElement {
+    constructor() {
+        super();
+
+        this.custom_keys = {};
+        this.custom_sources = {};
+        this.custom_icons = {};
+
+        this.holdtimer = null;
+        this.holdaction = null;
+        this.holdinterval = null;
+        this.timer = null;
+    }
+
     static get properties() {
         return {
             _hass: {},
@@ -76,9 +80,9 @@ class TVCardServices extends LitElement {
         }
 
         this._config = { theme: "default", ...config };
-        custom_keys = config.custom_keys || {};
-        custom_sources = config.custom_sources || {};
-        custom_icons = config.custom_icons || {};
+        this.custom_keys = config.custom_keys || {};
+        this.custom_sources = config.custom_sources || {};
+        this.custom_icons = config.custom_icons || {};
 
         this.loadCardHelpers();
         this.renderVolumeSlider();
@@ -169,7 +173,7 @@ class TVCardServices extends LitElement {
             if (this._config.enable_button_feedback === undefined || this._config.enable_button_feedback) fireEvent(window, "haptic", "light");
         };
         if (this._config.enable_double_click) {
-            timer = setTimeout(click_action, 200);
+            this.timer = setTimeout(click_action, 200);
         } else {
             click_action();
         }
@@ -180,8 +184,8 @@ class TVCardServices extends LitElement {
 
         event.stopImmediatePropagation();
 
-        clearTimeout(timer);
-        timer = null;
+        clearTimeout(this.timer);
+        this.timer = null;
 
         this.sendKey(this._config.double_click_keycode ? this._config.double_click_keycode : "KEY_RETURN");
         if (this._config.enable_button_feedback === undefined || this._config.enable_button_feedback) fireEvent(window, "haptic", "success");
@@ -190,11 +194,11 @@ class TVCardServices extends LitElement {
     onTouchStart(event) {
         event.stopImmediatePropagation();
 
-        holdaction = "KEY_ENTER";
-        holdtimer = setTimeout(() => {
+        this.holdaction = "KEY_ENTER";
+        this.holdtimer = setTimeout(() => {
             //hold
-            holdinterval = setInterval(() => {
-                this.sendKey(holdaction);
+            this.holdinterval = setInterval(() => {
+                this.sendKey(this.holdaction);
                 if (this._config.enable_button_feedback === undefined || this._config.enable_button_feedback) fireEvent(window, "haptic", "light");
             }, 200);
         }, 700);
@@ -203,14 +207,14 @@ class TVCardServices extends LitElement {
     }
 
     onTouchEnd(event) {
-        clearTimeout(timer);
-        clearTimeout(holdtimer);
-        clearInterval(holdinterval);
+        clearTimeout(this.timer);
+        clearTimeout(this.holdtimer);
+        clearInterval(this.holdinterval);
 
-        holdtimer = null;
-        timer = null;
-        holdinterval = null;
-        holdaction = null;
+        this.holdtimer = null;
+        this.timer = null;
+        this.holdinterval = null;
+        this.holdaction = null;
     }
 
     onTouchMove(event) {
@@ -227,12 +231,12 @@ class TVCardServices extends LitElement {
         if (Math.abs(diffX) > Math.abs(diffY)) {
             // sliding horizontally
             let key = diffX > 0 ? "KEY_LEFT" : "KEY_RIGHT";
-            holdaction = key;
+            this.holdaction = key;
             this.sendKey(key);
         } else {
             // sliding vertically
             let key = diffY > 0 ? "KEY_UP" : "KEY_DOWN";
-            holdaction = key;
+            this.holdaction = key;
             this.sendKey(key);
         }
 
@@ -243,7 +247,7 @@ class TVCardServices extends LitElement {
 
     handleActionClick(e) {
         let action = e.currentTarget.action;
-        let info = custom_keys[action] || custom_sources[action] || keys[action] || sources[action];
+        let info = this.custom_keys[action] || this.custom_sources[action] || keys[action] || sources[action];
 
         if (info.key) {
             this.sendKey(info.key);
@@ -260,9 +264,9 @@ class TVCardServices extends LitElement {
     }
 
     buildIconButton(action) {
-        let button_info = custom_keys[action] || custom_sources[action] || keys[action] || sources[action] || {};
+        let button_info = this.custom_keys[action] || this.custom_sources[action] || keys[action] || sources[action] || {};
         let icon = button_info.icon;
-        let custom_svg_path = custom_icons[icon];
+        let custom_svg_path = this.custom_icons[icon];
 
         return html`
             <ha-icon-button
