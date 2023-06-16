@@ -2,6 +2,10 @@ name: Android TV Card
 description: 📺 Android TV Remote Card
 type: lovelace
 keywords:
+  - androidtv
+  - android
+  - googletv
+  - google
   - tvcard
   - remote
   - tv
@@ -10,5 +14,5 @@ author:
   name: mar_robHD
 license: Apache License, Version 2.0
 files:
-  - tv-card.js
-  - tv-card-editor.js
+  - android-tv-card.js
+  - android-tv-card-editor.js

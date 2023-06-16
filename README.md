@@ -9,16 +9,17 @@
 
 [![Github][github]][github]
 
-📦 This repo is a fork of [tv-card](https://github.com/usernein/tv-card), which is a fork of [tv-card](https://github.com/marrobHD/tv-card) and includes a bunch of new features and improvements, like:
+📦 This repo is a fork of [tv-card](https://github.com/usernein/tv-card), which is a fork of another [tv-card](https://github.com/marrobHD/tv-card), and includes the same features and improvements usernein made, like:
 
 - Fully functional touchpad for navigation (thanks to [iablon's Touchpad Card](https://github.com/iablon/HomeAssistant-Touchpad-Card)) ❤️
 - Slider for volume (thanks to [AnthonMS's Slider Card](https://github.com/AnthonMS/my-cards#slider-card)) ❤️
-- Supports [ollo69's SamsungTV Smart Component](https://github.com/ollo69/ha-samsungtv-smart)
+- Supports the official (Android TV Remote integration)[https://www.home-assistant.io/integrations/androidtv_remote/]
 - Much easier setup
 - Implements haptics feedback
 - Customizable layout, you can choose the order of the rows and buttons
 - All rows and buttons are optional, you can change whatever you *(don't)* like
-- This version is for Android TV
+
+Vast majority of credit goes to the original authors, I barely had to modify anything to get this working for Android TV.
 
 ## Demo
 
@@ -28,11 +29,12 @@
 
 | Name | Type | Requirement | Description
 | ---- | ---- | ------- | -----------
-| type | string | **Required** | `custom:tv-card`
-| entity | string | **Required** | The `media_player` entity to control
+| type | string | **Required** | `custom:android-tv-card`
+| remote_id | string | **Required** | The `remote` entity id to control
+| media_player_id | string | **Optional** | The `media_player` entity id to control, required for changing sources
 | title | string | **Optional** | Card title for showing as header
 | enable_double_click | boolean | **Optional** | Whether a double click on the touchpad should send the key in `double_click_keycode`. Defaults to `true`.
-| double_click_keycode | string | **Optional** | The key for double clicks on the touchpad. Defaults to `KEY_RETURN`
+| double_click_keycode | string | **Optional** | The key for double clicks on the touchpad. Defaults to `DPAD_CENTER`
 | enable_button_feedback | boolean | **Optional** | Shall clicks on the buttons return a vibration feedback? Defaults to `true`.
 | enable_slider_feedback | boolean | **Optional** | Shall the volume slider return a vibration feedback when you slide through it? Defaults to `true`.
 | slider_config | object | **Optional** | Custom configuration for the volume slider. See [slider-card](https://github.com/AnthonMS/my-cards)
@@ -48,8 +50,7 @@ power_row:
   - power
 media_control_row:
   - rewind
-  - play
-  - pause
+  - play_pause
   - fast_forward
 ```
 
@@ -63,8 +64,9 @@ There also `volume_row` and `navigation_row`, but these requires a string as val
 
 ## **Notice**
 
-This card uses `media_player.play_media` to send keys to the TV.
-This is the way [ollo69's SamsungTV Smart Component](https://github.com/ollo69/ha-samsungtv-smart) (which i based this card on) works, but don't worry: if your TV is from another brand or simply the TV integration does not use `media_player.play_media` for sending keys, you can still use this card by setting [custom buttons](#custom-buttons) with services to send keys to your TV (or do whatever you want) in your way (just like the original [tv-card](https://github.com/marrobHD/tv-card)).
+This card uses `remote.send_command` to send keys to the TV.
+
+Further information on possible commands can be found on the [Home Assistant Android TV page](https://www.home-assistant.io/integrations/androidtv_remote/). If your TV is from another brand or simply the TV integration does not use `remote.send_command` for sending keys, you can still use this card by setting [custom buttons](#custom-buttons) with services to send keys to your TV (or do whatever you want) in your way (just like the original [tv-card](https://github.com/marrobHD/tv-card)).
 
 ## Custom buttons
 
@@ -112,15 +114,14 @@ power_row:
   - input_tv
 media_control_row:
   - rewind
-  - play
-  - pause
+  - play_pause
   - fast_forward
   - toggle_light
 ```
 
 <img src="assets/custom_keys.png" alt="guide" width="300"/>
 
-With custom buttons you can override existing buttons for changing its icon or even its functionality. Here i do both:
+With custom buttons you can override existing buttons for changing its icon or even its functionality. Here I do both:
 
 ```yaml
 custom_keys:
@@ -185,7 +186,7 @@ custom_sources:
 
 ### Step 1
 
-Install using HACS or [see this guide](https://github.com/thomasloven/hass-config/wiki/Lovelace-Plugins).
+Install [HACS](https://hacs.xyz/), open it, click on Frontend, click on the three dot menu in the top-right corner, click on Custom repositories, paste the URL of this repository in the repository field, and set the category to Lovelace.
 
 ### Step 2
 
@@ -193,7 +194,8 @@ Add a custom element in your `ui-lovelace.yaml`
 
 ```yaml
       - type: custom:tv-card
-        entity: media_player.tv
+        remote_id: remote.google_chromecast
+		media_player_id: media_player.google_chromecast
         power_row:
           - power
         channel_row:
@@ -212,8 +214,7 @@ Add a custom element in your `ui-lovelace.yaml`
           - source
         media_control_row:
           - rewind
-          - play
-          - pause
+          - play_pause
           - fast_forward
 ```
 
@@ -223,7 +224,8 @@ Playing with order, moving and repeating buttons:
 
 ```yaml
 type: custom:tv-card
-entity: media_player.tv
+remote_id: remote.google_chromecast
+media_player_id: media_player.google_chromecast
 title: Example 1
 power_row:
   - power
@@ -260,7 +262,8 @@ Buttons, buttons everywhere!
 
 ```yaml
 type: custom:tv-card
-entity: media_player.tv
+remote_id: remote.google_chromecast
+media_player_id: media_player.google_chromecast
 title: Example 2
 power_row:
   - power
@@ -295,7 +298,8 @@ Using less
 
 ```yaml
 type: custom:tv-card
-entity: media_player.tv
+remote_id: remote.google_chromecast
+media_player_id: media_player.google_chromecast
 title: Example 3
 power_row:
   - power

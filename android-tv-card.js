@@ -8,22 +8,69 @@ const keys = {
     "volume_up": {"key": "VOLUME_UP", "icon": "mdi:volume-plus"},
     "volume_down": {"key": "VOLUME_DOWN", "icon": "mdi:volume-minus"},
     "volume_mute": {"key": "MUTE", "icon": "mdi:volume-mute"},
-    "return": {"key": "BACK", "icon": "mdi:arrow-left"},
-    "source": {"key": "KEY_SOURCE", "icon": "mdi:video-input-hdmi"},
-    "info": {"key": "KEY_INFO", "icon": "mdi:television-guide"},
+    "back": {"key": "BACK", "icon": "mdi:arrow-left"},
     "home": {"key": "HOME", "icon": "mdi:home"},
-    "channel_up": {"key": "KEY_CHUP", "icon": "mdi:arrow-up"},
-    "channel_down": {"key": "KEY_CHDOWN", "icon": "mdi:arrow-down"},
     "up": {"key": "DPAD_UP", "icon": "mdi:chevron-up"},
     "left": {"key": "DPAD_LEFT", "icon": "mdi:chevron-left"},
     "enter": {"key": "DPAD_CENTER", "icon": "mdi:checkbox-blank-circle"},
     "right": {"key": "DPAD_RIGHT", "icon": "mdi:chevron-right"},
     "down": {"key": "DPAD_DOWN", "icon": "mdi:chevron-down"},
+    "play": {"key": "MEDIA_PLAY_", "icon": "mdi:play"},
+    "pause": {"key": "MEDIA_PAUSE", "icon": "mdi:pause"},
+    "play_pause": {"key": "MEDIA_PLAY_PAUSE", "icon": "mdi:play-pause"},
+	"stop": {"key": "MEDIA_STOP", "icon": "mdi:stop"},
     "rewind": {"key": "MEDIA_REWIND", "icon": "mdi:rewind"},
-    "play": {"key": "MEDIA_PLAY_PAUSE", "icon": "mdi:play"},
-    "pause": {"key": "MEDIA_PLAY_PAUSE", "icon": "mdi:pause"},
     "fast_forward": {"key": "MEDIA_FAST_FORWARD", "icon": "mdi:fast-forward"},
-    "menu": {"key": "MENU", "icon": "mdi:menu"}
+    "previous": {"key": "MEDIA_PREVIOUS", "icon": "mdi:skip-previous"},
+	"record": {"key": "MEDIA_RECORD", "icon": "mdi:record"},
+    "next": {"key": "MEDIA_NEXT", "icon": "mdi:skip-next"},
+    "menu": {"key": "MENU", "icon": "mdi:menu"},
+	"a": {"key": "BUTTON_A", "icon": "mdi:alpha-a-circle"},
+	"b": {"key": "BUTTON_B", "icon": "mdi:alpha-B-circle"},
+	"x": {"key": "BUTTON_X", "icon": "mdi:alpha-x-circle"},
+	"y": {"key": "BUTTON_Y", "icon": "mdi:alpha-y-circle"},
+	"n0": {"key": "0", "icon": "mdi:numeric-0"},
+	"n1": {"key": "1", "icon": "mdi:numeric-1"},
+	"n2": {"key": "2", "icon": "mdi:numeric-2"},
+	"n3": {"key": "3", "icon": "mdi:numeric-3"},
+	"n4": {"key": "4", "icon": "mdi:numeric-4"},
+	"n5": {"key": "5", "icon": "mdi:numeric-5"},
+	"n6": {"key": "6", "icon": "mdi:numeric-6"},
+	"n7": {"key": "7", "icon": "mdi:numeric-7"},
+	"n8": {"key": "8", "icon": "mdi:numeric-8"},
+	"n9": {"key": "9", "icon": "mdi:numeric-9"},
+	"delete": {"key": "DEL", "icon": "mdi:delete"},
+	"enter": {"key": "ENTER", "icon": "mdi:arrow-left-bottom"},
+	"channel_up": {"key": "CHANNEL_UP", "icon": "mdi:arrow-up-circle"},
+	"channel_down": {"key": "CHANNEL_DOWN", "icon": "mdi:arrow-down-circle"},
+	"f1": {"key": "F1", "icon": "mdi:keyboard-f1"},
+	"f2": {"key": "F2", "icon": "mdi:keyboard-f2"},
+	"f3": {"key": "F3", "icon": "mdi:keyboard-f3"},
+	"f4": {"key": "F4", "icon": "mdi:keyboard-f4"},
+	"f5": {"key": "F5", "icon": "mdi:keyboard-f5"},
+	"f6": {"key": "F6", "icon": "mdi:keyboard-f6"},
+	"f7": {"key": "F7", "icon": "mdi:keyboard-f7"},
+	"f8": {"key": "F8", "icon": "mdi:keyboard-f8"},
+	"f9": {"key": "F9", "icon": "mdi:keyboard-f9"},
+	"f10": {"key": "F10", "icon": "mdi:keyboard-f10"},
+	"f11": {"key": "F11", "icon": "mdi:keyboard-f11"},
+	"f12": {"key": "F12", "icon": "mdi:keyboard-f12"},
+	"tv": {"key": "TV", "icon": "mdi:television-box"},
+	"red": {"key": "PROG_RED", "icon": "mdi:alpha-r-box"},
+	"green": {"key": "PROG_GREEN", "icon": "mdi:alpha-g-box"},
+	"yellow": {"key": "PROG_YELLOW", "icon": "mdi:alpha-y-box"},
+	"blue": {"key": "PROG_BLUE", "icon": "mdi:alpha-b-box"},
+	"button_mode": {"key": "BUTTON_MODE", "icon": "mdi:gesture-tap-buton"},
+	"explorer": {"key": "EXPLORER", "icon": "mdi:folder-multiple"},
+	"info": {"key": "INFO", "icon": "mdi:information"},
+	"guide": {"key": "GUIDE", "icon": "mdi:television-guide"},
+	"teletext": {"key": "TV_TELETEXT", "icon": "mdi:card-text"},
+	"captions": {"key": "CAPTIONS", "icon": "mdi:closed-caption"},
+	"dvr": {"key": "DVR", "icon": "mdi:audio-video"},
+	"audio_track": {"key": "MEDIA_AUDIO_TRACK", "icon": "mdi:waveform"},
+	"settings": {"key": "SETTINGS", "icon": "mdi:cog"},
+	"search": {"key": "SEARCH", "icon": "mdi:magnify"},
+	"assist": {"key": "ASSIST", "icon": "mdi:google-assistant"},
 };
 
 const sources = {
@@ -75,7 +122,7 @@ class TVCardServices extends LitElement {
     }
 
     setConfig(config) {
-        if (!config.entity) {
+        if (!config.remote_id) {
             console.log("Invalid configuration");
             return;
         }
@@ -120,7 +167,7 @@ class TVCardServices extends LitElement {
 
         let slider_config = {
             "type": "custom:my-slider",
-            "entity": this._config.entity,
+            "entity": this._config.media_player_id,
             "height": "50px",
             "mainSliderColor": "white",
             "secondarySliderColor": "rgb(60, 60, 60)",
@@ -151,24 +198,22 @@ class TVCardServices extends LitElement {
 
     sendKey(key) {
         this._hass.callService("remote", "send_command", {
-            entity_id: this._config.entity,
+            entity_id: this._config.remote_id,
             command: key
         })
     }
 
     changeSource(source) {
-        let entity_id = this._config.entity;
-
         this._hass.callService("media_player", "select_source", {
             source: source,
-            entity_id: entity_id,
+            entity_id: this._config.media_player_id,
         });
     }
 
     onClick(event) {
         event.stopImmediatePropagation();
         let click_action = () => {
-            this.sendKey("DPAD_CENTER");
+            this.sendKey(keys.enter.key);
             if (this._config.enable_button_feedback === undefined || this._config.enable_button_feedback) fireEvent(window, "haptic", "light");
         };
         if (this._config.enable_double_click) {
@@ -186,14 +231,14 @@ class TVCardServices extends LitElement {
         clearTimeout(this.timer);
         this.timer = null;
 
-        this.sendKey(this._config.double_click_keycode ? this._config.double_click_keycode : "BACK");
+        this.sendKey(this._config.double_click_keycode ? this._config.double_click_keycode : keys.back.key);
         if (this._config.enable_button_feedback === undefined || this._config.enable_button_feedback) fireEvent(window, "haptic", "success");
     }
 
     onTouchStart(event) {
         event.stopImmediatePropagation();
 
-        this.holdaction = "DPAD_CENTER";
+		this.holdaction = keys.enter.key;
         this.holdtimer = setTimeout(() => {
             //hold
             this.holdinterval = setInterval(() => {
@@ -229,12 +274,12 @@ class TVCardServices extends LitElement {
 
         if (Math.abs(diffX) > Math.abs(diffY)) {
             // sliding horizontally
-            let key = diffX > 0 ? "DPAD_LEFT" : "DPAD_RIGHT";
+			let key = diffX > 0 ? keys.left.key : keys.right.key;
             this.holdaction = key;
             this.sendKey(key);
         } else {
             // sliding vertically
-            let key = diffY > 0 ? "DPAD_UP" : "DPAD_DOWN";
+            let key = diffY > 0 ? keys.up.key : keys.down.key;
             this.holdaction = key;
             this.sendKey(key);
         }
