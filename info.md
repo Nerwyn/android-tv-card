@@ -1,5 +1,5 @@
 
-# TV Remote Card
+# Android TV Remote Card
 
 **Sample overview:**
 

@@ -4,25 +4,26 @@ const LitElement = Object.getPrototypeOf(
 const html = LitElement.prototype.html;
 
 const keys = {
-    "power": {"key": "KEY_POWER", "icon": "mdi:power"},
-    "volume_up": {"key": "KEY_VOLUP", "icon": "mdi:volume-plus"},
-    "volume_down": {"key": "KEY_VOLDOWN", "icon": "mdi:volume-minus"},
-    "volume_mute": {"key": "KEY_MUTE", "icon": "mdi:volume-mute"},
-    "return": {"key": "KEY_RETURN", "icon": "mdi:arrow-left"},
+    "power": {"key": "POWER", "icon": "mdi:power"},
+    "volume_up": {"key": "VOLUME_UP", "icon": "mdi:volume-plus"},
+    "volume_down": {"key": "VOLUME_DOWN", "icon": "mdi:volume-minus"},
+    "volume_mute": {"key": "MUTE", "icon": "mdi:volume-mute"},
+    "return": {"key": "BACK", "icon": "mdi:arrow-left"},
     "source": {"key": "KEY_SOURCE", "icon": "mdi:video-input-hdmi"},
     "info": {"key": "KEY_INFO", "icon": "mdi:television-guide"},
-    "home": {"key": "KEY_HOME", "icon": "mdi:home"},
+    "home": {"key": "HOME", "icon": "mdi:home"},
     "channel_up": {"key": "KEY_CHUP", "icon": "mdi:arrow-up"},
     "channel_down": {"key": "KEY_CHDOWN", "icon": "mdi:arrow-down"},
-    "up": {"key": "KEY_UP", "icon": "mdi:chevron-up"},
-    "left": {"key": "KEY_LEFT", "icon": "mdi:chevron-left"},
-    "enter": {"key": "KEY_ENTER", "icon": "mdi:checkbox-blank-circle"},
-    "right": {"key": "KEY_RIGHT", "icon": "mdi:chevron-right"},
-    "down": {"key": "KEY_DOWN", "icon": "mdi:chevron-down"},
-    "rewind": {"key": "KEY_REWIND", "icon": "mdi:rewind"},
-    "play": {"key": "KEY_PLAY", "icon": "mdi:play"},
-    "pause": {"key": "KEY_PAUSE", "icon": "mdi:pause"},
-    "fast_forward": {"key": "KEY_FF", "icon": "mdi:fast-forward"},
+    "up": {"key": "DPAD_UP", "icon": "mdi:chevron-up"},
+    "left": {"key": "DPAD_LEFT", "icon": "mdi:chevron-left"},
+    "enter": {"key": "DPAD_CENTER", "icon": "mdi:checkbox-blank-circle"},
+    "right": {"key": "DPAD_RIGHT", "icon": "mdi:chevron-right"},
+    "down": {"key": "DPAD_DOWN", "icon": "mdi:chevron-down"},
+    "rewind": {"key": "MEDIA_REWIND", "icon": "mdi:rewind"},
+    "play": {"key": "MEDIA_PLAY_PAUSE", "icon": "mdi:play"},
+    "pause": {"key": "MEDIA_PLAY_PAUSE", "icon": "mdi:pause"},
+    "fast_forward": {"key": "MEDIA_FAST_FORWARD", "icon": "mdi:fast-forward"},
+    "menu": {"key": "MENU", "icon": "mdi:menu"}
 };
 
 const sources = {
@@ -149,12 +150,16 @@ class TVCardServices extends LitElement {
     }
 
     sendKey(key) {
-        let entity_id = this._config.entity;
+        // let entity_id = this._config.entity;
+        // this._hass.callService("media_player", "play_media", {
+        //     media_content_id: key,
+        //     media_content_type: "send_key",
+        // }, { entity_id: entity_id });
 
-        this._hass.callService("media_player", "play_media", {
-            media_content_id: key,
-            media_content_type: "send_key",
-        }, { entity_id: entity_id });
+        this._hass.callService("remote", "send_command"), {
+            entity_id: this._config.entity,
+            command: key
+        }
     }
 
     changeSource(source) {
@@ -169,7 +174,7 @@ class TVCardServices extends LitElement {
     onClick(event) {
         event.stopImmediatePropagation();
         let click_action = () => {
-            this.sendKey("KEY_ENTER");
+            this.sendKey("DPAD_CENTER");
             if (this._config.enable_button_feedback === undefined || this._config.enable_button_feedback) fireEvent(window, "haptic", "light");
         };
         if (this._config.enable_double_click) {
@@ -187,14 +192,14 @@ class TVCardServices extends LitElement {
         clearTimeout(this.timer);
         this.timer = null;
 
-        this.sendKey(this._config.double_click_keycode ? this._config.double_click_keycode : "KEY_RETURN");
+        this.sendKey(this._config.double_click_keycode ? this._config.double_click_keycode : "BACK");
         if (this._config.enable_button_feedback === undefined || this._config.enable_button_feedback) fireEvent(window, "haptic", "success");
     }
 
     onTouchStart(event) {
         event.stopImmediatePropagation();
 
-        this.holdaction = "KEY_ENTER";
+        this.holdaction = "DPAD_CENTER";
         this.holdtimer = setTimeout(() => {
             //hold
             this.holdinterval = setInterval(() => {
@@ -230,12 +235,12 @@ class TVCardServices extends LitElement {
 
         if (Math.abs(diffX) > Math.abs(diffY)) {
             // sliding horizontally
-            let key = diffX > 0 ? "KEY_LEFT" : "KEY_RIGHT";
+            let key = diffX > 0 ? "DPAD_LEFT" : "DPAD_RIGHT";
             this.holdaction = key;
             this.sendKey(key);
         } else {
             // sliding vertically
-            let key = diffY > 0 ? "KEY_UP" : "KEY_DOWN";
+            let key = diffY > 0 ? "DPAD_UP" : "DPAD_DOWN";
             this.holdaction = key;
             this.sendKey(key);
         }
@@ -433,4 +438,4 @@ class TVCardServices extends LitElement {
     }
 }
 
-customElements.define("tv-card", TVCardServices);
+customElements.define("android-tv-card", TVCardServices);

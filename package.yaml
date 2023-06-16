@@ -1,5 +1,5 @@
-name: TV Card
-description: 📺 TV Remote Card
+name: Android TV Card
+description: 📺 Android TV Remote Card
 type: lovelace
 keywords:
   - tvcard
