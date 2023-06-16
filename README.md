@@ -343,5 +343,5 @@ media_control_row:
 [license-shield]: https://img.shields.io/github/license/Nerwyn/android-tv-card.svg?style=for-the-badge
 [maintenance-shield]: https://img.shields.io/badge/maintainer-Nerwyn-blue.svg?style=for-the-badge
 [releases-shield]: https://img.shields.io/github/release/Nerwyn/android-tv-card.svg?style=for-the-badge
-[releases]: https://github.com/nerwyn/tv-card/releases
+[releases]: https://github.com/nerwyn/android-tv-card/releases
 [github]: https://img.shields.io/github/followers/Nerwyn.svg?style=social
