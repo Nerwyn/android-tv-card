@@ -1,5 +1,6 @@
 name: Android TV Card
 description: 📺 Android TV Remote Card
+version: 1.0.0
 type: lovelace
 keywords:
   - androidtv
@@ -12,6 +13,9 @@ keywords:
   - television
 author:
   name: mar_robHD
+contributors:
+  - name: usernein
+  - name: Nerwyn
 license: Apache License, Version 2.0
 files:
   - android-tv-card.js
