@@ -220,7 +220,6 @@ class TVCardServices extends LitElement {
 			sources[action]
 		if (info.key) {
 			let key = info.key
-			this.holdaction = key
 			this.sendKey(key)
 		}
 		if (info.service) {
@@ -329,6 +328,7 @@ class TVCardServices extends LitElement {
 			// sliding vertically
 			action = diffY > 0 ? 'up' : 'down'
 		}
+		this.holdaction = action
 
 		this.sendAction(action)
 
