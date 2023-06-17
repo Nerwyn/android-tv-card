@@ -286,7 +286,7 @@ class TVCardServices extends LitElement {
 		this.holdtimer = setTimeout(() => {
 			//hold
 			this.holdinterval = setInterval(() => {
-				this.sendAction(this.holdaction, info)
+				this.sendAction(this.holdaction)
 
 				if (
 					this._config.enable_button_feedback === undefined ||
