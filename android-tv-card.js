@@ -1,7 +1,7 @@
 const LitElement = Object.getPrototypeOf(
 	customElements.get('ha-panel-lovelace')
-)
-const html = LitElement.prototype.html
+);
+const html = LitElement.prototype.html;
 
 const keys = {
 	power: { key: 'POWER', icon: 'mdi:power' },
@@ -71,37 +71,37 @@ const keys = {
 	settings: { key: 'SETTINGS', icon: 'mdi:cog' },
 	search: { key: 'SEARCH', icon: 'mdi:magnify' },
 	assist: { key: 'ASSIST', icon: 'mdi:google-assistant' },
-}
+};
 
 const sources = {
 	netflix: { source: 'Netflix', icon: 'mdi:netflix' },
 	spotify: { source: 'Spotify', icon: 'mdi:spotify' },
 	youtube: { source: 'YouTube', icon: 'mdi:youtube' },
-}
+};
 
 var fireEvent = function (node, type, detail, options) {
-	options = options || {}
-	detail = detail === null || detail === undefined ? {} : detail
+	options = options || {};
+	detail = detail === null || detail === undefined ? {} : detail;
 	var event = new Event(type, {
 		bubbles: false,
-	})
-	event.detail = detail
-	node.dispatchEvent(event)
-	return event
-}
+	});
+	event.detail = detail;
+	node.dispatchEvent(event);
+	return event;
+};
 
 class TVCardServices extends LitElement {
 	constructor() {
-		super()
+		super();
 
-		this.custom_keys = {}
-		this.custom_sources = {}
-		this.custom_icons = {}
+		this.custom_keys = {};
+		this.custom_sources = {};
+		this.custom_icons = {};
 
-		this.holdtimer = null
-		this.holdaction = null
-		this.holdinterval = null
-		this.timer = null
+		this.holdtimer = null;
+		this.holdaction = null;
+		this.holdinterval = null;
+		this.timer = null;
 	}
 
 	static get properties() {
@@ -110,55 +110,55 @@ class TVCardServices extends LitElement {
 			_config: {},
 			_apps: {},
 			trigger: {},
-		}
+		};
 	}
 
 	static getStubConfig() {
-		return {}
+		return {};
 	}
 
 	getCardSize() {
-		return 7
+		return 7;
 	}
 
 	setConfig(config) {
-		this._config = { theme: 'default', ...config }
-		this.custom_keys = config.custom_keys || {}
-		this.custom_sources = config.custom_sources || {}
-		this.custom_icons = config.custom_icons || {}
+		this._config = { theme: 'default', ...config };
+		this.custom_keys = config.custom_keys || {};
+		this.custom_sources = config.custom_sources || {};
+		this.custom_icons = config.custom_icons || {};
 
-		this.loadCardHelpers()
-		this.renderVolumeSlider()
+		this.loadCardHelpers();
+		this.renderVolumeSlider();
 	}
 
 	isButtonEnabled(row, button) {
-		if (!(this._config[row] instanceof Array)) return false
+		if (!(this._config[row] instanceof Array)) return false;
 
-		return this._config[row].includes(button)
+		return this._config[row].includes(button);
 	}
 
 	set hass(hass) {
-		this._hass = hass
-		if (this.volume_slider) this.volume_slider.hass = hass
-		if (this._hassResolve) this._hassResolve()
+		this._hass = hass;
+		if (this.volume_slider) this.volume_slider.hass = hass;
+		if (this._hassResolve) this._hassResolve();
 	}
 
 	get hass() {
-		return this._hass
+		return this._hass;
 	}
 
 	async loadCardHelpers() {
-		this._helpers = await window.loadCardHelpers()
-		if (this._helpersResolve) this._helpersResolve()
+		this._helpers = await window.loadCardHelpers();
+		if (this._helpersResolve) this._helpersResolve();
 	}
 
 	async renderVolumeSlider() {
 		if (this._helpers === undefined)
-			await new Promise((resolve) => (this._helpersResolve = resolve))
+			await new Promise((resolve) => (this._helpersResolve = resolve));
 		if (this._hass === undefined)
-			await new Promise((resolve) => (this._hassResolve = resolve))
-		this._helpersResolve = undefined
-		this._hassResolve = undefined
+			await new Promise((resolve) => (this._hassResolve = resolve));
+		this._helpersResolve = undefined;
+		this._hassResolve = undefined;
 
 		let slider_config = {
 			type: 'custom:my-slider',
@@ -171,24 +171,24 @@ class TVCardServices extends LitElement {
 			thumbWidth: '0px',
 			thumbHorizontalPadding: '0px',
 			radius: '25px',
-		}
+		};
 
 		if (this._config.slider_config instanceof Object) {
-			slider_config = { ...slider_config, ...this._config.slider_config }
+			slider_config = { ...slider_config, ...this._config.slider_config };
 		}
 
 		this.volume_slider = await this._helpers.createCardElement(
 			slider_config
-		)
-		this.volume_slider.style = 'flex: 0.9;'
+		);
+		this.volume_slider.style = 'flex: 0.9;';
 		this.volume_slider.ontouchstart = (e) => {
-			e.stopImmediatePropagation()
+			e.stopImmediatePropagation();
 			if (
 				this._config.enable_button_feedback === undefined ||
 				this._config.enable_button_feedback
 			)
-				fireEvent(window, 'haptic', 'light')
-		}
+				fireEvent(window, 'haptic', 'light');
+		};
 		this.volume_slider.addEventListener(
 			'input',
 			(e) => {
@@ -196,20 +196,20 @@ class TVCardServices extends LitElement {
 					this._config.enable_slider_feedback === undefined ||
 					this._config.enable_slider_feedback
 				)
-					fireEvent(window, 'haptic', 'light')
+					fireEvent(window, 'haptic', 'light');
 			},
 			true
-		)
+		);
 
-		this.volume_slider.hass = this._hass
-		this.triggerRender()
+		this.volume_slider.hass = this._hass;
+		this.triggerRender();
 	}
 
 	sendKey(key) {
 		this._hass.callService('remote', 'send_command', {
 			entity_id: this._config.remote_id,
 			command: key,
-		})
+		});
 	}
 
 	sendAction(action) {
@@ -217,14 +217,14 @@ class TVCardServices extends LitElement {
 			this.custom_keys[action] ||
 			this.custom_sources[action] ||
 			keys[action] ||
-			sources[action]
+			sources[action];
 		if (info.key) {
-			let key = info.key
-			this.sendKey(key)
+			let key = info.key;
+			this.sendKey(key);
 		}
 		if (info.service) {
-			let [domain, service] = info.service.split('.', 2)
-			this._hass.callService(domain, service, info.service_data)
+			let [domain, service] = info.service.split('.', 2);
+			this._hass.callService(domain, service, info.service_data);
 		}
 	}
 
@@ -232,25 +232,25 @@ class TVCardServices extends LitElement {
 		this._hass.callService('media_player', 'select_source', {
 			source: source,
 			entity_id: this._config.media_player_id,
-		})
+		});
 	}
 
 	onClick(event) {
-		event.stopImmediatePropagation()
+		event.stopImmediatePropagation();
 		let click_action = () => {
-			let action = 'enter'
-			this.sendAction(action)
+			let action = 'enter';
+			this.sendAction(action);
 
 			if (
 				this._config.enable_button_feedback === undefined ||
 				this._config.enable_button_feedback
 			)
-				fireEvent(window, 'haptic', 'light')
-		}
+				fireEvent(window, 'haptic', 'light');
+		};
 		if (this._config.enable_double_click) {
-			this.timer = setTimeout(click_action, 200)
+			this.timer = setTimeout(click_action, 200);
 		} else {
-			click_action()
+			click_action();
 		}
 	}
 
@@ -259,97 +259,97 @@ class TVCardServices extends LitElement {
 			this._config.enable_double_click !== undefined &&
 			!this._config.enable_double_click
 		)
-			return
+			return;
 
-		event.stopImmediatePropagation()
+		event.stopImmediatePropagation();
 
-		clearTimeout(this.timer)
-		this.timer = null
+		clearTimeout(this.timer);
+		this.timer = null;
 
 		action = this._config.double_click_keycode
 			? this._config.double_click_keycode
-			: 'back'
-		this.sendAction(action)
+			: 'back';
+		this.sendAction(action);
 
 		if (
 			this._config.enable_button_feedback === undefined ||
 			this._config.enable_button_feedback
 		)
-			fireEvent(window, 'haptic', 'success')
+			fireEvent(window, 'haptic', 'success');
 	}
 
 	onTouchStart(event) {
-		event.stopImmediatePropagation()
+		event.stopImmediatePropagation();
 
-		this.holdaction = 'enter'
+		this.holdaction = 'enter';
 		this.holdtimer = setTimeout(() => {
 			//hold
 			this.holdinterval = setInterval(() => {
-				this.sendAction(this.holdaction)
+				this.sendAction(this.holdaction);
 
 				if (
 					this._config.enable_button_feedback === undefined ||
 					this._config.enable_button_feedback
 				)
-					fireEvent(window, 'haptic', 'light')
-			}, 200)
-		}, 700)
-		window.initialX = event.touches[0].clientX
-		window.initialY = event.touches[0].clientY
+					fireEvent(window, 'haptic', 'light');
+			}, 200);
+		}, 700);
+		window.initialX = event.touches[0].clientX;
+		window.initialY = event.touches[0].clientY;
 	}
 
 	onTouchEnd(event) {
-		clearTimeout(this.timer)
-		clearTimeout(this.holdtimer)
-		clearInterval(this.holdinterval)
+		clearTimeout(this.timer);
+		clearTimeout(this.holdtimer);
+		clearInterval(this.holdinterval);
 
-		this.holdtimer = null
-		this.timer = null
-		this.holdinterval = null
-		this.holdaction = null
+		this.holdtimer = null;
+		this.timer = null;
+		this.holdinterval = null;
+		this.holdaction = null;
 	}
 
 	onTouchMove(event) {
 		if (!initialX || !initialY) {
-			return
+			return;
 		}
 
-		var currentX = event.touches[0].clientX
-		var currentY = event.touches[0].clientY
+		var currentX = event.touches[0].clientX;
+		var currentY = event.touches[0].clientY;
 
-		var diffX = initialX - currentX
-		var diffY = initialY - currentY
+		var diffX = initialX - currentX;
+		var diffY = initialY - currentY;
 
-		let action
+		let action;
 		if (Math.abs(diffX) > Math.abs(diffY)) {
 			// sliding horizontally
-			action = diffX > 0 ? 'left' : 'right'
+			action = diffX > 0 ? 'left' : 'right';
 		} else {
 			// sliding vertically
-			action = diffY > 0 ? 'up' : 'down'
+			action = diffY > 0 ? 'up' : 'down';
 		}
-		this.holdaction = action
+		this.holdaction = action;
 
-		this.sendAction(action)
+		this.sendAction(action);
 
 		if (
 			this._config.enable_button_feedback === undefined ||
 			this._config.enable_button_feedback
 		)
-			fireEvent(window, 'haptic', 'selection')
-		initialX = null
-		initialY = null
+			fireEvent(window, 'haptic', 'selection');
+		initialX = null;
+		initialY = null;
 	}
 
 	handleActionClick(e) {
-		let action = e.currentTarget.action
-		this.sendAction(action)
+		let action = e.currentTarget.action;
+		this.sendAction(action);
 
 		if (
 			this._config.enable_button_feedback === undefined ||
 			this._config.enable_button_feedback
 		)
-			fireEvent(window, 'haptic', 'light')
+			fireEvent(window, 'haptic', 'light');
 	}
 
 	buildIconButton(action) {
@@ -358,9 +358,9 @@ class TVCardServices extends LitElement {
 			this.custom_sources[action] ||
 			keys[action] ||
 			sources[action] ||
-			{}
-		let icon = button_info.icon
-		let custom_svg_path = this.custom_icons[icon]
+			{};
+		let icon = button_info.icon;
+		let custom_svg_path = this.custom_icons[icon];
 
 		return html`
             <ha-icon-button
@@ -373,23 +373,23 @@ class TVCardServices extends LitElement {
                     .icon="${!custom_svg_path ? icon : ''}"
                 </ha-icon>
             </ha-icon-button>
-        `
+        `;
 	}
 
 	buildRow(content) {
-		return html` <div class="row">${content}</div> `
+		return html` <div class="row">${content}</div> `;
 	}
 	buildButtonsFromActions(actions) {
-		return actions.map((action) => this.buildIconButton(action))
+		return actions.map((action) => this.buildIconButton(action));
 	}
 
 	triggerRender() {
-		this.trigger = Math.random()
+		this.trigger = Math.random();
 	}
 
 	render() {
 		if (!this._config || !this._hass || !this.volume_slider) {
-			return html``
+			return html``;
 		}
 
 		const row_names = [
@@ -400,37 +400,37 @@ class TVCardServices extends LitElement {
 			'volume_row',
 			'media_control_row',
 			'navigation_row',
-		]
+		];
 
-		var content = []
+		var content = [];
 		Object.keys(this._config).forEach((row_name) => {
 			if (row_names.includes(row_name)) {
-				let row_actions = this._config[row_name]
+				let row_actions = this._config[row_name];
 
 				if (row_name === 'volume_row') {
-					let volume_row = []
+					let volume_row = [];
 					if (this._config.volume_row == 'buttons') {
 						volume_row = [
 							this.buildIconButton('volume_down'),
 							this.buildIconButton('volume_mute'),
 							this.buildIconButton('volume_up'),
-						]
+						];
 					} else if (this._config.volume_row == 'slider') {
-						volume_row = [this.volume_slider]
+						volume_row = [this.volume_slider];
 					}
-					content.push(volume_row)
+					content.push(volume_row);
 				} else if (row_name === 'navigation_row') {
-					let navigation_row = []
+					let navigation_row = [];
 
 					if (this._config.navigation_row == 'buttons') {
-						let up_row = [this.buildIconButton('up')]
+						let up_row = [this.buildIconButton('up')];
 						let middle_row = [
 							this.buildIconButton('left'),
 							this.buildIconButton('enter'),
 							this.buildIconButton('right'),
-						]
-						let down_row = [this.buildIconButton('down')]
-						navigation_row = [up_row, middle_row, down_row]
+						];
+						let down_row = [this.buildIconButton('down')];
+						navigation_row = [up_row, middle_row, down_row];
 					} else if (this._config.navigation_row == 'touchpad') {
 						var touchpad = [
 							html`
@@ -444,25 +444,25 @@ class TVCardServices extends LitElement {
 								>
 								</toucharea>
 							`,
-						]
-						navigation_row = [touchpad]
+						];
+						navigation_row = [touchpad];
 					}
-					content.push(...navigation_row)
+					content.push(...navigation_row);
 				} else {
-					let row_content = this.buildButtonsFromActions(row_actions)
-					content.push(row_content)
+					let row_content = this.buildButtonsFromActions(row_actions);
+					content.push(row_content);
 				}
 			}
-		})
+		});
 
-		content = content.map(this.buildRow)
+		content = content.map(this.buildRow);
 
 		var output = html`
 			${this.renderStyle()}
 			<ha-card .header="${this._config.title}">${content}</ha-card>
-		`
+		`;
 
-		return html`${output}`
+		return html`${output}`;
 	}
 
 	renderStyle() {
@@ -495,54 +495,54 @@ class TVCardServices extends LitElement {
 					text-align: center;
 				}
 			</style>
-		`
+		`;
 	}
 
 	applyThemesOnElement(element, themes, localTheme) {
 		if (!element._themes) {
-			element._themes = {}
+			element._themes = {};
 		}
-		let themeName = themes.default_theme
+		let themeName = themes.default_theme;
 		if (
 			localTheme === 'default' ||
 			(localTheme && themes.themes[localTheme])
 		) {
-			themeName = localTheme
+			themeName = localTheme;
 		}
-		const styles = Object.assign({}, element._themes)
+		const styles = Object.assign({}, element._themes);
 		if (themeName !== 'default') {
-			var theme = themes.themes[themeName]
+			var theme = themes.themes[themeName];
 			Object.keys(theme).forEach((key) => {
-				var prefixedKey = '--' + key
-				element._themes[prefixedKey] = ''
-				styles[prefixedKey] = theme[key]
-			})
+				var prefixedKey = '--' + key;
+				element._themes[prefixedKey] = '';
+				styles[prefixedKey] = theme[key];
+			});
 		}
 		if (element.updateStyles) {
-			element.updateStyles(styles)
+			element.updateStyles(styles);
 		} else if (window.ShadyCSS) {
 			// implement updateStyles() method of Polemer elements
 			window.ShadyCSS.styleSubtree(
 				/** @type {!HTMLElement} */
 				(element),
 				styles
-			)
+			);
 		}
 
-		const meta = document.querySelector('meta[name=theme-color]')
+		const meta = document.querySelector('meta[name=theme-color]');
 		if (meta) {
 			if (!meta.hasAttribute('default-content')) {
 				meta.setAttribute(
 					'default-content',
 					meta.getAttribute('content')
-				)
+				);
 			}
 			const themeColor =
 				styles['--primary-color'] ||
-				meta.getAttribute('default-content')
-			meta.setAttribute('content', themeColor)
+				meta.getAttribute('default-content');
+			meta.setAttribute('content', themeColor);
 		}
 	}
 }
 
-customElements.define('android-tv-card', TVCardServices)
+customElements.define('android-tv-card', TVCardServices);
