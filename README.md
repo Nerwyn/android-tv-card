@@ -19,6 +19,11 @@
 -   Customizable layout, you can choose the order of the rows and buttons
 -   All rows and buttons are optional, you can change whatever you _(don't)_ like
 
+Along with a few other changes/improvements:
+
+-	By default uses `remote.send_command` instead, and if given a `remote_id` like the one created by the Android TV Remote integration it will work with it by default.
+-	Swipe actions are now remappable by creating `custom_keys` for `up`, `down`, `left`, `right`, and `enter`.
+
 Vast majority of credit goes to the original authors, I barely had to modify anything to get this working for Android TV.
 
 ## Demo
