@@ -212,7 +212,7 @@ class TVCardServices extends LitElement {
 		})
 	}
 
-	sendAction(action, info) {
+	sendAction(action) {
 		let info =
 			this.custom_keys[action] ||
 			this.custom_sources[action] ||
@@ -240,7 +240,7 @@ class TVCardServices extends LitElement {
 		event.stopImmediatePropagation()
 		let click_action = () => {
 			let action = 'enter'
-			this.sendAction(action, info)
+			this.sendAction(action)
 
 			if (
 				this._config.enable_button_feedback === undefined ||
@@ -270,7 +270,7 @@ class TVCardServices extends LitElement {
 		action = this._config.double_click_keycode
 			? this._config.double_click_keycode
 			: 'back'
-		this.sendAction(action, info)
+		this.sendAction(action)
 
 		if (
 			this._config.enable_button_feedback === undefined ||
@@ -330,7 +330,7 @@ class TVCardServices extends LitElement {
 			action = diffY > 0 ? 'up' : 'down'
 		}
 
-		this.sendAction(action, info)
+		this.sendAction(action)
 
 		if (
 			this._config.enable_button_feedback === undefined ||
@@ -343,7 +343,7 @@ class TVCardServices extends LitElement {
 
 	handleActionClick(e) {
 		let action = e.currentTarget.action
-		this.sendAction(action, info)
+		this.sendAction(action)
 
 		if (
 			this._config.enable_button_feedback === undefined ||
