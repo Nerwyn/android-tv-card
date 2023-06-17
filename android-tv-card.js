@@ -40,7 +40,7 @@ const keys = {
 	"n8": {"key": "8", "icon": "mdi:numeric-8"},
 	"n9": {"key": "9", "icon": "mdi:numeric-9"},
 	"delete": {"key": "DEL", "icon": "mdi:delete"},
-	"enter": {"key": "ENTER", "icon": "mdi:arrow-left-bottom"},
+	"enter": {"key": "ENTER", "icon": "mdi:checkbox-blank-circle"},
 	"channel_up": {"key": "CHANNEL_UP", "icon": "mdi:arrow-up-circle"},
 	"channel_down": {"key": "CHANNEL_DOWN", "icon": "mdi:arrow-down-circle"},
 	"f1": {"key": "F1", "icon": "mdi:keyboard-f1"},
