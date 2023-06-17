@@ -299,6 +299,17 @@ class TVCardServices extends LitElement {
 	}
 
 	onTouchEnd(event) {
+		let action;
+		if (Math.abs(diffX) > Math.abs(diffY)) {
+			// sliding horizontally
+			action = diffX > 0 ? 'left' : 'right';
+		} else {
+			// sliding vertically
+			action = diffY > 0 ? 'up' : 'down';
+		}
+		this.holdaction = action;
+		this.sendAction(action);
+
 		clearTimeout(this.timer);
 		clearTimeout(this.holdtimer);
 		clearInterval(this.holdinterval);
@@ -319,18 +330,6 @@ class TVCardServices extends LitElement {
 
 		var diffX = initialX - currentX;
 		var diffY = initialY - currentY;
-
-		let action;
-		if (Math.abs(diffX) > Math.abs(diffY)) {
-			// sliding horizontally
-			action = diffX > 0 ? 'left' : 'right';
-		} else {
-			// sliding vertically
-			action = diffY > 0 ? 'up' : 'down';
-		}
-		this.holdaction = action;
-
-		this.sendAction(action);
 
 		if (
 			this._config.enable_button_feedback === undefined ||
