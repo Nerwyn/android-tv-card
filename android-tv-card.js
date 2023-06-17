@@ -217,6 +217,23 @@ class TVCardServices extends LitElement {
 		})
 	}
 
+	sendAction(action, info) {
+		let info =
+			this.custom_keys[action] ||
+			this.custom_sources[action] ||
+			keys[action] ||
+			sources[action]
+		if (info.key) {
+			let key = info.key
+			this.holdaction = key
+			this.sendKey(key)
+		}
+		if (info.service) {
+			let [domain, service] = info.service.split('.', 2)
+			this._hass.callService(domain, service, info.service_data)
+		}
+	}
+
 	changeSource(source) {
 		this._hass.callService('media_player', 'select_source', {
 			source: source,
@@ -227,8 +244,9 @@ class TVCardServices extends LitElement {
 	onClick(event) {
 		event.stopImmediatePropagation()
 		let click_action = () => {
+			let action = 'enter'
+			this.sendAction(action, info)
 
-			this.sendKey(keys.enter.key)
 			if (
 				this._config.enable_button_feedback === undefined ||
 				this._config.enable_button_feedback
@@ -254,11 +272,11 @@ class TVCardServices extends LitElement {
 		clearTimeout(this.timer)
 		this.timer = null
 
-		this.sendKey(
-			this._config.double_click_keycode
-				? this._config.double_click_keycode
-				: keys.back.key
-		)
+		action = this._config.double_click_keycode
+			? this._config.double_click_keycode
+			: 'back'
+		this.sendAction(action, info)
+
 		if (
 			this._config.enable_button_feedback === undefined ||
 			this._config.enable_button_feedback
@@ -269,11 +287,12 @@ class TVCardServices extends LitElement {
 	onTouchStart(event) {
 		event.stopImmediatePropagation()
 
-		this.holdaction = keys.enter.key
+		this.holdaction = 'enter'
 		this.holdtimer = setTimeout(() => {
 			//hold
 			this.holdinterval = setInterval(() => {
-				this.sendKey(this.holdaction)
+				this.sendAction(this.holdaction, info)
+
 				if (
 					this._config.enable_button_feedback === undefined ||
 					this._config.enable_button_feedback
@@ -316,20 +335,7 @@ class TVCardServices extends LitElement {
 			action = diffY > 0 ? 'up' : 'down'
 		}
 
-		let info =
-			this.custom_keys[action] ||
-			this.custom_sources[action] ||
-			keys[action] ||
-			sources[action]
-		if (info.key) {
-			let key = info.key
-			this.holdaction = key
-			this.sendKey(key)
-		}
-		if (info.service) {
-			let [domain, service] = info.service.split('.', 2)
-			this._hass.callService(domain, service, info.service_data)
-		}
+		this.sendAction(action, info)
 
 		if (
 			this._config.enable_button_feedback === undefined ||
@@ -342,20 +348,7 @@ class TVCardServices extends LitElement {
 
 	handleActionClick(e) {
 		let action = e.currentTarget.action
-		let info =
-			this.custom_keys[action] ||
-			this.custom_sources[action] ||
-			keys[action] ||
-			sources[action]
-
-		if (info.key) {
-			this.sendKey(info.key)
-		} else if (info.source) {
-			this.changeSource(info.source)
-		} else if (info.service) {
-			const [domain, service] = info.service.split('.', 2)
-			this._hass.callService(domain, service, info.service_data)
-		}
+		this.sendAction(action, info)
 
 		if (
 			this._config.enable_button_feedback === undefined ||
