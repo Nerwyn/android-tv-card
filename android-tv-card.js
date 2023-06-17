@@ -122,11 +122,6 @@ class TVCardServices extends LitElement {
 	}
 
 	setConfig(config) {
-		if (!config.remote_id) {
-			console.log('Invalid configuration')
-			return
-		}
-
 		this._config = { theme: 'default', ...config }
 		this.custom_keys = config.custom_keys || {}
 		this.custom_sources = config.custom_sources || {}
