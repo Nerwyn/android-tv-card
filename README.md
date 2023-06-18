@@ -21,8 +21,8 @@
 
 Along with a few other changes/improvements:
 
--	By default uses `remote.send_command` instead, and if given a `remote_id` like the one created by the Android TV Remote integration it will work with it by default.
--	Swipe actions are now remappable by creating `custom_keys` for `up`, `down`, `left`, `right`, and `enter`.
+-   By default uses `remote.send_command` instead, and if given a `remote_id` like the one created by the Android TV Remote integration it will work with it by default.
+-   Swipe actions are now remappable by creating `custom_keys` for `up`, `down`, `left`, `right`, and `enter`.
 
 Vast majority of credit goes to the original authors, I barely had to modify anything to get this working for Android TV.
 
@@ -79,49 +79,49 @@ If you want to add custom buttons to the remote control (of if you want to recon
 
 ```yaml
 custom_keys:
-    input_tv:
-        icon: mdi:television-box
-        key: KEY_TV
-    browser:
-        icon: mdi:web
-        source: browser
-    toggle_light:
-        icon: mdi:lightbulb
-        service: light.toggle
-        service_data:
-            entity_id: light.bedroom
+  input_tv:
+	icon: mdi:television-box
+	key: KEY_TV
+  browser:
+	icon: mdi:web
+	source: browser
+  toggle_light:
+	icon: mdi:lightbulb
+	service: light.toggle
+	service_data:
+	  entity_id: light.bedroom
 ```
 
 The `custom_sources` exists for the same purpose, but you can use it to split the keys and sources.
 
 ```yaml
 custom_keys:
-    input_tv:
-        icon: mdi:television-box
-        key: KEY_TV
-    toggle_light:
-        icon: mdi:lightbulb
-        service: light.toggle
-        service_data:
-            entity_id: light.bedroom
+  input_tv:
+	icon: mdi:television-box
+	key: KEY_TV
+toggle_light:
+  icon: mdi:lightbulb
+  service: light.toggle
+  service_data:
+	entity_id: light.bedroom
 custom_sources:
-    browser:
-        icon: mdi:web
-        source: browser
+  browser:
+	icon: mdi:web
+	source: browser
 ```
 
 Then you can easily use these buttons in your card:
 
 ```yaml
 power_row:
-    - browser
-    - power
-    - input_tv
+  - browser
+  - power
+  - input_tv
 media_control_row:
-    - rewind
-    - play_pause
-    - fast_forward
-    - toggle_light
+  - rewind
+  - play_pause
+  - fast_forward
+  - toggle_light
 ```
 
 <img src="assets/custom_keys.png" alt="guide" width="300"/>
@@ -130,11 +130,11 @@ With custom buttons you can override existing buttons for changing its icon or e
 
 ```yaml
 custom_keys:
-    power:
-        icon: mdi:power-cycle
-        service: media_player.toggle
-        service_data:
-            entity_id: media_player.tv
+  power:
+	icon: mdi:power-cycle
+	service: media_player.toggle
+	service_data:
+	  entity_id: media_player.tv
 ```
 
 Inside each button you may define `icon` and either `key`, `source` or `service`, as you've seen.
@@ -155,25 +155,25 @@ Usage:
 
 ```yaml
 custom_icons:
-    <button>: <svg_path>
+  <button>: <svg_path>
 ```
 
 Example:
 
 ```yaml
 custom_icons:
-    hbo: >-
-        M7.042 16.896H4.414v-3.754H2.708v3.754H.01L0
-        7.22h2.708v3.6h1.706v-3.6h2.628zm12.043.046C21.795 16.94 24 14.689 24
-        11.978a4.89 4.89 0 0 0-4.915-4.92c-2.707-.002-4.09 1.991-4.432
-        2.795.003-1.207-1.187-2.632-2.58-2.634H7.59v9.674l4.181.001c1.686 0
-        2.886-1.46 2.888-2.713.385.788 1.72 2.762 4.427 2.76zm-7.665-3.936c.387 0
-        .692.382.692.817 0 .435-.305.817-.692.817h-1.33v-1.634zm.005-3.633c.387 0
-        .692.382.692.817 0 .436-.305.818-.692.818h-1.33V9.373zm1.77
-        2.607c.305-.039.813-.387.992-.61-.063.276-.068 1.074.006
-        1.35-.204-.314-.688-.701-.998-.74zm3.43 0a2.462 2.462 0 1 1 4.924 0 2.462
-        2.462 0 0 1-4.925 0zm2.462 1.936a1.936 1.936 0 1 0 0-3.872 1.936 1.936 0 0 0
-        0 3.872Z
+  hbo: >-
+  M7.042 16.896H4.414v-3.754H2.708v3.754H.01L0
+  7.22h2.708v3.6h1.706v-3.6h2.628zm12.043.046C21.795 16.94 24 14.689 24
+  11.978a4.89 4.89 0 0 0-4.915-4.92c-2.707-.002-4.09 1.991-4.432
+  2.795.003-1.207-1.187-2.632-2.58-2.634H7.59v9.674l4.181.001c1.686 0
+  2.886-1.46 2.888-2.713.385.788 1.72 2.762 4.427 2.76zm-7.665-3.936c.387 0
+  .692.382.692.817 0 .435-.305.817-.692.817h-1.33v-1.634zm.005-3.633c.387 0
+  .692.382.692.817 0 .436-.305.818-.692.818h-1.33V9.373zm1.77
+  2.607c.305-.039.813-.387.992-.61-.063.276-.068 1.074.006
+  1.35-.204-.314-.688-.701-.998-.74zm3.43 0a2.462 2.462 0 1 1 4.924 0 2.462
+  2.462 0 0 1-4.925 0zm2.462 1.936a1.936 1.936 0 1 0 0-3.872 1.936 1.936 0 0 0
+  0 3.872Z
 ```
 
 The svg path was copied from [SimpleIcon](https://simpleicons.org/?q=hbo). Although you can use [this integration](https://github.com/vigonotion/hass-simpleicons) for using icons from SimpleIcons (there's also one for [fontawesome](https://github.com/thomasloven/hass-fontawesome)).
@@ -182,9 +182,9 @@ Having defined the custom icon, you can use it on any custom button:
 
 ```yaml
 custom_sources:
-    hbomax:
-        icon: hbo
-        source: HBO Max
+  hbomax:
+	icon: hbo
+	source: HBO Max
 ```
 
 ## Installation
@@ -198,29 +198,29 @@ Install [HACS](https://hacs.xyz/), open it, click on Frontend, click on the thre
 Add a custom element in your `ui-lovelace.yaml`
 
 ```yaml
-      - type: custom:tv-card
-        remote_id: remote.google_chromecast
-		media_player_id: media_player.google_chromecast
-        power_row:
-          - power
-        channel_row:
-          - channel_up
-          - info
-          - channel_down
-        apps_row:
-          - netflix
-          - youtube
-          - spotify
-        volume_row: slider
-        navigation_row: touchpad
-        source_row:
-          - return
-          - home
-          - source
-        media_control_row:
-          - rewind
-          - play_pause
-          - fast_forward
+type: custom:android-tv-card
+remote_id: remote.google_chromecast
+media_player_id: media_player.google_chromecast
+power_row:
+  - power
+channel_row:
+  - channel_up
+  - info
+  - channel_down
+apps_row:
+  - netflix
+  - youtube
+  - spotify
+volume_row: slider
+navigation_row: touchpad
+source_row:
+  - return
+  - home
+  - source
+media_control_row:
+  - rewind
+  - play_pause
+  - fast_forward
 ```
 
 ### Example 1
@@ -233,28 +233,28 @@ remote_id: remote.google_chromecast
 media_player_id: media_player.google_chromecast
 title: Example 1
 power_row:
-    - power
+  - power
 source_row:
-    - return
-    - home
-    - source
-    - netflix
+  - return
+  - home
+  - source
+  - netflix
 apps_row:
-    - youtube
-    - spotify
-    - netflix
+  - youtube
+  - spotify
+  - netflix
 navigation_row: touchpad
 volume_row: slider
 channel_row:
-    - channel_up
-    - channel_down
-    - info
+  - channel_up
+  - channel_down
+  - info
 media_control_row:
-    - rewind
-    - play
-    - spotify
-    - pause
-    - fast_forward
+  - rewind
+  - play
+  - spotify
+  - pause
+  - fast_forward
 ```
 
 Result:
@@ -271,26 +271,26 @@ remote_id: remote.google_chromecast
 media_player_id: media_player.google_chromecast
 title: Example 2
 power_row:
-    - power
+  - power
 channel_row:
-    - channel_up
-    - info
-    - channel_down
+  - channel_up
+  - info
+  - channel_down
 apps_row:
-    - netflix
-    - youtube
-    - spotify
+  - netflix
+  - youtube
+  - spotify
 volume_row: buttons
 navigation_row: buttons
 source_row:
-    - return
-    - home
-    - source
+  - return
+  - home
+  - source
 media_control_row:
-    - rewind
-    - play
-    - pause
-    - fast_forward
+  - rewind
+  - play
+  - pause
+  - fast_forward
 ```
 
 Result:
@@ -307,16 +307,16 @@ remote_id: remote.google_chromecast
 media_player_id: media_player.google_chromecast
 title: Example 3
 power_row:
-    - power
+  - power
 apps_row:
-    - netflix
-    - youtube
-    - spotify
+  - netflix
+  - youtube
+  - spotify
 volume_row: slider
 navigation_row: touchpad
 source_row:
-    - return
-    - home
+  - return
+  - home
 ```
 
 Result:
@@ -329,14 +329,14 @@ In any row, if you add an ampty item, there will be an empty/invisible button fi
 
 ```yaml
 source_row:
-    - return
-    - home
-    - source
+  - return
+  - home
+  - source
 media_control_row:
-    - rewind
-    -
-    -
-    - fast-forward
+  - rewind
+  -
+  -
+  - fast-forward
 ```
 
 <img src="assets/empty_buttons.png" alt="empty buttons example" width="300"/>
