@@ -80,14 +80,14 @@ If you want to add custom buttons to the remote control (of if you want to recon
 ```yaml
 custom_keys:
   input_tv:
-	icon: mdi:television-box
-	key: KEY_TV
+    icon: mdi:television-box
+    key: KEY_TV
   browser:
-	icon: mdi:web
-	source: browser
+    icon: mdi:web
+    source: browser
   toggle_light:
-	icon: mdi:lightbulb
-	service: light.toggle
+    icon: mdi:lightbulb
+    service: light.toggle
 	service_data:
 	  entity_id: light.bedroom
 ```
@@ -114,14 +114,14 @@ Then you can easily use these buttons in your card:
 
 ```yaml
 power_row:
-  - browser
-  - power
-  - input_tv
+    - browser
+    - power
+    - input_tv
 media_control_row:
-  - rewind
-  - play_pause
-  - fast_forward
-  - toggle_light
+    - rewind
+    - play_pause
+    - fast_forward
+    - toggle_light
 ```
 
 <img src="assets/custom_keys.png" alt="guide" width="300"/>
