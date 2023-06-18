@@ -88,8 +88,8 @@ custom_keys:
   toggle_light:
     icon: mdi:lightbulb
     service: light.toggle
-	service_data:
-	  entity_id: light.bedroom
+    service_data:
+      entity_id: light.bedroom
 ```
 
 The `custom_sources` exists for the same purpose, but you can use it to split the keys and sources.
@@ -97,31 +97,31 @@ The `custom_sources` exists for the same purpose, but you can use it to split th
 ```yaml
 custom_keys:
   input_tv:
-	icon: mdi:television-box
-	key: KEY_TV
+    icon: mdi:television-box
+    key: KEY_TV
 toggle_light:
   icon: mdi:lightbulb
   service: light.toggle
   service_data:
-	entity_id: light.bedroom
+    entity_id: light.bedroom
 custom_sources:
   browser:
-	icon: mdi:web
-	source: browser
+    icon: mdi:web
+    source: browser
 ```
 
 Then you can easily use these buttons in your card:
 
 ```yaml
 power_row:
-    - browser
-    - power
-    - input_tv
+  - browser
+  - power
+  - input_tv
 media_control_row:
-    - rewind
-    - play_pause
-    - fast_forward
-    - toggle_light
+  - rewind
+  - play_pause
+  - fast_forward
+  - toggle_light
 ```
 
 <img src="assets/custom_keys.png" alt="guide" width="300"/>
@@ -131,10 +131,10 @@ With custom buttons you can override existing buttons for changing its icon or e
 ```yaml
 custom_keys:
   power:
-	icon: mdi:power-cycle
-	service: media_player.toggle
-	service_data:
-	  entity_id: media_player.tv
+    icon: mdi:power-cycle
+    service: media_player.toggle
+    service_data:
+      entity_id: media_player.tv
 ```
 
 Inside each button you may define `icon` and either `key`, `source` or `service`, as you've seen.
@@ -183,8 +183,8 @@ Having defined the custom icon, you can use it on any custom button:
 ```yaml
 custom_sources:
   hbomax:
-	icon: hbo
-	source: HBO Max
+    icon: hbo
+    source: HBO Max
 ```
 
 ## Installation
