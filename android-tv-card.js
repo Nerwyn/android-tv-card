@@ -4,7 +4,7 @@ const LitElement = Object.getPrototypeOf(
 const html = LitElement.prototype.html;
 
 /**
- * This is the list of msot common commands from the Android TV Remote integration page
+ * This is the list of most common commands from the Android TV Remote integration page
  * https://www.home-assistant.io/integrations/androidtv_remote/#remote
  */
 const keys = {
@@ -361,7 +361,17 @@ class TVCardServices extends LitElement {
 	handleActionLongClick(e) {
 		this.holdaction = e.currentTarget.action;
 		this.holdtimer = setTimeout(() => {
-			if (['up', 'down', 'left', 'right'].includes(this.holdaction)) {
+			// Only repeat hold action for directional keys and volume
+			if (
+				[
+					'up',
+					'down',
+					'left',
+					'right',
+					'volume_up',
+					'volume_down',
+				].includes(this.holdaction)
+			) {
 				this.holdinterval = setInterval(() => {
 					this.sendAction(this.holdaction);
 					this.fireHapticEvent(window, 'light');

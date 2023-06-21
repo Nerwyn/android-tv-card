@@ -23,6 +23,7 @@ Along with a few other changes/improvements:
 
 -   By default uses `remote.send_command` instead, and if given a `remote_id` like the one created by the Android TV Remote integration it will work with it by default.
 -   Swipe actions are now remappable by creating `custom_keys` for `up`, `down`, `left`, `right`, and `enter`.
+-	Hold press/touch actions only repeat for directional keys, and perform a long press for anything else.
 
 Vast majority of credit goes to the original authors, I barely had to modify anything to get this working for Android TV.
 
@@ -52,11 +53,11 @@ You do it by declaring the rows as arrays and its buttons as values, like this:
 
 ```yaml
 power_row:
-    - power
+  - power
 media_control_row:
-    - rewind
-    - play_pause
-    - fast_forward
+  - rewind
+  - play_pause
+  - fast_forward
 ```
 
 The available rows are `power_row`, `channel_row`, `apps_row`, `source_row` and `media_control_row`
