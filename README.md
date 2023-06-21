@@ -23,7 +23,7 @@ Along with a few other changes/improvements:
 -   Supports the official (Android TV Remote integration)[https://www.home-assistant.io/integrations/androidtv_remote/]
 -   By default uses `remote.send_command` instead, and if given a `remote_id` like the one created by the Android TV Remote integration.
 -   Swipe actions are now remappable by creating `custom_keys` for `up`, `down`, `left`, `right`, and `enter`.
--	Hold press/touch actions only repeat for directional keys, and perform a long press for anything else.
+-	Hold press/touch actions only repeat for directional and volume keys, and perform a long press for anything else.
 
 Vast majority of credit goes to the original authors, I barely had to modify anything to get this working for Android TV.
 
