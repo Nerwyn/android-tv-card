@@ -241,7 +241,9 @@ class TVCardServices extends LitElement {
 			this.sendKey(key, longPress);
 		}
 		if (info.service) {
-			let service_data = JSON.parse(JSON.stringify(info.service_data || {}));
+			let service_data = JSON.parse(
+				JSON.stringify(info.service_data || {})
+			);
 			if (longPress) {
 				service_data.hold_secs = 0.5;
 			}
@@ -352,23 +354,16 @@ class TVCardServices extends LitElement {
 
 	handleActionClick(e) {
 		let action = e.currentTarget.action;
-		this.sendAction(action);
-
-		this.fireHapticEvent(window, 'light');
-
-		//////////////////////////////////////
-
-		// let click_action = () => {
-		// 	let action = e.currentTarget.action;
-		// 	this.sendAction(action);
-
-		// 	this.fireHapticEvent(window, 'light');
-		// };
-		// if (this._config.enable_double_click) {
-		// 	this.timer = setTimeout(click_action, 500);
-		// } else {
-		// 	click_action();
-		// }		
+		let longPress = false;
+		setTimeout(() => {
+			longPress = true;
+			this.sendAction(action, longPress);
+			this.fireHapticEvent(window, 'medium');
+		}, 500);
+		if (!longPress) {
+			this.sendAction(action);
+			this.fireHapticEvent(window, 'light');
+		}
 	}
 
 	buildIconButton(action) {
