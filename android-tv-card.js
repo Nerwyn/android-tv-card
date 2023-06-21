@@ -354,17 +354,11 @@ class TVCardServices extends LitElement {
 
 	handleActionClick(e) {
 		let action = e.currentTarget.action;
-		let longPress = false;
-		setTimeout(() => {
-			longPress = true;
-			this.sendAction(action, longPress);
-			this.fireHapticEvent(window, 'medium');
-		}, 500);
-		if (!longPress) {
-			this.sendAction(action);
-			this.fireHapticEvent(window, 'light');
-		}
-	}
+		this.sendAction(action);
+		this.fireHapticEvent(window, 'light');
+	// }
+
+
 
 	buildIconButton(action) {
 		let button_info =
