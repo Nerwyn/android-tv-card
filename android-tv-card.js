@@ -361,14 +361,26 @@ class TVCardServices extends LitElement {
 	handleActionLongClick(e) {
 		this.holdaction = e.currentTarget.action;
 		this.holdtimer = setTimeout(() => {
-			this.sendAction(this.holdaction, true);
-			this.fireHapticEvent(window, 'medium');
+			if (['up', 'down', 'left', 'right'].includes(this.holdaction)) {
+				this.holdinterval = setInterval(() => {
+					this.sendAction(this.holdaction);
+					this.fireHapticEvent(window, 'light');
+				}, 100);
+			} else {
+				this.sendAction(this.holdaction, true);
+				this.fireHapticEvent(window, 'medium');
+			}
 		}, 500);
 	}
 
 	handleActionLongClickEnd(e) {
+		clearTimeout(this.timer);
 		clearTimeout(this.holdtimer);
+		clearInterval(this.holdinterval);
+
 		this.holdtimer = null;
+		this.timer = null;
+		this.holdinterval = null;
 		this.holdaction = null;
 	}
 
