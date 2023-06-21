@@ -13,7 +13,6 @@
 
 -   Fully functional touchpad for navigation (thanks to [iablon's Touchpad Card](https://github.com/iablon/HomeAssistant-Touchpad-Card)) ❤️
 -   Slider for volume (thanks to [AnthonMS's Slider Card](https://github.com/AnthonMS/my-cards#slider-card)) ❤️
--   Supports the official (Android TV Remote integration)[https://www.home-assistant.io/integrations/androidtv_remote/]
 -   Much easier setup
 -   Implements haptics feedback
 -   Customizable layout, you can choose the order of the rows and buttons
@@ -21,9 +20,10 @@
 
 Along with a few other changes/improvements:
 
--   By default uses `remote.send_command` instead, and if given a `remote_id` like the one created by the Android TV Remote integration it will work with it by default.
+-   Supports the official (Android TV Remote integration)[https://www.home-assistant.io/integrations/androidtv_remote/]
+-   By default uses `remote.send_command` instead, and if given a `remote_id` like the one created by the Android TV Remote integration.
 -   Swipe actions are now remappable by creating `custom_keys` for `up`, `down`, `left`, `right`, and `enter`.
--	Hold press/touch actions only repeat for directional keys, and perform a long press for anything else.
+-	  Hold press/touch actions only repeat for directional keys, and perform a long press for anything else.
 
 Vast majority of credit goes to the original authors, I barely had to modify anything to get this working for Android TV.
 
