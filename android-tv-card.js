@@ -211,18 +211,22 @@ class TVCardServices extends LitElement {
 
 	/**
 	 * Send command to an Android TV remote
-	 * @param {string} key 
+	 * @param {string} key
 	 */
-	sendKey(key) {
-		this._hass.callService('remote', 'send_command', {
+	sendKey(key, longPress = false) {
+		let data = {
 			entity_id: this._config.remote_id,
 			command: key,
-		});
+		};
+		if (longPress) {
+			data.hold_secs = 0.5;
+		}
+		this._hass.callService('remote', 'send_command', data);
 	}
 
 	/**
 	 * Send either a command to an Android TV remote or a custom key to any service
-	 * @param {string} action 
+	 * @param {string} action
 	 * @param {boolean} [longPress=true]
 	 */
 	sendAction(action, longPress = false) {
@@ -301,7 +305,9 @@ class TVCardServices extends LitElement {
 		// Only repeat action for directional keys
 		this.holdtimer = setTimeout(() => {
 			//hold
-			isDirection = ['up', 'down', 'left', 'right'].includes(this.holdaction)
+			let isDirection = ['up', 'down', 'left', 'right'].includes(
+				this.holdaction
+			);
 			this.holdinterval = setInterval(() => {
 				if (isDirection) {
 					this.sendAction(this.holdaction);
@@ -312,13 +318,10 @@ class TVCardServices extends LitElement {
 					)
 						fireEvent(window, 'haptic', 'light');
 				} else {
-					this.sendAction('enter', true)
-					clearInterval()
+					this.sendAction('enter', true);
+					clearInterval();
 				}
 			}, 100);
-			if (!isDirection) {
-				clearTimeout()
-			}
 		}, 500);
 
 		window.initialX = event.touches[0].clientX;
