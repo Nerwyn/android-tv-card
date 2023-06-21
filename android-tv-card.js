@@ -212,7 +212,7 @@ class TVCardServices extends LitElement {
 		});
 	}
 
-	sendAction(action) {
+	sendAction(action, longPress = false) {
 		let info =
 			this.custom_keys[action] ||
 			this.custom_sources[action] ||
@@ -223,8 +223,12 @@ class TVCardServices extends LitElement {
 			this.sendKey(key);
 		}
 		if (info.service) {
+			let service_data = JSON.parse(JSON.stringify(info.service));
+			if (longPress) {
+				service_data.hold_secs = 0.5;
+			}
 			let [domain, service] = info.service.split('.', 2);
-			this._hass.callService(domain, service, info.service_data);
+			this._hass.callService(domain, service, service_data);
 		}
 	}
 
@@ -281,19 +285,24 @@ class TVCardServices extends LitElement {
 	onTouchStart(event) {
 		event.stopImmediatePropagation();
 
-		this.holdaction = 'enter';
-		this.holdtimer = setTimeout(() => {
-			//hold
-			this.holdinterval = setInterval(() => {
-				this.sendAction(this.holdaction);
+		// Only repeat action for directional keys
+		if (['up', 'down', 'left', 'right'].includes(this.holdaction)) {
+			this.holdtimer = setTimeout(() => {
+				//hold
+				this.holdinterval = setInterval(() => {
+					this.sendAction(this.holdaction);
 
-				if (
-					this._config.enable_button_feedback === undefined ||
-					this._config.enable_button_feedback
-				)
-					fireEvent(window, 'haptic', 'light');
-			}, 200);
-		}, 700);
+					if (
+						this._config.enable_button_feedback === undefined ||
+						this._config.enable_button_feedback
+					)
+						fireEvent(window, 'haptic', 'light');
+				}, 200);
+			}, 400);
+		} else {
+			this.sendAction('enter', true);
+		}
+
 		window.initialX = event.touches[0].clientX;
 		window.initialY = event.touches[0].clientY;
 	}
