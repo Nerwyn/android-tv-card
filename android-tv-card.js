@@ -3,6 +3,10 @@ const LitElement = Object.getPrototypeOf(
 );
 const html = LitElement.prototype.html;
 
+/**
+ * This is the list of msot common commands from the Android TV Remote integration page
+ * https://www.home-assistant.io/integrations/androidtv_remote/#remote
+ */
 const keys = {
 	power: { key: 'POWER', icon: 'mdi:power' },
 	volume_up: { key: 'VOLUME_UP', icon: 'mdi:volume-plus' },
@@ -205,6 +209,10 @@ class TVCardServices extends LitElement {
 		this.triggerRender();
 	}
 
+	/**
+	 * Send command to an Android TV remote
+	 * @param {string} key 
+	 */
 	sendKey(key) {
 		this._hass.callService('remote', 'send_command', {
 			entity_id: this._config.remote_id,
@@ -212,6 +220,11 @@ class TVCardServices extends LitElement {
 		});
 	}
 
+	/**
+	 * Send either a command to an Android TV remote or a custom key to any service
+	 * @param {string} action 
+	 * @param {boolean} [longPress=true]
+	 */
 	sendAction(action, longPress = false) {
 		let info =
 			this.custom_keys[action] ||
@@ -297,9 +310,12 @@ class TVCardServices extends LitElement {
 						this._config.enable_button_feedback
 					)
 						fireEvent(window, 'haptic', 'light');
+				} else {
+					this.sendAction('enter', true)
+					clearInterval()
 				}
-			}, 200);
-		}, 700);
+			}, 100);
+		}, 500);
 
 		window.initialX = event.touches[0].clientX;
 		window.initialY = event.touches[0].clientY;
