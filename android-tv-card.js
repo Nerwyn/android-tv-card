@@ -299,9 +299,9 @@ class TVCardServices extends LitElement {
 		event.stopImmediatePropagation();
 
 		// Only repeat action for directional keys
-		isDirection = ['up', 'down', 'left', 'right'].includes(this.holdaction)
 		this.holdtimer = setTimeout(() => {
 			//hold
+			isDirection = ['up', 'down', 'left', 'right'].includes(this.holdaction)
 			this.holdinterval = setInterval(() => {
 				if (isDirection) {
 					this.sendAction(this.holdaction);
@@ -318,7 +318,6 @@ class TVCardServices extends LitElement {
 			}, 100);
 			if (!isDirection) {
 				clearTimeout()
-				this.onTouchEnd()
 			}
 		}, 500);
 
