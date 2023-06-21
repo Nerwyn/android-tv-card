@@ -237,7 +237,7 @@ class TVCardServices extends LitElement {
 			sources[action];
 		if (info.key) {
 			let key = info.key;
-			this.sendKey(key);
+			this.sendKey(key, longPress);
 		}
 		if (info.service) {
 			let service_data = JSON.parse(JSON.stringify(info.service));
