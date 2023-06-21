@@ -358,6 +358,20 @@ class TVCardServices extends LitElement {
 		this.fireHapticEvent(window, 'light');
 	}
 
+	handleActionLongClick(e) {
+		this.holdaction = e.currentTarget.action;
+		this.holdtimer = setTimeout(() => {
+			this.sendAction(this.holdaction, true);
+			this.fireHapticEvent(window, 'medium');
+		}, 500);
+	}
+
+	handleActionLongClickEnd(e) {
+		clearTimeout(this.holdtimer);
+		this.holdtimer = null;
+		this.holdaction = null;
+	}
+
 	buildIconButton(action) {
 		let button_info =
 			this.custom_keys[action] ||
@@ -372,6 +386,8 @@ class TVCardServices extends LitElement {
             <ha-icon-button
                 .action="${action}"
                 @click="${this.handleActionClick}"
+				@touchstart="${this.handleActionLongClick}"
+				@touchend="${this.handleActionLongClickEnd}"
                 title="${action}"
                 .path="${custom_svg_path ? custom_svg_path : ''}"
                 >
