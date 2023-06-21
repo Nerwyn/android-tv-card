@@ -151,6 +151,15 @@ class TVCardServices extends LitElement {
 		return this._hass;
 	}
 
+	fireHapticEvent(window, detail) {
+		if (
+			this._config.enable_button_feedback === undefined ||
+			this._config.enable_button_feedback
+		) {
+			fireEvent(window, 'haptic', detail);
+		}
+	}
+
 	async loadCardHelpers() {
 		this._helpers = await window.loadCardHelpers();
 		if (this._helpersResolve) this._helpersResolve();
@@ -187,20 +196,12 @@ class TVCardServices extends LitElement {
 		this.volume_slider.style = 'flex: 0.9;';
 		this.volume_slider.ontouchstart = (e) => {
 			e.stopImmediatePropagation();
-			if (
-				this._config.enable_button_feedback === undefined ||
-				this._config.enable_button_feedback
-			)
-				fireEvent(window, 'haptic', 'light');
+			this.fireHapticEvent(window, 'light');
 		};
 		this.volume_slider.addEventListener(
 			'input',
 			(e) => {
-				if (
-					this._config.enable_slider_feedback === undefined ||
-					this._config.enable_slider_feedback
-				)
-					fireEvent(window, 'haptic', 'light');
+				this.fireHapticEvent(window, 'light');
 			},
 			true
 		);
@@ -262,11 +263,7 @@ class TVCardServices extends LitElement {
 			let action = 'enter';
 			this.sendAction(action);
 
-			if (
-				this._config.enable_button_feedback === undefined ||
-				this._config.enable_button_feedback
-			)
-				fireEvent(window, 'haptic', 'light');
+			this.fireHapticEvent(window, 'light');
 		};
 		if (this._config.enable_double_click) {
 			this.timer = setTimeout(click_action, 200);
@@ -292,11 +289,7 @@ class TVCardServices extends LitElement {
 			: 'back';
 		this.sendAction(action);
 
-		if (
-			this._config.enable_button_feedback === undefined ||
-			this._config.enable_button_feedback
-		)
-			fireEvent(window, 'haptic', 'success');
+		this.fireHapticEvent(window, 'success');
 	}
 
 	onTouchStart(event) {
@@ -307,19 +300,11 @@ class TVCardServices extends LitElement {
 			if (['up', 'down', 'left', 'right'].includes(this.holdaction)) {
 				this.holdinterval = setInterval(() => {
 					this.sendAction(this.holdaction);
-					if (
-						this._config.enable_button_feedback === undefined ||
-						this._config.enable_button_feedback
-					)
-						fireEvent(window, 'haptic', 'light');
+					this.fireHapticEvent(window, 'light');
 				}, 100);
 			} else {
 				this.sendAction('enter', true);
-				if (
-					this._config.enable_button_feedback === undefined ||
-					this._config.enable_button_feedback
-				)
-					fireEvent(window, 'haptic', 'light');
+				this.fireHapticEvent(window, 'light');
 			}
 		}, 500);
 
@@ -360,11 +345,7 @@ class TVCardServices extends LitElement {
 		this.holdaction = action;
 		this.sendAction(action);
 
-		if (
-			this._config.enable_button_feedback === undefined ||
-			this._config.enable_button_feedback
-		)
-			fireEvent(window, 'haptic', 'selection');
+		this.fireHapticEvent(window, 'selection');
 		initialX = null;
 		initialY = null;
 	}
@@ -373,11 +354,7 @@ class TVCardServices extends LitElement {
 		let action = e.currentTarget.action;
 		this.sendAction(action);
 
-		if (
-			this._config.enable_button_feedback === undefined ||
-			this._config.enable_button_feedback
-		)
-			fireEvent(window, 'haptic', 'light');
+		this.fireHapticEvent(window, 'light');
 	}
 
 	buildIconButton(action) {
