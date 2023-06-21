@@ -302,14 +302,11 @@ class TVCardServices extends LitElement {
 	onTouchStart(event) {
 		event.stopImmediatePropagation();
 
-		// Only repeat action for directional keys
 		this.holdtimer = setTimeout(() => {
-			//hold
-			let isDirection = ['up', 'down', 'left', 'right'].includes(
-				this.holdaction
-			);
+			// Hold
 			this.holdinterval = setInterval(() => {
-				if (isDirection) {
+				// Only repeat action for directional keys
+				if (['up', 'down', 'left', 'right'].includes(this.holdaction)) {
 					this.sendAction(this.holdaction);
 
 					if (
@@ -317,9 +314,6 @@ class TVCardServices extends LitElement {
 						this._config.enable_button_feedback
 					)
 						fireEvent(window, 'haptic', 'light');
-				} else {
-					this.sendAction('enter', true);
-					clearInterval();
 				}
 			}, 100);
 		}, 500);
