@@ -356,7 +356,7 @@ class TVCardServices extends LitElement {
 		let action = e.currentTarget.action;
 		this.sendAction(action);
 		this.fireHapticEvent(window, 'light');
-	// }
+	}
 
 
 
