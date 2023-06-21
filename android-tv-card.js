@@ -405,19 +405,19 @@ class TVCardServices extends LitElement {
 		let custom_svg_path = this.custom_icons[icon];
 
 		return html`
-            <ha-icon-button
-                .action="${action}"
-                @click="${this.handleActionClick}"
+			<ha-icon-button
+				.action="${action}"
+				@click="${this.handleActionClick}"
 				@touchstart="${this.handleActionLongClick}"
 				@touchend="${this.handleActionLongClickEnd}"
-                title="${action}"
-                .path="${custom_svg_path ? custom_svg_path : ''}"
-                >
-                <ha-icon
-                    .icon="${!custom_svg_path ? icon : ''}"
-                </ha-icon>
-            </ha-icon-button>
-        `;
+				title="${action}"
+				.path="${custom_svg_path ? custom_svg_path : ''}"
+				>
+				<ha-icon
+					.icon="${!custom_svg_path ? icon : ''}"
+				</ha-icon>
+				</ha-icon-button>
+		`;
 	}
 
 	buildRow(content) {
