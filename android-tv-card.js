@@ -297,8 +297,8 @@ class TVCardServices extends LitElement {
 						this._config.enable_button_feedback
 					)
 						fireEvent(window, 'haptic', 'light');
-				}, 200);
-			}, 400);
+				}, 100);
+			}, 700);
 		} else {
 			this.sendAction('enter', true);
 		}
