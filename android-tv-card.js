@@ -358,8 +358,6 @@ class TVCardServices extends LitElement {
 		this.fireHapticEvent(window, 'light');
 	}
 
-
-
 	buildIconButton(action) {
 		let button_info =
 			this.custom_keys[action] ||
