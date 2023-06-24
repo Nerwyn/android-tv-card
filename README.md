@@ -11,21 +11,21 @@
 
 📦 This repo is a fork of [tv-card](https://github.com/usernein/tv-card), which is a fork of another [tv-card](https://github.com/marrobHD/tv-card), and includes the same features and improvements usernein made, like:
 
--   Fully functional touchpad for navigation (thanks to [iablon's Touchpad Card](https://github.com/iablon/HomeAssistant-Touchpad-Card)) ❤️
--   Slider for volume (thanks to [AnthonMS's Slider Card](https://github.com/AnthonMS/my-cards#slider-card)) ❤️
+-   Fully functional touchpad for navigation (thanks to [iablon's Touchpad Card](https://github.com/iablon/HomeAssistant-Touchpad-Card))
+-   Slider for volume (thanks to [AnthonMS's Slider Card](https://github.com/AnthonMS/my-cards#slider-card))
 -   Much easier setup
--   Implements haptics feedback
+-   Implements haptic feedback
 -   Customizable layout, you can choose the order of the rows and buttons
 -   All rows and buttons are optional, you can change whatever you _(don't)_ like
 
 Along with a few other changes/improvements:
 
--   Supports the official [Android TV Remote integration](https://www.home-assistant.io/integrations/androidtv_remote/)
--   By default uses `remote.send_command` instead, and if given a `remote_id` like the one created by the Android TV Remote integration.
+-   Supports the official [Android TV Remote integration](https://www.home-assistant.io/integrations/androidtv_remote/).
+-   Uses `remote.send_command` (instead of `media_player.play_media` like the original) to send commands to an Android TV using said integration, and can be given a `remote_id` to do so.
 -   Swipe actions are now remappable by creating `custom_keys` for `up`, `down`, `left`, `right`, and `enter`.
 -	Hold press/touch actions only repeat for directional and volume keys, and perform a long press for anything else.
 
-Vast majority of credit goes to the original authors, I barely had to modify anything to get this working for Android TV.
+Many thanks to the original authors. Getting this to work with Android TV was straightforward and all of the frontend heavy lifting they did has provided an excellent base on which to build my personal ultimate Android TV remote.
 
 ## Demo
 
