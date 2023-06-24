@@ -23,7 +23,9 @@ Along with a few other changes/improvements:
 -   Supports the official [Android TV Remote integration](https://www.home-assistant.io/integrations/androidtv_remote/).
 -   Uses `remote.send_command` (instead of `media_player.play_media` like the original) to send commands to an Android TV using said integration, and can be given a `remote_id` to do so.
 -   Swipe actions are now remappable by creating `custom_keys` for `up`, `down`, `left`, `right`, and `enter`.
--	Hold press/touch actions only repeat for directional and volume keys, and perform a long press for anything else.
+- 	Navigation and button behavior tweaked to mimic the Google TV remote, such as:
+  	-	Hold press/touch/swipe actions only repeat for directional and volume keys, and perform a long press for anything else.
+  	-	Navigation speed increased to be closer to (but not as crazy fast) as the Google TV remote.
 
 Many thanks to the original authors. Getting this to work with Android TV was straightforward and all of the frontend heavy lifting they did has provided an excellent base on which to build my personal ultimate Android TV remote.
 
