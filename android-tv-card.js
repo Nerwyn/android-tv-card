@@ -16,7 +16,7 @@ const keys = {
 	home: { key: 'HOME', icon: 'mdi:home' },
 	up: { key: 'DPAD_UP', icon: 'mdi:chevron-up' },
 	left: { key: 'DPAD_LEFT', icon: 'mdi:chevron-left' },
-	enter: { key: 'DPAD_CENTER', icon: 'mdi:checkbox-blank-circle' },
+	center: { key: 'DPAD_CENTER', icon: 'mdi:checkbox-blank-circle' },
 	right: { key: 'DPAD_RIGHT', icon: 'mdi:chevron-right' },
 	down: { key: 'DPAD_DOWN', icon: 'mdi:chevron-down' },
 	play: { key: 'MEDIA_PLAY_', icon: 'mdi:play' },
@@ -44,7 +44,7 @@ const keys = {
 	n8: { key: '8', icon: 'mdi:numeric-8' },
 	n9: { key: '9', icon: 'mdi:numeric-9' },
 	delete: { key: 'DEL', icon: 'mdi:delete' },
-	enter: { key: 'ENTER', icon: 'mdi:checkbox-blank-circle' },
+	enter: { key: 'ENTER', icon: 'mdi:arrow-left-bottom' },
 	channel_up: { key: 'CHANNEL_UP', icon: 'mdi:arrow-up-circle' },
 	channel_down: { key: 'CHANNEL_DOWN', icon: 'mdi:arrow-down-circle' },
 	f1: { key: 'F1', icon: 'mdi:keyboard-f1' },
@@ -262,7 +262,7 @@ class TVCardServices extends LitElement {
 	onClick(event) {
 		event.stopImmediatePropagation();
 		let click_action = () => {
-			let action = 'enter';
+			let action = 'center';
 			this.sendAction(action);
 
 			this.fireHapticEvent(window, 'light');
@@ -305,7 +305,7 @@ class TVCardServices extends LitElement {
 					this.fireHapticEvent(window, 'light');
 				}, 100);
 			} else {
-				this.sendAction('enter', true);
+				this.sendAction('center', true);
 				this.fireHapticEvent(window, 'medium');
 			}
 		}, 500);
@@ -462,7 +462,7 @@ class TVCardServices extends LitElement {
 						let up_row = [this.buildIconButton('up')];
 						let middle_row = [
 							this.buildIconButton('left'),
-							this.buildIconButton('enter'),
+							this.buildIconButton('center'),
 							this.buildIconButton('right'),
 						];
 						let down_row = [this.buildIconButton('down')];

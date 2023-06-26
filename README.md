@@ -231,7 +231,7 @@ media_control_row:
 Playing with order, moving and repeating buttons:
 
 ```yaml
-type: custom:tv-card
+type: custom:android-tv-card
 remote_id: remote.google_chromecast
 media_player_id: media_player.google_chromecast
 title: Example 1
@@ -269,7 +269,7 @@ Result:
 Buttons, buttons everywhere!
 
 ```yaml
-type: custom:tv-card
+type: custom:android-tv-card
 remote_id: remote.google_chromecast
 media_player_id: media_player.google_chromecast
 title: Example 2
@@ -305,7 +305,7 @@ Result:
 Using less
 
 ```yaml
-type: custom:tv-card
+type: custom:android-tv-card
 remote_id: remote.google_chromecast
 media_player_id: media_player.google_chromecast
 title: Example 3
