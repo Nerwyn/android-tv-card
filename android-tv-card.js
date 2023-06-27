@@ -428,19 +428,9 @@ class TVCardServices extends LitElement {
 			return html``;
 		}
 
-		const row_names = [
-			'power_row',
-			'channel_row',
-			'apps_row',
-			'source_row',
-			'volume_row',
-			'media_control_row',
-			'navigation_row',
-		];
-
 		var content = [];
 		Object.keys(this._config).forEach((row_name) => {
-			if (row_names.includes(row_name)) {
+			if (row_name.includes('_row')) {
 				let row_actions = this._config[row_name];
 
 				if (row_name === 'volume_row') {
@@ -525,7 +515,7 @@ class TVCardServices extends LitElement {
 				toucharea {
 					border-radius: 30px;
 					flex-grow: 1;
-					height: 250px;
+					height: ${this._config['touchpad_height'] || '250px'};
 					background: #6d767e;
 					touch-action: none;
 					text-align: center;
