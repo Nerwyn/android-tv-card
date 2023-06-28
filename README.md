@@ -11,23 +11,23 @@
 
 📦 This repo is a fork of [tv-card](https://github.com/usernein/tv-card), which is a fork of another [tv-card](https://github.com/marrobHD/tv-card), and includes the same features and improvements usernein made, like:
 
--   Fully functional touchpad for navigation (thanks to [iablon's Touchpad Card](https://github.com/iablon/HomeAssistant-Touchpad-Card))
--   Slider for volume (thanks to [AnthonMS's Slider Card](https://github.com/AnthonMS/my-cards#slider-card))
--   Much easier setup
--   Implements haptic feedback
--   Customizable layout, you can choose the order of the rows and buttons
--   All rows and buttons are optional, you can change whatever you _(don't)_ like
+- Fully functional touchpad for navigation (thanks to [iablon's Touchpad Card](https://github.com/iablon/HomeAssistant-Touchpad-Card))
+- Slider for volume (thanks to [AnthonMS's Slider Card](https://github.com/AnthonMS/my-cards#slider-card))
+- Much easier setup
+- Implements haptic feedback
+- Customizable layout, you can choose the order of the rows and buttons
+- All rows and buttons are optional, you can change whatever you _(don't)_ like
 
 Along with a few other changes/improvements:
 
--   Supports the official [Android TV Remote integration](https://www.home-assistant.io/integrations/androidtv_remote/).
--   Uses `remote.send_command` (instead of `media_player.play_media` like the original) to send commands to an Android TV using said integration, and can be given a `remote_id` to do so.
--   Swipe actions are now remappable by creating `custom_keys` for `up`, `down`, `left`, `right`, and `center`.
-- 	Navigation and button behavior tweaked to mimic the Google TV remote, such as:
-  	-	Hold press/touch/swipe actions only repeat for directional and volume keys, and perform a long press for anything else.
-  	-	Navigation speed increased to be closer to (but not as crazy fast) as the Google TV remote.
+- Supports the official [Android TV Remote integration](https://www.home-assistant.io/integrations/androidtv_remote/).
+- Uses `remote.send_command` (instead of `media_player.play_media` like the original) to send commands to an Android TV using said integration, and can be given a `remote_id` to do so.
+- Swipe actions are now remappable by creating `custom_keys` for `up`, `down`, `left`, `right`, and `center`.
+- Navigation and button behavior tweaked to mimic the Google TV remote, such as:
+  - Hold press/touch/swipe actions only repeat for directional and volume keys, and perform a long press for anything else.
+  - Navigation speed increased to be closer to (but not as crazy fast) as the Google TV remote.
 - Row names (except for `volume_row` and `navigation_row`) can be named anything as long as it contains `_row`, giving you the option to add unlimited rows.
-	- Combine this with `custom_keys` and you can really use this card for anything you want!
+  - Combine this with `custom_keys` and you can really use this card for anything you want!
 - Touchpad height can now be adjusted using the configuration option `touchpad_height`. If not provided will default to 250px.
 
 Many thanks to the original authors. Getting this to work with Android TV was straightforward and all of the frontend heavy lifting they did has provided an excellent base on which to build my personal ultimate Android TV remote.
@@ -393,7 +393,7 @@ Result:
 
 ### Extra
 
-In any row, if you add an ampty item, there will be an empty/invisible button filling the space:
+In any row, if you add an empty item, there will be an empty/invisible button filling the space:
 
 ```yaml
 source_row:

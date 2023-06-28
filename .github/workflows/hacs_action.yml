@@ -2,15 +2,19 @@ name: HACS Action
 
 on:
   push:
+    branches:
+      - main
+  release:
+    types: [published]
   pull_request:
   schedule:
-    - cron:  '0 0 * * *'
+    - cron: '0 0 * * *'
 
 jobs:
   validate:
-    runs-on: "ubuntu-latest"
+    runs-on: 'ubuntu-latest'
     steps:
-        - name: HACS Action
-          uses: "hacs/action@main"
-          with:
-            category: "plugin"
+      - name: HACS Action
+        uses: 'hacs/action@main'
+        with:
+          category: 'plugin'
