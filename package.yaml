@@ -12,10 +12,7 @@ keywords:
   - tv
   - television
 author:
-  name: mar_robHD
-contributors:
-  - name: usernein
-  - name: Nerwyn
+  name: Nerwyn
 license: Apache License, Version 2.0
 files:
   - android-tv-card.js
