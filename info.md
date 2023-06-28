@@ -11,7 +11,7 @@ A fork of usernein's tv-card for the Home Assistant [Android TV Remote](https://
 
 **Sample overview:**
 
-<img src="https://github.com/Nerwyn/android-tv-card/blob/master/assets/screenshot.png" alt="screenshot" width="300"/>
+<img src="https://github.com/Nerwyn/android-tv-card/blob/main/assets/screenshot.png" alt="screenshot" width="300"/>
 
 Add this to your lovelace configuration:
 
@@ -42,6 +42,6 @@ media_control_row:
     - fast_forward
 ```
 
-You may want to set custom buttons for your tv. [Check it out](https://github.com/Nerwyn/android-tv-card/blob/master/README.md#notice).
+You may want to set custom buttons for your tv. [Check it out](https://github.com/Nerwyn/android-tv-card/blob/main/README.md#notice).
 
-Look at [README](https://github.com/Nerwyn/android-tv-card/blob/master/README.md) for more information
+Look at [README](https://github.com/Nerwyn/android-tv-card/blob/main/README.md) for more information
