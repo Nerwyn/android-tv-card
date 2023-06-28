@@ -26,6 +26,9 @@ Along with a few other changes/improvements:
 - 	Navigation and button behavior tweaked to mimic the Google TV remote, such as:
   	-	Hold press/touch/swipe actions only repeat for directional and volume keys, and perform a long press for anything else.
   	-	Navigation speed increased to be closer to (but not as crazy fast) as the Google TV remote.
+- Row names (except for `volume_row` and `navigation_row`) can be named anything as long as it contains `_row`, giving you the option to add unlimited rows.
+	- Combine this with `custom_keys` and you can really use this card for anything you want!
+- Touchpad height can now be adjusted using the configuration option `touchpad_height`. If not provided will default to 250px.
 
 Many thanks to the original authors. Getting this to work with Android TV was straightforward and all of the frontend heavy lifting they did has provided an excellent base on which to build my personal ultimate Android TV remote.
 
@@ -48,6 +51,7 @@ Many thanks to the original authors. Getting this to work with Android TV was st
 | slider_config          | object  | **Optional** | Custom configuration for the volume slider. See [slider-card](https://github.com/AnthonMS/my-cards)                                                          |
 | custom_keys            | object  | **Optional** | Custom keys for the remote control. Each item is an object that should have `icon` and at least one of the following properties: `key`, `source`, `service`. |
 | custom_sources         | object  | **Optional** | Custom sources for the remote control. Same object as above, but letting you split keys and sources.                                                         |
+| touchpad_height        | string  | **Optional** | Change touchpad height to a custom value, must include [units](https://www.w3schools.com/cssref/css_units.php). Defaults to `250px`.                         |
 
 Using only these options you will get an empty card (or almost empty, if you set a title).
 In order to include the buttons, you need to specify in the config the rows you want and which buttons you want in it.
@@ -62,8 +66,8 @@ media_control_row:
   - fast_forward
 ```
 
-The available rows are `power_row`, `channel_row`, `apps_row`, `source_row` and `media_control_row`
-There also `volume_row` and `navigation_row`, but these requires a string as value.
+Any name and number of rows can be added, but they must contain `_row` in their names.
+The row names `volume_row` and `navigation_row` are special rows that can also be added to your remote, but they require a string as value.
 
 | Name           | Type   | Description                                                                                                                                                                                                                       |
 | -------------- | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -325,6 +329,67 @@ source_row:
 Result:
 
 <img src="assets/using_less.png" alt="less example" width="300"/>
+
+### Example 4
+
+A tablet UI
+
+```yaml
+type: horizontal-stack
+cards:
+  - type: vertical-stack
+    cards:
+      - type: tile
+        entity: media_player.google_chromecast
+        show_entity_picture: true
+        vertical: true
+        icon_tap_action:
+          action: toggle
+      - type: custom:android-tv-card
+        remote_id: remote.google_chromecast
+        media_player_id: media_player.google_chromecast
+        _row_1:
+          - back
+          - null
+          - home
+          - null
+          - menu
+        spacer_row_1:
+          - null
+        _row_2:
+          - volume_down
+          - null
+          - volume_mute
+          - null
+          - volume_up
+        spacer_row_2:
+          - null
+        _row_3:
+          - rewind
+          - null
+          - play_pause
+          - null
+          - fast_forward
+        custom_keys:
+          volume_down:
+            icon: mdi:volume-medium
+            service: script.amplifier_volume_down
+          volume_mute:
+            icon: mdi:volume-mute
+            service: script.amplifier_volume_mute
+          volume_up:
+            icon: mdi:volume-high
+            service: script.amplifier_volume_up
+  - type: custom:android-tv-card
+    remote_id: remote.google_chromecast
+    media_player_id: media_player.google_chromecast
+    navigation_row: touchpad
+    touchpad_height: 512px
+```
+
+Result:
+
+<img src="assets/tablet.png" alt="tablet example" width="800"/>
 
 ### Extra
 
