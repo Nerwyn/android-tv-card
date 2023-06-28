@@ -14,6 +14,8 @@ jobs:
   validate:
     runs-on: 'ubuntu-latest'
     steps:
+      - name: Checkout v3
+        uses: 'actions/checkout@v3'
       - name: HACS Action
         uses: 'hacs/action@main'
         with:
