@@ -1,4 +1,4 @@
-name: Validate plugin
+name: HACS Action
 
 on:
   push:
@@ -10,7 +10,6 @@ jobs:
   validate:
     runs-on: "ubuntu-latest"
     steps:
-        - uses: "actions/checkout@v2"
         - name: HACS Action
           uses: "hacs/action@main"
           with:
