@@ -240,7 +240,10 @@ class TVCardServices extends LitElement {
 			let key = info.key;
 			this.sendKey(key, longPress);
 		}
-		if (info.service) {
+		else if (info.source) {
+			this.changeSource(info.source)
+		}
+		else if (info.service) {
 			let service_data = JSON.parse(
 				JSON.stringify(info.service_data || {})
 			);
@@ -253,9 +256,9 @@ class TVCardServices extends LitElement {
 	}
 
 	changeSource(source) {
-		this._hass.callService('media_player', 'select_source', {
-			source: source,
-			entity_id: this._config.media_player_id,
+		this._hass.callService('remote', 'turn_on', {
+			activity: source,
+			entity_id: this._config.remote_id,
 		});
 	}
 
