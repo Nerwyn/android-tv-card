@@ -78,9 +78,11 @@ const keys = {
 };
 
 const sources = {
-	netflix: { source: 'Netflix', icon: 'mdi:netflix' },
-	spotify: { source: 'Spotify', icon: 'mdi:spotify' },
-	youtube: { source: 'YouTube', icon: 'mdi:youtube' },
+	netflix: { source: 'netflix://', icon: 'mdi:netflix' },
+	spotify: { source: 'spotify://', icon: 'mdi:spotify' },
+	youtube: { source: 'vnd.youtube://', icon: 'mdi:youtube' },
+	appletv: { source: 'https://tv.apple.com', icon: 'mdi:apple' },
+	crunchyroll: { source: 'crunchyroll://', svg_path: 'M 2.933594 13.46875 C 2.707031 10.601562 3.65625 7.769531 5.566406 5.621094 C 7.476562 3.476562 10.179688 2.199219 13.050781 2.089844 C 15.921875 1.984375 18.710938 3.050781 20.777344 5.046875 C 22.847656 7.042969 24.007812 9.792969 24 12.667969 L 24 12 C 24 5.371094 18.628906 0 12 0 C 5.371094 0 0 5.371094 0 12 C 0 18.628906 5.371094 24 12 24 L 12.800781 24 C 7.261719 23.609375 2.964844 19.015625 2.933594 13.46875 Z M 19.199219 14 C 14.886719 14.015625 13.8125 8.011719 17.867188 6.53125 C 16.679688 5.898438 15.347656 5.574219 14 5.601562 C 10.601562 5.601562 7.539062 7.648438 6.238281 10.785156 C 4.9375 13.925781 5.65625 17.539062 8.058594 19.941406 C 10.460938 22.34375 14.074219 23.0625 17.214844 21.761719 C 20.351562 20.460938 22.398438 17.398438 22.398438 14 C 22.421875 13.464844 22.378906 12.925781 22.265625 12.398438 C 21.609375 13.449219 20.4375 14.0625 19.199219 14 Z M 19.199219 14 ' },
 };
 
 var fireEvent = function (node, type, detail, options) {
@@ -239,11 +241,9 @@ class TVCardServices extends LitElement {
 		if (info.key) {
 			let key = info.key;
 			this.sendKey(key, longPress);
-		}
-		else if (info.source) {
-			this.changeSource(info.source)
-		}
-		else if (info.service) {
+		} else if (info.source) {
+			this.changeSource(info.source);
+		} else if (info.service) {
 			let service_data = JSON.parse(
 				JSON.stringify(info.service_data || {})
 			);
@@ -397,7 +397,7 @@ class TVCardServices extends LitElement {
 			sources[action] ||
 			{};
 		let icon = button_info.icon;
-		let custom_svg_path = this.custom_icons[icon];
+		let svg_path = button_info.svg_path ?? this.custom_icons[icon];
 
 		return html`
 			<ha-icon-button
@@ -406,12 +406,12 @@ class TVCardServices extends LitElement {
 				@touchstart="${this.handleActionLongClick}"
 				@touchend="${this.handleActionLongClickEnd}"
 				title="${action}"
-				.path="${custom_svg_path ? custom_svg_path : ''}"
-				>
+				.path="${svg_path ? svg_path : ''}"
+			>
 				<ha-icon
-					.icon="${!custom_svg_path ? icon : ''}"
+					.icon="${!svg_path ? icon : ''}"
 				</ha-icon>
-				</ha-icon-button>
+			</ha-icon-button>
 		`;
 	}
 

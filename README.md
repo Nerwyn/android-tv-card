@@ -146,13 +146,13 @@ custom_keys:
 
 Inside each button you may define `icon` and either `key`, `source` or `service`, as you've seen.
 
-| Option       | internal function                                                              | Description                                                                                    |
-| ------------ | ------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------- |
-| icon         |                                                                                | The icon to show in the button. If empty, the button will be blank.                            |
-| key          | `media_player.play_media(media_content_id=key, media_content_type="send_key")` | The key to send to the TV via `media_player.play_media`                                        |
-| source       | `media_player.select_source(source=source)`                                    | The source to switch to via `media_player.select_source`                                       |
-| service      | `_hass.callService(domain, service, service_data)`                             | A string representing service to call. Use the format `domain.service`, e.g. `"light.turn_on"` |
-| service_data | passed with `service`                                                          | The data to pass to the service. May be an object depending on the service you are using.      |
+| Option       | internal function                                  | Description                                                                                    |
+| ------------ | -------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| icon         |                                                    | The icon to show in the button. If empty, the button will be blank.                            |
+| key          | `remote.send_command(command=key)`                 | The key to send to the TV via `remote.send_command`                                            |
+| source       | `remote.turn_on(activity=source)`                  | The source to switch to via `remote.turn_on`                                                   |
+| service      | `_hass.callService(domain, service, service_data)` | A string representing service to call. Use the format `domain.service`, e.g. `"light.turn_on"` |
+| service_data | passed with `service`                              | The data to pass to the service. May be an object depending on the service you are using.      |
 
 ## Custom icons
 
@@ -185,13 +185,15 @@ custom_icons:
 
 The svg path was copied from [SimpleIcon](https://simpleicons.org/?q=hbo). Although you can use [this integration](https://github.com/vigonotion/hass-simpleicons) for using icons from SimpleIcons (there's also one for [fontawesome](https://github.com/thomasloven/hass-fontawesome)).
 
+I highly recommend using a service like [iLoveIMG Resize SVG](https://www.iloveimg.com/resize-image/resize-svg) to resize any icons you find to 24x24 pixels so that they render correctly.
+
 Having defined the custom icon, you can use it on any custom button:
 
 ```yaml
 custom_sources:
-  hbomax:
+  max:
     icon: hbo
-    source: HBO Max
+    source: hbomax://deeplink
 ```
 
 ## Installation
