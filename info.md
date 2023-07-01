@@ -8,6 +8,8 @@ A fork of usernein's tv-card for the Home Assistant [Android TV Remote](https://
 - Tweaks navigation behavior to behave more like the Google TV remote.
 - Lets you name rows anything and add unlimited rows as long as they have `_row` in the name and don't have duplicate names.
 - Allows you to change the touchpad height using the configuration option `touchpad_height`.
+- Many more default keys and sources
+	- *Not all working or tested at this time, let me know if you find the correct source/activity for the broken ones!
 
 **Sample overview:**
 
