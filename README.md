@@ -29,6 +29,8 @@ Along with a few other changes/improvements:
 - Row names (except for `volume_row` and `navigation_row`) can be named anything as long as it contains `_row`, giving you the option to add unlimited rows.
   - Combine this with `custom_keys` and you can really use this card for anything you want!
 - Touchpad height can now be adjusted using the configuration option `touchpad_height`. If not provided will default to 250px.
+- Many more default sources with SVG icons if no material design icon was available in Home Assistant.
+  - Not all are working or tested at this time, please let me know if you find the correct source/activity names for the ones that are incorrect.
 
 Many thanks to the original authors. Getting this to work with Android TV was straightforward and all of the frontend heavy lifting they did has provided an excellent base on which to build my personal ultimate Android TV remote.
 
@@ -42,7 +44,7 @@ Many thanks to the original authors. Getting this to work with Android TV was st
 | ---------------------- | ------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | type                   | string  | **Required** | `custom:android-tv-card`                                                                                                                                     |
 | remote_id              | string  | **Optional** | The `remote` entity id to control, required for default commands                                                                                             |
-| media_player_id        | string  | **Optional** | The `media_player` entity id to control, required for changing sources                                                                                       |
+| media_player_id        | string  | **Optional** | The `media_player` entity id to control, required for the optional volume slider                                                                             |
 | title                  | string  | **Optional** | Card title for showing as header                                                                                                                             |
 | enable_double_click    | boolean | **Optional** | Whether a double click on the touchpad should send the key in `double_click_keycode`. Defaults to `true`.                                                    |
 | double_click_keycode   | string  | **Optional** | The key for double clicks on the touchpad. Defaults to `back`                                                                                                |
