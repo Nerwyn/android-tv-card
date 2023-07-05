@@ -72,7 +72,7 @@ class TVCardServices extends LitElement {
 		return this._hass;
 	}
 
-	fireEvent(node, type, detail, _options) {
+	fireEvent = function (node, type, detail, _options) {
 		detail = detail === null || detail === undefined ? {} : detail;
 		let e = new Event(type, {
 			bubbles: false,
@@ -80,7 +80,7 @@ class TVCardServices extends LitElement {
 		e.detail = detail;
 		node.dispatchEvent(e);
 		return e;
-	}
+	};
 
 	fireHapticEvent(window, detail) {
 		if (
@@ -202,7 +202,7 @@ class TVCardServices extends LitElement {
 
 	/**
 	 * Event handler for touchpad click with no movement
-	 * @param {Event} e
+	 * @param {Event} e 
 	 */
 	onTouchClick(e) {
 		e.stopImmediatePropagation();
@@ -221,7 +221,7 @@ class TVCardServices extends LitElement {
 
 	/**
 	 * Event handler for touchpad double click
-	 * @param {Event} e
+	 * @param {Event} e 
 	 */
 	onTouchDoubleClick(e) {
 		if (
@@ -245,7 +245,7 @@ class TVCardServices extends LitElement {
 
 	/**
 	 * Event handler for touchpad swipe start
-	 * @param {Event} e
+	 * @param {Event} e 
 	 */
 	onTouchStart(e) {
 		e.stopImmediatePropagation();
@@ -269,7 +269,7 @@ class TVCardServices extends LitElement {
 
 	/**
 	 * Event handler for touchpad swipe end
-	 * @param {Event} _e
+	 * @param {Event} _e 
 	 */
 	onTouchEnd(_e) {
 		clearTimeout(this.timer);
@@ -315,7 +315,7 @@ class TVCardServices extends LitElement {
 
 	/**
 	 * Event handler for button click
-	 * @param {Event} e
+	 * @param {Event} e 
 	 */
 	onButtonClick(e) {
 		let action = e.currentTarget.action;
@@ -325,7 +325,7 @@ class TVCardServices extends LitElement {
 
 	/**
 	 * Event handler for button long click start
-	 * @param {Event} e
+	 * @param {Event} e 
 	 */
 	onButtonLongClickStart(e) {
 		this.holdaction = e.currentTarget.action;
@@ -346,7 +346,7 @@ class TVCardServices extends LitElement {
 
 	/**
 	 * Event handler for button long click end
-	 * @param {Event} _e
+	 * @param {Event} _e 
 	 */
 	onButtonLongClickEnd(_e) {
 		clearTimeout(this.timer);
