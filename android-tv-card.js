@@ -1,9 +1,21 @@
-import { defaultKeys, defaultSources } from './models';
-
 const LitElement = Object.getPrototypeOf(
 	customElements.get('ha-panel-lovelace')
 );
 const html = LitElement.prototype.html;
+
+/**
+ * This is the list of most common commands from the Android TV Remote integration page.
+ * Not all are ensured to work, and if they do not it is likely an issue with the underlying package used by the Android TV Remote integration or the Android TV Remote Protocol V2 itself.
+ * https://www.home-assistant.io/integrations/androidtv_remote/#remote
+ */
+const defaultKeys = fetch('./models/defaultKeys.json');
+
+/**
+ * This is a list of common streaming apps, their icons, and the deep links to open them in Android TV, mostly collected from the following Home Assistant Community Forum guide.
+ * Not all have been tested, if any do not work please let me know!
+ * https://community.home-assistant.io/t/android-tv-remote-app-links-deep-linking-guide/567921
+ */
+const defaultSources = fetch('./models/defaultSources.json');
 
 class TVCardServices extends LitElement {
 	constructor() {
