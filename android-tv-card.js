@@ -558,59 +558,44 @@ class TVCardServices extends LitElement {
 				let row_actions = this._config[row_name];
 				let row = [];
 
-				switch (row_name) {
-					case 'volume_row': {
-						if (this._config.volume_row == 'buttons') {
-							row = [
-								this.buildIconButton('volume_down'),
-								this.buildIconButton('volume_mute'),
-								this.buildIconButton('volume_up'),
-							];
-						} else if (this._config.volume_row == 'slider') {
-							row.push(this.volume_slider);
-						}
-						break;
+				if (row_name == 'volume_row') {
+					if (this._config.volume_row == 'buttons') {
+						row = [
+							this.buildIconButton('volume_down'),
+							this.buildIconButton('volume_mute'),
+							this.buildIconButton('volume_up'),
+						];
+					} else if (this._config.volume_row == 'slider') {
+						row.push(this.volume_slider);
 					}
-
-					case 'navigation_row': {
-						switch (this._config.navigation_row) {
-							case 'buttons': {
-								let up_row = [this.buildIconButton('up')];
-								let middle_row = [
-									this.buildIconButton('left'),
-									this.buildIconButton('center'),
-									this.buildIconButton('right'),
-								];
-								let down_row = [this.buildIconButton('down')];
-								row.push(...[up_row, middle_row, down_row]);
-								break;
-							}
-
-							case 'touchpad':
-							default: {
-								const touchpad = [
-									html`
-										<toucharea
-											id="toucharea"
-											@click="${this.onTouchClick}"
-											@dblclick="${this
-												.onTouchDoubleClick}"
-											@touchstart="${this.onTouchStart}"
-											@touchmove="${this.onTouchMove}"
-											@touchend="${this.onTouchEnd}"
-										>
-										</toucharea>
-									`,
-								];
-								row.push(touchpad);
-							}
-						}
-						break;
+				} else if (row_name == 'navigation_row') {
+					if (this._config.navigation_row == 'buttons') {
+						let up_row = [this.buildIconButton('up')];
+						let middle_row = [
+							this.buildIconButton('left'),
+							this.buildIconButton('center'),
+							this.buildIconButton('right'),
+						];
+						let down_row = [this.buildIconButton('down')];
+						row.push(...[up_row, middle_row, down_row]);
+					} else if (this._config.navigation_row == 'touchpad') {
+						const touchpad = [
+							html`
+								<toucharea
+									id="toucharea"
+									@click="${this.onTouchClick}"
+									@dblclick="${this.onTouchDoubleClick}"
+									@touchstart="${this.onTouchStart}"
+									@touchmove="${this.onTouchMove}"
+									@touchend="${this.onTouchEnd}"
+								>
+								</toucharea>
+							`,
+						];
+						row.push(touchpad);
 					}
-
-					default: {
-						row = this.buildButtonsFromActions(row_actions);
-					}
+				} else {
+					row = this.buildButtonsFromActions(row_actions);
 				}
 				content.push(row);
 			}
