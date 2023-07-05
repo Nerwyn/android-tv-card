@@ -33,14 +33,13 @@ class TVCardServices extends LitElement {
 	}
 
 	getCardSize() {
-		// let numRows = Object.keys(this._config).filter((key) =>
-		// 	key.includes('_row')
-		// ).length;
-		// if ('title' in this._config) {
-		// 	numRows += 1;
-		// }
-		// return numRows;
-		return 7;
+		let numRows = Object.keys(this._config).filter((key) =>
+			key.includes('_row')
+		).length;
+		if ('title' in this._config) {
+			numRows += 1;
+		}
+		return numRows;
 	}
 
 	setConfig(config) {
@@ -203,7 +202,7 @@ class TVCardServices extends LitElement {
 
 	/**
 	 * Event handler for touchpad click with no movement
-	 * @param {Event} e
+	 * @param {Event} e 
 	 */
 	onTouchClick(e) {
 		e.stopImmediatePropagation();
@@ -222,7 +221,7 @@ class TVCardServices extends LitElement {
 
 	/**
 	 * Event handler for touchpad double click
-	 * @param {Event} e
+	 * @param {Event} e 
 	 */
 	onTouchDoubleClick(e) {
 		if (
@@ -246,7 +245,7 @@ class TVCardServices extends LitElement {
 
 	/**
 	 * Event handler for touchpad swipe start
-	 * @param {Event} e
+	 * @param {Event} e 
 	 */
 	onTouchStart(e) {
 		e.stopImmediatePropagation();
@@ -270,7 +269,7 @@ class TVCardServices extends LitElement {
 
 	/**
 	 * Event handler for touchpad swipe end
-	 * @param {Event} _e
+	 * @param {Event} _e 
 	 */
 	onTouchEnd(_e) {
 		clearTimeout(this.timer);
@@ -316,7 +315,7 @@ class TVCardServices extends LitElement {
 
 	/**
 	 * Event handler for button click
-	 * @param {Event} e
+	 * @param {Event} e 
 	 */
 	onButtonClick(e) {
 		let action = e.currentTarget.action;
@@ -326,7 +325,7 @@ class TVCardServices extends LitElement {
 
 	/**
 	 * Event handler for button long click start
-	 * @param {Event} e
+	 * @param {Event} e 
 	 */
 	onButtonLongClickStart(e) {
 		this.holdaction = e.currentTarget.action;
@@ -347,7 +346,7 @@ class TVCardServices extends LitElement {
 
 	/**
 	 * Event handler for button long click end
-	 * @param {Event} _e
+	 * @param {Event} _e 
 	 */
 	onButtonLongClickEnd(_e) {
 		clearTimeout(this.timer);
