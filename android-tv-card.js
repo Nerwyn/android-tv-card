@@ -447,7 +447,6 @@ class TVCardServices extends LitElement {
 									`,
 								];
 								row.push(touchpad);
-								break;
 							}
 						}
 						break;
@@ -455,7 +454,6 @@ class TVCardServices extends LitElement {
 
 					default: {
 						row = this.buildButtonsFromActions(row_actions);
-						break;
 					}
 				}
 				content.push(row);
