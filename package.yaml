@@ -1,6 +1,6 @@
 name: Android TV Card
 description: 📺 Android TV Remote Card
-version: 1.3.4
+version: 1.3.3
 type: lovelace
 keywords:
   - androidtv
