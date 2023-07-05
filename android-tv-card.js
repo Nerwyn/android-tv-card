@@ -455,7 +455,7 @@ class TVCardServices extends LitElement {
 
 					default: {
 						row = this.buildButtonsFromActions(row_actions);
-						break;
+						break
 					}
 				}
 				content.push(row);
