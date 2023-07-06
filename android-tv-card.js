@@ -317,7 +317,8 @@ class TVCardServices extends LitElement {
 			this.custom_keys[action] ||
 			this.custom_sources[action] ||
 			defaultKeys[action] ||
-			defaultSources[action]
+			defaultSources[action] ||
+			{}
 		);
 	}
 
@@ -517,8 +518,8 @@ class TVCardServices extends LitElement {
 
 	buildIconButton(action) {
 		let info = this.getInfo(action);
-		let icon = info.icon ?? '';
-		let svg_path = info.svg_path ?? this.custom_icons[icon];
+		let icon = info?.icon ?? '';
+		let svg_path = info.svg_path ?? this.custom_icons[icon] ?? '';
 
 		return html`
 			<ha-icon-button
@@ -527,7 +528,7 @@ class TVCardServices extends LitElement {
 				@touchstart="${this.onButtonLongClickStart}"
 				@touchend="${this.onButtonLongClickEnd}"
 				title="${action}"
-				.path="${svg_path ?? ''}"
+				.path="${svg_path}"
 			>
 				<ha-icon
 					.icon="${!svg_path ? icon : ''}"
