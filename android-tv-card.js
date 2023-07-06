@@ -517,7 +517,7 @@ class TVCardServices extends LitElement {
 
 	buildIconButton(action) {
 		let info = this.getInfo(action);
-		let icon = info.icon;
+		let icon = info.icon ?? '';
 		let svg_path = info.svg_path ?? this.custom_icons[icon];
 
 		return html`
