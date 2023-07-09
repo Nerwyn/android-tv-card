@@ -613,7 +613,7 @@ class TVCardServices extends LitElement {
 						row = this.buildButtonsFromActions(row_actions);
 					}
 				}
-				content.push(...row);
+				content.push(row);
 			}
 		});
 
