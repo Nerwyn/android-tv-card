@@ -583,7 +583,7 @@ class TVCardServices extends LitElement {
 									this.buildIconButton('right'),
 								];
 								let down_row = [this.buildIconButton('down')];
-								row.push([up_row, middle_row, down_row]);
+								row.push(...[up_row, middle_row, down_row]);
 								break;
 							}
 
@@ -613,7 +613,7 @@ class TVCardServices extends LitElement {
 						row = this.buildButtonsFromActions(row_actions);
 					}
 				}
-				content.push(row);
+				content.push(...row);
 			}
 		});
 
