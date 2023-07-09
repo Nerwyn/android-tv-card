@@ -20,7 +20,7 @@ const defaultKeys = {
 	center: { key: 'DPAD_CENTER', icon: 'mdi:checkbox-blank-circle' },
 	right: { key: 'DPAD_RIGHT', icon: 'mdi:chevron-right' },
 	down: { key: 'DPAD_DOWN', icon: 'mdi:chevron-down' },
-	play: { key: 'MEDIA_PLAY_', icon: 'mdi:play' },
+	play: { key: 'MEDIA_PLAY', icon: 'mdi:play' },
 	pause: { key: 'MEDIA_PAUSE', icon: 'mdi:pause' },
 	play_pause: { key: 'MEDIA_PLAY_PAUSE', icon: 'mdi:play-pause' },
 	stop: { key: 'MEDIA_STOP', icon: 'mdi:stop' },
@@ -583,7 +583,7 @@ class TVCardServices extends LitElement {
 									this.buildIconButton('right'),
 								];
 								let down_row = [this.buildIconButton('down')];
-								row.push(...[up_row, middle_row, down_row]);
+								row.push([up_row, middle_row, down_row]);
 								break;
 							}
 
