@@ -585,7 +585,7 @@ class TVCardServices extends LitElement {
 									this.buildIconButton('right'),
 								];
 								let down_row = [this.buildIconButton('down')];
-								row.push([up_row, middle_row, down_row]);
+								row = [up_row, middle_row, down_row];
 								break;
 							}
 
