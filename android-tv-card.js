@@ -563,12 +563,14 @@ class TVCardServices extends LitElement {
 					case 'volume_row': {
 						if (this._config.volume_row == 'buttons') {
 							row = [
-								this.buildIconButton('volume_down'),
-								this.buildIconButton('volume_mute'),
-								this.buildIconButton('volume_up'),
+								[
+									this.buildIconButton('volume_down'),
+									this.buildIconButton('volume_mute'),
+									this.buildIconButton('volume_up'),
+								],
 							];
 						} else if (this._config.volume_row == 'slider') {
-							row.push(this.volume_slider);
+							row.push([this.volume_slider]);
 						}
 						break;
 					}
@@ -583,7 +585,7 @@ class TVCardServices extends LitElement {
 									this.buildIconButton('right'),
 								];
 								let down_row = [this.buildIconButton('down')];
-								row.push(...[up_row, middle_row, down_row]);
+								row.push([up_row, middle_row, down_row]);
 								break;
 							}
 
@@ -603,17 +605,17 @@ class TVCardServices extends LitElement {
 										</toucharea>
 									`,
 								];
-								row.push(touchpad);
+								row.push([touchpad]);
 							}
 						}
 						break;
 					}
 
 					default: {
-						row = this.buildButtonsFromActions(row_actions);
+						row = [this.buildButtonsFromActions(row_actions)];
 					}
 				}
-				content.push(row);
+				content.push(...row);
 			}
 		});
 
