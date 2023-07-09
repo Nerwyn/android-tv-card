@@ -556,21 +556,16 @@ class TVCardServices extends LitElement {
 		let content = [];
 		Object.keys(this._config).forEach((row_name) => {
 			if (row_name.includes('_row')) {
-				let row_actions = this._config[row_name];
-				let row = [];
-
 				switch (row_name) {
 					case 'volume_row': {
 						if (this._config.volume_row == 'buttons') {
-							row = [
-								[
-									this.buildIconButton('volume_down'),
-									this.buildIconButton('volume_mute'),
-									this.buildIconButton('volume_up'),
-								],
-							];
+							content.push([
+								this.buildIconButton('volume_down'),
+								this.buildIconButton('volume_mute'),
+								this.buildIconButton('volume_up'),
+							]);
 						} else if (this._config.volume_row == 'slider') {
-							row.push([this.volume_slider]);
+							content.push([this.volume_slider]);
 						}
 						break;
 					}
@@ -578,14 +573,13 @@ class TVCardServices extends LitElement {
 					case 'navigation_row': {
 						switch (this._config.navigation_row) {
 							case 'buttons': {
-								let up_row = [this.buildIconButton('up')];
-								let middle_row = [
+								content.push([this.buildIconButton('up')]);
+								content.push([
 									this.buildIconButton('left'),
 									this.buildIconButton('center'),
 									this.buildIconButton('right'),
-								];
-								let down_row = [this.buildIconButton('down')];
-								row = [up_row, middle_row, down_row];
+								]);
+								content.push([this.buildIconButton('down')]);
 								break;
 							}
 
@@ -605,17 +599,20 @@ class TVCardServices extends LitElement {
 										</toucharea>
 									`,
 								];
-								row.push([touchpad]);
+								content.push([touchpad]);
 							}
 						}
 						break;
 					}
 
 					default: {
-						row = [this.buildButtonsFromActions(row_actions)];
+						content.push([
+							this.buildButtonsFromActions(
+								this._config[row_name]
+							),
+						]);
 					}
 				}
-				content.push(...row);
 			}
 		});
 
