@@ -527,7 +527,7 @@ class TVCardServices extends LitElement {
 		let text = prompt('Send text: ');
 		let data = {
 			entity_id: this._config.adb_id,
-			command: 'input text ' + text,
+			command: 'input text "' + text + '"',
 		};
 		this._hass.callService('androidtv', 'adb_command', data);
 	}
