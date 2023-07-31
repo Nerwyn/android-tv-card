@@ -1,6 +1,6 @@
 {
 	"name": "android-tv-card",
-	"version": "1.3.6",
+	"version": "1.4.0",
 	"description": "Android TV Remote Card",
 	"main": "./src/android-tv-card.js",
 	"scripts": {

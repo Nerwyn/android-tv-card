@@ -22,6 +22,7 @@ Along with a few other changes/improvements:
 
 - Supports the official [Android TV Remote integration](https://www.home-assistant.io/integrations/androidtv_remote/).
 - Uses `remote.send_command` (instead of `media_player.play_media` like the original) to send commands to an Android TV using said integration, and can be given a `remote_id` to do so.
+  - `media_player_id` is still present just for the volume slider. All other buttons and sources including volume buttons use the `remote_id`.
 - Swipe actions are now remappable by creating `custom_keys` for `up`, `down`, `left`, `right`, and `center`.
 - Navigation and button behavior tweaked to mimic the Google TV remote, such as:
   - Hold press/touch/swipe actions only repeat for directional and volume keys, and perform a long press for anything else.
@@ -31,6 +32,8 @@ Along with a few other changes/improvements:
 - Touchpad height can now be adjusted using the configuration option `touchpad_height`. If not provided will default to 250px.
 - Many more default keys and sources with SVG icons if no material design icon was available in Home Assistant.
   - Not all are working or tested at this time, please let me know if you find the correct source/activity names for the ones that are incorrect.
+- Send keyboard keys using `androidtv.adb_command` using the [Android Debug Bridge integration](https://www.home-assistant.io/integrations/androidtv/) and the `adb_id` configuration option.
+  - Create a key titled `keyboard` to enable this and click it to pull up the onscreen keyboard on mobile.
 
 Many thanks to the original authors. Getting this to work with Android TV was straightforward and all of the frontend heavy lifting they did has provided an excellent base on which to build my personal ultimate Android TV remote.
 
@@ -44,7 +47,8 @@ Many thanks to the original authors. Getting this to work with Android TV was st
 | ---------------------- | ------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | type                   | string  | **Required** | `custom:android-tv-card`                                                                                                                                     |
 | remote_id              | string  | **Optional** | The `remote` entity id to control, required for default commands                                                                                             |
-| media_player_id        | string  | **Optional** | The `media_player` entity id to control, required for the optional volume slider                                                                             |
+| media_player_id        | string  | **Optional** | The `media_player` entity id to use for the optional volume slider (not required for volume buttons)                                                         |
+| adb_id                 | string  | **Optional** | The adb `media_player` entity id to use to send keyboard events                                                                                              |
 | title                  | string  | **Optional** | Card title for showing as header                                                                                                                             |
 | enable_double_click    | boolean | **Optional** | Whether a double click on the touchpad should send the key in `double_click_keycode`. Defaults to `true`.                                                    |
 | double_click_keycode   | string  | **Optional** | The key for double clicks on the touchpad. Defaults to `back`                                                                                                |

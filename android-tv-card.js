@@ -76,6 +76,7 @@ const defaultKeys = {
 	settings: { key: 'SETTINGS', icon: 'mdi:cog' },
 	search: { key: 'SEARCH', icon: 'mdi:magnify' },
 	assist: { key: 'ASSIST', icon: 'mdi:google-assistant' },
+	keyboard: { key: 'KEYBOARD', icon: 'mdi:keyboard' },
 };
 
 /**
@@ -331,7 +332,11 @@ class TVCardServices extends LitElement {
 		let info = this.getInfo(action);
 		if (info.key) {
 			let key = info.key;
-			this.sendKey(key, longPress);
+			if (key == 'KEYBOARD') {
+				prompt();
+			} else {
+				this.sendKey(key, longPress);
+			}
 		} else if (info.source) {
 			this.changeSource(info.source);
 		} else if (info.service) {
@@ -516,10 +521,25 @@ class TVCardServices extends LitElement {
 		this.holdaction = null;
 	}
 
+	onKeyboardPress(e) {
+		let code = e.code;
+		let data = {
+			entity_id: this._config.adb_id,
+			command: 'input keyevent ' + code,
+		};
+		this._hass.callService('androidtv', 'adb_command', data);
+	}
+
 	buildIconButton(action) {
 		let info = this.getInfo(action);
 		let icon = info?.icon ?? '';
 		let svg_path = info.svg_path ?? this.custom_icons[icon] ?? '';
+
+		if (info.key == 'KEYBOARD') {
+			document.addEventListener('keypress', (e) =>
+				this.onKeyboardPress(e)
+			);
+		}
 
 		return html`
 			<ha-icon-button
