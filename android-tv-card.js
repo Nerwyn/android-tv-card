@@ -44,8 +44,6 @@ const defaultKeys = {
 	n7: { key: '7', icon: 'mdi:numeric-7' },
 	n8: { key: '8', icon: 'mdi:numeric-8' },
 	n9: { key: '9', icon: 'mdi:numeric-9' },
-	delete: { key: 'DEL', icon: 'mdi:backspace' },
-	enter: { key: 'ENTER', icon: 'mdi:keyboard-return' },
 	channel_up: { key: 'CHANNEL_UP', icon: 'mdi:arrow-up-circle' },
 	channel_down: { key: 'CHANNEL_DOWN', icon: 'mdi:arrow-down-circle' },
 	f1: { key: 'F1', icon: 'mdi:keyboard-f1' },
@@ -74,8 +72,9 @@ const defaultKeys = {
 	dvr: { key: 'DVR', icon: 'mdi:audio-video' },
 	audio_track: { key: 'MEDIA_AUDIO_TRACK', icon: 'mdi:waveform' },
 	settings: { key: 'SETTINGS', icon: 'mdi:cog' },
-	search: { key: 'SEARCH', icon: 'mdi:magnify' },
-	assist: { key: 'ASSIST', icon: 'mdi:google-assistant' },
+	search: { key: 'SEARCH', icon: 'mdi:google-assistant' },
+	delete: { key: 'DEL', icon: 'mdi:backspace' },
+	enter: { key: 'ENTER', icon: 'mdi:magnify' },
 	keyboard: { key: 'KEYBOARD', icon: 'mdi:keyboard' },
 };
 
@@ -526,12 +525,14 @@ class TVCardServices extends LitElement {
 	onKeyboardPress(e) {
 		e.stopImmediatePropagation();
 		let text = prompt('Send Text To TV: ');
-		let data = {
-			entity_id: this._config.adb_id,
-			// TODO: Use input keyevent to send keyboard events translated from JS key code to ADB key code
-			command: 'input text "' + text + '"',
-		};
-		this._hass.callService('androidtv', 'adb_command', data);
+		if (text) {
+			let data = {
+				entity_id: this._config.adb_id,
+				// TODO: Use input keyevent to send keyboard events translated from JS key code to ADB key code
+				command: 'input text "' + text + '"',
+			};
+			this._hass.callService('androidtv', 'adb_command', data);
+		}
 	}
 
 	buildIconButton(action) {
