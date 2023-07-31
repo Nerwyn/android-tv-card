@@ -10,6 +10,7 @@ A fork of usernein's tv-card for the Home Assistant [Android TV Remote](https://
 - Allows you to change the touchpad height using the configuration option `touchpad_height`.
 - Many more default keys and sources
 	- *Not all working or tested at this time, let me know if you find the correct source/activity for the broken ones!
+- Keyboard text entry via the [Android Debug Bridge integration](https://www.home-assistant.io/integrations/androidtv/).
 
 **Sample overview:**
 
