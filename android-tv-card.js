@@ -332,11 +332,7 @@ class TVCardServices extends LitElement {
 		let info = this.getInfo(action);
 		if (info.key) {
 			let key = info.key;
-			if (key == 'KEYBOARD') {
-				prompt();
-			} else {
-				this.sendKey(key, longPress);
-			}
+			this.sendKey(key, longPress);
 		} else if (info.source) {
 			this.changeSource(info.source);
 		} else if (info.service) {
@@ -481,8 +477,13 @@ class TVCardServices extends LitElement {
 	 */
 	onButtonClick(e) {
 		let action = e.currentTarget.action;
-		this.sendAction(action);
-		this.fireHapticEvent(window, 'light');
+		let info = this.getInfo(action);
+		if (info.key == 'KEYBOARD') {
+			this.onKeyboardPress(e);
+		} else {
+			this.sendAction(action);
+			this.fireHapticEvent(window, 'light');
+		}
 	}
 
 	/**
@@ -522,10 +523,11 @@ class TVCardServices extends LitElement {
 	}
 
 	onKeyboardPress(e) {
-		let code = e.code;
+		e.stopImmediatePropagation();
+		let text = prompt('Send text: ');
 		let data = {
 			entity_id: this._config.adb_id,
-			command: 'input keyevent ' + code,
+			command: 'input text ' + text,
 		};
 		this._hass.callService('androidtv', 'adb_command', data);
 	}
@@ -534,12 +536,6 @@ class TVCardServices extends LitElement {
 		let info = this.getInfo(action);
 		let icon = info?.icon ?? '';
 		let svg_path = info.svg_path ?? this.custom_icons[icon] ?? '';
-
-		if (info.key == 'KEYBOARD') {
-			document.addEventListener('keypress', (e) =>
-				this.onKeyboardPress(e)
-			);
-		}
 
 		return html`
 			<ha-icon-button
