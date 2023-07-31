@@ -34,6 +34,7 @@ Along with a few other changes/improvements:
   - Not all are working or tested at this time, please let me know if you find the correct source/activity names for the ones that are incorrect.
 - Send keyboard keys using `androidtv.adb_command` using the [Android Debug Bridge integration](https://www.home-assistant.io/integrations/androidtv/) and the `adb_id` configuration option.
   - Create a key titled `keyboard` to enable this and click it to pull up the onscreen keyboard on mobile.
+  - Highly recommended to also create keys for `delete` and `enter` so you can remove and send your input text.
 
 Many thanks to the original authors. Getting this to work with Android TV was straightforward and all of the frontend heavy lifting they did has provided an excellent base on which to build my personal ultimate Android TV remote.
 
@@ -43,21 +44,21 @@ Many thanks to the original authors. Getting this to work with Android TV was st
 
 ## Options
 
-| Name                   | Type    | Requirement  | Description                                                                                                                                                  |
-| ---------------------- | ------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| type                   | string  | **Required** | `custom:android-tv-card`                                                                                                                                     |
-| remote_id              | string  | **Optional** | The `remote` entity id to control, required for default commands                                                                                             |
-| media_player_id        | string  | **Optional** | The `media_player` entity id to use for the optional volume slider (not required for volume buttons)                                                         |
-| adb_id                 | string  | **Optional** | The adb `media_player` entity id to use to send keyboard events                                                                                              |
-| title                  | string  | **Optional** | Card title for showing as header                                                                                                                             |
-| enable_double_click    | boolean | **Optional** | Whether a double click on the touchpad should send the key in `double_click_keycode`. Defaults to `true`.                                                    |
-| double_click_keycode   | string  | **Optional** | The key for double clicks on the touchpad. Defaults to `back`                                                                                                |
-| enable_button_feedback | boolean | **Optional** | Shall clicks on the buttons return a vibration feedback? Defaults to `true`.                                                                                 |
-| enable_slider_feedback | boolean | **Optional** | Shall the volume slider return a vibration feedback when you slide through it? Defaults to `true`.                                                           |
-| slider_config          | object  | **Optional** | Custom configuration for the volume slider. See [slider-card](https://github.com/AnthonMS/my-cards)                                                          |
-| custom_keys            | object  | **Optional** | Custom keys for the remote control. Each item is an object that should have `icon` and at least one of the following properties: `key`, `source`, `service`. |
-| custom_sources         | object  | **Optional** | Custom sources for the remote control. Same object as above, but letting you split keys and sources.                                                         |
-| touchpad_height        | string  | **Optional** | Change touchpad height to a custom value, must include [units](https://www.w3schools.com/cssref/css_units.php). Defaults to `250px`.                         |
+| Name                   | Type    | Requirement  | Description                                                                                                                                                              |
+| ---------------------- | ------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| type                   | string  | **Required** | `custom:android-tv-card`                                                                                                                                                 |
+| remote_id              | string  | **Optional** | The `remote` entity id to control, required for default commands.                                                                                                        |
+| media_player_id        | string  | **Optional** | The `media_player` entity id to use for the optional volume slider (not required for volume buttons).                                                                    |
+| adb_id                 | string  | **Optional** | The adb `media_player` entity id to use to send keyboard events. Requires the [Android Debug Bridge integration](https://www.home-assistant.io/integrations/androidtv/). |
+| title                  | string  | **Optional** | Card title for showing as header.                                                                                                                                        |
+| enable_double_click    | boolean | **Optional** | Whether a double click on the touchpad should send the key in `double_click_keycode`. Defaults to `true`.                                                                |
+| double_click_keycode   | string  | **Optional** | The key for double clicks on the touchpad. Defaults to `back`.                                                                                                           |
+| enable_button_feedback | boolean | **Optional** | Shall clicks on the buttons return a vibration feedback? Defaults to `true`.                                                                                             |
+| enable_slider_feedback | boolean | **Optional** | Shall the volume slider return a vibration feedback when you slide through it? Defaults to `true`.                                                                       |
+| slider_config          | object  | **Optional** | Custom configuration for the volume slider. See [slider-card](https://github.com/AnthonMS/my-cards). Requires `media_player_id`.                                         |
+| custom_keys            | object  | **Optional** | Custom keys for the remote control. Each item is an object that should have `icon` and at least one of the following properties: `key`, `source`, `service`.             |
+| custom_sources         | object  | **Optional** | Custom sources for the remote control. Same object as above, but letting you split keys and sources.                                                                     |
+| touchpad_height        | string  | **Optional** | Change touchpad height to a custom value, must include [units](https://www.w3schools.com/cssref/css_units.php). Defaults to `250px`.                                     |
 
 Using only these options you will get an empty card (or almost empty, if you set a title).
 In order to include the buttons, you need to specify in the config the rows you want and which buttons you want in it.
@@ -201,6 +202,32 @@ custom_sources:
     icon: hbo
     source: hbomax://deeplink
 ```
+
+## Keyboard input with ADB
+
+You can use the [Android Debug Bridge integration](https://www.home-assistant.io/integrations/androidtv/) with this card to send text to your Android TV. Create a buton named `keyboard` to do so. Clicking on it will create a text prompt in which you can enter the text which you wish to send. It is highly recommended that you also create keys for `delete` and `enter` so you can easily delete the text you send and quickly search using it.
+
+```yaml
+type: custom:android-tv-card
+remote_id: remote.google_chromecast
+adb_id: media_player.google_chromecast_adb
+_row_1:
+  - back
+  - home
+  - play_pause
+_row_2:
+  - volume_down
+  - volume_mute
+  - volume_up
+navigation_row: touchpad
+touchpad_height: 370px
+_row_3:
+  - delete
+  - keyboard
+  - enter
+```
+
+<img src="assets/keyboard_keys.png" alt="keyboard example" width="300"/>
 
 ## Installation
 

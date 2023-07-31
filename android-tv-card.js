@@ -479,6 +479,7 @@ class TVCardServices extends LitElement {
 		let action = e.currentTarget.action;
 		let info = this.getInfo(action);
 		if (info.key == 'KEYBOARD') {
+			// TODO: Make this pull up the keyboard instead and use keypress event listener to send keys
 			this.onKeyboardPress(e);
 		} else {
 			this.sendAction(action);
@@ -524,9 +525,10 @@ class TVCardServices extends LitElement {
 
 	onKeyboardPress(e) {
 		e.stopImmediatePropagation();
-		let text = prompt('Send text: ');
+		let text = prompt('Send Text To TV: ');
 		let data = {
 			entity_id: this._config.adb_id,
+			// TODO: Use input keyevent to send keyboard events translated from JS key code to ADB key code
 			command: 'input text "' + text + '"',
 		};
 		this._hass.callService('androidtv', 'adb_command', data);
@@ -536,6 +538,13 @@ class TVCardServices extends LitElement {
 		let info = this.getInfo(action);
 		let icon = info?.icon ?? '';
 		let svg_path = info.svg_path ?? this.custom_icons[icon] ?? '';
+
+		// TODO: Use keypress event listener and a better way to pull up keyboard to send keyboard events to TV via ADB, have to translate from JS key code to ADB key code
+		// if (info.key == 'KEYBOARD') {
+		// 	document.addEventListener('keypress', (e) =>
+		// 		this.onKeyboardPress(e)
+		// 	);
+		// }
 
 		return html`
 			<ha-icon-button
