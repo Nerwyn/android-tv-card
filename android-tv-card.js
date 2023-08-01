@@ -477,12 +477,18 @@ class TVCardServices extends LitElement {
 	onButtonClick(e) {
 		let action = e.currentTarget.action;
 		let info = this.getInfo(action);
-		if (info.key == 'KEYBOARD') {
-			// TODO: Make this pull up the keyboard instead and use keypress event listener to send keys
-			this.onKeyboardPress(e);
-		} else {
-			this.sendAction(action);
-			this.fireHapticEvent(window, 'light');
+		switch (info.key) {
+			case 'KEYBOARD':
+				// TODO: Make this pull up the keyboard instead and use keypress event listener to send keys
+				this.onKeyboardPress(e);
+				break;
+			case 'SEARCH':
+				this.onSearchPress(e);
+				break;
+			default:
+				this.sendAction(action);
+				this.fireHapticEvent(window, 'light');
+				break;
 		}
 	}
 
@@ -524,12 +530,27 @@ class TVCardServices extends LitElement {
 
 	onKeyboardPress(e) {
 		e.stopImmediatePropagation();
-		let text = prompt('Send Text To TV: ');
+		let text = prompt('Search: ');
 		if (text) {
 			let data = {
 				entity_id: this._config.adb_id,
 				// TODO: Use input keyevent to send keyboard events translated from JS key code to ADB key code
 				command: 'input text "' + text + '"',
+			};
+			this._hass.callService('androidtv', 'adb_command', data);
+		}
+	}
+
+	onSearchPress(e) {
+		e.stopImmediatePropagation();
+		let text = prompt('Global Search: ');
+		if (text) {
+			let data = {
+				entity_id: this._config.adb_id,
+				command:
+					'am start -a "android.search.action.GLOBAL_SEARCH" --es query "' +
+					text +
+					'"',
 			};
 			this._hass.callService('androidtv', 'adb_command', data);
 		}
