@@ -37,7 +37,7 @@ Along with a few other changes/improvements:
   - Highly recommended that you also create keys for `delete` and `enter` so you can remove and send your input text.
 - Quick global search also using ADB.
   - Create a key titled 'search'. It will function similarly to keyboard entry except that it will launch a global search on close. This can also be used to send commands and queries to Google Assistant.
-Many thanks to the original authors. Getting this to work with Android TV was straightforward and all of the frontend heavy lifting they did has provided an excellent base on which to build my personal ultimate Android TV remote.
+    Many thanks to the original authors. Getting this to work with Android TV was straightforward and all of the frontend heavy lifting they did has provided an excellent base on which to build my personal ultimate Android TV remote.
 
 ## Demo
 
@@ -52,7 +52,7 @@ Many thanks to the original authors. Getting this to work with Android TV was st
 | media_player_id        | string  | **Optional** | The `media_player` entity id to use for the optional volume slider (not required for volume buttons).                                                                    |
 | adb_id                 | string  | **Optional** | The adb `media_player` entity id to use to send keyboard events. Requires the [Android Debug Bridge integration](https://www.home-assistant.io/integrations/androidtv/). |
 | title                  | string  | **Optional** | Card title for showing as header.                                                                                                                                        |
-| enable_double_click    | boolean | **Optional** | Whether a double click on the touchpad should send the key in `double_click_keycode`. Defaults to `true`.                                                                |
+| enable_double_click    | boolean | **Optional** | Whether a double click on the touchpad should send the key in `double_click_keycode`. Defaults to `false`.                                                               |
 | double_click_keycode   | string  | **Optional** | The key for double clicks on the touchpad. Defaults to `back`.                                                                                                           |
 | enable_button_feedback | boolean | **Optional** | Shall clicks on the buttons return a vibration feedback? Defaults to `true`.                                                                                             |
 | enable_slider_feedback | boolean | **Optional** | Shall the volume slider return a vibration feedback when you slide through it? Defaults to `true`.                                                                       |
