@@ -369,7 +369,10 @@ class TVCardServices extends LitElement {
 
 			this.fireHapticEvent(window, 'light');
 		};
-		if (this._config.enable_double_click) {
+		if (
+			this._config.enable_double_click !== undefined &&
+			!this._config.enable_double_click
+		) {
 			this.timer = setTimeout(click_action, 200);
 		} else {
 			click_action();
@@ -384,8 +387,9 @@ class TVCardServices extends LitElement {
 		if (
 			this._config.enable_double_click !== undefined &&
 			!this._config.enable_double_click
-		)
+		) {
 			return;
+		}
 
 		e.stopImmediatePropagation();
 
