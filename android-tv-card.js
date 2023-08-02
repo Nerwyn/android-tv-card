@@ -381,24 +381,19 @@ class TVCardServices extends LitElement {
 	 * @param {Event} e
 	 */
 	onTouchDoubleClick(e) {
-		if (
-			this._config.enable_double_click !== undefined &&
-			!this._config.enable_double_click
-		) {
-			return;
+		if (this._config.enable_double_click) {
+			e.stopImmediatePropagation();
+
+			clearTimeout(this.timer);
+			this.timer = null;
+
+			let action = this._config.double_click_keycode
+				? this._config.double_click_keycode
+				: 'back';
+			this.sendAction(action);
+
+			this.fireHapticEvent(window, 'success');
 		}
-
-		e.stopImmediatePropagation();
-
-		clearTimeout(this.timer);
-		this.timer = null;
-
-		let action = this._config.double_click_keycode
-			? this._config.double_click_keycode
-			: 'back';
-		this.sendAction(action);
-
-		this.fireHapticEvent(window, 'success');
 	}
 
 	/**
