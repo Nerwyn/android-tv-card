@@ -45,21 +45,21 @@ Along with a few other changes/improvements:
 
 ## Options
 
-| Name                   | Type    | Requirement  | Description                                                                                                                                                              |
-| ---------------------- | ------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| type                   | string  | **Required** | `custom:android-tv-card`                                                                                                                                                 |
-| remote_id              | string  | **Optional** | The `remote` entity id to control, required for default commands.                                                                                                        |
-| media_player_id        | string  | **Optional** | The `media_player` entity id to use for the optional volume slider (not required for volume buttons).                                                                    |
-| adb_id                 | string  | **Optional** | The adb `media_player` entity id to use to send keyboard events. Requires the [Android Debug Bridge integration](https://www.home-assistant.io/integrations/androidtv/). |
-| title                  | string  | **Optional** | Card title for showing as header.                                                                                                                                        |
-| enable_double_click    | boolean | **Optional** | Whether a double click on the touchpad should send the key in `double_click_keycode`. Defaults to `false`.                                                               |
-| double_click_keycode   | string  | **Optional** | The key for double clicks on the touchpad. Defaults to `back`.                                                                                                           |
-| enable_button_feedback | boolean | **Optional** | Shall clicks on the buttons return a vibration feedback? Defaults to `true`.                                                                                             |
-| enable_slider_feedback | boolean | **Optional** | Shall the volume slider return a vibration feedback when you slide through it? Defaults to `true`.                                                                       |
-| slider_config          | object  | **Optional** | Custom configuration for the volume slider. See [slider-card](https://github.com/AnthonMS/my-cards). Requires `media_player_id`.                                         |
-| custom_keys            | object  | **Optional** | Custom keys for the remote control. Each item is an object that should have `icon` and at least one of the following properties: `key`, `source`, `service`.             |
-| custom_sources         | object  | **Optional** | Custom sources for the remote control. Same object as above, but letting you split keys and sources.                                                                     |
-| touchpad_height        | string  | **Optional** | Change touchpad height to a custom value, must include [units](https://www.w3schools.com/cssref/css_units.php). Defaults to `250px`.                                     |
+| Name                   | Type    | Requirement  | Description                                                                                                                                                               |
+| ---------------------- | ------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| type                   | string  | **Required** | `custom:android-tv-card`                                                                                                                                                  |
+| remote_id              | string  | **Optional** | The `remote` entity id to control, required for default commands.                                                                                                         |
+| media_player_id        | string  | **Optional** | The `media_player` entity id to use for the optional volume slider (not required for volume buttons).                                                                     |
+| adb_id                 | string  | **Optional** | The adb `media_player` entity id to use to send keyboard events. Requires the [Android Debug Bridge integration](https://www.home-assistant.io/integrations/androidtv/).  |
+| title                  | string  | **Optional** | Card title for showing as header.                                                                                                                                         |
+| enable_double_click    | boolean | **Optional** | Whether a double click on the touchpad should send the key in `double_click_keycode`. Defaults to `false`. NOTE: Enabling this introduces a 200ms delay to single clicks. |
+| double_click_keycode   | string  | **Optional** | The key for double clicks on the touchpad. Defaults to `back`.                                                                                                            |
+| enable_button_feedback | boolean | **Optional** | Shall clicks on the buttons return a vibration feedback? Defaults to `true`.                                                                                              |
+| enable_slider_feedback | boolean | **Optional** | Shall the volume slider return a vibration feedback when you slide through it? Defaults to `true`.                                                                        |
+| slider_config          | object  | **Optional** | Custom configuration for the volume slider. See [slider-card](https://github.com/AnthonMS/my-cards). Requires `media_player_id`.                                          |
+| custom_keys            | object  | **Optional** | Custom keys for the remote control. Each item is an object that should have `icon` and at least one of the following properties: `key`, `source`, `service`.              |
+| custom_sources         | object  | **Optional** | Custom sources for the remote control. Same object as above, but letting you split keys and sources.                                                                      |
+| touchpad_height        | string  | **Optional** | Change touchpad height to a custom value, must include [units](https://www.w3schools.com/cssref/css_units.php). Defaults to `250px`.                                      |
 
 Using only these options you will get an empty card (or almost empty, if you set a title).
 In order to include the buttons, you need to specify in the config the rows you want and which buttons you want in it.
