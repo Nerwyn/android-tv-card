@@ -2,9 +2,8 @@
 
 A fork of usernein's tv-card for the Home Assistant [Android TV Remote](https://www.home-assistant.io/integrations/androidtv_remote/) integration. This fork also:
 
-- Remaps touchpad swipes to custom keys, allowing for use with more than Android TV or other media players.
+- Allows touchpad swipes to remap to custom keys, allowing for use with more than Android TV or other media players.
 - Changes long press/hold to only repeat for directional keys/touch and volume up/down, and does a long press action for anything else.
-- Makes swipe actions remappable.
 - Tweaks navigation behavior to behave more like the Google TV remote.
 - Lets you name rows anything and add unlimited rows as long as they have `_row` in the name and don't have duplicate names.
 - Allows you to change the touchpad height using the configuration option `touchpad_height`.
