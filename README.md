@@ -382,10 +382,9 @@ cards:
     cards:
       - type: tile
         entity: media_player.google_chromecast
-        show_entity_picture: true
-        vertical: true
         icon_tap_action:
           action: toggle
+        vertical: true
       - type: custom:android-tv-card
         remote_id: remote.google_chromecast
         media_player_id: media_player.google_chromecast
@@ -395,22 +394,29 @@ cards:
           - home
           - null
           - menu
-        spacer_row_1:
-          - null
         _row_2:
           - volume_down
           - null
           - volume_mute
           - null
           - volume_up
-        spacer_row_2:
-          - null
         _row_3:
           - rewind
           - null
           - play_pause
           - null
           - fast_forward
+        sources_row_1:
+          - netflix
+          - disney
+          - hulu
+          - max
+          - primevideo
+        sources_row_2:
+          - plex
+          - vudu
+          - youtube
+          - spotify
         custom_keys:
           volume_down:
             icon: mdi:volume-medium
@@ -421,11 +427,19 @@ cards:
           volume_up:
             icon: mdi:volume-high
             service: script.amplifier_volume_up
-  - type: custom:android-tv-card
-    remote_id: remote.google_chromecast
-    media_player_id: media_player.google_chromecast
-    navigation_row: touchpad
-    touchpad_height: 512px
+  - type: vertical-stack
+    cards:
+      - type: custom:android-tv-card
+        remote_id: remote.google_chromecast
+        adb_id: media_player.google_chromecast_adb
+        navigation_row: touchpad
+        touchpad_height: 480px
+        _row_1:
+          - delete
+          - keyboard
+          - enter
+          - search
+
 ```
 
 Result:
