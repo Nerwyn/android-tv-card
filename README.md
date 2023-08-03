@@ -96,8 +96,8 @@ If you want to add custom buttons to the remote control (of if you want to recon
 ```yaml
 custom_keys:
   input_tv:
-    icon: mdi:television-box
-    key: KEY_TV
+    icon: mdi:television-classic
+    key: tv
   browser:
     icon: mdi:web
     source: browser
@@ -113,13 +113,13 @@ The `custom_sources` exists for the same purpose, but you can use it to split th
 ```yaml
 custom_keys:
   input_tv:
-    icon: mdi:television-box
-    key: KEY_TV
-toggle_light:
-  icon: mdi:lightbulb
-  service: light.toggle
-  service_data:
-    entity_id: light.bedroom
+    icon: mdi:television-classic
+    key: tv
+  toggle_light:
+    icon: mdi:lightbulb
+    service: light.toggle
+    service_data:
+      entity_id: light.bedroom
 custom_sources:
   browser:
     icon: mdi:web
@@ -192,9 +192,11 @@ custom_icons:
     0 3.872Z
 ```
 
+You can also paste the entire SVG path onto one line.
+
 The svg path was copied from [SimpleIcon](https://simpleicons.org/?q=hbo). Although you can use [this integration](https://github.com/vigonotion/hass-simpleicons) for using icons from SimpleIcons (there's also one for [fontawesome](https://github.com/thomasloven/hass-fontawesome)).
 
-I highly recommend using a service like [iLoveIMG Resize SVG](https://www.iloveimg.com/resize-image/resize-svg) to resize any icons you find to 24x24 pixels so that they render correctly.
+I highly recommend using a service like [iLoveIMG Resize SVG](https://www.iloveimg.com/resize-image/resize-svg) to resize any icons you find to 24x24 pixels so that they render correctly, and [this SVG path editor](https://yqnn.github.io/svg-path-editor/) to modify the icons to properly fit within the 24x24 pixel window.
 
 Having defined the custom icon, you can use it on any custom button:
 
