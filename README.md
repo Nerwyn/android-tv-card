@@ -36,8 +36,9 @@ Along with a few other changes/improvements:
   - Create a key titled `keyboard` to enable this and click it to open a text prompt in which you can enter text to send to your Android TV.
   - Highly recommended that you also create keys for `delete` and `enter` so you can remove and send your input text.
 - Quick global search also using ADB.
-  - Create a key titled 'search'. It will function similarly to keyboard entry except that it will launch a global search on close. This can also be used to send commands and queries to Google Assistant.
-    Many thanks to the original authors. Getting this to work with Android TV was straightforward and all of the frontend heavy lifting they did has provided an excellent base on which to build my personal ultimate Android TV remote.
+  - Create a key titled `search`. It will function similarly to keyboard entry except that it will launch a global search on close. This can also be used to send commands and queries to Google Assistant.
+
+Many thanks to the original authors. Getting this to work with Android TV was straightforward and all of the frontend heavy lifting they did has provided an excellent base on which to build my personal ultimate Android TV remote.
 
 ## Demo
 
