@@ -163,6 +163,8 @@ Inside each button you may define `icon` and either `key`, `source` or `service`
 | service      | `_hass.callService(domain, service, service_data)` | A string representing service to call. Use the format `domain.service`, e.g. `"light.turn_on"` |
 | service_data | passed with `service`                              | The data to pass to the service. May be an object depending on the service you are using.      |
 
+If an icon is not provided for a custom key or source that overwrites a predefined key or source, the original icon will be used instead.
+
 ## Custom icons
 
 You can customize any icon with a custom svg path using the `custom_icons` option.
@@ -439,7 +441,6 @@ cards:
           - keyboard
           - enter
           - search
-
 ```
 
 Result:

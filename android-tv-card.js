@@ -557,6 +557,13 @@ class TVCardServices extends LitElement {
 		let icon = info?.icon ?? '';
 		let svg_path = info.svg_path ?? this.custom_icons[icon] ?? '';
 
+		// Use original icon if none provided for custom key or source
+		if (!(icon || svg_path)) {
+			let info = defaultKeys[action] || defaultSources[action] || {};
+			icon = info?.icon ?? '';
+			svg_path = info?.svg_path ?? '';
+		}
+
 		// TODO: Use keypress event listener and a better way to pull up keyboard to send keyboard events to TV via ADB, have to translate from JS key code to ADB key code
 		// if (info.key == 'KEYBOARD') {
 		// 	document.addEventListener('keypress', (e) =>
