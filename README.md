@@ -260,9 +260,9 @@ apps_row:
 volume_row: slider
 navigation_row: touchpad
 source_row:
-  - return
+  - back
   - home
-  - source
+  - tv
 media_control_row:
   - rewind
   - play_pause
@@ -281,9 +281,9 @@ title: Example 1
 power_row:
   - power
 source_row:
-  - return
+  - back
   - home
-  - source
+  - tv
   - netflix
 apps_row:
   - youtube
@@ -329,9 +329,9 @@ apps_row:
 volume_row: buttons
 navigation_row: buttons
 source_row:
-  - return
+  - back
   - home
-  - source
+  - tv
 media_control_row:
   - rewind
   - play
@@ -361,7 +361,7 @@ apps_row:
 volume_row: slider
 navigation_row: touchpad
 source_row:
-  - return
+  - back
   - home
 ```
 
@@ -436,14 +436,14 @@ In any row, if you add an empty item, there will be an empty/invisible button fi
 
 ```yaml
 source_row:
-  - return
+  - back
   - home
-  - source
+  - tv
 media_control_row:
   - rewind
   -
   -
-  - fast-forward
+  - fast_forward
 ```
 
 <img src="assets/empty_buttons.png" alt="empty buttons example" width="300"/>
