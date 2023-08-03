@@ -23,27 +23,28 @@ Add this to your lovelace configuration:
 type: custom:android-tv-card
 remote_id: remote.google_chromecast
 media_player_id: media_player.google_chromecast
-title: Example 2
+adb_id: media_player.google_chromecast_adb
+title: Example
 power_row:
+  - back
   - power
-channel_row:
-  - channel_up
-  - info
-  - channel_down
+  - home
 apps_row:
   - netflix
   - youtube
   - spotify
 volume_row: slider
 navigation_row: touchpad
-source_row:
-  - return
-  - home
-  - source
 media_control_row:
-  - rewind
+  - previous
   - play_pause
-  - fast_forward
+  - next
+keyboard_row:
+  - delete
+  - keyboard
+  - enter
+  - search
+
 ```
 
 You may want to set custom buttons for your tv. [Check it out](https://github.com/Nerwyn/android-tv-card/blob/main/README.md#notice).
