@@ -447,7 +447,7 @@ Result:
 
 <img src="assets/tablet.png" alt="tablet example" width="800"/>
 
-### Extra
+### Example 5
 
 In any row, if you add an empty item, there will be an empty/invisible button filling the space:
 
@@ -464,6 +464,124 @@ media_control_row:
 ```
 
 <img src="assets/empty_buttons.png" alt="empty buttons example" width="300"/>
+
+### Example 6
+
+Apple TV
+
+```yaml
+type: custom:android-tv-card
+remote_id: remote.appletv
+navigation_row: touchpad
+touchpad_height: 200px
+enable_double_click: true
+double_click_keycode: menu
+custom_keys:
+  up:
+    icon: mdi:chevron-up
+    key: up
+  down:
+    icon: mdi:chevron-down
+    key: down
+  left:
+    icon: mdi:chevron-left
+    key: left
+  right:
+    icon: mdi:chevron-right
+    key: right
+  center:
+    icon: mdi:checkbox-blank-circle
+    key: select
+  play:
+    icon: mdi:play
+    key: play
+  pause:
+    icon: mdi:pause
+    key: pause
+  menu:
+    icon: mdi:apple
+    key: menu
+```
+
+### Example 7
+
+Kodi
+
+```yaml
+type: custom:android-tv-card
+navigation_row: touchpad
+touchpad_height: 200px
+enable_double_click: true
+double_click_keycode: back
+custom_keys:
+  up:
+    icon: mdi:chevron-up
+    service: kodi.call_method
+    service_data:
+      entity_id: media_player.kodi
+      method: Input.Up
+  down:
+    icon: mdi:chevron-down
+    service: kodi.call_method
+    service_data:
+      entity_id: media_player.kodi
+      method: Input.Down
+  left:
+    icon: mdi:chevron-left
+    service: kodi.call_method
+    service_data:
+      entity_id: media_player.kodi
+      method: Input.Left
+  right:
+    icon: mdi:chevron-right
+    service: kodi.call_method
+    service_data:
+      entity_id: media_player.kodi
+      method: Input.Right
+  center:
+    icon: mdi:kodi
+    service: kodi.call_method
+    service_data:
+      entity_id: media_player.kodi
+      method: Input.Select
+  back:
+    icon: mdi:kodi
+    service: kodi.call_method
+    service_data:
+      entity_id: media_player.kodi
+      method: Input.Back
+```
+
+### Example 8
+
+Sony Bravia KD.xx TV
+
+```yaml
+type: custom:android-tv-card
+remote_id: remote.sony_kd_75xf8596
+navigation_row: touchpad
+enable_double_click: true
+double_click_keycode: back
+custom_keys:
+  up:
+    icon: mdi:chevron-up
+    key: Up
+  down:
+    icon: mdi:chevron-down
+    key: Down
+  left:
+    icon: mdi:chevron-left
+    key: Left
+  right:
+    icon: mdi:chevron-right
+    key: Right
+  center:
+    icon: mdi:enter
+    key: DpadCenter
+  back:
+    icon: mdi:play
+    key: Back
+```
 
 [last-commit-shield]: https://img.shields.io/github/last-commit/Nerwyn/android-tv-card?style=for-the-badge
 [commits]: https://github.com/Nerwyn/android-tv-card/commits/main
