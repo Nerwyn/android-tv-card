@@ -583,6 +583,50 @@ custom_keys:
     key: Back
 ```
 
+### Example 9
+
+Marantz Receiver
+
+```yaml
+type: custom:android-tv-card
+entity_id: media_player.marantz_sr7013
+navigation_row: touchpad
+touchpad_height: 200px
+enable_double_click: true
+double_click_keycode: back
+custom_keys:
+  down:
+    service: denonavr.get_command
+    service_data:
+      entity_id: media_player.marantz_sr7013
+      command: /goform/formiPhoneAppDirect.xml?MNCDN
+  up:
+    service: denonavr.get_command
+    service_data:
+      entity_id: media_player.marantz_sr7013
+      command: /goform/formiPhoneAppDirect.xml?MNCUP
+  left:
+    service: denonavr.get_command
+    service_data:
+      entity_id: media_player.marantz_sr7013
+      command: /goform/formiPhoneAppDirect.xml?MNCLT
+  right:
+    service: denonavr.get_command
+    service_data:
+      entity_id: media_player.marantz_sr7013
+      command: /goform/formiPhoneAppDirect.xml?MNCRT
+  center:
+    service: denonavr.get_command
+    service_data:
+      entity_id: media_player.marantz_sr7013
+      command: /goform/formiPhoneAppDirect.xml?MNENT
+  back:
+    service: denonavr.get_command
+    service_data:
+      entity_id: media_player.marantz_sr7013
+      command: /goform/formiPhoneAppDirect.xml?MNRTN
+```
+
 [last-commit-shield]: https://img.shields.io/github/last-commit/Nerwyn/android-tv-card?style=for-the-badge
 [commits]: https://github.com/Nerwyn/android-tv-card/commits/main
 [forum-shield]: https://img.shields.io/badge/community-forum-brightgreen.svg?style=for-the-badge
