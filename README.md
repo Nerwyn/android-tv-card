@@ -375,6 +375,24 @@ Result:
 
 ### Example 4
 
+In any row, if you add an empty item, there will be an empty/invisible button filling the space:
+
+```yaml
+source_row:
+  - back
+  - home
+  - tv
+media_control_row:
+  - rewind
+  -
+  -
+  - fast_forward
+```
+
+<img src="assets/empty_buttons.png" alt="empty buttons example" width="300"/>
+
+### Example 5
+
 A tablet UI
 
 ```yaml
@@ -446,24 +464,6 @@ cards:
 Result:
 
 <img src="assets/tablet.png" alt="tablet example" width="800"/>
-
-### Example 5
-
-In any row, if you add an empty item, there will be an empty/invisible button filling the space:
-
-```yaml
-source_row:
-  - back
-  - home
-  - tv
-media_control_row:
-  - rewind
-  -
-  -
-  - fast_forward
-```
-
-<img src="assets/empty_buttons.png" alt="empty buttons example" width="300"/>
 
 ### Example 6
 
@@ -581,6 +581,50 @@ custom_keys:
   back:
     icon: mdi:play
     key: Back
+```
+
+### Example 9
+
+Marantz Receiver
+
+```yaml
+type: custom:android-tv-card
+entity_id: media_player.marantz_sr7013
+navigation_row: touchpad
+touchpad_height: 200px
+enable_double_click: true
+double_click_keycode: back
+custom_keys:
+  down:
+    service: denonavr.get_command
+    service_data:
+      entity_id: media_player.marantz_sr7013
+      command: /goform/formiPhoneAppDirect.xml?MNCDN
+  up:
+    service: denonavr.get_command
+    service_data:
+      entity_id: media_player.marantz_sr7013
+      command: /goform/formiPhoneAppDirect.xml?MNCUP
+  left:
+    service: denonavr.get_command
+    service_data:
+      entity_id: media_player.marantz_sr7013
+      command: /goform/formiPhoneAppDirect.xml?MNCLT
+  right:
+    service: denonavr.get_command
+    service_data:
+      entity_id: media_player.marantz_sr7013
+      command: /goform/formiPhoneAppDirect.xml?MNCRT
+  center:
+    service: denonavr.get_command
+    service_data:
+      entity_id: media_player.marantz_sr7013
+      command: /goform/formiPhoneAppDirect.xml?MNENT
+  back:
+    service: denonavr.get_command
+    service_data:
+      entity_id: media_player.marantz_sr7013
+      command: /goform/formiPhoneAppDirect.xml?MNRTN
 ```
 
 [last-commit-shield]: https://img.shields.io/github/last-commit/Nerwyn/android-tv-card?style=for-the-badge
