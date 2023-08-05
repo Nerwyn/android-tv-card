@@ -375,6 +375,24 @@ Result:
 
 ### Example 4
 
+In any row, if you add an empty item, there will be an empty/invisible button filling the space:
+
+```yaml
+source_row:
+  - back
+  - home
+  - tv
+media_control_row:
+  - rewind
+  -
+  -
+  - fast_forward
+```
+
+<img src="assets/empty_buttons.png" alt="empty buttons example" width="300"/>
+
+### Example 5
+
 A tablet UI
 
 ```yaml
@@ -446,24 +464,6 @@ cards:
 Result:
 
 <img src="assets/tablet.png" alt="tablet example" width="800"/>
-
-### Example 5
-
-In any row, if you add an empty item, there will be an empty/invisible button filling the space:
-
-```yaml
-source_row:
-  - back
-  - home
-  - tv
-media_control_row:
-  - rewind
-  -
-  -
-  - fast_forward
-```
-
-<img src="assets/empty_buttons.png" alt="empty buttons example" width="300"/>
 
 ### Example 6
 
