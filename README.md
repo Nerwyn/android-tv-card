@@ -516,7 +516,7 @@ custom_sources:
   primevideo:
     service: media_player.select_source
     service_data:
-	  source: Prime Video
+      source: Prime Video
       entity_id: media_player.appletv
   netflix:
    service: media_player.select_source
