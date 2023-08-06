@@ -476,6 +476,13 @@ Apple TV
 ```yaml
 type: custom:android-tv-card
 remote_id: remote.appletv
+_row_1:
+  - play
+  - pause
+  - menu
+_row_2:
+  - netflix
+  - primevideo
 navigation_row: touchpad
 touchpad_height: 200px
 enable_double_click: true
@@ -505,6 +512,17 @@ custom_keys:
   menu:
     icon: mdi:apple
     key: menu
+custom_sources:
+  primevideo:
+    service: media_player.select_source
+    service_data:
+	  source: Prime Video
+      entity_id: media_player.appletv
+  netflix:
+   service: media_player.select_source
+   service_data:
+    source: Netflix
+    target: media_player.appletv
 ```
 
 ### Example 7
