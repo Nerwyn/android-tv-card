@@ -9,6 +9,8 @@
 
 [![Github][github]][github]
 
+[![My Home Assistant](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?repository=android-tv-card&owner=Nerwyn&category=Plugin)
+
 📦 This repo is a fork of [tv-card](https://github.com/usernein/tv-card), which is a fork of another [tv-card](https://github.com/marrobHD/tv-card), and includes the same features and improvements usernein made, like:
 
 - Fully functional touchpad for navigation (thanks to [iablon's Touchpad Card](https://github.com/iablon/HomeAssistant-Touchpad-Card))
@@ -39,6 +41,8 @@ Along with a few other changes/improvements:
   - Create a key titled `search`. It will function similarly to keyboard entry except that it will launch a global search on close. This can also be used to send commands and queries to Google Assistant.
 
 Many thanks to the original authors. Getting this to work with Android TV was straightforward and all of the frontend heavy lifting they did has provided an excellent base on which to build my personal ultimate Android TV remote.
+
+[Home Assistant Community Forums Thread](https://community.home-assistant.io/t/android-tv-card-a-tv-card-fork-for-android-tv/585089)
 
 ## Demo
 
