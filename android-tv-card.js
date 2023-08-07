@@ -386,9 +386,7 @@ class TVCardServices extends LitElement {
 	 * Event handler for touchpad double click
 	 * @param {Event} e
 	 */
-	onTouchDoubleClick(e) {
-		e.stopImmediatePropagation();
-
+	onTouchDoubleClick(_e) {
 		clearTimeout(this.timer);
 		this.timer = null;
 
