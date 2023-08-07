@@ -372,6 +372,7 @@ class TVCardServices extends LitElement {
 			let action = 'center';
 			this.sendAction(action);
 			this.fireHapticEvent(window, 'light');
+			this.count = 0;
 		};
 		if (e.detail > this.count) {
 			this.count++;
@@ -385,7 +386,6 @@ class TVCardServices extends LitElement {
 		} else {
 			click_action();
 		}
-		this.count = 0;
 	}
 
 	/**
@@ -400,8 +400,9 @@ class TVCardServices extends LitElement {
 			? this._config.double_click_keycode
 			: 'back';
 		this.sendAction(action);
-
 		this.fireHapticEvent(window, 'success');
+
+		this.count = 0;
 	}
 
 	/**
