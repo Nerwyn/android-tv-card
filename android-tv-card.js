@@ -169,10 +169,12 @@ class TVCardServices extends LitElement {
 		this.custom_sources = {};
 		this.custom_icons = {};
 
+		this.touchtimer = null;
+		this.touchcount = 0;
+
 		this.holdtimer = null;
 		this.holdaction = null;
 		this.holdinterval = null;
-		this.timer = null;
 	}
 
 	static get properties() {
@@ -364,22 +366,26 @@ class TVCardServices extends LitElement {
 	onTouchClick(e) {
 		e.stopImmediatePropagation();
 		let click_action = () => {
-			clearTimeout(this.timer);
-			this.timer = null;
+			clearTimeout(this.touchtimer);
+			this.touchtimer = null;
 
 			let action = 'center';
 			this.sendAction(action);
 			this.fireHapticEvent(window, 'light');
 		};
+		if (e.detail > this.count) {
+			this.count++;
+		}
 		if (this._config.enable_double_click) {
-			if (e.detail == 2) {
+			if (this.count == 2) {
 				this.onTouchDoubleClick(e);
 			} else {
-				this.timer = setTimeout(click_action, 200);
+				this.touchtimer = setTimeout(click_action, 200);
 			}
 		} else {
 			click_action();
 		}
+		this.count = 0;
 	}
 
 	/**
@@ -387,8 +393,8 @@ class TVCardServices extends LitElement {
 	 * @param {Event} e
 	 */
 	onTouchDoubleClick(_e) {
-		clearTimeout(this.timer);
-		this.timer = null;
+		clearTimeout(this.touchtimer);
+		this.touchtimer = null;
 
 		let action = this._config.double_click_keycode
 			? this._config.double_click_keycode
@@ -427,12 +433,12 @@ class TVCardServices extends LitElement {
 	 * @param {Event} _e
 	 */
 	onTouchEnd(_e) {
-		clearTimeout(this.timer);
+		clearTimeout(this.touchtimer);
 		clearTimeout(this.holdtimer);
 		clearInterval(this.holdinterval);
 
 		this.holdtimer = null;
-		this.timer = null;
+		this.touchtimer = null;
 		this.holdinterval = null;
 		this.holdaction = null;
 	}
@@ -516,12 +522,12 @@ class TVCardServices extends LitElement {
 	 * @param {Event} _e
 	 */
 	onButtonLongClickEnd(_e) {
-		clearTimeout(this.timer);
+		clearTimeout(this.touchtimer);
 		clearTimeout(this.holdtimer);
 		clearInterval(this.holdinterval);
 
 		this.holdtimer = null;
-		this.timer = null;
+		this.touchtimer = null;
 		this.holdinterval = null;
 		this.holdaction = null;
 	}
