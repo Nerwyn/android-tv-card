@@ -368,11 +368,11 @@ class TVCardServices extends LitElement {
 		let click_action = () => {
 			clearTimeout(this.touchtimer);
 			this.touchtimer = null;
+			this.touchcount = 0;
 
 			let action = 'center';
 			this.sendAction(action);
 			this.fireHapticEvent(window, 'light');
-			this.touchcount = 0;
 		};
 		if (e.detail > this.touchcount) {
 			this.touchcount++;
@@ -397,6 +397,7 @@ class TVCardServices extends LitElement {
 			this.touchcount++;
 		}
 		if (
+			this.touchtimer &&
 			this._config.enable_double_click &&
 			(!e.detail || this.touchcount == 2)
 		) {
