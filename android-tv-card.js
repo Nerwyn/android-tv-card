@@ -170,6 +170,8 @@ class TVCardServices extends LitElement {
 		this.custom_icons = {};
 
 		this.touchtimer = null;
+		this.touchdelaytime = 0;
+
 		this.holdtimer = null;
 		this.holdaction = null;
 		this.holdinterval = null;
@@ -366,6 +368,7 @@ class TVCardServices extends LitElement {
 		let click_action = () => {
 			clearTimeout(this.touchtimer);
 			this.touchtimer = null;
+			this.touchdelaytime = 0;
 
 			let action = 'center';
 			this.sendAction(action);
@@ -373,6 +376,7 @@ class TVCardServices extends LitElement {
 		};
 		if (this._config.enable_double_click) {
 			if (!this.touchtimer && e.detail == 1) {
+				this.touchdelaytime = new Date().getTime();
 				this.touchtimer = setTimeout(click_action, 200);
 			}
 		} else {
@@ -386,9 +390,14 @@ class TVCardServices extends LitElement {
 	 */
 	onTouchDoubleClick(e) {
 		e.stopImmediatePropagation();
-		if (this._config.enable_double_click && e.detail == 2) {
+		if (
+			this._config.enable_double_click &&
+			e.detail == 2 &&
+			new Date().getTime() - this.touchdelaytime < 200
+		) {
 			clearTimeout(this.touchtimer);
 			this.touchtimer = null;
+			this.touchdelaytime = 0;
 
 			let action = this._config.double_click_keycode
 				? this._config.double_click_keycode
