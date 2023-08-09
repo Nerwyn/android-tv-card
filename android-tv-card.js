@@ -378,7 +378,7 @@ class TVCardServices extends LitElement {
 			this.touchcount++;
 		}
 		if (this._config.enable_double_click && this.touchcount == 1) {
-			this.touchtimer = setTimeout(click_action, 200);
+			this.touchtimer = setTimeout(click_action, 500);
 		} else {
 			click_action();
 		}
