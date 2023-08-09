@@ -392,10 +392,10 @@ class TVCardServices extends LitElement {
 	 */
 	onTouchDoubleClick(e) {
 		e.stopImmediatePropagation();
-		if (e.detail > this.touchcount) {
-			this.touchcount++;
-		}
-		if (this._config.enable_double_click && this.touchcount > 1) {
+		// if (e.detail > this.touchcount) {
+		// 	this.touchcount++;
+		// }
+		if (this._config.enable_double_click && this.touchtimer) {
 			clearTimeout(this.touchtimer);
 			this.touchtimer = null;
 
