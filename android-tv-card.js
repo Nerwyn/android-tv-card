@@ -377,10 +377,7 @@ class TVCardServices extends LitElement {
 		if (e.detail > this.touchcount) {
 			this.touchcount++;
 		}
-		if (
-			this._config.enable_double_click &&
-			(!e.detail || this.touchcount == 1)
-		) {
+		if (this._config.enable_double_click && this.touchcount == 1) {
 			this.touchtimer = setTimeout(click_action, 200);
 		} else {
 			click_action();
@@ -396,11 +393,7 @@ class TVCardServices extends LitElement {
 		if (e.detail > this.touchcount) {
 			this.touchcount++;
 		}
-		if (
-			this.touchtimer &&
-			this._config.enable_double_click &&
-			(!e.detail || this.touchcount == 2)
-		) {
+		if (this._config.enable_double_click && this.touchcount == 2) {
 			clearTimeout(this.touchtimer);
 			this.touchtimer = null;
 
