@@ -57,7 +57,7 @@ Many thanks to the original authors. Getting this to work with Android TV was st
 | media_player_id        | string  | **Optional** | The `media_player` entity id to use for the optional volume slider (not required for volume buttons).                                                                                                                                                        |
 | adb_id                 | string  | **Optional** | The adb `media_player` entity id to use to send keyboard events. Requires the [Android Debug Bridge integration](https://www.home-assistant.io/integrations/androidtv/).                                                                                     |
 | title                  | string  | **Optional** | Card title for showing as header.                                                                                                                                                                                                                            |
-| enable_double_click    | boolean | **Optional** | Whether a double click on the touchpad should send the key in `double_click_keycode`. Defaults to `false`. NOTE: Enabling this introduces a 200ms delay to single clicks.                                                                                    |
+| enable_double_click    | boolean | **Optional** | Whether a double click on the touchpad should send the key in `double_click_keycode`. Defaults to `false`. **NOTE**: Enabling this introduces a 200ms delay to single clicks. **Double click does not seem to work on iOS.**                                 |
 | double_click_keycode   | string  | **Optional** | The key for double clicks on the touchpad. Defaults to `back`.                                                                                                                                                                                               |
 | enable_button_feedback | boolean | **Optional** | Shall clicks on the buttons return a vibration feedback? Defaults to `true`.                                                                                                                                                                                 |
 | enable_slider_feedback | boolean | **Optional** | Shall the volume slider return a vibration feedback when you slide through it? Defaults to `true`.                                                                                                                                                           |
@@ -519,10 +519,10 @@ custom_sources:
       source: Prime Video
       entity_id: media_player.appletv
   netflix:
-   service: media_player.select_source
-   service_data:
-    source: Netflix
-    target: media_player.appletv
+    service: media_player.select_source
+    service_data:
+      source: Netflix
+      target: media_player.appletv
 ```
 
 ### Example 7
