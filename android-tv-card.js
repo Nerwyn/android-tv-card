@@ -364,16 +364,22 @@ class TVCardServices extends LitElement {
 	onTouchClick(e) {
 		e.stopImmediatePropagation();
 		let click_action = () => {
+			clearTimeout(this.touchtimer);
+			this.touchtimer = null;
+
 			let action = 'center';
 			this.sendAction(action);
 			this.fireHapticEvent(window, 'light');
+			this.touchcount = 0;
 		};
+		if (e.detail > this.touchcount) {
+			this.touchcount++;
+		}
 		if (this._config.enable_double_click) {
-			if (!e.detail || e.detail == 1) {
-				this.touchtimer = setTimeout(
-					click_action,
-					this._config.double_click_timeout ?? 500
-				);
+			if (this.touchcount == 2) {
+				this.onTouchDoubleClick(e);
+			} else {
+				this.touchtimer = setTimeout(click_action, 200);
 			}
 		} else {
 			click_action();
@@ -384,17 +390,17 @@ class TVCardServices extends LitElement {
 	 * Event handler for touchpad double click
 	 * @param {Event} e
 	 */
-	onTouchDoubleClick(e) {
-		if (this._config.enable_double_click && (!e.detail || e.detail == 2)) {
-			e.stopImmediatePropagation();
+	onTouchDoubleClick(_e) {
+		clearTimeout(this.touchtimer);
+		this.touchtimer = null;
 
-			clearTimeout(this.touchtimer);
-			this.touchtimer = null;
+		let action = this._config.double_click_keycode
+			? this._config.double_click_keycode
+			: 'back';
+		this.sendAction(action);
+		this.fireHapticEvent(window, 'success');
 
-			let action = this._config.double_click_keycode ?? 'back';
-			this.sendAction(action);
-			this.fireHapticEvent(window, 'success');
-		}
+		this.touchcount = 0;
 	}
 
 	/**
@@ -641,8 +647,6 @@ class TVCardServices extends LitElement {
 										<toucharea
 											id="toucharea"
 											@click="${this.onTouchClick}"
-											@dblclick="${this
-												.onTouchDoubleClick}"
 											@touchstart="${this.onTouchStart}"
 											@touchmove="${this.onTouchMove}"
 											@touchend="${this.onTouchEnd}"
