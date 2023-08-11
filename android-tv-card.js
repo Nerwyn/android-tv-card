@@ -368,11 +368,13 @@ class TVCardServices extends LitElement {
 			this.sendAction(action);
 			this.fireHapticEvent(window, 'light');
 		};
-		if (this._config.enable_double_click && (!e.detail || e.detail == 1)) {
-			this.touchtimer = setTimeout(
-				click_action,
-				this._config.double_click_timeout ?? 500
-			);
+		if (this._config.enable_double_click) {
+			if (!e.detail || e.detail == 1) {
+				this.touchtimer = setTimeout(
+					click_action,
+					this._config.double_click_timeout ?? 500
+				);
+			}
 		} else {
 			click_action();
 		}
