@@ -418,7 +418,11 @@ class TVCardServices extends LitElement {
 					this.fireHapticEvent(window, 'light');
 				}, 100);
 			} else {
-				this.sendAction('center', true);
+				if (this._config.long_click_keycode) {
+					this.sendAction(this._config.long_click_keycode);
+				} else {
+					this.sendAction('center', true);
+				}
 				this.fireHapticEvent(window, 'medium');
 			}
 		}, 500);
