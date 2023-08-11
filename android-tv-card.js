@@ -368,7 +368,7 @@ class TVCardServices extends LitElement {
 			this.sendAction(action);
 			this.fireHapticEvent(window, 'light');
 		};
-		if (this._config.enable_double_click && !this.touchtimer) {
+		if (this._config.enable_double_click && (!e.detail || e.detail == 1)) {
 			this.touchtimer = setTimeout(
 				click_action,
 				this._config.double_click_timeout ?? 500
@@ -383,7 +383,7 @@ class TVCardServices extends LitElement {
 	 * @param {Event} e
 	 */
 	onTouchDoubleClick(e) {
-		if (this._config.enable_double_click) {
+		if (this._config.enable_double_click && (!e.detail || e.detail == 2)) {
 			e.stopImmediatePropagation();
 
 			clearTimeout(this.touchtimer);
