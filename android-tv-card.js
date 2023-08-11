@@ -366,19 +366,16 @@ class TVCardServices extends LitElement {
 	onTouchClick(e) {
 		e.stopImmediatePropagation();
 		let click_action = () => {
-			clearTimeout(this.touchtimer);
-			this.touchtimer = null;
-			this.touchdelaytime = 0;
-
 			let action = 'center';
 			this.sendAction(action);
+
 			this.fireHapticEvent(window, 'light');
 		};
 		if (this._config.enable_double_click) {
-			if (!this.touchtimer && e.detail == 1) {
-				this.touchdelaytime = new Date().getTime();
-				this.touchtimer = setTimeout(click_action, 200);
-			}
+			this.timer = setTimeout(
+				click_action,
+				this._config.double_click_timeout ?? 500
+			);
 		} else {
 			click_action();
 		}
@@ -389,20 +386,17 @@ class TVCardServices extends LitElement {
 	 * @param {Event} e
 	 */
 	onTouchDoubleClick(e) {
-		e.stopImmediatePropagation();
-		if (
-			this._config.enable_double_click &&
-			e.detail > 1 &&
-			new Date().getTime() - this.touchdelaytime < 200
-		) {
-			clearTimeout(this.touchtimer);
-			this.touchtimer = null;
-			this.touchdelaytime = 0;
+		if (this._config.enable_double_click) {
+			e.stopImmediatePropagation();
+
+			clearTimeout(this.timer);
+			this.timer = null;
 
 			let action = this._config.double_click_keycode
 				? this._config.double_click_keycode
 				: 'back';
 			this.sendAction(action);
+
 			this.fireHapticEvent(window, 'success');
 		}
 	}
