@@ -542,27 +542,48 @@ class TVCardServices extends LitElement {
 	}
 
 	/**
-	 * Event handler for keyboard events
+	 * Event handler for keyboard keydown events
 	 * @param {Event} e
 	 */
 	onKeyDown(e) {
 		e.stopImmediatePropagation();
-		let data = {
-			entity_id: this._config.adb_id,
-		};
+
+		// prettier-ignore
+		if (['Backspace', 'Delete', 'Control','Alt', 'Meta', 'Shift', 'Tab', 'Escape', 'CapsLock', 'Enter'].includes(e.key)) {
+			let e2 = JSON.stringify(
+				{
+					key: e.key,
+					keyCode: e.keyCode,
+					which: e.which,
+					code: e.code,
+					location: e.location,
+					altKey: e.altKey,
+					ctrlKey: e.ctrlKey,
+					metaKey: e.metaKey,
+					shiftKey: e.shiftKey,
+					repeat: e.repeat,
+				},
+				null,
+				'\t'
+			);
+			alert(e2);
+			console.log(e2);
+		}
+	}
+
+	/**
+	 * Event handler for keyboard input events
+	 * @param {Event} e
+	 */
+	onInput(e) {
+		e.stopImmediatePropagation();
 
 		let e2 = JSON.stringify(
 			{
-				key: e.key,
-				keyCode: e.keyCode,
-				which: e.which,
-				code: e.code,
-				location: e.location,
-				altKey: e.altKey,
-				ctrlKey: e.ctrlKey,
-				metaKey: e.metaKey,
-				shiftKey: e.shiftKey,
-				repeat: e.repeat,
+				data: e.data,
+				dataTransfer: e.dataTransfer,
+				inputType: e.inputType,
+				isComposing: e.isComposing,
 			},
 			null,
 			'\t'
@@ -570,15 +591,10 @@ class TVCardServices extends LitElement {
 		alert(e2);
 		console.log(e2);
 
-		let key = e.key;
-		// prettier-ignore
-		if (['Backspace', 'Delete', 'Control','Alt', 'Meta', 'Shift', 'Tab', 'Escape', 'CapsLock', 'Enter'].includes(key)) {
-			console.log('Not an alphanumerical key!'); // TODO: Send these as commands or ignore
-		} else {
-			data.command = 'input text "' + key + '"';
-		}
-		data.command = 'input text "' + key + '"';
-
+		let data = {
+			entity_id: this._config.adb_id,
+			command: 'input text "' + e.data + '"',
+		};
 		this._hass.callService('androidtv', 'adb_command', data);
 		e.currentTarget.value = '';
 	}
@@ -618,6 +634,7 @@ class TVCardServices extends LitElement {
 							id="kInput"
 							onfocus="this.value=''"
 							@keydown="${this.onKeyDown}"
+							@input="${this.onInput}"
 						>
 						</input>
 					</div>
