@@ -746,8 +746,8 @@ class TVCardServices extends LitElement {
 					opacity: 0;
 					filter: alpha(opacity=0);
 					z-index: 9;
-					width: 100%
-					height: 100%
+					width: 100%;
+					height: 100%;
 				}
 			</style>
 		`;
