@@ -582,35 +582,21 @@ class TVCardServices extends LitElement {
 		}
 
 		if (info.key == 'KEYBOARD') {
-			// return html`
-			// 	<div class="keyboard-container">
-			// 		<div class="keyboard-input">
-			// 			<input 
-			// 				id="kInput"
-			// 				onfocus="this.value=''"
-			// 				@onkeydown="${this.onKeyboardPress}"
-			// 			>
-			// 			</input>
-			// 		</div>
-			// 		<div class="keyboard-icon">
-			// 			<ha-icon .icon="${icon}"></ha-icon>
-			// 		</div>
-			// 	</div>
-			// `;
 			return html`
-			<ha-icon-button
-				.action="${action}"
-				@click="${this.onButtonClick}"
-				@touchstart="${this.onButtonLongClickStart}"
-				@touchend="${this.onButtonLongClickEnd}"
-				title="${action}"
-				.path="${svg_path}"
-				@onkeydown="${this.onKeyboardPress}
-				tabindex="-1"
-			>
-				<ha-icon .icon="${!svg_path ? icon : ''}"></ha-icon>
-			</ha-icon-button>
-		`;
+				<div class="keyboard-container">
+					<div class="keyboard-input">
+						<input 
+							id="kInput"
+							onfocus="this.value=''"
+							@keydown="${this.onKeyboardPress}"
+						>
+						</input>
+					</div>
+					<div class="keyboard-icon">
+						<ha-icon .icon="${icon}"></ha-icon>
+					</div>
+				</div>
+			`;
 		} else {
 			return html`
 				<ha-icon-button
