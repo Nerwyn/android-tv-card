@@ -718,13 +718,13 @@ class TVCardServices extends LitElement {
 					text-align: center;
 				}
 				.keyboard-input {
-					width: 0
-					height: 0
-					overflow: hidden
+					width: 0;
+					height: 0;
+					overflow: hidden;
 				}
 				#kInput {
-					opacity: 0
-					filter:alpha(opacity=0)
+					opacity: 0;
+					filter: alpha(opacity=0);
 				}
 			</style>
 		`;
