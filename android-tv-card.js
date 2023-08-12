@@ -588,7 +588,7 @@ class TVCardServices extends LitElement {
 						<input 
 							id="kInput"
 							onfocus="this.value=''"
-							@onkeypress="${this.onKeyboardPress}"
+							@onkeydown="${this.onKeyboardPress}"
 						>
 						</input>
 					</div>
@@ -597,20 +597,20 @@ class TVCardServices extends LitElement {
 					</div>
 				</div>
 			`;
+		} else {
+			return html`
+				<ha-icon-button
+					.action="${action}"
+					@click="${this.onButtonClick}"
+					@touchstart="${this.onButtonLongClickStart}"
+					@touchend="${this.onButtonLongClickEnd}"
+					title="${action}"
+					.path="${svg_path}"
+				>
+					<ha-icon .icon="${!svg_path ? icon : ''}"></ha-icon>
+				</ha-icon-button>
+			`;
 		}
-
-		return html`
-			<ha-icon-button
-				.action="${action}"
-				@click="${this.onButtonClick}"
-				@touchstart="${this.onButtonLongClickStart}"
-				@touchend="${this.onButtonLongClickEnd}"
-				title="${action}"
-				.path="${svg_path}"
-			>
-				<ha-icon .icon="${!svg_path ? icon : ''}"></ha-icon>
-			</ha-icon-button>
-		`;
 	}
 
 	buildRow(content) {
