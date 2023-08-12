@@ -588,7 +588,7 @@ class TVCardServices extends LitElement {
 						<input 
 							id="kInput"
 							onfocus="this.value=''"
-							onkeypress="${this.onKeyboardPress}"
+							@onkeypress="${this.onKeyboardPress}"
 						>
 						</input>
 					</div>
