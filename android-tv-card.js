@@ -588,7 +588,6 @@ class TVCardServices extends LitElement {
 			null,
 			'\t'
 		);
-		alert(e2);
 		console.log(e2);
 
 		let data = {
