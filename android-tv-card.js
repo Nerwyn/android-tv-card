@@ -547,17 +547,22 @@ class TVCardServices extends LitElement {
 	 */
 	onKeyDown(e) {
 		e.stopImmediatePropagation();
-		alert(e);
 		let data = {
 			entity_id: this._config.adb_id,
 		};
-		let key = e.key;
-		// prettier-ignore
-		if (['Backspace', 'Delete', 'Control','Alt', 'Meta', 'Shift', 'Tab', 'Escape', 'CapsLock', 'Enter'].includes(key)) {
-			console.log('Not an alphanumerical key!'); // TODO: Send these as commands or ignore
-		} else {
-			data.command = 'input text "' + e.key + '"';
+		// let key = e.key;
+		// // prettier-ignore
+		// if (['Backspace', 'Delete', 'Control','Alt', 'Meta', 'Shift', 'Tab', 'Escape', 'CapsLock', 'Enter'].includes(key)) {
+		// 	console.log('Not an alphanumerical key!'); // TODO: Send these as commands or ignore
+		// } else {
+		// 	data.command = 'input text "' + e.key + '"';
+		// }
+		let key = e.key
+		if (!key) {
+			key = String.fromCharCode(e.code)
 		}
+		data.command = 'input text "' + key + '"';
+
 		this._hass.callService('androidtv', 'adb_command', data);
 		e.currentTarget.value = '';
 	}
