@@ -170,7 +170,7 @@ class TVCardServices extends LitElement {
 		this.custom_icons = {};
 
 		this.touchtimer = null;
-		this.touchcount = 0
+		this.touchcount = 0;
 
 		this.holdtimer = null;
 		this.holdaction = null;
