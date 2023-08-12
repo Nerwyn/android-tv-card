@@ -207,7 +207,9 @@ class TVCardServices extends LitElement {
 		this.custom_icons = config.custom_icons || {};
 
 		this.loadCardHelpers();
-		this.renderVolumeSlider();
+		if (this._config.volume_row == 'slider') {
+			this.renderVolumeSlider();
+		}
 	}
 
 	isButtonEnabled(row, button) {
@@ -488,9 +490,7 @@ class TVCardServices extends LitElement {
 		let info = this.getInfo(action);
 		switch (info.key) {
 			case 'KEYBOARD':
-				// TODO: Make this pull up the keyboard instead and use keypress event listener to send keys
-				document.getElementsByClassName('android-tv-card').focus();
-				// this.onKeyboardPress(e);
+				document.getElementById('kInput').focus();
 				break;
 			case 'SEARCH':
 				this.onSearchPress(e);
@@ -579,26 +579,29 @@ class TVCardServices extends LitElement {
 			svg_path = iconInfo?.svg_path ?? '';
 		}
 
+		let kInput = html``;
 		if (info.key == 'KEYBOARD') {
 			document.addEventListener('keypress', (e) =>
 				this.onKeyboardPress(e)
 			);
+			kInput = html`<input type="hidden" id="kInput" onfocus="this.value=''"></input>`;
 		}
 
 		return html`
-			<ha-icon-button
-				.action="${action}"
-				@click="${this.onButtonClick}"
-				@touchstart="${this.onButtonLongClickStart}"
-				@touchend="${this.onButtonLongClickEnd}"
-				title="${action}"
-				.path="${svg_path}"
-			>
-				<ha-icon
-					.icon="${!svg_path ? icon : ''}"
-				</ha-icon>
-			</ha-icon-button>
-		`;
+		<ha-icon-button
+			.action="${action}"
+			@click="${this.onButtonClick}"
+			@touchstart="${this.onButtonLongClickStart}"
+			@touchend="${this.onButtonLongClickEnd}"
+			title="${action}"
+			.path="${svg_path}"
+		>
+			<ha-icon
+				.icon="${!svg_path ? icon : ''}"
+			</ha-icon>
+			${kInput}
+		</ha-icon-button>
+	`;
 	}
 
 	buildRow(content) {
