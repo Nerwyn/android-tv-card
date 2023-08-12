@@ -489,7 +489,8 @@ class TVCardServices extends LitElement {
 		switch (info.key) {
 			case 'KEYBOARD':
 				// TODO: Make this pull up the keyboard instead and use keypress event listener to send keys
-				this.onKeyboardPress(e);
+				document.getElementsByClassName('android-tv-card').focus();
+				// this.onKeyboardPress(e);
 				break;
 			case 'SEARCH':
 				this.onSearchPress(e);
@@ -539,15 +540,16 @@ class TVCardServices extends LitElement {
 
 	onKeyboardPress(e) {
 		e.stopImmediatePropagation();
-		let text = prompt('Search: ');
-		if (text) {
-			let data = {
-				entity_id: this._config.adb_id,
-				// TODO: Use input keyevent to send keyboard events translated from JS key code to ADB key code
-				command: 'input text "' + text + '"',
-			};
-			this._hass.callService('androidtv', 'adb_command', data);
+		let data = {
+			entity_id: this._config.adb_id,
+		};
+		let key = e.key;
+		if (key in ['backspace', 'delete', 'ctrl', 'alt', 'enter']) {
+			console.log('Not an alphanumerical key!'); // TODO: Send these as commands or ignore
+		} else {
+			data.command = 'input text "' + e.key + '"';
 		}
+		this._hass.callService('androidtv', 'adb_command', data);
 	}
 
 	onSearchPress(e) {
@@ -572,17 +574,16 @@ class TVCardServices extends LitElement {
 
 		// Use original icon if none provided for custom key or source
 		if (!(icon || svg_path)) {
-			let info = defaultKeys[action] || defaultSources[action] || {};
-			icon = info?.icon ?? '';
-			svg_path = info?.svg_path ?? '';
+			let iconInfo = defaultKeys[action] || defaultSources[action] || {};
+			icon = iconInfo?.icon ?? '';
+			svg_path = iconInfo?.svg_path ?? '';
 		}
 
-		// TODO: Use keypress event listener and a better way to pull up keyboard to send keyboard events to TV via ADB, have to translate from JS key code to ADB key code
-		// if (info.key == 'KEYBOARD') {
-		// 	document.addEventListener('keypress', (e) =>
-		// 		this.onKeyboardPress(e)
-		// 	);
-		// }
+		if (info.key == 'KEYBOARD') {
+			document.addEventListener('keypress', (e) =>
+				this.onKeyboardPress(e)
+			);
+		}
 
 		return html`
 			<ha-icon-button
