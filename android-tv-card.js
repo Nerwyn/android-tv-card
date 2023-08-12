@@ -581,8 +581,8 @@ class TVCardServices extends LitElement {
 				<div class="keyboard-input">
 					<input 
 						id="kInput"
-						@onfocus="this.value=''">
-						@onkeypress="${this.onKeyboardPress}"
+						@onfocus="this.value=''"
+						@onkeypress="${this.onKeyboardPress}">
 					</input>
 					<ha-icon .icon="${icon}" class="keyboard-icon"></ha-icon>
 				</div>
