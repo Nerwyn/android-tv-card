@@ -577,16 +577,14 @@ class TVCardServices extends LitElement {
 		}
 
 		if (info.key == 'KEYBOARD') {
-			document.addEventListener('keypress', (e) =>
-				this.onKeyboardPress(e)
-			);
 			return html`
 				<div class="keyboard-input">
 					<input 
 						id="kInput"
 						onfocus="this.value=''">
+						onkeypress="${this.onKeyboardPress}"
 					</input>
-					<ha-icon .icon="${icon}"></ha-icon>
+					<ha-icon .icon="${icon}" class="keyboard-icon"></ha-icon>
 				</div>
 			`;
 		}
@@ -726,7 +724,20 @@ class TVCardServices extends LitElement {
 					height: 64px;
 					overflow: hidden;
 				}
+				.keyboard-icon {
+					width: 100%;
+					height: 100%;
+					position: absolute;
+					top: 0;
+					left: 0;
+					z-index: 9;
+				}
 				#kInput {
+					width: 100%;
+					height: 100%;
+					position: absolute;
+					top: 0;
+					left: 0;
 					opacity: 0;
 					filter: alpha(opacity=0);
 				}
