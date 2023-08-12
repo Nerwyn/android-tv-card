@@ -494,9 +494,9 @@ class TVCardServices extends LitElement {
 				break;
 			default:
 				this.sendAction(action);
-				this.fireHapticEvent(window, 'light');
 				break;
 		}
+		this.fireHapticEvent(window, 'light');
 	}
 
 	/**
@@ -535,17 +535,19 @@ class TVCardServices extends LitElement {
 		this.holdaction = null;
 	}
 
-	onKeyboardPress(e) {
+	/**
+	 * Event handler for keyboard events
+	 * @param {Event} e
+	 */
+	onKeyDown(e) {
 		e.stopImmediatePropagation();
+		alert(JSON.stringify(e, null, '\t'));
 		let data = {
 			entity_id: this._config.adb_id,
 		};
 		let key = e.key;
-		if (
-			key in
-			// prettier-ignore
-			['Backspace', 'Delete', 'Control','Alt', 'Meta', 'Shift', 'Tab', 'Escape', 'CapsLock', 'Enter']
-		) {
+		// prettier-ignore
+		if (['Backspace', 'Delete', 'Control','Alt', 'Meta', 'Shift', 'Tab', 'Escape', 'CapsLock', 'Enter'].includes(key)) {
 			console.log('Not an alphanumerical key!'); // TODO: Send these as commands or ignore
 		} else {
 			data.command = 'input text "' + e.key + '"';
@@ -588,7 +590,7 @@ class TVCardServices extends LitElement {
 						<input 
 							id="kInput"
 							onfocus="this.value=''"
-							@keydown="${this.onKeyboardPress}"
+							@keydown="${this.onKeyDown}"
 						>
 						</input>
 					</div>
