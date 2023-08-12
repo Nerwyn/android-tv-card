@@ -200,16 +200,16 @@ class TVCardServices extends LitElement {
 		return numRows;
 	}
 
-	setConfig(config) {
+	async setConfig(config) {
 		this._config = { theme: 'default', ...config };
 		this.custom_keys = config.custom_keys || {};
 		this.custom_sources = config.custom_sources || {};
 		this.custom_icons = config.custom_icons || {};
 
-		this.loadCardHelpers();
-		this.loadHassHelpers();
+		await this.loadCardHelpers();
+		await this.loadHassHelpers();
 		if (this._config.volume_row == 'slider') {
-			this.renderVolumeSlider();
+			await this.renderVolumeSlider();
 		}
 		this.triggerRender();
 	}
