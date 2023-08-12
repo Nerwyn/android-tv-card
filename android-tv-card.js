@@ -585,6 +585,7 @@ class TVCardServices extends LitElement {
 		}
 
 		return html`
+		${kInput}
 		<ha-icon-button
 			.action="${action}"
 			@click="${this.onButtonClick}"
@@ -596,7 +597,6 @@ class TVCardServices extends LitElement {
 			<ha-icon
 				.icon="${!svg_path ? icon : ''}"
 			</ha-icon>
-			${kInput}
 		</ha-icon-button>
 	`;
 	}
