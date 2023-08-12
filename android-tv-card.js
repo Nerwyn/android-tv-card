@@ -207,10 +207,7 @@ class TVCardServices extends LitElement {
 		this.custom_icons = config.custom_icons || {};
 
 		this.loadCardHelpers();
-		if (this._config.volume_row == 'slider') {
-			this.renderVolumeSlider();
-		}
-		this.triggerRender();
+		this.renderVolumeSlider();
 	}
 
 	isButtonEnabled(row, button) {
