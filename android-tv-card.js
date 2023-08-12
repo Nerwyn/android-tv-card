@@ -541,7 +541,21 @@ class TVCardServices extends LitElement {
 			entity_id: this._config.adb_id,
 		};
 		let key = e.key;
-		if (key in ['backspace', 'delete', 'ctrl', 'alt', 'enter']) {
+		if (
+			key in
+			[
+				'Backspace',
+				'Delete',
+				'Control',
+				'Alt',
+				'Meta',
+				'Shift',
+				'Tab',
+				'Escape',
+				'CapsLock',
+				'Enter',
+			]
+		) {
 			console.log('Not an alphanumerical key!'); // TODO: Send these as commands or ignore
 		} else {
 			data.command = 'input text "' + e.key + '"';
@@ -582,7 +596,7 @@ class TVCardServices extends LitElement {
 					<div class="keyboard-input">
 						<input 
 							id="kInput"
-							@onfocus="this.value=''"
+							onfocus="this.value=''"
 							@onkeypress="${this.onKeyboardPress}">
 						</input>
 					</div>
