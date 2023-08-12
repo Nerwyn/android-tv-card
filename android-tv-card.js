@@ -207,7 +207,11 @@ class TVCardServices extends LitElement {
 		this.custom_icons = config.custom_icons || {};
 
 		this.loadCardHelpers();
-		this.renderVolumeSlider();
+		this.loadHassHelpers();
+		if (this._config.volume_row == 'slider') {
+			this.renderVolumeSlider();
+		}
+		this.triggerRender();
 	}
 
 	isButtonEnabled(row, button) {
@@ -254,14 +258,16 @@ class TVCardServices extends LitElement {
 		if (this._helpersResolve) this._helpersResolve();
 	}
 
-	async renderVolumeSlider() {
+	async loadHassHelpers() {
 		if (this._helpers === undefined)
 			await new Promise((resolve) => (this._helpersResolve = resolve));
 		if (this._hass === undefined)
 			await new Promise((resolve) => (this._hassResolve = resolve));
 		this._helpersResolve = undefined;
 		this._hassResolve = undefined;
+	}
 
+	async renderVolumeSlider() {
 		let slider_config = {
 			type: 'custom:my-slider',
 			entity: this._config.media_player_id,
