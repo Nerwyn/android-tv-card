@@ -547,7 +547,7 @@ class TVCardServices extends LitElement {
 	 */
 	onKeyDown(e) {
 		e.stopImmediatePropagation();
-		alert(JSON.stringify(e, null, '\t'));
+		alert(e);
 		let data = {
 			entity_id: this._config.adb_id,
 		};
