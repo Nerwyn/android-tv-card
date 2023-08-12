@@ -549,7 +549,7 @@ class TVCardServices extends LitElement {
 		e.stopImmediatePropagation();
 
 		// prettier-ignore
-		if (['Backspace', 'Delete', 'Control','Alt', 'Meta', 'Shift', 'Tab', 'Escape', 'CapsLock', 'Enter'].includes(e.key)) {
+		if (['Backspace', 'Delete', 'Enter', 'ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(e.key)) {
 			let e2 = JSON.stringify(
 				{
 					key: e.key,
@@ -632,6 +632,8 @@ class TVCardServices extends LitElement {
 						<input 
 							id="kInput"
 							onfocus="this.value=''"
+							spellcheck="false"
+							autocorrect="false"
 							@keydown="${this.onKeyDown}"
 							@input="${this.onInput}"
 						>
