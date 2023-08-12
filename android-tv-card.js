@@ -543,24 +543,15 @@ class TVCardServices extends LitElement {
 		let key = e.key;
 		if (
 			key in
-			[
-				'Backspace',
-				'Delete',
-				'Control',
-				'Alt',
-				'Meta',
-				'Shift',
-				'Tab',
-				'Escape',
-				'CapsLock',
-				'Enter',
-			]
+			// prettier-ignore
+			['Backspace', 'Delete', 'Control','Alt', 'Meta', 'Shift', 'Tab', 'Escape', 'CapsLock', 'Enter']
 		) {
 			console.log('Not an alphanumerical key!'); // TODO: Send these as commands or ignore
 		} else {
 			data.command = 'input text "' + e.key + '"';
 		}
 		this._hass.callService('androidtv', 'adb_command', data);
+		e.currentTarget.value = '';
 	}
 
 	onSearchPress(e) {
@@ -597,7 +588,7 @@ class TVCardServices extends LitElement {
 						<input 
 							id="kInput"
 							onfocus="this.value=''"
-							@onkeypress="${this.onKeyboardPress}">
+							@oninput="${this.onKeyboardPress}">
 						</input>
 					</div>
 					<div class="keyboard-icon">
