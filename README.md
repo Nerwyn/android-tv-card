@@ -39,6 +39,9 @@ Along with a few other changes/improvements:
   - Highly recommended that you also create keys for `delete` and `enter` so you can remove and send your input text.
 - Quick global search also using ADB.
   - Create a key titled `search`. It will function similarly to keyboard entry except that it will launch a global search on close. This can also be used to send commands and queries to Google Assistant.
+- Fixed double click so single click won't trigger twice and made long click on touchpad remappable.
+  - Due to limitations in iOS's webview, double click does not work on iPhone and iPad.
+  - Due to limitations on desktop browsers, touchpad swiping and long clicks do not work with a mouse.
 
 Many thanks to the original authors. Getting this to work with Android TV was straightforward and all of the frontend heavy lifting they did has provided an excellent base on which to build my personal ultimate Android TV remote.
 
@@ -50,23 +53,22 @@ Many thanks to the original authors. Getting this to work with Android TV was st
 
 ## Options
 
-| Name                   | Type    | Requirement  | Description                                                                                                                                                                                                                                                      |
-| ---------------------- | ------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| type                   | string  | **Required** | `custom:android-tv-card`                                                                                                                                                                                                                                         |
-| remote_id              | string  | **Optional** | The `remote` entity id to control, required for default commands.                                                                                                                                                                                                |
-| media_player_id        | string  | **Optional** | The `media_player` entity id to use for the optional volume slider (not required for volume buttons).                                                                                                                                                            |
-| adb_id                 | string  | **Optional** | The adb `media_player` entity id to use to send keyboard events. Requires the [Android Debug Bridge integration](https://www.home-assistant.io/integrations/androidtv/).                                                                                         |
-| title                  | string  | **Optional** | Card title for showing as header.                                                                                                                                                                                                                                |
-| enable_double_click    | boolean | **Optional** | Whether a double click on the touchpad should send the key in `double_click_keycode`. Defaults to `false`. NOTE: Enabling this introduces a 500ms delay to single clicks.                                                                                        |
-| double_click_keycode   | string  | **Optional** | The key for double clicks on the touchpad. Defaults to `back`.                                                                                                                                                                                                   |
-| double_click_timeout   | number  | **Optional** | The time in milliseconds to wait before firing a single click when double click is enabled. Lowering this value will make single clicks more responsive, but may result in unwanted behavior such as both the single and double click firing. Defaults to `500`. |
-| long_click_keycode     | string  | **Optional** | Custom key for long clicks on the touchpad. Defaults to a long `center` click, which acts as `menu` on Android when available for a selected element and `center` otherwise.                                                                                     |
-| enable_button_feedback | boolean | **Optional** | Shall clicks on the buttons return a vibration feedback? Defaults to `true`.                                                                                                                                                                                     |
-| enable_slider_feedback | boolean | **Optional** | Shall the volume slider return a vibration feedback when you slide through it? Defaults to `true`.                                                                                                                                                               |
-| slider_config          | object  | **Optional** | Custom configuration for the volume slider. See [slider-card](https://github.com/AnthonMS/my-cards). Requires `media_player_id`.                                                                                                                                 |
-| custom_keys            | object  | **Optional** | Custom keys for the remote control. Each item is an object that can optionally have an `icon` (will use original key icon if overwriting an existing one and icon is not provided) and at least one of the following properties: `key`, `source`, `service`.     |
-| custom_sources         | object  | **Optional** | Custom sources for the remote control. Same object as above, but letting you split keys and sources.                                                                                                                                                             |
-| touchpad_height        | string  | **Optional** | Change touchpad height to a custom value, must include [units](https://www.w3schools.com/cssref/css_units.php). Defaults to `250px`.                                                                                                                             |
+| Name                   | Type    | Requirement  | Description                                                                                                                                                                                                                                                  |
+| ---------------------- | ------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| type                   | string  | **Required** | `custom:android-tv-card`                                                                                                                                                                                                                                     |
+| remote_id              | string  | **Optional** | The `remote` entity id to control, required for default commands.                                                                                                                                                                                            |
+| media_player_id        | string  | **Optional** | The `media_player` entity id to use for the optional volume slider (not required for volume buttons).                                                                                                                                                        |
+| adb_id                 | string  | **Optional** | The adb `media_player` entity id to use to send keyboard events. Requires the [Android Debug Bridge integration](https://www.home-assistant.io/integrations/androidtv/).                                                                                     |
+| title                  | string  | **Optional** | Card title for showing as header.                                                                                                                                                                                                                            |
+| enable_double_click    | boolean | **Optional** | Whether a double click on the touchpad should send the key in `double_click_keycode`. Defaults to `false`. Enabling this introduces a 200ms delay to single clicks.                                                                                          |
+| double_click_keycode   | string  | **Optional** | The key for double clicks on the touchpad. Defaults to `back`.                                                                                                                                                                                               |
+| long_click_keycode     | string  | **Optional** | The key for long clicks on the touchpad. Defaults to a long `center` click.                                                                                                                                                                                  |
+| enable_button_feedback | boolean | **Optional** | Shall clicks on the buttons return a vibration feedback? Defaults to `true`.                                                                                                                                                                                 |
+| enable_slider_feedback | boolean | **Optional** | Shall the volume slider return a vibration feedback when you slide through it? Defaults to `true`.                                                                                                                                                           |
+| slider_config          | object  | **Optional** | Custom configuration for the volume slider. See [slider-card](https://github.com/AnthonMS/my-cards). Requires `media_player_id`.                                                                                                                             |
+| custom_keys            | object  | **Optional** | Custom keys for the remote control. Each item is an object that can optionally have an `icon` (will use original key icon if overwriting an existing one and icon is not provided) and at least one of the following properties: `key`, `source`, `service`. |
+| custom_sources         | object  | **Optional** | Custom sources for the remote control. Same object as above, but letting you split keys and sources.                                                                                                                                                         |
+| touchpad_height        | string  | **Optional** | Change touchpad height to a custom value, must include [units](https://www.w3schools.com/cssref/css_units.php). Defaults to `250px`.                                                                                                                         |
 
 Using only these options you will get an empty card (or almost empty, if you set a title).
 In order to include the buttons, you need to specify in the config the rows you want and which buttons you want in it.
@@ -95,7 +97,7 @@ This card uses `remote.send_command` to send keys to the TV.
 
 Further information on possible commands can be found on the [Home Assistant Android TV page](https://www.home-assistant.io/integrations/androidtv_remote/). If your TV is from another brand or simply the TV integration does not use `remote.send_command` for sending keys, you can still use this card by setting [custom buttons](#custom-buttons) with services to send keys to your TV (or do whatever you want) in your way (just like the original [tv-card](https://github.com/marrobHD/tv-card)).
 
-## Custom buttons
+## Custom Buttons
 
 If you want to add custom buttons to the remote control (of if you want to reconfigure the existing buttons), you can do it by adding an object to the `custom_keys` option:
 
@@ -171,7 +173,67 @@ Inside each button you may define `icon` and either `key`, `source` or `service`
 
 If an icon is not provided for a custom key or source that overwrites a predefined key or source, the original icon will be used instead.
 
-## Custom icons
+### Custom Touchpad Commands
+
+The touchpad can be customized using `custom_keys` so that it can be used with other devices
+
+Touchpad swipe and single click commands can be remapped by creating custom keys for `left`, `right`, `up`, `down`, and `center`.
+
+```yaml
+custom_keys:
+  up:
+    service: kodi.call_method
+    service_data:
+      entity_id: media_player.kodi
+      method: Input.Up
+  down:
+    service: kodi.call_method
+    service_data:
+      entity_id: media_player.kodi
+      method: Input.Down
+  left:
+    service: kodi.call_method
+    service_data:
+      entity_id: media_player.kodi
+      method: Input.Left
+  right:
+    service: kodi.call_method
+    service_data:
+      entity_id: media_player.kodi
+      method: Input.Right
+  center:
+    service: kodi.call_method
+    service_data:
+      entity_id: media_player.kodi
+      method: Input.Select
+```
+
+Touchpad double click commands can be remapped by either setting `double_click_keycode` in the config if you just want to change the Android TV functionality, creating a custom key for `back` if you want to change the default back functionality, or both.
+
+````yaml
+enable_double_click: true
+double_click_keycode: back
+custom_keys:
+  back:
+  service: kodi.call_method
+  service_data:
+    entity_id: media_player.kodi
+    method: Input.Back```
+````
+
+Touchpad long click commands can be changed to a different command and custom key by setting `long_click_keycode` in the config. By default the long click command sends a long `center` click, which on Android TV will peform a `menu` command on a selected item if available and a `center` command if not. This will not work on other devices and has to be remapped like so.
+
+```yaml
+long_click_keycode: menu
+custom_keys:
+  menu:
+    service: kodi.call_method
+    service_data:
+      entity_id: media_player.kodi
+      method: Input.ContextMenu
+```
+
+## Custom Icons
 
 You can customize any icon with a custom svg path using the `custom_icons` option.
 
@@ -215,7 +277,7 @@ custom_sources:
     source: hbomax://deeplink
 ```
 
-## Keyboard input with ADB
+## Keyboard Input With ADB
 
 You can use the [Android Debug Bridge integration](https://www.home-assistant.io/integrations/androidtv/) with this card to send text to your Android TV. Create a button named `keyboard` to do so. Clicking on it will create a text prompt in which you can enter the text which you wish to send. It is highly recommended that you also create keys for `delete` and `enter` so you can easily delete the text you send and quickly search using it.
 
