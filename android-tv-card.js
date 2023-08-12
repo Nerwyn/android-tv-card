@@ -558,6 +558,8 @@ class TVCardServices extends LitElement {
 		// 	data.command = 'input text "' + e.key + '"';
 		// }
 		let key = String.fromCharCode(e.code)
+		console.log(key + ' - ' + e.code)
+		alert(key + ' - ' + e.code)
 		data.command = 'input text "' + key + '"';
 
 		this._hass.callService('androidtv', 'adb_command', data);
