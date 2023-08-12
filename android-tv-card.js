@@ -728,17 +728,26 @@ class TVCardServices extends LitElement {
 					height: 64px;
 					position: relative;
 				}
-				.keyboard-input,
-				.keyboard-icon {
+				.keyboard-input {
 					width: 100%;
 					height: 100%;
 					position: absolute;
 					top: 0;
 					left: 0;
+					z-index: 9;
+				}
+				.keyboard-icon {
+					--mdc-icon-size: 100%;
+					position: absolute;
+					top: -0.5em;
+					left: 0;
 				}
 				#kInput {
 					opacity: 0;
 					filter: alpha(opacity=0);
+					z-index: 9;
+					width: 100%
+					height: 100%
 				}
 			</style>
 		`;
