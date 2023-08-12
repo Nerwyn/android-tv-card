@@ -580,23 +580,29 @@ class TVCardServices extends LitElement {
 			document.addEventListener('keypress', (e) =>
 				this.onKeyboardPress(e)
 			);
+			return html`
+				<div class="keyboard-input">
+					<input 
+						id="kInput"
+						onfocus="this.value=''">
+					</input>
+					<ha-icon .icon="${icon}"></ha-icon>
+				</div>
+			`;
 		}
 
 		return html`
-		<ha-icon-button
-			.action="${action}"
-			@click="${this.onButtonClick}"
-			@touchstart="${this.onButtonLongClickStart}"
-			@touchend="${this.onButtonLongClickEnd}"
-			title="${action}"
-			.path="${svg_path}"
-			tabindex="-1"
-		>
-			<ha-icon
-				.icon="${!svg_path ? icon : ''}"
-			</ha-icon>
-		</ha-icon-button>
-	`;
+			<ha-icon-button
+				.action="${action}"
+				@click="${this.onButtonClick}"
+				@touchstart="${this.onButtonLongClickStart}"
+				@touchend="${this.onButtonLongClickEnd}"
+				title="${action}"
+				.path="${svg_path}"
+			>
+				<ha-icon .icon="${!svg_path ? icon : ''}"></ha-icon>
+			</ha-icon-button>
+		`;
 	}
 
 	buildRow(content) {
@@ -714,6 +720,15 @@ class TVCardServices extends LitElement {
 					background: #6d767e;
 					touch-action: none;
 					text-align: center;
+				}
+				.keyboard-input {
+					width: 64px;
+					height: 64px;
+					overflow: hidden;
+				}
+				#kInput {
+					opacity: 0;
+					filter: alpha(opacity=0);
 				}
 			</style>
 		`;
