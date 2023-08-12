@@ -545,23 +545,38 @@ class TVCardServices extends LitElement {
 	 * Event handler for keyboard events
 	 * @param {Event} e
 	 */
-	onKeyUp(e) {
+	onKeyDown(e) {
 		e.stopImmediatePropagation();
 		let data = {
 			entity_id: this._config.adb_id,
 		};
 
-		let key = e.currentTarget.value.charAt(
-			e.currentTarget.value.length - 1
+		let e2 = JSON.stringify(
+			{
+				key: e.key,
+				keyCode: e.keyCode,
+				which: e.which,
+				code: e.code,
+				location: e.location,
+				altKey: e.altKey,
+				ctrlKey: e.ctrlKey,
+				metaKey: e.metaKey,
+				shiftKey: e.shiftKey,
+				repeat: e.repeat,
+			},
+			null,
+			'\t'
 		);
-		console.log(key)
+		alert(e2);
+		console.log(e2);
 
-		// // prettier-ignore
-		// if (['Backspace', 'Delete', 'Control','Alt', 'Meta', 'Shift', 'Tab', 'Escape', 'CapsLock', 'Enter'].includes(key)) {
-		// 	console.log('Not an alphanumerical key!'); // TODO: Send these as commands or ignore
-		// } else {
-		// 	data.command = 'input text "' + e.key + '"';
-		// }
+		let key = e.key;
+		// prettier-ignore
+		if (['Backspace', 'Delete', 'Control','Alt', 'Meta', 'Shift', 'Tab', 'Escape', 'CapsLock', 'Enter'].includes(key)) {
+			console.log('Not an alphanumerical key!'); // TODO: Send these as commands or ignore
+		} else {
+			data.command = 'input text "' + key + '"';
+		}
 		data.command = 'input text "' + key + '"';
 
 		this._hass.callService('androidtv', 'adb_command', data);
@@ -602,7 +617,7 @@ class TVCardServices extends LitElement {
 						<input 
 							id="kInput"
 							onfocus="this.value=''"
-							@keyup="${this.onKeyUp}"
+							@keydown="${this.onKeyDown}"
 						>
 						</input>
 					</div>
