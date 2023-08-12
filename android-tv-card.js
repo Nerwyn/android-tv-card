@@ -581,11 +581,10 @@ class TVCardServices extends LitElement {
 			document.addEventListener('keypress', (e) =>
 				this.onKeyboardPress(e)
 			);
-			kInput = html`<div class="keyboard-input"><input class="keyboard-input" id="kInput" onfocus="this.value=''"></input></div>`;
+			kInput = html`<div class="keyboard-input"><input id="kInput" onfocus="this.value=''"></input></div>`;
 		}
 
 		return html`
-		${kInput}
 		<ha-icon-button
 			.action="${action}"
 			@click="${this.onButtonClick}"
@@ -597,6 +596,7 @@ class TVCardServices extends LitElement {
 			<ha-icon
 				.icon="${!svg_path ? icon : ''}"
 			</ha-icon>
+			${kInput}
 		</ha-icon-button>
 	`;
 	}
