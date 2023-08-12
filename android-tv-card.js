@@ -633,7 +633,8 @@ class TVCardServices extends LitElement {
 							id="kInput"
 							onfocus="this.value=''"
 							spellcheck="false"
-							autocorrect="false"
+							autocorrect="off"
+							autocomplete="off"
 							@input="${this.onInput}"
 						>
 						</input>
