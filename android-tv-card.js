@@ -633,7 +633,7 @@ class TVCardServices extends LitElement {
 	}
 
 	render() {
-		if (!this._config || !this._hass || !this.volume_slider) {
+		if (!this._config || !this._hass) {
 			return html``;
 		}
 
