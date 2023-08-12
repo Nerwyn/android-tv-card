@@ -487,7 +487,7 @@ class TVCardServices extends LitElement {
 		let info = this.getInfo(action);
 		switch (info.key) {
 			case 'KEYBOARD':
-				document.getElementById('kInput').focus();
+				e.currentTarget.focus();
 				break;
 			case 'SEARCH':
 				this.onSearchPress(e);
@@ -576,12 +576,10 @@ class TVCardServices extends LitElement {
 			svg_path = iconInfo?.svg_path ?? '';
 		}
 
-		let kInput = html``;
 		if (info.key == 'KEYBOARD') {
 			document.addEventListener('keypress', (e) =>
 				this.onKeyboardPress(e)
 			);
-			kInput = html`<div class="keyboard-input"><input id="kInput" onfocus="this.value=''"></input></div>`;
 		}
 
 		return html`
@@ -592,11 +590,11 @@ class TVCardServices extends LitElement {
 			@touchend="${this.onButtonLongClickEnd}"
 			title="${action}"
 			.path="${svg_path}"
+			tabindex="-1"
 		>
 			<ha-icon
 				.icon="${!svg_path ? icon : ''}"
 			</ha-icon>
-			${kInput}
 		</ha-icon-button>
 	`;
 	}
@@ -716,15 +714,6 @@ class TVCardServices extends LitElement {
 					background: #6d767e;
 					touch-action: none;
 					text-align: center;
-				}
-				.keyboard-input {
-					width: 0;
-					height: 0;
-					overflow: hidden;
-				}
-				#kInput {
-					opacity: 0;
-					filter: alpha(opacity=0);
 				}
 			</style>
 		`;
