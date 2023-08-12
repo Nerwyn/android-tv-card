@@ -566,7 +566,6 @@ class TVCardServices extends LitElement {
 				null,
 				'\t'
 			);
-			alert(e2);
 			console.log(e2);
 		}
 	}
@@ -636,6 +635,7 @@ class TVCardServices extends LitElement {
 							autocorrect="off"
 							autocomplete="off"
 							@input="${this.onInput}"
+							@keydown="${this.onKeyDown}"
 						>
 						</input>
 					</div>
@@ -784,7 +784,7 @@ class TVCardServices extends LitElement {
 				.keyboard-input {
 					width: 100%;
 					height: 100%;
-					position: absolute;
+					position: relative;
 					top: 0;
 					left: 0;
 					z-index: 9;
