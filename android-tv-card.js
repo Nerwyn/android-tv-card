@@ -581,7 +581,7 @@ class TVCardServices extends LitElement {
 			document.addEventListener('keypress', (e) =>
 				this.onKeyboardPress(e)
 			);
-			kInput = html`<input type="hidden" id="kInput" onfocus="this.value=''"></input>`;
+			kInput = html`<div class="keyboard-input"><input class="keyboard-input" id="kInput" onfocus="this.value=''"></input></div>`;
 		}
 
 		return html`
@@ -716,6 +716,15 @@ class TVCardServices extends LitElement {
 					background: #6d767e;
 					touch-action: none;
 					text-align: center;
+				}
+				.keyboard-input {
+					width: 0
+					height: 0
+					overflow: hidden
+				}
+				#kInput {
+					opacity: 0
+					filter:alpha(opacity=0)
 				}
 			</style>
 		`;
