@@ -578,13 +578,17 @@ class TVCardServices extends LitElement {
 
 		if (info.key == 'KEYBOARD') {
 			return html`
-				<div class="keyboard-input">
-					<input 
-						id="kInput"
-						@onfocus="this.value=''"
-						@onkeypress="${this.onKeyboardPress}">
-					</input>
-					<ha-icon .icon="${icon}" class="keyboard-icon"></ha-icon>
+				<div class="keyboard-container">
+					<div class="keyboard-input">
+						<input 
+							id="kInput"
+							@onfocus="this.value=''"
+							@onkeypress="${this.onKeyboardPress}">
+						</input>
+					</div>
+					<div class="keyboard-icon">
+						<ha-icon .icon="${icon}"></ha-icon>
+					</div>
 				</div>
 			`;
 		}
@@ -719,25 +723,20 @@ class TVCardServices extends LitElement {
 					touch-action: none;
 					text-align: center;
 				}
-				.keyboard-input {
+				.keyboard-container {
 					width: 64px;
 					height: 64px;
-					overflow: hidden;
+					position: relative;
 				}
+				.keyboard-input,
 				.keyboard-icon {
 					width: 100%;
 					height: 100%;
 					position: absolute;
 					top: 0;
 					left: 0;
-					z-index: 9;
 				}
 				#kInput {
-					width: 100%;
-					height: 100%;
-					position: absolute;
-					top: 0;
-					left: 0;
 					opacity: 0;
 					filter: alpha(opacity=0);
 				}
