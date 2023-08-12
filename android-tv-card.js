@@ -210,6 +210,7 @@ class TVCardServices extends LitElement {
 		if (this._config.volume_row == 'slider') {
 			this.renderVolumeSlider();
 		}
+		this.triggerRender();
 	}
 
 	isButtonEnabled(row, button) {
@@ -298,7 +299,6 @@ class TVCardServices extends LitElement {
 		);
 
 		this.volume_slider.hass = this._hass;
-		this.triggerRender();
 	}
 
 	/**
