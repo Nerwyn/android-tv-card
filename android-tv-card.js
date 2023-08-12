@@ -545,7 +545,7 @@ class TVCardServices extends LitElement {
 	 * Event handler for keyboard events
 	 * @param {Event} e
 	 */
-	onKeyDown(e) {
+	onKeyUp(e) {
 		e.stopImmediatePropagation();
 		let data = {
 			entity_id: this._config.adb_id,
@@ -602,7 +602,7 @@ class TVCardServices extends LitElement {
 						<input 
 							id="kInput"
 							onfocus="this.value=''"
-							@keydown="${this.onKeyDown}"
+							@keyup="${this.onKeyUp}"
 						>
 						</input>
 					</div>
