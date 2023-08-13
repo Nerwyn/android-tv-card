@@ -622,6 +622,24 @@ class TVCardServices extends LitElement {
 	}
 
 	/**
+	 * Event handler for on focus events
+	 * @param {Event} e
+	 */
+	onFocus(e) {
+		e.currentTarget.value = '';
+		e.currentTarget.style.color = 'var(--state-active-color)';
+	}
+
+	/**
+	 * Event handler for on focus out events
+	 * @param {Event} e
+	 */
+	onFocusOut(e) {
+		e.currentTarget.value = '';
+		e.currentTarget.style.color = '';
+	}
+
+	/**
 	 * Event handler for global Google Assistant search
 	 * @param {Event} e
 	 */
@@ -665,7 +683,8 @@ class TVCardServices extends LitElement {
 							autocapitalize="off"
 							onchange="this.value=''"
 							onkeyup="this.value=''"
-							onfocus="this.value=''"
+							@focus="${this.onFocus}"
+							@focusout="${this.onFocusOut}"
 							@input="${this.onInput}"
 							@paste="${this.onPaste}"
 							@keydown="${this.onKeyDown}"
