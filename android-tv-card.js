@@ -212,9 +212,6 @@ class TVCardServices extends LitElement {
 		if (this._config.volume_row == 'slider') {
 			await this.renderVolumeSlider();
 		}
-		if (this._config.alt_volume_icons) {
-			this.useAltVolumeIcons();
-		}
 
 		this.triggerRender();
 	}
@@ -331,6 +328,9 @@ class TVCardServices extends LitElement {
 	}
 
 	getInfo(action) {
+		if (this._config.alt_volume_icons) {
+			this.useAltVolumeIcons();
+		}
 		return (
 			this.custom_keys[action] ||
 			this.custom_sources[action] ||
@@ -635,6 +635,9 @@ class TVCardServices extends LitElement {
 	}
 
 	buildIconButton(action) {
+		if (this._config.alt_volume_icons) {
+			this.useAltVolumeIcons();
+		}
 		let info = this.getInfo(action);
 		let icon = info?.icon ?? '';
 		let svg_path = info.svg_path ?? this.custom_icons[icon] ?? '';
