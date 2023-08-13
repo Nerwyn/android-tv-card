@@ -553,29 +553,11 @@ class TVCardServices extends LitElement {
 	}
 
 	/**
-	 * Event handler for keyboard keydown events
+	 * Event handler for keyboard keydown events, used for non-alphanumerical keys
 	 * @param {Event} e
 	 */
 	onKeyDown(e) {
 		e.stopImmediatePropagation();
-
-		let e2 = JSON.stringify(
-			{
-				key: e.key,
-				keyCode: e.keyCode,
-				which: e.which,
-				code: e.code,
-				location: e.location,
-				altKey: e.altKey,
-				ctrlKey: e.ctrlKey,
-				metaKey: e.metaKey,
-				shiftKey: e.shiftKey,
-				repeat: e.repeat,
-			},
-			null,
-			'\t'
-		);
-		console.log(e2);
 
 		const keyToKey = {
 			Backspace: 'delete',
@@ -597,23 +579,11 @@ class TVCardServices extends LitElement {
 	}
 
 	/**
-	 * Event handler for keyboard input events
+	 * Event handler for keyboard input events, used for alphanumerical keys and works on all platforms
 	 * @param {Event} e
 	 */
 	onInput(e) {
 		e.stopImmediatePropagation();
-
-		let e2 = JSON.stringify(
-			{
-				data: e.data,
-				dataTransfer: e.dataTransfer,
-				inputType: e.inputType,
-				isComposing: e.isComposing,
-			},
-			null,
-			'\t'
-		);
-		console.log(e2);
 
 		if (e.data) {
 			let data = {
@@ -625,17 +595,12 @@ class TVCardServices extends LitElement {
 	}
 
 	/**
-	 * Event handler for paste events
+	 * Event handler for paste events, as onInput paste events return null for data field
 	 * @param {Event} e
 	 */
 	onPaste(e) {
 		e.stopImmediatePropagation();
 		e.preventDefault();
-
-		let e2 = JSON.stringify({
-			clipboardData: e.clipboardData.getData('Text'),
-		});
-		console.log(e2);
 
 		let text = e.clipboardData.getData('Text');
 		if (text) {
@@ -651,23 +616,12 @@ class TVCardServices extends LitElement {
 	}
 
 	/**
-	 * Event handler for keyboard focus events
-	 * @param {Event} e
-	 */
-	onFocus(e) {
-		e.stopImmediatePropagation();
-		e.preventDefault();
-		e.currentTarget.value = '';
-		e.currentTarget.focus({ preventScroll: true });
-	}
-
-	/**
 	 * Event handler for global Google Assistant search
 	 * @param {Event} e
 	 */
 	onSearchPress(e) {
 		e.stopImmediatePropagation();
-		let text = prompt('Global Search: ');
+		let text = prompt('Google Assistant Search: ');
 		if (text) {
 			let data = {
 				entity_id: this._config.adb_id,
@@ -704,7 +658,7 @@ class TVCardServices extends LitElement {
 							autocapitalize="off"
 							onchange="this.value=''"
 							onkeyup="this.value=''"
-							@focus="${this.onFocus}"
+							onfocus="this.value=''"
 							@input="${this.onInput}"
 							@paste="${this.onPaste}"
 							@keydown="${this.onKeyDown}"
@@ -854,14 +808,16 @@ class TVCardServices extends LitElement {
 					position: relative;
 				}
 				.keyboard-input {
-					width: 100%;
-					height: 100%;
+					width: inherit;
+					height: inherit;
 					position: relative;
 					top: 0;
 					left: 0;
 					z-index: 9;
 				}
 				.keyboard-icon {
+					width: inherit;
+					height: inherit;
 					--mdc-icon-size: 100%;
 					position: absolute;
 					top: -0.5em;
@@ -871,8 +827,8 @@ class TVCardServices extends LitElement {
 					opacity: 0;
 					filter: alpha(opacity=0);
 					z-index: 9;
-					width: 100%;
-					height: 100%;
+					width: inherit;
+					height: inherit;
 				}
 			</style>
 		`;
