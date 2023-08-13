@@ -617,8 +617,9 @@ class TVCardServices extends LitElement {
 			};
 			this._hass.callService('androidtv', 'adb_command', data);
 		}
+		e.currentTarget.blur();
 		e.currentTarget.value = '';
-		e.target.value = '';
+		e.currentTarget.focus();
 	}
 
 	/**
@@ -642,8 +643,19 @@ class TVCardServices extends LitElement {
 			};
 			this._hass.callService('androidtv', 'adb_command', data);
 		}
+		e.currentTarget.blur();
 		e.currentTarget.value = '';
-		e.target.value = '';
+		e.currentTarget.focus();
+	}
+
+	/**
+	 * Event handler for keyboard focus events
+	 * @param {Event} e
+	 */
+	onFocus(e) {
+		e.preventDefault();
+		e.currentTarget.value = '';
+		e.currentTarget.focus({ preventScroll: true });
 	}
 
 	/**
@@ -686,9 +698,10 @@ class TVCardServices extends LitElement {
 							spellcheck="false"
 							autocorrect="off"
 							autocomplete="off"
-							onfocus="this.value=''"
+							autocapitalize="off"
 							onchange="this.value=''"
 							onkeyup="this.value=''"
+							@focus="${this.onFocus}"
 							@input="${this.onInput}"
 							@paste="${this.onPaste}"
 							@keydown="${this.onKeyDown}"
