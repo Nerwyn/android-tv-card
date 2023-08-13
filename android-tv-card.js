@@ -585,8 +585,6 @@ class TVCardServices extends LitElement {
 			Enter: 'enter',
 			ArrowLeft: 'left',
 			ArrowRight: 'right',
-			ArrowUp: 'up',
-			ArrowDown: 'down',
 			Home: 'line_home',
 			End: 'line_end',
 		};
@@ -687,11 +685,12 @@ class TVCardServices extends LitElement {
 					<div class="keyboard-input">
 						<input 
 							id="kInput"
-							onfocus="this.value=''"
-							onchange="this.value=''"
 							spellcheck="false"
 							autocorrect="off"
 							autocomplete="off"
+							onfocus="this.value=''"
+							onchange="this.value=''"
+							onkeyup="this.value=''"
 							@input="${this.onInput}"
 							@paste="${this.onPaste}"
 							@keydown="${this.onKeyDown}"
