@@ -561,10 +561,6 @@ class TVCardServices extends LitElement {
 	onKeyDown(e) {
 		e.stopImmediatePropagation();
 
-		// prettier-ignore
-		if (!['Backspace', 'Delete', 'Enter', 'ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(e.key)) {
-			return
-		}
 		let e2 = JSON.stringify(
 			{
 				key: e.key,
@@ -594,7 +590,11 @@ class TVCardServices extends LitElement {
 			Home: 'line_home',
 			End: 'line_end',
 		};
-		this.sendAction(keyToKey[e.key]);
+
+		let key = keyToKey[e.key];
+		if (key) {
+			this.sendAction(keyToKey[key]);
+		}
 	}
 
 	/**
@@ -616,14 +616,44 @@ class TVCardServices extends LitElement {
 		);
 		console.log(e2);
 
-		let data = {
-			entity_id: this._config.adb_id,
-			command: 'input text "' + e.data + '"',
-		};
-		this._hass.callService('androidtv', 'adb_command', data);
+		if (e.data) {
+			let data = {
+				entity_id: this._config.adb_id,
+				command: 'input text "' + e.data + '"',
+			};
+			this._hass.callService('androidtv', 'adb_command', data);
+		}
 		e.currentTarget.value = '';
 	}
 
+	/**
+	 * Event handler for paste events
+	 * @param {Event} e
+	 */
+	onPaste(e) {
+		e.stopImmediatePropagation();
+		e.preventDefault();
+
+		let e2 = JSON.stringify({
+			clipboardData: e.clipboardData.getData('Text'),
+		});
+		console.log(e2);
+
+		let text = e.clipboardData.getData('Text');
+		if (text) {
+			let data = {
+				entity_id: this._config.adb_id,
+				command: 'input text "' + e.data + '"',
+			};
+			this._hass.callService('androidtv', 'adb_command', data);
+		}
+		e.currentTarget.value = '';
+	}
+
+	/**
+	 * Event handler for global Google Assistant search
+	 * @param {Event} e
+	 */
 	onSearchPress(e) {
 		e.stopImmediatePropagation();
 		let text = prompt('Global Search: ');
@@ -658,10 +688,12 @@ class TVCardServices extends LitElement {
 						<input 
 							id="kInput"
 							onfocus="this.value=''"
+							onchange="this.value=''"
 							spellcheck="false"
 							autocorrect="off"
 							autocomplete="off"
 							@input="${this.onInput}"
+							@paste="${this.onPaste}"
 							@keydown="${this.onKeyDown}"
 						>
 						</input>
