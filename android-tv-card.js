@@ -8,7 +8,7 @@ const html = LitElement.prototype.html;
  * Not all are ensured to work, and if they do not it is likely an issue with the underlying package used by the Android TV Remote integration or the Android TV Remote Protocol V2 itself.
  * https://www.home-assistant.io/integrations/androidtv_remote/#remote
  */
-const defaultKeys = {
+const default_keys = {
 	power: { key: 'POWER', icon: 'mdi:power' },
 	volume_up: { key: 'VOLUME_UP', icon: 'mdi:volume-plus' },
 	volume_down: { key: 'VOLUME_DOWN', icon: 'mdi:volume-minus' },
@@ -84,7 +84,7 @@ const defaultKeys = {
  * Not all have been tested, if any do not work please let me know!
  * https://community.home-assistant.io/t/android-tv-remote-app-links-deep-linking-guide/567921
  */
-const defaultSources = {
+const default_sources = {
 	appletv: {
 		source: 'https://tv.apple.com', // UNTESTED
 		svg_path:
@@ -166,6 +166,9 @@ class TVCardServices extends LitElement {
 	constructor() {
 		super();
 
+		this.default_keys = {};
+		this.default_sources = {};
+
 		this.custom_keys = {};
 		this.custom_sources = {};
 		this.custom_icons = {};
@@ -206,6 +209,12 @@ class TVCardServices extends LitElement {
 		this.custom_keys = config.custom_keys || {};
 		this.custom_sources = config.custom_sources || {};
 		this.custom_icons = config.custom_icons || {};
+
+		this.default_keys = default_keys;
+		this.default_sources = default_sources;
+		if (this._config.alt_volume_icons) {
+			this.useAltVolumeIcons();
+		}
 
 		await this.loadCardHelpers();
 		await this.loadHassHelpers();
@@ -307,9 +316,9 @@ class TVCardServices extends LitElement {
 	}
 
 	useAltVolumeIcons() {
-		defaultKeys.volume_up.icon = 'mdi:volume-high';
-		defaultKeys.volume_down.icon = 'mdi:volume-medium';
-		defaultKeys.volume_mute.icon = 'mdi:volume-variant-off';
+		this.default_keys.volume_up.icon = 'mdi:volume-high';
+		this.default_keys.volume_down.icon = 'mdi:volume-medium';
+		this.default_keys.volume_mute.icon = 'mdi:volume-variant-off';
 	}
 
 	/**
@@ -328,14 +337,11 @@ class TVCardServices extends LitElement {
 	}
 
 	getInfo(action) {
-		if (this._config.alt_volume_icons) {
-			this.useAltVolumeIcons();
-		}
 		return (
 			this.custom_keys[action] ||
 			this.custom_sources[action] ||
-			defaultKeys[action] ||
-			defaultSources[action] ||
+			this.default_keys[action] ||
+			this.default_sources[action] ||
 			{}
 		);
 	}
@@ -635,16 +641,14 @@ class TVCardServices extends LitElement {
 	}
 
 	buildIconButton(action) {
-		if (this._config.alt_volume_icons) {
-			this.useAltVolumeIcons();
-		}
 		let info = this.getInfo(action);
 		let icon = info?.icon ?? '';
 		let svg_path = info.svg_path ?? this.custom_icons[icon] ?? '';
 
 		// Use original icon if none provided for custom key or source
 		if (!(icon || svg_path)) {
-			let iconInfo = defaultKeys[action] || defaultSources[action] || {};
+			let iconInfo =
+				this.default_keys[action] || this.default_sources[action] || {};
 			icon = iconInfo?.icon ?? '';
 			svg_path = iconInfo?.svg_path ?? '';
 		}
