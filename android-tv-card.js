@@ -72,11 +72,12 @@ const default_keys = {
 	dvr: { key: 'DVR', icon: 'mdi:audio-video' },
 	audio_track: { key: 'MEDIA_AUDIO_TRACK', icon: 'mdi:waveform' },
 	settings: { key: 'SETTINGS', icon: 'mdi:cog' },
-	search: { key: 'SEARCH', icon: 'mdi:google-assistant' },
 	delete: { key: 'DEL', icon: 'mdi:backspace' },
 	forward_delete: { key: 'FOWARD_DEL', icon: 'mdi:backspace-reverse' },
 	enter: { key: 'ENTER', icon: 'mdi:magnify' },
 	keyboard: { key: 'KEYBOARD', icon: 'mdi:keyboard' },
+	search: { key: 'SEARCH', icon: 'mdi:google-assistant' },
+	textbox: { key: 'TEXTBOX', icon: 'mdi:form-textbox' },
 };
 
 /**
@@ -509,8 +510,8 @@ class TVCardServices extends LitElement {
 		let action = e.currentTarget.action;
 		let info = this.getInfo(action);
 		switch (info.key) {
-			case 'KEYBOARD':
-				e.currentTarget.focus();
+			case 'TEXTBOX':
+				this.onTextboxPress(e);
 				break;
 			case 'SEARCH':
 				this.onSearchPress(e);
@@ -622,7 +623,7 @@ class TVCardServices extends LitElement {
 	}
 
 	/**
-	 * Event handler for on focus events
+	 * Event handler for on focus events, clears input and changes icon color
 	 * @param {Event} e
 	 */
 	onFocus(e) {
@@ -632,12 +633,13 @@ class TVCardServices extends LitElement {
 	}
 
 	/**
-	 * Event handler for on focus out events
+	 * Event handler for on focus out events, clears input and resets icon color
 	 * @param {Event} e
 	 */
 	onFocusOut(e) {
 		e.currentTarget.value = '';
-		e.currentTarget.parentElement.parentElement.children[1].children[0].style.color = '';
+		e.currentTarget.parentElement.parentElement.children[1].children[0].style.color =
+			'';
 	}
 
 	/**
@@ -654,6 +656,22 @@ class TVCardServices extends LitElement {
 					'am start -a "android.search.action.GLOBAL_SEARCH" --es query "' +
 					text +
 					'"',
+			};
+			this._hass.callService('androidtv', 'adb_command', data);
+		}
+	}
+
+	/**
+	 * Event handler for sending bulk text via legacy prompt method
+	 * @param {Event} e
+	 */
+	onTextboxPress(e) {
+		e.stopImmediatePropagation();
+		let text = prompt('Text Input: ');
+		if (text) {
+			let data = {
+				entity_id: this._config.adb_id,
+				command: 'input text "' + text + '"',
 			};
 			this._hass.callService('androidtv', 'adb_command', data);
 		}
