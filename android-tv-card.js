@@ -627,7 +627,7 @@ class TVCardServices extends LitElement {
 	 */
 	onFocus(e) {
 		e.currentTarget.value = '';
-		e.currentTarget.parentElement.children[1].children[0].style.color =
+		e.currentTarget.parentElement.parentElement.children[1].children[0].style.color =
 			'var(--state-active-color)';
 	}
 
@@ -637,7 +637,7 @@ class TVCardServices extends LitElement {
 	 */
 	onFocusOut(e) {
 		e.currentTarget.value = '';
-		e.currentTarget.parentElement.children[1].children[0].style.color = '';
+		e.currentTarget.parentElement.parentElement.children[1].children[0].style.color = '';
 	}
 
 	/**
