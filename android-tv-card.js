@@ -74,6 +74,9 @@ const defaultKeys = {
 	settings: { key: 'SETTINGS', icon: 'mdi:cog' },
 	search: { key: 'SEARCH', icon: 'mdi:google-assistant' },
 	delete: { key: 'DEL', icon: 'mdi:backspace' },
+	forward_delete: { key: 'FOWARD_DEL', icon: 'mdi:backspace-reverse' },
+	line_home: { key: 'MOVE_HOME', icon: 'mdi:arrow-collapse-left' },
+	line_end: { key: 'MOVE_END', icon: 'mdi:arrow-collapse-right' },
 	enter: { key: 'ENTER', icon: 'mdi:magnify' },
 	keyboard: { key: 'KEYBOARD', icon: 'mdi:keyboard' },
 };
@@ -211,6 +214,10 @@ class TVCardServices extends LitElement {
 		if (this._config.volume_row == 'slider') {
 			await this.renderVolumeSlider();
 		}
+		if (this._config.alt_volume_icons) {
+			this.useAltVolumeIcons();
+		}
+
 		this.triggerRender();
 	}
 
@@ -302,6 +309,12 @@ class TVCardServices extends LitElement {
 		);
 
 		this.volume_slider.hass = this._hass;
+	}
+
+	useAltVolumeIcons() {
+		defaultKeys.volume_up.icon = 'mdi:volume-high';
+		defaultKeys.volume_down.icon = 'mdi:volume-medium';
+		defaultKeys.volume_mute.icon = 'mdi:volume-variant-off';
 	}
 
 	/**
@@ -549,25 +562,39 @@ class TVCardServices extends LitElement {
 		e.stopImmediatePropagation();
 
 		// prettier-ignore
-		if (['Backspace', 'Delete', 'Enter', 'ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(e.key)) {
-			let e2 = JSON.stringify(
-				{
-					key: e.key,
-					keyCode: e.keyCode,
-					which: e.which,
-					code: e.code,
-					location: e.location,
-					altKey: e.altKey,
-					ctrlKey: e.ctrlKey,
-					metaKey: e.metaKey,
-					shiftKey: e.shiftKey,
-					repeat: e.repeat,
-				},
-				null,
-				'\t'
-			);
-			console.log(e2);
+		if (!['Backspace', 'Delete', 'Enter', 'ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(e.key)) {
+			return
 		}
+		let e2 = JSON.stringify(
+			{
+				key: e.key,
+				keyCode: e.keyCode,
+				which: e.which,
+				code: e.code,
+				location: e.location,
+				altKey: e.altKey,
+				ctrlKey: e.ctrlKey,
+				metaKey: e.metaKey,
+				shiftKey: e.shiftKey,
+				repeat: e.repeat,
+			},
+			null,
+			'\t'
+		);
+		console.log(e2);
+
+		const keyToKey = {
+			Backspace: 'delete',
+			Delete: 'forward_delete',
+			Enter: 'enter',
+			ArrowLeft: 'left',
+			ArrowRight: 'right',
+			ArrowUp: 'up',
+			ArrowDown: 'down',
+			Home: 'line_home',
+			End: 'line_end',
+		};
+		this.sendAction(keyToKey[e.key]);
 	}
 
 	/**

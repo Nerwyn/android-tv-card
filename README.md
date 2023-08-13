@@ -69,6 +69,7 @@ Many thanks to the original authors. Getting this to work with Android TV was st
 | custom_keys            | object  | **Optional** | Custom keys for the remote control. Each item is an object that can optionally have an `icon` (will use original key icon if overwriting an existing one and icon is not provided) and at least one of the following properties: `key`, `source`, `service`. |
 | custom_sources         | object  | **Optional** | Custom sources for the remote control. Same object as above, but letting you split keys and sources.                                                                                                                                                         |
 | touchpad_height        | string  | **Optional** | Change touchpad height to a custom value, must include [units](https://www.w3schools.com/cssref/css_units.php). Defaults to `250px`.                                                                                                                         |
+| alt_volume_icons       | boolean | **Optional** | Use alternate volume up, down, and mute icons `mdi:volume-high`, `mdi:volume-medium`, and `mdi:volume-variant-off`.                                                                                                                                          |
 
 Using only these options you will get an empty card (or almost empty, if you set a title).
 In order to include the buttons, you need to specify in the config the rows you want and which buttons you want in it.
