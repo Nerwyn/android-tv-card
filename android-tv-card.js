@@ -75,8 +75,6 @@ const defaultKeys = {
 	search: { key: 'SEARCH', icon: 'mdi:google-assistant' },
 	delete: { key: 'DEL', icon: 'mdi:backspace' },
 	forward_delete: { key: 'FOWARD_DEL', icon: 'mdi:backspace-reverse' },
-	line_home: { key: 'MOVE_HOME', icon: 'mdi:arrow-collapse-left' },
-	line_end: { key: 'MOVE_END', icon: 'mdi:arrow-collapse-right' },
 	enter: { key: 'ENTER', icon: 'mdi:magnify' },
 	keyboard: { key: 'KEYBOARD', icon: 'mdi:keyboard' },
 };
@@ -585,8 +583,6 @@ class TVCardServices extends LitElement {
 			Enter: 'enter',
 			ArrowLeft: 'left',
 			ArrowRight: 'right',
-			Home: 'line_home',
-			End: 'line_end',
 		};
 
 		let key = keyToKey[e.key];
@@ -622,6 +618,7 @@ class TVCardServices extends LitElement {
 			this._hass.callService('androidtv', 'adb_command', data);
 		}
 		e.currentTarget.value = '';
+		e.target.value = '';
 	}
 
 	/**
@@ -646,6 +643,7 @@ class TVCardServices extends LitElement {
 			this._hass.callService('androidtv', 'adb_command', data);
 		}
 		e.currentTarget.value = '';
+		e.target.value = '';
 	}
 
 	/**
