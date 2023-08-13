@@ -587,6 +587,11 @@ class TVCardServices extends LitElement {
 
 		let key = keyToKey[e.key];
 		if (key) {
+			if (e.currentTarget.value != '') {
+				e.currentTarget.blur();
+				e.currentTarget.value = '';
+				e.currentTarget.focus();
+			}
 			this.sendAction(key);
 		}
 	}
@@ -617,9 +622,6 @@ class TVCardServices extends LitElement {
 			};
 			this._hass.callService('androidtv', 'adb_command', data);
 		}
-		e.currentTarget.blur();
-		e.currentTarget.value = '';
-		e.currentTarget.focus();
 	}
 
 	/**
@@ -653,6 +655,7 @@ class TVCardServices extends LitElement {
 	 * @param {Event} e
 	 */
 	onFocus(e) {
+		e.stopImmediatePropagation();
 		e.preventDefault();
 		e.currentTarget.value = '';
 		e.currentTarget.focus({ preventScroll: true });
