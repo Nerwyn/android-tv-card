@@ -593,7 +593,7 @@ class TVCardServices extends LitElement {
 
 		let key = keyToKey[e.key];
 		if (key) {
-			this.sendAction(keyToKey[key]);
+			this.sendAction(key);
 		}
 	}
 
@@ -643,7 +643,7 @@ class TVCardServices extends LitElement {
 		if (text) {
 			let data = {
 				entity_id: this._config.adb_id,
-				command: 'input text "' + e.data + '"',
+				command: 'input text "' + text + '"',
 			};
 			this._hass.callService('androidtv', 'adb_command', data);
 		}
