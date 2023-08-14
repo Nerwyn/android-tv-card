@@ -38,7 +38,7 @@ Along with a many other changes and improvements:
 - Custom keys and sources that replace default ones will now inherit the default icons if no new ones are given.
 - Send keyboard keys using `androidtv.adb_command` using the [Android Debug Bridge integration](https://www.home-assistant.io/integrations/androidtv/) and the `adb_id` configuration option. This card has three methods for sending text to Android TV:
   - Create a key named `keyboard`, which when pressed will turn on the keyboard event listener and allow you to send text to Android TV one character at a time.
-    - Also works with backspace, delete, enter, and left and right arrow keys.
+    - Also works with backspace, delete, enter, and left and right keys.
   - Create a key named `textbox`, which when pressed will open a text prompt in which you can enter text to send to your Android TV in bulk.
   - Highly recommended that you also create keys for `delete` and `enter` so you can remove and send your input text.
   - Create a key named `search`, which will open a text prompt in which you can enter text to send to your Android TV to process as a Google Assistant search.
@@ -291,7 +291,7 @@ You can use the [Android Debug Bridge integration](https://www.home-assistant.io
 
 ### Seamless Text Entry
 
-Send text to Android TV in a seamless manner by creating a button named `keyboard`. Clicking on it will activate a several listeners which will send any text you type to the Android TV, along with backspace, delete, enter, left, and right commands (note that the latter two may not behave as expected depending on where the cursor is on the Android TV). You can also paste by holding clicking `CTRL + V` while the keyboard is active or holding down and selecting paste on the keyboard button itself. You may experience some delay as keys are being sent to Android TV as they are being sent one at a time by ADB. Tip: Put the keyboard button at the top of your card so that your screen does not shift to keep it in focus when the on screen keyboard opens.
+Send text to Android TV in a seamless manner by creating a button named `keyboard`. Clicking on it will activate several listeners which will send any text you type to the Android TV, along with backspace, delete, enter, left, and right commands (note that the latter two may not behave as expected depending on where the cursor is on the Android TV). You can also paste by holding clicking `CTRL + V` while the keyboard is active or holding down and selecting paste on the keyboard button itself. You may experience some delay as keys are being sent to Android TV as they are being sent one at a time by ADB. Tip: Put the keyboard button at the top of your card so that your screen does not shift to keep it in focus when the on screen keyboard opens.
 
 ```yaml
 type: custom:android-tv-card
