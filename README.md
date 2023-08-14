@@ -291,7 +291,7 @@ You can use the [Android Debug Bridge integration](https://www.home-assistant.io
 
 ### Seamless Text Entry
 
-Send text to Android TV in a seamless manner by creating a button named `keyboard`. Clicking on it will activate a several listeners which will send any text you type to the Android TV, along with backspace, delete, enter, left, and right commands (note that the latter two may not behave as expected depending on where the cursor is on the Android TV). You can also paste by holding clicking `CTRL + V` while the keyboard is active or holding down and selecting paste on the keyboard itself. Tip: Put the keyboard button at the top of your card so that your screen does not shift to keep it in focus when the on screen keyboard opens.
+Send text to Android TV in a seamless manner by creating a button named `keyboard`. Clicking on it will activate a several listeners which will send any text you type to the Android TV, along with backspace, delete, enter, left, and right commands (note that the latter two may not behave as expected depending on where the cursor is on the Android TV). You can also paste by holding clicking `CTRL + V` while the keyboard is active or holding down and selecting paste on the keyboard button itself. You may experience some delay as keys are being sent to Android TV as they are being sent one at a time by ADB. Tip: Put the keyboard button at the top of your card so that your screen does not shift to keep it in focus when the on screen keyboard opens.
 
 ```yaml
 type: custom:android-tv-card
@@ -301,18 +301,11 @@ _row_1:
   - back
   - home
   - play_pause
-_row_3:
+_row_2:
   - keyboard
   - search
 navigation_row: touchpad
 volume_row: buttons
-custom_keys:
-  volume_down:
-    service: script.amplifier_volume_down
-  volume_mute:
-    service: script.amplifier_volume_mute
-  volume_up:
-    service: script.amplifier_volume_up
 touchpad_height: 370px
 ```
 
@@ -326,19 +319,17 @@ Send text to Android TV in bulk by creating a button named `textbox`. Clicking o
 type: custom:android-tv-card
 remote_id: remote.google_chromecast
 adb_id: media_player.google_chromecast_adb
+alt_volume_icons: true
 _row_1:
   - back
   - home
   - play_pause
-_row_2:
-  - volume_down
-  - volume_mute
-  - volume_up
+volume_row: buttons
 navigation_row: touchpad
 touchpad_height: 370px
-_row_3:
+_row_4:
   - delete
-  - keyboard
+  - textbox
   - enter
 ```
 
@@ -509,67 +500,56 @@ A tablet UI
 ```yaml
 type: horizontal-stack
 cards:
-  - type: vertical-stack
-    cards:
-      - type: tile
-        entity: media_player.google_chromecast
-        icon_tap_action:
-          action: toggle
-        vertical: true
-      - type: custom:android-tv-card
-        remote_id: remote.google_chromecast
-        media_player_id: media_player.google_chromecast
-        _row_1:
-          - back
-          - null
-          - home
-          - null
-          - menu
-        _row_2:
-          - volume_down
-          - null
-          - volume_mute
-          - null
-          - volume_up
-        _row_3:
-          - rewind
-          - null
-          - play_pause
-          - null
-          - fast_forward
-        sources_row_1:
-          - netflix
-          - disney
-          - hulu
-          - max
-          - primevideo
-        sources_row_2:
-          - plex
-          - vudu
-          - youtube
-          - spotify
-        custom_keys:
-          volume_down:
-            icon: mdi:volume-medium
-            service: script.amplifier_volume_down
-          volume_mute:
-            icon: mdi:volume-mute
-            service: script.amplifier_volume_mute
-          volume_up:
-            icon: mdi:volume-high
-            service: script.amplifier_volume_up
-  - type: vertical-stack
-    cards:
-      - type: custom:android-tv-card
-        remote_id: remote.google_chromecast
-        adb_id: media_player.google_chromecast_adb
-        navigation_row: touchpad
-        touchpad_height: 480px
-        _row_1:
-          - delete
-          - keyboard
-          - enter
-          - search
+  - type: custom:android-tv-card
+    remote_id: remote.google_chromecast
+    media_player_id: media_player.google_chromecast
+    _row_1:
+      - back
+      - null
+      - home
+      - null
+      - menu
+    _row_2:
+      - volume_down
+      - null
+      - volume_mute
+      - null
+      - volume_up
+    _row_3:
+      - rewind
+      - null
+      - play_pause
+      - null
+      - fast_forward
+    sources_row_1:
+      - netflix
+      - disney
+      - hulu
+      - max
+      - primevideo
+    sources_row_2:
+      - plex
+      - vudu
+      - youtube
+      - spotify
+    custom_keys:
+      volume_down:
+        icon: mdi:volume-medium
+        service: script.amplifier_volume_down
+      volume_mute:
+        icon: mdi:volume-mute
+        service: script.amplifier_volume_mute
+      volume_up:
+        icon: mdi:volume-high
+        service: script.amplifier_volume_up
+  - type: custom:android-tv-card
+    remote_id: remote.google_chromecast
+    adb_id: media_player.google_chromecast_adb
+    _row_1:
+      - keyboard
+      - search
+    navigation_row: touchpad
+    touchpad_height: 300px
 ```
 
 Result:
