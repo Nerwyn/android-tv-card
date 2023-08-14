@@ -40,7 +40,7 @@ Along with a many other changes and improvements:
   - Create a key named `keyboard`, which when pressed will turn on the keyboard event listener and allow you to send text to Android TV one character at a time.
     - Also works with backspace, delete, enter, and left and right keys.
   - Create a key named `textbox`, which when pressed will open a text prompt in which you can enter text to send to your Android TV in bulk.
-  - Highly recommended that you also create keys for `delete` and `enter` so you can remove and send your input text.
+    - Highly recommended that you also create keys for `delete` and `enter` so you can remove and send your input text.
   - Create a key named `search`, which will open a text prompt in which you can enter text to send to your Android TV to process as a Google Assistant search.
     - Works well if you are experiencing [this issue](https://github.com/home-assistant/core/issues/94063).
 - Fixed double click so single click won't trigger twice and made long click on touchpad remappable.
