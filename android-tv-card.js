@@ -77,7 +77,7 @@ const default_keys = {
 	enter: { key: 'ENTER', icon: 'mdi:magnify' },
 	keyboard: { key: 'KEYBOARD', icon: 'mdi:keyboard' },
 	search: { key: 'SEARCH', icon: 'mdi:google-assistant' },
-	textbox: { key: 'TEXTBOX', icon: 'mdi:form-textbox' },
+	textbox: { key: 'TEXTBOX', icon: 'mdi:text-box' },
 };
 
 /**

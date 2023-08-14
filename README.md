@@ -20,7 +20,7 @@
 - Customizable layout, you can choose the order of the rows and buttons
 - All rows and buttons are optional, you can change whatever you _(don't)_ like
 
-Along with a few other changes/improvements:
+Along with a many other changes and improvements:
 
 - Supports the official [Android TV Remote integration](https://www.home-assistant.io/integrations/androidtv_remote/).
 - Uses `remote.send_command` (instead of `media_player.play_media` like the original) to send commands to an Android TV using said integration, and can be given a `remote_id` to do so.
@@ -28,20 +28,27 @@ Along with a few other changes/improvements:
 - Swipe actions are now remappable by creating `custom_keys` for `up`, `down`, `left`, `right`, and `center`.
 - Navigation and button behavior tweaked to mimic the Google TV remote, such as:
   - Hold press/touch/swipe actions only repeat for directional and volume keys, and perform a long press for anything else.
+    - Remap long clicks on the touchpad by setting `long_click_keycode` to a different key name.
   - Navigation speed increased to be closer to (but not as crazy fast) as the Google TV remote.
 - Row names (except for `volume_row` and `navigation_row`) can be named anything as long as it contains `_row`, giving you the option to add unlimited rows.
   - Combine this with `custom_keys` and you can really use this card for anything you want!
 - Touchpad height can now be adjusted using the configuration option `touchpad_height`. If not provided will default to 250px.
 - Many more default keys and sources with SVG icons if no material design icon was available in Home Assistant.
   - Not all are working or tested at this time, please let me know if you find the correct source/activity names for the ones that are incorrect.
-- Send keyboard keys using `androidtv.adb_command` using the [Android Debug Bridge integration](https://www.home-assistant.io/integrations/androidtv/) and the `adb_id` configuration option.
-  - Create a key titled `keyboard` to enable this and click it to open a text prompt in which you can enter text to send to your Android TV.
+- Custom keys and sources that replace default ones will now inherit the default icons if no new ones are given.
+- Send keyboard keys using `androidtv.adb_command` using the [Android Debug Bridge integration](https://www.home-assistant.io/integrations/androidtv/) and the `adb_id` configuration option. This card has three methods for sending text to Android TV:
+  - Create a key named `keyboard`, which when pressed will turn on the keyboard event listener and allow you to send text to Android TV one character at a time.
+    - Also works with backspace, delete, enter, and left and right arrow keys.
+  - Create a key named `textbox`, which when pressed will open a text prompt in which you can enter text to send to your Android TV in bulk.
   - Highly recommended that you also create keys for `delete` and `enter` so you can remove and send your input text.
-- Quick global search also using ADB.
-  - Create a key titled `search`. It will function similarly to keyboard entry except that it will launch a global search on close. This can also be used to send commands and queries to Google Assistant.
+  - Create a key named `search`, which will open a text prompt in which you can enter text to send to your Android TV to process as a Google Assistant search.
+    - Works well if you are experiencing [this issue](https://github.com/home-assistant/core/issues/94063).
 - Fixed double click so single click won't trigger twice and made long click on touchpad remappable.
+  - Double clicks are now disabled by default, but can be enabled by setting `enable_double_click` to true.
+  - Double clicks default to `back` but can be remapped by setting `double_click_keycode` to a different key name.
   - Due to limitations in iOS's webview, double click does not work on iPhone and iPad.
   - Due to limitations on desktop browsers, touchpad swiping and long clicks do not work with a mouse.
+- Easily switch to alternate volume icons by setting `alt_volume_icons` to true.
 
 Many thanks to the original authors. Getting this to work with Android TV was straightforward and all of the frontend heavy lifting they did has provided an excellent base on which to build my personal ultimate Android TV remote.
 
@@ -280,7 +287,40 @@ custom_sources:
 
 ## Keyboard Input With ADB
 
-You can use the [Android Debug Bridge integration](https://www.home-assistant.io/integrations/androidtv/) with this card to send text to your Android TV. Create a button named `keyboard` to do so. Clicking on it will create a text prompt in which you can enter the text which you wish to send. It is highly recommended that you also create keys for `delete` and `enter` so you can easily delete the text you send and quickly search using it.
+You can use the [Android Debug Bridge integration](https://www.home-assistant.io/integrations/androidtv/) with this card to send text to your Android TV. This card includes three different methods for sending text to Android TV.
+
+### Seamless Text Entry
+
+Send text to Android TV in a seamless manner by creating a button named `keyboard`. Clicking on it will activate a several listeners which will send any text you type to the Android TV, along with backspace, delete, enter, left, and right commands (note that the latter two may not behave as expected depending on where the cursor is on the Android TV). You can also paste by holding clicking `CTRL + V` while the keyboard is active or holding down and selecting paste on the keyboard itself. Tip: Put the keyboard button at the top of your card so that your screen does not shift to keep it in focus when the on screen keyboard opens.
+
+```yaml
+type: custom:android-tv-card
+remote_id: remote.google_chromecast
+adb_id: media_player.google_chromecast_adb
+_row_1:
+  - back
+  - home
+  - play_pause
+_row_3:
+  - keyboard
+  - search
+navigation_row: touchpad
+volume_row: buttons
+custom_keys:
+  volume_down:
+    service: script.amplifier_volume_down
+  volume_mute:
+    service: script.amplifier_volume_mute
+  volume_up:
+    service: script.amplifier_volume_up
+touchpad_height: 370px
+```
+
+<img src="assets/live_keyboard.png" alt="keyboard example" width="300"/>
+
+### Bulk Text Entry
+
+Send text to Android TV in bulk by creating a button named `textbox`. Clicking on it will create a text prompt in which you can enter the text which you wish to send. It is highly recommended that you also create keys for `delete` and `enter` so you can easily delete the text you send and quickly search using it.
 
 ```yaml
 type: custom:android-tv-card
@@ -302,9 +342,11 @@ _row_3:
   - enter
 ```
 
-<img src="assets/keyboard_keys.png" alt="keyboard example" width="300"/>
+<img src="assets/bulk_keyboard.png" alt="keyboard example" width="300"/>
 
-Similarly, you can use ADB to do quick global Google Assistant searches by creating a button named `search`, which will function in a similar manner but will search immediately after sending the text.
+### Google Assistant Search
+
+Send text to Android TV to be processed as a Google Assistant global search by creating a button named `search`. Clicking on it will createa text prompt in which you can enter text you wish to search for using Google Assistant on Android TV. This method cannot be used to enter text into text fields on Android TV, but does work if you are experiencing [this issue](https://github.com/home-assistant/core/issues/94063) which prevents the on screen keyboard from appearing, and therefore search from being triggered.
 
 ## Installation
 
