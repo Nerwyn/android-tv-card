@@ -826,7 +826,6 @@ class TVCardServices extends LitElement {
 					height: 64px;
 					cursor: pointer;
 					--mdc-icon-size: 100%;
-					z-index: 5;
 				}
 				.row {
 					display: flex;
@@ -848,8 +847,8 @@ class TVCardServices extends LitElement {
 					opacity: 0;
 					filter: alpha(opacity=0);
 					z-index: -1;
-					width: inherit;
-					height: inherit;
+					width: 100%;
+					height: 100%;
 				}
 			</style>
 		`;
