@@ -505,11 +505,13 @@ class TVCardServices extends LitElement {
 	/**
 	 * Event handler for button click
 	 * @param {Event} e
+	 * @param {string} [action]
 	 * @param {boolean} [longPress=false]
 	 */
-	onButtonClick(e, longPress = false) {
-		let action = e.currentTarget.action;
+	onButtonClick(e, action, longPress = false) {
+		action = action || e.currentTarget.action;
 		let info = this.getInfo(action);
+		this.fireHapticEvent(window, longPress ? 'medium' : 'light');
 		switch (info.key) {
 			case 'KEYBOARD':
 				this.onKeyboardPress(e, longPress);
@@ -524,7 +526,6 @@ class TVCardServices extends LitElement {
 				this.sendAction(action, longPress);
 				break;
 		}
-		this.fireHapticEvent(window, longPress ? 'medium' : 'light');
 	}
 
 	/**
@@ -538,12 +539,10 @@ class TVCardServices extends LitElement {
 			// prettier-ignore
 			if (['up', 'down', 'left', 'right', 'volume_up', 'volume_down', 'delete'].includes(this.holdaction)) {
 				this.holdinterval = setInterval(() => {
-					this.sendAction(this.holdaction);
-					this.fireHapticEvent(window, 'light');
+					this.onButtonClick(e, this.holdaction, false)
 				}, 100);
 			} else {
-				this.sendAction(this.holdaction, true);
-				this.fireHapticEvent(window, 'medium');
+				this.onButtonClick(e, this.holdaction, true)
 			}
 		}, 500);
 	}
