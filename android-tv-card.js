@@ -532,8 +532,8 @@ class TVCardServices extends LitElement {
 	 * @param {Event} e
 	 */
 	onButtonLongClickStart(e) {
-		alert(e.currentTarget.action)
 		this.holdtimer = setTimeout(() => {
+			alert(e.currentTarget.action)
 			// Only repeat hold action for directional keys and volume
 			// prettier-ignore
 			if (['up', 'down', 'left', 'right', 'volume_up', 'volume_down', 'delete'].includes(e.currentTarget.action)) {
