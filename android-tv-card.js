@@ -390,6 +390,7 @@ class TVCardServices extends LitElement {
 	 */
 	onTouchClick(e) {
 		e.stopImmediatePropagation();
+		e.preventDefault()
 		let click_action = () => {
 			clearTimeout(this.touchtimer);
 			this.touchtimer = null;
