@@ -510,6 +510,9 @@ class TVCardServices extends LitElement {
 		let action = e.currentTarget.action;
 		let info = this.getInfo(action);
 		switch (info.key) {
+			case 'KEYBOARD':
+				e.currentTarget.children[1].focus();
+				break;
 			case 'TEXTBOX':
 				this.onTextboxPress(e);
 				break;
@@ -630,6 +633,7 @@ class TVCardServices extends LitElement {
 		e.currentTarget.value = '';
 		e.currentTarget.parentElement.parentElement.children[1].children[0].style.color =
 			'var(--state-active-color)';
+		e.currentTarget.children[1].style['z-index'] = '9';
 	}
 
 	/**
@@ -640,6 +644,7 @@ class TVCardServices extends LitElement {
 		e.currentTarget.value = '';
 		e.currentTarget.parentElement.parentElement.children[1].children[0].style.color =
 			'';
+		e.currentTarget.children[1].style['z-index'] = '';
 	}
 
 	/**
@@ -690,45 +695,38 @@ class TVCardServices extends LitElement {
 			svg_path = iconInfo?.svg_path ?? '';
 		}
 
+		let kInput = html``;
 		if (info.key == 'KEYBOARD') {
-			return html`
-				<div class="keyboard-container">
-					<div class="keyboard-input">
-						<input 
-							id="kInput"
-							spellcheck="false"
-							autocorrect="off"
-							autocomplete="off"
-							autocapitalize="off"
-							onchange="this.value=''"
-							onkeyup="this.value=''"
-							@focus="${this.onFocus}"
-							@focusout="${this.onFocusOut}"
-							@input="${this.onInput}"
-							@paste="${this.onPaste}"
-							@keydown="${this.onKeyDown}"
-						>
-						</input>
-					</div>
-					<div class="keyboard-icon">
-						<ha-icon .icon="${icon}"></ha-icon>
-					</div>
-				</div>
-			`;
-		} else {
-			return html`
-				<ha-icon-button
-					.action="${action}"
-					@click="${this.onButtonClick}"
-					@touchstart="${this.onButtonLongClickStart}"
-					@touchend="${this.onButtonLongClickEnd}"
-					title="${action}"
-					.path="${svg_path}"
-				>
-					<ha-icon .icon="${!svg_path ? icon : ''}"></ha-icon>
-				</ha-icon-button>
+			kInput = html`
+				<input
+					id="kInput"
+					spellcheck="false"
+					autocorrect="off"
+					autocomplete="off"
+					autocapitalize="off"
+					onchange="this.value=''"
+					onkeyup="this.value=''"
+					@focus="${this.onFocus}"
+					@focusout="${this.onFocusOut}"
+					@input="${this.onInput}"
+					@paste="${this.onPaste}"
+					@keydown="${this.onKeyDown}"
+				/>
 			`;
 		}
+		return html`
+			<ha-icon-button
+				.action="${action}"
+				@click="${this.onButtonClick}"
+				@touchstart="${this.onButtonLongClickStart}"
+				@touchend="${this.onButtonLongClickEnd}"
+				title="${action}"
+				.path="${svg_path}"
+			>
+				<ha-icon .icon="${!svg_path ? icon : ''}"></ha-icon>
+				${kInput}
+			</ha-icon-button>
+		`;
 	}
 
 	buildRow(content) {
@@ -847,31 +845,10 @@ class TVCardServices extends LitElement {
 					touch-action: none;
 					text-align: center;
 				}
-				.keyboard-container {
-					width: 64px;
-					height: 64px;
-					position: relative;
-				}
-				.keyboard-input {
-					width: inherit;
-					height: inherit;
-					position: relative;
-					top: 0;
-					left: 0;
-					z-index: 9;
-				}
-				.keyboard-icon {
-					width: inherit;
-					height: inherit;
-					--mdc-icon-size: 100%;
-					position: absolute;
-					top: -0.5em;
-					left: 0;
-				}
 				#kInput {
 					opacity: 0;
 					filter: alpha(opacity=0);
-					z-index: 9;
+					z-index: -1;
 					width: inherit;
 					height: inherit;
 				}
