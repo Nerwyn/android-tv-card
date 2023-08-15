@@ -365,7 +365,7 @@ class TVCardServices extends LitElement {
 			let service_data = JSON.parse(
 				JSON.stringify(info.service_data || {})
 			);
-			if (longPress) {
+			if (longPress && service == 'remote.send_command') {
 				service_data.hold_secs = 0.5;
 			}
 			let [domain, service] = info.service.split('.', 2);
