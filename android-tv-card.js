@@ -634,6 +634,7 @@ class TVCardServices extends LitElement {
 		e.currentTarget.parentElement.children[0].style.color =
 			'var(--state-active-color)';
 		e.currentTarget.style.zIndex = '9';
+		e.currentTarget.parentElement.style.zIndex = '-1'
 	}
 
 	/**
@@ -644,6 +645,7 @@ class TVCardServices extends LitElement {
 		e.currentTarget.value = '';
 		e.currentTarget.parentElement.children[0].style.color = '';
 		e.currentTarget.style.zIndex = '';
+		e.currentTarget.parentElement.style.zIndex = ''
 	}
 
 	/**
