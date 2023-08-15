@@ -419,18 +419,17 @@ class TVCardServices extends LitElement {
 	 * Event handler for touchpad double click
 	 * @param {Event} e
 	 */
-	onTouchDoubleClick(_e) {
+	onTouchDoubleClick(e) {
 		clearTimeout(this.clicktimer);
 		this.clicktimer = null;
 		this.clickcount = 0;
 
 		let action = this._config.double_click_keycode ?? 'back';
-		this.sendAction(action);
-		this.fireHapticEvent(window, 'success');
+		this.onButtonClick(e, action, false, 'success');
 	}
 
 	/**
-	 * Event handler for touchpad swipe start
+	 * Event handler for touchpad swipe and long click start
 	 * @param {Event} e
 	 */
 	onTouchStart(e) {
@@ -495,9 +494,7 @@ class TVCardServices extends LitElement {
 			// sliding vertically
 			action = diffY > 0 ? 'up' : 'down';
 		}
-		this.touchaction = action;
-		this.sendAction(action);
-		this.fireHapticEvent(window, 'selection');
+		this.onButtonClick(e, action, false, 'selection');
 
 		window.initialX = null;
 		window.initialY = null;
@@ -508,8 +505,12 @@ class TVCardServices extends LitElement {
 	 * @param {Event} e
 	 * @param {string} [action]
 	 * @param {boolean} [longPress=false]
+	 * @param {string} [haptic]
 	 */
-	onButtonClick(e, action, longPress = false) {
+	onButtonClick(e, action, longPress = false, haptic = undefined) {
+		haptic = haptic || longPress ? 'medium' : 'light';
+		this.fireHapticEvent(window, haptic);
+
 		action = action || e.currentTarget.action;
 		let info = this.getInfo(action);
 		switch (info.key) {
@@ -526,7 +527,6 @@ class TVCardServices extends LitElement {
 				this.sendAction(action, longPress);
 				break;
 		}
-		this.fireHapticEvent(window, longPress ? 'medium' : 'light');
 	}
 
 	/**
