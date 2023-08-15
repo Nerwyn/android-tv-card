@@ -510,7 +510,6 @@ class TVCardServices extends LitElement {
 	onButtonClick(e, longPress = false) {
 		let action = e.currentTarget.action;
 		let info = this.getInfo(action);
-		this.fireHapticEvent(window, longPress ? 'medium' : 'light');
 		switch (info.key) {
 			case 'KEYBOARD':
 				this.onKeyboardPress(e, longPress);
@@ -525,6 +524,7 @@ class TVCardServices extends LitElement {
 				this.sendAction(action, longPress);
 				break;
 		}
+		this.fireHapticEvent(window, longPress ? 'medium' : 'light');
 	}
 
 	/**
@@ -532,18 +532,17 @@ class TVCardServices extends LitElement {
 	 * @param {Event} e
 	 */
 	onButtonLongClickStart(e) {
+		this.holdaction = e.currentTarget.action;
 		this.holdtimer = setTimeout(() => {
 			// Only repeat hold action for directional keys and volume
 			// prettier-ignore
-			if (['up', 'down', 'left', 'right', 'volume_up', 'volume_down', 'delete'].includes(e.currentTarget.action)) {
+			if (['up', 'down', 'left', 'right', 'volume_up', 'volume_down', 'delete'].includes(this.holdaction)) {
 				this.holdinterval = setInterval(() => {
-					// this.onButtonClick(e, false)
-					this.sendAction(e.currentTarget.action, false);
+					this.sendAction(this.holdaction);
 					this.fireHapticEvent(window, 'light');
 				}, 100);
 			} else {
-				// this.onButtonClick(e, true)
-				this.sendAction(e.currentTarget.action, true);
+				this.sendAction(this.holdaction, true);
 				this.fireHapticEvent(window, 'medium');
 			}
 		}, 500);
@@ -561,6 +560,7 @@ class TVCardServices extends LitElement {
 		this.touchtimer = null;
 		this.holdtimer = null;
 		this.holdinterval = null;
+		this.holdaction = null;
 	}
 
 	/**
