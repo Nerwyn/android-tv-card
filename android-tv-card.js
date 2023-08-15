@@ -425,8 +425,7 @@ class TVCardServices extends LitElement {
 		this.clickcount = 0;
 
 		let action = this._config.double_click_keycode ?? 'back';
-		this.sendAction(action, false);
-		this.fireHapticEvent(window, 'success');
+		this.onButtonClick(e, action, false, 'success');
 	}
 
 	/**
@@ -495,8 +494,8 @@ class TVCardServices extends LitElement {
 			// sliding vertically
 			action = diffY > 0 ? 'up' : 'down';
 		}
-		this.sendAction(action, false);
-		this.fireHapticEvent(window, 'selection');
+		this.touchaction = action;
+		this.onButtonClick(e, action, false, 'selection');
 
 		window.initialX = null;
 		window.initialY = null;
@@ -507,9 +506,11 @@ class TVCardServices extends LitElement {
 	 * @param {Event} e
 	 * @param {string} [action]
 	 * @param {boolean} [longPress=false]
+	 * @param {string} [haptic]
 	 */
-	onButtonClick(e, action, longPress = false) {
-		this.fireHapticEvent(window, longPress ? 'medium' : 'light');
+	onButtonClick(e, action, longPress = false, haptic = undefined) {
+		haptic = haptic || longPress ? 'medium' : 'light';
+		this.fireHapticEvent(window, haptic);
 
 		action = action || e.currentTarget.action;
 		let info = this.getInfo(action);
