@@ -512,7 +512,6 @@ class TVCardServices extends LitElement {
 	onButtonClick(e, action, longPress = false) {
 		action = action || e.currentTarget.action;
 		let info = this.getInfo(action);
-		this.fireHapticEvent(window, longPress ? 'medium' : 'light');
 		switch (info.key) {
 			case 'KEYBOARD':
 				this.onKeyboardPress(e, longPress);
@@ -527,6 +526,7 @@ class TVCardServices extends LitElement {
 				this.sendAction(action, longPress);
 				break;
 		}
+		this.fireHapticEvent(window, longPress ? 'medium' : 'light');
 	}
 
 	/**
