@@ -174,11 +174,13 @@ class TVCardServices extends LitElement {
 		this.custom_sources = {};
 		this.custom_icons = {};
 
+		this.touchaction = null;
 		this.touchtimer = null;
+		this.touchinterval = null;
 		this.touchcount = 0;
 
-		this.holdtimer = null;
 		this.holdaction = null;
+		this.holdtimer = null;
 		this.holdinterval = null;
 	}
 
@@ -435,16 +437,16 @@ class TVCardServices extends LitElement {
 	onTouchStart(e) {
 		e.stopImmediatePropagation();
 
-		this.holdtimer = setTimeout(() => {
+		this.touchtimer = setTimeout(() => {
 			// Only repeat hold action for directional keys
-			if (['up', 'down', 'left', 'right'].includes(this.holdaction)) {
-				this.holdinterval = setInterval(() => {
-					this.sendAction(this.holdaction);
+			if (['up', 'down', 'left', 'right'].includes(this.touchaction)) {
+				this.touchinterval = setInterval(() => {
+					this.sendAction(this.touchaction);
 					this.fireHapticEvent(window, 'light');
 				}, 100);
 			} else {
 				if (this._config.long_click_keycode) {
-					this.sendAction(this._config.long_click_keycode);
+					this.sendAction(this._config.long_click_keycode, true);
 				} else {
 					this.sendAction('center', true);
 				}
@@ -462,13 +464,11 @@ class TVCardServices extends LitElement {
 	 */
 	onTouchEnd(_e) {
 		clearTimeout(this.touchtimer);
-		clearTimeout(this.holdtimer);
-		clearInterval(this.holdinterval);
+		clearInterval(this.touchinterval);
 
-		this.holdtimer = null;
+		this.touchaction = null;
 		this.touchtimer = null;
-		this.holdinterval = null;
-		this.holdaction = null;
+		this.touchinterval = null;
 	}
 
 	/**
@@ -494,7 +494,7 @@ class TVCardServices extends LitElement {
 			// sliding vertically
 			action = diffY > 0 ? 'up' : 'down';
 		}
-		this.holdaction = action;
+		this.touchaction = action;
 		this.sendAction(action);
 
 		this.fireHapticEvent(window, 'selection');
@@ -552,14 +552,12 @@ class TVCardServices extends LitElement {
 	 * @param {Event} _e
 	 */
 	onButtonLongClickEnd(_e) {
-		clearTimeout(this.touchtimer);
 		clearTimeout(this.holdtimer);
 		clearInterval(this.holdinterval);
 
-		this.touchtimer = null;
+		this.holdaction = null;
 		this.holdtimer = null;
 		this.holdinterval = null;
-		this.holdaction = null;
 	}
 
 	/**
