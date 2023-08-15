@@ -634,7 +634,7 @@ class TVCardServices extends LitElement {
 		e.currentTarget.parentElement.children[0].style.color =
 			'var(--state-active-color)';
 		e.currentTarget.style.zIndex = '9';
-		e.currentTarget.parentElement.style.zIndex = '1'
+		e.currentTarget.parentElement.style.zIndex = '1';
 	}
 
 	/**
@@ -645,7 +645,7 @@ class TVCardServices extends LitElement {
 		e.currentTarget.value = '';
 		e.currentTarget.parentElement.children[0].style.color = '';
 		e.currentTarget.style.zIndex = '';
-		e.currentTarget.parentElement.style.zIndex = ''
+		e.currentTarget.parentElement.style.zIndex = '';
 	}
 
 	/**
@@ -824,8 +824,8 @@ class TVCardServices extends LitElement {
 				}
 				img,
 				ha-icon-button {
-					width: 64px;
-					height: 64px;
+					width: 48px;
+					height: 48px;
 					cursor: pointer;
 					--mdc-icon-size: 100%;
 					position: relative;
@@ -836,6 +836,12 @@ class TVCardServices extends LitElement {
 					top: 0;
 					left: 0;
 					position: absolute;
+					width: -moz-available;
+					width: -webkit-fill-available;
+					width: fill-available;
+					height: -moz-available;
+					height: -webkit-fill-available;
+					height: fill-available;
 				}
 				.row {
 					display: flex;
