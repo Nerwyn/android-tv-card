@@ -350,7 +350,7 @@ class TVCardServices extends LitElement {
 	/**
 	 * Send either a command to an Android TV remote or a custom key to any service
 	 * @param {string} action
-	 * @param {boolean} [longPress=true]
+	 * @param {boolean} [longPress=false]
 	 */
 	sendAction(action, longPress = false) {
 		let info = this.getInfo(action);
@@ -505,25 +505,26 @@ class TVCardServices extends LitElement {
 	/**
 	 * Event handler for button click
 	 * @param {Event} e
+	 * @param {boolean} [longPress=false]
 	 */
-	onButtonClick(e) {
+	onButtonClick(e, longPress = false) {
 		let action = e.currentTarget.action;
 		let info = this.getInfo(action);
+		this.fireHapticEvent(window, longPress ? 'medium' : 'light');
 		switch (info.key) {
 			case 'KEYBOARD':
-				e.currentTarget.children[1].focus();
+				this.onKeyboardPress(e, longPress);
 				break;
 			case 'TEXTBOX':
-				this.onTextboxPress(e);
+				this.onTextboxPress(e, longPress);
 				break;
 			case 'SEARCH':
-				this.onSearchPress(e);
+				this.onSearchPress(e, longPress);
 				break;
 			default:
-				this.sendAction(action);
+				this.sendAction(action, longPress);
 				break;
 		}
-		this.fireHapticEvent(window, 'light');
 	}
 
 	/**
@@ -537,12 +538,10 @@ class TVCardServices extends LitElement {
 			// prettier-ignore
 			if (['up', 'down', 'left', 'right', 'volume_up', 'volume_down', 'delete'].includes(this.holdaction)) {
 				this.holdinterval = setInterval(() => {
-					this.sendAction(this.holdaction);
-					this.fireHapticEvent(window, 'light');
+					this.onButtonClick(this.holdaction, false)
 				}, 100);
 			} else {
-				this.sendAction(this.holdaction, true);
-				this.fireHapticEvent(window, 'medium');
+				this.onButtonClick(this.holdaction, true)
 			}
 		}, 500);
 	}
@@ -649,10 +648,37 @@ class TVCardServices extends LitElement {
 	}
 
 	/**
+	 * Event handler for clicking the keyboard button
+	 * @param {Event} e
+	 * @param {boolean} [longPress=false]
+	 */
+	onKeyboardPress(e, _longpress) {
+		e.currentTarget.children[1].focus();
+	}
+
+	/**
+	 * Event handler for sending bulk text via legacy prompt method
+	 * @param {Event} e
+	 * @param {boolean} [longPress=false]
+	 */
+	onTextboxPress(e, _longpress) {
+		e.stopImmediatePropagation();
+		let text = prompt('Text Input: ');
+		if (text) {
+			let data = {
+				entity_id: this._config.adb_id,
+				command: 'input text "' + text + '"',
+			};
+			this._hass.callService('androidtv', 'adb_command', data);
+		}
+	}
+
+	/**
 	 * Event handler for global Google Assistant search
 	 * @param {Event} e
+	 * @param {boolean} [longPress=false]
 	 */
-	onSearchPress(e) {
+	onSearchPress(e, _longpress) {
 		e.stopImmediatePropagation();
 		let text = prompt('Google Assistant Search: ');
 		if (text) {
@@ -662,22 +688,6 @@ class TVCardServices extends LitElement {
 					'am start -a "android.search.action.GLOBAL_SEARCH" --es query "' +
 					text +
 					'"',
-			};
-			this._hass.callService('androidtv', 'adb_command', data);
-		}
-	}
-
-	/**
-	 * Event handler for sending bulk text via legacy prompt method
-	 * @param {Event} e
-	 */
-	onTextboxPress(e) {
-		e.stopImmediatePropagation();
-		let text = prompt('Text Input: ');
-		if (text) {
-			let data = {
-				entity_id: this._config.adb_id,
-				command: 'input text "' + text + '"',
 			};
 			this._hass.callService('androidtv', 'adb_command', data);
 		}
