@@ -395,10 +395,7 @@ class TVCardServices extends LitElement {
 		let click_action = () => {
 			clearTimeout(this.clicktimer);
 			this.clicktimer = null;
-
-			let action = 'center';
-			this.onButtonClick(e, action, false);
-
+			this.onButtonClick(e, 'center', false);
 			this.clickcount = 0;
 		};
 		if (e.detail > this.clickcount) {
@@ -425,7 +422,7 @@ class TVCardServices extends LitElement {
 		this.clickcount = 0;
 
 		let action = this._config.double_click_keycode ?? 'back';
-		this.onButtonClick(e, action, false, 'success');
+		this.onButtonClick(e, action, false);
 	}
 
 	/**
@@ -439,7 +436,7 @@ class TVCardServices extends LitElement {
 			// Only repeat hold action for directional keys
 			if (['up', 'down', 'left', 'right'].includes(this.touchaction)) {
 				this.touchinterval = setInterval(() => {
-					this.onButtonClick(e, this.touchaction, false, 'selection');
+					this.onButtonClick(e, this.touchaction, false);
 				}, 100);
 			} else {
 				if (this._config.long_click_keycode) {
@@ -495,7 +492,7 @@ class TVCardServices extends LitElement {
 			action = diffY > 0 ? 'up' : 'down';
 		}
 		this.touchaction = action;
-		this.onButtonClick(e, action, false, 'selection');
+		this.onButtonClick(e, action, false);
 
 		window.initialX = null;
 		window.initialY = null;
@@ -506,14 +503,19 @@ class TVCardServices extends LitElement {
 	 * @param {Event} e
 	 * @param {string} [action]
 	 * @param {boolean} [longPress=false]
-	 * @param {string} [haptic]
 	 */
-	onButtonClick(e, action, longPress = false, haptic = undefined) {
-		haptic = haptic || longPress ? 'medium' : 'light';
-		this.fireHapticEvent(window, haptic);
-
+	onButtonClick(e, action, longPress = false) {
 		action = action || e.currentTarget.action;
 		let info = this.getInfo(action);
+
+		let haptic = longPress ? 'medium' : 'light';
+		if (action == 'center' && !longPress) {
+			haptic = 'selection';
+		} else if (action == this._config.double_click_keycode) {
+			haptic = 'success';
+		}
+		this.fireHapticEvent(window, haptic);
+
 		switch (info.key) {
 			case 'KEYBOARD':
 				this.onKeyboardPress(e, longPress);
