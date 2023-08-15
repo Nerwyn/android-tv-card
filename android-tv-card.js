@@ -631,8 +631,9 @@ class TVCardServices extends LitElement {
 	 */
 	onFocus(e) {
 		e.currentTarget.value = '';
-		e.currentTarget.parentElement.children[0].style.color = 'var(--state-active-color)';
-		e.currentTarget.style['z-index'] = '9';
+		e.currentTarget.parentElement.children[0].style.color =
+			'var(--state-active-color)';
+		e.currentTarget.style.zIndex = '9';
 	}
 
 	/**
@@ -642,7 +643,7 @@ class TVCardServices extends LitElement {
 	onFocusOut(e) {
 		e.currentTarget.value = '';
 		e.currentTarget.parentElement.children[0].style.color = '';
-		e.currentTarget.style['z-index'] = '';
+		e.currentTarget.style.zIndex = '';
 	}
 
 	/**
@@ -827,6 +828,14 @@ class TVCardServices extends LitElement {
 					cursor: pointer;
 					--mdc-icon-size: 100%;
 				}
+				ha-icon {
+					width: inherit;
+					height: inherit;
+					--mdc-icon-size: 100%
+					position: absolute;
+					display: flex;
+					justify-content: center;
+				}
 				.row {
 					display: flex;
 					padding: 8px 36px 8px 36px;
@@ -847,8 +856,8 @@ class TVCardServices extends LitElement {
 					opacity: 0;
 					filter: alpha(opacity=0);
 					z-index: -1;
-					width: 100%;
-					height: 100%;
+					width: inherit;
+					height: inherit;
 				}
 			</style>
 		`;
