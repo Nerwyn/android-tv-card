@@ -365,7 +365,7 @@ class TVCardServices extends LitElement {
 			let service_data = JSON.parse(
 				JSON.stringify(info.service_data || {})
 			);
-			if (longPress && service == 'remote.send_command') {
+			if (longPress && info.service == 'remote.send_command') {
 				service_data.hold_secs = 0.5;
 			}
 			let [domain, service] = info.service.split('.', 2);
@@ -421,9 +421,7 @@ class TVCardServices extends LitElement {
 		clearTimeout(this.touchtimer);
 		this.touchtimer = null;
 
-		let action = this._config.double_click_keycode
-			? this._config.double_click_keycode
-			: 'back';
+		let action = this._config.double_click_keycode ?? 'back';
 		this.sendAction(action);
 		this.fireHapticEvent(window, 'success');
 
