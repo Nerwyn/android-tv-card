@@ -439,7 +439,7 @@ class TVCardServices extends LitElement {
 			// Only repeat hold action for directional keys
 			if (['up', 'down', 'left', 'right'].includes(this.touchaction)) {
 				this.touchinterval = setInterval(() => {
-					this.onButtonClick(e, this.touchaction, false);
+					this.onButtonClick(e, this.touchaction, false, 'selection');
 				}, 100);
 			} else {
 				if (this._config.long_click_keycode) {
