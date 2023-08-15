@@ -698,7 +698,6 @@ class TVCardServices extends LitElement {
 		if (info.key == 'KEYBOARD') {
 			kInput = html`
 				<input
-					id="kInput"
 					spellcheck="false"
 					autocorrect="off"
 					autocomplete="off"
@@ -710,7 +709,7 @@ class TVCardServices extends LitElement {
 					@input="${this.onInput}"
 					@paste="${this.onPaste}"
 					@keydown="${this.onKeyDown}"
-				/>
+				></input>
 			`;
 		}
 		return html`
@@ -827,14 +826,14 @@ class TVCardServices extends LitElement {
 					height: 64px;
 					cursor: pointer;
 					--mdc-icon-size: 100%;
+					position: relative;
 				}
-				ha-icon {
-					width: inherit;
-					height: inherit;
-					--mdc-icon-size: 100%
+				input {
+					opacity: 0;
+					filter: alpha(opacity=0);
+					top: 0;
+					left: 0;
 					position: absolute;
-					display: flex;
-					justify-content: center;
 				}
 				.row {
 					display: flex;
@@ -851,13 +850,6 @@ class TVCardServices extends LitElement {
 					background: #6d767e;
 					touch-action: none;
 					text-align: center;
-				}
-				#kInput {
-					opacity: 0;
-					filter: alpha(opacity=0);
-					z-index: -1;
-					width: inherit;
-					height: inherit;
 				}
 			</style>
 		`;
