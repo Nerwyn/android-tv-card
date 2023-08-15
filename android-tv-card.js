@@ -395,8 +395,8 @@ class TVCardServices extends LitElement {
 			this.touchtimer = null;
 
 			let action = 'center';
-			this.sendAction(action);
-			this.fireHapticEvent(window, 'light');
+			this.onButtonClick(e, action, false);
+
 			this.touchcount = 0;
 		};
 		if (e.detail > this.touchcount) {
@@ -441,16 +441,18 @@ class TVCardServices extends LitElement {
 			// Only repeat hold action for directional keys
 			if (['up', 'down', 'left', 'right'].includes(this.touchaction)) {
 				this.touchinterval = setInterval(() => {
-					this.sendAction(this.touchaction);
-					this.fireHapticEvent(window, 'light');
+					this.onButtonClick(e, this.touchaction, false);
 				}, 100);
 			} else {
 				if (this._config.long_click_keycode) {
-					this.sendAction(this._config.long_click_keycode, true);
+					this.onButtonClick(
+						e,
+						this._config.long_click_keycode,
+						true
+					);
 				} else {
-					this.sendAction('center', true);
+					this.onButtonClick(e, 'center', true);
 				}
-				this.fireHapticEvent(window, 'medium');
 			}
 		}, 500);
 
@@ -496,8 +498,8 @@ class TVCardServices extends LitElement {
 		}
 		this.touchaction = action;
 		this.sendAction(action);
-
 		this.fireHapticEvent(window, 'selection');
+
 		window.initialX = null;
 		window.initialY = null;
 	}
