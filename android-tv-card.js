@@ -464,10 +464,12 @@ class TVCardServices extends LitElement {
 	onTouchEnd(_e) {
 		clearTimeout(this.touchtimer);
 		clearInterval(this.touchinterval);
+		clearTimeout(this.clicktimer);
 
 		this.touchaction = null;
 		this.touchtimer = null;
 		this.touchinterval = null;
+		this.clicktimer = null;
 	}
 
 	/**
