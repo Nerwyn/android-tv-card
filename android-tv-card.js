@@ -459,7 +459,10 @@ class TVCardServices extends LitElement {
 	 * Event handler for touchpad swipe end
 	 * @param {Event} _e
 	 */
-	onTouchEnd(_e) {
+	onTouchEnd(e) {
+		e.stopImmediatePropagation();
+		e.preventDefault();
+
 		clearTimeout(this.touchtimer);
 		clearInterval(this.touchinterval);
 
@@ -553,9 +556,11 @@ class TVCardServices extends LitElement {
 
 	/**
 	 * Event handler for button long click end
-	 * @param {Event} _e
+	 * @param {Event} e
 	 */
-	onButtonLongClickEnd(_e) {
+	onButtonLongClickEnd(e) {
+		e.stopImmediatePropagation();
+		e.preventDefault();
 		clearTimeout(this.holdtimer);
 		clearInterval(this.holdinterval);
 
