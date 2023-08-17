@@ -433,6 +433,8 @@ class TVCardServices extends LitElement {
 		e.stopImmediatePropagation();
 
 		this.touchtimer = setTimeout(() => {
+			e.preventDefault();
+
 			// Only repeat hold action for directional keys
 			if (['up', 'down', 'left', 'right'].includes(this.touchaction)) {
 				this.touchinterval = setInterval(() => {
@@ -459,10 +461,7 @@ class TVCardServices extends LitElement {
 	 * Event handler for touchpad swipe end
 	 * @param {Event} _e
 	 */
-	onTouchEnd(e) {
-		e.stopImmediatePropagation();
-		e.preventDefault();
-
+	onTouchEnd(_e) {
 		clearTimeout(this.touchtimer);
 		clearInterval(this.touchinterval);
 
@@ -540,12 +539,17 @@ class TVCardServices extends LitElement {
 	 * @param {Event} e
 	 */
 	onButtonLongClickStart(e) {
+		e.stopImmediatePropagation();
+
 		this.holdaction = e.currentTarget.action;
 		this.holdtimer = setTimeout(() => {
+			e.preventDefault();
+
 			// Only repeat hold action for directional keys and volume
 			// prettier-ignore
 			if (['up', 'down', 'left', 'right', 'volume_up', 'volume_down', 'delete'].includes(this.holdaction)) {
 				this.holdinterval = setInterval(() => {
+
 					this.onButtonClick(e, this.holdaction, false)
 				}, 100);
 			} else {
@@ -556,11 +560,9 @@ class TVCardServices extends LitElement {
 
 	/**
 	 * Event handler for button long click end
-	 * @param {Event} e
+	 * @param {Event} _e
 	 */
-	onButtonLongClickEnd(e) {
-		e.stopImmediatePropagation();
-		e.preventDefault();
+	onButtonLongClickEnd(_e) {
 		clearTimeout(this.holdtimer);
 		clearInterval(this.holdinterval);
 
