@@ -180,10 +180,12 @@ class TVCardServices extends LitElement {
 		this.touchaction = null;
 		this.touchtimer = null;
 		this.touchinterval = null;
+		this.touchlongclick = false;
 
 		this.holdaction = null;
 		this.holdtimer = null;
 		this.holdinterval = null;
+		this.holdlongclick = false;
 	}
 
 	static get properties() {
@@ -430,10 +432,8 @@ class TVCardServices extends LitElement {
 	 * @param {Event} e
 	 */
 	onTouchStart(e) {
-		e.stopImmediatePropagation();
-
 		this.touchtimer = setTimeout(() => {
-			e.preventDefault();
+			this.touchlongclick = true;
 
 			// Only repeat hold action for directional keys
 			if (['up', 'down', 'left', 'right'].includes(this.touchaction)) {
@@ -441,15 +441,11 @@ class TVCardServices extends LitElement {
 					this.onButtonClick(e, this.touchaction, false);
 				}, 100);
 			} else {
-				if (this._config.long_click_keycode) {
-					this.onButtonClick(
-						e,
-						this._config.long_click_keycode,
-						true
-					);
-				} else {
-					this.onButtonClick(e, 'center', true);
-				}
+				this.onButtonClick(
+					e,
+					this._config.long_click_keycode ?? 'center',
+					this._config.long_click_keycode ? false : true
+				);
 			}
 		}, 500);
 
@@ -459,9 +455,14 @@ class TVCardServices extends LitElement {
 
 	/**
 	 * Event handler for touchpad swipe end
-	 * @param {Event} _e
+	 * @param {Event} e
 	 */
-	onTouchEnd(_e) {
+	onTouchEnd(e) {
+		if (this.touchlongclick) {
+			this.touchlongclick = false;
+			e.stopImmediatePropagation();
+			e.preventDefault();
+		}
 		clearTimeout(this.touchtimer);
 		clearInterval(this.touchinterval);
 		clearTimeout(this.clicktimer);
@@ -541,11 +542,9 @@ class TVCardServices extends LitElement {
 	 * @param {Event} e
 	 */
 	onButtonLongClickStart(e) {
-		e.stopImmediatePropagation();
-
 		this.holdaction = e.currentTarget.action;
 		this.holdtimer = setTimeout(() => {
-			e.preventDefault();
+			this.holdlongclick = true;
 
 			// Only repeat hold action for directional keys and volume
 			// prettier-ignore
@@ -562,9 +561,15 @@ class TVCardServices extends LitElement {
 
 	/**
 	 * Event handler for button long click end
-	 * @param {Event} _e
+	 * @param {Event} e
 	 */
-	onButtonLongClickEnd(_e) {
+	onButtonLongClickEnd(e) {
+		if (this.holdlongclick) {
+			this.holdlongclick = false;
+			e.stopImmediatePropagation();
+			e.preventDefault();
+		}
+
 		clearTimeout(this.holdtimer);
 		clearInterval(this.holdinterval);
 
