@@ -1,4 +1,3 @@
-//webpack.config.js
 const path = require('path');
 
 module.exports = {
@@ -9,7 +8,7 @@ module.exports = {
 	},
 	output: {
 		path: path.resolve(__dirname, './dist'),
-		filename: 'android-tv-card.js', // <--- Will be compiled to this single file
+		filename: 'android-tv-card.js',
 	},
 	resolve: {
 		extensions: ['.ts', '.tsx', '.js'],

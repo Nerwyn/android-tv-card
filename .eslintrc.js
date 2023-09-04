@@ -3,7 +3,7 @@ module.exports = {
 		browser: true,
 		es2021: true,
 	},
-	extends: 'eslint:recommended',
+	extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended'],
 	overrides: [
 		{
 			env: {
@@ -15,6 +15,9 @@ module.exports = {
 			},
 		},
 	],
+	parser: '@typescript-eslint/parser',
+	plugins: ['@typescript-eslint'],
+	root: true,
 	parserOptions: {
 		ecmaVersion: 'latest',
 		sourceType: 'module',
@@ -25,9 +28,6 @@ module.exports = {
 			{
 				argsIgnorePattern: '^_',
 			},
-			{
-				argsIgnorePattern: '^__'
-			}
 		],
 	},
 };

@@ -5,15 +5,14 @@ import {
 	key,
 	source,
 	serviceData,
-	HAEvent as Event,
 } from './models';
 
 const LitElement = Object.getPrototypeOf(
-	customElements.get('ha-panel-lovelace')
+	customElements.get('ha-panel-lovelace'),
 );
 const html = LitElement.prototype.html;
 
-class TVCardServices extends LitElement {
+class AndroidTVCard extends LitElement {
 	constructor() {
 		super();
 
@@ -53,7 +52,7 @@ class TVCardServices extends LitElement {
 
 	getCardSize() {
 		let numRows = Object.keys(this._config).filter((key) =>
-			key.includes('_row')
+			key.includes('_row'),
 		).length;
 		if ('title' in this._config) {
 			numRows += 1;
@@ -103,10 +102,10 @@ class TVCardServices extends LitElement {
 	}
 
 	fireEvent(window: Window, type: string, detail?: string) {
-		let e = new Event(type, {
+		const e = new Event(type, {
 			bubbles: false,
-		}) as Event;
-		e.detail = detail;
+		});
+		(e as any).detail = detail;
 		window.dispatchEvent(e);
 		return e;
 	}
@@ -152,9 +151,8 @@ class TVCardServices extends LitElement {
 			slider_config = { ...slider_config, ...this._config.slider_config };
 		}
 
-		this.volume_slider = await this._helpers.createCardElement(
-			slider_config
-		);
+		this.volume_slider =
+			await this._helpers.createCardElement(slider_config);
 		this.volume_slider.style = 'flex: 0.9;';
 		this.volume_slider.ontouchstart = (e: Event) => {
 			e.stopImmediatePropagation();
@@ -165,7 +163,7 @@ class TVCardServices extends LitElement {
 			(_e: Event) => {
 				this.fireHapticEvent(window, 'light');
 			},
-			true
+			true,
 		);
 
 		this.volume_slider.hass = this._hass;
@@ -182,7 +180,7 @@ class TVCardServices extends LitElement {
 	 * @param {string} key
 	 */
 	sendKey(key: string, longPress: boolean = false) {
-		let data: serviceData = {
+		const data: serviceData = {
 			entity_id: this._config.remote_id,
 			command: key,
 		};
@@ -208,20 +206,20 @@ class TVCardServices extends LitElement {
 	 * @param {boolean} [longPress=false]
 	 */
 	sendAction(action: string, longPress: boolean = false) {
-		let info = this.getInfo(action);
+		const info = this.getInfo(action);
 		if ('key' in info) {
-			let key = (info as key).key;
+			const key = (info as key).key;
 			this.sendKey(key, longPress);
 		} else if ('source' in info) {
 			this.changeSource((info as source).source);
 		} else if ('service' in info) {
-			let service_data = JSON.parse(
-				JSON.stringify(info.service_data || {})
+			const service_data = JSON.parse(
+				JSON.stringify(info.service_data || {}),
 			);
 			if (longPress && info.service == 'remote.send_command') {
 				service_data.hold_secs = 0.5;
 			}
-			let [domain, service] = info.service.split('.', 2);
+			const [domain, service] = info.service.split('.', 2);
 			this._hass.callService(domain, service, service_data);
 		}
 	}
@@ -241,9 +239,9 @@ class TVCardServices extends LitElement {
 	 * Event handler for touchpad click with no movement
 	 * @param {Event} e
 	 */
-	onTouchClick(e: Event) {
+	onTouchClick(e: MouseEvent) {
 		e.stopImmediatePropagation();
-		let click_action = () => {
+		const click_action = () => {
 			clearTimeout(this.clickTimer);
 			this.clickTimer = null;
 			this.onButtonClick(e, 'center', false);
@@ -272,7 +270,7 @@ class TVCardServices extends LitElement {
 		this.clickTimer = null;
 		this.clickCount = 0;
 
-		let action = this._config.double_click_keycode ?? 'back';
+		const action = this._config.double_click_keycode ?? 'back';
 		this.onButtonClick(e, action, false);
 	}
 
@@ -280,7 +278,7 @@ class TVCardServices extends LitElement {
 	 * Event handler for touchpad swipe and long click start
 	 * @param {Event} e
 	 */
-	onTouchStart(e: Event) {
+	onTouchStart(e: TouchEvent) {
 		this.touchTimer = setTimeout(() => {
 			this.touchLongClick = true;
 
@@ -293,13 +291,13 @@ class TVCardServices extends LitElement {
 				this.onButtonClick(
 					e,
 					this._config.long_click_keycode ?? 'center',
-					this._config.long_click_keycode ? false : true
+					this._config.long_click_keycode ? false : true,
 				);
 			}
 		}, 500);
 
-		window.initialX = e.touches?.[0].clientX;
-		window.initialY = e.touches?.[0].clientY;
+		window.initialX = e.touches[0].clientX;
+		window.initialY = e.touches[0].clientY;
 	}
 
 	/**
@@ -326,16 +324,16 @@ class TVCardServices extends LitElement {
 	 * Event handler for touchpad swipe move
 	 * @param {Event} e
 	 */
-	onTouchMove(e: Event) {
+	onTouchMove(e: TouchEvent) {
 		if (!window.initialX || !window.initialY) {
 			return;
 		}
 
-		let currentX = e.touches?.[0].clientX || 0;
-		let currentY = e.touches?.[0].clientY || 0;
+		const currentX = e.touches[0].clientX || 0;
+		const currentY = e.touches[0].clientY || 0;
 
-		let diffX = window.initialX - currentX;
-		let diffY = window.initialY - currentY;
+		const diffX = window.initialX - currentX;
+		const diffY = window.initialY - currentY;
 
 		let action;
 		if (Math.abs(diffX) > Math.abs(diffY)) {
@@ -360,7 +358,7 @@ class TVCardServices extends LitElement {
 	 */
 	onButtonClick(e: Event, action: string, longPress: boolean = false) {
 		action = action || (e.currentTarget as any).action;
-		let info = this.getInfo(action);
+		const info = this.getInfo(action);
 
 		let haptic = longPress ? 'medium' : 'light';
 		if (action == 'center' && !longPress) {
@@ -370,7 +368,7 @@ class TVCardServices extends LitElement {
 		}
 		this.fireHapticEvent(window, haptic);
 
-		let key = 'key' in info ? info.key : '';
+		const key = 'key' in info ? info.key : '';
 		switch (key) {
 			case 'KEYBOARD':
 				this.onKeyboardPress(e, longPress);
@@ -432,7 +430,7 @@ class TVCardServices extends LitElement {
 	 * Event handler for keyboard keydown events, used for non-alphanumerical keys
 	 * @param {Event} e
 	 */
-	onKeyDown(e: Event) {
+	onKeyDown(e: KeyboardEvent) {
 		e.stopImmediatePropagation();
 
 		const keyToKey: Record<string, string> = {
@@ -443,12 +441,12 @@ class TVCardServices extends LitElement {
 			ArrowRight: 'right',
 		};
 
-		let key = keyToKey[e.key ?? ''];
+		const key = keyToKey[e.key ?? ''];
 		if (key) {
-			if (e.currentTarget?.value != '') {
-				e.currentTarget?.blur();
-				e.currentTarget!.value = '';
-				e.currentTarget?.focus();
+			if ((e.currentTarget as HTMLInputElement).value != '') {
+				(e.currentTarget as HTMLInputElement).blur();
+				(e.currentTarget as HTMLInputElement).value = '';
+				(e.currentTarget as HTMLInputElement).focus();
 			}
 			this.sendAction(key);
 		}
@@ -458,11 +456,11 @@ class TVCardServices extends LitElement {
 	 * Event handler for keyboard input events, used for alphanumerical keys and works on all platforms
 	 * @param {Event} e
 	 */
-	onInput(e: Event) {
+	onInput(e: InputEvent) {
 		e.stopImmediatePropagation();
 
 		if (e.data) {
-			let data = {
+			const data = {
 				entity_id: this._config.adb_id,
 				command: 'input text "' + e.data + '"',
 			};
@@ -474,44 +472,49 @@ class TVCardServices extends LitElement {
 	 * Event handler for paste events, as onInput paste events return null for data field
 	 * @param {Event} e
 	 */
-	onPaste(e: Event) {
+	onPaste(e: ClipboardEvent) {
 		e.stopImmediatePropagation();
 		e.preventDefault();
 
-		let text = e.clipboardData.getData('Text');
+		const text = e.clipboardData?.getData('Text');
 		if (text) {
-			let data = {
+			const data = {
 				entity_id: this._config.adb_id,
 				command: 'input text "' + text + '"',
 			};
 			this._hass.callService('androidtv', 'adb_command', data);
 		}
-		e.currentTarget.blur();
-		e.currentTarget.value = '';
-		e.currentTarget.focus();
+		(e.currentTarget as HTMLInputElement).blur();
+		(e.currentTarget as HTMLInputElement).value = '';
+		(e.currentTarget as HTMLInputElement).focus();
 	}
 
 	/**
 	 * Event handler for on focus events, clears input and changes icon color
 	 * @param {Event} e
 	 */
-	onFocus(e: Event) {
-		e.currentTarget.value = '';
-		e.currentTarget.parentElement.children[0].style.color =
-			'var(--state-active-color)';
-		e.currentTarget.style.zIndex = '9';
-		e.currentTarget.parentElement.style.zIndex = '1';
+	onFocus(e: InputEvent) {
+		(e.currentTarget as HTMLInputElement).value = '';
+		(
+			(e.currentTarget as HTMLInputElement).parentElement!
+				.children[0] as HTMLElement
+		).style.color = 'var(--state-active-color)';
+		(e.currentTarget as HTMLInputElement).style.zIndex = '9';
+		(e.currentTarget as HTMLInputElement).parentElement!.style.zIndex = '1';
 	}
 
 	/**
 	 * Event handler for on focus out events, clears input and resets icon color
 	 * @param {Event} e
 	 */
-	onFocusOut(e: Event) {
-		e.currentTarget.value = '';
-		e.currentTarget.parentElement.children[0].style.color = '';
-		e.currentTarget.style.zIndex = '';
-		e.currentTarget.parentElement.style.zIndex = '';
+	onFocusOut(e: InputEvent) {
+		(e.currentTarget as HTMLInputElement).value = '';
+		(
+			(e.currentTarget as HTMLInputElement).parentElement!
+				.children[0] as HTMLElement
+		).style.color = '';
+		(e.currentTarget as HTMLInputElement).style.zIndex = '';
+		(e.currentTarget as HTMLInputElement).parentElement!.style.zIndex = '';
 	}
 
 	/**
@@ -520,7 +523,9 @@ class TVCardServices extends LitElement {
 	 * @param {boolean} [longPress=false]
 	 */
 	onKeyboardPress(e: Event, _longpress: boolean) {
-		e.currentTarget.children[1].focus();
+		(
+			(e.currentTarget as HTMLInputElement).children[1] as HTMLElement
+		).focus();
 	}
 
 	/**
@@ -530,9 +535,9 @@ class TVCardServices extends LitElement {
 	 */
 	onTextboxPress(e: Event, _longpress: boolean) {
 		e.stopImmediatePropagation();
-		let text = prompt('Text Input: ');
+		const text = prompt('Text Input: ');
 		if (text) {
-			let data = {
+			const data = {
 				entity_id: this._config.adb_id,
 				command: 'input text "' + text + '"',
 			};
@@ -547,9 +552,9 @@ class TVCardServices extends LitElement {
 	 */
 	onSearchPress(e: Event, _longpress: boolean) {
 		e.stopImmediatePropagation();
-		let text = prompt('Google Assistant Search: ');
+		const text = prompt('Google Assistant Search: ');
 		if (text) {
-			let data = {
+			const data = {
 				entity_id: this._config.adb_id,
 				command:
 					'am start -a "android.search.action.GLOBAL_SEARCH" --es query "' +
@@ -561,13 +566,13 @@ class TVCardServices extends LitElement {
 	}
 
 	buildIconButton(action: string): string {
-		let info = this.getInfo(action);
+		const info = this.getInfo(action);
 		let icon = info?.icon ?? '';
 		let svg_path = info.svg_path ?? this.customIcons[icon] ?? '';
 
 		// Use original icon if none provided for custom key or source
 		if (!(icon || svg_path)) {
-			let iconInfo =
+			const iconInfo =
 				this.defaultKeys[action] || this.defaultSources[action] || {};
 			icon = iconInfo?.icon ?? '';
 			svg_path = iconInfo?.svg_path ?? '';
@@ -675,7 +680,9 @@ class TVCardServices extends LitElement {
 
 					default: {
 						content.push(
-							this.buildButtonsFromActions(this._config[row_name])
+							this.buildButtonsFromActions(
+								this._config[row_name],
+							),
 						);
 					}
 				}
@@ -684,7 +691,7 @@ class TVCardServices extends LitElement {
 
 		content = content.map(this.buildRow);
 
-		let output = html`
+		const output = html`
 			${this.renderStyle()}
 			<ha-card .header="${this._config.title}">${content}</ha-card>
 		`;
@@ -742,7 +749,7 @@ class TVCardServices extends LitElement {
 	applyThemesOnElement(
 		element: Record<string, any>,
 		themes: Record<string, any>,
-		localTheme: string
+		localTheme: string,
 	) {
 		element._themes = element._themes ?? {};
 		let themeName = themes.default_theme;
@@ -754,9 +761,9 @@ class TVCardServices extends LitElement {
 		}
 		const styles = Object.assign({}, element._themes);
 		if (themeName !== 'default') {
-			let theme = themes.themes[themeName];
+			const theme = themes.themes[themeName];
 			Object.keys(theme).forEach((key) => {
-				let prefixedKey = '--' + key;
+				const prefixedKey = '--' + key;
 				element._themes[prefixedKey] = '';
 				styles[prefixedKey] = theme[key];
 			});
@@ -768,7 +775,7 @@ class TVCardServices extends LitElement {
 			window.ShadyCSS.styleSubtree(
 				/** @type {!HTMLElement} */
 				element,
-				styles
+				styles,
 			);
 		}
 
@@ -777,7 +784,7 @@ class TVCardServices extends LitElement {
 			if (!meta.hasAttribute('default-content')) {
 				meta.setAttribute(
 					'default-content',
-					meta.getAttribute('content') as string
+					meta.getAttribute('content') as string,
 				);
 			}
 			const themeColor =
@@ -790,5 +797,5 @@ class TVCardServices extends LitElement {
 
 customElements.define(
 	'android-tv-card',
-	TVCardServices as unknown as CustomElementConstructor
+	AndroidTVCard as unknown as CustomElementConstructor,
 );
