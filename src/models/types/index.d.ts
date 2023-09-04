@@ -5,5 +5,10 @@ declare global {
 		loadCardHelpers: Function;
 		initialX?: number;
 		initialY?: number;
+		ShadyCSS?: shadyCSS;
+	}
+
+	interface ShadyCSS {
+		styleSubtree: Function;
 	}
 }

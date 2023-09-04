@@ -441,10 +441,10 @@ class TVCardServices extends LitElement {
 	 * Event handler for keyboard keydown events, used for non-alphanumerical keys
 	 * @param {Event} e
 	 */
-	onKeyDown(e) {
+	onKeyDown(e: Event) {
 		e.stopImmediatePropagation();
 
-		const keyToKey = {
+		const keyToKey: Record<string, string> = {
 			Backspace: 'delete',
 			Delete: 'forward_delete',
 			Enter: 'enter',
@@ -452,12 +452,12 @@ class TVCardServices extends LitElement {
 			ArrowRight: 'right',
 		};
 
-		let key = keyToKey[e.key];
+		let key = keyToKey[e.key ?? ''];
 		if (key) {
-			if (e.currentTarget.value != '') {
-				e.currentTarget.blur();
-				e.currentTarget.value = '';
-				e.currentTarget.focus();
+			if (e.currentTarget?.value != '') {
+				e.currentTarget?.blur();
+				e.currentTarget!.value = '';
+				e.currentTarget?.focus();
 			}
 			this.sendAction(key);
 		}
@@ -467,7 +467,7 @@ class TVCardServices extends LitElement {
 	 * Event handler for keyboard input events, used for alphanumerical keys and works on all platforms
 	 * @param {Event} e
 	 */
-	onInput(e) {
+	onInput(e: Event) {
 		e.stopImmediatePropagation();
 
 		if (e.data) {
@@ -483,7 +483,7 @@ class TVCardServices extends LitElement {
 	 * Event handler for paste events, as onInput paste events return null for data field
 	 * @param {Event} e
 	 */
-	onPaste(e) {
+	onPaste(e: Event) {
 		e.stopImmediatePropagation();
 		e.preventDefault();
 
@@ -504,7 +504,7 @@ class TVCardServices extends LitElement {
 	 * Event handler for on focus events, clears input and changes icon color
 	 * @param {Event} e
 	 */
-	onFocus(e) {
+	onFocus(e: Event) {
 		e.currentTarget.value = '';
 		e.currentTarget.parentElement.children[0].style.color =
 			'var(--state-active-color)';
@@ -516,7 +516,7 @@ class TVCardServices extends LitElement {
 	 * Event handler for on focus out events, clears input and resets icon color
 	 * @param {Event} e
 	 */
-	onFocusOut(e) {
+	onFocusOut(e: Event) {
 		e.currentTarget.value = '';
 		e.currentTarget.parentElement.children[0].style.color = '';
 		e.currentTarget.style.zIndex = '';
@@ -528,7 +528,7 @@ class TVCardServices extends LitElement {
 	 * @param {Event} e
 	 * @param {boolean} [longPress=false]
 	 */
-	onKeyboardPress(e, _longpress) {
+	onKeyboardPress(e: Event, _longpress: boolean) {
 		e.currentTarget.children[1].focus();
 	}
 
@@ -537,7 +537,7 @@ class TVCardServices extends LitElement {
 	 * @param {Event} e
 	 * @param {boolean} [longPress=false]
 	 */
-	onTextboxPress(e, _longpress) {
+	onTextboxPress(e: Event, _longpress: boolean) {
 		e.stopImmediatePropagation();
 		let text = prompt('Text Input: ');
 		if (text) {
@@ -554,7 +554,7 @@ class TVCardServices extends LitElement {
 	 * @param {Event} e
 	 * @param {boolean} [longPress=false]
 	 */
-	onSearchPress(e, _longpress) {
+	onSearchPress(e: Event, _longpress: boolean) {
 		e.stopImmediatePropagation();
 		let text = prompt('Google Assistant Search: ');
 		if (text) {
@@ -569,7 +569,7 @@ class TVCardServices extends LitElement {
 		}
 	}
 
-	buildIconButton(action) {
+	buildIconButton(action: string): string {
 		let info = this.getInfo(action);
 		let icon = info?.icon ?? '';
 		let svg_path = info.svg_path ?? this.customIcons[icon] ?? '';
@@ -583,7 +583,7 @@ class TVCardServices extends LitElement {
 		}
 
 		let kInput = html``;
-		if (info.key == 'KEYBOARD') {
+		if ('key' in info && info.key == 'KEYBOARD') {
 			kInput = html`
 				<input
 					spellcheck="false"
@@ -615,10 +615,11 @@ class TVCardServices extends LitElement {
 		`;
 	}
 
-	buildRow(content) {
+	buildRow(content: string[]) {
 		return html` <div class="row">${content}</div> `;
 	}
-	buildButtonsFromActions(actions) {
+
+	buildButtonsFromActions(actions: string[]) {
 		return actions.map((action) => this.buildIconButton(action));
 	}
 
@@ -631,7 +632,7 @@ class TVCardServices extends LitElement {
 			return html``;
 		}
 
-		let content = [];
+		let content: string[][] = [];
 		Object.keys(this._config).forEach((row_name) => {
 			if (row_name.includes('_row')) {
 				switch (row_name) {
@@ -663,7 +664,7 @@ class TVCardServices extends LitElement {
 
 							case 'touchpad':
 							default: {
-								const touchpad = [
+								const touchpad: string[] = [
 									html`
 										<toucharea
 											id="toucharea"
@@ -675,18 +676,16 @@ class TVCardServices extends LitElement {
 										</toucharea>
 									`,
 								];
-								content.push([touchpad]);
+								content.push(touchpad);
 							}
 						}
 						break;
 					}
 
 					default: {
-						content.push([
-							this.buildButtonsFromActions(
-								this._config[row_name]
-							),
-						]);
+						content.push(
+							this.buildButtonsFromActions(this._config[row_name])
+						);
 					}
 				}
 			}
@@ -749,7 +748,11 @@ class TVCardServices extends LitElement {
 		`;
 	}
 
-	applyThemesOnElement(element, themes, localTheme) {
+	applyThemesOnElement(
+		element: Record<string, any>,
+		themes: Record<string, any>,
+		localTheme: string
+	) {
 		element._themes = element._themes ?? {};
 		let themeName = themes.default_theme;
 		if (
@@ -783,7 +786,7 @@ class TVCardServices extends LitElement {
 			if (!meta.hasAttribute('default-content')) {
 				meta.setAttribute(
 					'default-content',
-					meta.getAttribute('content')
+					meta.getAttribute('content') as string
 				);
 			}
 			const themeColor =
@@ -794,4 +797,7 @@ class TVCardServices extends LitElement {
 	}
 }
 
-customElements.define('android-tv-card', TVCardServices);
+customElements.define(
+	'android-tv-card',
+	TVCardServices as unknown as CustomElementConstructor
+);
