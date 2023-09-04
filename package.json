@@ -1,10 +1,11 @@
 {
 	"name": "android-tv-card",
-	"version": "1.5.3",
+	"version": "2.0.0",
 	"description": "Android TV Remote Card",
 	"main": "./src/android-tv-card.js",
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"build": "npx webpack"
 	},
 	"repository": {
 		"type": "git",
@@ -25,5 +26,11 @@
 	"bugs": {
 		"url": "https://github.com/Nerwyn/android-tv-card/issues"
 	},
-	"homepage": "https://github.com/Nerwyn/android-tv-card#readme"
+	"homepage": "https://github.com/Nerwyn/android-tv-card#readme",
+	"devDependencies": {
+		"ts-loader": "^9.4.4",
+		"typescript": "^5.2.2",
+		"webpack": "^5.88.2",
+		"webpack-cli": "^5.1.4"
+	}
 }

@@ -25,6 +25,9 @@ module.exports = {
 			{
 				argsIgnorePattern: '^_',
 			},
+			{
+				argsIgnorePattern: '^__'
+			}
 		],
 	},
 };
