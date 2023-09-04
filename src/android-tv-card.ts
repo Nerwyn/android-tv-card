@@ -1,4 +1,12 @@
-import { defaultKeys, defaultSources } from './models';
+import {
+	customAction,
+	defaultKeys,
+	defaultSources,
+	key,
+	source,
+	serviceData,
+	HAEvent as Event,
+} from './models';
 
 const LitElement = Object.getPrototypeOf(
 	customElements.get('ha-panel-lovelace')
@@ -12,22 +20,22 @@ class TVCardServices extends LitElement {
 		this.defaultKeys = {};
 		this.defaultSources = {};
 
-		this.custom_keys = {};
-		this.custom_sources = {};
-		this.custom_icons = {};
+		this.customKeys = {};
+		this.customSources = {};
+		this.customIcons = {};
 
-		this.clicktimer = null;
-		this.clickcount = 0;
+		this.clickTimer = null;
+		this.clickCount = 0;
 
-		this.touchaction = null;
-		this.touchtimer = null;
-		this.touchinterval = null;
-		this.touchlongclick = false;
+		this.touchAction = null;
+		this.touchTimer = null;
+		this.touchInterval = null;
+		this.touchLongClick = false;
 
-		this.holdaction = null;
-		this.holdtimer = null;
-		this.holdinterval = null;
-		this.holdlongclick = false;
+		this.holdAction = null;
+		this.holdTimer = null;
+		this.holdInterval = null;
+		this.holdLongClick = false;
 	}
 
 	static get properties() {
@@ -53,11 +61,11 @@ class TVCardServices extends LitElement {
 		return numRows;
 	}
 
-	async setConfig(config) {
+	async setConfig(config: Record<string, any>) {
 		this._config = { theme: 'default', ...config };
-		this.custom_keys = config.custom_keys || {};
-		this.custom_sources = config.custom_sources || {};
-		this.custom_icons = config.custom_icons || {};
+		this.customKeys = config.customKeys || {};
+		this.customSources = config.customSources || {};
+		this.customIcons = config.customIcons || {};
 
 		this.defaultKeys = defaultKeys;
 		this.defaultSources = defaultSources;
@@ -74,7 +82,7 @@ class TVCardServices extends LitElement {
 		this.triggerRender();
 	}
 
-	isButtonEnabled(row, button) {
+	isButtonEnabled(row: string, button: string) {
 		if (!(this._config[row] instanceof Array)) return false;
 
 		return this._config[row].includes(button);
@@ -94,17 +102,16 @@ class TVCardServices extends LitElement {
 		return this._hass;
 	}
 
-	fireEvent(node, type, detail, _options) {
-		detail = detail === null || detail === undefined ? {} : detail;
+	fireEvent(window: Window, type: string, detail?: string) {
 		let e = new Event(type, {
 			bubbles: false,
-		});
+		}) as Event;
 		e.detail = detail;
-		node.dispatchEvent(e);
+		window.dispatchEvent(e);
 		return e;
 	}
 
-	fireHapticEvent(window, detail) {
+	fireHapticEvent(window: Window, detail: string) {
 		if (
 			this._config.enable_button_feedback === undefined ||
 			this._config.enable_button_feedback
@@ -149,13 +156,13 @@ class TVCardServices extends LitElement {
 			slider_config
 		);
 		this.volume_slider.style = 'flex: 0.9;';
-		this.volume_slider.ontouchstart = (e) => {
+		this.volume_slider.ontouchstart = (e: Event) => {
 			e.stopImmediatePropagation();
 			this.fireHapticEvent(window, 'light');
 		};
 		this.volume_slider.addEventListener(
 			'input',
-			(_e) => {
+			(_e: Event) => {
 				this.fireHapticEvent(window, 'light');
 			},
 			true
@@ -174,8 +181,8 @@ class TVCardServices extends LitElement {
 	 * Send command to an Android TV remote
 	 * @param {string} key
 	 */
-	sendKey(key, longPress = false) {
-		let data = {
+	sendKey(key: string, longPress: boolean = false) {
+		let data: serviceData = {
 			entity_id: this._config.remote_id,
 			command: key,
 		};
@@ -185,10 +192,10 @@ class TVCardServices extends LitElement {
 		this._hass.callService('remote', 'send_command', data);
 	}
 
-	getInfo(action) {
+	getInfo(action: string): key | source | customAction {
 		return (
-			this.custom_keys[action] ||
-			this.custom_sources[action] ||
+			this.customKeys[action] ||
+			this.customSources[action] ||
 			this.defaultKeys[action] ||
 			this.defaultSources[action] ||
 			{}
@@ -200,14 +207,14 @@ class TVCardServices extends LitElement {
 	 * @param {string} action
 	 * @param {boolean} [longPress=false]
 	 */
-	sendAction(action, longPress = false) {
+	sendAction(action: string, longPress: boolean = false) {
 		let info = this.getInfo(action);
-		if (info.key) {
-			let key = info.key;
+		if ('key' in info) {
+			let key = (info as key).key;
 			this.sendKey(key, longPress);
-		} else if (info.source) {
-			this.changeSource(info.source);
-		} else if (info.service) {
+		} else if ('source' in info) {
+			this.changeSource((info as source).source);
+		} else if ('service' in info) {
 			let service_data = JSON.parse(
 				JSON.stringify(info.service_data || {})
 			);
@@ -223,7 +230,7 @@ class TVCardServices extends LitElement {
 	 * Open an Android TV app using it's deep link
 	 * @param {string} source Android TV deep link for an app
 	 */
-	changeSource(source) {
+	changeSource(source: string) {
 		this._hass.callService('remote', 'turn_on', {
 			activity: source,
 			entity_id: this._config.remote_id,
@@ -234,22 +241,22 @@ class TVCardServices extends LitElement {
 	 * Event handler for touchpad click with no movement
 	 * @param {Event} e
 	 */
-	onTouchClick(e) {
+	onTouchClick(e: Event) {
 		e.stopImmediatePropagation();
 		let click_action = () => {
-			clearTimeout(this.clicktimer);
-			this.clicktimer = null;
+			clearTimeout(this.clickTimer);
+			this.clickTimer = null;
 			this.onButtonClick(e, 'center', false);
-			this.clickcount = 0;
+			this.clickCount = 0;
 		};
-		if (e.detail > this.clickcount) {
-			this.clickcount++;
+		if (e.detail && e.detail > this.clickCount) {
+			this.clickCount++;
 		}
 		if (this._config.enable_double_click) {
-			if (this.clickcount == 2) {
+			if (this.clickCount == 2) {
 				this.onTouchDoubleClick(e);
 			} else {
-				this.clicktimer = setTimeout(click_action, 200);
+				this.clickTimer = setTimeout(click_action, 200);
 			}
 		} else {
 			click_action();
@@ -260,10 +267,10 @@ class TVCardServices extends LitElement {
 	 * Event handler for touchpad double click
 	 * @param {Event} e
 	 */
-	onTouchDoubleClick(e) {
-		clearTimeout(this.clicktimer);
-		this.clicktimer = null;
-		this.clickcount = 0;
+	onTouchDoubleClick(e: Event) {
+		clearTimeout(this.clickTimer);
+		this.clickTimer = null;
+		this.clickCount = 0;
 
 		let action = this._config.double_click_keycode ?? 'back';
 		this.onButtonClick(e, action, false);
@@ -273,14 +280,14 @@ class TVCardServices extends LitElement {
 	 * Event handler for touchpad swipe and long click start
 	 * @param {Event} e
 	 */
-	onTouchStart(e) {
-		this.touchtimer = setTimeout(() => {
-			this.touchlongclick = true;
+	onTouchStart(e: Event) {
+		this.touchTimer = setTimeout(() => {
+			this.touchLongClick = true;
 
 			// Only repeat hold action for directional keys
-			if (['up', 'down', 'left', 'right'].includes(this.touchaction)) {
-				this.touchinterval = setInterval(() => {
-					this.onButtonClick(e, this.touchaction, false);
+			if (['up', 'down', 'left', 'right'].includes(this.touchAction)) {
+				this.touchInterval = setInterval(() => {
+					this.onButtonClick(e, this.touchAction, false);
 				}, 100);
 			} else {
 				this.onButtonClick(
@@ -291,58 +298,67 @@ class TVCardServices extends LitElement {
 			}
 		}, 500);
 
-		window.initialX = e.touches[0].clientX;
-		window.initialY = e.touches[0].clientY;
+		if (!e.touches?.length) {
+			e.touches = [
+				{
+					clientX: window.initialX,
+					clientY: window.initialY,
+				},
+			];
+		} else {
+			window.initialX = e.touches[0].clientX;
+			window.initialY = e.touches[0].clientY;
+		}
 	}
 
 	/**
 	 * Event handler for touchpad swipe end
 	 * @param {Event} e
 	 */
-	onTouchEnd(e) {
-		if (this.touchlongclick) {
-			this.touchlongclick = false;
+	onTouchEnd(e: Event) {
+		if (this.touchLongClick) {
+			this.touchLongClick = false;
 			e.stopImmediatePropagation();
 			e.preventDefault();
 		}
-		clearTimeout(this.touchtimer);
-		clearInterval(this.touchinterval);
-		clearTimeout(this.clicktimer);
+		clearTimeout(this.touchTimer);
+		clearInterval(this.touchInterval);
+		clearTimeout(this.clickTimer);
 
-		this.touchaction = null;
-		this.touchtimer = null;
-		this.touchinterval = null;
-		this.clicktimer = null;
+		this.touchAction = null;
+		this.touchTimer = null;
+		this.touchInterval = null;
+		this.clickTimer = null;
 	}
 
 	/**
 	 * Event handler for touchpad swipe move
 	 * @param {Event} e
 	 */
-	onTouchMove(e) {
+	onTouchMove(e: Event) {
 		if (!window.initialX || !window.initialY) {
 			return;
 		}
 
-		let currentX = e.touches[0].clientX;
-		let currentY = e.touches[0].clientY;
+		let currentX = e.touches?.[0].clientX || 0;
+		let currentY = e.touches?.[0].clientY || 0;
 
 		let diffX = window.initialX - currentX;
 		let diffY = window.initialY - currentY;
 
 		let action;
 		if (Math.abs(diffX) > Math.abs(diffY)) {
-			// sliding horizontally
+			// Sliding horizontally
 			action = diffX > 0 ? 'left' : 'right';
 		} else {
-			// sliding vertically
+			// Sliding vertically
 			action = diffY > 0 ? 'up' : 'down';
 		}
-		this.touchaction = action;
+		this.touchAction = action;
 		this.onButtonClick(e, action, false);
 
-		window.initialX = null;
-		window.initialY = null;
+		window.initialX = undefined;
+		window.initialY = undefined;
 	}
 
 	/**
@@ -351,8 +367,8 @@ class TVCardServices extends LitElement {
 	 * @param {string} [action]
 	 * @param {boolean} [longPress=false]
 	 */
-	onButtonClick(e, action, longPress = false) {
-		action = action || e.currentTarget.action;
+	onButtonClick(e: Event, action: string, longPress: boolean = false) {
+		action = action || (e.currentTarget as any).action;
 		let info = this.getInfo(action);
 
 		let haptic = longPress ? 'medium' : 'light';
@@ -363,7 +379,8 @@ class TVCardServices extends LitElement {
 		}
 		this.fireHapticEvent(window, haptic);
 
-		switch (info.key) {
+		let key = 'key' in info ? info.key : '';
+		switch (key) {
 			case 'KEYBOARD':
 				this.onKeyboardPress(e, longPress);
 				break;
@@ -383,20 +400,20 @@ class TVCardServices extends LitElement {
 	 * Event handler for button long click start
 	 * @param {Event} e
 	 */
-	onButtonLongClickStart(e) {
-		this.holdaction = e.currentTarget.action;
-		this.holdtimer = setTimeout(() => {
-			this.holdlongclick = true;
+	onButtonLongClickStart(e: Event) {
+		this.holdAction = (e.currentTarget as any).action;
+		this.holdTimer = setTimeout(() => {
+			this.holdLongClick = true;
 
 			// Only repeat hold action for directional keys and volume
 			// prettier-ignore
-			if (['up', 'down', 'left', 'right', 'volume_up', 'volume_down', 'delete'].includes(this.holdaction)) {
-				this.holdinterval = setInterval(() => {
+			if (['up', 'down', 'left', 'right', 'volume_up', 'volume_down', 'delete'].includes(this.holdAction)) {
+				this.holdInterval = setInterval(() => {
 
-					this.onButtonClick(e, this.holdaction, false)
+					this.onButtonClick(e, this.holdAction, false)
 				}, 100);
 			} else {
-				this.onButtonClick(e, this.holdaction, true)
+				this.onButtonClick(e, this.holdAction, true)
 			}
 		}, 500);
 	}
@@ -405,19 +422,19 @@ class TVCardServices extends LitElement {
 	 * Event handler for button long click end
 	 * @param {Event} e
 	 */
-	onButtonLongClickEnd(e) {
-		if (this.holdlongclick) {
-			this.holdlongclick = false;
+	onButtonLongClickEnd(e: Event) {
+		if (this.holdLongClick) {
+			this.holdLongClick = false;
 			e.stopImmediatePropagation();
 			e.preventDefault();
 		}
 
-		clearTimeout(this.holdtimer);
-		clearInterval(this.holdinterval);
+		clearTimeout(this.holdTimer);
+		clearInterval(this.holdInterval);
 
-		this.holdaction = null;
-		this.holdtimer = null;
-		this.holdinterval = null;
+		this.holdAction = null;
+		this.holdTimer = null;
+		this.holdInterval = null;
 	}
 
 	/**
@@ -555,7 +572,7 @@ class TVCardServices extends LitElement {
 	buildIconButton(action) {
 		let info = this.getInfo(action);
 		let icon = info?.icon ?? '';
-		let svg_path = info.svg_path ?? this.custom_icons[icon] ?? '';
+		let svg_path = info.svg_path ?? this.customIcons[icon] ?? '';
 
 		// Use original icon if none provided for custom key or source
 		if (!(icon || svg_path)) {
