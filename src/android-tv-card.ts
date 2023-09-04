@@ -63,9 +63,9 @@ class TVCardServices extends LitElement {
 
 	async setConfig(config: Record<string, any>) {
 		this._config = { theme: 'default', ...config };
-		this.customKeys = config.customKeys || {};
-		this.customSources = config.customSources || {};
-		this.customIcons = config.customIcons || {};
+		this.customKeys = config.custom_keys || {};
+		this.customSources = config.custom_sources || {};
+		this.customIcons = config.custom_icons || {};
 
 		this.defaultKeys = defaultKeys;
 		this.defaultSources = defaultSources;
