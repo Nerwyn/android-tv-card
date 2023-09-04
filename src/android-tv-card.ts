@@ -14,6 +14,7 @@ const html = LitElement.prototype.html;
 
 class AndroidTVCard extends LitElement {
 	constructor() {
+		console.log('foobar');
 		super();
 
 		this.defaultKeys = {};
