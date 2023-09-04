@@ -298,17 +298,8 @@ class TVCardServices extends LitElement {
 			}
 		}, 500);
 
-		if (!e.touches?.length) {
-			e.touches = [
-				{
-					clientX: window.initialX,
-					clientY: window.initialY,
-				},
-			];
-		} else {
-			window.initialX = e.touches[0].clientX;
-			window.initialY = e.touches[0].clientY;
-		}
+		window.initialX = e.touches?.[0].clientX;
+		window.initialY = e.touches?.[0].clientY;
 	}
 
 	/**
