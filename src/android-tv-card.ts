@@ -1,5 +1,5 @@
 import { TemplateResult, html } from 'lit-element';
-import { HomeAssistant, createThing } from 'custom-card-helpers';
+import { createThing } from 'custom-card-helpers';
 import {
 	IConfig,
 	ICustomAction,
@@ -24,7 +24,7 @@ const HAElement = Object.getPrototypeOf(
 window.customCards = window.customCards || [];
 window.customCards.push({
 	type: 'android-tv-card',
-	name: 'Android Tv Card',
+	name: 'Android TV Card',
 	description: 'Remote for Android TV',
 });
 
@@ -49,12 +49,6 @@ class AndroidTVCard extends HAElement {
 	holdInterval: ReturnType<typeof setInterval> | null;
 	holdLongClick: boolean;
 
-	_config: IConfig;
-	_hass: HomeAssistant;
-	trigger?: number;
-	volume_slider: HTMLElement;
-	rows: string[][];
-
 	constructor() {
 		super();
 
@@ -77,11 +71,6 @@ class AndroidTVCard extends HAElement {
 		this.holdTimer = null;
 		this.holdInterval = null;
 		this.holdLongClick = false;
-
-		this._config = {};
-		this._hass = this.hass;
-		this.volume_slider = new HTMLElement();
-		this.rows = [];
 	}
 
 	static get properties() {
