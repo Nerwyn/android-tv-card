@@ -35,6 +35,9 @@ class AndroidTVCard extends LitElement {
 
 	_config: IConfig;
 	_hass: HomeAssistant;
+	// _hassResolve: Function;
+	_helpers?: ReturnType<AndroidTVCard['loadCardHelpers']>;
+	// _helpersResolve: Function;
 	trigger: number;
 	volume_slider: HTMLElement;
 	rows: string[][];
@@ -104,7 +107,7 @@ class AndroidTVCard extends LitElement {
 			this.useAltVolumeIcons();
 		}
 
-		// await this.loadCardHelpers();
+		this._helpers = await this.loadCardHelpers();
 		// await this.loadHassHelpers();
 		if (this._config.volume_row == 'slider') {
 			await this.renderVolumeSlider();
@@ -113,11 +116,12 @@ class AndroidTVCard extends LitElement {
 		this.triggerRender();
 	}
 
-	// isButtonEnabled(row: string, button: string) {
-	// 	if (!(this._config[row] instanceof Array)) return false;
-
-	// 	return this._config[row].includes(button);
-	// }
+	isButtonEnabled(row: string, button: string) {
+		return (
+			row.includes('_row') &&
+			(this._config as Record<string, string[]>)[row].includes(button)
+		);
+	}
 
 	set hass(hass) {
 		this._hass = hass;
@@ -151,18 +155,18 @@ class AndroidTVCard extends LitElement {
 		}
 	}
 
-	// async loadCardHelpers() {
-	// 	this._helpers = await window.loadCardHelpers();
-	// 	if (this._helpersResolve) this._helpersResolve();
-	// }
+	async loadCardHelpers() {
+		return await window.loadCardHelpers();
+		// if (this._helpersResolve) this._helpersResolve();
+	}
 
 	// async loadHassHelpers() {
 	// 	if (this._helpers === undefined)
 	// 		await new Promise((resolve) => (this._helpersResolve = resolve));
 	// 	if (this._hass === undefined)
 	// 		await new Promise((resolve) => (this._hassResolve = resolve));
-	// 	this._helpersResolve = undefined;
-	// 	this._hassResolve = undefined;
+	// this._helpersResolve = undefined;
+	// this._hassResolve = undefined;
 	// }
 
 	async renderVolumeSlider() {

@@ -30,5 +30,5 @@ export interface IConfig {
 	double_click_keycode?: string;
 	long_click_keycode?: string;
 
-	rows?: string[];
+	rows?: string[][];
 }
