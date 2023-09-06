@@ -1,4 +1,4 @@
-export interface serviceData {
+export interface IServiceData {
 	entity_id: string;
 	[key: string]: string | number;
 }

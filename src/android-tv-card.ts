@@ -1,10 +1,11 @@
 import {
-	customAction,
+	IConfig,
+	ICustomAction,
 	defaultKeys,
 	defaultSources,
-	key,
-	source,
-	serviceData,
+	IKey,
+	ISource,
+	IServiceData,
 } from './models';
 
 const LitElement = Object.getPrototypeOf(
@@ -60,7 +61,7 @@ class AndroidTVCard extends LitElement {
 		return numRows;
 	}
 
-	async setConfig(config: Record<string, any>) {
+	async setConfig(config: IConfig) {
 		this._config = { theme: 'default', ...config };
 		this.customKeys = config.custom_keys || {};
 		this.customSources = config.custom_sources || {};
@@ -101,11 +102,11 @@ class AndroidTVCard extends LitElement {
 		return this._hass;
 	}
 
-	fireEvent(window: Window, type: string, detail?: string) {
+	fireEvent(window: Window, type: string, detail: string) {
 		const e = new Event(type, {
 			bubbles: false,
 		});
-		(e as any).detail = detail;
+		(e as HapticEvent).detail = detail;
 		window.dispatchEvent(e);
 		return e;
 	}
@@ -180,7 +181,7 @@ class AndroidTVCard extends LitElement {
 	 * @param {string} key
 	 */
 	sendKey(key: string, longPress: boolean = false) {
-		const data: serviceData = {
+		const data: IServiceData = {
 			entity_id: this._config.remote_id,
 			command: key,
 		};
@@ -190,7 +191,7 @@ class AndroidTVCard extends LitElement {
 		this._hass.callService('remote', 'send_command', data);
 	}
 
-	getInfo(action: string): key | source | customAction {
+	getInfo(action: string): IKey | ISource | ICustomAction {
 		return (
 			this.customKeys[action] ||
 			this.customSources[action] ||
@@ -208,10 +209,10 @@ class AndroidTVCard extends LitElement {
 	sendAction(action: string, longPress: boolean = false) {
 		const info = this.getInfo(action);
 		if ('key' in info) {
-			const key = (info as key).key;
+			const key = (info as IKey).key;
 			this.sendKey(key, longPress);
 		} else if ('source' in info) {
-			this.changeSource((info as source).source);
+			this.changeSource((info as ISource).source);
 		} else if ('service' in info) {
 			const service_data = JSON.parse(
 				JSON.stringify(info.service_data || {}),
@@ -357,7 +358,7 @@ class AndroidTVCard extends LitElement {
 	 * @param {boolean} [longPress=false]
 	 */
 	onButtonClick(e: Event, action: string, longPress: boolean = false) {
-		action = action || (e.currentTarget as any).action;
+		action = action || e.currentTarget?.action || '';
 		const info = this.getInfo(action);
 
 		let haptic = longPress ? 'medium' : 'light';
@@ -390,7 +391,7 @@ class AndroidTVCard extends LitElement {
 	 * @param {Event} e
 	 */
 	onButtonLongClickStart(e: Event) {
-		this.holdAction = (e.currentTarget as any).action;
+		this.holdAction = e.currentTarget?.action;
 		this.holdTimer = setTimeout(() => {
 			this.holdLongClick = true;
 
@@ -746,11 +747,7 @@ class AndroidTVCard extends LitElement {
 		`;
 	}
 
-	applyThemesOnElement(
-		element: Record<string, any>,
-		themes: Record<string, any>,
-		localTheme: string,
-	) {
+	applyThemesOnElement(element: Element, themes: Themes, localTheme: string) {
 		element._themes = element._themes ?? {};
 		let themeName = themes.default_theme;
 		if (
@@ -790,7 +787,7 @@ class AndroidTVCard extends LitElement {
 			const themeColor =
 				styles['--primary-color'] ||
 				meta.getAttribute('default-content');
-			meta.setAttribute('content', themeColor);
+			meta.setAttribute('content', themeColor as string);
 		}
 	}
 }

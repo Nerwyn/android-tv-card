@@ -1,11 +1,11 @@
-import { keys } from '.';
+import { IKeys } from '.';
 
 /**
  * This is the list of most common commands from the Android TV Remote integration page.
  * Not all are ensured to work, and if they do not it is likely an issue with the underlying package used by the Android TV Remote integration or the Android TV Remote Protocol V2 itself.
  * https://www.home-assistant.io/integrations/androidtv_remote/#remote
  */
-export const defaultKeys: keys = {
+export const defaultKeys: IKeys = {
 	power: { key: 'POWER', icon: 'mdi:power' },
 	volume_up: { key: 'VOLUME_UP', icon: 'mdi:volume-plus' },
 	volume_down: { key: 'VOLUME_DOWN', icon: 'mdi:volume-minus' },
