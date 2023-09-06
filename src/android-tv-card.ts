@@ -35,18 +35,20 @@ class AndroidTVCard extends LitElement {
 
 	_config: IConfig;
 	_hass: HomeAssistant;
-	// _hassResolve: Function;
-	_helpers?: ReturnType<AndroidTVCard['loadCardHelpers']>;
-	// _helpersResolve: Function;
-	trigger: number;
+	/* eslint-disable */
+	_hassResolve?: Function;
+	_helpers?: Function;
+	_helpersResolve?: Function;
+	/* eslint-enable */
+	trigger?: number;
 	volume_slider: HTMLElement;
 	rows: string[][];
 
 	constructor() {
 		super();
 
-		this.defaultKeys = {};
-		this.defaultSources = {};
+		this.defaultKeys = defaultKeys;
+		this.defaultSources = defaultSources;
 
 		this.customKeys = {};
 		this.customSources = {};
@@ -67,7 +69,6 @@ class AndroidTVCard extends LitElement {
 
 		this._config = {};
 		this._hass = this.hass;
-		this.trigger = Math.random();
 		this.volume_slider = new HTMLElement();
 		this.rows = [];
 	}
@@ -107,8 +108,8 @@ class AndroidTVCard extends LitElement {
 			this.useAltVolumeIcons();
 		}
 
-		this._helpers = await this.loadCardHelpers();
-		// await this.loadHassHelpers();
+		await this.loadCardHelpers();
+		await this.loadHassHelpers();
 		if (this._config.volume_row == 'slider') {
 			await this.renderVolumeSlider();
 		}
@@ -128,13 +129,27 @@ class AndroidTVCard extends LitElement {
 		if (this.volume_slider) {
 			(this.volume_slider as VolumeSlider).hass = hass;
 		}
-		// if (this._hassResolve) {
-		// 	this._hassResolve();
-		// }
+		if (this._hassResolve) {
+			this._hassResolve();
+		}
 	}
 
 	get hass() {
 		return this._hass;
+	}
+
+	async loadCardHelpers() {
+		this._helpers = await window.loadCardHelpers();
+		if (this._helpersResolve) this._helpersResolve();
+	}
+
+	async loadHassHelpers() {
+		if (this._helpers === undefined)
+			await new Promise((resolve) => (this._helpersResolve = resolve));
+		if (this._hass === undefined)
+			await new Promise((resolve) => (this._hassResolve = resolve));
+		this._helpersResolve = undefined;
+		this._hassResolve = undefined;
 	}
 
 	fireEvent(window: Window, type: string, detail: string) {
@@ -154,20 +169,6 @@ class AndroidTVCard extends LitElement {
 			this.fireEvent(window, 'haptic', detail);
 		}
 	}
-
-	async loadCardHelpers() {
-		return await window.loadCardHelpers();
-		// if (this._helpersResolve) this._helpersResolve();
-	}
-
-	// async loadHassHelpers() {
-	// 	if (this._helpers === undefined)
-	// 		await new Promise((resolve) => (this._helpersResolve = resolve));
-	// 	if (this._hass === undefined)
-	// 		await new Promise((resolve) => (this._hassResolve = resolve));
-	// this._helpersResolve = undefined;
-	// this._hassResolve = undefined;
-	// }
 
 	async renderVolumeSlider() {
 		let slider_config = {
