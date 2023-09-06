@@ -1,4 +1,5 @@
-import { TemplateResult, html } from 'lit-element';
+import { version } from '../package.json';
+import { TemplateResult, html } from 'lit';
 import { createThing } from 'custom-card-helpers';
 import {
 	IConfig,
@@ -13,7 +14,7 @@ import {
 } from './models';
 
 console.info(
-	`%c ANDROID-TV-CARD`,
+	`%c ANDROID-TV-CARD v${version}`,
 	'color: white; font-weight: bold; background: green',
 );
 
