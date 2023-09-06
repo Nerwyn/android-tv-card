@@ -32,4 +32,8 @@ declare global {
 	interface EventTarget {
 		action: string;
 	}
+
+	interface VolumeSlider extends HTMLElement {
+		hass: HomeAssistant;
+	}
 }

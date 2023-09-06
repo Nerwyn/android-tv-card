@@ -1,19 +1,44 @@
+import { LitElement, TemplateResult, html } from 'lit-element';
+import { HomeAssistant, createThing } from 'custom-card-helpers';
 import {
 	IConfig,
 	ICustomAction,
 	defaultKeys,
 	defaultSources,
+	IKeys,
 	IKey,
+	ISources,
 	ISource,
 	IServiceData,
 } from './models';
 
-const LitElement = Object.getPrototypeOf(
-	customElements.get('ha-panel-lovelace'),
-);
-const html = LitElement.prototype.html;
-
 class AndroidTVCard extends LitElement {
+	defaultKeys: IKeys;
+	defaultSources: ISources;
+
+	customKeys: IKeys;
+	customSources: ISources;
+	customIcons: Record<string, string>;
+
+	clickTimer: ReturnType<typeof setTimeout> | null;
+	clickCount: number;
+
+	touchAction: string;
+	touchTimer: ReturnType<typeof setTimeout> | null;
+	touchInterval: ReturnType<typeof setInterval> | null;
+	touchLongClick: boolean;
+
+	holdAction: string;
+	holdTimer: ReturnType<typeof setTimeout> | null;
+	holdInterval: ReturnType<typeof setInterval> | null;
+	holdLongClick: boolean;
+
+	_config: IConfig;
+	_hass: HomeAssistant;
+	trigger: number;
+	volume_slider: HTMLElement;
+	rows: string[][];
+
 	constructor() {
 		super();
 
@@ -27,15 +52,21 @@ class AndroidTVCard extends LitElement {
 		this.clickTimer = null;
 		this.clickCount = 0;
 
-		this.touchAction = null;
+		this.touchAction = '';
 		this.touchTimer = null;
 		this.touchInterval = null;
 		this.touchLongClick = false;
 
-		this.holdAction = null;
+		this.holdAction = '';
 		this.holdTimer = null;
 		this.holdInterval = null;
 		this.holdLongClick = false;
+
+		this._config = {};
+		this._hass = this.hass;
+		this.trigger = Math.random();
+		this.volume_slider = new HTMLElement();
+		this.rows = [];
 	}
 
 	static get properties() {
@@ -73,8 +104,8 @@ class AndroidTVCard extends LitElement {
 			this.useAltVolumeIcons();
 		}
 
-		await this.loadCardHelpers();
-		await this.loadHassHelpers();
+		// await this.loadCardHelpers();
+		// await this.loadHassHelpers();
 		if (this._config.volume_row == 'slider') {
 			await this.renderVolumeSlider();
 		}
@@ -82,20 +113,20 @@ class AndroidTVCard extends LitElement {
 		this.triggerRender();
 	}
 
-	isButtonEnabled(row: string, button: string) {
-		if (!(this._config[row] instanceof Array)) return false;
+	// isButtonEnabled(row: string, button: string) {
+	// 	if (!(this._config[row] instanceof Array)) return false;
 
-		return this._config[row].includes(button);
-	}
+	// 	return this._config[row].includes(button);
+	// }
 
 	set hass(hass) {
 		this._hass = hass;
 		if (this.volume_slider) {
-			this.volume_slider.hass = hass;
+			(this.volume_slider as VolumeSlider).hass = hass;
 		}
-		if (this._hassResolve) {
-			this._hassResolve();
-		}
+		// if (this._hassResolve) {
+		// 	this._hassResolve();
+		// }
 	}
 
 	get hass() {
@@ -120,19 +151,19 @@ class AndroidTVCard extends LitElement {
 		}
 	}
 
-	async loadCardHelpers() {
-		this._helpers = await window.loadCardHelpers();
-		if (this._helpersResolve) this._helpersResolve();
-	}
+	// async loadCardHelpers() {
+	// 	this._helpers = await window.loadCardHelpers();
+	// 	if (this._helpersResolve) this._helpersResolve();
+	// }
 
-	async loadHassHelpers() {
-		if (this._helpers === undefined)
-			await new Promise((resolve) => (this._helpersResolve = resolve));
-		if (this._hass === undefined)
-			await new Promise((resolve) => (this._hassResolve = resolve));
-		this._helpersResolve = undefined;
-		this._hassResolve = undefined;
-	}
+	// async loadHassHelpers() {
+	// 	if (this._helpers === undefined)
+	// 		await new Promise((resolve) => (this._helpersResolve = resolve));
+	// 	if (this._hass === undefined)
+	// 		await new Promise((resolve) => (this._hassResolve = resolve));
+	// 	this._helpersResolve = undefined;
+	// 	this._hassResolve = undefined;
+	// }
 
 	async renderVolumeSlider() {
 		let slider_config = {
@@ -152,9 +183,10 @@ class AndroidTVCard extends LitElement {
 			slider_config = { ...slider_config, ...this._config.slider_config };
 		}
 
-		this.volume_slider =
-			await this._helpers.createCardElement(slider_config);
-		this.volume_slider.style = 'flex: 0.9;';
+		// this.volume_slider = await this._helpers.createCardElement(slider_config);
+		this.volume_slider = await createThing(slider_config);
+		// this.volume_slider.style = 'flex: 0.9;';
+		this.volume_slider.setAttribute('style', 'flex: 0.9;');
 		this.volume_slider.ontouchstart = (e: Event) => {
 			e.stopImmediatePropagation();
 			this.fireHapticEvent(window, 'light');
@@ -167,7 +199,7 @@ class AndroidTVCard extends LitElement {
 			true,
 		);
 
-		this.volume_slider.hass = this._hass;
+		(this.volume_slider as VolumeSlider).hass = this._hass;
 	}
 
 	useAltVolumeIcons() {
@@ -182,7 +214,7 @@ class AndroidTVCard extends LitElement {
 	 */
 	sendKey(key: string, longPress: boolean = false) {
 		const data: IServiceData = {
-			entity_id: this._config.remote_id,
+			entity_id: this._config.remote_id!,
 			command: key,
 		};
 		if (longPress) {
@@ -243,7 +275,7 @@ class AndroidTVCard extends LitElement {
 	onTouchClick(e: MouseEvent) {
 		e.stopImmediatePropagation();
 		const click_action = () => {
-			clearTimeout(this.clickTimer);
+			clearTimeout(this.clickTimer as ReturnType<typeof setTimeout>);
 			this.clickTimer = null;
 			this.onButtonClick(e, 'center', false);
 			this.clickCount = 0;
@@ -267,7 +299,7 @@ class AndroidTVCard extends LitElement {
 	 * @param {Event} e
 	 */
 	onTouchDoubleClick(e: Event) {
-		clearTimeout(this.clickTimer);
+		clearTimeout(this.clickTimer as ReturnType<typeof setTimeout>);
 		this.clickTimer = null;
 		this.clickCount = 0;
 
@@ -311,11 +343,11 @@ class AndroidTVCard extends LitElement {
 			e.stopImmediatePropagation();
 			e.preventDefault();
 		}
-		clearTimeout(this.touchTimer);
-		clearInterval(this.touchInterval);
-		clearTimeout(this.clickTimer);
+		clearTimeout(this.touchTimer as ReturnType<typeof setTimeout>);
+		clearInterval(this.touchInterval as ReturnType<typeof setInterval>);
+		clearTimeout(this.clickTimer as ReturnType<typeof setTimeout>);
 
-		this.touchAction = null;
+		this.touchAction = '';
 		this.touchTimer = null;
 		this.touchInterval = null;
 		this.clickTimer = null;
@@ -391,7 +423,7 @@ class AndroidTVCard extends LitElement {
 	 * @param {Event} e
 	 */
 	onButtonLongClickStart(e: Event) {
-		this.holdAction = e.currentTarget?.action;
+		this.holdAction = e.currentTarget!.action;
 		this.holdTimer = setTimeout(() => {
 			this.holdLongClick = true;
 
@@ -419,10 +451,10 @@ class AndroidTVCard extends LitElement {
 			e.preventDefault();
 		}
 
-		clearTimeout(this.holdTimer);
-		clearInterval(this.holdInterval);
+		clearTimeout(this.holdTimer as ReturnType<typeof setTimeout>);
+		clearInterval(this.holdInterval as ReturnType<typeof setInterval>);
 
-		this.holdAction = null;
+		this.holdAction = '';
 		this.holdTimer = null;
 		this.holdInterval = null;
 	}
@@ -566,7 +598,7 @@ class AndroidTVCard extends LitElement {
 		}
 	}
 
-	buildIconButton(action: string): string {
+	buildIconButton(action: string): TemplateResult {
 		const info = this.getInfo(action);
 		let icon = info?.icon ?? '';
 		let svg_path = info.svg_path ?? this.customIcons[icon] ?? '';
@@ -612,7 +644,7 @@ class AndroidTVCard extends LitElement {
 		`;
 	}
 
-	buildRow(content: string[]) {
+	buildRow(content: TemplateResult[]): TemplateResult {
 		return html` <div class="row">${content}</div> `;
 	}
 
@@ -629,7 +661,7 @@ class AndroidTVCard extends LitElement {
 			return html``;
 		}
 
-		let content: string[][] = [];
+		const content: TemplateResult[][] = [];
 		Object.keys(this._config).forEach((row_name) => {
 			if (row_name.includes('_row')) {
 				switch (row_name) {
@@ -641,7 +673,9 @@ class AndroidTVCard extends LitElement {
 								this.buildIconButton('volume_up'),
 							]);
 						} else if (this._config.volume_row == 'slider') {
-							content.push([this.volume_slider]);
+							content.push([
+								this.volume_slider as unknown as TemplateResult,
+							]);
 						}
 						break;
 					}
@@ -661,7 +695,7 @@ class AndroidTVCard extends LitElement {
 
 							case 'touchpad':
 							default: {
-								const touchpad: string[] = [
+								const touchpad = [
 									html`
 										<toucharea
 											id="toucharea"
@@ -682,7 +716,9 @@ class AndroidTVCard extends LitElement {
 					default: {
 						content.push(
 							this.buildButtonsFromActions(
-								this._config[row_name],
+								(this._config as Record<string, string[]>)[
+									row_name
+								],
 							),
 						);
 					}
@@ -690,11 +726,11 @@ class AndroidTVCard extends LitElement {
 			}
 		});
 
-		content = content.map(this.buildRow);
+		const mappedContent = content.map(this.buildRow);
 
 		const output = html`
 			${this.renderStyle()}
-			<ha-card .header="${this._config.title}">${content}</ha-card>
+			<ha-card .header="${this._config.title}">${mappedContent}</ha-card>
 		`;
 
 		return html`${output}`;
