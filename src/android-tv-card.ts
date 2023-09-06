@@ -1,6 +1,6 @@
 import { version } from '../package.json';
 import { TemplateResult, html } from 'lit';
-import { createThing } from 'custom-card-helpers';
+import { } from 'custom-card-helpers';
 import {
 	IConfig,
 	ICustomAction,
@@ -153,21 +153,17 @@ class AndroidTVCard extends HAElement {
 		this._hassResolve = undefined;
 	}
 
-	fireEvent(window: Window, type: string, detail: string) {
-		const e = new Event(type, {
-			bubbles: false,
-		});
-		(e as HapticEvent).detail = detail;
-		window.dispatchEvent(e);
-		return e;
-	}
-
 	fireHapticEvent(window: Window, detail: string) {
 		if (
 			this._config.enable_button_feedback === undefined ||
 			this._config.enable_button_feedback
 		) {
-			this.fireEvent(window, 'haptic', detail);
+			const e = new Event('haptic', {
+				bubbles: false,
+			});
+			(e as HapticEvent).detail = detail;
+			window.dispatchEvent(e);
+			return e;
 		}
 	}
 
@@ -189,10 +185,10 @@ class AndroidTVCard extends HAElement {
 			slider_config = { ...slider_config, ...this._config.slider_config };
 		}
 
-		// this.volume_slider = await this._helpers.createCardElement(slider_config);
-		this.volume_slider = await createThing(slider_config);
-		// this.volume_slider.style = 'flex: 0.9;';
-		this.volume_slider.setAttribute('style', 'flex: 0.9;');
+		this.volume_slider = await this._helpers.createCardElement(slider_config);
+		this.volume_slider.style = 'flex: 0.9;';
+		// this.volume_slider = await createThing(slider_config);
+		// this.volume_slider.setAttribute('style', 'flex: 0.9;');
 		this.volume_slider.ontouchstart = (e: Event) => {
 			e.stopImmediatePropagation();
 			this.fireHapticEvent(window, 'light');
