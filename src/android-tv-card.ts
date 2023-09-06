@@ -1,4 +1,4 @@
-import { LitElement, TemplateResult, html } from 'lit-element';
+import { TemplateResult, html } from 'lit-element';
 import { HomeAssistant, createThing } from 'custom-card-helpers';
 import {
 	IConfig,
@@ -12,7 +12,23 @@ import {
 	IServiceData,
 } from './models';
 
-class AndroidTVCard extends LitElement {
+console.info(
+	`%c ANDROID-TV-CARD`,
+	'color: white; font-weight: bold; background: green',
+);
+
+const HAElement = Object.getPrototypeOf(
+	customElements.get('ha-panel-lovelace'),
+);
+
+window.customCards = window.customCards || [];
+window.customCards.push({
+	type: 'android-tv-card',
+	name: 'Android Tv Card',
+	description: 'Remote for Android TV',
+});
+
+class AndroidTVCard extends HAElement {
 	defaultKeys: IKeys;
 	defaultSources: ISources;
 
@@ -35,11 +51,6 @@ class AndroidTVCard extends LitElement {
 
 	_config: IConfig;
 	_hass: HomeAssistant;
-	/* eslint-disable */
-	_hassResolve?: Function;
-	_helpers?: Function;
-	_helpersResolve?: Function;
-	/* eslint-enable */
 	trigger?: number;
 	volume_slider: HTMLElement;
 	rows: string[][];
