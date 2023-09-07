@@ -22,33 +22,57 @@
 
 Along with a many other changes and improvements:
 
-- Supports the official [Android TV Remote integration](https://www.home-assistant.io/integrations/androidtv_remote/).
-- Uses `remote.send_command` (instead of `media_player.play_media` like the original) to send commands to an Android TV using said integration, and can be given a `remote_id` to do so.
-  - `media_player_id` is still present just for the volume slider. All other buttons and sources including volume buttons use the `remote_id`.
+**Ported to TypeScript**
+
+- Refactored to use proper types (no anys!) and separated large objects like the default keys and sources into their own files.
+- Proper use of packages such as `lit-element` and `custom-card-helpers`.
+- Provides a clean base on which to add future features.
+
+**Redesigned for the [Android TV Remote integration](https://www.home-assistant.io/integrations/androidtv_remote/) (but can be used for anything)**
+
+- Uses `remote.send_command` to send commands to an Android TV for all default keys and sources using Android TV Remote entity ID `remote_id`.
+- `media_player_id` is still present just for the volume slider (not buttons).
+
+**Behavior tweaked to mimic the Google TV remote**
+
+- Hold press/touch/swipe actions only repeat for directional and volume keys, and perform a long press for anything else.
+- Navigation speed increased to be closer to (but not as crazy fast) as the Google TV remote.
+
+**Fully customizable touchpad**
+
 - Swipe actions are now remappable by creating `custom_keys` for `up`, `down`, `left`, `right`, and `center`.
-- Navigation and button behavior tweaked to mimic the Google TV remote, such as:
-  - Hold press/touch/swipe actions only repeat for directional and volume keys, and perform a long press for anything else.
-    - Remap long clicks on the touchpad by setting `long_click_keycode` to a different key name.
-  - Navigation speed increased to be closer to (but not as crazy fast) as the Google TV remote.
-- Row names (except for `volume_row` and `navigation_row`) can be named anything as long as it contains `_row`, giving you the option to add unlimited rows.
-  - Combine this with `custom_keys` and you can really use this card for anything you want!
-- Touchpad height can now be adjusted using the configuration option `touchpad_height`. If not provided will default to 250px.
-- Many more default keys and sources with SVG icons if no material design icon was available in Home Assistant.
-  - Not all are working or tested at this time, please let me know if you find the correct source/activity names for the ones that are incorrect.
+- Enable double taps on the touchpad by setting `enable_double_click` to true.
+  - _Due to limitations in iOS's webview, double click does not work on iPhone and iPad._
+- Double taps default to `back` but can be remapped by changing the value of `double_click_keycode`.
+- Remap long clicks on the touchpad by setting `long_click_keycode` to a different key name.
+  - _Due to limitations on desktop browsers, touchpad swiping and long clicks do not work with a mouse._
+- Adjust touchpad height by changing the value of `touchpad_height` (default is 250px).
+
+**Better row handling**
+
+- Rows now exist in a new `rows` array with no limit on the number of rows you can add.
+  - Legacy configs that use `_row` key names will still work but are not recommended.
+  - For special volume and navigation features use `volume_buttons`, `volume_slider`, `navigation_buttons`, and `navigation_touchpad` as button names within a row.
+- Volume sliders and navigation touchpads can now be placed in rows alongside other buttons.
+
+**Better icon handling**
+
+- Many more default keys and sources with SVG icons for sources with no material design icon present in Home Assistant's default material design icon list.
+  - _Not all default keys and sources are working or tested at this time, please let me know if you find the correct source/activity names for the ones that are incorrect._
+  - _Also let me know if you find a key or source that is not listed here and you want to add to the default lists!_
 - Custom keys and sources that replace default ones will now inherit the default icons if no new ones are given.
-- Send keyboard keys using `androidtv.adb_command` using the [Android Debug Bridge integration](https://www.home-assistant.io/integrations/androidtv/) and the `adb_id` configuration option. This card has three methods for sending text to Android TV:
-  - Create a key named `keyboard`, which when pressed will turn on the keyboard event listener and allow you to send text to Android TV one character at a time.
-    - Also works with backspace, delete, enter, and left and right keys.
-  - Create a key named `textbox`, which when pressed will open a text prompt in which you can enter text to send to your Android TV in bulk.
-    - Highly recommended that you also create keys for `delete` and `enter` so you can remove and send your input text.
-  - Create a key named `search`, which will open a text prompt in which you can enter text to send to your Android TV to process as a Google Assistant search.
-    - Works well if you are experiencing [this issue](https://github.com/home-assistant/core/issues/94063).
-- Fixed double click so single click won't trigger twice and made long click on touchpad remappable.
-  - Double clicks are now disabled by default, but can be enabled by setting `enable_double_click` to true.
-  - Double clicks default to `back` but can be remapped by setting `double_click_keycode` to a different key name.
-  - Due to limitations in iOS's webview, double click does not work on iPhone and iPad.
-  - Due to limitations on desktop browsers, touchpad swiping and long clicks do not work with a mouse.
 - Easily switch to alternate volume icons by setting `alt_volume_icons` to true.
+
+**Keyboard input!**
+
+- Send text to text input fields on your Android TV using `androidtv.adb_command` by setting the media player entity id created by the [Android Debug Bridge integration](https://www.home-assistant.io/integrations/androidtv/) to `adb_id.
+- Includes three different methods:
+  - Seamless text entry - Create and press the button `keyboard` to pull up the on screen keyboard (on mobile) and send keystrokes seamlessly to your Android TV.
+    - Also works with backspace, delete, enter, and left and right keys.
+  - Bulk text entry - Create and press the button `textbox` to pull up a browser prompt in which you can type in text to send to your Android TV all at once.
+    - Highly recommended that you also create keys for `delete` and `enter` so you can remove and send your input text.
+  - Google Assistant search - Create and press the button `search` to pull up a browser prompt in which you can type in text to send to your Android TV to process as a Google Assistant search.
+    - Works well if you are experiencing [this issue](https://github.com/home-assistant/core/issues/94063).
 
 Many thanks to the original authors. Getting this to work with Android TV was straightforward and all of the frontend heavy lifting they did has provided an excellent base on which to build my personal ultimate Android TV remote.
 
