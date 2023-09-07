@@ -1,7 +1,12 @@
 import { version } from '../package.json';
 import { LitElement, TemplateResult, html } from 'lit';
 import { property } from 'lit/decorators.js';
-import { HomeAssistant, createThing } from 'custom-card-helpers';
+import {
+	HomeAssistant,
+	createThing,
+	HapticType,
+	forwardHaptic,
+} from 'custom-card-helpers';
 import {
 	IConfig,
 	ICustomAction,
@@ -83,7 +88,6 @@ class AndroidTVCard extends LitElement {
 			_hass: {},
 			_config: {},
 			_apps: {},
-			// trigger: {},
 		};
 	}
 
@@ -136,17 +140,12 @@ class AndroidTVCard extends LitElement {
 		return this._hass;
 	}
 
-	fireHapticEvent(window: Window, detail: string) {
+	fireHapticEvent(haptic: HapticType) {
 		if (
 			this._config.enable_button_feedback === undefined ||
 			this._config.enable_button_feedback
 		) {
-			const e = new Event('haptic', {
-				bubbles: false,
-			});
-			(e as HapticEvent).detail = detail;
-			window.dispatchEvent(e);
-			return e;
+			forwardHaptic(haptic);
 		}
 	}
 
@@ -180,12 +179,12 @@ class AndroidTVCard extends LitElement {
 
 		this.volume_slider.ontouchstart = (e: Event) => {
 			e.stopImmediatePropagation();
-			this.fireHapticEvent(window, 'light');
+			this.fireHapticEvent('light');
 		};
 		this.volume_slider.addEventListener(
 			'input',
 			(_e: Event) => {
-				this.fireHapticEvent(window, 'light');
+				this.fireHapticEvent('light');
 			},
 			true,
 		);
@@ -384,13 +383,13 @@ class AndroidTVCard extends LitElement {
 		action = action || e.currentTarget?.action || '';
 		const info = this.getInfo(action);
 
-		let haptic = longPress ? 'medium' : 'light';
-		if (action == 'center' && !longPress) {
+		let haptic: HapticType = longPress ? 'medium' : 'light';
+		if (action in ['up', 'down', 'left', 'right']) {
 			haptic = 'selection';
 		} else if (action == this._config.double_click_keycode) {
 			haptic = 'success';
 		}
-		this.fireHapticEvent(window, haptic);
+		this.fireHapticEvent(haptic);
 
 		const key = 'key' in info ? info.key : '';
 		switch (key) {
