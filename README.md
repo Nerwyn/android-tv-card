@@ -52,8 +52,9 @@ Along with a many other changes and improvements:
 
 - Rows now exist in a new `rows` array with no limit on the number of rows you can add.
   - Legacy configs that use `_row` key names will still work but are not recommended.
-  - For special volume and navigation features use `volume_buttons`, `volume_slider`, `navigation_buttons`, and `navigation_touchpad` as button names within a row.
 - Volume sliders and navigation touchpads can now be placed in rows alongside other buttons.
+  - For special volume and navigation features use `volume_buttons`, `volume_slider`, `navigation_buttons`, and `navigation_touchpad` as button names within a row.
+- Empty buttons are no longer clickable.
 
 **Better icon handling**
 
@@ -63,15 +64,15 @@ Along with a many other changes and improvements:
 - Custom keys and sources that replace default ones will now inherit the default icons if no new ones are given.
 - Easily switch to alternate volume icons by setting `alt_volume_icons` to true.
 
-**Keyboard input!**
+**Keyboard input**
 
-- Send text to text input fields on your Android TV using `androidtv.adb_command` by setting the media player entity id created by the [Android Debug Bridge integration](https://www.home-assistant.io/integrations/androidtv/) to `adb_id.
+- Send text to text input fields on your Android TV using `androidtv.adb_command` by setting the media player entity id created by the [Android Debug Bridge integration](https://www.home-assistant.io/integrations/androidtv/) to `adb_id`.
 - Includes three different methods:
-  - Seamless text entry - Create and press the button `keyboard` to pull up the on screen keyboard (on mobile) and send keystrokes seamlessly to your Android TV.
+  - **Seamless text entry** - Create and press the button `keyboard` to pull up the on screen keyboard (on mobile) and send keystrokes seamlessly to your Android TV.
     - Also works with backspace, delete, enter, and left and right keys.
-  - Bulk text entry - Create and press the button `textbox` to pull up a browser prompt in which you can type in text to send to your Android TV all at once.
+  - **Bulk text entry** - Create and press the button `textbox` to pull up a browser prompt in which you can type in text to send to your Android TV all at once.
     - Highly recommended that you also create keys for `delete` and `enter` so you can remove and send your input text.
-  - Google Assistant search - Create and press the button `search` to pull up a browser prompt in which you can type in text to send to your Android TV to process as a Google Assistant search.
+  - **Google Assistant search** - Create and press the button `search` to pull up a browser prompt in which you can type in text to send to your Android TV to process as a Google Assistant search.
     - Works well if you are experiencing [this issue](https://github.com/home-assistant/core/issues/94063).
 
 Many thanks to the original authors. Getting this to work with Android TV was straightforward and all of the frontend heavy lifting they did has provided an excellent base on which to build my personal ultimate Android TV remote.
@@ -84,50 +85,57 @@ Many thanks to the original authors. Getting this to work with Android TV was st
 
 ## Options
 
-| Name                   | Type    | Requirement  | Description                                                                                                                                                                                                                                                  |
-| ---------------------- | ------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| type                   | string  | **Required** | `custom:android-tv-card`                                                                                                                                                                                                                                     |
-| remote_id              | string  | **Optional** | The `remote` entity id to control, required for default commands.                                                                                                                                                                                            |
-| media_player_id        | string  | **Optional** | The `media_player` entity id to use for the optional volume slider (not required for volume buttons).                                                                                                                                                        |
-| adb_id                 | string  | **Optional** | The adb `media_player` entity id to use to send keyboard events. Requires the [Android Debug Bridge integration](https://www.home-assistant.io/integrations/androidtv/).                                                                                     |
-| title                  | string  | **Optional** | Card title for showing as header.                                                                                                                                                                                                                            |
-| enable_double_click    | boolean | **Optional** | Whether a double click on the touchpad should send the key in `double_click_keycode`. Defaults to `false`. Enabling this introduces a 200ms delay to single clicks.                                                                                          |
-| double_click_keycode   | string  | **Optional** | The key for double clicks on the touchpad. Defaults to `back`.                                                                                                                                                                                               |
-| long_click_keycode     | string  | **Optional** | The key for long clicks on the touchpad. Defaults to a long `center` click.                                                                                                                                                                                  |
-| enable_button_feedback | boolean | **Optional** | Shall clicks on the buttons return a vibration feedback? Defaults to `true`.                                                                                                                                                                                 |
-| enable_slider_feedback | boolean | **Optional** | Shall the volume slider return a vibration feedback when you slide through it? Defaults to `true`.                                                                                                                                                           |
-| slider_config          | object  | **Optional** | Custom configuration for the volume slider. See [slider-card](https://github.com/AnthonMS/my-cards). Requires `media_player_id`.                                                                                                                             |
-| custom_keys            | object  | **Optional** | Custom keys for the remote control. Each item is an object that can optionally have an `icon` (will use original key icon if overwriting an existing one and icon is not provided) and at least one of the following properties: `key`, `source`, `service`. |
-| custom_sources         | object  | **Optional** | Custom sources for the remote control. Same object as above, but letting you split keys and sources.                                                                                                                                                         |
-| touchpad_height        | string  | **Optional** | Change touchpad height to a custom value, must include [units](https://www.w3schools.com/cssref/css_units.php). Defaults to `250px`.                                                                                                                         |
-| alt_volume_icons       | boolean | **Optional** | Use alternate volume up, down, and mute icons `mdi:volume-high`, `mdi:volume-medium`, and `mdi:volume-variant-off`.                                                                                                                                          |
+All fields are technically optional except for `type`, but the card will not function unless you customize it using the below options.
+
+| Name                   | Type     | Description                                                                                                                                                                                                                                                  |
+| ---------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| type                   | string   | `custom:android-tv-card`                                                                                                                                                                                                                                     |
+| remote_id              | string   | The `remote` entity id to control, required for default commands.                                                                                                                                                                                            |
+| media_player_id        | string   | The `media_player` entity id to use for the optional volume slider (not required for volume buttons).                                                                                                                                                        |
+| adb_id                 | string   | The adb `media_player` entity id to use to send keyboard events. Requires the [Android Debug Bridge integration](https://www.home-assistant.io/integrations/androidtv/).                                                                                     |
+| title                  | string   | Card title for showing as header.                                                                                                                                                                                                                            |
+| rows                   | string[] | Defines the buttons used in the card. Each row within rows defines a row of buttons (or slider and touchpad).                                                                                                                                                |
+| enable_double_click    | boolean  | Whether a double click on the touchpad should send the key in `double_click_keycode`. Defaults to `false`. Enabling this introduces a 200ms delay to single clicks.                                                                                          |
+| double_click_keycode   | string   | The key for double clicks on the touchpad. Defaults to `back`.                                                                                                                                                                                               |
+| long_click_keycode     | string   | The key for long clicks on the touchpad. Defaults to a long `center` click.                                                                                                                                                                                  |
+| enable_button_feedback | boolean  | Shall clicks on the buttons return a vibration feedback? Defaults to `true`.                                                                                                                                                                                 |
+| enable_slider_feedback | boolean  | Shall the volume slider return a vibration feedback when you slide through it? Defaults to `true`.                                                                                                                                                           |
+| slider_config          | object   | Custom configuration for the volume slider. See [slider-card](https://github.com/AnthonMS/my-cards). Requires `media_player_id`.                                                                                                                             |
+| custom_keys            | object   | Custom keys for the remote control. Each item is an object that can optionally have an `icon` (will use original key icon if overwriting an existing one and icon is not provided) and at least one of the following properties: `key`, `source`, `service`. |
+| custom_sources         | object   | Custom sources for the remote control. Same object as above, but letting you split keys and sources.                                                                                                                                                         |
+| touchpad_height        | string   | Change touchpad height to a custom value, must include [units](https://www.w3schools.com/cssref/css_units.php). Defaults to `250px`.                                                                                                                         |
+| alt_volume_icons       | boolean  | Use alternate volume up, down, and mute icons `mdi:volume-high`, `mdi:volume-medium`, and `mdi:volume-variant-off`.                                                                                                                                          |
 
 Using only these options you will get an empty card (or almost empty, if you set a title).
 In order to include the buttons, you need to specify in the config the rows you want and which buttons you want in it.
 You do it by declaring the rows as arrays and its buttons as values, like this:
 
 ```yaml
-power_row:
-  - power
-media_control_row:
-  - rewind
-  - play_pause
-  - fast_forward
+rows:
+  - - power
+  - - rewind
+	- play_pause
+	- fast_forward
 ```
 
-Any name and number of rows can be added, but they must contain `_row` in their names.
-The row names `volume_row` and `navigation_row` are special rows that can also be added to your remote, but they require a string as value.
+There is no hard limit to the number of rows or buttons you can add.
 
-| Name           | Type   | Description                                                                                                                                                                                                                       |
-| -------------- | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| volume_row     | string | Can be either `slider` or `buttons`. This defines the mode you want for setting the volume (you'll see them soon below). You need to have [slider-card](https://github.com/AnthonMS/my-cards) installed in order to use `slider`. |
-| navigation_row | string | Can be either `touchpad` or `buttons`. This defines the mode you want for navigating around your tv (you'll also see them soon below).                                                                                            |
+### Special Elements
+
+This card also supports the following special button shortcuts and elements which can be added to any row.
+
+| Name                | Type     | Description                                                                                                                   |
+| ------------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| volume_buttons      | buttons  | Shorthand to generate a set of volume down, volume mute, and volume up buttons in a row.                                      |
+| navigation_buttons  | buttons  | Shorthand to generate a set of up, down, left, right, and center buttons arranged in a d-pad across three rows.               |
+| volume_slider       | slider   | A slider that controls the entity defined by `media_player_id`. Requires [slider-card](https://github.com/AnthonMS/my-cards). |
+| navigation_touchpad | touchpad | A touchpad that functions the same as navigation buttons but uses swipe actions instead.                                      |
 
 ## **Notice**
 
 This card uses `remote.send_command` to send keys to the TV.
 
-Further information on possible commands can be found on the [Home Assistant Android TV page](https://www.home-assistant.io/integrations/androidtv_remote/). If your TV is from another brand or simply the TV integration does not use `remote.send_command` for sending keys, you can still use this card by setting [custom buttons](#custom-buttons) with services to send keys to your TV (or do whatever you want) in your way (just like the original [tv-card](https://github.com/marrobHD/tv-card)).
+Further information on possible commands can be found on the [Home Assistant Android TV page](https://www.home-assistant.io/integrations/androidtv_remote/). If your TV is from another brand or simply the TV integration does not use `remote.send_command` for sending keys, you can still use this card by setting [custom buttons](#custom-buttons) with services to send keys to your TV (or do whatever you want) in your way (just like the original [tv-card](https://github.com/marrobHD/tv-card)). You can also remap the touchpad by creating custom keys for `up`, `down`, `left`, `right`, and `center` along with changing the long and double tap actions by changing `long_click_keycode` and `double_click_keycode`.
 
 ## Custom Buttons
 
