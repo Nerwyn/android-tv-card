@@ -623,7 +623,7 @@ class AndroidTVCard extends LitElement {
 
 	buildIconButton(action: string): TemplateResult {
 		if (!action) {
-			return html`<ha-icon-button></ha-icon-button>`;
+			return html`<div class="empty-button"></div>`;
 		}
 		const info = this.getInfo(action);
 		let icon = info?.icon ?? '';
@@ -764,6 +764,11 @@ class AndroidTVCard extends LitElement {
 					height: 48px;
 					cursor: pointer;
 					--mdc-icon-size: 100%;
+					position: relative;
+				}
+				.empty-button {
+					width: 48px;
+					height: 48px;
 					position: relative;
 				}
 				input {
