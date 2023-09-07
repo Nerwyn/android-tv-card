@@ -177,10 +177,14 @@ class AndroidTVCard extends LitElement {
 			}
 		}
 
-		this.volume_slider.ontouchstart = (e: Event) => {
-			e.stopImmediatePropagation();
-			this.fireHapticEvent('light');
-		};
+		this.volume_slider.addEventListener(
+			'ontouchstart',
+			(e: Event) => {
+				e.stopImmediatePropagation();
+				this.fireHapticEvent('light');
+			},
+			{ passive: true },
+		);
 		this.volume_slider.addEventListener(
 			'input',
 			(_e: Event) => {
