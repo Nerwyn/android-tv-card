@@ -417,7 +417,7 @@ class AndroidTVCard extends LitElement {
 		const info = this.getInfo(action);
 
 		let haptic: HapticType = longPress ? 'medium' : 'light';
-		if (action in ['up', 'down', 'left', 'right']) {
+		if (['up', 'down', 'left', 'right'].includes(action)) {
 			haptic = 'selection';
 		} else if (action == this._config.double_click_keycode) {
 			haptic = 'success';
