@@ -1,6 +1,7 @@
 import { version } from '../package.json';
-import { TemplateResult, html } from 'lit';
-import { } from 'custom-card-helpers';
+import { LitElement, TemplateResult, html } from 'lit';
+import { property } from 'lit-element';
+import { HomeAssistant, createThing } from 'custom-card-helpers';
 import {
 	IConfig,
 	ICustomAction,
@@ -18,9 +19,9 @@ console.info(
 	'color: white; font-weight: bold; background: green',
 );
 
-const HAElement = Object.getPrototypeOf(
-	customElements.get('ha-panel-lovelace'),
-);
+// const HAElement = Object.getPrototypeOf(
+// 	customElements.get('ha-panel-lovelace'),
+// );
 
 window.customCards = window.customCards || [];
 window.customCards.push({
@@ -29,7 +30,7 @@ window.customCards.push({
 	description: 'Remote for Android TV',
 });
 
-class AndroidTVCard extends HAElement {
+class AndroidTVCard extends LitElement {
 	defaultKeys: IKeys;
 	defaultSources: ISources;
 
@@ -49,6 +50,14 @@ class AndroidTVCard extends HAElement {
 	holdTimer: ReturnType<typeof setTimeout> | null;
 	holdInterval: ReturnType<typeof setInterval> | null;
 	holdLongClick: boolean;
+
+	volume_slider?: ReturnType<typeof createThing>;
+	trigger?: number;
+
+	@property({ attribute: false })
+	public _hass!: HomeAssistant;
+	@property({ attribute: false })
+	private _config!: IConfig;
 
 	constructor() {
 		super();
@@ -109,8 +118,8 @@ class AndroidTVCard extends HAElement {
 			this.useAltVolumeIcons();
 		}
 
-		await this.loadCardHelpers();
-		await this.loadHassHelpers();
+		// await this.loadCardHelpers();
+		// await this.loadHassHelpers();
 		if (this._config.volume_row == 'slider') {
 			await this.renderVolumeSlider();
 		}
@@ -125,33 +134,33 @@ class AndroidTVCard extends HAElement {
 		);
 	}
 
-	set hass(hass) {
-		this._hass = hass;
-		if (this.volume_slider) {
-			(this.volume_slider as VolumeSlider).hass = hass;
-		}
-		if (this._hassResolve) {
-			this._hassResolve();
-		}
-	}
+	// set hass(hass) {
+	// 	this._hass = hass;
+	// 	if (this.volume_slider) {
+	// 		(this.volume_slider as VolumeSlider).hass = hass;
+	// 	}
+	// 	if (this._hassResolve) {
+	// 		this._hassResolve();
+	// 	}
+	// }
 
-	get hass() {
-		return this._hass;
-	}
+	// get hass() {
+	// 	return this._hass;
+	// }
 
-	async loadCardHelpers() {
-		this._helpers = await window.loadCardHelpers();
-		if (this._helpersResolve) this._helpersResolve();
-	}
+	// async loadCardHelpers() {
+	// 	this._helpers = await window.loadCardHelpers();
+	// 	if (this._helpersResolve) this._helpersResolve();
+	// }
 
-	async loadHassHelpers() {
-		if (this._helpers === undefined)
-			await new Promise((resolve) => (this._helpersResolve = resolve));
-		if (this._hass === undefined)
-			await new Promise((resolve) => (this._hassResolve = resolve));
-		this._helpersResolve = undefined;
-		this._hassResolve = undefined;
-	}
+	// async loadHassHelpers() {
+	// 	if (this._helpers === undefined)
+	// 		await new Promise((resolve) => (this._helpersResolve = resolve));
+	// 	if (this._hass === undefined)
+	// 		await new Promise((resolve) => (this._hassResolve = resolve));
+	// 	this._helpersResolve = undefined;
+	// 	this._hassResolve = undefined;
+	// }
 
 	fireHapticEvent(window: Window, detail: string) {
 		if (
@@ -185,10 +194,10 @@ class AndroidTVCard extends HAElement {
 			slider_config = { ...slider_config, ...this._config.slider_config };
 		}
 
-		this.volume_slider = await this._helpers.createCardElement(slider_config);
-		this.volume_slider.style = 'flex: 0.9;';
-		// this.volume_slider = await createThing(slider_config);
-		// this.volume_slider.setAttribute('style', 'flex: 0.9;');
+		// this.volume_slider = await this._helpers.createCardElement(slider_config);
+		// this.volume_slider.style = 'flex: 0.9;';
+		this.volume_slider = await createThing(slider_config);
+		this.volume_slider.setAttribute('style', 'flex: 0.9;');
 		this.volume_slider.ontouchstart = (e: Event) => {
 			e.stopImmediatePropagation();
 			this.fireHapticEvent(window, 'light');
