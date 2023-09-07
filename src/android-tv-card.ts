@@ -1,6 +1,6 @@
 import { version } from '../package.json';
 import { LitElement, TemplateResult, html } from 'lit';
-import { property } from 'lit-element';
+import { property } from 'lit/decorators.js';
 import { HomeAssistant, createThing } from 'custom-card-helpers';
 import {
 	IConfig,
@@ -18,10 +18,6 @@ console.info(
 	`%c ANDROID-TV-CARD v${version}`,
 	'color: white; font-weight: bold; background: green',
 );
-
-// const HAElement = Object.getPrototypeOf(
-// 	customElements.get('ha-panel-lovelace'),
-// );
 
 window.customCards = window.customCards || [];
 window.customCards.push({
@@ -52,7 +48,6 @@ class AndroidTVCard extends LitElement {
 	holdLongClick: boolean;
 
 	volume_slider?: ReturnType<typeof createThing>;
-	// trigger?: number;
 
 	@property({ attribute: false })
 	_hass!: HomeAssistant;
@@ -118,13 +113,9 @@ class AndroidTVCard extends LitElement {
 			this.useAltVolumeIcons();
 		}
 
-		// await this.loadCardHelpers();
-		// await this.loadHassHelpers();
 		if (this._config.volume_row == 'slider') {
 			await this.renderVolumeSlider();
 		}
-
-		// this.triggerRender();
 	}
 
 	isButtonEnabled(row: string, button: string) {
@@ -139,28 +130,11 @@ class AndroidTVCard extends LitElement {
 		if (this.volume_slider) {
 			(this.volume_slider as VolumeSlider).hass = hass;
 		}
-		// if (this._hassResolve) {
-		// 	this._hassResolve();
-		// }
 	}
 
 	get hass() {
 		return this._hass;
 	}
-
-	// async loadCardHelpers() {
-	// 	this._helpers = await window.loadCardHelpers();
-	// 	if (this._helpersResolve) this._helpersResolve();
-	// }
-
-	// async loadHassHelpers() {
-	// 	if (this._helpers === undefined)
-	// 		await new Promise((resolve) => (this._helpersResolve = resolve));
-	// 	if (this._hass === undefined)
-	// 		await new Promise((resolve) => (this._hassResolve = resolve));
-	// 	this._helpersResolve = undefined;
-	// 	this._hassResolve = undefined;
-	// }
 
 	fireHapticEvent(window: Window, detail: string) {
 		if (
@@ -194,10 +168,16 @@ class AndroidTVCard extends LitElement {
 			slider_config = { ...slider_config, ...this._config.slider_config };
 		}
 
-		// this.volume_slider = await this._helpers.createCardElement(slider_config);
-		// this.volume_slider.style = 'flex: 0.9;';
-		this.volume_slider = await createThing(slider_config);
-		this.volume_slider.setAttribute('style', 'flex: 0.9;');
+		// Retry due to slider intermittently not rendering
+		for (let i = 0; i < 5; i++) {
+			try {
+				this.volume_slider = await createThing(slider_config);
+				this.volume_slider.setAttribute('style', 'flex: 0.9;');
+			} catch {
+				await new Promise((resolve) => setTimeout(resolve, 100));
+			}
+		}
+
 		this.volume_slider.ontouchstart = (e: Event) => {
 			e.stopImmediatePropagation();
 			this.fireHapticEvent(window, 'light');
