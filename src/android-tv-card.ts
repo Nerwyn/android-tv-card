@@ -118,7 +118,10 @@ class AndroidTVCard extends LitElement {
 			this.useAltVolumeIcons();
 		}
 
-		if (this._config.volume_row == 'slider') {
+		if (
+			this._config.volume_row == 'slider' ||
+			this._config.rows?.some((row) => row.includes('volume_slider'))
+		) {
 			await this.renderVolumeSlider();
 		}
 
@@ -724,7 +727,7 @@ class AndroidTVCard extends LitElement {
 
 					default: {
 						row_content.push(this.buildIconButton(button_name));
-						break
+						break;
 					}
 				}
 			}
