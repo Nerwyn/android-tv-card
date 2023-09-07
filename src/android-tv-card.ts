@@ -622,6 +622,9 @@ class AndroidTVCard extends LitElement {
 	}
 
 	buildIconButton(action: string): TemplateResult {
+		if (!action) {
+			return html`<ha-icon-button></ha-icon-button>`;
+		}
 		const info = this.getInfo(action);
 		let icon = info?.icon ?? '';
 		let svg_path = info.svg_path ?? this.customIcons[icon] ?? '';
