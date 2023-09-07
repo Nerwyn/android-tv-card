@@ -25,7 +25,7 @@
 				<ha-icon .icon="${l?"":c}"></ha-icon>
 				${u}
 			</ha-icon-button>
-		`}buildRow(t){return s.html` <div class="row">${t}</div> `}render(){if(!this._config||!this._hass)return s.html``;const t=[];for(const e of this._config.rows){const i=[];for(const n of e)switch(n){case"volume_buttons":i.push(this.buildIconButton("volume_down"),this.buildIconButton("volume_mute"),this.buildIconButton("volume_up"));break;case"volume_slider":i.push(this.volume_slider);break;case"navigation_buttons":t.push([this.buildIconButton("up")]),t.push([this.buildIconButton("left"),this.buildIconButton("center"),this.buildIconButton("right")]),t.push([this.buildIconButton("down")]);break;case"navigation_touchpad":{const t=s.html`
+		`}buildRow(t){return s.html` <div class="row">${t}</div> `}render(){if(!this._config||!this._hass)return s.html``;const t=[];for(let e of this._config.rows){"string"==typeof e&&(e=[e]);const i=[];for(const n of e)switch(n){case"volume_buttons":i.push(this.buildIconButton("volume_down"),this.buildIconButton("volume_mute"),this.buildIconButton("volume_up"));break;case"volume_slider":i.push(this.volume_slider);break;case"navigation_buttons":t.push([this.buildIconButton("up")]),t.push([this.buildIconButton("left"),this.buildIconButton("center"),this.buildIconButton("right")]),t.push([this.buildIconButton("down")]);break;case"navigation_touchpad":{const t=s.html`
 							<toucharea
 								id="toucharea"
 								@click="${this.onTouchClick}"

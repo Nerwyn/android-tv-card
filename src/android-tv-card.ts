@@ -677,7 +677,10 @@ class AndroidTVCard extends LitElement {
 		}
 
 		const content: TemplateResult[][] = [];
-		for (const row of this._config.rows!) {
+		for (let row of this._config.rows!) {
+			if (typeof row == 'string') {
+				row = [row];
+			}
 			const row_content: TemplateResult[] = [];
 			for (const button_name of row) {
 				switch (button_name) {
