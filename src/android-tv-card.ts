@@ -118,14 +118,14 @@ class AndroidTVCard extends LitElement {
 			this.useAltVolumeIcons();
 		}
 
+		this.convertToRowsArray();
+
 		if (
 			this._config.volume_row == 'slider' ||
 			this._config.rows?.some((row) => row.includes('volume_slider'))
 		) {
 			await this.renderVolumeSlider();
 		}
-
-		this.convertToRowsArray();
 	}
 
 	isButtonEnabled(row: string, button: string) {
@@ -777,6 +777,7 @@ class AndroidTVCard extends LitElement {
 					display: flex;
 					padding: 8px 36px 8px 36px;
 					justify-content: space-evenly;
+					align-items: center;
 				}
 				.diagonal {
 					background-color: var(--light-primary-color);
