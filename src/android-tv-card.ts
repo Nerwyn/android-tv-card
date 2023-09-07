@@ -99,9 +99,7 @@ class AndroidTVCard extends LitElement {
 	}
 
 	getCardSize() {
-		let numRows = Object.keys(this._config).filter((key) =>
-			key.includes('_row'),
-		).length;
+		let numRows = this._config.rows!.length;
 		if ('title' in this._config) {
 			numRows += 1;
 		}
@@ -123,6 +121,8 @@ class AndroidTVCard extends LitElement {
 		if (this._config.volume_row == 'slider') {
 			await this.renderVolumeSlider();
 		}
+
+		this.convertToRowsArray();
 	}
 
 	isButtonEnabled(row: string, button: string) {
@@ -203,6 +203,29 @@ class AndroidTVCard extends LitElement {
 		this.defaultKeys.volume_up.icon = 'mdi:volume-high';
 		this.defaultKeys.volume_down.icon = 'mdi:volume-medium';
 		this.defaultKeys.volume_mute.icon = 'mdi:volume-variant-off';
+	}
+
+	convertToRowsArray() {
+		if (!this._config.rows || !this._config.rows.length) {
+			const rows: string[][] = [];
+			const rowNames = Object.keys(this._config).filter((row) =>
+				row.includes('_row'),
+			);
+			for (const name of rowNames) {
+				let row = (this._config as Record<string, string[]>)[name];
+				if (typeof row == 'string') {
+					if (name == 'volume_row') {
+						row = ['volume_' + row];
+					} else if (name == 'navigation_row') {
+						row = ['navigation_' + row];
+					} else {
+						row = [row];
+					}
+				}
+				rows.push(row);
+			}
+			this._config.rows = rows;
+		}
 	}
 
 	/**
@@ -646,83 +669,70 @@ class AndroidTVCard extends LitElement {
 		return html` <div class="row">${content}</div> `;
 	}
 
-	buildButtonsFromActions(actions: string[]) {
-		return actions.map((action) => this.buildIconButton(action));
-	}
-
-	// triggerRender() {
-	// 	this.trigger = Math.random();
-	// }
-
 	render() {
 		if (!this._config || !this._hass) {
 			return html``;
 		}
 
 		const content: TemplateResult[][] = [];
-		Object.keys(this._config).forEach((row_name) => {
-			if (row_name.includes('_row')) {
-				switch (row_name) {
-					case 'volume_row': {
-						if (this._config.volume_row == 'buttons') {
-							content.push([
+		for (const row of this._config.rows!) {
+			const row_content: TemplateResult[] = [];
+			for (const button_name of row) {
+				switch (button_name) {
+					case 'volume_buttons': {
+						row_content.push(
+							...[
 								this.buildIconButton('volume_down'),
 								this.buildIconButton('volume_mute'),
 								this.buildIconButton('volume_up'),
-							]);
-						} else if (this._config.volume_row == 'slider') {
-							content.push([
+							],
+						);
+						break;
+					}
+					case 'volume_slider':
+						{
+							row_content.push(
 								this.volume_slider as unknown as TemplateResult,
-							]);
+							);
 						}
+						break;
+
+					case 'navigation_buttons': {
+						// Push straight to content as three rows
+						content.push([this.buildIconButton('up')]);
+						content.push([
+							this.buildIconButton('left'),
+							this.buildIconButton('center'),
+							this.buildIconButton('right'),
+						]);
+						content.push([this.buildIconButton('down')]);
 						break;
 					}
 
-					case 'navigation_row': {
-						switch (this._config.navigation_row) {
-							case 'buttons': {
-								content.push([this.buildIconButton('up')]);
-								content.push([
-									this.buildIconButton('left'),
-									this.buildIconButton('center'),
-									this.buildIconButton('right'),
-								]);
-								content.push([this.buildIconButton('down')]);
-								break;
-							}
-
-							case 'touchpad':
-							default: {
-								const touchpad = [
-									html`
-										<toucharea
-											id="toucharea"
-											@click="${this.onTouchClick}"
-											@touchstart="${this.onTouchStart}"
-											@touchmove="${this.onTouchMove}"
-											@touchend="${this.onTouchEnd}"
-										>
-										</toucharea>
-									`,
-								];
-								content.push(touchpad);
-							}
-						}
+					case 'navigation_touchpad': {
+						const touchpad = html`
+							<toucharea
+								id="toucharea"
+								@click="${this.onTouchClick}"
+								@touchstart="${this.onTouchStart}"
+								@touchmove="${this.onTouchMove}"
+								@touchend="${this.onTouchEnd}"
+							>
+							</toucharea>
+						`;
+						row_content.push(touchpad);
 						break;
 					}
 
 					default: {
-						content.push(
-							this.buildButtonsFromActions(
-								(this._config as Record<string, string[]>)[
-									row_name
-								],
-							),
-						);
+						row_content.push(this.buildIconButton(button_name));
 					}
 				}
 			}
-		});
+			if (row_content.length) {
+				content.push(row_content);
+			}
+		}
 
 		const mappedContent = content.map(this.buildRow);
 
