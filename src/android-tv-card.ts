@@ -52,10 +52,10 @@ class AndroidTVCard extends LitElement {
 	holdLongClick: boolean;
 
 	volume_slider?: ReturnType<typeof createThing>;
-	trigger?: number;
+	// trigger?: number;
 
 	@property({ attribute: false })
-	public _hass!: HomeAssistant;
+	_hass!: HomeAssistant;
 	@property({ attribute: false })
 	private _config!: IConfig;
 
@@ -88,7 +88,7 @@ class AndroidTVCard extends LitElement {
 			_hass: {},
 			_config: {},
 			_apps: {},
-			trigger: {},
+			// trigger: {},
 		};
 	}
 
@@ -124,7 +124,7 @@ class AndroidTVCard extends LitElement {
 			await this.renderVolumeSlider();
 		}
 
-		this.triggerRender();
+		// this.triggerRender();
 	}
 
 	isButtonEnabled(row: string, button: string) {
@@ -134,19 +134,19 @@ class AndroidTVCard extends LitElement {
 		);
 	}
 
-	// set hass(hass) {
-	// 	this._hass = hass;
-	// 	if (this.volume_slider) {
-	// 		(this.volume_slider as VolumeSlider).hass = hass;
-	// 	}
-	// 	if (this._hassResolve) {
-	// 		this._hassResolve();
-	// 	}
-	// }
+	set hass(hass) {
+		this._hass = hass;
+		if (this.volume_slider) {
+			(this.volume_slider as VolumeSlider).hass = hass;
+		}
+		// if (this._hassResolve) {
+		// 	this._hassResolve();
+		// }
+	}
 
-	// get hass() {
-	// 	return this._hass;
-	// }
+	get hass() {
+		return this._hass;
+	}
 
 	// async loadCardHelpers() {
 	// 	this._helpers = await window.loadCardHelpers();
@@ -663,9 +663,9 @@ class AndroidTVCard extends LitElement {
 		return actions.map((action) => this.buildIconButton(action));
 	}
 
-	triggerRender() {
-		this.trigger = Math.random();
-	}
+	// triggerRender() {
+	// 	this.trigger = Math.random();
+	// }
 
 	render() {
 		if (!this._config || !this._hass) {
