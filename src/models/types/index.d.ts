@@ -19,18 +19,7 @@ declare global {
 		description: string;
 	}
 
-	interface Element {
-		_themes: Themes;
-		updateStyles: function;
-	}
-
-	interface Themes {
-		default_theme: string;
-		themes: {
-			[key: string]: Record<string, string>;
-		};
-		[key: string]: string;
-	}
+	interface Themes {}
 
 	interface HapticEvent extends Event {
 		detail: string;
