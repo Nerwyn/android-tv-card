@@ -1,6 +1,6 @@
 import { version } from '../package.json';
 import { LitElement, TemplateResult, html } from 'lit';
-import { property, eventOptions } from 'lit/decorators.js';
+import { customElement, property, eventOptions } from 'lit/decorators.js';
 import {
 	HomeAssistant,
 	createThing,
@@ -31,6 +31,8 @@ window.customCards.push({
 	description: 'Remote for Android TV',
 });
 
+@customElement('android-tv-card')
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 class AndroidTVCard extends LitElement {
 	defaultKeys: IKeys;
 	defaultSources: ISources;
@@ -822,8 +824,3 @@ class AndroidTVCard extends LitElement {
 		}
 	}
 }
-
-customElements.define(
-	'android-tv-card',
-	AndroidTVCard as unknown as CustomElementConstructor,
-);
