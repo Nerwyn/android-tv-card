@@ -1,6 +1,6 @@
 import { version } from '../package.json';
 import { LitElement, TemplateResult, html } from 'lit';
-import { property } from 'lit/decorators.js';
+import { property, eventOptions } from 'lit/decorators.js';
 import {
 	HomeAssistant,
 	createThing,
@@ -301,6 +301,7 @@ class AndroidTVCard extends LitElement {
 	 * Event handler for touchpad swipe and long click start
 	 * @param {Event} e
 	 */
+	@eventOptions({ passive: true })
 	onTouchStart(e: TouchEvent) {
 		this.touchTimer = setTimeout(() => {
 			this.touchLongClick = true;
