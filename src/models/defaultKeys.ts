@@ -28,7 +28,7 @@ export const defaultKeys: IKeys = {
 	next: { key: 'MEDIA_NEXT', icon: 'mdi:skip-next' },
 	menu: { key: 'MENU', icon: 'mdi:menu' },
 	a: { key: 'BUTTON_A', icon: 'mdi:alpha-a-circle' },
-	b: { key: 'BUTTON_B', icon: 'mdi:alpha-B-circle' },
+	b: { key: 'BUTTON_B', icon: 'mdi:alpha-b-circle' },
 	x: { key: 'BUTTON_X', icon: 'mdi:alpha-x-circle' },
 	y: { key: 'BUTTON_Y', icon: 'mdi:alpha-y-circle' },
 	n0: { key: '0', icon: 'mdi:numeric-0' },
