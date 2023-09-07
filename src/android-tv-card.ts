@@ -214,13 +214,12 @@ class AndroidTVCard extends LitElement {
 			for (const name of rowNames) {
 				let row = (this._config as Record<string, string[]>)[name];
 				if (typeof row == 'string') {
-					if (name == 'volume_row') {
-						row = ['volume_' + row];
-					} else if (name == 'navigation_row') {
-						row = ['navigation_' + row];
-					} else {
-						row = [row];
-					}
+					row = [row];
+				}
+				if (name == 'volume_row') {
+					row = ['volume_' + row[0]];
+				} else if (name == 'navigation_row') {
+					row = ['navigation_' + row[0]];
 				}
 				rows.push(row);
 			}
@@ -689,13 +688,12 @@ class AndroidTVCard extends LitElement {
 						);
 						break;
 					}
-					case 'volume_slider':
-						{
-							row_content.push(
-								this.volume_slider as unknown as TemplateResult,
-							);
-						}
+					case 'volume_slider': {
+						row_content.push(
+							this.volume_slider as unknown as TemplateResult,
+						);
 						break;
+					}
 
 					case 'navigation_buttons': {
 						// Push straight to content as three rows
@@ -726,6 +724,7 @@ class AndroidTVCard extends LitElement {
 
 					default: {
 						row_content.push(this.buildIconButton(button_name));
+						break
 					}
 				}
 			}
