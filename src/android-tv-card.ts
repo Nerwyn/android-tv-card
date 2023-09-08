@@ -686,67 +686,71 @@ class AndroidTVCard extends LitElement {
 		return html` <div class="column">${content}</div> `;
 	}
 
-	buildButtons(row: string[], isColumn: boolean = false) {
+	buildButtons(row: (string | string[])[], isColumn: boolean = false) {
 		if (typeof row == 'string') {
 			row = [row];
 		}
 		const row_content: TemplateResult[] = [];
 		for (const button_name of row) {
-			switch (button_name) {
-				case 'volume_buttons': {
-					row_content.push(
-						...[
-							this.buildIconButton('volume_down'),
-							this.buildIconButton('volume_mute'),
-							this.buildIconButton('volume_up'),
-						],
-					);
-					break;
-				}
-				case 'volume_slider': {
-					row_content.push(
-						this.volume_slider as unknown as TemplateResult,
-					);
-					break;
-				}
+			if (typeof button_name == 'object') {
+				row_content.push(this.buildButtons(button_name, true));
+			} else {
+				switch (button_name) {
+					case 'volume_buttons': {
+						row_content.push(
+							...[
+								this.buildIconButton('volume_down'),
+								this.buildIconButton('volume_mute'),
+								this.buildIconButton('volume_up'),
+							],
+						);
+						break;
+					}
+					case 'volume_slider': {
+						row_content.push(
+							this.volume_slider as unknown as TemplateResult,
+						);
+						break;
+					}
 
-				case 'navigation_buttons': {
-					const navigation_buttons: TemplateResult[] = [];
-					navigation_buttons.push(
-						this.buildRow([this.buildIconButton('up')]),
-					);
-					navigation_buttons.push(
-						this.buildRow([
-							this.buildIconButton('left'),
-							this.buildIconButton('center'),
-							this.buildIconButton('right'),
-						]),
-					);
-					navigation_buttons.push(
-						this.buildRow([this.buildIconButton('down')]),
-					);
-					row_content.push(this.buildColumn(navigation_buttons));
-					break;
-				}
+					case 'navigation_buttons': {
+						const navigation_buttons: TemplateResult[] = [];
+						navigation_buttons.push(
+							this.buildRow([this.buildIconButton('up')]),
+						);
+						navigation_buttons.push(
+							this.buildRow([
+								this.buildIconButton('left'),
+								this.buildIconButton('center'),
+								this.buildIconButton('right'),
+							]),
+						);
+						navigation_buttons.push(
+							this.buildRow([this.buildIconButton('down')]),
+						);
+						row_content.push(this.buildColumn(navigation_buttons));
+						break;
+					}
 
-				case 'navigation_touchpad': {
-					const touchpad = html`
-						<toucharea
-							id="toucharea"
-							@click="${this.onTouchClick}"
-							@touchstart="${this.onTouchStart}"
-							@touchmove="${this.onTouchMove}"
-							@touchend="${this.onTouchEnd}"
-						>
-						</toucharea>
-					`;
-					row_content.push(touchpad);
-					break;
-				}
+					case 'navigation_touchpad': {
+						const touchpad = html`
+							<toucharea
+								id="toucharea"
+								@click="${this.onTouchClick}"
+								@touchstart="${this.onTouchStart}"
+								@touchmove="${this.onTouchMove}"
+								@touchend="${this.onTouchEnd}"
+							>
+							</toucharea>
+						`;
+						row_content.push(touchpad);
+						break;
+					}
 
-				default: {
-					row_content.push(this.buildIconButton(button_name));
-					break;
+					default: {
+						row_content.push(this.buildIconButton(button_name));
+						break;
+					}
 				}
 			}
 		}
