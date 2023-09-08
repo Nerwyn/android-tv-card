@@ -510,16 +510,14 @@ rows:
 
 ### Example 5
 
-A tablet UI
+A tablet UI using columns
 
 ```yaml
-type: horizontal-stack
-cards:
-  - type: custom:android-tv-card
-    remote_id: remote.google_chromecast
-    media_player_id: media_player.google_chromecast
-    rows:
-      - - back
+type: custom:android-tv-card
+remote_id: remote.google_chromecast
+alt_volume_icons: true
+rows:
+  - - - - back
         - null
         - home
         - null
@@ -543,24 +541,10 @@ cards:
         - vudu
         - youtube
         - spotify
-    custom_keys:
-      volume_down:
-        icon: mdi:volume-medium
-        service: script.amplifier_volume_down
-      volume_mute:
-        icon: mdi:volume-mute
-        service: script.amplifier_volume_mute
-      volume_up:
-        icon: mdi:volume-high
-        service: script.amplifier_volume_up
-  - type: custom:android-tv-card
-    remote_id: remote.google_chromecast
-    adb_id: media_player.google_chromecast_adb
-    rows:
-      - - keyboard
+    - - - keyboard
         - search
       - - navigation_touchpad
-    touchpad_height: 300px
+touchpad_height: 300px
 ```
 
 Result:
@@ -748,6 +732,32 @@ custom_keys:
       entity_id: media_player.marantz_sr7013
       command: /goform/formiPhoneAppDirect.xml?MNRTN
 ```
+
+### Example 10
+
+Even more disorder with columns and special elements in the same row as buttons
+
+```yaml
+type: custom:android-tv-card
+remote_id: remote.lounge_google_tv
+rows:
+  - - - home
+      - menu
+      - back
+      - keyboard
+    - - netflix
+      - hulu
+      - disney
+      - max
+      - primevideo
+    - navigation_touchpad
+  - - volume_slider
+    - search
+```
+
+Result:
+
+<img src="assets/more_disorder.png" alt="more disorder example" width="500"/>
 
 [last-commit-shield]: https://img.shields.io/github/last-commit/Nerwyn/android-tv-card?style=for-the-badge
 [commits]: https://github.com/Nerwyn/android-tv-card/commits/main
