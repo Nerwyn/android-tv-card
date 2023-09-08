@@ -123,7 +123,7 @@ class AndroidTVCard extends LitElement {
 		if (
 			this._config.volume_row == 'slider' ||
 			this._config.rows?.some((row) => {
-				(row as string[]).includes('volume_slider') ||
+				return (row as string[]).includes('volume_slider') ||
 					(row as string[][]).some((column) =>
 						column.includes('volume-slider'),
 					);
@@ -731,7 +731,7 @@ class AndroidTVCard extends LitElement {
 							this.buildIconButton(''),
 						]),
 					);
-					row_content.push(this.buildRow(navigation_buttons));
+					row_content.push(this.buildColumn(navigation_buttons));
 					break;
 				}
 
