@@ -25,7 +25,7 @@
 				<ha-icon .icon="${l?"":c}"></ha-icon>
 				${u}
 			</ha-icon-button>
-		`}buildRow(t){return s.html` <div class="row">${t}</div> `}buildColumn(t){return s.html` <div class="column">${t}</div> `}buildButtons(t,e=!1){"string"==typeof t&&(t=[t]);const i=[];for(const e of t)if("object"==typeof e&&null!=e)i.push(this.buildButtons(e,!0));else switch(e){case"volume_buttons":i.push(this.buildIconButton("volume_down"),this.buildIconButton("volume_mute"),this.buildIconButton("volume_up"));break;case"volume_slider":i.push(this.volume_slider);break;case"navigation_buttons":{const t=[];t.push(this.buildRow([this.buildIconButton("up")])),t.push(this.buildRow([this.buildIconButton("left"),s.html`<div class="dpad-spacer"></div>`,this.buildIconButton("center"),s.html`<div class="dpad-spacer"></div>`,this.buildIconButton("right")])),t.push(this.buildRow([this.buildIconButton("down")])),i.push(this.buildColumn(t));break}case"navigation_touchpad":{const t=s.html`
+		`}buildRow(t){return s.html` <div class="row">${t}</div> `}buildColumn(t){return s.html` <div class="column">${t}</div> `}buildButtons(t,e=!1){"string"==typeof t&&(t=[t]);const i=[];for(const n of t)if("object"==typeof n&&null!=n)i.push(this.buildButtons(n,!e));else switch(n){case"volume_buttons":i.push(this.buildIconButton("volume_down"),this.buildIconButton("volume_mute"),this.buildIconButton("volume_up"));break;case"volume_slider":i.push(this.volume_slider);break;case"navigation_buttons":{const t=[];t.push(this.buildRow([this.buildIconButton("up")])),t.push(this.buildRow([this.buildIconButton("left"),s.html`<div class="dpad-spacer"></div>`,this.buildIconButton("center"),s.html`<div class="dpad-spacer"></div>`,this.buildIconButton("right")])),t.push(this.buildRow([this.buildIconButton("down")])),i.push(this.buildColumn(t));break}case"navigation_touchpad":{const t=s.html`
 							<toucharea
 								id="toucharea"
 								@click="${this.onTouchClick}"
@@ -34,7 +34,7 @@
 								@touchend="${this.onTouchEnd}"
 							>
 							</toucharea>
-						`;i.push(t);break}default:i.push(this.buildIconButton(e))}return e?this.buildColumn(i):this.buildRow(i)}render(){if(!this._config||!this._hass)return s.html``;const t=[];for(const e of this._config.rows){const i=this.buildButtons(e);t.push(i)}const e=s.html`
+						`;i.push(t);break}default:i.push(this.buildIconButton(n))}return e?this.buildColumn(i):this.buildRow(i)}render(){if(!this._config||!this._hass)return s.html``;const t=[];for(const e of this._config.rows){const i=this.buildButtons(e);t.push(i)}const e=s.html`
 			${this.renderStyle()}
 			<ha-card .header="${this._config.title}">${t}</ha-card>
 		`;return s.html`${e}`}renderStyle(){return s.html`

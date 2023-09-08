@@ -476,17 +476,15 @@ type: custom:android-tv-card
 remote_id: remote.google_chromecast
 media_player_id: media_player.google_chromecast
 title: Example 3
-power_row:
-  - power
-apps_row:
-  - netflix
-  - youtube
-  - spotify
-volume_row: slider
-navigation_row: touchpad
-source_row:
-  - back
-  - home
+rows:
+  - - power
+    - netflix
+    - youtube
+    - spotify
+  - - volume_slider
+  - - navigation_touchpad
+  - - back
+    - home
 ```
 
 Result:
@@ -495,18 +493,17 @@ Result:
 
 ### Example 4
 
-In any row, if you add an empty item, there will be an empty/invisible button filling the space:
+In any row, if you add an empty or `null` item, there will be an empty button sized space:
 
 ```yaml
-source_row:
-  - back
-  - home
-  - tv
-media_control_row:
-  - rewind
-  -
-  -
-  - fast_forward
+rows:
+  - - back
+    - home
+    - tv
+  - - rewind
+    - null
+    - null
+    - fast_forward
 ```
 
 <img src="assets/empty_buttons.png" alt="empty buttons example" width="300"/>
@@ -521,35 +518,31 @@ cards:
   - type: custom:android-tv-card
     remote_id: remote.google_chromecast
     media_player_id: media_player.google_chromecast
-    _row_1:
-      - back
-      - null
-      - home
-      - null
-      - menu
-    _row_2:
-      - volume_down
-      - null
-      - volume_mute
-      - null
-      - volume_up
-    _row_3:
-      - rewind
-      - null
-      - play_pause
-      - null
-      - fast_forward
-    sources_row_1:
-      - netflix
-      - disney
-      - hulu
-      - max
-      - primevideo
-    sources_row_2:
-      - plex
-      - vudu
-      - youtube
-      - spotify
+    rows:
+      - - back
+        - null
+        - home
+        - null
+        - menu
+      - - volume_down
+        - null
+        - volume_mute
+        - null
+        - volume_up
+      - - rewind
+        - null
+        - play_pause
+        - null
+        - fast_forward
+      - - netflix
+        - disney
+        - hulu
+        - max
+        - primevideo
+      - - plex
+        - vudu
+        - youtube
+        - spotify
     custom_keys:
       volume_down:
         icon: mdi:volume-medium
@@ -563,10 +556,10 @@ cards:
   - type: custom:android-tv-card
     remote_id: remote.google_chromecast
     adb_id: media_player.google_chromecast_adb
-    _row_1:
-      - keyboard
-      - search
-    navigation_row: touchpad
+    rows:
+      - - keyboard
+        - search
+      - - navigation_touchpad
     touchpad_height: 300px
 ```
 
@@ -581,14 +574,13 @@ Apple TV
 ```yaml
 type: custom:android-tv-card
 remote_id: remote.appletv
-_row_1:
-  - play
-  - pause
-  - menu
-_row_2:
-  - netflix
-  - primevideo
-navigation_row: touchpad
+rows:
+  - - play
+    - pause
+    - menu
+  - - netflix
+    - primevideo
+  - - navigation_touchpad
 touchpad_height: 200px
 enable_double_click: true
 double_click_keycode: menu
@@ -636,7 +628,8 @@ Kodi
 
 ```yaml
 type: custom:android-tv-card
-navigation_row: touchpad
+rows:
+  - - navigation_touchpad
 touchpad_height: 200px
 enable_double_click: true
 double_click_keycode: back
@@ -686,7 +679,8 @@ Sony Bravia KD.xx TV
 ```yaml
 type: custom:android-tv-card
 remote_id: remote.sony_kd_75xf8596
-navigation_row: touchpad
+rows:
+  - - navigation_touchpad
 enable_double_click: true
 double_click_keycode: back
 custom_keys:
@@ -717,7 +711,8 @@ Marantz Receiver
 ```yaml
 type: custom:android-tv-card
 entity_id: media_player.marantz_sr7013
-navigation_row: touchpad
+rows:
+  - - navigation_touchpad
 touchpad_height: 200px
 enable_double_click: true
 double_click_keycode: back
