@@ -692,7 +692,7 @@ class AndroidTVCard extends LitElement {
 		}
 		const row_content: TemplateResult[] = [];
 		for (const button_name of row) {
-			if (typeof button_name == 'object') {
+			if (typeof button_name == 'object' && button_name != null) {
 				row_content.push(this.buildButtons(button_name, true));
 			} else {
 				switch (button_name) {
