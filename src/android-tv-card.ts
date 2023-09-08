@@ -818,6 +818,7 @@ class AndroidTVCard extends LitElement {
 					width: -moz-available;
 					width: -webkit-fill-available;
 					width: fill-available;
+					flex: 1;
 					padding: 8px 36px 8px 36px;
 					justify-content: space-evenly;
 					align-items: center;
@@ -826,6 +827,10 @@ class AndroidTVCard extends LitElement {
 					display: flex;
 					flex-wrap: wrap;
 					flex-direction: column;
+					width: -moz-available;
+					width: -webkit-fill-available;
+					width: fill-available;
+					flex: 1;
 					padding: 8px;
 					justify-content: space-evenly;
 					align-items: center;
