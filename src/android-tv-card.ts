@@ -784,9 +784,6 @@ class AndroidTVCard extends LitElement {
 	renderStyle() {
 		return html`
 			<style>
-				.remote {
-					padding: 16px 0px 16px 0px;
-				}
 				img,
 				ha-icon-button {
 					width: 48px;
@@ -819,7 +816,7 @@ class AndroidTVCard extends LitElement {
 					width: -webkit-fill-available;
 					width: fill-available;
 					flex: 1;
-					padding: 8px 36px 8px 36px;
+					padding: 8px;
 					justify-content: space-evenly;
 					align-items: center;
 				}
@@ -842,7 +839,7 @@ class AndroidTVCard extends LitElement {
 					background-color: var(--light-primary-color);
 				}
 				toucharea {
-					border-radius: 30px;
+					border-radius: 32px;
 					flex-grow: 1;
 					height: ${this._config['touchpad_height'] || '250px'};
 					width: -moz-available;

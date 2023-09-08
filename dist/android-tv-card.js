@@ -39,9 +39,6 @@
 			<ha-card .header="${this._config.title}">${t}</ha-card>
 		`;return s.html`${e}`}renderStyle(){return s.html`
 			<style>
-				.remote {
-					padding: 16px 0px 16px 0px;
-				}
 				img,
 				ha-icon-button {
 					width: 48px;
@@ -74,7 +71,7 @@
 					width: -webkit-fill-available;
 					width: fill-available;
 					flex: 1;
-					padding: 8px 36px 8px 36px;
+					padding: 8px;
 					justify-content: space-evenly;
 					align-items: center;
 				}
@@ -97,7 +94,7 @@
 					background-color: var(--light-primary-color);
 				}
 				toucharea {
-					border-radius: 30px;
+					border-radius: 32px;
 					flex-grow: 1;
 					height: ${this._config.touchpad_height||"250px"};
 					width: -moz-available;
