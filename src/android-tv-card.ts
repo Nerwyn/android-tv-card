@@ -123,10 +123,12 @@ class AndroidTVCard extends LitElement {
 		if (
 			this._config.volume_row == 'slider' ||
 			this._config.rows?.some((row) => {
-				return (row as string[]).includes('volume_slider') ||
+				return (
+					(row as string[]).includes('volume_slider') ||
 					(row as string[][]).some((column) =>
 						column.includes('volume-slider'),
-					);
+					)
+				);
 			})
 		) {
 			await this.renderVolumeSlider();
@@ -711,11 +713,7 @@ class AndroidTVCard extends LitElement {
 				case 'navigation_buttons': {
 					const navigation_buttons: TemplateResult[] = [];
 					navigation_buttons.push(
-						this.buildRow([
-							this.buildIconButton(''),
-							this.buildIconButton('up'),
-							this.buildIconButton(''),
-						]),
+						this.buildRow([this.buildIconButton('up')]),
 					);
 					navigation_buttons.push(
 						this.buildRow([
@@ -725,11 +723,7 @@ class AndroidTVCard extends LitElement {
 						]),
 					);
 					navigation_buttons.push(
-						this.buildRow([
-							this.buildIconButton(''),
-							this.buildIconButton('down'),
-							this.buildIconButton(''),
-						]),
+						this.buildRow([this.buildIconButton('down')]),
 					);
 					row_content.push(this.buildColumn(navigation_buttons));
 					break;
