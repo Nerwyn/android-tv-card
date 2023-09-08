@@ -80,7 +80,8 @@
 				.column {
 					display: flex;
 					flex-wrap: wrap;
-					padding: 8px 36px 8px 36px;
+					flex-direction: column;
+					padding: 8px;
 					justify-content: space-evenly;
 					align-items: center;
 				}
