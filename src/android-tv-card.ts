@@ -721,7 +721,9 @@ class AndroidTVCard extends LitElement {
 						navigation_buttons.push(
 							this.buildRow([
 								this.buildIconButton('left'),
+								html`<div class="dpad-spacer"></div>`,
 								this.buildIconButton('center'),
+								html`<div class="dpad-spacer"></div>`,
 								this.buildIconButton('right'),
 							]),
 						);
@@ -827,6 +829,9 @@ class AndroidTVCard extends LitElement {
 					padding: 8px;
 					justify-content: space-evenly;
 					align-items: center;
+				}
+				.dpad-spacer {
+					width: 36px;
 				}
 				.diagonal {
 					background-color: var(--light-primary-color);

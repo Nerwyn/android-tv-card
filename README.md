@@ -33,7 +33,7 @@ Along with a many other changes and improvements:
 - Uses `remote.send_command` to send commands to an Android TV for all default keys and sources using Android TV Remote entity ID `remote_id`.
 - `media_player_id` is still present just for the volume slider (not buttons).
 
-**Behavior tweaked to mimic the Google TV remote**
+**Navigation behavior tweaked to mimic the Google TV remote**
 
 - Hold press/touch/swipe actions only repeat for directional and volume keys, and perform a long press for anything else.
 - Navigation speed increased to be closer to (but not as crazy fast) as the Google TV remote.
@@ -48,13 +48,14 @@ Along with a many other changes and improvements:
   - _Due to limitations on desktop browsers, touchpad swiping and long clicks do not work with a mouse._
 - Adjust touchpad height by changing the value of `touchpad_height` (default is 250px).
 
-**Better row handling**
+**Better row handling and columns**
 
 - Rows now exist in a new `rows` array with no limit on the number of rows you can add.
   - Legacy configs that use `_row` key names will still work but are not recommended.
 - Volume sliders and navigation touchpads can now be placed in rows alongside other buttons.
   - For special volume and navigation features use `volume_buttons`, `volume_slider`, `navigation_buttons`, and `navigation_touchpad` as button names within a row.
 - Empty buttons are no longer clickable.
+- Create columns by creating an array within a row array (see examples).
 
 **Better icon handling**
 
@@ -66,7 +67,7 @@ Along with a many other changes and improvements:
 
 **Keyboard input**
 
-- Send text to text input fields on your Android TV using `androidtv.adb_command` by setting the media player entity id created by the [Android Debug Bridge integration](https://www.home-assistant.io/integrations/androidtv/) to `adb_id`.
+- Send text to text input fields on your Android TV using `androidtv.adb_command` by setting the media player entity ID created by the [Android Debug Bridge integration](https://www.home-assistant.io/integrations/androidtv/) to `adb_id`.
 - Includes three different methods:
   - **Seamless text entry** - Create and press the button `keyboard` to pull up the on screen keyboard (on mobile) and send keystrokes seamlessly to your Android TV.
     - Also works with backspace, delete, enter, and left and right keys.
@@ -177,15 +178,14 @@ custom_sources:
 Then you can easily use these buttons in your card:
 
 ```yaml
-power_row:
-  - browser
-  - power
-  - input_tv
-media_control_row:
-  - rewind
-  - play_pause
-  - fast_forward
-  - toggle_light
+rows:
+  - - browser
+  	- power
+  	- input_tv
+  - - rewind
+  	- play_pause
+  	- fast_forward
+  	- toggle_light
 ```
 
 <img src="assets/custom_keys.png" alt="guide" width="300"/>
@@ -323,21 +323,20 @@ You can use the [Android Debug Bridge integration](https://www.home-assistant.io
 
 ### Seamless Text Entry
 
-Send text to Android TV in a seamless manner by creating a button named `keyboard`. Clicking on it will activate several listeners which will send any text you type to the Android TV, along with backspace, delete, enter, left, and right commands (note that the latter two may not behave as expected depending on where the cursor is on the Android TV). You can also paste by holding clicking `CTRL + V` while the keyboard is active or holding down and selecting paste on the keyboard button itself. You may experience some delay as keys are being sent to Android TV as they are being sent one at a time by ADB. Tip: Put the keyboard button at the top of your card so that your screen does not shift to keep it in focus when the on screen keyboard opens.
+Send text to Android TV in seamlessly by creating a button named `keyboard`. Clicking on it will activate several listeners which will send any text you type to the Android TV, along with backspace, delete, enter, left, and right commands (note that the latter two may not behave as expected depending on where the cursor is on the Android TV). You can also paste by holding clicking `CTRL + V` while the keyboard is active or holding down and selecting paste on the keyboard button itself. You may experience some delay as keys are being sent to Android TV as they are being sent one at a time by ADB. Tip: Put the keyboard button at the top of your card so that your screen does not shift to keep it in focus when the on screen keyboard opens.
 
 ```yaml
 type: custom:android-tv-card
 remote_id: remote.google_chromecast
 adb_id: media_player.google_chromecast_adb
-_row_1:
-  - back
-  - home
-  - play_pause
-_row_2:
-  - keyboard
-  - search
-navigation_row: touchpad
-volume_row: buttons
+rows:
+  - - back
+  	- home
+    - play_pause
+  - - keyboard
+    - search
+  - - navigation_touchpad
+  - - volume_buttons
 touchpad_height: 370px
 ```
 
@@ -352,17 +351,16 @@ type: custom:android-tv-card
 remote_id: remote.google_chromecast
 adb_id: media_player.google_chromecast_adb
 alt_volume_icons: true
-_row_1:
-  - back
-  - home
-  - play_pause
-volume_row: buttons
-navigation_row: touchpad
+rows:
+  - - back
+    - home
+    - play_pause
+  - - volume_buttons
+  - - navigation_touchpad
+  - - delete
+    - textbox
+    - enter
 touchpad_height: 370px
-_row_4:
-  - delete
-  - textbox
-  - enter
 ```
 
 <img src="assets/bulk_keyboard.png" alt="keyboard example" width="300"/>
@@ -385,26 +383,22 @@ Add a custom element in your `ui-lovelace.yaml`
 type: custom:android-tv-card
 remote_id: remote.google_chromecast
 media_player_id: media_player.google_chromecast
-power_row:
-  - power
-channel_row:
-  - channel_up
-  - info
-  - channel_down
-apps_row:
-  - netflix
-  - youtube
-  - spotify
-volume_row: slider
-navigation_row: touchpad
-source_row:
-  - back
-  - home
-  - tv
-media_control_row:
-  - rewind
-  - play_pause
-  - fast_forward
+rows:
+  - - power
+    - channel_up
+    - info
+    - channel_down
+  - - netflix
+    - youtube
+    - spotify
+  - - volume_slider
+  - - navigation_touchpad
+  - - back
+    - home
+    - tv
+  - - rewind
+    - play_pause
+    - fast_forward
 ```
 
 ### Example 1
@@ -416,29 +410,25 @@ type: custom:android-tv-card
 remote_id: remote.google_chromecast
 media_player_id: media_player.google_chromecast
 title: Example 1
-power_row:
-  - power
-source_row:
-  - back
-  - home
-  - tv
-  - netflix
-apps_row:
-  - youtube
-  - spotify
-  - netflix
-navigation_row: touchpad
-volume_row: slider
-channel_row:
-  - channel_up
-  - channel_down
-  - info
-media_control_row:
-  - rewind
-  - play
-  - spotify
-  - pause
-  - fast_forward
+rows:
+  - - power
+  - - back
+    - home
+    - tv
+    - netflix
+  - - youtube
+    - spotify
+    - netflix
+  - - navigation_touchpad
+  - - volume_slider
+  - - channel_up
+    - channel_down
+    - info
+  - - rewind
+    - play
+    - spotify
+    - pause
+    - fast_forward
 ```
 
 Result:
@@ -454,27 +444,23 @@ type: custom:android-tv-card
 remote_id: remote.google_chromecast
 media_player_id: media_player.google_chromecast
 title: Example 2
-power_row:
-  - power
-channel_row:
-  - channel_up
-  - info
-  - channel_down
-apps_row:
-  - netflix
-  - youtube
-  - spotify
-volume_row: buttons
-navigation_row: buttons
-source_row:
-  - back
-  - home
-  - tv
-media_control_row:
-  - rewind
-  - play
-  - pause
-  - fast_forward
+rows:
+  - - power
+    - channel_up
+    - info
+    - channel_down
+  - - netflix
+    - youtube
+    - spotify
+  - - volume_buttons
+  - - navigation_buttons
+  - - back
+    - home
+    - tv
+  - - rewind
+    - play
+    - pause
+    - fast_forward
 ```
 
 Result:
