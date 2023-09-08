@@ -122,7 +122,12 @@ class AndroidTVCard extends LitElement {
 
 		if (
 			this._config.volume_row == 'slider' ||
-			this._config.rows?.some((row) => row.includes('volume_slider'))
+			this._config.rows?.some((row) => {
+				(row as string[]).includes('volume_slider') ||
+					(row as string[][]).some((column) =>
+						column.includes('volume-slider'),
+					);
+			})
 		) {
 			await this.renderVolumeSlider();
 		}
@@ -622,12 +627,13 @@ class AndroidTVCard extends LitElement {
 	}
 
 	buildIconButton(action: string): TemplateResult {
-		if (!action) {
-			return html`<div class="empty-button"></div>`;
-		}
 		const info = this.getInfo(action);
 		let icon = info?.icon ?? '';
 		let svg_path = info.svg_path ?? this.customIcons[icon] ?? '';
+
+		if (!Object.keys(info).length) {
+			return html`<div class="empty-button"></div>`;
+		}
 
 		// Use original icon if none provided for custom key or source
 		if (!(icon || svg_path)) {
@@ -674,79 +680,102 @@ class AndroidTVCard extends LitElement {
 		return html` <div class="row">${content}</div> `;
 	}
 
+	buildColumn(content: TemplateResult[]): TemplateResult {
+		return html` <div class="column">${content}</div> `;
+	}
+
+	buildButtons(row: string[], isColumn: boolean = false) {
+		if (typeof row == 'string') {
+			row = [row];
+		}
+		const row_content: TemplateResult[] = [];
+		for (const button_name of row) {
+			switch (button_name) {
+				case 'volume_buttons': {
+					row_content.push(
+						...[
+							this.buildIconButton('volume_down'),
+							this.buildIconButton('volume_mute'),
+							this.buildIconButton('volume_up'),
+						],
+					);
+					break;
+				}
+				case 'volume_slider': {
+					row_content.push(
+						this.volume_slider as unknown as TemplateResult,
+					);
+					break;
+				}
+
+				case 'navigation_buttons': {
+					const navigation_buttons: TemplateResult[] = [];
+					navigation_buttons.push(
+						this.buildRow([
+							this.buildIconButton(''),
+							this.buildIconButton('up'),
+							this.buildIconButton(''),
+						]),
+					);
+					navigation_buttons.push(
+						this.buildRow([
+							this.buildIconButton('left'),
+							this.buildIconButton('center'),
+							this.buildIconButton('right'),
+						]),
+					);
+					navigation_buttons.push(
+						this.buildRow([
+							this.buildIconButton(''),
+							this.buildIconButton('down'),
+							this.buildIconButton(''),
+						]),
+					);
+					row_content.push(this.buildRow(navigation_buttons));
+					break;
+				}
+
+				case 'navigation_touchpad': {
+					const touchpad = html`
+						<toucharea
+							id="toucharea"
+							@click="${this.onTouchClick}"
+							@touchstart="${this.onTouchStart}"
+							@touchmove="${this.onTouchMove}"
+							@touchend="${this.onTouchEnd}"
+						>
+						</toucharea>
+					`;
+					row_content.push(touchpad);
+					break;
+				}
+
+				default: {
+					row_content.push(this.buildIconButton(button_name));
+					break;
+				}
+			}
+		}
+		return isColumn
+			? this.buildColumn(row_content)
+			: this.buildRow(row_content);
+	}
+
 	render() {
 		if (!this._config || !this._hass) {
 			return html``;
 		}
 
-		const content: TemplateResult[][] = [];
-		for (let row of this._config.rows!) {
-			if (typeof row == 'string') {
-				row = [row];
-			}
-			const row_content: TemplateResult[] = [];
-			for (const button_name of row) {
-				switch (button_name) {
-					case 'volume_buttons': {
-						row_content.push(
-							...[
-								this.buildIconButton('volume_down'),
-								this.buildIconButton('volume_mute'),
-								this.buildIconButton('volume_up'),
-							],
-						);
-						break;
-					}
-					case 'volume_slider': {
-						row_content.push(
-							this.volume_slider as unknown as TemplateResult,
-						);
-						break;
-					}
+		const content: TemplateResult[] = [];
 
-					case 'navigation_buttons': {
-						// Push straight to content as three rows
-						content.push([this.buildIconButton('up')]);
-						content.push([
-							this.buildIconButton('left'),
-							this.buildIconButton('center'),
-							this.buildIconButton('right'),
-						]);
-						content.push([this.buildIconButton('down')]);
-						break;
-					}
-
-					case 'navigation_touchpad': {
-						const touchpad = html`
-							<toucharea
-								id="toucharea"
-								@click="${this.onTouchClick}"
-								@touchstart="${this.onTouchStart}"
-								@touchmove="${this.onTouchMove}"
-								@touchend="${this.onTouchEnd}"
-							>
-							</toucharea>
-						`;
-						row_content.push(touchpad);
-						break;
-					}
-
-					default: {
-						row_content.push(this.buildIconButton(button_name));
-						break;
-					}
-				}
-			}
-			if (row_content.length) {
-				content.push(row_content);
-			}
+		for (const row of this._config.rows!) {
+			const row_content = this.buildButtons(row as string[]);
+			content.push(row_content);
 		}
-
-		const mappedContent = content.map(this.buildRow);
 
 		const output = html`
 			${this.renderStyle()}
-			<ha-card .header="${this._config.title}">${mappedContent}</ha-card>
+			<ha-card .header="${this._config.title}">${content}</ha-card>
 		`;
 
 		return html`${output}`;
@@ -786,6 +815,14 @@ class AndroidTVCard extends LitElement {
 				}
 				.row {
 					display: flex;
+					padding: 8px 36px 8px 36px;
+					justify-content: space-evenly;
+					align-items: center;
+				}
+				.column {
+					display: flex;
+					flex-wrap: wrap;
+					width: 48px;
 					padding: 8px 36px 8px 36px;
 					justify-content: space-evenly;
 					align-items: center;
