@@ -95,6 +95,7 @@
 					border-radius: 30px;
 					flex-grow: 1;
 					height: ${this._config.touchpad_height||"250px"};
+					width: inherit;
 					background: #6d767e;
 					touch-action: none;
 					text-align: center;
