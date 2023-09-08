@@ -70,6 +70,9 @@
 				}
 				.row {
 					display: flex;
+					width: -moz-available;
+					width: -webkit-fill-available;
+					width: fill-available;
 					padding: 8px 36px 8px 36px;
 					justify-content: space-evenly;
 					align-items: center;
@@ -77,7 +80,6 @@
 				.column {
 					display: flex;
 					flex-wrap: wrap;
-					width: 48px;
 					padding: 8px 36px 8px 36px;
 					justify-content: space-evenly;
 					align-items: center;
