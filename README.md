@@ -82,6 +82,30 @@ Many thanks to the original authors. Getting this to work with Android TV was st
 
 ## Demo
 
+```yaml
+type: custom:android-tv-card
+remote_id: remote.google_chromecast
+media_player_id: media_player.google_chromecast
+adb_id: media_player.google_chromecast_adb
+title: Example
+rows:
+  - - back
+    - power
+    - home
+  - - keyboard
+    - search
+    - volume_slider
+  - - - netflix
+      - null
+      - youtube
+      - null
+      - spotify
+    - navigation_touchpad
+  - - previous
+    - play_pause
+    - next
+```
+
 <img src="assets/screenshot.png" alt="ex" width="300"/>
 
 ## Options
@@ -94,14 +118,14 @@ All fields are technically optional except for `type`, but the card will not fun
 | remote_id              | string   | The `remote` entity id to control, required for default commands.                                                                                                                                                                                            |
 | media_player_id        | string   | The `media_player` entity id to use for the optional volume slider (not required for volume buttons).                                                                                                                                                        |
 | adb_id                 | string   | The adb `media_player` entity id to use to send keyboard events. Requires the [Android Debug Bridge integration](https://www.home-assistant.io/integrations/androidtv/).                                                                                     |
-| title                  | string   | Card title for showing as header.                                                                                                                                                                                                                            |
-| rows                   | string[] | Defines the buttons used in the card. Each row within rows defines a row of buttons (or slider and touchpad).                                                                                                                                                |
-| enable_double_click    | boolean  | Whether a double click on the touchpad should send the key in `double_click_keycode`. Defaults to `false`. Enabling this introduces a 200ms delay to single clicks.                                                                                          |
+| title                  | string   | Title to display in the card header.                                                                                                                                                                                                                         |
+| rows                   | string[] | Defines the buttons used in the card. Each row within rows defines a row of buttons (or slider and touchpad). Sub-arrays within these rows will display as columns, and sub-arrays within those will alternate between rows and columns.                     |
+| enable_double_click    | boolean  | Enable double clicks on the touchpad. Defaults to `false`. Enabling this introduces a 200ms delay to single clicks.                                                                                                                                          |
 | double_click_keycode   | string   | The key for double clicks on the touchpad. Defaults to `back`.                                                                                                                                                                                               |
 | long_click_keycode     | string   | The key for long clicks on the touchpad. Defaults to a long `center` click.                                                                                                                                                                                  |
-| enable_button_feedback | boolean  | Shall clicks on the buttons return a vibration feedback? Defaults to `true`.                                                                                                                                                                                 |
-| enable_slider_feedback | boolean  | Shall the volume slider return a vibration feedback when you slide through it? Defaults to `true`.                                                                                                                                                           |
-| slider_config          | object   | Custom configuration for the volume slider. See [slider-card](https://github.com/AnthonMS/my-cards). Requires `media_player_id`.                                                                                                                             |
+| enable_button_feedback | boolean  | Enable vibration feedback on the buttons and touchpad, defaults to `true`.                                                                                                                                                                                   |
+| enable_slider_feedback | boolean  | Enable vibration feedback on the volume slider, defaults to `true`.                                                                                                                                                                                          |
+| slider_config          | object   | Custom configuration for the volume slider. See [slider-card](https://github.com/AnthonMS/my-cards). Requires `media_player_id`. Not required to use `volume_slider`.                                                                                        |
 | custom_keys            | object   | Custom keys for the remote control. Each item is an object that can optionally have an `icon` (will use original key icon if overwriting an existing one and icon is not provided) and at least one of the following properties: `key`, `source`, `service`. |
 | custom_sources         | object   | Custom sources for the remote control. Same object as above, but letting you split keys and sources.                                                                                                                                                         |
 | touchpad_height        | string   | Change touchpad height to a custom value, must include [units](https://www.w3schools.com/cssref/css_units.php). Defaults to `250px`.                                                                                                                         |
@@ -180,12 +204,12 @@ Then you can easily use these buttons in your card:
 ```yaml
 rows:
   - - browser
-  	- power
-  	- input_tv
+    - power
+    - input_tv
   - - rewind
-  	- play_pause
-  	- fast_forward
-  	- toggle_light
+    - play_pause
+    - fast_forward
+    - toggle_light
 ```
 
 <img src="assets/custom_keys.png" alt="guide" width="300"/>
@@ -331,7 +355,7 @@ remote_id: remote.google_chromecast
 adb_id: media_player.google_chromecast_adb
 rows:
   - - back
-  	- home
+    - home
     - play_pause
   - - keyboard
     - search
@@ -496,6 +520,7 @@ Result:
 In any row, if you add an empty or `null` item, there will be an empty button sized space:
 
 ```yaml
+type: custom:android-tv-card
 rows:
   - - back
     - home
