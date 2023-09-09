@@ -173,9 +173,9 @@ class AndroidTVCard extends LitElement {
 		}
 
 		// Retry due to slider intermittently not rendering
-		for (let i = 0; i < 5; i++) {
+		for (let i = 0; i < 10; i++) {
 			try {
-				this.volume_slider = await createThing(slider_config, true);
+				this.volume_slider = createThing(slider_config, true);
 				this.volume_slider.setAttribute('style', 'flex: 0.9;');
 			} catch {
 				await new Promise((resolve) => setTimeout(resolve, 100));
