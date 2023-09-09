@@ -55,7 +55,7 @@ Along with a many other changes and improvements:
 - Volume sliders and navigation touchpads can now be placed in rows alongside other buttons.
   - For special volume and navigation features use `volume_buttons`, `volume_slider`, `navigation_buttons`, and `navigation_touchpad` as button names within a row.
 - Empty buttons are no longer clickable.
-- Create columns by creating an array within a row array (see examples).
+- Create columns by creating an array within a row array (see examples). Create an array within that array to create another row. Experiment with nesting rows and columns to make weird remote layouts.
 
 **Better icon handling**
 
