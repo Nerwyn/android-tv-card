@@ -115,8 +115,8 @@ You do it by declaring the rows as arrays and its buttons as values, like this:
 rows:
   - - power
   - - rewind
-	- play_pause
-	- fast_forward
+    - play_pause
+    - fast_forward
 ```
 
 There is no hard limit to the number of rows or buttons you can add.

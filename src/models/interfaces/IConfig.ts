@@ -19,7 +19,9 @@ export interface IConfig {
 	alt_volume_icons?: boolean;
 
 	touchpad_height?: string;
+
 	slider_config?: Record<string, string>;
+	enable_slider_feedback?: boolean;
 
 	enable_button_feedback?: boolean;
 	enable_double_click?: boolean;
