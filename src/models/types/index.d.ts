@@ -21,10 +21,6 @@ declare global {
 
 	interface Themes {}
 
-	interface HapticEvent extends Event {
-		detail: string;
-	}
-
 	interface EventTarget {
 		action: string;
 	}

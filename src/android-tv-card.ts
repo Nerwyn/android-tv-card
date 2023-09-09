@@ -121,7 +121,7 @@ class AndroidTVCard extends LitElement {
 		this.convertToRowsArray();
 
 		if (
-			this._config.volume_row == 'slider' ||
+			(this._config as Record<string, string>).volume_row == 'slider' ||
 			this._config.rows?.some((row) => {
 				return (
 					(row as string[]).includes('volume_slider') ||

@@ -1,5 +1,4 @@
 import { IKeys, ISources } from '.';
-import { TemplateResult } from 'lit-element';
 
 export interface IConfig {
 	theme?: string;
@@ -19,10 +18,7 @@ export interface IConfig {
 	custom_icons?: Record<string, string>;
 	alt_volume_icons?: boolean;
 
-	navigation_row?: string;
 	touchpad_height?: string;
-	volume_row?: string;
-	volume_slider?: TemplateResult;
 	slider_config?: Record<string, string>;
 
 	enable_button_feedback?: boolean;
