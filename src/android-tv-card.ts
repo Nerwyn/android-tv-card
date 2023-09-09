@@ -812,9 +812,12 @@ class AndroidTVCard extends LitElement {
 				}
 				.row {
 					display: flex;
+					flex-wrap: nowrap;
+					flex-direction: row;
 					width: -moz-available;
 					width: -webkit-fill-available;
 					width: fill-available;
+					min-height: 48px;
 					flex: 1;
 					padding: 8px;
 					justify-content: space-evenly;
@@ -822,11 +825,12 @@ class AndroidTVCard extends LitElement {
 				}
 				.column {
 					display: flex;
-					flex-wrap: wrap;
+					flex-wrap: nowrap;
 					flex-direction: column;
 					width: -moz-available;
 					width: -webkit-fill-available;
 					width: fill-available;
+					min-height: 48px;
 					flex: 1;
 					padding: 8px;
 					justify-content: space-evenly;
