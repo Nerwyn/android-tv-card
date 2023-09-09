@@ -354,7 +354,7 @@ class AndroidTVCard extends LitElement {
 				this.onButtonClick(
 					e,
 					this._config.long_click_keycode ?? 'center',
-					this._config.long_click_keycode ? false : true,
+					true,
 				);
 			}
 		}, 500);
@@ -426,7 +426,10 @@ class AndroidTVCard extends LitElement {
 		let haptic: HapticType = longPress ? 'medium' : 'light';
 		if (['up', 'down', 'left', 'right'].includes(action)) {
 			haptic = 'selection';
-		} else if (action == this._config.double_click_keycode) {
+		} else if (
+			action == this._config.double_click_keycode ||
+			(!this._config.double_click_keycode && action == 'back')
+		) {
 			haptic = 'success';
 		}
 		this.fireHapticEvent(haptic);

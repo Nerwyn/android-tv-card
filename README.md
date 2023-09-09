@@ -1,4 +1,4 @@
-# Android TV Remote Card (with touchpad and haptic feedback)
+# Android TV Remote Card
 
 [![GitHub Release][releases-shield]][releases]
 [![License][license-shield]](LICENSE.md)
@@ -69,7 +69,7 @@ Along with a many other changes and improvements:
 
 - Send text to text input fields on your Android TV using `androidtv.adb_command` by setting the media player entity ID created by the [Android Debug Bridge integration](https://www.home-assistant.io/integrations/androidtv/) to `adb_id`.
 - Includes three different methods:
-  - **Seamless text entry** - Create and press the button `keyboard` to pull up the on screen keyboard (on mobile) and send keystrokes seamlessly to your Android TV.
+  - **Seamless text entry** - Create and press the button `keyboard` to pull up the on screen keyboard (on mobile, otherwise use your physical keyboard) and send keystrokes seamlessly to your Android TV.
     - Also works with backspace, delete, enter, and left and right keys.
   - **Bulk text entry** - Create and press the button `textbox` to pull up a browser prompt in which you can type in text to send to your Android TV all at once.
     - Highly recommended that you also create keys for `delete` and `enter` so you can remove and send your input text.
@@ -123,20 +123,20 @@ There is no hard limit to the number of rows or buttons you can add.
 
 ### Special Elements
 
-This card also supports the following special button shortcuts and elements which can be added to any row.
+This card also supports the following special button shortcuts and elements which can be added to any row or column.
 
-| Name                | Type     | Description                                                                                                                   |
-| ------------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| volume_buttons      | buttons  | Shorthand to generate a set of volume down, volume mute, and volume up buttons in a row.                                      |
-| navigation_buttons  | buttons  | Shorthand to generate a set of up, down, left, right, and center buttons arranged in a d-pad across three rows.               |
-| volume_slider       | slider   | A slider that controls the entity defined by `media_player_id`. Requires [slider-card](https://github.com/AnthonMS/my-cards). |
-| navigation_touchpad | touchpad | A touchpad that functions the same as navigation buttons but uses swipe actions instead.                                      |
+| Name                | Type     | Description                                                                                                                     |
+| ------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| volume_buttons      | buttons  | Shorthand to generate a set of volume down, volume mute, and volume up buttons in a row or column.                              |
+| navigation_buttons  | buttons  | Shorthand to generate a set of up, down, left, right, and center buttons arranged in a d-pad across three rows within a column. |
+| volume_slider       | slider   | A slider that controls the entity defined by `media_player_id`. Requires [slider-card](https://github.com/AnthonMS/my-cards).   |
+| navigation_touchpad | touchpad | A touchpad that functions the same as navigation buttons but uses swipe actions instead.                                        |
 
 ## **Notice**
 
 This card uses `remote.send_command` to send keys to the TV.
 
-Further information on possible commands can be found on the [Home Assistant Android TV page](https://www.home-assistant.io/integrations/androidtv_remote/). If your TV is from another brand or simply the TV integration does not use `remote.send_command` for sending keys, you can still use this card by setting [custom buttons](#custom-buttons) with services to send keys to your TV (or do whatever you want) in your way (just like the original [tv-card](https://github.com/marrobHD/tv-card)). You can also remap the touchpad by creating custom keys for `up`, `down`, `left`, `right`, and `center` along with changing the long and double tap actions by changing `long_click_keycode` and `double_click_keycode`.
+Further information on possible commands can be found on the [Home Assistant Android TV page](https://www.home-assistant.io/integrations/androidtv_remote/). If your TV is from another brand or simply the TV integration does not use `remote.send_command` for sending keys, you can still use this card by setting [custom buttons](#custom-buttons) with services to send keys to your TV (or do whatever you want) in your way (just like the original [tv-card](https://github.com/marrobHD/tv-card)). You can also remap the touchpad by creating custom keys for `up`, `down`, `left`, `right`, and `center` along with changing the long and double tap actions by changing `long_click_keycode` and `double_click_keycode` (enable double tap by setting `enable_double_click` to true).
 
 ## Custom Buttons
 
@@ -250,7 +250,7 @@ custom_keys:
 
 Touchpad double click commands can be remapped by either setting `double_click_keycode` in the config if you just want to change the Android TV functionality, creating a custom key for `back` if you want to change the default back functionality, or both.
 
-````yaml
+```yaml
 enable_double_click: true
 double_click_keycode: back
 custom_keys:
@@ -258,8 +258,8 @@ custom_keys:
   service: kodi.call_method
   service_data:
     entity_id: media_player.kodi
-    method: Input.Back```
-````
+    method: Input.Back
+```
 
 Touchpad long click commands can be changed to a different command and custom key by setting `long_click_keycode` in the config. By default the long click command sends a long `center` click, which on Android TV will peform a `menu` command on a selected item if available and a `center` command if not. This will not work on other devices and has to be remapped like so.
 
@@ -367,7 +367,7 @@ touchpad_height: 370px
 
 ### Google Assistant Search
 
-Send text to Android TV to be processed as a Google Assistant global search by creating a button named `search`. Clicking on it will createa text prompt in which you can enter text you wish to search for using Google Assistant on Android TV. This method cannot be used to enter text into text fields on Android TV, but does work if you are experiencing [this issue](https://github.com/home-assistant/core/issues/94063) which prevents the on screen keyboard from appearing, and therefore search from being triggered.
+Send text to Android TV to be processed as a Google Assistant global search by creating a button named `search`. Clicking on it will create a text prompt in which you can enter text you wish to search for using Google Assistant on Android TV. This method cannot be used to enter text into text fields on Android TV, but does work if you are experiencing [this issue](https://github.com/home-assistant/core/issues/94063) which prevents the on screen keyboard from appearing, and therefore search from being triggered.
 
 ## Installation
 
@@ -377,7 +377,7 @@ Install [HACS](https://hacs.xyz/), open it, click on Frontend, click on the thre
 
 ### Step 2
 
-Add a custom element in your `ui-lovelace.yaml`
+When in edit mode on a lovelace view, click add card and search for Android TV Card. Create a remote config like the below examples.
 
 ```yaml
 type: custom:android-tv-card
@@ -553,7 +553,7 @@ Result:
 
 ### Example 6
 
-Apple TV
+Apple TV, using card-mod to put an image in the touchpad
 
 ```yaml
 type: custom:android-tv-card
@@ -604,11 +604,24 @@ custom_sources:
     service_data:
       source: Netflix
       target: media_player.appletv
+card_mod:
+  style: |
+    toucharea {
+      background-image: url("https://upload.wikimedia.org/wikipedia/commons/a/ab/Apple-logo.png");
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      opacity: 1.0;
+    }
 ```
+
+Result:
+
+<img src="assets/appletv.png" alt="apple tv example" width="400"/>
 
 ### Example 7
 
-Kodi
+Kodi, using card-mod to put an image in the touchpad
 
 ```yaml
 type: custom:android-tv-card
@@ -654,7 +667,20 @@ custom_keys:
     service_data:
       entity_id: media_player.kodi
       method: Input.Back
+card_mod:
+  style: |
+    toucharea {
+      background-image: url("https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Kodi-logo-Thumbnail-light-transparent.png/600px-Kodi-logo-Thumbnail-light-transparent.png?20141126003611");
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      opacity: 1.0;
+    }
 ```
+
+Result:
+
+<img src="assets/kodi.png" alt="kodi example" width="400"/>
 
 ### Example 8
 
@@ -758,6 +784,26 @@ rows:
 Result:
 
 <img src="assets/more_disorder.png" alt="more disorder example" width="500"/>
+
+### Example 11
+
+A simple gamepad
+
+```yaml
+type: custom:android-tv-card
+remote_id: remote.lounge_google_tv
+rows:
+  - - navigation_buttons
+    - - - 'y'
+      - - x
+        - null
+        - b
+      - - a
+```
+
+Result:
+
+<img src="assets/gamepad.png" alt="gamepad example" width="500"/>
 
 [last-commit-shield]: https://img.shields.io/github/last-commit/Nerwyn/android-tv-card?style=for-the-badge
 [commits]: https://github.com/Nerwyn/android-tv-card/commits/main
