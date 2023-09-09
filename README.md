@@ -279,10 +279,10 @@ enable_double_click: true
 double_click_keycode: back
 custom_keys:
   back:
-  service: kodi.call_method
-  service_data:
-    entity_id: media_player.kodi
-    method: Input.Back
+    service: kodi.call_method
+    service_data:
+      entity_id: media_player.kodi
+      method: Input.Back
 ```
 
 Touchpad long click commands can be changed to a different command and custom key by setting `long_click_keycode` in the config. By default the long click command sends a long `center` click, which on Android TV will peform a `menu` command on a selected item if available and a `center` command if not. This will not work on other devices and has to be remapped like so.
