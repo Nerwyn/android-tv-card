@@ -1,8 +1,8 @@
 {
 	"name": "android-tv-card",
-	"version": "2.0.1",
+	"version": "2.1.0",
 	"description": "Android TV Remote Card",
-	"main": "./src/android-tv-card.js",
+	"main": "./dist/android-tv-card.js",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"build": "npx webpack",

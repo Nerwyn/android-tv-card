@@ -5,12 +5,7 @@ declare global {
 		loadCardHelpers: function;
 		initialX?: number;
 		initialY?: number;
-		ShadyCSS?: shadyCSS;
 		customCards: CustomCard[];
-	}
-
-	interface ShadyCSS {
-		styleSubtree: function;
 	}
 
 	interface CustomCard {

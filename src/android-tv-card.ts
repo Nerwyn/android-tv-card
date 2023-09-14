@@ -118,6 +118,15 @@ class AndroidTVCard extends LitElement {
 			this.useAltVolumeIcons();
 		}
 
+		if (
+			(this._config as Record<string, string>).adb_id &&
+			!this._config.keyboard_id
+		) {
+			this._config.keyboard_id = (
+				this._config as Record<string, string>
+			).adb_id;
+		}
+
 		this.convertToRowsArray();
 
 		await window.loadCardHelpers();
@@ -521,6 +530,57 @@ class AndroidTVCard extends LitElement {
 	}
 
 	/**
+	 * Event handler for sending bulk text via legacy prompt method
+	 * @param {Event} e
+	 * @param {boolean} [longPress=false]
+	 */
+	onTextboxPress(e: Event, _longpress: boolean) {
+		e.stopImmediatePropagation();
+		const text = prompt('Text Input: ');
+		if (text) {
+			let data: Record<string, string>;
+			switch ((this._config.keyboard_mode ?? '').toUpperCase()) {
+				case 'KODI':
+				case 'ANDROID_TV':
+				default:
+					data = {
+						entity_id: this._config.keyboard_id!,
+						command: 'input text "' + text + '"',
+					};
+					this._hass.callService('androidtv', 'adb_command', data);
+					break;
+			}
+		}
+	}
+
+	/**
+	 * Event handler for global Google Assistant search
+	 * @param {Event} e
+	 * @param {boolean} [longPress=false]
+	 */
+	onSearchPress(e: Event, _longpress: boolean) {
+		e.stopImmediatePropagation();
+		const text = prompt('Google Assistant Search: ');
+		if (text) {
+			let data: Record<string, string>;
+			switch ((this._config.keyboard_mode ?? '').toUpperCase()) {
+				case 'KODI':
+				case 'ANDROID_TV':
+				default:
+					data = {
+						entity_id: this._config.keyboard_id!,
+						command:
+							'am start -a "android.search.action.GLOBAL_SEARCH" --es query "' +
+							text +
+							'"',
+					};
+					this._hass.callService('androidtv', 'adb_command', data);
+					break;
+			}
+		}
+	}
+
+	/**
 	 * Event handler for keyboard input events, used for alphanumerical keys and works on all platforms
 	 * @param {Event} e
 	 */
@@ -528,11 +588,18 @@ class AndroidTVCard extends LitElement {
 		e.stopImmediatePropagation();
 
 		if (e.data) {
-			const data = {
-				entity_id: this._config.adb_id,
-				command: 'input text "' + e.data + '"',
-			};
-			this._hass.callService('androidtv', 'adb_command', data);
+			let data: Record<string, string>;
+			switch ((this._config.keyboard_mode ?? '').toUpperCase()) {
+				case 'KODI':
+				case 'ANDROID_TV':
+				default:
+					data = {
+						entity_id: this._config.keyboard_id!,
+						command: 'input text "' + e.data + '"',
+					};
+					this._hass.callService('androidtv', 'adb_command', data);
+					break;
+			}
 		}
 	}
 
@@ -545,13 +612,20 @@ class AndroidTVCard extends LitElement {
 		e.preventDefault();
 
 		const text = e.clipboardData?.getData('Text');
+		let data: Record<string, string>;
 		if (text) {
-			const data = {
-				entity_id: this._config.adb_id,
-				command: 'input text "' + text + '"',
-			};
-			this._hass.callService('androidtv', 'adb_command', data);
+			switch ((this._config.keyboard_mode ?? '').toUpperCase()) {
+				case 'KODI':
+				case 'ANDROIDTV':
+				default:
+					data = {
+						entity_id: this._config.keyboard_id!,
+						command: 'input text "' + text + '"',
+					};
+					this._hass.callService('androidtv', 'adb_command', data);
+			}
 		}
+
 		(e.currentTarget as HTMLInputElement).blur();
 		(e.currentTarget as HTMLInputElement).value = '';
 		(e.currentTarget as HTMLInputElement).focus();
@@ -594,43 +668,6 @@ class AndroidTVCard extends LitElement {
 		(
 			(e.currentTarget as HTMLInputElement).children[1] as HTMLElement
 		).focus();
-	}
-
-	/**
-	 * Event handler for sending bulk text via legacy prompt method
-	 * @param {Event} e
-	 * @param {boolean} [longPress=false]
-	 */
-	onTextboxPress(e: Event, _longpress: boolean) {
-		e.stopImmediatePropagation();
-		const text = prompt('Text Input: ');
-		if (text) {
-			const data = {
-				entity_id: this._config.adb_id,
-				command: 'input text "' + text + '"',
-			};
-			this._hass.callService('androidtv', 'adb_command', data);
-		}
-	}
-
-	/**
-	 * Event handler for global Google Assistant search
-	 * @param {Event} e
-	 * @param {boolean} [longPress=false]
-	 */
-	onSearchPress(e: Event, _longpress: boolean) {
-		e.stopImmediatePropagation();
-		const text = prompt('Google Assistant Search: ');
-		if (text) {
-			const data = {
-				entity_id: this._config.adb_id,
-				command:
-					'am start -a "android.search.action.GLOBAL_SEARCH" --es query "' +
-					text +
-					'"',
-			};
-			this._hass.callService('androidtv', 'adb_command', data);
-		}
 	}
 
 	buildIconButton(action: string): TemplateResult {

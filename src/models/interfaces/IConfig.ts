@@ -6,7 +6,8 @@ export interface IConfig {
 
 	media_player_id?: string;
 	remote_id?: string;
-	adb_id?: string;
+	keyboard_id?: string;
+	keyboard_mode?: string;
 
 	keys?: IKeys;
 	custom_keys?: IKeys;
