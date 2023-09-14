@@ -401,10 +401,10 @@ Send text to Android TV to be processed as a Google Assistant global search by c
 
 You can also use the keyboard to send text on the following alternate platforms by setting `keyboard_id` to the entity ID of the platform and `keyboard_mode` to one of the following:
 
-| Media Platform | Info                                                                                                         |
-| -------------- | ------------------------------------------------------------------------------------------------------------ |
-| `ANDROID TV`   | Default, not required if using Android TV                                                                    |
-| `KODI`         | Does not support backspace, delete, enter, left, and right but these can be used with the on screen keyboard |
+| Media Platform | Info                                                                                                                                                                                                                  |
+| -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ANDROID TV`   | Default, not required if using Android TV                                                                                                                                                                             |
+| `KODI`         | Does not support backspace, delete, enter, left, and right but these can be used with the on screen keyboard. Seamless mode does not work as the Kodi `Input.SendText` method clears the textbox before sending text. |
 
 More may be added as requested if there is a way to do so through their Home Assistant (or possibly community made) integrations.
 
@@ -661,18 +661,23 @@ Result:
 
 ### Example 7
 
-Kodi with keyboard and touchpad, using card-mod to put an image in the touchpad
+Kodi with keyboard and touchpad, using card-mod to put an image in the touchpad. Use the [Kodi JSON-RPC API](https://kodi.wiki/view/JSON-RPC_API/v13) to add more buttons like below.
 
 ```yaml
 type: custom:android-tv-card
 keyboard_id: media_player.kodi
 keyboard_mode: KODI
 rows:
-  - - keyboard
-    - textbox
-  - - navigation_touchpad
-rows:
-  - - navigation_touchpad
+  - - back
+    - home
+    - menu
+  - - info
+    - play_pause
+  - - - volume_buttons
+    - navigation_touchpad
+    - - textbox
+      - null
+      - search
 touchpad_height: 200px
 enable_double_click: true
 double_click_keycode: back
@@ -708,8 +713,46 @@ custom_keys:
       entity_id: media_player.kodi
       method: Input.Back
   search:
-	icon: mdi:kodi
-	key: SEARCH
+    icon: mdi:kodi
+    key: SEARCH
+  volume_mute:
+    service: kodi.call_method
+    service_data:
+      entity_id: media_player.kodi
+      method: Application.SetMute
+  volume_up:
+    service: kodi.call_method
+    service_data:
+      entity_id: media_player.kodi
+      method: Application.SetVolume
+      volume: increment
+  volume_down:
+    service: kodi.call_method
+    service_data:
+      entity_id: media_player.kodi
+      method: Application.SetVolume
+      volume: decrement
+  menu:
+    service: kodi.call_method
+    service_data:
+      entity_id: media_player.kodi
+      method: Input.ContextMenu
+  home:
+    service: kodi.call_method
+    service_data:
+      entity_id: media_player.kodi
+      method: Input.Home
+  info:
+    service: kodi.call_method
+    service_data:
+      entity_id: media_player.kodi
+      method: Input.Info
+  play_pause:
+    service: kodi.call_method
+    service_data:
+      entity_id: media_player.kodi
+      method: Player.PlayPause
+      playerid: -1
 card_mod:
   style: |
     toucharea {

@@ -604,7 +604,7 @@ class AndroidTVCard extends LitElement {
 						entity_id: this._config.keyboard_id!,
 						method: 'Input.SendText',
 						text: text,
-						done: false,
+						done: true,
 					};
 					this._hass.callService('kodi', 'call_method', data);
 					break;
