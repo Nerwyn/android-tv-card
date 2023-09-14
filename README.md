@@ -681,6 +681,7 @@ rows:
 touchpad_height: 200px
 enable_double_click: true
 double_click_keycode: back
+long_click_keycode: menu
 custom_keys:
   up:
     service: kodi.call_method
