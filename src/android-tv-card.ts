@@ -108,7 +108,7 @@ class AndroidTVCard extends LitElement {
 
 	async setConfig(config: IConfig) {
 		this._config = { theme: 'default', ...config };
-		
+
 		this.customKeys = config.custom_keys || {};
 		this.customSources = config.custom_sources || {};
 		this.customIcons = config.custom_icons || {};
@@ -542,6 +542,7 @@ class AndroidTVCard extends LitElement {
 			let data: Record<string, string>;
 			switch ((this._config.keyboard_mode ?? '').toUpperCase()) {
 				case 'KODI':
+					break;
 				case 'ANDROID_TV':
 				default:
 					data = {
@@ -566,6 +567,7 @@ class AndroidTVCard extends LitElement {
 			let data: Record<string, string>;
 			switch ((this._config.keyboard_mode ?? '').toUpperCase()) {
 				case 'KODI':
+					break;
 				case 'ANDROID_TV':
 				default:
 					data = {
@@ -592,6 +594,7 @@ class AndroidTVCard extends LitElement {
 			let data: Record<string, string>;
 			switch ((this._config.keyboard_mode ?? '').toUpperCase()) {
 				case 'KODI':
+					break;
 				case 'ANDROID_TV':
 				default:
 					data = {
@@ -617,6 +620,7 @@ class AndroidTVCard extends LitElement {
 		if (text) {
 			switch ((this._config.keyboard_mode ?? '').toUpperCase()) {
 				case 'KODI':
+					break;
 				case 'ANDROIDTV':
 				default:
 					data = {
@@ -624,6 +628,7 @@ class AndroidTVCard extends LitElement {
 						command: 'input text "' + text + '"',
 					};
 					this._hass.callService('androidtv', 'adb_command', data);
+					break;
 			}
 		}
 
