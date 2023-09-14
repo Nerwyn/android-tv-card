@@ -720,6 +720,7 @@ custom_keys:
     service_data:
       entity_id: media_player.kodi
       method: Application.SetMute
+      mute: toggle
   volume_up:
     service: kodi.call_method
     service_data:
@@ -752,7 +753,7 @@ custom_keys:
     service_data:
       entity_id: media_player.kodi
       method: Player.PlayPause
-      playerid: -1
+      playerid: 1
 card_mod:
   style: |
     toucharea {
