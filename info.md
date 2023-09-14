@@ -1,16 +1,18 @@
 # Android TV Remote Card
 
-A fork of usernein's tv-card for the Home Assistant [Android TV Remote](https://www.home-assistant.io/integrations/androidtv_remote/) integration that also allows for a greater level of customization and keyboard entry.
+Yet another tv-card for Home Assistant, specifically for the  [Android TV Remote](https://www.home-assistant.io/integrations/androidtv_remote/) integration, that also allows for a greater level of customization and keyboard entry for multiple platforms.
 
-- Fully configurable and remappable touchpad that can now be used for more than Android TV.
+- Fully configurable and remappable touchpad that can now be used for more any media platform.
 - Holding directional and volume keys causes them to repeat until let go, with navigation behavior tweaked to behave more like the Google TV remote.
 - Changes row configuration to nested arrays. Every level nested past the second array alternates between columns and rows, allowing for much more customization.
 - Many more default [keys](https://github.com/Nerwyn/android-tv-card/blob/main/src/models/defaultKeys.ts) and [sources](https://github.com/Nerwyn/android-tv-card/blob/main/src/models/defaultSources.ts) with [SVG icons](https://github.com/Nerwyn/android-tv-card/blob/main/src/models/enums/svg.ts) to match the sources.
   - _Not all working or tested at this time, let me know if you find the correct source/activity for the broken ones!_
-- Keyboard text entry via the [Android Debug Bridge integration](https://www.home-assistant.io/integrations/androidtv/) with three methods implemented depending on the button used:
-  - `keyboard`: seamless live text entry.
-  - `textbox`: bulk text entry.
-  - `search`: Google Assistant search.
+- Keyboard text entry via the [Android Debug Bridge integration](https://www.home-assistant.io/integrations/androidtv/)
+  - Three different methods:
+    - `keyboard`: seamless live text entry.
+    - `textbox`: bulk text entry.
+    - `search`: Google Assistant search.
+  - Also supports Kodi
 
 **Sample overview:**
 

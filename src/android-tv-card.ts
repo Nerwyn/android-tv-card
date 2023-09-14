@@ -526,7 +526,15 @@ class AndroidTVCard extends LitElement {
 				(e.currentTarget as HTMLInputElement).value = '';
 				(e.currentTarget as HTMLInputElement).focus();
 			}
-			this.sendAction(key);
+
+			switch ((this._config.keyboard_mode ?? '').toUpperCase()) {
+				case 'KODI':
+					break;
+				case 'ANDROID_TV':
+				default:
+					this.sendAction(key);
+					break;
+			}
 		}
 	}
 
@@ -537,11 +545,19 @@ class AndroidTVCard extends LitElement {
 	 */
 	onTextboxPress(e: Event, _longpress: boolean) {
 		e.stopImmediatePropagation();
+
 		const text = prompt('Text Input: ');
 		if (text) {
-			let data: Record<string, string>;
+			let data: Record<string, string | boolean>;
 			switch ((this._config.keyboard_mode ?? '').toUpperCase()) {
 				case 'KODI':
+					data = {
+						entity_id: this._config.keyboard_id!,
+						method: 'Input.SendText',
+						string: text,
+						done: true,
+					};
+					this._hass.callService('kodi', 'call_method', data);
 					break;
 				case 'ANDROID_TV':
 				default:
@@ -562,6 +578,7 @@ class AndroidTVCard extends LitElement {
 	 */
 	onSearchPress(e: Event, _longpress: boolean) {
 		e.stopImmediatePropagation();
+
 		const text = prompt('Google Assistant Search: ');
 		if (text) {
 			let data: Record<string, string>;
@@ -590,16 +607,24 @@ class AndroidTVCard extends LitElement {
 	onInput(e: InputEvent) {
 		e.stopImmediatePropagation();
 
-		if (e.data) {
-			let data: Record<string, string>;
+		const text = e.data;
+		if (text) {
+			let data: Record<string, string | boolean>;
 			switch ((this._config.keyboard_mode ?? '').toUpperCase()) {
 				case 'KODI':
+					data = {
+						entity_id: this._config.keyboard_id!,
+						method: 'Input.SendText',
+						string: text,
+						done: false,
+					};
+					this._hass.callService('kodi', 'call_method', data);
 					break;
 				case 'ANDROID_TV':
 				default:
 					data = {
 						entity_id: this._config.keyboard_id!,
-						command: 'input text "' + e.data + '"',
+						command: 'input text "' + text + '"',
 					};
 					this._hass.callService('androidtv', 'adb_command', data);
 					break;
@@ -616,10 +641,17 @@ class AndroidTVCard extends LitElement {
 		e.preventDefault();
 
 		const text = e.clipboardData?.getData('Text');
-		let data: Record<string, string>;
 		if (text) {
+			let data: Record<string, string | boolean>;
 			switch ((this._config.keyboard_mode ?? '').toUpperCase()) {
 				case 'KODI':
+					data = {
+						entity_id: this._config.keyboard_id!,
+						method: 'Input.SendText',
+						string: text,
+						done: false,
+					};
+					this._hass.callService('kodi', 'call_method', data);
 					break;
 				case 'ANDROIDTV':
 				default:

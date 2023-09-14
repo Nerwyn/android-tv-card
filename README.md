@@ -75,6 +75,7 @@ Along with a many other changes and improvements:
     - Highly recommended that you also create keys for `delete` and `enter` so you can remove and send your input text.
   - **Google Assistant search** - Create and press the button `search` to pull up a browser prompt in which you can type in text to send to your Android TV to process as a Google Assistant search.
     - Works well if you are experiencing [this issue](https://github.com/home-assistant/core/issues/94063).
+- Can also be used for Kodi (see below)
 
 Many thanks to the original authors. Getting this to work with Android TV was straightforward and all of the frontend heavy lifting they did has provided an excellent base on which to build my personal ultimate Android TV remote.
 
@@ -660,10 +661,16 @@ Result:
 
 ### Example 7
 
-Kodi, using card-mod to put an image in the touchpad
+Kodi with keyboard and touchpad, using card-mod to put an image in the touchpad
 
 ```yaml
 type: custom:android-tv-card
+keyboard_id: media_player.kodi
+keyboard_mode: KODI
+rows:
+  - - keyboard
+    - textbox
+  - - navigation_touchpad
 rows:
   - - navigation_touchpad
 touchpad_height: 200px
