@@ -554,7 +554,7 @@ class AndroidTVCard extends LitElement {
 					data = {
 						entity_id: this._config.keyboard_id!,
 						method: 'Input.SendText',
-						string: text,
+						text: text,
 						done: true,
 					};
 					this._hass.callService('kodi', 'call_method', data);
@@ -579,11 +579,35 @@ class AndroidTVCard extends LitElement {
 	onSearchPress(e: Event, _longpress: boolean) {
 		e.stopImmediatePropagation();
 
-		const text = prompt('Google Assistant Search: ');
+		let promptText: string;
+		switch ((this._config.keyboard_mode ?? '').toUpperCase()) {
+			case 'KODI':
+				promptText = 'Global Search: ';
+				break;
+			case 'ANDROID TV':
+			default:
+				promptText = 'Google Assistant Search: ';
+				break;
+		}
+
+		const text = prompt(promptText);
 		if (text) {
-			let data: Record<string, string>;
+			let data: Record<string, string | boolean>;
 			switch ((this._config.keyboard_mode ?? '').toUpperCase()) {
 				case 'KODI':
+					this._hass.callService('kodi', 'call_method', {
+						entity_id: this._config.keyboard_id!,
+						method: 'Addons.ExecuteAddon',
+						addonid: 'script.globalsearch',
+					});
+
+					data = {
+						entity_id: this._config.keyboard_id!,
+						method: 'Input.SendText',
+						text: text,
+						done: true,
+					};
+					this._hass.callService('kodi', 'call_method', data);
 					break;
 				case 'ANDROID_TV':
 				default:
@@ -615,7 +639,7 @@ class AndroidTVCard extends LitElement {
 					data = {
 						entity_id: this._config.keyboard_id!,
 						method: 'Input.SendText',
-						string: text,
+						text: text,
 						done: false,
 					};
 					this._hass.callService('kodi', 'call_method', data);
@@ -648,7 +672,7 @@ class AndroidTVCard extends LitElement {
 					data = {
 						entity_id: this._config.keyboard_id!,
 						method: 'Input.SendText',
-						string: text,
+						text: text,
 						done: false,
 					};
 					this._hass.callService('kodi', 'call_method', data);

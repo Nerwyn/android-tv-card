@@ -65,7 +65,7 @@ Along with a many other changes and improvements:
 - Custom keys and sources that replace default ones will now inherit the default icons if no new ones are given.
 - Easily switch to alternate volume icons by setting `alt_volume_icons` to true.
 
-**Keyboard input**
+**Keyboard support**
 
 - Send text to text input fields on your Android TV using `androidtv.adb_command` by setting the media player entity ID created by the [Android Debug Bridge integration](https://www.home-assistant.io/integrations/androidtv/) to `keyboard_id`.
 - Includes three different methods:
@@ -401,10 +401,10 @@ Send text to Android TV to be processed as a Google Assistant global search by c
 
 You can also use the keyboard to send text on the following alternate platforms by setting `keyboard_id` to the entity ID of the platform and `keyboard_mode` to one of the following:
 
-| Media Platform | Info                                               |
-| -------------- | -------------------------------------------------- |
-| `ANDROID TV`   | Default, not required if using Android TV          |
-| `KODI`         | Does not suppport Google Assistant / Global search |
+| Media Platform | Info                                                                                                         |
+| -------------- | ------------------------------------------------------------------------------------------------------------ |
+| `ANDROID TV`   | Default, not required if using Android TV                                                                    |
+| `KODI`         | Does not support backspace, delete, enter, left, and right but these can be used with the on screen keyboard |
 
 More may be added as requested if there is a way to do so through their Home Assistant (or possibly community made) integrations.
 
@@ -678,41 +678,38 @@ enable_double_click: true
 double_click_keycode: back
 custom_keys:
   up:
-    icon: mdi:chevron-up
     service: kodi.call_method
     service_data:
       entity_id: media_player.kodi
       method: Input.Up
   down:
-    icon: mdi:chevron-down
     service: kodi.call_method
     service_data:
       entity_id: media_player.kodi
       method: Input.Down
   left:
-    icon: mdi:chevron-left
     service: kodi.call_method
     service_data:
       entity_id: media_player.kodi
       method: Input.Left
   right:
-    icon: mdi:chevron-right
     service: kodi.call_method
     service_data:
       entity_id: media_player.kodi
       method: Input.Right
   center:
-    icon: mdi:kodi
     service: kodi.call_method
     service_data:
       entity_id: media_player.kodi
       method: Input.Select
   back:
-    icon: mdi:kodi
     service: kodi.call_method
     service_data:
       entity_id: media_player.kodi
       method: Input.Back
+  search:
+	icon: mdi:kodi
+	key: SEARCH
 card_mod:
   style: |
     toucharea {
