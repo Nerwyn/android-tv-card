@@ -530,7 +530,7 @@ class AndroidTVCard extends LitElement {
 			switch ((this._config.keyboard_mode ?? '').toUpperCase()) {
 				case 'KODI':
 					break;
-				case 'ANDROID_TV':
+				case 'ANDROID TV':
 				default:
 					this.sendAction(key);
 					break;
@@ -559,7 +559,7 @@ class AndroidTVCard extends LitElement {
 					};
 					this._hass.callService('kodi', 'call_method', data);
 					break;
-				case 'ANDROID_TV':
+				case 'ANDROID TV':
 				default:
 					data = {
 						entity_id: this._config.keyboard_id!,
@@ -608,7 +608,7 @@ class AndroidTVCard extends LitElement {
 					};
 					this._hass.callService('kodi', 'call_method', data);
 					break;
-				case 'ANDROID_TV':
+				case 'ANDROID TV':
 				default:
 					data = {
 						entity_id: this._config.keyboard_id!,
@@ -643,7 +643,7 @@ class AndroidTVCard extends LitElement {
 					};
 					this._hass.callService('kodi', 'call_method', data);
 					break;
-				case 'ANDROID_TV':
+				case 'ANDROID TV':
 				default:
 					data = {
 						entity_id: this._config.keyboard_id!,
@@ -676,7 +676,7 @@ class AndroidTVCard extends LitElement {
 					};
 					this._hass.callService('kodi', 'call_method', data);
 					break;
-				case 'ANDROIDTV':
+				case 'ANDROID TV':
 				default:
 					data = {
 						entity_id: this._config.keyboard_id!,
