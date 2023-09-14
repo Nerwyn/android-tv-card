@@ -22,7 +22,7 @@ Add this to your lovelace configuration:
 type: custom:android-tv-card
 remote_id: remote.google_chromecast
 media_player_id: media_player.google_chromecast
-adb_id: media_player.google_chromecast_adb
+keyboard_id: media_player.google_chromecast_adb
 title: Example
 rows:
   - - back
