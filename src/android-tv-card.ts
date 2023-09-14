@@ -108,6 +108,7 @@ class AndroidTVCard extends LitElement {
 
 	async setConfig(config: IConfig) {
 		this._config = { theme: 'default', ...config };
+		
 		this.customKeys = config.custom_keys || {};
 		this.customSources = config.custom_sources || {};
 		this.customIcons = config.custom_icons || {};
@@ -118,6 +119,7 @@ class AndroidTVCard extends LitElement {
 			this.useAltVolumeIcons();
 		}
 
+		// Legacy config upgrades
 		if (
 			(this._config as Record<string, string>).adb_id &&
 			!this._config.keyboard_id
@@ -126,7 +128,6 @@ class AndroidTVCard extends LitElement {
 				this._config as Record<string, string>
 			).adb_id;
 		}
-
 		this.convertToRowsArray();
 
 		await window.loadCardHelpers();

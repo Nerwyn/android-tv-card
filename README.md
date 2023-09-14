@@ -67,7 +67,7 @@ Along with a many other changes and improvements:
 
 **Keyboard input**
 
-- Send text to text input fields on your Android TV using `androidtv.adb_command` by setting the media player entity ID created by the [Android Debug Bridge integration](https://www.home-assistant.io/integrations/androidtv/) to `adb_id`.
+- Send text to text input fields on your Android TV using `androidtv.adb_command` by setting the media player entity ID created by the [Android Debug Bridge integration](https://www.home-assistant.io/integrations/androidtv/) to `keyboard_id`.
 - Includes three different methods:
   - **Seamless text entry** - Create and press the button `keyboard` to pull up the on screen keyboard (on mobile, otherwise use your physical keyboard) and send keystrokes seamlessly to your Android TV.
     - Also works with backspace, delete, enter, and left and right keys.
@@ -86,7 +86,7 @@ Many thanks to the original authors. Getting this to work with Android TV was st
 type: custom:android-tv-card
 remote_id: remote.google_chromecast
 media_player_id: media_player.google_chromecast
-adb_id: media_player.google_chromecast_adb
+keyboard_id: media_player.google_chromecast_adb
 title: Example
 rows:
   - - back
@@ -117,7 +117,8 @@ All fields are technically optional except for `type`, but the card will not fun
 | type                   | string   | `custom:android-tv-card`                                                                                                                                                                                                                                     |
 | remote_id              | string   | The `remote` entity id to control, required for default commands.                                                                                                                                                                                            |
 | media_player_id        | string   | The `media_player` entity id to use for the optional volume slider (not required for volume buttons).                                                                                                                                                        |
-| adb_id                 | string   | The adb `media_player` entity id to use to send keyboard events. Requires the [Android Debug Bridge integration](https://www.home-assistant.io/integrations/androidtv/).                                                                                     |
+| keyboard_id            | string   | The `media_player` entity id to use to send keyboard events. Requires the [Android Debug Bridge integration](https://www.home-assistant.io/integrations/androidtv/) for Android TV, and other media platform integration for other supported ones.           |
+| keyboard_mode          | string   | The media platform type for sending keyboard commands. Defaults to `ANDROID TV`. The only other currently supported method is `KODI`.                                                                                                                        |
 | title                  | string   | Title to display in the card header.                                                                                                                                                                                                                         |
 | rows                   | string[] | Defines the buttons used in the card. Each row within rows defines a row of buttons (or slider and touchpad). Sub-arrays within these rows will display as columns, and sub-arrays within those will alternate between rows and columns.                     |
 | enable_double_click    | boolean  | Enable double clicks on the touchpad. Defaults to `false`. Enabling this introduces a 200ms delay to single clicks.                                                                                                                                          |
@@ -341,18 +342,20 @@ custom_sources:
     source: hbomax://deeplink
 ```
 
-## Keyboard Input With ADB
+## Keyboard Input
 
-You can use the [Android Debug Bridge integration](https://www.home-assistant.io/integrations/androidtv/) with this card to send text to your Android TV. This card includes three different methods for sending text to Android TV.
+You can use the [Android Debug Bridge integration](https://www.home-assistant.io/integrations/androidtv/) with this card to send text to your Android TV (by default, see below for alternate media platforms). This card includes three different methods for sending text to Android TV.
 
-### Seamless Text Entry
+### Methods
+
+#### Seamless Text Entry
 
 Send text to Android TV in seamlessly by creating a button named `keyboard`. Clicking on it will activate several listeners which will send any text you type to the Android TV, along with backspace, delete, enter, left, and right commands (note that the latter two may not behave as expected depending on where the cursor is on the Android TV). You can also paste by holding clicking `CTRL + V` while the keyboard is active or holding down and selecting paste on the keyboard button itself. You may experience some delay as keys are being sent to Android TV as they are being sent one at a time by ADB. Tip: Put the keyboard button at the top of your card so that your screen does not shift to keep it in focus when the on screen keyboard opens.
 
 ```yaml
 type: custom:android-tv-card
 remote_id: remote.google_chromecast
-adb_id: media_player.google_chromecast_adb
+keyboard_id: media_player.google_chromecast_adb
 rows:
   - - back
     - home
@@ -366,14 +369,14 @@ touchpad_height: 370px
 
 <img src="assets/live_keyboard.png" alt="keyboard example" width="300"/>
 
-### Bulk Text Entry
+#### Bulk Text Entry
 
 Send text to Android TV in bulk by creating a button named `textbox`. Clicking on it will create a text prompt in which you can enter the text which you wish to send. It is highly recommended that you also create keys for `delete` and `enter` so you can easily delete the text you send and quickly search using it.
 
 ```yaml
 type: custom:android-tv-card
 remote_id: remote.google_chromecast
-adb_id: media_player.google_chromecast_adb
+keyboard_id: media_player.google_chromecast_adb
 alt_volume_icons: true
 rows:
   - - back
@@ -389,9 +392,20 @@ touchpad_height: 370px
 
 <img src="assets/bulk_keyboard.png" alt="keyboard example" width="300"/>
 
-### Google Assistant Search
+#### Google Assistant Search
 
 Send text to Android TV to be processed as a Google Assistant global search by creating a button named `search`. Clicking on it will create a text prompt in which you can enter text you wish to search for using Google Assistant on Android TV. This method cannot be used to enter text into text fields on Android TV, but does work if you are experiencing [this issue](https://github.com/home-assistant/core/issues/94063) which prevents the on screen keyboard from appearing, and therefore search from being triggered.
+
+### Alternate Media Platform Support
+
+You can also use the keyboard to send text on the following alternate platforms by setting `keyboard_id` to the entity ID of the platform and `keyboard_mode` to one of the following:
+
+| Media Platform | Info                                               |
+| -------------- | -------------------------------------------------- |
+| `ANDROID TV`   | Default, not required if using Android TV          |
+| `KODI`         | Does not suppport Google Assistant / Global search |
+
+More may be added as requested if there is a way to do so through their Home Assistant (or possibly community made) integrations.
 
 ## Installation
 
