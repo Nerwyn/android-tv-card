@@ -555,7 +555,7 @@ class AndroidTVCard extends LitElement {
 						entity_id: this._config.keyboard_id!,
 						method: 'Input.SendText',
 						text: text,
-						done: true,
+						done: false,
 					};
 					this._hass.callService('kodi', 'call_method', data);
 					break;
@@ -583,6 +583,11 @@ class AndroidTVCard extends LitElement {
 		switch ((this._config.keyboard_mode ?? '').toUpperCase()) {
 			case 'KODI':
 				promptText = 'Global Search: ';
+				this._hass.callService('kodi', 'call_method', {
+					entity_id: this._config.keyboard_id!,
+					method: 'Addons.ExecuteAddon',
+					addonid: 'script.globalsearch',
+				});
 				break;
 			case 'ANDROID TV':
 			default:
@@ -595,17 +600,11 @@ class AndroidTVCard extends LitElement {
 			let data: Record<string, string | boolean>;
 			switch ((this._config.keyboard_mode ?? '').toUpperCase()) {
 				case 'KODI':
-					this._hass.callService('kodi', 'call_method', {
-						entity_id: this._config.keyboard_id!,
-						method: 'Addons.ExecuteAddon',
-						addonid: 'script.globalsearch',
-					});
-
 					data = {
 						entity_id: this._config.keyboard_id!,
 						method: 'Input.SendText',
 						text: text,
-						done: true,
+						done: false,
 					};
 					this._hass.callService('kodi', 'call_method', data);
 					break;
