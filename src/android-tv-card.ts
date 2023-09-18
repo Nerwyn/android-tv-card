@@ -627,14 +627,20 @@ class AndroidTVCard extends LitElement {
 	 * Event handler for keyboard input events, used for alphanumerical keys and works on all platforms
 	 * @param {Event} e
 	 */
-	onInput(e: InputEvent) {
+	async onInput(e: InputEvent) {
 		e.stopImmediatePropagation();
 
 		const text = e.data;
 		if (text) {
+			let res: Record<string, string>;
 			let data: Record<string, string | boolean>;
 			switch ((this._config.keyboard_mode ?? '').toUpperCase()) {
 				case 'KODI':
+					res = (await this._hass.callService('kodi', 'call_method', {
+						method: 'GUI.GetProperties',
+						properties: ['currentcontrol'],
+					})) as unknown as Record<string, string>;
+					console.log(res);
 					data = {
 						entity_id: this._config.keyboard_id!,
 						method: 'Input.SendText',
