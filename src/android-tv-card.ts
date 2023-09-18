@@ -632,16 +632,9 @@ class AndroidTVCard extends LitElement {
 
 		const text = e.data;
 		if (text) {
-			let res: IServiceData;
 			let data: IServiceData;
 			switch ((this._config.keyboard_mode ?? '').toUpperCase()) {
 				case 'KODI':
-					res = (await this._hass.callService('kodi', 'call_method', {
-						entity_id: this._config.keyboard_id!,
-						method: 'GUI.GetProperties',
-						properties: ['currentcontrol'],
-					})) as unknown as IServiceData;
-					console.log(JSON.stringify(res));
 					data = {
 						entity_id: this._config.keyboard_id!,
 						method: 'Input.SendText',
