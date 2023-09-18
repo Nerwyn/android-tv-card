@@ -637,6 +637,7 @@ class AndroidTVCard extends LitElement {
 			switch ((this._config.keyboard_mode ?? '').toUpperCase()) {
 				case 'KODI':
 					res = (await this._hass.callService('kodi', 'call_method', {
+						entity_id: this._config.keyboard_id,
 						method: 'GUI.GetProperties',
 						properties: ['currentcontrol'],
 					})) as unknown as Record<string, string>;
