@@ -548,7 +548,7 @@ class AndroidTVCard extends LitElement {
 
 		const text = prompt('Text Input: ');
 		if (text) {
-			let data: Record<string, string | boolean>;
+			let data: IServiceData;
 			switch ((this._config.keyboard_mode ?? '').toUpperCase()) {
 				case 'KODI':
 					data = {
@@ -597,7 +597,7 @@ class AndroidTVCard extends LitElement {
 
 		const text = prompt(promptText);
 		if (text) {
-			let data: Record<string, string | boolean>;
+			let data: IServiceData;
 			switch ((this._config.keyboard_mode ?? '').toUpperCase()) {
 				case 'KODI':
 					data = {
@@ -632,15 +632,15 @@ class AndroidTVCard extends LitElement {
 
 		const text = e.data;
 		if (text) {
-			let res: Record<string, string>;
-			let data: Record<string, string | boolean>;
+			let res: IServiceData;
+			let data: IServiceData;
 			switch ((this._config.keyboard_mode ?? '').toUpperCase()) {
 				case 'KODI':
 					res = (await this._hass.callService('kodi', 'call_method', {
-						entity_id: this._config.keyboard_id,
+						entity_id: this._config.keyboard_id!,
 						method: 'GUI.GetProperties',
 						properties: ['currentcontrol'],
-					})) as unknown as Record<string, string>;
+					})) as unknown as IServiceData;
 					console.log(JSON.stringify(res));
 					data = {
 						entity_id: this._config.keyboard_id!,
@@ -672,7 +672,7 @@ class AndroidTVCard extends LitElement {
 
 		const text = e.clipboardData?.getData('Text');
 		if (text) {
-			let data: Record<string, string | boolean>;
+			let data: IServiceData;
 			switch ((this._config.keyboard_mode ?? '').toUpperCase()) {
 				case 'KODI':
 					data = {
