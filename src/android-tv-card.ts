@@ -627,7 +627,7 @@ class AndroidTVCard extends LitElement {
 	 * Event handler for keyboard input events, used for alphanumerical keys and works on all platforms
 	 * @param {Event} e
 	 */
-	async onInput(e: InputEvent) {
+	onInput(e: InputEvent) {
 		e.stopImmediatePropagation();
 
 		const text = e.data;
