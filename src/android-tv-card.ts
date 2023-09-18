@@ -640,7 +640,7 @@ class AndroidTVCard extends LitElement {
 						method: 'GUI.GetProperties',
 						properties: ['currentcontrol'],
 					})) as unknown as Record<string, string>;
-					console.log(res);
+					console.log(JSON.stringify(res));
 					data = {
 						entity_id: this._config.keyboard_id!,
 						method: 'Input.SendText',
