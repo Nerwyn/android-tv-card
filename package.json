@@ -1,6 +1,6 @@
 {
 	"name": "android-tv-card",
-	"version": "2.1.0",
+	"version": "2.1.1",
 	"description": "Android TV Remote Card",
 	"main": "./dist/android-tv-card.js",
 	"scripts": {
@@ -9,7 +9,8 @@
 		"prelint": "tsc --noemit",
 		"lint": "eslint ./src --fix --ext .ts --config ./.eslintrc.js",
 		"pretty-quick": "pretty-quick",
-		"postinstall": "husky install"
+		"postinstall": "husky install",
+		"build-css": "tcm src"
 	},
 	"repository": {
 		"type": "git",

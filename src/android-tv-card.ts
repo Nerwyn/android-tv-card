@@ -894,6 +894,13 @@ class AndroidTVCard extends LitElement {
 					cursor: pointer;
 					--mdc-icon-size: 100%;
 					position: relative;
+					display: inline-flex;
+					flex-direction: column;
+					align-content: center;
+					justify-content: center;
+					text-align: center;
+					flex-grow: 1;
+					align-items: center;
 				}
 				.empty-button {
 					width: 48px;
