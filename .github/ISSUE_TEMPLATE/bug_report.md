@@ -4,13 +4,13 @@ about: Create a report to help us improve
 title: ''
 labels: bug
 assignees: ''
-
 ---
 
 <!-- READ THIS FIRST:
 - If you need additional help with this template please refer to https://www.home-assistant.io/help/reporting_issues/
 - Make sure you are running the latest version of Home Assistant before reporting an issue: https://github.com/home-assistant/home-assistant/releases
 - Provide as many details as possible. Do not delete any text from this template!
+- Please check the README first to make sure that something isn't misconfigured.
 -->
 
 **Checklist:**
@@ -37,6 +37,12 @@ Explain what the issue is, and how things should look/behave. If possible provid
 **Javascript errors shown in the web inspector (if applicable):**
 
 ```
+
+```
+
+**Your Full Remote Config**
+
+```yaml
 
 ```
 

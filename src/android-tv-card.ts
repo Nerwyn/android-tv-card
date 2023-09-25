@@ -901,6 +901,10 @@ class AndroidTVCard extends LitElement {
 					text-align: center;
 					align-items: center;
 				}
+				mwc-icon-button, button {
+					height: 100%;
+					width: 100%;
+				}
 				.empty-button {
 					width: 48px;
 					height: 48px;
@@ -926,7 +930,6 @@ class AndroidTVCard extends LitElement {
 					width: -moz-available;
 					width: -webkit-fill-available;
 					width: fill-available;
-					min-height: 48px;
 					flex: 1;
 					padding: 8px;
 					justify-content: space-evenly;
@@ -939,7 +942,6 @@ class AndroidTVCard extends LitElement {
 					width: -moz-available;
 					width: -webkit-fill-available;
 					width: fill-available;
-					min-height: 48px;
 					flex: 1;
 					padding: 8px;
 					justify-content: space-evenly;
