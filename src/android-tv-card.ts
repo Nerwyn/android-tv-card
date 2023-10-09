@@ -955,7 +955,7 @@ class AndroidTVCard extends LitElement {
 			toucharea {
 				border-radius: 32px;
 				flex-grow: 1;
-				height: '250px';
+				height: 250px;
 				width: -moz-available;
 				width: -webkit-fill-available;
 				width: fill-available;
