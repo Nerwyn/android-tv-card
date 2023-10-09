@@ -1,5 +1,5 @@
 import { version } from '../package.json';
-import { LitElement, TemplateResult, html } from 'lit';
+import { LitElement, TemplateResult, html, css } from 'lit';
 import { customElement, property, eventOptions } from 'lit/decorators.js';
 import {
 	HomeAssistant,
@@ -60,7 +60,7 @@ class AndroidTVCard extends LitElement {
 	@property({ attribute: false })
 	_hass!: HomeAssistant;
 	@property({ attribute: false })
-	private _config!: IConfig;
+	_config!: IConfig;
 
 	constructor() {
 		super();
@@ -824,9 +824,9 @@ class AndroidTVCard extends LitElement {
 						navigation_buttons.push(
 							this.buildRow([
 								this.buildIconButton('left'),
-								html`<div class="dpad-spacer"></div>`,
+								// html`<div class="dpad-spacer"></div>`,
 								this.buildIconButton('center'),
-								html`<div class="dpad-spacer"></div>`,
+								// html`<div class="dpad-spacer"></div>`,
 								this.buildIconButton('right'),
 							]),
 						);
@@ -838,6 +838,10 @@ class AndroidTVCard extends LitElement {
 					}
 
 					case 'navigation_touchpad': {
+						let style = ``;
+						if (this._config['touchpad_height']) {
+							style = `height: ${this._config['touchpad_height']}`;
+						}
 						const touchpad = html`
 							<toucharea
 								id="toucharea"
@@ -845,6 +849,7 @@ class AndroidTVCard extends LitElement {
 								@touchstart="${this.onTouchStart}"
 								@touchmove="${this.onTouchMove}"
 								@touchend="${this.onTouchEnd}"
+								style="${style}"
 							>
 							</toucharea>
 						`;
@@ -876,91 +881,88 @@ class AndroidTVCard extends LitElement {
 			content.push(row_content);
 		}
 
-		const output = html`
-			${this.renderStyle()}
-			<ha-card .header="${this._config.title}">${content}</ha-card>
-		`;
+		const output = html`<ha-card .header="${this._config.title}"
+			>${content}</ha-card
+		>`;
 
 		return html`${output}`;
 	}
 
-	renderStyle() {
-		return html`
-			<style>
-				img,
-				ha-icon-button {
-					width: 48px;
-					height: 48px;
-					cursor: pointer;
-					--mdc-icon-size: 100%;
-					position: relative;
-					display: inline-flex;
-					flex-direction: column;
-					align-content: center;
-					justify-content: center;
-					text-align: center;
-					align-items: center;
-				}
-				.empty-button {
-					width: 48px;
-					height: 48px;
-					position: relative;
-				}
-				input {
-					opacity: 0;
-					filter: alpha(opacity=0);
-					top: 0;
-					left: 0;
-					position: absolute;
-					width: -moz-available;
-					width: -webkit-fill-available;
-					width: fill-available;
-					height: -moz-available;
-					height: -webkit-fill-available;
-					height: fill-available;
-				}
-				.row {
-					display: flex;
-					flex-wrap: nowrap;
-					flex-direction: row;
-					width: -moz-available;
-					width: -webkit-fill-available;
-					width: fill-available;
-					flex: 1;
-					padding: 8px;
-					justify-content: space-evenly;
-					align-items: center;
-				}
-				.column {
-					display: flex;
-					flex-wrap: nowrap;
-					flex-direction: column;
-					width: -moz-available;
-					width: -webkit-fill-available;
-					width: fill-available;
-					flex: 1;
-					padding: 8px;
-					justify-content: space-evenly;
-					align-items: center;
-				}
-				.dpad-spacer {
-					width: 36px;
-				}
-				.diagonal {
-					background-color: var(--light-primary-color);
-				}
-				toucharea {
-					border-radius: 32px;
-					flex-grow: 1;
-					height: ${this._config['touchpad_height'] || '250px'};
-					width: -moz-available;
-					width: -webkit-fill-available;
-					width: fill-available;
-					background: #6d767e;
-					touch-action: none;
-					text-align: center;
-				}
-			</style>
+	static get styles() {
+		return css`
+			img,
+			ha-icon-button {
+				width: 48px;
+				height: 48px;
+				cursor: pointer;
+				--mdc-icon-size: 100%;
+				position: relative;
+				display: inline-flex;
+				flex-direction: column;
+				align-content: center;
+				justify-content: center;
+				text-align: center;
+				align-items: center;
+			}
+			.empty-button {
+				width: 48px;
+				height: 48px;
+				position: relative;
+			}
+			input {
+				opacity: 0;
+				filter: alpha(opacity=0);
+				top: 0;
+				left: 0;
+				position: absolute;
+				width: -moz-available;
+				width: -webkit-fill-available;
+				width: fill-available;
+				height: -moz-available;
+				height: -webkit-fill-available;
+				height: fill-available;
+			}
+			.row {
+				display: flex;
+				flex-wrap: nowrap;
+				flex-direction: row;
+				width: -moz-available;
+				width: -webkit-fill-available;
+				width: fill-available;
+				flex: 1;
+				padding: 8px;
+				justify-content: space-evenly;
+				align-items: center;
+			}
+			.column {
+				display: flex;
+				flex-wrap: nowrap;
+				flex-direction: column;
+				width: -moz-available;
+				width: -webkit-fill-available;
+				width: fill-available;
+				flex: 1;
+				padding: 8px;
+				justify-content: space-evenly;
+				align-items: center;
+			}
+			.dpad-spacer {
+				width: 36px;
+			}
+			.diagonal {
+				background-color: var(--light-primary-color);
+			}
+			toucharea {
+				border-radius: 32px;
+				flex-grow: 1;
+				height: '250px';
+				width: -moz-available;
+				width: -webkit-fill-available;
+				width: fill-available;
+				background: #6d767e;
+				touch-action: none;
+				text-align: center;
+			}
 		`;
 	}
 
