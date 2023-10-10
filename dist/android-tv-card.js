@@ -91,7 +91,6 @@
 				width: fill-available;
 				flex: 1;
 				padding: 4px;
-				gap: 8px;
 				justify-content: space-evenly;
 				align-items: center;
 			}
