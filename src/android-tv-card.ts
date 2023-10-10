@@ -138,15 +138,11 @@ class AndroidTVCard extends LitElement {
 		);
 	}
 
-	set hass(hass) {
-		this.hass = hass;
+	set hass(hass: HomeAssistant) {
 		if (this.volume_slider) {
 			(this.volume_slider as VolumeSlider).hass = hass;
 		}
-	}
-
-	get hass(): HomeAssistant {
-		return this.hass;
+		this.hass = hass;
 	}
 
 	fireHapticEvent(haptic: HapticType) {
