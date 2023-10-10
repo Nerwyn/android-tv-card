@@ -1,6 +1,6 @@
 import { version } from '../package.json';
-import { LitElement, TemplateResult, html } from 'lit';
-import { customElement, property, eventOptions } from 'lit/decorators.js';
+import { LitElement, TemplateResult, html, css } from 'lit';
+import { property, eventOptions } from 'lit/decorators.js';
 import {
 	HomeAssistant,
 	createThing,
@@ -13,11 +13,9 @@ import {
 	ICustomAction,
 	defaultKeys,
 	defaultSources,
-	IKeys,
 	IKey,
-	ISources,
 	ISource,
-	IServiceData,
+	IData,
 } from './models';
 
 console.info(
@@ -25,21 +23,12 @@ console.info(
 	'color: white; font-weight: bold; background: green',
 );
 
-window.customCards = window.customCards || [];
-window.customCards.push({
-	type: 'android-tv-card',
-	name: 'Android TV Card',
-	description: 'Remote for Android TV',
-});
-
-@customElement('android-tv-card')
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 class AndroidTVCard extends LitElement {
-	defaultKeys: IKeys;
-	defaultSources: ISources;
+	defaultKeys: Record<string, IKey>;
+	defaultSources: Record<string, ISource>;
 
-	customKeys: IKeys;
-	customSources: ISources;
+	customKeys: Record<string, IKey | ICustomAction>;
+	customSources: Record<string, ISource | ICustomAction>;
 	customIcons: Record<string, string>;
 
 	clickTimer: ReturnType<typeof setTimeout> | null;
@@ -59,14 +48,15 @@ class AndroidTVCard extends LitElement {
 
 	@property({ attribute: false })
 	_hass!: HomeAssistant;
+
 	@property({ attribute: false })
-	private _config!: IConfig;
+	config!: IConfig;
 
 	constructor() {
 		super();
 
-		this.defaultKeys = defaultKeys;
-		this.defaultSources = defaultSources;
+		this.defaultKeys = {};
+		this.defaultSources = {};
 
 		this.customKeys = {};
 		this.customSources = {};
@@ -88,86 +78,92 @@ class AndroidTVCard extends LitElement {
 
 	static get properties() {
 		return {
-			_hass: {},
-			_config: {},
-			_apps: {},
+			hass: {},
+			config: {},
 		};
 	}
 
 	static getStubConfig() {
-		return {};
+		return {
+			type: 'custom:android-tv-card',
+			rows: [],
+		};
 	}
 
 	getCardSize() {
-		let numRows = this._config.rows!.length;
-		if ('title' in this._config) {
+		let numRows = this.config.rows!.length;
+		if ('title' in this.config) {
 			numRows += 1;
 		}
 		return numRows;
 	}
 
 	async setConfig(config: IConfig) {
-		this._config = { theme: 'default', ...config };
+		if (!config) {
+			throw new Error('Invalid configuration');
+		}
+		config = JSON.parse(JSON.stringify(config));
+		config = { theme: 'default', ...config };
+
+		if (config.alt_volume_icons) {
+			this.defaultKeys = this.useAltVolumeIcons(defaultKeys);
+		} else {
+			this.defaultKeys = defaultKeys;
+		}
+		this.defaultSources = defaultSources;
+
+		// Legacy config upgrades
+		config = this.updateDeprecatedKeys(config);
+		config = this.convertToRowsArray(config);
+		config = this.combineServiceFields(config);
 
 		this.customKeys = config.custom_keys || {};
 		this.customSources = config.custom_sources || {};
 		this.customIcons = config.custom_icons || {};
 
-		this.defaultKeys = defaultKeys;
-		this.defaultSources = defaultSources;
-		if (this._config.alt_volume_icons) {
-			this.useAltVolumeIcons();
-		}
-
-		// Legacy config upgrades
-		if (
-			(this._config as Record<string, string>).adb_id &&
-			!this._config.keyboard_id
-		) {
-			this._config.keyboard_id = (
-				this._config as Record<string, string>
-			).adb_id;
-		}
-		this.convertToRowsArray();
-
 		await window.loadCardHelpers();
 
-		if (this._config.rows?.toString().includes('volume_slider')) {
-			await this.renderVolumeSlider();
+		if (
+			config.rows?.toString().includes('volume_slider') &&
+			'media_player_id' in config
+		) {
+			await this.renderVolumeSlider(config);
 		}
+
+		this.config = config;
 	}
 
 	isButtonEnabled(row: string, button: string) {
 		return (
 			row.includes('_row') &&
-			(this._config as Record<string, string[]>)[row].includes(button)
+			(this.config as Record<string, string[]>)[row].includes(button)
 		);
 	}
 
-	set hass(hass) {
-		this._hass = hass;
+	set hass(hass: HomeAssistant) {
 		if (this.volume_slider) {
 			(this.volume_slider as VolumeSlider).hass = hass;
 		}
+		this._hass = hass;
 	}
 
-	get hass() {
+	get hass(): HomeAssistant {
 		return this._hass;
 	}
 
 	fireHapticEvent(haptic: HapticType) {
 		if (
-			this._config.enable_button_feedback === undefined ||
-			this._config.enable_button_feedback
+			this.config.enable_button_feedback === undefined ||
+			this.config.enable_button_feedback
 		) {
 			forwardHaptic(haptic);
 		}
 	}
 
-	async renderVolumeSlider() {
+	async renderVolumeSlider(config: IConfig) {
 		let slider_config = {
 			type: 'custom:my-slider',
-			entity: this._config.media_player_id,
+			entity: config.media_player_id,
 			height: '50px',
 			mainSliderColor: 'white',
 			secondarySliderColor: 'rgb(60, 60, 60)',
@@ -178,8 +174,8 @@ class AndroidTVCard extends LitElement {
 			radius: '25px',
 		};
 
-		if (this._config.slider_config instanceof Object) {
-			slider_config = { ...slider_config, ...this._config.slider_config };
+		if (config.slider_config instanceof Object) {
+			slider_config = { ...slider_config, ...config.slider_config };
 		}
 
 		// Retry due to slider intermittently not rendering
@@ -197,8 +193,8 @@ class AndroidTVCard extends LitElement {
 			(e: Event) => {
 				e.stopImmediatePropagation();
 				if (
-					this._config.enable_slider_feedback == undefined ||
-					this._config.enable_slider_feedback
+					config.enable_slider_feedback == undefined ||
+					config.enable_slider_feedback
 				) {
 					forwardHaptic('selection');
 				}
@@ -209,8 +205,8 @@ class AndroidTVCard extends LitElement {
 			'input',
 			(_e: Event) => {
 				if (
-					this._config.enable_slider_feedback == undefined ||
-					this._config.enable_slider_feedback
+					config.enable_slider_feedback == undefined ||
+					config.enable_slider_feedback
 				) {
 					forwardHaptic('light');
 				}
@@ -218,23 +214,32 @@ class AndroidTVCard extends LitElement {
 			true,
 		);
 
-		(this.volume_slider as VolumeSlider).hass = this._hass;
+		(this.volume_slider as VolumeSlider).hass = this.hass;
 	}
 
-	useAltVolumeIcons() {
-		this.defaultKeys.volume_up.icon = 'mdi:volume-high';
-		this.defaultKeys.volume_down.icon = 'mdi:volume-medium';
-		this.defaultKeys.volume_mute.icon = 'mdi:volume-variant-off';
+	useAltVolumeIcons(defaultKeys: Record<string, IKey>) {
+		defaultKeys = JSON.parse(JSON.stringify(defaultKeys));
+		defaultKeys.volume_up.icon = 'mdi:volume-high';
+		defaultKeys.volume_down.icon = 'mdi:volume-medium';
+		defaultKeys.volume_mute.icon = 'mdi:volume-variant-off';
+		return defaultKeys;
 	}
 
-	convertToRowsArray() {
-		if (!this._config.rows || !this._config.rows.length) {
+	updateDeprecatedKeys(config: IConfig) {
+		if ('adb_id' in config && !('keyboard_id' in config)) {
+			config.keyboard_id = (config as Record<string, string>).adb_id;
+		}
+		return config;
+	}
+
+	convertToRowsArray(config: IConfig) {
+		if (!('rows' in config) || !(config.rows || []).length) {
 			const rows: string[][] = [];
-			const rowNames = Object.keys(this._config).filter((row) =>
+			const rowNames = Object.keys(config).filter((row) =>
 				row.includes('_row'),
 			);
 			for (const name of rowNames) {
-				let row = (this._config as Record<string, string[]>)[name];
+				let row = (config as Record<string, string[]>)[name];
 				if (typeof row == 'string') {
 					row = [row];
 				}
@@ -245,8 +250,42 @@ class AndroidTVCard extends LitElement {
 				}
 				rows.push(row);
 			}
-			this._config.rows = rows;
+			config.rows = rows;
 		}
+		return config;
+	}
+
+	combineServiceFields(config: IConfig) {
+		const customActionKeys = [
+			'custom_keys',
+			'custom_sources',
+		] as (keyof IConfig)[];
+
+		for (const key of customActionKeys) {
+			if (key in config) {
+				const customActions = config[key as keyof IConfig] as Record<
+					string,
+					ICustomAction
+				>;
+				for (const name in customActions) {
+					const customAction = customActions[name];
+					if ('service' in customAction) {
+						customAction.data = {
+							...customAction.data,
+							...(
+								customAction as unknown as Record<
+									string,
+									IData | undefined
+								>
+							).service_data,
+							...customAction.target,
+						};
+					}
+				}
+			}
+		}
+
+		return config;
 	}
 
 	/**
@@ -254,14 +293,14 @@ class AndroidTVCard extends LitElement {
 	 * @param {string} key
 	 */
 	sendKey(key: string, longPress: boolean = false) {
-		const data: IServiceData = {
-			entity_id: this._config.remote_id!,
+		const data: IData = {
+			entity_id: this.config.remote_id!,
 			command: key,
 		};
 		if (longPress) {
 			data.hold_secs = 0.5;
 		}
-		this._hass.callService('remote', 'send_command', data);
+		this.hass.callService('remote', 'send_command', data);
 	}
 
 	getInfo(action: string): IKey | ISource | ICustomAction {
@@ -287,14 +326,12 @@ class AndroidTVCard extends LitElement {
 		} else if ('source' in info) {
 			this.changeSource((info as ISource).source);
 		} else if ('service' in info) {
-			const service_data = JSON.parse(
-				JSON.stringify(info.service_data || {}),
-			);
+			const data = JSON.parse(JSON.stringify(info.data || {}));
 			if (longPress && info.service == 'remote.send_command') {
-				service_data.hold_secs = 0.5;
+				data.hold_secs = 0.5;
 			}
 			const [domain, service] = info.service.split('.', 2);
-			this._hass.callService(domain, service, service_data);
+			this.hass.callService(domain, service, data);
 		}
 	}
 
@@ -303,9 +340,9 @@ class AndroidTVCard extends LitElement {
 	 * @param {string} source Android TV deep link for an app
 	 */
 	changeSource(source: string) {
-		this._hass.callService('remote', 'turn_on', {
+		this.hass.callService('remote', 'turn_on', {
 			activity: source,
-			entity_id: this._config.remote_id,
+			entity_id: this.config.remote_id,
 		});
 	}
 
@@ -324,7 +361,7 @@ class AndroidTVCard extends LitElement {
 		if (e.detail && e.detail > this.clickCount) {
 			this.clickCount++;
 		}
-		if (this._config.enable_double_click) {
+		if (this.config.enable_double_click) {
 			if (this.clickCount == 2) {
 				this.onTouchDoubleClick(e);
 			} else {
@@ -344,7 +381,7 @@ class AndroidTVCard extends LitElement {
 		this.clickTimer = null;
 		this.clickCount = 0;
 
-		const action = this._config.double_click_keycode ?? 'back';
+		const action = this.config.double_click_keycode ?? 'back';
 		this.onButtonClick(e, action, false);
 	}
 
@@ -365,7 +402,7 @@ class AndroidTVCard extends LitElement {
 			} else {
 				this.onButtonClick(
 					e,
-					this._config.long_click_keycode ?? 'center',
+					this.config.long_click_keycode ?? 'center',
 					true,
 				);
 			}
@@ -439,8 +476,8 @@ class AndroidTVCard extends LitElement {
 		if (['up', 'down', 'left', 'right'].includes(action)) {
 			haptic = 'selection';
 		} else if (
-			action == this._config.double_click_keycode ||
-			(!this._config.double_click_keycode && action == 'back')
+			action == this.config.double_click_keycode ||
+			(!this.config.double_click_keycode && action == 'back')
 		) {
 			haptic = 'success';
 		}
@@ -527,7 +564,7 @@ class AndroidTVCard extends LitElement {
 				(e.currentTarget as HTMLInputElement).focus();
 			}
 
-			switch ((this._config.keyboard_mode ?? '').toUpperCase()) {
+			switch ((this.config.keyboard_mode ?? '').toUpperCase()) {
 				case 'KODI':
 					break;
 				case 'ANDROID TV':
@@ -548,24 +585,24 @@ class AndroidTVCard extends LitElement {
 
 		const text = prompt('Text Input: ');
 		if (text) {
-			let data: IServiceData;
-			switch ((this._config.keyboard_mode ?? '').toUpperCase()) {
+			let data: IData;
+			switch ((this.config.keyboard_mode ?? '').toUpperCase()) {
 				case 'KODI':
 					data = {
-						entity_id: this._config.keyboard_id!,
+						entity_id: this.config.keyboard_id!,
 						method: 'Input.SendText',
 						text: text,
 						done: false,
 					};
-					this._hass.callService('kodi', 'call_method', data);
+					this.hass.callService('kodi', 'call_method', data);
 					break;
 				case 'ANDROID TV':
 				default:
 					data = {
-						entity_id: this._config.keyboard_id!,
+						entity_id: this.config.keyboard_id!,
 						command: 'input text "' + text + '"',
 					};
-					this._hass.callService('androidtv', 'adb_command', data);
+					this.hass.callService('androidtv', 'adb_command', data);
 					break;
 			}
 		}
@@ -580,11 +617,11 @@ class AndroidTVCard extends LitElement {
 		e.stopImmediatePropagation();
 
 		let promptText: string;
-		switch ((this._config.keyboard_mode ?? '').toUpperCase()) {
+		switch ((this.config.keyboard_mode ?? '').toUpperCase()) {
 			case 'KODI':
 				promptText = 'Global Search: ';
-				this._hass.callService('kodi', 'call_method', {
-					entity_id: this._config.keyboard_id!,
+				this.hass.callService('kodi', 'call_method', {
+					entity_id: this.config.keyboard_id!,
 					method: 'Addons.ExecuteAddon',
 					addonid: 'script.globalsearch',
 				});
@@ -597,27 +634,27 @@ class AndroidTVCard extends LitElement {
 
 		const text = prompt(promptText);
 		if (text) {
-			let data: IServiceData;
-			switch ((this._config.keyboard_mode ?? '').toUpperCase()) {
+			let data: IData;
+			switch ((this.config.keyboard_mode ?? '').toUpperCase()) {
 				case 'KODI':
 					data = {
-						entity_id: this._config.keyboard_id!,
+						entity_id: this.config.keyboard_id!,
 						method: 'Input.SendText',
 						text: text,
 						done: true,
 					};
-					this._hass.callService('kodi', 'call_method', data);
+					this.hass.callService('kodi', 'call_method', data);
 					break;
 				case 'ANDROID TV':
 				default:
 					data = {
-						entity_id: this._config.keyboard_id!,
+						entity_id: this.config.keyboard_id!,
 						command:
 							'am start -a "android.search.action.GLOBAL_SEARCH" --es query "' +
 							text +
 							'"',
 					};
-					this._hass.callService('androidtv', 'adb_command', data);
+					this.hass.callService('androidtv', 'adb_command', data);
 					break;
 			}
 		}
@@ -632,24 +669,24 @@ class AndroidTVCard extends LitElement {
 
 		const text = e.data;
 		if (text) {
-			let data: IServiceData;
-			switch ((this._config.keyboard_mode ?? '').toUpperCase()) {
+			let data: IData;
+			switch ((this.config.keyboard_mode ?? '').toUpperCase()) {
 				case 'KODI':
 					data = {
-						entity_id: this._config.keyboard_id!,
+						entity_id: this.config.keyboard_id!,
 						method: 'Input.SendText',
 						text: text,
 						done: false,
 					};
-					this._hass.callService('kodi', 'call_method', data);
+					this.hass.callService('kodi', 'call_method', data);
 					break;
 				case 'ANDROID TV':
 				default:
 					data = {
-						entity_id: this._config.keyboard_id!,
+						entity_id: this.config.keyboard_id!,
 						command: 'input text "' + text + '"',
 					};
-					this._hass.callService('androidtv', 'adb_command', data);
+					this.hass.callService('androidtv', 'adb_command', data);
 					break;
 			}
 		}
@@ -665,24 +702,24 @@ class AndroidTVCard extends LitElement {
 
 		const text = e.clipboardData?.getData('Text');
 		if (text) {
-			let data: IServiceData;
-			switch ((this._config.keyboard_mode ?? '').toUpperCase()) {
+			let data: IData;
+			switch ((this.config.keyboard_mode ?? '').toUpperCase()) {
 				case 'KODI':
 					data = {
-						entity_id: this._config.keyboard_id!,
+						entity_id: this.config.keyboard_id!,
 						method: 'Input.SendText',
 						text: text,
 						done: false,
 					};
-					this._hass.callService('kodi', 'call_method', data);
+					this.hass.callService('kodi', 'call_method', data);
 					break;
 				case 'ANDROID TV':
 				default:
 					data = {
-						entity_id: this._config.keyboard_id!,
+						entity_id: this.config.keyboard_id!,
 						command: 'input text "' + text + '"',
 					};
-					this._hass.callService('androidtv', 'adb_command', data);
+					this.hass.callService('androidtv', 'adb_command', data);
 					break;
 			}
 		}
@@ -824,9 +861,7 @@ class AndroidTVCard extends LitElement {
 						navigation_buttons.push(
 							this.buildRow([
 								this.buildIconButton('left'),
-								html`<div class="dpad-spacer"></div>`,
 								this.buildIconButton('center'),
-								html`<div class="dpad-spacer"></div>`,
 								this.buildIconButton('right'),
 							]),
 						);
@@ -838,9 +873,13 @@ class AndroidTVCard extends LitElement {
 					}
 
 					case 'navigation_touchpad': {
+						let style = ``;
+						if (this.config['touchpad_height']) {
+							style = `height: ${this.config['touchpad_height']}`;
+						}
 						const touchpad = html`
 							<toucharea
-								id="toucharea"
+								style="${style}"
 								@click="${this.onTouchClick}"
 								@touchstart="${this.onTouchStart}"
 								@touchmove="${this.onTouchMove}"
@@ -865,102 +904,92 @@ class AndroidTVCard extends LitElement {
 	}
 
 	render() {
-		if (!this._config || !this._hass) {
+		if (!this.config || !this.hass) {
 			return html``;
 		}
 
 		const content: TemplateResult[] = [];
 
-		for (const row of this._config.rows!) {
+		for (const row of this.config.rows!) {
 			const row_content = this.buildButtons(row as string[]);
 			content.push(row_content);
 		}
 
-		const output = html`
-			${this.renderStyle()}
-			<ha-card .header="${this._config.title}">${content}</ha-card>
-		`;
-
-		return html`${output}`;
+		return html`<ha-card .header="${this.config.title}"
+			>${content}</ha-card
+		>`;
 	}
 
-	renderStyle() {
-		return html`
-			<style>
-				img,
-				ha-icon-button {
-					width: 48px;
-					height: 48px;
-					cursor: pointer;
-					--mdc-icon-size: 100%;
-					position: relative;
-					display: inline-flex;
-					flex-direction: column;
-					align-content: center;
-					justify-content: center;
-					text-align: center;
-					align-items: center;
-				}
-				.empty-button {
-					width: 48px;
-					height: 48px;
-					position: relative;
-				}
-				input {
-					opacity: 0;
-					filter: alpha(opacity=0);
-					top: 0;
-					left: 0;
-					position: absolute;
-					width: -moz-available;
-					width: -webkit-fill-available;
-					width: fill-available;
-					height: -moz-available;
-					height: -webkit-fill-available;
-					height: fill-available;
-				}
-				.row {
-					display: flex;
-					flex-wrap: nowrap;
-					flex-direction: row;
-					width: -moz-available;
-					width: -webkit-fill-available;
-					width: fill-available;
-					flex: 1;
-					padding: 8px;
-					justify-content: space-evenly;
-					align-items: center;
-				}
-				.column {
-					display: flex;
-					flex-wrap: nowrap;
-					flex-direction: column;
-					width: -moz-available;
-					width: -webkit-fill-available;
-					width: fill-available;
-					flex: 1;
-					padding: 8px;
-					justify-content: space-evenly;
-					align-items: center;
-				}
-				.dpad-spacer {
-					width: 36px;
-				}
-				.diagonal {
-					background-color: var(--light-primary-color);
-				}
-				toucharea {
-					border-radius: 32px;
-					flex-grow: 1;
-					height: ${this._config['touchpad_height'] || '250px'};
-					width: -moz-available;
-					width: -webkit-fill-available;
-					width: fill-available;
-					background: #6d767e;
-					touch-action: none;
-					text-align: center;
-				}
-			</style>
+	static get styles() {
+		return css`
+			img,
+			ha-icon-button {
+				width: 48px;
+				height: 48px;
+				cursor: pointer;
+				--mdc-icon-size: 100%;
+				position: relative;
+				display: inline-flex;
+				flex-direction: column;
+				align-content: center;
+				justify-content: center;
+				text-align: center;
+				align-items: center;
+			}
+			.empty-button {
+				width: 48px;
+				height: 48px;
+				position: relative;
+			}
+			input {
+				opacity: 0;
+				filter: alpha(opacity=0);
+				top: 0;
+				left: 0;
+				position: absolute;
+				width: -moz-available;
+				width: -webkit-fill-available;
+				width: fill-available;
+				height: -moz-available;
+				height: -webkit-fill-available;
+				height: fill-available;
+			}
+			.row {
+				display: flex;
+				flex-wrap: nowrap;
+				flex-direction: row;
+				width: -moz-available;
+				width: -webkit-fill-available;
+				width: fill-available;
+				flex: 1;
+				padding: 4px;
+				gap: 8px;
+				justify-content: space-evenly;
+				align-items: center;
+			}
+			.column {
+				display: flex;
+				flex-wrap: nowrap;
+				flex-direction: column;
+				width: -moz-available;
+				width: -webkit-fill-available;
+				width: fill-available;
+				flex: 1;
+				padding: 4px;
+				justify-content: space-evenly;
+				align-items: center;
+			}
+			toucharea {
+				border-radius: 32px;
+				flex-grow: 1;
+				height: 250px;
+				width: -moz-available;
+				width: -webkit-fill-available;
+				width: fill-available;
+				background: #6d767e;
+				touch-action: none;
+				text-align: center;
+			}
 		`;
 	}
 
@@ -968,3 +997,12 @@ class AndroidTVCard extends LitElement {
 		applyThemesOnElement(element, themes, localTheme);
 	}
 }
+
+customElements.define('android-tv-card', AndroidTVCard);
+
+window.customCards = window.customCards || [];
+window.customCards.push({
+	type: 'android-tv-card',
+	name: 'Android TV Card',
+	description: 'Remote for Android TV',
+});

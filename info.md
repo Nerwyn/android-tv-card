@@ -1,10 +1,10 @@
 # Android TV Remote Card
 
-Yet another tv-card for Home Assistant, specifically for the  [Android TV Remote](https://www.home-assistant.io/integrations/androidtv_remote/) integration, that also allows for a greater level of customization and keyboard entry for multiple platforms.
+A remote card for Home Assistant that also allows for a greater level of customization and keyboard entry for multiple platforms. Works with the [Android TV Remote](https://www.home-assistant.io/integrations/androidtv_remote/) integration by default but can be customized for use with any media platform.
 
-- Fully configurable and remappable touchpad that can now be used for more any media platform.
+- Fully configurable and remappable touchpad that can now be used for any media platform.
 - Holding directional and volume keys causes them to repeat until let go, with navigation behavior tweaked to behave more like the Google TV remote.
-- Changes row configuration to nested arrays. Every level nested past the second array alternates between columns and rows, allowing for much more customization.
+- Organize buttons into alternating nested rows and columns to create highly customizable layouts.
 - Many more default [keys](https://github.com/Nerwyn/android-tv-card/blob/main/src/models/defaultKeys.ts) and [sources](https://github.com/Nerwyn/android-tv-card/blob/main/src/models/defaultSources.ts) with [SVG icons](https://github.com/Nerwyn/android-tv-card/blob/main/src/models/enums/svg.ts) to match the sources.
   - _Not all working or tested at this time, let me know if you find the correct source/activity for the broken ones!_
 - Keyboard text entry via the [Android Debug Bridge integration](https://www.home-assistant.io/integrations/androidtv/)
@@ -13,6 +13,7 @@ Yet another tv-card for Home Assistant, specifically for the  [Android TV Remote
     - `textbox`: bulk text entry.
     - `search`: Google Assistant search.
   - Also supports Kodi
+- Example alternate media platform remote configs for Kodi, Apple TV, Sony Bravia TV, and Denon/Marantz in the README examples.
 
 **Sample overview:**
 

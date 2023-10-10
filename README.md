@@ -179,7 +179,7 @@ custom_keys:
   toggle_light:
     icon: mdi:lightbulb
     service: light.toggle
-    service_data:
+    target:
       entity_id: light.bedroom
 ```
 
@@ -193,7 +193,7 @@ custom_keys:
   toggle_light:
     icon: mdi:lightbulb
     service: light.toggle
-    service_data:
+    target:
       entity_id: light.bedroom
 custom_sources:
   browser:
@@ -223,21 +223,24 @@ custom_keys:
   power:
     icon: mdi:power-cycle
     service: media_player.toggle
-    service_data:
+    target:
       entity_id: media_player.tv
 ```
 
 Inside each button you may define `icon` and either `key`, `source` or `service`, as you've seen.
 
-| Option       | internal function                                  | Description                                                                                                                     |
-| ------------ | -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| icon         |                                                    | The icon to show in the button. If empty the original key or source icon will be used if it exists, otherwise it will be empty. |
-| key          | `remote.send_command(command=key)`                 | The key to send to the TV via `remote.send_command`.                                                                            |
-| source       | `remote.turn_on(activity=source)`                  | The source to switch to via `remote.turn_on`.                                                                                   |
-| service      | `_hass.callService(domain, service, service_data)` | A string representing service to call. Use the format `domain.service`, e.g. `"light.turn_on"`.                                 |
-| service_data | passed with `service`                              | The data to pass to the service. May be an object depending on the service you are using.                                       |
+| Option  | internal function                         | Description                                                                                                                                                      |
+| ------- | ----------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| icon    |                                           | The icon to show in the button. If empty the original key or source icon will be used if it exists, otherwise it will be empty.                                  |
+| key     | `remote.send_command(command=key)`        | The key to send to the TV via `remote.send_command`.                                                                                                             |
+| source  | `remote.turn_on(activity=source)`         | The source to switch to via `remote.turn_on`.                                                                                                                    |
+| service | `hass.callService(domain, service, data)` | A string representing service to call. Use the format `domain.service`, e.g. `"light.turn_on"`.                                                                  |
+| data    | Data to be passed with `service`          | Additional data to pass to the service call. See the Home Assistant documentation or go to Developer Tools > Services to see available options for each service. |
+| target  | Target of the `service`                   | The entity IDs, device IDs, or area IDs to call the service on.                                                                                                  |
 
 If an icon is not provided for a custom key or source that overwrites a predefined key or source, the original icon will be used instead.
+
+`target`, `data`, and `service_data` (soft deprecated name for `data`) all get internally merged into one object since `hass.callService` only has a single data field for target and data. You can safely put all information into one object with any of these names. This was done so that you can easily design service calls using Home Assistant's service developer tool and copy the YAML to custom button configurations in this card.
 
 ### Custom Touchpad Commands
 
@@ -249,28 +252,33 @@ Touchpad swipe and single click commands can be remapped by creating custom keys
 custom_keys:
   up:
     service: kodi.call_method
-    service_data:
+    target:
       entity_id: media_player.kodi
+    data:
       method: Input.Up
   down:
     service: kodi.call_method
-    service_data:
+    target:
       entity_id: media_player.kodi
+    data:
       method: Input.Down
   left:
     service: kodi.call_method
-    service_data:
+    target:
       entity_id: media_player.kodi
+    data:
       method: Input.Left
   right:
     service: kodi.call_method
-    service_data:
+    target:
       entity_id: media_player.kodi
+    data:
       method: Input.Right
   center:
     service: kodi.call_method
-    service_data:
+    target:
       entity_id: media_player.kodi
+    data:
       method: Input.Select
 ```
 
@@ -282,8 +290,9 @@ double_click_keycode: back
 custom_keys:
   back:
     service: kodi.call_method
-    service_data:
+    target:
       entity_id: media_player.kodi
+    data:
       method: Input.Back
 ```
 
@@ -294,8 +303,9 @@ long_click_keycode: menu
 custom_keys:
   menu:
     service: kodi.call_method
-    service_data:
+    target:
       entity_id: media_player.kodi
+    data:
       method: Input.ContextMenu
 ```
 
@@ -636,14 +646,16 @@ custom_keys:
 custom_sources:
   primevideo:
     service: media_player.select_source
-    service_data:
+    data:
       source: Prime Video
+    target:
       entity_id: media_player.appletv
   netflix:
     service: media_player.select_source
-    service_data:
+    data:
       source: Netflix
-      target: media_player.appletv
+    target:
+      entity_id: media_player.appletv
 card_mod:
   style: |
     toucharea {
@@ -685,74 +697,87 @@ long_click_keycode: menu
 custom_keys:
   up:
     service: kodi.call_method
-    service_data:
+    target:
       entity_id: media_player.kodi
+    data:
       method: Input.Up
   down:
     service: kodi.call_method
-    service_data:
+    target:
       entity_id: media_player.kodi
+    data:
       method: Input.Down
   left:
     service: kodi.call_method
-    service_data:
+    target:
       entity_id: media_player.kodi
+    data:
       method: Input.Left
   right:
     service: kodi.call_method
-    service_data:
+    target:
       entity_id: media_player.kodi
+    data:
       method: Input.Right
   center:
     service: kodi.call_method
-    service_data:
+    target:
       entity_id: media_player.kodi
+    data:
       method: Input.Select
   back:
     service: kodi.call_method
-    service_data:
+    target:
       entity_id: media_player.kodi
+    data:
       method: Input.Back
   search:
     icon: mdi:kodi
     key: SEARCH
   volume_mute:
     service: kodi.call_method
-    service_data:
+    target:
       entity_id: media_player.kodi
+    data:
       method: Application.SetMute
       mute: toggle
   volume_up:
     service: kodi.call_method
-    service_data:
+    target:
       entity_id: media_player.kodi
+    data:
       method: Application.SetVolume
       volume: increment
   volume_down:
     service: kodi.call_method
-    service_data:
+    target:
       entity_id: media_player.kodi
+    data:
       method: Application.SetVolume
       volume: decrement
   menu:
     service: kodi.call_method
-    service_data:
+    target:
       entity_id: media_player.kodi
+    data:
       method: Input.ContextMenu
   home:
     service: kodi.call_method
-    service_data:
+    target:
       entity_id: media_player.kodi
+    data:
       method: Input.Home
   info:
     service: kodi.call_method
-    service_data:
+    target:
       entity_id: media_player.kodi
+    data:
       method: Input.Info
   play_pause:
     service: kodi.call_method
-    service_data:
+    target:
       entity_id: media_player.kodi
+    data:
       method: Player.PlayPause
       playerid: 1
 card_mod:
@@ -817,33 +842,39 @@ double_click_keycode: back
 custom_keys:
   down:
     service: denonavr.get_command
-    service_data:
+    target:
       entity_id: media_player.marantz_sr7013
+    data:
       command: /goform/formiPhoneAppDirect.xml?MNCDN
   up:
     service: denonavr.get_command
-    service_data:
+    target:
       entity_id: media_player.marantz_sr7013
+    data:
       command: /goform/formiPhoneAppDirect.xml?MNCUP
   left:
     service: denonavr.get_command
-    service_data:
+    target:
       entity_id: media_player.marantz_sr7013
+    data:
       command: /goform/formiPhoneAppDirect.xml?MNCLT
   right:
     service: denonavr.get_command
-    service_data:
+    target:
       entity_id: media_player.marantz_sr7013
+    data:
       command: /goform/formiPhoneAppDirect.xml?MNCRT
   center:
     service: denonavr.get_command
-    service_data:
+    target:
       entity_id: media_player.marantz_sr7013
+    data:
       command: /goform/formiPhoneAppDirect.xml?MNENT
   back:
     service: denonavr.get_command
-    service_data:
+    target:
       entity_id: media_player.marantz_sr7013
+    data:
       command: /goform/formiPhoneAppDirect.xml?MNRTN
 ```
 

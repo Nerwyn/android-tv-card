@@ -1,11 +1,11 @@
-import { ISources, svg } from '.';
+import { ISource, svg } from '.';
 
 /**
  * This is a list of common streaming apps, their icons, and the deep links to open them in Android TV, mostly collected from the following Home Assistant Community Forum guide.
  * Not all have been tested, if any do not work please let me know!
  * https://community.home-assistant.io/t/android-tv-remote-app-links-deep-linking-guide/567921
  */
-export const defaultSources: ISources = {
+export const defaultSources: Record<string, ISource> = {
 	appletv: {
 		source: 'https://tv.apple.com', // UNTESTED
 		svg_path: svg.APPLETV,

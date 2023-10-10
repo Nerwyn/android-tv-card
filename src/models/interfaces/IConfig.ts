@@ -1,4 +1,4 @@
-import { IKeys, ISources } from '.';
+import { IKey, ISource, ICustomAction } from '.';
 
 export interface IConfig {
 	theme?: string;
@@ -9,13 +9,9 @@ export interface IConfig {
 	keyboard_id?: string;
 	keyboard_mode?: string;
 
-	keys?: IKeys;
-	custom_keys?: IKeys;
+	custom_keys?: Record<string, IKey | ICustomAction>;
+	custom_sources?: Record<string, ISource | ICustomAction>;
 
-	sources?: ISources;
-	custom_sources?: ISources;
-
-	icons?: Record<string, string>;
 	custom_icons?: Record<string, string>;
 	alt_volume_icons?: boolean;
 
@@ -29,5 +25,7 @@ export interface IConfig {
 	double_click_keycode?: string;
 	long_click_keycode?: string;
 
-	rows?: (string[] | string[][])[];
+	rows?: Row[];
 }
+
+export type Row = (string | Row[])[];
