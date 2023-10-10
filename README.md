@@ -254,31 +254,31 @@ custom_keys:
     service: kodi.call_method
     target:
       entity_id: media_player.kodi
-	data:
+    data:
       method: Input.Up
   down:
     service: kodi.call_method
     target:
       entity_id: media_player.kodi
-	data:
+    data:
       method: Input.Down
   left:
     service: kodi.call_method
     target:
       entity_id: media_player.kodi
-	data:
+    data:
       method: Input.Left
   right:
     service: kodi.call_method
     target:
       entity_id: media_player.kodi
-	data:
+    data:
       method: Input.Right
   center:
     service: kodi.call_method
     target:
       entity_id: media_player.kodi
-	data:
+    data:
       method: Input.Select
 ```
 
@@ -292,7 +292,7 @@ custom_keys:
     service: kodi.call_method
     target:
       entity_id: media_player.kodi
-	data:
+    data:
       method: Input.Back
 ```
 
@@ -305,7 +305,7 @@ custom_keys:
     service: kodi.call_method
     target:
       entity_id: media_player.kodi
-	data:
+    data:
       method: Input.ContextMenu
 ```
 
@@ -648,13 +648,13 @@ custom_sources:
     service: media_player.select_source
     data:
       source: Prime Video
-	target:
+    target:
       entity_id: media_player.appletv
   netflix:
     service: media_player.select_source
     data:
       source: Netflix
-	target:
+    target:
       entity_id: media_player.appletv
 card_mod:
   style: |
@@ -699,37 +699,37 @@ custom_keys:
     service: kodi.call_method
     target:
       entity_id: media_player.kodi
-	data:
+    data:
       method: Input.Up
   down:
     service: kodi.call_method
     target:
       entity_id: media_player.kodi
-	data:
+    data:
       method: Input.Down
   left:
     service: kodi.call_method
     target:
       entity_id: media_player.kodi
-	data:
+    data:
       method: Input.Left
   right:
     service: kodi.call_method
     target:
       entity_id: media_player.kodi
-	data:
+    data:
       method: Input.Right
   center:
     service: kodi.call_method
     target:
       entity_id: media_player.kodi
-	data:
+    data:
       method: Input.Select
   back:
     service: kodi.call_method
     target:
       entity_id: media_player.kodi
-	data:
+    data:
       method: Input.Back
   search:
     icon: mdi:kodi
@@ -738,46 +738,46 @@ custom_keys:
     service: kodi.call_method
     target:
       entity_id: media_player.kodi
-	data:
+    data:
       method: Application.SetMute
       mute: toggle
   volume_up:
     service: kodi.call_method
     target:
       entity_id: media_player.kodi
-	data:
+    data:
       method: Application.SetVolume
       volume: increment
   volume_down:
     service: kodi.call_method
     target:
       entity_id: media_player.kodi
-	data:
+    data:
       method: Application.SetVolume
       volume: decrement
   menu:
     service: kodi.call_method
     target:
       entity_id: media_player.kodi
-	data:
+    data:
       method: Input.ContextMenu
   home:
     service: kodi.call_method
     target:
       entity_id: media_player.kodi
-	data:
+    data:
       method: Input.Home
   info:
     service: kodi.call_method
     target:
       entity_id: media_player.kodi
-	data:
+    data:
       method: Input.Info
   play_pause:
     service: kodi.call_method
     target:
       entity_id: media_player.kodi
-	data:
+    data:
       method: Player.PlayPause
       playerid: 1
 card_mod:
@@ -844,37 +844,37 @@ custom_keys:
     service: denonavr.get_command
     target:
       entity_id: media_player.marantz_sr7013
-	data:
+    data:
       command: /goform/formiPhoneAppDirect.xml?MNCDN
   up:
     service: denonavr.get_command
     target:
       entity_id: media_player.marantz_sr7013
-	data:
+    data:
       command: /goform/formiPhoneAppDirect.xml?MNCUP
   left:
     service: denonavr.get_command
     target:
       entity_id: media_player.marantz_sr7013
-	data:
+    data:
       command: /goform/formiPhoneAppDirect.xml?MNCLT
   right:
     service: denonavr.get_command
     target:
       entity_id: media_player.marantz_sr7013
-	data:
+    data:
       command: /goform/formiPhoneAppDirect.xml?MNCRT
   center:
     service: denonavr.get_command
     target:
       entity_id: media_player.marantz_sr7013
-	data:
+    data:
       command: /goform/formiPhoneAppDirect.xml?MNENT
   back:
     service: denonavr.get_command
     target:
       entity_id: media_player.marantz_sr7013
-	data:
+    data:
       command: /goform/formiPhoneAppDirect.xml?MNRTN
 ```
 
