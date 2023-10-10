@@ -280,7 +280,6 @@ class AndroidTVCard extends LitElement {
 							).service_data,
 							...customAction.target,
 						};
-						customActions[name] = customAction
 					}
 				}
 			}
