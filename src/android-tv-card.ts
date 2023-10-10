@@ -142,7 +142,6 @@ class AndroidTVCard extends LitElement {
 		if (this.volume_slider) {
 			(this.volume_slider as VolumeSlider).hass = hass;
 		}
-		this.hass = hass;
 	}
 
 	fireHapticEvent(haptic: HapticType) {
