@@ -94,9 +94,6 @@
 				justify-content: space-evenly;
 				align-items: center;
 			}
-			.diagonal {
-				background-color: var(--light-primary-color);
-			}
 			toucharea {
 				border-radius: 32px;
 				flex-grow: 1;
