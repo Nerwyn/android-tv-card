@@ -54,8 +54,8 @@ class AndroidTVCard extends LitElement {
 	constructor() {
 		super();
 
-		this.defaultKeys = defaultKeys;
-		this.defaultSources = defaultSources;
+		this.defaultKeys = {};
+		this.defaultSources = {};
 
 		this.customKeys = {};
 		this.customSources = {};
@@ -108,26 +108,20 @@ class AndroidTVCard extends LitElement {
 		this.customSources = config.custom_sources || {};
 		this.customIcons = config.custom_icons || {};
 
-		this.defaultKeys = defaultKeys;
-		this.defaultSources = defaultSources;
 		if (config.alt_volume_icons) {
-			this.useAltVolumeIcons();
+			this.defaultKeys = this.useAltVolumeIcons(defaultKeys);
+		} else {
+			this.defaultKeys = defaultKeys;
 		}
+		this.defaultSources = defaultSources;
 
 		// Legacy config upgrades
-		if (
-			(this.config as Record<string, string>).adb_id &&
-			!this.config.keyboard_id
-		) {
-			this.config.keyboard_id = (
-				this.config as Record<string, string>
-			).adb_id;
-		}
-		this.convertToRowsArray();
+		config = this.updateDeprecatedKeys(config);
+		config = this.convertToRowsArray(config);
 
 		await window.loadCardHelpers();
 
-		if (this.config.rows?.toString().includes('volume_slider')) {
+		if (config.rows?.toString().includes('volume_slider')) {
 			await this.renderVolumeSlider();
 		}
 
@@ -218,20 +212,29 @@ class AndroidTVCard extends LitElement {
 		(this.volume_slider as VolumeSlider).hass = this.hass;
 	}
 
-	useAltVolumeIcons() {
-		this.defaultKeys.volume_up.icon = 'mdi:volume-high';
-		this.defaultKeys.volume_down.icon = 'mdi:volume-medium';
-		this.defaultKeys.volume_mute.icon = 'mdi:volume-variant-off';
+	useAltVolumeIcons(defaultKeys: IKeys) {
+		defaultKeys = JSON.parse(JSON.stringify(defaultKeys));
+		defaultKeys.volume_up.icon = 'mdi:volume-high';
+		defaultKeys.volume_down.icon = 'mdi:volume-medium';
+		defaultKeys.volume_mute.icon = 'mdi:volume-variant-off';
+		return defaultKeys;
 	}
 
-	convertToRowsArray() {
-		if (!this.config.rows || !this.config.rows.length) {
+	updateDeprecatedKeys(config: IConfig) {
+		if ('adb_id' in config && !('keyboard_id' in config)) {
+			config.keyboard_id = (config as Record<string, string>).adb_id;
+		}
+		return config;
+	}
+
+	convertToRowsArray(config: IConfig) {
+		if (!('rows' in config) || !(config.rows || []).length) {
 			const rows: string[][] = [];
-			const rowNames = Object.keys(this.config).filter((row) =>
+			const rowNames = Object.keys(config).filter((row) =>
 				row.includes('_row'),
 			);
 			for (const name of rowNames) {
-				let row = (this.config as Record<string, string[]>)[name];
+				let row = (config as Record<string, string[]>)[name];
 				if (typeof row == 'string') {
 					row = [row];
 				}
@@ -242,8 +245,9 @@ class AndroidTVCard extends LitElement {
 				}
 				rows.push(row);
 			}
-			this.config.rows = rows;
+			config.rows = rows;
 		}
+		return config;
 	}
 
 	/**
