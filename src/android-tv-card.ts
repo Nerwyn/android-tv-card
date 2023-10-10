@@ -262,15 +262,12 @@ class AndroidTVCard extends LitElement {
 		] as (keyof IConfig)[];
 
 		for (const key of customActionKeys) {
-			console.log(key)
 			if (key in config) {
-				console.log('Found!')
 				const customActions = config[key as keyof IConfig] as Record<
 					string,
 					ICustomAction
 				>;
 				for (const name in customActions) {
-					console.log(name)
 					const customAction = customActions[name];
 					if ('service' in customAction) {
 						customAction.data = {
