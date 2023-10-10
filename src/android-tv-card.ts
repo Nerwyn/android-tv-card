@@ -49,6 +49,9 @@ class AndroidTVCard extends LitElement {
 	volume_slider?: ReturnType<typeof createThing>;
 
 	@property({ attribute: false })
+	_hass!: HomeAssistant;
+
+	@property({ attribute: false })
 	config!: IConfig;
 
 	constructor() {
@@ -142,6 +145,11 @@ class AndroidTVCard extends LitElement {
 		if (this.volume_slider) {
 			(this.volume_slider as VolumeSlider).hass = hass;
 		}
+		this._hass = hass;
+	}
+
+	get hass(): HomeAssistant {
+		return this._hass;
 	}
 
 	fireHapticEvent(haptic: HapticType) {
