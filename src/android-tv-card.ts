@@ -121,8 +121,11 @@ class AndroidTVCard extends LitElement {
 
 		await window.loadCardHelpers();
 
-		if (config.rows?.toString().includes('volume_slider')) {
-			await this.renderVolumeSlider();
+		if (
+			config.rows?.toString().includes('volume_slider') &&
+			'media_player_id' in config
+		) {
+			await this.renderVolumeSlider(config);
 		}
 
 		this.config = config;
@@ -155,10 +158,10 @@ class AndroidTVCard extends LitElement {
 		}
 	}
 
-	async renderVolumeSlider() {
+	async renderVolumeSlider(config: IConfig) {
 		let slider_config = {
 			type: 'custom:my-slider',
-			entity: this.config.media_player_id,
+			entity: config.media_player_id,
 			height: '50px',
 			mainSliderColor: 'white',
 			secondarySliderColor: 'rgb(60, 60, 60)',
@@ -169,8 +172,8 @@ class AndroidTVCard extends LitElement {
 			radius: '25px',
 		};
 
-		if (this.config.slider_config instanceof Object) {
-			slider_config = { ...slider_config, ...this.config.slider_config };
+		if (config.slider_config instanceof Object) {
+			slider_config = { ...slider_config, ...config.slider_config };
 		}
 
 		// Retry due to slider intermittently not rendering
@@ -188,8 +191,8 @@ class AndroidTVCard extends LitElement {
 			(e: Event) => {
 				e.stopImmediatePropagation();
 				if (
-					this.config.enable_slider_feedback == undefined ||
-					this.config.enable_slider_feedback
+					config.enable_slider_feedback == undefined ||
+					config.enable_slider_feedback
 				) {
 					forwardHaptic('selection');
 				}
@@ -200,8 +203,8 @@ class AndroidTVCard extends LitElement {
 			'input',
 			(_e: Event) => {
 				if (
-					this.config.enable_slider_feedback == undefined ||
-					this.config.enable_slider_feedback
+					config.enable_slider_feedback == undefined ||
+					config.enable_slider_feedback
 				) {
 					forwardHaptic('light');
 				}
