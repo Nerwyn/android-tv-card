@@ -261,7 +261,7 @@ class AndroidTVCard extends LitElement {
 			'custom_sources',
 		] as (keyof IConfig)[];
 
-		for (const key in customActionKeys) {
+		for (const key of customActionKeys) {
 			console.log(key)
 			if (key in config) {
 				console.log('Found!')
