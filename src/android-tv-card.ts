@@ -840,16 +840,15 @@ class AndroidTVCard extends LitElement {
 					case 'navigation_touchpad': {
 						let style = ``;
 						if (this._config['touchpad_height']) {
-							style = `style="height: ${this._config['touchpad_height']}"`;
+							style = `style="height:${this._config['touchpad_height']}"`;
 						}
 						const touchpad = html`
 							<toucharea
-								id="toucharea"
+								${style}
 								@click="${this.onTouchClick}"
 								@touchstart="${this.onTouchStart}"
 								@touchmove="${this.onTouchMove}"
 								@touchend="${this.onTouchEnd}"
-								${style}
 							>
 							</toucharea>
 						`;
