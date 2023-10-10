@@ -268,9 +268,9 @@ class AndroidTVCard extends LitElement {
 					ICustomAction
 				>;
 				for (const name in customActions) {
+					console.log(name)
 					const customAction = customActions[name];
 					if ('service' in customAction) {
-						console.log('here!');
 						customAction.data = {
 							...customAction.data,
 							...(
@@ -281,6 +281,7 @@ class AndroidTVCard extends LitElement {
 							).service_data,
 							...customAction.target,
 						};
+						customActions[name] = customAction
 					}
 				}
 			}
