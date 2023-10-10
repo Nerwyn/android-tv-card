@@ -77,7 +77,8 @@
 				width: -webkit-fill-available;
 				width: fill-available;
 				flex: 1;
-				padding: 8px;
+				padding: 4px;
+				gap: 8px;
 				justify-content: space-evenly;
 				align-items: center;
 			}
@@ -89,12 +90,10 @@
 				width: -webkit-fill-available;
 				width: fill-available;
 				flex: 1;
-				padding: 8px;
+				padding: 4px;
+				gap: 8px;
 				justify-content: space-evenly;
 				align-items: center;
-			}
-			.dpad-spacer {
-				width: 36px;
 			}
 			.diagonal {
 				background-color: var(--light-primary-color);
