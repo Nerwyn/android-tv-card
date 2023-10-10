@@ -3,7 +3,3 @@ export interface ISource {
 	icon?: string;
 	svg_path?: string;
 }
-
-export interface ISources {
-	[key: string]: ISource;
-}

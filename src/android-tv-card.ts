@@ -13,11 +13,9 @@ import {
 	ICustomAction,
 	defaultKeys,
 	defaultSources,
-	IKeys,
 	IKey,
-	ISources,
 	ISource,
-	IServiceData,
+	IData,
 } from './models';
 
 console.info(
@@ -26,11 +24,11 @@ console.info(
 );
 
 class AndroidTVCard extends LitElement {
-	defaultKeys: IKeys;
-	defaultSources: ISources;
+	defaultKeys: Record<string, IKey>;
+	defaultSources: Record<string, ISource>;
 
-	customKeys: IKeys;
-	customSources: ISources;
+	customKeys: Record<string, IKey | ICustomAction>;
+	customSources: Record<string, ISource | ICustomAction>;
 	customIcons: Record<string, string>;
 
 	clickTimer: ReturnType<typeof setTimeout> | null;
@@ -107,10 +105,6 @@ class AndroidTVCard extends LitElement {
 		config = JSON.parse(JSON.stringify(config));
 		config = { theme: 'default', ...config };
 
-		this.customKeys = config.custom_keys || {};
-		this.customSources = config.custom_sources || {};
-		this.customIcons = config.custom_icons || {};
-
 		if (config.alt_volume_icons) {
 			this.defaultKeys = this.useAltVolumeIcons(defaultKeys);
 		} else {
@@ -121,6 +115,11 @@ class AndroidTVCard extends LitElement {
 		// Legacy config upgrades
 		config = this.updateDeprecatedKeys(config);
 		config = this.convertToRowsArray(config);
+		config = this.combineServiceFields(config);
+
+		this.customKeys = config.custom_keys || {};
+		this.customSources = config.custom_sources || {};
+		this.customIcons = config.custom_icons || {};
 
 		await window.loadCardHelpers();
 
@@ -218,7 +217,7 @@ class AndroidTVCard extends LitElement {
 		(this.volume_slider as VolumeSlider).hass = this.hass;
 	}
 
-	useAltVolumeIcons(defaultKeys: IKeys) {
+	useAltVolumeIcons(defaultKeys: Record<string, IKey>) {
 		defaultKeys = JSON.parse(JSON.stringify(defaultKeys));
 		defaultKeys.volume_up.icon = 'mdi:volume-high';
 		defaultKeys.volume_down.icon = 'mdi:volume-medium';
@@ -256,12 +255,46 @@ class AndroidTVCard extends LitElement {
 		return config;
 	}
 
+	combineServiceFields(config: IConfig) {
+		const customActionKeys = [
+			'custom_keys',
+			'custom_sources',
+		] as (keyof IConfig)[];
+
+		for (const key in customActionKeys) {
+			if (key in config) {
+				const customActions = config[key as keyof IConfig] as Record<
+					string,
+					ICustomAction
+				>;
+				for (const name in customActions) {
+					const customAction = customActions[name];
+					if ('service' in customAction) {
+						console.log('here!');
+						customAction.data = {
+							...customAction.data,
+							...(
+								customAction as unknown as Record<
+									string,
+									IData | undefined
+								>
+							).service_data,
+							...customAction.target,
+						};
+					}
+				}
+			}
+		}
+
+		return config;
+	}
+
 	/**
 	 * Send command to an Android TV remote
 	 * @param {string} key
 	 */
 	sendKey(key: string, longPress: boolean = false) {
-		const data: IServiceData = {
+		const data: IData = {
 			entity_id: this.config.remote_id!,
 			command: key,
 		};
@@ -294,14 +327,12 @@ class AndroidTVCard extends LitElement {
 		} else if ('source' in info) {
 			this.changeSource((info as ISource).source);
 		} else if ('service' in info) {
-			const service_data = JSON.parse(
-				JSON.stringify(info.service_data || {}),
-			);
+			const data = JSON.parse(JSON.stringify(info.data || {}));
 			if (longPress && info.service == 'remote.send_command') {
-				service_data.hold_secs = 0.5;
+				data.hold_secs = 0.5;
 			}
 			const [domain, service] = info.service.split('.', 2);
-			this.hass.callService(domain, service, service_data);
+			this.hass.callService(domain, service, data);
 		}
 	}
 
@@ -555,7 +586,7 @@ class AndroidTVCard extends LitElement {
 
 		const text = prompt('Text Input: ');
 		if (text) {
-			let data: IServiceData;
+			let data: IData;
 			switch ((this.config.keyboard_mode ?? '').toUpperCase()) {
 				case 'KODI':
 					data = {
@@ -604,7 +635,7 @@ class AndroidTVCard extends LitElement {
 
 		const text = prompt(promptText);
 		if (text) {
-			let data: IServiceData;
+			let data: IData;
 			switch ((this.config.keyboard_mode ?? '').toUpperCase()) {
 				case 'KODI':
 					data = {
@@ -639,7 +670,7 @@ class AndroidTVCard extends LitElement {
 
 		const text = e.data;
 		if (text) {
-			let data: IServiceData;
+			let data: IData;
 			switch ((this.config.keyboard_mode ?? '').toUpperCase()) {
 				case 'KODI':
 					data = {
@@ -672,7 +703,7 @@ class AndroidTVCard extends LitElement {
 
 		const text = e.clipboardData?.getData('Text');
 		if (text) {
-			let data: IServiceData;
+			let data: IData;
 			switch ((this.config.keyboard_mode ?? '').toUpperCase()) {
 				case 'KODI':
 					data = {

@@ -3,7 +3,3 @@ export interface IKey {
 	icon?: string;
 	svg_path?: string;
 }
-
-export interface IKeys {
-	[key: string]: IKey;
-}
