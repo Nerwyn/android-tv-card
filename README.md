@@ -659,10 +659,10 @@ custom_sources:
 card_mod:
   style: |
     toucharea {
-      background-image: url("https://upload.wikimedia.org/wikipedia/commons/a/ab/Apple-logo.png");
-      background-size: contain;
-      background-repeat: no-repeat;
-      background-position: center;
+      background-image: url("https://upload.wikimedia.org/wikipedia/commons/a/ab/Apple-logo.png") !important;
+      background-size: contain !important;
+      background-repeat: no-repeat !important;
+      background-position: center !important;
       opacity: 1.0;
     }
 ```
@@ -783,10 +783,10 @@ custom_keys:
 card_mod:
   style: |
     toucharea {
-      background-image: url("https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Kodi-logo-Thumbnail-light-transparent.png/600px-Kodi-logo-Thumbnail-light-transparent.png?20141126003611");
-      background-size: contain;
-      background-repeat: no-repeat;
-      background-position: center;
+      background-image: url("https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Kodi-logo-Thumbnail-light-transparent.png/600px-Kodi-logo-Thumbnail-light-transparent.png?20141126003611") !important;
+      background-size: contain !important;
+      background-repeat: no-repeat !important;
+      background-position: center !important;
       opacity: 1.0;
     }
 ```
