@@ -37,10 +37,9 @@
 						`;i.push(e);break}default:i.push(this.buildIconButton(n))}return e?this.buildColumn(i):this.buildRow(i)}render(){if(!this.config||!this.hass)return s.html``;const t=[];for(const e of this.config.rows){const i=this.buildButtons(e);t.push(i)}return s.html`<ha-card .header="${this.config.title}"
 			>${t}</ha-card
 		>`}static get styles(){return s.css`
-			:host {
-				padding: 12px
+			ha-card {
+				padding: 12px;
 			}
-			img,
 			ha-icon-button {
 				width: 48px;
 				height: 48px;
