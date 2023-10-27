@@ -38,7 +38,7 @@
 			>${t}</ha-card
 		>`}static get styles(){return s.css`
 			:host {
-				padding: 8px
+				padding: 12px
 			}
 			img,
 			ha-icon-button {

@@ -923,7 +923,7 @@ class AndroidTVCard extends LitElement {
 	static get styles() {
 		return css`
 			:host {
-				padding: 8px
+				padding: 12px
 			}
 			img,
 			ha-icon-button {
