@@ -182,7 +182,7 @@ class AndroidTVCard extends LitElement {
 		for (let i = 0; i < 10; i++) {
 			try {
 				this.volume_slider = createThing(slider_config, true);
-				this.volume_slider.setAttribute('style', 'flex: 0.9;');
+				this.volume_slider.setAttribute('style', 'width: inherit;');
 			} catch {
 				await new Promise((resolve) => setTimeout(resolve, 100));
 			}
@@ -922,6 +922,9 @@ class AndroidTVCard extends LitElement {
 
 	static get styles() {
 		return css`
+			:host {
+				padding: 8px
+			}
 			img,
 			ha-icon-button {
 				width: 48px;
