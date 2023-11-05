@@ -111,6 +111,38 @@ rows:
 
 <img src="assets/screenshot.png" alt="ex" width="300"/>
 
+## Installation
+
+### Step 1
+
+This project is now available on [HACS](https://hacs.xyz/)! Search for it under frontend repositories.
+
+### Step 2
+
+When in edit mode on a lovelace view, click add card and search for Android TV Card. Create a remote config like the below examples.
+
+```yaml
+type: custom:android-tv-card
+remote_id: remote.google_chromecast
+media_player_id: media_player.google_chromecast
+rows:
+  - - power
+    - channel_up
+    - info
+    - channel_down
+  - - netflix
+    - youtube
+    - spotify
+  - - volume_slider
+  - - navigation_touchpad
+  - - back
+    - home
+    - tv
+  - - rewind
+    - play_pause
+    - fast_forward
+```
+
 ## Options
 
 All fields are technically optional except for `type`, but the card will not function unless you customize it using the below options.
@@ -420,37 +452,7 @@ You can also use the keyboard to send text on the following alternate platforms 
 
 More may be added as requested if there is a way to do so through their Home Assistant (or possibly community made) integrations.
 
-## Installation
-
-### Step 1
-
-Install [HACS](https://hacs.xyz/), open it, click on Frontend, click on the three dot menu in the top-right corner, click on Custom repositories, paste the URL of this repository in the repository field, and set the category to Lovelace.
-
-### Step 2
-
-When in edit mode on a lovelace view, click add card and search for Android TV Card. Create a remote config like the below examples.
-
-```yaml
-type: custom:android-tv-card
-remote_id: remote.google_chromecast
-media_player_id: media_player.google_chromecast
-rows:
-  - - power
-    - channel_up
-    - info
-    - channel_down
-  - - netflix
-    - youtube
-    - spotify
-  - - volume_slider
-  - - navigation_touchpad
-  - - back
-    - home
-    - tv
-  - - rewind
-    - play_pause
-    - fast_forward
-```
+## Examples and Alternate Media Platforms
 
 ### Example 1
 
@@ -929,7 +931,7 @@ Result:
 [last-commit-shield]: https://img.shields.io/github/last-commit/Nerwyn/android-tv-card?style=for-the-badge
 [commits]: https://github.com/Nerwyn/android-tv-card/commits/main
 [forum-shield]: https://img.shields.io/badge/community-forum-brightgreen.svg?style=for-the-badge
-[forum]:https://community.home-assistant.io/t/android-tv-card-a-tv-card-fork-for-android-tv/585089
+[forum]: https://community.home-assistant.io/t/android-tv-card-a-tv-card-fork-for-android-tv/585089
 [license-shield]: https://img.shields.io/github/license/Nerwyn/android-tv-card.svg?style=for-the-badge
 [maintenance-shield]: https://img.shields.io/badge/maintainer-Nerwyn-blue.svg?style=for-the-badge
 [releases-shield]: https://img.shields.io/github/release/Nerwyn/android-tv-card.svg?style=for-the-badge
