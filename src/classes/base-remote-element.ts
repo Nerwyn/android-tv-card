@@ -4,7 +4,7 @@ import { LitElement, CSSResult, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { StyleInfo } from 'lit/directives/style-map.js';
 
-import { IData } from '../models';
+import { IData, IKey, ISource, ICustomAction } from '../models';
 
 @customElement('base-remote-element')
 export class BaseRemoteElement extends LitElement {
@@ -24,6 +24,25 @@ export class BaseRemoteElement extends LitElement {
 	fireHapticEvent(haptic: HapticType) {
 		if (this.hapticEnabled ?? true) {
 			forwardHaptic(haptic);
+		}
+	}
+
+	sendAction(
+		info: IKey | ISource | ICustomAction,
+		longPress: boolean = false,
+	) {
+		if ('key' in info) {
+			const key = (info as IKey).key;
+			this.sendCommand(key, longPress);
+		} else if ('source' in info) {
+			this.changeSource((info as ISource).source);
+		} else if ('service' in info) {
+			const data = JSON.parse(JSON.stringify(info.data || {}));
+			if (longPress && info.service == 'remote.send_command') {
+				data.hold_secs = 0.5;
+			}
+			const [domain, service] = info.service.split('.', 2);
+			this.hass.callService(domain, service, data);
 		}
 	}
 

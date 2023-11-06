@@ -32,19 +32,7 @@ export class RemoteButton extends BaseRemoteElement {
 		}
 		this.fireHapticEvent(haptic);
 
-		if ('key' in this.info) {
-			const key = (this.info as IKey).key;
-			this.sendCommand(key, longPress);
-		} else if ('source' in this.info) {
-			this.changeSource((this.info as ISource).source);
-		} else if ('service' in this.info) {
-			const data = JSON.parse(JSON.stringify(this.info.data || {}));
-			if (longPress && this.info.service == 'remote.send_command') {
-				data.hold_secs = 0.5;
-			}
-			const [domain, service] = this.info.service.split('.', 2);
-			this.hass.callService(domain, service, data);
-		}
+		this.sendAction(this.info, longPress);
 	}
 
 	onlongClickStart(e: Event) {
