@@ -24,9 +24,6 @@ console.info(
 );
 
 class AndroidTVCard extends LitElement {
-	defaultKeys: Record<string, IKey>;
-	defaultSources: Record<string, ISource>;
-
 	customKeys: Record<string, IKey | ICustomAction>;
 	customSources: Record<string, ISource | ICustomAction>;
 	customIcons: Record<string, string>;
@@ -46,17 +43,11 @@ class AndroidTVCard extends LitElement {
 
 	volume_slider?: ReturnType<typeof createThing>;
 
-	@property({ attribute: false })
-	_hass!: HomeAssistant;
-
-	@property({ attribute: false })
-	config!: IConfig;
+	@property({ attribute: false }) _hass!: HomeAssistant;
+	@property({ attribute: false }) config!: IConfig;
 
 	constructor() {
 		super();
-
-		this.defaultKeys = {};
-		this.defaultSources = {};
 
 		this.customKeys = {};
 		this.customSources = {};
@@ -105,13 +96,6 @@ class AndroidTVCard extends LitElement {
 		config = JSON.parse(JSON.stringify(config));
 		config = { theme: 'default', ...config };
 
-		if (config.alt_volume_icons) {
-			this.defaultKeys = this.useAltVolumeIcons(defaultKeys);
-		} else {
-			this.defaultKeys = defaultKeys;
-		}
-		this.defaultSources = defaultSources;
-
 		// Legacy config upgrades
 		config = this.updateDeprecatedKeys(config);
 		config = this.convertToRowsArray(config);
@@ -131,13 +115,6 @@ class AndroidTVCard extends LitElement {
 		}
 
 		this.config = config;
-	}
-
-	isButtonEnabled(row: string, button: string) {
-		return (
-			row.includes('_row') &&
-			(this.config as Record<string, string[]>)[row].includes(button)
-		);
 	}
 
 	set hass(hass: HomeAssistant) {
@@ -215,14 +192,6 @@ class AndroidTVCard extends LitElement {
 		);
 
 		(this.volume_slider as VolumeSlider).hass = this.hass;
-	}
-
-	useAltVolumeIcons(defaultKeys: Record<string, IKey>) {
-		defaultKeys = JSON.parse(JSON.stringify(defaultKeys));
-		defaultKeys.volume_up.icon = 'mdi:volume-high';
-		defaultKeys.volume_down.icon = 'mdi:volume-medium';
-		defaultKeys.volume_mute.icon = 'mdi:volume-variant-off';
-		return defaultKeys;
 	}
 
 	updateDeprecatedKeys(config: IConfig) {
@@ -307,8 +276,8 @@ class AndroidTVCard extends LitElement {
 		return (
 			this.customKeys[action] ||
 			this.customSources[action] ||
-			this.defaultKeys[action] ||
-			this.defaultSources[action] ||
+			defaultKeys[action] ||
+			defaultSources[action] ||
 			{}
 		);
 	}
@@ -780,7 +749,7 @@ class AndroidTVCard extends LitElement {
 		// Use original icon if none provided for custom key or source
 		if (!(icon || svg_path)) {
 			const iconInfo =
-				this.defaultKeys[action] || this.defaultSources[action] || {};
+				defaultKeys[action] || defaultSources[action] || {};
 			icon = iconInfo?.icon ?? '';
 			svg_path = iconInfo?.svg_path ?? '';
 		}

@@ -11,9 +11,7 @@ export interface IConfig {
 
 	custom_keys?: Record<string, IKey | ICustomAction>;
 	custom_sources?: Record<string, ISource | ICustomAction>;
-
 	custom_icons?: Record<string, string>;
-	alt_volume_icons?: boolean;
 
 	touchpad_height?: string;
 

@@ -7,9 +7,9 @@ import { IKey } from '.';
  */
 export const defaultKeys: Record<string, IKey> = {
 	power: { key: 'POWER', icon: 'mdi:power' },
-	volume_up: { key: 'VOLUME_UP', icon: 'mdi:volume-plus' },
-	volume_down: { key: 'VOLUME_DOWN', icon: 'mdi:volume-minus' },
-	volume_mute: { key: 'MUTE', icon: 'mdi:volume-mute' },
+	volume_up: { key: 'VOLUME_UP', icon: 'mdi:volume-high' },
+	volume_down: { key: 'VOLUME_DOWN', icon: 'mdi:volume-medium' },
+	volume_mute: { key: 'MUTE', icon: 'mdi:volume-low' },
 	back: { key: 'BACK', icon: 'mdi:keyboard-backspace' },
 	home: { key: 'HOME', icon: 'mdi:home' },
 	up: { key: 'DPAD_UP', icon: 'mdi:chevron-up' },
