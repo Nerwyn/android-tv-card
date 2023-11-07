@@ -22,7 +22,6 @@ import './classes/remote-textbox';
 import './classes/remote-search';
 import './classes/remote-touchpad';
 import './classes/remote-slider';
-import './classes/remote-slider-old';
 
 console.info(
 	`%c ANDROID-TV-CARD v${version}`,
@@ -206,18 +205,6 @@ class AndroidTVCard extends LitElement {
 		];
 	}
 
-	buildVolumeSliderOld(): TemplateResult {
-		const sliderConfig = (this.config as Record<string, string>)
-			.slider_config;
-
-		return html`<remote-slider-old
-			.hass=${this.hass}
-			.hapticEnabled=${this.config.enable_slider_feedback}
-			.mediaPlayerId=${this.config.media_player_id}
-			.sliderConfig=${sliderConfig}
-		/>`;
-	}
-
 	buildVolumeSlider(): TemplateResult {
 		const value = this.hass.states[this.config.media_player_id!].state;
 		const range = this.config.slider_range ?? [0, 1];
@@ -383,10 +370,6 @@ class AndroidTVCard extends LitElement {
 					}
 					case 'volume_slider': {
 						row_content.push(this.buildVolumeSlider());
-						break;
-					}
-					case 'volume_slider_old': {
-						row_content.push(this.buildVolumeSliderOld());
 						break;
 					}
 

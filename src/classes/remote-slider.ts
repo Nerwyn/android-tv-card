@@ -22,6 +22,11 @@ export class RemoteSlider extends BaseRemoteElement {
 	}
 
 	onInput(e: InputEvent) {
+		e.preventDefault();
+		e.stopImmediatePropagation();
+
+		this.fireHapticEvent('selection');
+		
 		const slider = e.currentTarget as HTMLInputElement;
 		const start = parseFloat(
 			(this.oldValue as unknown as string) ?? this.value ?? '0',
@@ -56,11 +61,6 @@ export class RemoteSlider extends BaseRemoteElement {
 		}
 
 		this.oldValue = end;
-	}
-
-	onTouchStart(e: TouchEvent) {
-		e.stopImmediatePropagation();
-		this.fireHapticEvent('selection');
 	}
 
 	onEnd(_e: MouseEvent | TouchEvent) {
@@ -107,7 +107,6 @@ export class RemoteSlider extends BaseRemoteElement {
 				@input=${this.onInput}
 				@mouseup=${this.onEnd}
 				@touchend=${this.onEnd}
-				@touchstart=${this.onTouchStart}
 			/>
 		`;
 
@@ -150,7 +149,7 @@ export class RemoteSlider extends BaseRemoteElement {
 				width: inherit;
 				height: inherit;
 				background: var(--disabled-color);
-				opacity: 0.2;
+				opacity: 0.5;
 			}
 
 			.slider,
