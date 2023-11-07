@@ -61,12 +61,13 @@ export class RemoteSlider extends BaseRemoteElement {
 		this.oldValue = end;
 	}
 
-	onTouchStart(_e: TouchEvent) {
+	onTouchStart(e: TouchEvent) {
+		e.stopImmediatePropagation();
 		this.fireHapticEvent('selection');
 	}
 
 	onEnd(_e: MouseEvent | TouchEvent) {
-		const [domain, service] = ['media_player', 'set_volume'];
+		const [domain, service] = ['media_player', 'volume_set'];
 		const data: IData = {
 			volume_level: this.value,
 		};
@@ -138,7 +139,6 @@ export class RemoteSlider extends BaseRemoteElement {
 				overflow: hidden;
 				font-size: inherit;
 				color: inherit;
-				--slider-opacity: 1;
 			}
 
 			.container {
@@ -152,7 +152,6 @@ export class RemoteSlider extends BaseRemoteElement {
 				width: inherit;
 				height: inherit;
 				background: rgb(60, 60, 60);
-				opacity: 0.2;
 			}
 
 			.slider,
