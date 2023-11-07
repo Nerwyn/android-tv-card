@@ -118,6 +118,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			// Sliding vertically
 			action = diffY > 0 ? 'up' : 'down';
 		}
+		this.fireHapticEvent('selection');
 		this.touchAction = action as TouchAction;
 		this.sendAction(this.info[action as TouchAction]);
 
