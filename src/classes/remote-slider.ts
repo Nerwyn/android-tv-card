@@ -9,8 +9,7 @@ export class RemoteSlider extends BaseRemoteElement {
 	@property({ attribute: false }) mediaPlayerId!: string;
 	@property({ attribute: false }) range: [number, number] = [0, 1];
 
-	value: number =
-		this.hass.states[this.mediaPlayerId].attributes.volume_level ?? '0';
+	value: number = 0;
 	oldValue: number = this.value;
 	newValue: number = this.value;
 	step: number = (this.range[1] - this.range[0]) / 100;
@@ -24,7 +23,9 @@ export class RemoteSlider extends BaseRemoteElement {
 
 		const slider = e.currentTarget as HTMLInputElement;
 		const start = parseFloat(
-			(this.oldValue as unknown as string) ?? this.value,
+			this.hass.states[this.mediaPlayerId].attributes.volume_level ??
+				(this.oldValue as unknown as string) ??
+				this.value,
 		);
 		const end = parseFloat(slider.value ?? start);
 		slider.value = start.toString();
@@ -74,6 +75,9 @@ export class RemoteSlider extends BaseRemoteElement {
 
 	render() {
 		const background = html`<div class="slider-background"></div>`;
+
+		this.value =
+			this.hass.states[this.mediaPlayerId].attributes.volume_level ?? 0;
 
 		let sliderClass = 'slider';
 		if (!this.value || this.value <= this.range[0]) {
