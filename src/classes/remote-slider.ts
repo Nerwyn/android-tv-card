@@ -76,6 +76,8 @@ export class RemoteSlider extends BaseRemoteElement {
 
 		this.value =
 			this.hass.states[this.mediaPlayerId].attributes.volume_level ?? 0;
+		this.oldValue = this.value;
+		this.newValue = this.value;
 
 		let sliderClass = 'slider';
 		if (!this.value || this.value <= this.range[0]) {
