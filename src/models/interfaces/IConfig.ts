@@ -1,6 +1,6 @@
 import { StyleInfo } from 'lit/directives/style-map.js';
 
-import { IKey, ISource, ICustomAction } from '.';
+import { IKey, ISource, IServiceCall } from '.';
 
 export interface IConfig {
 	theme?: string;
@@ -9,10 +9,10 @@ export interface IConfig {
 	remote_id?: string;
 	media_player_id?: string;
 	keyboard_id?: string;
-	keyboard_mode?: string;
+	keyboard_mode?: KeyboardMode;
 
-	custom_keys?: Record<string, IKey | ICustomAction>;
-	custom_sources?: Record<string, ISource | ICustomAction>;
+	custom_keys?: Record<string, IKey | IServiceCall>;
+	custom_sources?: Record<string, ISource | IServiceCall>;
 	custom_icons?: Record<string, string>;
 
 	enable_button_feedback?: boolean;
@@ -31,3 +31,5 @@ export interface IConfig {
 }
 
 export type Row = (string | Row[])[];
+
+export type KeyboardMode = 'ANDROID TV' | 'KODI';

@@ -13,12 +13,7 @@ export class BaseRemoteElement extends LitElement {
 	@property({ attribute: false }) remoteId?: string;
 	@property({ attribute: false }) elementStyle?: StyleInfo;
 
-	longPress?: boolean;
-
-	constructor() {
-		super();
-		this.longPress = false;
-	}
+	longPress?: boolean = false;
 
 	fireHapticEvent(haptic: HapticType) {
 		if (this.hapticEnabled ?? true) {

@@ -1,13 +1,10 @@
-import { customElement, property } from 'lit/decorators.js';
+import { customElement } from 'lit/decorators.js';
 
 import { IData } from '../models';
-import { RemoteButton } from './remote-button';
+import { BaseKeyboardElement } from './base-keyboard-element';
 
 @customElement('remote-search')
-export class RemoteSearch extends RemoteButton {
-	@property({ attribute: false }) keyboardId!: string;
-	@property({ attribute: false }) keyboardMode!: string;
-
+export class RemoteSearch extends BaseKeyboardElement {
 	onClick(e: Event, _longpress: boolean) {
 		e.stopImmediatePropagation();
 		this.fireHapticEvent('light');

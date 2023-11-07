@@ -1,13 +1,10 @@
-import { customElement, property } from 'lit/decorators.js';
-import { IData } from '../models';
+import { customElement } from 'lit/decorators.js';
 
-import { RemoteButton } from './remote-button';
+import { IData } from '../models';
+import { BaseKeyboardElement } from './base-keyboard-element';
 
 @customElement('remote-textbox')
-export class RemoteTextbox extends RemoteButton {
-	@property({ attribute: false }) keyboardId!: string;
-	@property({ attribute: false }) keyboardMode!: string;
-
+export class RemoteTextbox extends BaseKeyboardElement {
 	onClick(e: Event, _longpress: boolean) {
 		e.stopImmediatePropagation();
 

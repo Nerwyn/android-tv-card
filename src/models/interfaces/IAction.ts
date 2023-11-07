@@ -1,26 +1,23 @@
-export interface IKey {
+export interface IIcon {
+	icon?: string;
+	svg_path?: string;
+}
+
+export interface IKey extends IIcon {
 	key: string;
-	icon?: string;
-	svg_path?: string;
 }
 
-export interface ISource {
+export interface ISource extends IIcon {
 	source: string;
-	icon?: string;
-	svg_path?: string;
 }
 
-export interface ICustomAction {
+export interface IServiceCall extends IIcon {
 	service: string;
 	data?: IData;
 	target?: ITarget;
-	key?: string;
-	source?: string;
-	icon?: string;
-	svg_path?: string;
 }
 
-export type IAction = IKey | ISource | ICustomAction;
+export type IAction = IKey | ISource | IServiceCall;
 
 export interface IData {
 	[key: string]: string | string[] | number | boolean;

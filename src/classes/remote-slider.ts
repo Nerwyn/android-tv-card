@@ -2,8 +2,6 @@ import { html, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
-import { IData } from '../models';
-
 import { BaseRemoteElement } from './base-remote-element';
 
 @customElement('remote-slider')
@@ -16,10 +14,6 @@ export class RemoteSlider extends BaseRemoteElement {
 	newValue: number = 1;
 	step: number = (this.range[1] - this.range[0]) / 100;
 	speed: number = (this.range[1] - this.range[0]) / 50;
-
-	constructor() {
-		super();
-	}
 
 	onInput(e: InputEvent) {
 		e.preventDefault();
@@ -65,25 +59,13 @@ export class RemoteSlider extends BaseRemoteElement {
 
 	onEnd(_e: MouseEvent | TouchEvent) {
 		const [domain, service] = ['media_player', 'volume_set'];
-		const data: IData = {
-			volume_level: 'VALUE',
-			entity_id: this.mediaPlayerId,
-		};
 		if (!this.newValue && this.newValue != 0) {
 			this.newValue = this.value as number;
 		}
-		if (this.newValue % 1 == 0) {
-			this.newValue = Math.trunc(this.newValue);
-		}
-		for (const key in data) {
-			if (data[key] == 'VALUE') {
-				data[key] = this.newValue;
-			} else if (data[key].toString().includes('VALUE')) {
-				data[key] = data[key]
-					.toString()
-					.replace('VALUE', this.newValue.toString());
-			}
-		}
+		const data = {
+			volume_level: this.newValue,
+			entity_id: this.mediaPlayerId,
+		};
 		this.fireHapticEvent('light');
 		this.hass.callService(domain, service, data);
 		this.value = this.newValue;

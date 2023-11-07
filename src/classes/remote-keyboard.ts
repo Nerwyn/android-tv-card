@@ -1,18 +1,11 @@
 import { CSSResult, html, css } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { customElement } from 'lit/decorators.js';
 
 import { IData } from '../models';
-import { RemoteButton } from './remote-button';
+import { BaseKeyboardElement } from './base-keyboard-element';
 
 @customElement('remote-keyboard')
-export class RemoteKeyboard extends RemoteButton {
-	@property({ attribute: false }) keyboardId!: string;
-	@property({ attribute: false }) keyboardMode!: string;
-
-	constructor() {
-		super();
-	}
-
+export class RemoteKeyboard extends BaseKeyboardElement {
 	onClick(e: Event, _longpress: boolean) {
 		e.stopImmediatePropagation();
 		this.fireHapticEvent('light');

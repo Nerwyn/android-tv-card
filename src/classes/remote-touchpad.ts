@@ -11,17 +11,12 @@ export class RemoteTouchpad extends BaseRemoteElement {
 	@property({ attribute: false }) info!: Record<TouchAction, IAction>;
 
 	clickTimer?: ReturnType<typeof setTimeout>;
-	clickCount: number;
+	clickCount: number = 0;
+
 	touchAction?: TouchAction;
 	touchTimer?: ReturnType<typeof setTimeout>;
 	touchInterval?: ReturnType<typeof setInterval>;
-	touchLongClick: boolean;
-
-	constructor() {
-		super();
-		this.clickCount = 0;
-		this.touchLongClick = false;
-	}
+	touchLongClick: boolean = false;
 
 	onClick(e: MouseEvent) {
 		e.stopImmediatePropagation();

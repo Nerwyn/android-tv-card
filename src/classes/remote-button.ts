@@ -4,21 +4,17 @@ import { TemplateResult, CSSResult, html, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
-import { IKey, ISource, ICustomAction } from '../models';
+import { IAction } from '../models';
 import { BaseRemoteElement } from './base-remote-element';
 
 @customElement('remote-button')
 export class RemoteButton extends BaseRemoteElement {
-	@property({ attribute: false }) info!: IKey | ISource | ICustomAction;
+	@property({ attribute: false }) info!: IAction;
 	@property({ attribute: false }) actionKey!: string;
 	@property({ attribute: false }) customIcon?: string;
 
 	timer?: ReturnType<typeof setTimeout>;
 	interval?: ReturnType<typeof setInterval>;
-
-	constructor() {
-		super();
-	}
 
 	onClick(_e: Event, longPress: boolean = false) {
 		let haptic: HapticType = longPress ? 'medium' : 'light';

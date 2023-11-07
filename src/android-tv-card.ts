@@ -9,11 +9,11 @@ import {
 	IConfig,
 	IKey,
 	ISource,
-	ICustomAction,
 	IAction,
 	defaultKeys,
 	defaultSources,
 	IData,
+	IServiceCall,
 } from './models';
 
 import './classes/remote-button';
@@ -29,19 +29,12 @@ console.info(
 );
 
 class AndroidTVCard extends LitElement {
-	customKeys: Record<string, IKey | ICustomAction>;
-	customSources: Record<string, ISource | ICustomAction>;
-	customIcons: Record<string, string>;
-
 	@property({ attribute: false }) hass!: HomeAssistant;
 	@property({ attribute: false }) private config!: IConfig;
 
-	constructor() {
-		super();
-		this.customKeys = {};
-		this.customSources = {};
-		this.customIcons = {};
-	}
+	customKeys: Record<string, IKey | IServiceCall> = {};
+	customSources: Record<string, ISource | IServiceCall> = {};
+	customIcons: Record<string, string> = {};
 
 	static get properties() {
 		return {
@@ -131,7 +124,7 @@ class AndroidTVCard extends LitElement {
 			if (key in config) {
 				const customActions = config[key as keyof IConfig] as Record<
 					string,
-					ICustomAction
+					IAction
 				>;
 				for (const name in customActions) {
 					const customAction = customActions[name];
@@ -155,17 +148,14 @@ class AndroidTVCard extends LitElement {
 	}
 
 	getInfo(action: string): IAction {
+		const defaultInfo = defaultKeys[action] || defaultSources[action] || {};
 		const info =
 			this.customKeys[action] ||
 			this.customSources[action] ||
-			defaultKeys[action] ||
-			defaultSources[action] ||
-			{};
+			defaultInfo;
 		if (!(info?.icon || info.svg_path)) {
-			const iconInfo =
-				defaultKeys[action] || defaultSources[action] || {};
-			info.icon = iconInfo?.icon ?? '';
-			info.svg_path = iconInfo?.svg_path ?? '';
+			info.icon = defaultInfo?.icon ?? '';
+			info.svg_path = defaultInfo?.svg_path ?? '';
 		}
 		return info;
 	}
@@ -178,6 +168,19 @@ class AndroidTVCard extends LitElement {
 		return html` <div class="column">${content}</div> `;
 	}
 
+	buildButton(element_name: string): TemplateResult {
+		const info = this.getInfo(element_name);
+
+		return html`<remote-button
+			.hass=${this.hass}
+			.hapticEnabled=${this.config.enable_button_feedback || true}
+			.remoteId=${this.config.remote_id}
+			.info=${info}
+			.actionKey="${element_name}"
+			.customIcon=${this.customIcons[info.icon ?? ''] ?? ''}
+		/>`;
+	}
+
 	buildVolumeButtons(): TemplateResult[] {
 		return [
 			this.buildButton('volume_down'),
@@ -187,8 +190,10 @@ class AndroidTVCard extends LitElement {
 	}
 
 	buildVolumeSlider(): TemplateResult {
-		const value = this.hass.states[this.config.media_player_id!].state;
 		const range = this.config.slider_range ?? [0, 1];
+		const value = (
+			this.hass.states[this.config.media_player_id!].state ?? range[0]
+		).toString();
 
 		return html`<remote-slider
 			.hass=${this.hass}
@@ -275,19 +280,6 @@ class AndroidTVCard extends LitElement {
 			.customIcon=${this.customIcons[info.icon ?? ''] ?? ''}
 			.keyboardId=${this.config.keyboard_id}
 			.keyboardMode=${this.config.keyboard_mode}
-		/>`;
-	}
-
-	buildButton(element_name: string): TemplateResult {
-		const info = this.getInfo(element_name);
-
-		return html`<remote-button
-			.hass=${this.hass}
-			.hapticEnabled=${this.config.enable_button_feedback || true}
-			.remoteId=${this.config.remote_id}
-			.info=${info}
-			.actionKey="${element_name}"
-			.customIcon=${this.customIcons[info.icon ?? ''] ?? ''}
 		/>`;
 	}
 
