@@ -4,8 +4,8 @@ export interface IConfig {
 	theme?: string;
 	title?: string;
 
-	media_player_id?: string;
 	remote_id?: string;
+	media_player_id?: string;
 	keyboard_id?: string;
 	keyboard_mode?: string;
 
@@ -13,16 +13,16 @@ export interface IConfig {
 	custom_sources?: Record<string, ISource | ICustomAction>;
 	custom_icons?: Record<string, string>;
 
-	slider_config?: Record<string, string>;
+	enable_button_feedback?: boolean;
+	enable_touchpad_feedback?: boolean;
 	enable_slider_feedback?: boolean;
 
-	enable_button_feedback?: boolean;
-
 	touchpad_height?: string;
-	enable_touchpad_feedback?: boolean;
 	enable_double_click?: boolean;
 	double_click_keycode?: string;
 	long_click_keycode?: string;
+
+	slider_config?: Record<string, string>;
 
 	rows?: Row[];
 }

@@ -2,42 +2,34 @@ import { html, css } from 'lit';
 import { customElement, property, eventOptions } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
-import { IKey, ISource, ICustomAction, defaultKeys } from '../models';
+import {
+	IKey,
+	ISource,
+	ICustomAction,
+	TouchAction,
+	defaultKeys,
+} from '../models';
 import { BaseRemoteElement } from './base-remote-element';
 
 @customElement('remote-touchpad')
 export class RemoteTouchpad extends BaseRemoteElement {
 	@property({ attribute: false }) enableDoubleClick?: boolean;
-	@property({ attribute: false }) upInfo!: IKey | ISource | ICustomAction;
-	@property({ attribute: false }) downInfo!: IKey | ISource | ICustomAction;
-	@property({ attribute: false }) leftInfo!: IKey | ISource | ICustomAction;
-	@property({ attribute: false }) rightInfo!: IKey | ISource | ICustomAction;
-	@property({ attribute: false }) centerInfo!: IKey | ISource | ICustomAction;
-	@property({ attribute: false }) doubleInfo!: IKey | ISource | ICustomAction;
-	@property({ attribute: false }) longInfo!: IKey | ISource | ICustomAction;
+	@property({ attribute: false }) info!: Record<
+		TouchAction,
+		IKey | ISource | ICustomAction
+	>;
 
 	clickTimer?: ReturnType<typeof setTimeout>;
 	clickCount: number;
-	touchAction: string;
+	touchAction?: TouchAction;
 	touchTimer?: ReturnType<typeof setTimeout>;
 	touchInterval?: ReturnType<typeof setInterval>;
 	touchLongClick: boolean;
-	info: Record<string, IKey | ISource | ICustomAction>;
 
 	constructor() {
 		super();
 		this.clickCount = 0;
-		this.touchAction = '';
 		this.touchLongClick = false;
-		this.info = {
-			up: this.upInfo,
-			down: this.downInfo,
-			left: this.leftInfo,
-			right: this.rightInfo,
-			center: this.centerInfo,
-			double: this.doubleInfo,
-			long: this.longInfo,
-		};
 	}
 
 	onClick(e: MouseEvent) {
@@ -69,7 +61,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		this.clickCount = 0;
 
 		this.fireHapticEvent('success');
-		const info = this.doubleInfo ?? defaultKeys['back'];
+		const info = this.info.double ?? defaultKeys['back'];
 		this.sendAction(info);
 	}
 
@@ -79,9 +71,13 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			this.touchLongClick = true;
 
 			// Only repeat hold action for directional keys
-			if (['up', 'down', 'left', 'right'].includes(this.touchAction)) {
+			if (
+				['up', 'down', 'left', 'right'].includes(
+					this.touchAction as TouchAction,
+				)
+			) {
 				this.touchInterval = setInterval(() => {
-					this.sendAction(this.info[this.touchAction]);
+					this.sendAction(this.info[this.touchAction as TouchAction]);
 				}, 100);
 			} else {
 				this.sendAction(this.info['long'], true);
@@ -103,7 +99,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		clearInterval(this.touchInterval as ReturnType<typeof setInterval>);
 		clearTimeout(this.clickTimer as ReturnType<typeof setTimeout>);
 
-		this.touchAction = '';
+		this.touchAction = undefined;
 		this.touchTimer = undefined;
 		this.touchInterval = undefined;
 		this.clickTimer = undefined;
@@ -129,8 +125,8 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			// Sliding vertically
 			action = diffY > 0 ? 'up' : 'down';
 		}
-		this.touchAction = action;
-		this.sendAction(this.info[action]);
+		this.touchAction = action as TouchAction;
+		this.sendAction(this.info[action as TouchAction]);
 
 		window.initialX = undefined;
 		window.initialY = undefined;
@@ -142,7 +138,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			style = this.elementStyle;
 		}
 
-		console.log(this.info)
+		console.log(this.info);
 
 		return html`
 			<toucharea

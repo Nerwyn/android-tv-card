@@ -265,17 +265,15 @@ class AndroidTVCard extends LitElement {
 	}
 
 	buildTouchpad(): TemplateResult {
-		const upInfo = this.getInfo('up');
-		const downInfo = this.getInfo('down');
-		const leftInfo = this.getInfo('left');
-		const rightInfo = this.getInfo('right');
-		const centerInfo = this.getInfo('center');
-		const doubleInfo = this.getInfo(
-			this.config.double_click_keycode ?? 'back',
-		);
-		const longInfo = this.getInfo(
-			this.config.long_click_keycode ?? 'center',
-		);
+		const info = {
+			up: this.getInfo('up'),
+			down: this.getInfo('down'),
+			left: this.getInfo('left'),
+			right: this.getInfo('right'),
+			center: this.getInfo('center'),
+			double: this.getInfo(this.config.double_click_keycode ?? 'back'),
+			long: this.getInfo(this.config.long_click_keycode ?? 'center'),
+		};
 
 		const style: Record<string, string> = {};
 		if (this.config['touchpad_height']) {
@@ -287,13 +285,7 @@ class AndroidTVCard extends LitElement {
 			.hapticEnabled=${this.config.enable_touchpad_feedback || true}
 			.remoteId=${this.config.remote_id}
 			.enableDoubleClick=${this.config.enable_double_click || false}
-			.upInfo=${upInfo}
-			.downInfo=${downInfo}
-			.leftInfo=${leftInfo}
-			.rightInfo=${rightInfo}
-			.centerInfo=${centerInfo}
-			.doubleInfo=${doubleInfo}
-			.longInfo=${longInfo}
+			.info=${info}
 		/>`;
 	}
 
