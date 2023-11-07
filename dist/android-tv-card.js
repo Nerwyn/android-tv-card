@@ -217,8 +217,25 @@
 			${e}${i}
 		</div>`}static get styles(){return n.css`
 			:host {
+				display: flex;
+				flex-flow: column;
+				place-content: center space-evenly;
+				align-items: center;
+				position: relative;
+				height: 50px;
+				width: 100%;
+				border-radius: 25px;
+				border: none;
+				padding: 0px;
+				box-sizing: border-box;
+				line-height: 0;
+				outline: 0px;
+				overflow: hidden;
+				font-size: inherit;
+				color: inherit;
 				--slider-opacity: 1;
 			}
+
 			.slider-background {
 				position: absolute;
 				width: inherit;
