@@ -2,7 +2,6 @@ import { version } from '../package.json';
 
 import { LitElement, TemplateResult, html, css } from 'lit';
 import { property } from 'lit/decorators.js';
-import { styleMap } from 'lit/directives/style-map.js';
 
 import { HomeAssistant, applyThemesOnElement } from 'custom-card-helpers';
 
@@ -285,7 +284,7 @@ class AndroidTVCard extends LitElement {
 			};
 		}
 		return html`<remote-touchpad
-			.elementStyle=${styleMap(style)}
+			.elementStyle=${style}
 			.hass=${this.hass}
 			.hapticEnabled=${this.config.enable_touchpad_feedback || true}
 			.remoteId=${this.config.remote_id}
