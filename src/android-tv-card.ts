@@ -280,12 +280,12 @@ class AndroidTVCard extends LitElement {
 
 		let style = {};
 		if (this.config['touchpad_height']) {
-			style = styleMap({
+			style = {
 				height: this.config['touchpad_height'],
-			});
+			};
 		}
 		return html`<remote-touchpad
-			.elementStyle=${style}
+			.elementStyle=${styleMap(style)}
 			.hass=${this.hass}
 			.hapticEnabled=${this.config.enable_touchpad_feedback || true}
 			.remoteId=${this.config.remote_id}

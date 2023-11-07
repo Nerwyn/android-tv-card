@@ -1,5 +1,6 @@
 import { createThing, forwardHaptic } from 'custom-card-helpers';
 
+import { css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
 import { BaseRemoteElement } from './base-remote-element';
@@ -64,5 +65,13 @@ export class RemoteSlider extends BaseRemoteElement {
 
 		(volumeSlider as VolumeSlider).hass = this.hass;
 		return volumeSlider;
+	}
+
+	static get styles() {
+		return css`
+			:host {
+				width: inherit;
+			}
+		`;
 	}
 }
