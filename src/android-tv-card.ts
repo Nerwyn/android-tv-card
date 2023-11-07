@@ -167,6 +167,169 @@ class AndroidTVCard extends LitElement {
 		return html` <div class="column">${content}</div> `;
 	}
 
+	buildVolumeButtons(): TemplateResult[] {
+		const volumeUpInfo = this.getInfo('volume_up');
+		const volumeDownInfo = this.getInfo('volume_down');
+		const volumeMuteInfo = this.getInfo('volume_mute');
+
+		return [
+			html`<remote-button
+				.hass=${this.hass}
+				.hapticEnabled=${this.config.enable_button_feedback || true}
+				.remoteId=${this.config.remote_id}
+				.info=${volumeUpInfo}
+				.actionKey="volume_up"
+				.customIcon=${this.customIcons[volumeUpInfo.icon ?? ''] ?? ''}
+			/>`,
+			html`<remote-button
+				.hass=${this.hass}
+				.hapticEnabled=${this.config.enable_button_feedback || true}
+				.remoteId=${this.config.remote_id}
+				.info=${volumeDownInfo}
+				.actionKey="volume_down"
+				.customIcon=${this.customIcons[volumeDownInfo.icon ?? ''] ?? ''}
+			/>`,
+			html`<remote-button
+				.hass=${this.hass}
+				.hapticEnabled=${this.config.enable_button_feedback || true}
+				.remoteId=${this.config.remote_id}
+				.info=${volumeMuteInfo}
+				.actionKey="volume_mute"
+				.customIcon=${this.customIcons[volumeMuteInfo.icon ?? ''] ?? ''}
+			/>`,
+		];
+	}
+
+	buildVolumeSlider(): TemplateResult {
+		return html`<remote-slider
+			.hass=${this.hass}
+			.hapticEnabled=${this.config.enable_slider_feedback}
+			.mediaPlayerId=${this.config.media_player_id}
+			.sliderConfig=${this.config.slider_config}
+		/>`;
+	}
+
+	buildNavigationButtons(): TemplateResult[] {
+		const upInfo = this.getInfo('up');
+		const leftInfo = this.getInfo('left');
+		const centerInfo = this.getInfo('center');
+		const rightInfo = this.getInfo('right');
+		const downInfo = this.getInfo('down');
+		return [
+			this.buildRow([
+				html`<remote-button
+					.hass=${this.hass}
+					.hapticEnabled=${this.config.enable_button_feedback || true}
+					.remoteId=${this.config.remote_id}
+					.info=${upInfo}
+					.actionKey="up"
+					.customIcon=${this.customIcons[upInfo.icon ?? ''] ?? ''}
+				/>`,
+			]),
+			this.buildRow([
+				html`<remote-button
+					.hass=${this.hass}
+					.hapticEnabled=${this.config.enable_button_feedback || true}
+					.remoteId=${this.config.remote_id}
+					.info=${leftInfo}
+					.actionKey="left"
+					.customIcon=${this.customIcons[leftInfo.icon ?? ''] ?? ''}
+				/>`,
+				html`<remote-button
+					.hass=${this.hass}
+					.hapticEnabled=${this.config.enable_button_feedback || true}
+					.remoteId=${this.config.remote_id}
+					.info=${centerInfo}
+					.actionKey="center"
+					.customIcon=${this.customIcons[centerInfo.icon ?? ''] ?? ''}
+				/>`,
+				html`<remote-button
+					.hass=${this.hass}
+					.hapticEnabled=${this.config.enable_button_feedback || true}
+					.remoteId=${this.config.remote_id}
+					.info=${rightInfo}
+					.actionKey="right"
+					.customIcon=${this.customIcons[rightInfo.icon ?? ''] ?? ''}
+				/>`,
+			]),
+			this.buildRow([
+				html`<remote-button
+					.hass=${this.hass}
+					.hapticEnabled=${this.config.enable_button_feedback || true}
+					.remoteId=${this.config.remote_id}
+					.info=${downInfo}
+					.actionKey="down"
+					.customIcon=${this.customIcons[downInfo.icon ?? ''] ?? ''}
+				/>`,
+			]),
+		];
+	}
+
+	buildTouchpad(): TemplateResult {
+		const upInfo = this.getInfo('up');
+		const downInfo = this.getInfo('down');
+		const leftInfo = this.getInfo('left');
+		const rightInfo = this.getInfo('right');
+		const centerInfo = this.getInfo('center');
+		const doubleInfo = this.getInfo(
+			this.config.double_click_keycode ?? 'back',
+		);
+		const longInfo = this.getInfo(
+			this.config.long_click_keycode ?? 'center',
+		);
+
+		let style = {};
+		if (this.config['touchpad_height']) {
+			style = styleMap({
+				height: this.config['touchpad_height'],
+			});
+		}
+		return html`<remote-touchpad
+			.elementStyle=${style}
+			.hass=${this.hass}
+			.hapticEnabled=${this.config.enable_touchpad_feedback || true}
+			.remoteId=${this.config.remote_id}
+			.enableDoubleClick=${this.config.enable_double_click || false}
+			.upInfo=${upInfo}
+			.downInfo=${downInfo}
+			.leftInfo=${leftInfo}
+			.rightInfo=${rightInfo}
+			.centerInfo=${centerInfo}
+			.doubleInfo=${doubleInfo}
+			.longInfo=${longInfo}
+		/>`;
+	}
+
+	buildKeyboard(element_name: string): TemplateResult {
+		const info = this.getInfo(element_name);
+
+		return html`<remote-${element_name}
+			.hass=${this.hass}
+			.hapticEnabled=${this.config.enable_button_feedback || true}
+			.remoteId=${this.config.remote_id}
+			.info=${info}
+			.actionKey="${element_name}"
+			.customIcon=${this.customIcons[info.icon ?? ''] ?? ''}
+			.keyboardId=${this.config.keyboard_id}
+			.keyboardMode=${this.config.keyboard_mode}
+		/>`;
+	}
+
+	buildButton(element_name: string): TemplateResult {
+		const info = this.getInfo(element_name);
+
+		return html`<remote-button
+			.hass=${this.hass}
+			.hapticEnabled=${this.config.enable_button_feedback || true}
+			.remoteId=${this.config.remote_id}
+			.info=${info}
+			.actionKey="${element_name}"
+			.customIcon=${this.customIcons[info.icon ?? ''] ?? ''}
+			.keyboardId=${this.config.keyboard_id}
+			.keyboardMode=${this.config.keyboard_mode}
+		/>`;
+	}
+
 	buildElements(row: (string | string[])[], isColumn: boolean = false) {
 		if (typeof row == 'string') {
 			row = [row];
@@ -178,216 +341,35 @@ class AndroidTVCard extends LitElement {
 			} else {
 				switch (element_name) {
 					case 'volume_buttons': {
-						const volumeUpInfo = this.getInfo('volume_up');
-						const volumeDownInfo = this.getInfo('volume_down');
-						const volumeMuteInfo = this.getInfo('volume_mute');
-
-						row_content.push(
-							...[
-								html`<remote-button
-									.hass=${this.hass}
-									.hapticEnabled=${this.config
-										.enable_button_feedback || true}
-									.remoteId=${this.config.remote_id}
-									.info=${volumeUpInfo}
-									.actionKey="volume_up"
-									.customIcon=${this.customIcons[
-										volumeUpInfo.icon ?? ''
-									] ?? ''}
-								/>`,
-								html`<remote-button
-									.hass=${this.hass}
-									.hapticEnabled=${this.config
-										.enable_button_feedback || true}
-									.remoteId=${this.config.remote_id}
-									.info=${volumeDownInfo}
-									.actionKey="volume_down"
-									.customIcon=${this.customIcons[
-										volumeDownInfo.icon ?? ''
-									] ?? ''}
-								/>`,
-								html`<remote-button
-									.hass=${this.hass}
-									.hapticEnabled=${this.config
-										.enable_button_feedback || true}
-									.remoteId=${this.config.remote_id}
-									.info=${volumeMuteInfo}
-									.actionKey="volume_mute"
-									.customIcon=${this.customIcons[
-										volumeMuteInfo.icon ?? ''
-									] ?? ''}
-								/>`,
-							],
-						);
+						row_content.push(...this.buildVolumeButtons());
 						break;
 					}
 					case 'volume_slider': {
-						row_content.push(
-							html`<remote-slider
-								.hass=${this.hass}
-								.hapticEnabled=${this.config
-									.enable_slider_feedback}
-								.mediaPlayerId=${this.config.media_player_id}
-								.sliderConfig=${this.config.slider_config}
-							/>`,
-						);
+						row_content.push(this.buildVolumeSlider());
 						break;
 					}
 
 					case 'navigation_buttons': {
-						const navigation_buttons: TemplateResult[] = [];
-						const upInfo = this.getInfo('up');
-						navigation_buttons.push(
-							html`<remote-button
-								.hass=${this.hass}
-								.hapticEnabled=${this.config
-									.enable_button_feedback || true}
-								.remoteId=${this.config.remote_id}
-								.info=${upInfo}
-								.actionKey="up"
-								.customIcon=${this.customIcons[
-									upInfo.icon ?? ''
-								] ?? ''}
-							/>`,
+						row_content.push(
+							this.buildColumn(this.buildNavigationButtons()),
 						);
-
-						const leftInfo = this.getInfo('left');
-						const centerInfo = this.getInfo('center');
-						const rightInfo = this.getInfo('right');
-						navigation_buttons.push(
-							this.buildRow([
-								html`<remote-button
-									.hass=${this.hass}
-									.hapticEnabled=${this.config
-										.enable_button_feedback || true}
-									.remoteId=${this.config.remote_id}
-									.info=${leftInfo}
-									.actionKey="left"
-									.customIcon=${this.customIcons[
-										leftInfo.icon ?? ''
-									] ?? ''}
-								/>`,
-								html`<remote-button
-									.hass=${this.hass}
-									.hapticEnabled=${this.config
-										.enable_button_feedback || true}
-									.remoteId=${this.config.remote_id}
-									.info=${centerInfo}
-									.actionKey="center"
-									.customIcon=${this.customIcons[
-										centerInfo.icon ?? ''
-									] ?? ''}
-								/>`,
-								html`<remote-button
-									.hass=${this.hass}
-									.hapticEnabled=${this.config
-										.enable_button_feedback || true}
-									.remoteId=${this.config.remote_id}
-									.info=${rightInfo}
-									.actionKey="right"
-									.customIcon=${this.customIcons[
-										rightInfo.icon ?? ''
-									] ?? ''}
-								/>`,
-							]),
-						);
-
-						const downInfo = this.getInfo('down');
-						navigation_buttons.push(
-							html`<remote-button
-								.hass=${this.hass}
-								.hapticEnabled=${this.config
-									.enable_button_feedback || true}
-								.remoteId=${this.config.remote_id}
-								.info=${downInfo}
-								.actionKey="down"
-								.customIcon=${this.customIcons[
-									downInfo.icon ?? ''
-								] ?? ''}
-							/>`,
-						);
-						row_content.push(this.buildColumn(navigation_buttons));
 						break;
 					}
 
 					case 'navigation_touchpad': {
-						const upInfo = this.getInfo('up');
-						const downInfo = this.getInfo('down');
-						const leftInfo = this.getInfo('left');
-						const rightInfo = this.getInfo('right');
-						const centerInfo = this.getInfo('center');
-						const doubleInfo = this.getInfo(
-							this.config.double_click_keycode ?? 'back',
-						);
-						const longInfo = this.getInfo(
-							this.config.long_click_keycode ?? 'center',
-						);
-
-						let style = {};
-						if (this.config['touchpad_height']) {
-							style = styleMap({
-								height: this.config['touchpad_height'],
-							});
-						}
-						const touchpad = html`<remote-touchpad
-							.elementStyle=${style}
-							.hass=${this.hass}
-							.hapticEnabled=${this.config
-								.enable_touchpad_feedback || true}
-							.remoteId=${this.config.remote_id}
-							.enableDoubleClick=${this.config
-								.enable_double_click || false}
-							.upInfo=${upInfo}
-							.downInfo=${downInfo}
-							.leftInfo=${leftInfo}
-							.rightInfo=${rightInfo}
-							.centerInfo=${centerInfo}
-							.doubleInfo=${doubleInfo}
-							.longInfo=${longInfo}
-						/>`;
-						row_content.push(touchpad);
+						row_content.push(this.buildTouchpad());
 						break;
 					}
 
 					case 'keyboard':
 					case 'textbox':
 					case 'search': {
-						const info = this.getInfo(element_name);
-						row_content.push(
-							html`<remote-${element_name}
-								.hass=${this.hass}
-								.hapticEnabled=${this.config
-									.enable_button_feedback || true}
-								.remoteId=${this.config.remote_id}
-								.info=${info}
-								.actionKey="${element_name}"
-								.customIcon=${this.customIcons[
-									info.icon ?? ''
-								] ?? ''}
-								.keyboardId=${this.config.keyboard_id}
-								.keyboardMode=${this.config.keyboard_mode}
-							/>`,
-						);
+						row_content.push(this.buildKeyboard(element_name));
 						break;
 					}
 
 					default: {
-						const info = this.getInfo(element_name);
-						row_content.push(
-							html`<remote-button
-								.hass=${this.hass}
-								.hapticEnabled=${this.config
-									.enable_button_feedback || true}
-								.remoteId=${this.config.remote_id}
-								.info=${info}
-								.actionKey="${element_name}"
-								.customIcon=${this.customIcons[
-									info.icon ?? ''
-								] ?? ''}
-								.keyboardId=${this.config.keyboard_id}
-								.keyboardMode=${this.config.keyboard_mode}
-							/>`,
-						);
+						row_content.push(this.buildButton(element_name));
 						break;
 					}
 				}

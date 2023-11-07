@@ -69,7 +69,7 @@ export class RemoteButton extends BaseRemoteElement {
 	render(inputTemplate?: TemplateResult<1>) {
 		let style = {};
 		if (this.elementStyle) {
-			style = styleMap(this.elementStyle);
+			style = this.elementStyle;
 		}
 
 		let icon = this.info?.icon ?? '';
@@ -87,7 +87,7 @@ export class RemoteButton extends BaseRemoteElement {
 
 		return html`
 			<ha-icon-button
-				style=${style}
+				style=${styleMap(style)}
 				@click=${this.onClick}
 				@touchstart=${this.onlongClickStart}
 				@touchend=${this.onlongClickEnd}

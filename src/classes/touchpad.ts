@@ -139,12 +139,12 @@ export class RemoteTouchpad extends BaseRemoteElement {
 	render() {
 		let style = {};
 		if (this.elementStyle) {
-			style = styleMap(this.elementStyle);
+			style = this.elementStyle;
 		}
 
 		return html`
 			<toucharea
-				style=${style}
+				style=${styleMap(style)}
 				@click=${this.onClick}
 				@touchstart=${this.onTouchStart}
 				@touchmove=${this.onTouchMove}
