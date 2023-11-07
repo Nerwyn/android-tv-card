@@ -13,12 +13,13 @@ export interface IConfig {
 	custom_sources?: Record<string, ISource | ICustomAction>;
 	custom_icons?: Record<string, string>;
 
-	touchpad_height?: string;
-
 	slider_config?: Record<string, string>;
 	enable_slider_feedback?: boolean;
 
 	enable_button_feedback?: boolean;
+
+	touchpad_height?: string;
+	enable_touchpad_feedback?: boolean;
 	enable_double_click?: boolean;
 	double_click_keycode?: string;
 	long_click_keycode?: string;

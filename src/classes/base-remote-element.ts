@@ -10,8 +10,7 @@ import { IData, IKey, ISource, ICustomAction } from '../models';
 export class BaseRemoteElement extends LitElement {
 	@property({ attribute: false }) hass!: HomeAssistant;
 	@property({ attribute: false }) hapticEnabled?: boolean;
-	@property({ attribute: false }) remoteId!: string;
-	@property({ attribute: false }) action!: string;
+	@property({ attribute: false }) remoteId?: string;
 	@property({ attribute: false }) elementStyle?: StyleInfo;
 
 	longPress?: boolean;
@@ -48,7 +47,7 @@ export class BaseRemoteElement extends LitElement {
 
 	sendCommand(key: string, longPress: boolean = false) {
 		const data: IData = {
-			entity_id: this.remoteId,
+			entity_id: this.remoteId!,
 			command: key,
 		};
 		if (longPress) {

@@ -16,6 +16,7 @@ import { BaseRemoteElement } from './base-remote-element';
 @customElement('remote-button')
 export class RemoteButton extends BaseRemoteElement {
 	@property({ attribute: false }) info!: IKey | ISource | ICustomAction;
+	@property({ attribute: false }) actionKey!: string;
 	@property({ attribute: false }) customIcon?: string;
 
 	timer?: ReturnType<typeof setTimeout>;
@@ -27,7 +28,7 @@ export class RemoteButton extends BaseRemoteElement {
 
 	onClick(_e: Event, longPress: boolean = false) {
 		let haptic: HapticType = longPress ? 'medium' : 'light';
-		if (['up', 'down', 'left', 'right'].includes(this.action)) {
+		if (['up', 'down', 'left', 'right'].includes(this.actionKey)) {
 			haptic = 'selection';
 		}
 		this.fireHapticEvent(haptic);
@@ -41,7 +42,7 @@ export class RemoteButton extends BaseRemoteElement {
 
 			// Only repeat hold action for directional keys and volume
 			// prettier-ignore
-			if (['up', 'down', 'left', 'right', 'volume_up', 'volume_down', 'delete'].includes(this.action)) {
+			if (['up', 'down', 'left', 'right', 'volume_up', 'volume_down', 'delete'].includes(this.actionKey)) {
 				this.interval = setInterval(() => {
 					this.onClick(e, false)
 				}, 100);
@@ -61,7 +62,6 @@ export class RemoteButton extends BaseRemoteElement {
 		clearTimeout(this.timer as ReturnType<typeof setTimeout>);
 		clearInterval(this.interval as ReturnType<typeof setInterval>);
 
-		this.action = '';
 		this.timer = undefined;
 		this.interval = undefined;
 	}
@@ -78,7 +78,9 @@ export class RemoteButton extends BaseRemoteElement {
 		// Use original icon if none provided for custom key or source
 		if (!(icon || svg_path)) {
 			const iconInfo =
-				defaultKeys[this.action] || defaultSources[this.action] || {};
+				defaultKeys[this.actionKey] ||
+				defaultSources[this.actionKey] ||
+				{};
 			icon = iconInfo?.icon ?? '';
 			svg_path = iconInfo?.svg_path ?? '';
 		}
@@ -89,7 +91,8 @@ export class RemoteButton extends BaseRemoteElement {
 				@click=${this.onClick}
 				@touchstart=${this.onlongClickStart}
 				@touchend=${this.onlongClickEnd}
-				title="${this.action}
+				title="${this.actionKey}
+				.action=${this.actionKey}
 				.path=${svg_path}
 			>
 				<ha-icon .icon="${!svg_path ? icon : ''}"></ha-icon>

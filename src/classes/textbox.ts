@@ -3,8 +3,8 @@ import { IData } from '../models';
 
 import { RemoteButton } from './button';
 
-@customElement('remote-bulk-text')
-export class RemoteBulkText extends RemoteButton {
+@customElement('remote-texbox')
+export class RemoteTextbox extends RemoteButton {
 	@property({ attribute: false }) keyboardId!: string;
 	@property({ attribute: false }) keyboardMode!: string;
 

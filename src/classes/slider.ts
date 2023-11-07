@@ -6,7 +6,6 @@ import { BaseRemoteElement } from './base-remote-element';
 
 @customElement('remote-button')
 export class RemoteButton extends BaseRemoteElement {
-	@property({ attribute: false }) enableSliderFeedback?: boolean;
 	@property({ attribute: false }) mediaPlayerId!: string;
 	@property({ attribute: false }) sliderConfig?: Record<string, string>;
 
@@ -47,7 +46,7 @@ export class RemoteButton extends BaseRemoteElement {
 			'ontouchstart',
 			(e: Event) => {
 				e.stopImmediatePropagation();
-				if (this.enableSliderFeedback ?? true) {
+				if (this.hapticEnabled ?? true) {
 					forwardHaptic('selection');
 				}
 			},
@@ -56,7 +55,7 @@ export class RemoteButton extends BaseRemoteElement {
 		volumeSlider.addEventListener(
 			'input',
 			(_e: Event) => {
-				if (this.enableSliderFeedback ?? true) {
+				if (this.hapticEnabled ?? true) {
 					forwardHaptic('light');
 				}
 			},
