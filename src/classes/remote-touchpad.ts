@@ -2,7 +2,7 @@ import { html, css } from 'lit';
 import { customElement, property, eventOptions } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
-import { IAction, TouchAction, defaultKeys } from '../models';
+import { IAction, TouchAction } from '../models';
 import { BaseRemoteElement } from './base-remote-element';
 
 @customElement('remote-touchpad')
@@ -52,7 +52,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		this.clickCount = 0;
 
 		this.fireHapticEvent('success');
-		const info = this.info.double ?? defaultKeys['back'];
+		const info = this.info.double;
 		this.sendAction(info);
 	}
 
@@ -73,7 +73,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 				}, 100);
 			} else {
 				this.fireHapticEvent('medium');
-				this.sendAction(this.info['long'], true);
+				this.sendAction(this.info.long, true);
 			}
 		}, 500);
 

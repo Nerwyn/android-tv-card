@@ -4,13 +4,7 @@ import { TemplateResult, CSSResult, html, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
-import {
-	IKey,
-	ISource,
-	ICustomAction,
-	defaultKeys,
-	defaultSources,
-} from '../models';
+import { IKey, ISource, ICustomAction } from '../models';
 import { BaseRemoteElement } from './base-remote-element';
 
 @customElement('remote-button')
@@ -72,18 +66,8 @@ export class RemoteButton extends BaseRemoteElement {
 			style = this.elementStyle;
 		}
 
-		let icon = this.info?.icon ?? '';
-		let svg_path = this.info.svg_path ?? this.customIcon ?? '';
-
-		// Use original icon if none provided for custom key or source
-		if (!(icon || svg_path)) {
-			const iconInfo =
-				defaultKeys[this.actionKey] ||
-				defaultSources[this.actionKey] ||
-				{};
-			icon = iconInfo?.icon ?? '';
-			svg_path = iconInfo?.svg_path ?? '';
-		}
+		const icon = this.info.icon;
+		const svg_path = this.info.svg_path ?? this.customIcon;
 
 		return html`
 			<ha-icon-button
