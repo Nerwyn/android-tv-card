@@ -150,6 +150,7 @@ export class RemoteSlider extends BaseRemoteElement {
 				width: inherit;
 				height: inherit;
 				background: var(--disabled-color);
+				opacity: 0.2;
 			}
 
 			.slider,

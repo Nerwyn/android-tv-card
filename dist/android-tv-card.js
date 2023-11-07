@@ -249,6 +249,7 @@
 				width: inherit;
 				height: inherit;
 				background: var(--disabled-color);
+				opacity: 0.2;
 			}
 
 			.slider,
@@ -308,6 +309,7 @@
 				width: -webkit-fill-available;
 				width: fill-available;
 				background: var(--disabled-color);
+				opacity: 0.2;
 				touch-action: none;
 				text-align: center;
 			}
