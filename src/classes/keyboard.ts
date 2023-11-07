@@ -1,4 +1,4 @@
-import { html } from 'lit';
+import { CSSResult, html, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
 import { IData } from '../models';
@@ -142,13 +142,33 @@ export class RemoteKeyboard extends RemoteButton {
 				onchange="this.value=''"
 				onkeyup="this.value=''"
 				@focus=${this.onFocus}
-				@focusout"${this.onFocusOut}
+				@focusout=${this.onFocusOut}
 				@input=${this.onInput}
 				@paste=${this.onPaste}
 				@keydown=${this.onKeyDown}
 			></input>
-			</ha-icon-button>
 		`;
 		return super.render(inputTemplate);
+	}
+
+	static get styles(): CSSResult | CSSResult[] {
+		return [
+			super.styles as CSSResult,
+			css`
+				input {
+					opacity: 0;
+					filter: alpha(opacity=0);
+					top: 0;
+					left: 0;
+					position: absolute;
+					width: -moz-available;
+					width: -webkit-fill-available;
+					width: fill-available;
+					height: -moz-available;
+					height: -webkit-fill-available;
+					height: fill-available;
+				}
+			`,
+		];
 	}
 }
