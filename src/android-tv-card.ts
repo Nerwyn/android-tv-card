@@ -894,37 +894,6 @@ class AndroidTVCard extends LitElement {
 			ha-card {
 				padding: 12px;
 			}
-			ha-icon-button {
-				width: 48px;
-				height: 48px;
-				cursor: pointer;
-				--mdc-icon-size: 100%;
-				position: relative;
-				display: inline-flex;
-				flex-direction: column;
-				align-content: center;
-				justify-content: center;
-				text-align: center;
-				align-items: center;
-			}
-			.empty-button {
-				width: 48px;
-				height: 48px;
-				position: relative;
-			}
-			input {
-				opacity: 0;
-				filter: alpha(opacity=0);
-				top: 0;
-				left: 0;
-				position: absolute;
-				width: -moz-available;
-				width: -webkit-fill-available;
-				width: fill-available;
-				height: -moz-available;
-				height: -webkit-fill-available;
-				height: fill-available;
-			}
 			.row {
 				display: flex;
 				flex-wrap: nowrap;
@@ -950,16 +919,10 @@ class AndroidTVCard extends LitElement {
 				justify-content: space-evenly;
 				align-items: center;
 			}
-			toucharea {
-				border-radius: 32px;
-				flex-grow: 1;
-				height: 250px;
-				width: -moz-available;
-				width: -webkit-fill-available;
-				width: fill-available;
-				background: #6d767e;
-				touch-action: none;
-				text-align: center;
+			.empty-button {
+				width: 48px;
+				height: 48px;
+				position: relative;
 			}
 		`;
 	}

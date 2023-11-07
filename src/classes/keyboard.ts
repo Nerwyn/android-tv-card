@@ -135,18 +135,18 @@ export class RemoteKeyboard extends RemoteButton {
 	render() {
 		const inputTemplate = html`
 			<input
-					spellcheck="false"
-					autocorrect="off"
-					autocomplete="off"
-					autocapitalize="off"
-					onchange="this.value=''"
-					onkeyup="this.value=''"
-					@focus=${this.onFocus}
-					@focusout"${this.onFocusOut}
-					@input=${this.onInput}
-					@paste=${this.onPaste}
-					@keydown=${this.onKeyDown}
-				></input>
+				spellcheck="false"
+				autocorrect="off"
+				autocomplete="off"
+				autocapitalize="off"
+				onchange="this.value=''"
+				onkeyup="this.value=''"
+				@focus=${this.onFocus}
+				@focusout"${this.onFocusOut}
+				@input=${this.onInput}
+				@paste=${this.onPaste}
+				@keydown=${this.onKeyDown}
+			></input>
 			</ha-icon-button>
 		`;
 		return super.render(inputTemplate);
