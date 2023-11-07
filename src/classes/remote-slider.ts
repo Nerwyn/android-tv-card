@@ -23,9 +23,7 @@ export class RemoteSlider extends BaseRemoteElement {
 
 		const slider = e.currentTarget as HTMLInputElement;
 		const start = parseFloat(
-			this.hass.states[this.mediaPlayerId].attributes.volume_level ??
-				(this.oldValue as unknown as string) ??
-				this.value,
+			(this.oldValue as unknown as string) ?? this.value,
 		);
 		const end = parseFloat(slider.value ?? start);
 		slider.value = start.toString();
