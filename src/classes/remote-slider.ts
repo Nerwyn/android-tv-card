@@ -10,8 +10,7 @@ export class RemoteSlider extends BaseRemoteElement {
 	@property({ attribute: false }) range: [number, number] = [0, 1];
 
 	value: number =
-		this.hass.states[this.mediaPlayerId].attributes.volume_level ??
-		(this.range[1] - this.range[0]) / 2;
+		this.hass.states[this.mediaPlayerId].attributes.volume_level ?? '0';
 	oldValue: number = this.value;
 	newValue: number = this.value;
 	step: number = (this.range[1] - this.range[0]) / 100;
