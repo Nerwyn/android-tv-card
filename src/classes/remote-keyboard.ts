@@ -2,7 +2,7 @@ import { CSSResult, html, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
 import { IData } from '../models';
-import { RemoteButton } from './button';
+import { RemoteButton } from './remote-button';
 
 @customElement('remote-keyboard')
 export class RemoteKeyboard extends RemoteButton {

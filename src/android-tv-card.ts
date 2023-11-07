@@ -15,12 +15,12 @@ import {
 	IData,
 } from './models';
 
-import './classes/button';
-import './classes/keyboard';
-import './classes/textbox';
-import './classes/search';
-import './classes/touchpad';
-import './classes/slider';
+import './classes/remote-button';
+import './classes/remote-keyboard';
+import './classes/remote-textbox';
+import './classes/remote-search';
+import './classes/remote-touchpad';
+import './classes/remote-slider';
 
 console.info(
 	`%c ANDROID-TV-CARD v${version}`,

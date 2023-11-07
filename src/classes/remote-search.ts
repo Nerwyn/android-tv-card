@@ -1,7 +1,7 @@
 import { customElement, property } from 'lit/decorators.js';
 
 import { IData } from '../models';
-import { RemoteButton } from './button';
+import { RemoteButton } from './remote-button';
 
 @customElement('remote-search')
 export class RemoteSearch extends RemoteButton {
