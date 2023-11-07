@@ -20,6 +20,8 @@ export interface ICustomAction {
 	svg_path?: string;
 }
 
+export type IAction = IKey | ISource | ICustomAction;
+
 export interface IData {
 	[key: string]: string | string[] | number | boolean;
 }

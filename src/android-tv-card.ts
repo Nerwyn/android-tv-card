@@ -7,11 +7,12 @@ import { HomeAssistant, applyThemesOnElement } from 'custom-card-helpers';
 
 import {
 	IConfig,
-	ICustomAction,
-	defaultKeys,
-	defaultSources,
 	IKey,
 	ISource,
+	ICustomAction,
+	IAction,
+	defaultKeys,
+	defaultSources,
 	IData,
 } from './models';
 
@@ -90,6 +91,11 @@ class AndroidTVCard extends LitElement {
 		if ('adb_id' in config && !('keyboard_id' in config)) {
 			config.keyboard_id = (config as Record<string, string>).adb_id;
 		}
+		if ('touchpad_height' in config && !('touchpad_style' in config)) {
+			config.touchpad_style = {
+				height: (config as Record<string, string>).touchpad_height,
+			};
+		}
 		return config;
 	}
 
@@ -149,7 +155,7 @@ class AndroidTVCard extends LitElement {
 		return config;
 	}
 
-	getInfo(action: string): IKey | ISource | ICustomAction {
+	getInfo(action: string): IAction {
 		return (
 			this.customKeys[action] ||
 			this.customSources[action] ||
@@ -201,19 +207,28 @@ class AndroidTVCard extends LitElement {
 	}
 
 	buildVolumeSliderOld(): TemplateResult {
+		const sliderConfig = (this.config as Record<string, string>)
+			.slider_config;
+
 		return html`<remote-slider-old
 			.hass=${this.hass}
 			.hapticEnabled=${this.config.enable_slider_feedback}
 			.mediaPlayerId=${this.config.media_player_id}
+			.sliderConfig=${sliderConfig}
 		/>`;
 	}
 
 	buildVolumeSlider(): TemplateResult {
+		const value = this.hass.states[this.config.media_player_id!].state;
+		const range = this.config.slider_range ?? [0, 1];
+
 		return html`<remote-slider
 			.hass=${this.hass}
 			.hapticEnabled=${this.config.enable_slider_feedback}
 			.mediaPlayerId=${this.config.media_player_id}
-			.sliderConfig=${this.config.slider_config}
+			.value=${value}
+			.range=${range}
+			.elementStyle=${this.config.slider_style}
 		/>`;
 	}
 
@@ -284,12 +299,8 @@ class AndroidTVCard extends LitElement {
 			long: this.getInfo(this.config.long_click_keycode ?? 'center'),
 		};
 
-		const style: Record<string, string> = {};
-		if (this.config['touchpad_height']) {
-			style['height'] = this.config['touchpad_height'];
-		}
 		return html`<remote-touchpad
-			.elementStyle=${style}
+			.elementStyle=${this.config.touchpad_style}
 			.hass=${this.hass}
 			.hapticEnabled=${this.config.enable_touchpad_feedback || true}
 			.remoteId=${this.config.remote_id}

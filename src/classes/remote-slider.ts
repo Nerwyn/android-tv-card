@@ -70,6 +70,7 @@ export class RemoteSlider extends BaseRemoteElement {
 		const [domain, service] = ['media_player', 'volume_set'];
 		const data: IData = {
 			volume_level: this.value,
+			entity_id: this.mediaPlayerId,
 		};
 		if (!this.newValue && this.newValue != 0) {
 			this.newValue = this.value as number;
@@ -151,7 +152,7 @@ export class RemoteSlider extends BaseRemoteElement {
 				position: absolute;
 				width: inherit;
 				height: inherit;
-				background: rgb(60, 60, 60);
+				background: var(--disabled-color);
 			}
 
 			.slider,
@@ -177,10 +178,10 @@ export class RemoteSlider extends BaseRemoteElement {
 				height: 20px;
 				width: 4px;
 				border-radius: 12px;
-				background: white;
+				background: var(--primary-text-color);
 				cursor: pointer;
 				z-index: 1;
-				box-shadow: -100vw 0 0 100vw white;
+				box-shadow: -100vw 0 0 100vw var(--primary-text-color);
 			}
 
 			.slider-off::-webkit-slider-thumb {

@@ -1,3 +1,5 @@
+import { StyleInfo } from 'lit/directives/style-map.js';
+
 import { IKey, ISource, ICustomAction } from '.';
 
 export interface IConfig {
@@ -14,15 +16,16 @@ export interface IConfig {
 	custom_icons?: Record<string, string>;
 
 	enable_button_feedback?: boolean;
-	enable_touchpad_feedback?: boolean;
-	enable_slider_feedback?: boolean;
 
-	touchpad_height?: string;
+	enable_touchpad_feedback?: boolean;
 	enable_double_click?: boolean;
 	double_click_keycode?: string;
 	long_click_keycode?: string;
+	touchpad_style?: StyleInfo;
 
-	slider_config?: Record<string, string>;
+	enable_slider_feedback?: boolean;
+	slider_range?: [number, number];
+	slider_style?: StyleInfo;
 
 	rows?: Row[];
 }

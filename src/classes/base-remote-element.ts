@@ -4,7 +4,7 @@ import { LitElement, CSSResult, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { StyleInfo } from 'lit/directives/style-map.js';
 
-import { IData, IKey, ISource, ICustomAction } from '../models';
+import { IData, IKey, ISource, IAction } from '../models';
 
 @customElement('base-remote-element')
 export class BaseRemoteElement extends LitElement {
@@ -26,10 +26,7 @@ export class BaseRemoteElement extends LitElement {
 		}
 	}
 
-	sendAction(
-		info: IKey | ISource | ICustomAction,
-		longPress: boolean = false,
-	) {
+	sendAction(info: IAction, longPress: boolean = false) {
 		if ('key' in info) {
 			const key = (info as IKey).key;
 			this.sendCommand(key, longPress);

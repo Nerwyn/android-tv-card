@@ -2,22 +2,13 @@ import { html, css } from 'lit';
 import { customElement, property, eventOptions } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
-import {
-	IKey,
-	ISource,
-	ICustomAction,
-	TouchAction,
-	defaultKeys,
-} from '../models';
+import { IAction, TouchAction, defaultKeys } from '../models';
 import { BaseRemoteElement } from './base-remote-element';
 
 @customElement('remote-touchpad')
 export class RemoteTouchpad extends BaseRemoteElement {
 	@property({ attribute: false }) enableDoubleClick?: boolean;
-	@property({ attribute: false }) info!: Record<
-		TouchAction,
-		IKey | ISource | ICustomAction
-	>;
+	@property({ attribute: false }) info!: Record<TouchAction, IAction>;
 
 	clickTimer?: ReturnType<typeof setTimeout>;
 	clickCount: number;
@@ -162,7 +153,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 				width: -moz-available;
 				width: -webkit-fill-available;
 				width: fill-available;
-				background: #6d767e;
+				background: var(--disabled-color);
 				touch-action: none;
 				text-align: center;
 			}
