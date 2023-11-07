@@ -60,7 +60,7 @@
 					.info=${f}
 					.actionKey="down"
 					.customIcon=${null!==(u=this.customIcons[null!==(l=f.icon)&&void 0!==l?l:""])&&void 0!==u?u:""}
-				/>`])]}buildTouchpad(){var t,e;const i=this.getInfo("up"),o=this.getInfo("down"),n=this.getInfo("left"),r=this.getInfo("right"),a=this.getInfo("center"),c=this.getInfo(null!==(t=this.config.double_click_keycode)&&void 0!==t?t:"back"),l=this.getInfo(null!==(e=this.config.long_click_keycode)&&void 0!==e?e:"center");let u={};return this.config.touchpad_height&&(u={height:this.config.touchpad_height}),s.html`<remote-touchpad
+				/>`])]}buildTouchpad(){var t,e;const i=this.getInfo("up"),o=this.getInfo("down"),n=this.getInfo("left"),r=this.getInfo("right"),a=this.getInfo("center"),c=this.getInfo(null!==(t=this.config.double_click_keycode)&&void 0!==t?t:"back"),l=this.getInfo(null!==(e=this.config.long_click_keycode)&&void 0!==e?e:"center"),u={};return this.config.touchpad_height&&(u.height=this.config.touchpad_height),s.html`<remote-touchpad
 			.elementStyle=${u}
 			.hass=${this.hass}
 			.hapticEnabled=${this.config.enable_touchpad_feedback||!0}

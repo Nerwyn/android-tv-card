@@ -277,11 +277,9 @@ class AndroidTVCard extends LitElement {
 			this.config.long_click_keycode ?? 'center',
 		);
 
-		let style = {};
+		const style: Record<string, string> = {};
 		if (this.config['touchpad_height']) {
-			style = {
-				height: this.config['touchpad_height'],
-			};
+			style['height'] = this.config['touchpad_height'];
 		}
 		return html`<remote-touchpad
 			.elementStyle=${style}
