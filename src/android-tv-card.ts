@@ -21,6 +21,7 @@ import './classes/remote-textbox';
 import './classes/remote-search';
 import './classes/remote-touchpad';
 import './classes/remote-slider';
+import './classes/remote-slider-old';
 
 console.info(
 	`%c ANDROID-TV-CARD v${version}`,
@@ -199,6 +200,14 @@ class AndroidTVCard extends LitElement {
 		];
 	}
 
+	buildVolumeSliderOld(): TemplateResult {
+		return html`<remote-slider-old
+			.hass=${this.hass}
+			.hapticEnabled=${this.config.enable_slider_feedback}
+			.mediaPlayerId=${this.config.media_player_id}
+		/>`;
+	}
+
 	buildVolumeSlider(): TemplateResult {
 		return html`<remote-slider
 			.hass=${this.hass}
@@ -365,6 +374,10 @@ class AndroidTVCard extends LitElement {
 						row_content.push(this.buildVolumeSlider());
 						break;
 					}
+					case 'volume_slider_old': {
+						row_content.push(this.buildVolumeSliderOld());
+						break;
+					}
 
 					case 'navigation_buttons': {
 						row_content.push(
@@ -372,7 +385,6 @@ class AndroidTVCard extends LitElement {
 						);
 						break;
 					}
-
 					case 'navigation_touchpad': {
 						row_content.push(this.buildTouchpad());
 						break;
