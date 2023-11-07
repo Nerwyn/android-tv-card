@@ -4,8 +4,8 @@ import { customElement, property } from 'lit/decorators.js';
 
 import { BaseRemoteElement } from './base-remote-element';
 
-@customElement('remote-button')
-export class RemoteButton extends BaseRemoteElement {
+@customElement('remote-slider')
+export class RemoteSlider extends BaseRemoteElement {
 	@property({ attribute: false }) mediaPlayerId!: string;
 	@property({ attribute: false }) sliderConfig?: Record<string, string>;
 
