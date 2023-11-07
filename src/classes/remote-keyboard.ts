@@ -25,11 +25,11 @@ export class RemoteKeyboard extends RemoteButton {
 		e.stopImmediatePropagation();
 
 		const keyToKey: Record<string, string> = {
-			Backspace: 'delete',
-			Delete: 'forward_delete',
-			Enter: 'enter',
-			ArrowLeft: 'left',
-			ArrowRight: 'right',
+			Backspace: 'DEL',
+			Delete: 'FOWARD_DEL',
+			Enter: 'ENTER',
+			ArrowLeft: 'DPAD_LEFT',
+			ArrowRight: 'DPAD_RIGHT',
 		};
 
 		const key = keyToKey[e.key ?? ''];
