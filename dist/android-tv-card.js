@@ -195,6 +195,9 @@
 			>
 			</toucharea>
 		`}static get styles(){return n.css`
+			:host {
+				display: contents;
+			}
 			toucharea {
 				border-radius: 32px;
 				flex-grow: 1;

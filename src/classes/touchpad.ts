@@ -156,6 +156,9 @@ export class RemoteTouchpad extends BaseRemoteElement {
 
 	static get styles() {
 		return css`
+			:host {
+				display: contents;
+			}
 			toucharea {
 				border-radius: 32px;
 				flex-grow: 1;
