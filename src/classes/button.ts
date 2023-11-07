@@ -87,11 +87,11 @@ export class RemoteButton extends BaseRemoteElement {
 
 		return html`
 			<ha-icon-button
+				title="${this.actionKey}"
 				style=${styleMap(style)}
 				@click=${this.onClick}
 				@touchstart=${this.onlongClickStart}
 				@touchend=${this.onlongClickEnd}
-				title="${this.actionKey}
 				.action=${this.actionKey}
 				.path=${svg_path}
 			>
