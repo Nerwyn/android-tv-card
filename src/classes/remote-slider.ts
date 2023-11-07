@@ -26,7 +26,7 @@ export class RemoteSlider extends BaseRemoteElement {
 		e.stopImmediatePropagation();
 
 		this.fireHapticEvent('selection');
-		
+
 		const slider = e.currentTarget as HTMLInputElement;
 		const start = parseFloat(
 			(this.oldValue as unknown as string) ?? this.value ?? '0',
@@ -93,7 +93,7 @@ export class RemoteSlider extends BaseRemoteElement {
 		const background = html`<div class="slider-background"></div>`;
 
 		let sliderClass = 'slider';
-		if (!this.value || this.value == 0) {
+		if (!this.value || this.value <= this.range[0]) {
 			sliderClass = 'slider-off';
 		}
 		const slider = html`
