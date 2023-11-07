@@ -13,7 +13,7 @@ export class RemoteSlider extends BaseRemoteElement {
 		super();
 	}
 
-	async render() {
+	render() {
 		let slider_config = {
 			type: 'custom:my-slider',
 			entity: this.mediaPlayerId,
@@ -38,7 +38,7 @@ export class RemoteSlider extends BaseRemoteElement {
 				volumeSlider = createThing(slider_config, true);
 				volumeSlider.setAttribute('style', 'width: inherit;');
 			} catch {
-				await new Promise((resolve) => setTimeout(resolve, 100));
+				new Promise((resolve) => setTimeout(resolve, 100));
 			}
 		}
 
