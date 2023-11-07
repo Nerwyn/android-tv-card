@@ -6,7 +6,7 @@
 			.info=${n}
 			.actionKey="${e}"
 			.customIcon=${null!==(i=this.customIcons[null!==(t=n.icon)&&void 0!==t?t:""])&&void 0!==i?i:""}
-		/>`}buildVolumeButtons(){return[this.buildButton("volume_down"),this.buildButton("volume_mute"),this.buildButton("volume_up")]}buildVolumeSlider(){var e,t;const i=null!==(e=this.config.slider_range)&&void 0!==e?e:[0,1],n=(null!==(t=this.hass.states[this.config.media_player_id].state)&&void 0!==t?t:i[0]).toString();return s.html`<remote-slider
+		/>`}buildVolumeButtons(){return[this.buildButton("volume_down"),this.buildButton("volume_mute"),this.buildButton("volume_up")]}buildVolumeSlider(){var e,t;const i=null!==(e=this.config.slider_range)&&void 0!==e?e:[0,1],n=(null!==(t=this.hass.states[this.config.media_player_id].attributes.volume_level)&&void 0!==t?t:i[0]).toString();return s.html`<remote-slider
 			.hass=${this.hass}
 			.hapticEnabled=${this.config.enable_slider_feedback}
 			.mediaPlayerId=${this.config.media_player_id}
