@@ -141,6 +141,12 @@ export class RemoteSlider extends BaseRemoteElement {
 				--slider-opacity: 1;
 			}
 
+			.container {
+				all: inherit;
+				height: 100%;
+				overflow: hidden;
+			}
+
 			.slider-background {
 				position: absolute;
 				width: inherit;
