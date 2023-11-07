@@ -142,6 +142,8 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			style = this.elementStyle;
 		}
 
+		console.log(this.info)
+
 		return html`
 			<toucharea
 				style=${styleMap(style)}
