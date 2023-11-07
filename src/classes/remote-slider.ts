@@ -10,8 +10,8 @@ export class RemoteSlider extends BaseRemoteElement {
 	@property({ attribute: false }) range: [number, number] = [0, 1];
 
 	value: number = 0;
-	oldValue: number = this.value;
-	newValue: number = this.value;
+	oldValue?: number;
+	newValue?: number;
 	step: number = (this.range[1] - this.range[0]) / 100;
 	speed: number = (this.range[1] - this.range[0]) / 50;
 
@@ -76,8 +76,12 @@ export class RemoteSlider extends BaseRemoteElement {
 
 		this.value =
 			this.hass.states[this.mediaPlayerId].attributes.volume_level ?? 0;
-		this.oldValue = this.value;
-		this.newValue = this.value;
+		if (this.oldValue == undefined) {
+			this.oldValue = this.value;
+		}
+		if (this.newValue == undefined) {
+			this.newValue = this.value;
+		}
 
 		let sliderClass = 'slider';
 		if (!this.value || this.value <= this.range[0]) {
