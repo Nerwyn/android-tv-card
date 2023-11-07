@@ -155,13 +155,19 @@ class AndroidTVCard extends LitElement {
 	}
 
 	getInfo(action: string): IAction {
-		return (
+		const info =
 			this.customKeys[action] ||
 			this.customSources[action] ||
 			defaultKeys[action] ||
 			defaultSources[action] ||
-			{}
-		);
+			{};
+		if (!(info?.icon || info.svg_path)) {
+			const iconInfo =
+				defaultKeys[action] || defaultSources[action] || {};
+			info.icon = iconInfo?.icon ?? '';
+			info.svg_path = iconInfo?.svg_path ?? '';
+		}
+		return info;
 	}
 
 	buildRow(content: TemplateResult[]): TemplateResult {
@@ -173,35 +179,10 @@ class AndroidTVCard extends LitElement {
 	}
 
 	buildVolumeButtons(): TemplateResult[] {
-		const volumeUpInfo = this.getInfo('volume_up');
-		const volumeDownInfo = this.getInfo('volume_down');
-		const volumeMuteInfo = this.getInfo('volume_mute');
-
 		return [
-			html`<remote-button
-				.hass=${this.hass}
-				.hapticEnabled=${this.config.enable_button_feedback || true}
-				.remoteId=${this.config.remote_id}
-				.info=${volumeUpInfo}
-				.actionKey="volume_up"
-				.customIcon=${this.customIcons[volumeUpInfo.icon ?? ''] ?? ''}
-			/>`,
-			html`<remote-button
-				.hass=${this.hass}
-				.hapticEnabled=${this.config.enable_button_feedback || true}
-				.remoteId=${this.config.remote_id}
-				.info=${volumeDownInfo}
-				.actionKey="volume_down"
-				.customIcon=${this.customIcons[volumeDownInfo.icon ?? ''] ?? ''}
-			/>`,
-			html`<remote-button
-				.hass=${this.hass}
-				.hapticEnabled=${this.config.enable_button_feedback || true}
-				.remoteId=${this.config.remote_id}
-				.info=${volumeMuteInfo}
-				.actionKey="volume_mute"
-				.customIcon=${this.customIcons[volumeMuteInfo.icon ?? ''] ?? ''}
-			/>`,
+			this.buildButton('volume_down'),
+			this.buildButton('volume_mute'),
+			this.buildButton('volume_up'),
 		];
 	}
 
@@ -220,58 +201,14 @@ class AndroidTVCard extends LitElement {
 	}
 
 	buildNavigationButtons(): TemplateResult[] {
-		const upInfo = this.getInfo('up');
-		const leftInfo = this.getInfo('left');
-		const centerInfo = this.getInfo('center');
-		const rightInfo = this.getInfo('right');
-		const downInfo = this.getInfo('down');
 		return [
+			this.buildRow([this.buildButton('up')]),
 			this.buildRow([
-				html`<remote-button
-					.hass=${this.hass}
-					.hapticEnabled=${this.config.enable_button_feedback || true}
-					.remoteId=${this.config.remote_id}
-					.info=${upInfo}
-					.actionKey="up"
-					.customIcon=${this.customIcons[upInfo.icon ?? ''] ?? ''}
-				/>`,
+				this.buildButton('left'),
+				this.buildButton('center'),
+				this.buildButton('right'),
 			]),
-			this.buildRow([
-				html`<remote-button
-					.hass=${this.hass}
-					.hapticEnabled=${this.config.enable_button_feedback || true}
-					.remoteId=${this.config.remote_id}
-					.info=${leftInfo}
-					.actionKey="left"
-					.customIcon=${this.customIcons[leftInfo.icon ?? ''] ?? ''}
-				/>`,
-				html`<remote-button
-					.hass=${this.hass}
-					.hapticEnabled=${this.config.enable_button_feedback || true}
-					.remoteId=${this.config.remote_id}
-					.info=${centerInfo}
-					.actionKey="center"
-					.customIcon=${this.customIcons[centerInfo.icon ?? ''] ?? ''}
-				/>`,
-				html`<remote-button
-					.hass=${this.hass}
-					.hapticEnabled=${this.config.enable_button_feedback || true}
-					.remoteId=${this.config.remote_id}
-					.info=${rightInfo}
-					.actionKey="right"
-					.customIcon=${this.customIcons[rightInfo.icon ?? ''] ?? ''}
-				/>`,
-			]),
-			this.buildRow([
-				html`<remote-button
-					.hass=${this.hass}
-					.hapticEnabled=${this.config.enable_button_feedback || true}
-					.remoteId=${this.config.remote_id}
-					.info=${downInfo}
-					.actionKey="down"
-					.customIcon=${this.customIcons[downInfo.icon ?? ''] ?? ''}
-				/>`,
-			]),
+			this.buildRow([this.buildButton('down')]),
 		];
 	}
 
