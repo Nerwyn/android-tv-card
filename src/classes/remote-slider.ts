@@ -22,9 +22,6 @@ export class RemoteSlider extends BaseRemoteElement {
 	}
 
 	onInput(e: InputEvent) {
-		e.preventDefault();
-		e.stopImmediatePropagation();
-
 		const slider = e.currentTarget as HTMLInputElement;
 		const start = parseFloat(
 			(this.oldValue as unknown as string) ?? this.value ?? '0',
@@ -69,7 +66,7 @@ export class RemoteSlider extends BaseRemoteElement {
 	onEnd(_e: MouseEvent | TouchEvent) {
 		const [domain, service] = ['media_player', 'volume_set'];
 		const data: IData = {
-			volume_level: this.value,
+			volume_level: 'VALUE',
 			entity_id: this.mediaPlayerId,
 		};
 		if (!this.newValue && this.newValue != 0) {
