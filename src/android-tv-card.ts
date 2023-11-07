@@ -300,15 +300,45 @@ class AndroidTVCard extends LitElement {
 		/>`;
 	}
 
-	buildKeyboard(element_name: string): TemplateResult {
-		const info = this.getInfo(element_name);
+	buildKeyboard(): TemplateResult {
+		const info = this.getInfo('keyboard');
 
-		return html`<remote-${element_name}
+		return html`<remote-keyboard
 			.hass=${this.hass}
 			.hapticEnabled=${this.config.enable_button_feedback || true}
 			.remoteId=${this.config.remote_id}
 			.info=${info}
-			.actionKey="${element_name}"
+			.actionKey="keyboard"
+			.customIcon=${this.customIcons[info.icon ?? ''] ?? ''}
+			.keyboardId=${this.config.keyboard_id}
+			.keyboardMode=${this.config.keyboard_mode}
+		/>`;
+	}
+
+	buildTextbox(): TemplateResult {
+		const info = this.getInfo('textbox');
+
+		return html`<remote-textbox
+			.hass=${this.hass}
+			.hapticEnabled=${this.config.enable_button_feedback || true}
+			.remoteId=${this.config.remote_id}
+			.info=${info}
+			.actionKey="textbox"
+			.customIcon=${this.customIcons[info.icon ?? ''] ?? ''}
+			.keyboardId=${this.config.keyboard_id}
+			.keyboardMode=${this.config.keyboard_mode}
+		/>`;
+	}
+
+	buildSearch(): TemplateResult {
+		const info = this.getInfo('search');
+
+		return html`<remote-search
+			.hass=${this.hass}
+			.hapticEnabled=${this.config.enable_button_feedback || true}
+			.remoteId=${this.config.remote_id}
+			.info=${info}
+			.actionKey="search"
 			.customIcon=${this.customIcons[info.icon ?? ''] ?? ''}
 			.keyboardId=${this.config.keyboard_id}
 			.keyboardMode=${this.config.keyboard_mode}
@@ -325,8 +355,6 @@ class AndroidTVCard extends LitElement {
 			.info=${info}
 			.actionKey="${element_name}"
 			.customIcon=${this.customIcons[info.icon ?? ''] ?? ''}
-			.keyboardId=${this.config.keyboard_id}
-			.keyboardMode=${this.config.keyboard_mode}
 		/>`;
 	}
 
@@ -361,10 +389,18 @@ class AndroidTVCard extends LitElement {
 						break;
 					}
 
-					case 'keyboard':
-					case 'textbox':
+					case 'keyboard': {
+						row_content.push(this.buildKeyboard());
+						break;
+					}
+
+					case 'textbox': {
+						row_content.push(this.buildTextbox());
+						break;
+					}
+
 					case 'search': {
-						row_content.push(this.buildKeyboard(element_name));
+						row_content.push(this.buildSearch());
 						break;
 					}
 
