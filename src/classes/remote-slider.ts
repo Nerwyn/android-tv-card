@@ -10,8 +10,8 @@ export class RemoteSlider extends BaseRemoteElement {
 	@property({ attribute: false }) value: number = 0;
 	@property({ attribute: false }) range: [number, number] = [0, 1];
 
-	oldValue: number = 0;
-	newValue: number = 1;
+	oldValue: number = this.value;
+	newValue: number = this.value;
 	step: number = (this.range[1] - this.range[0]) / 100;
 	speed: number = (this.range[1] - this.range[0]) / 50;
 
