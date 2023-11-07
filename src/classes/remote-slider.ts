@@ -7,9 +7,11 @@ import { BaseRemoteElement } from './base-remote-element';
 @customElement('remote-slider')
 export class RemoteSlider extends BaseRemoteElement {
 	@property({ attribute: false }) mediaPlayerId!: string;
-	@property({ attribute: false }) value: number = 0;
 	@property({ attribute: false }) range: [number, number] = [0, 1];
 
+	value: number =
+		this.hass.states[this.mediaPlayerId].attributes.volume_level ??
+		(this.range[1] - this.range[0]) / 2;
 	oldValue: number = this.value;
 	newValue: number = this.value;
 	step: number = (this.range[1] - this.range[0]) / 100;
@@ -23,7 +25,7 @@ export class RemoteSlider extends BaseRemoteElement {
 
 		const slider = e.currentTarget as HTMLInputElement;
 		const start = parseFloat(
-			(this.oldValue as unknown as string) ?? this.value ?? '0',
+			(this.oldValue as unknown as string) ?? this.value,
 		);
 		const end = parseFloat(slider.value ?? start);
 		slider.value = start.toString();

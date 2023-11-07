@@ -191,16 +191,11 @@ class AndroidTVCard extends LitElement {
 
 	buildVolumeSlider(): TemplateResult {
 		const range = this.config.slider_range ?? [0, 1];
-		const value = (
-			this.hass.states[this.config.media_player_id!].attributes
-				.volume_level ?? range[0]
-		).toString();
 
 		return html`<remote-slider
 			.hass=${this.hass}
 			.hapticEnabled=${this.config.enable_slider_feedback}
 			.mediaPlayerId=${this.config.media_player_id}
-			.value=${value}
 			.range=${range}
 			.elementStyle=${this.config.slider_style}
 		/>`;
