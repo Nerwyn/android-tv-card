@@ -114,9 +114,7 @@ export class RemoteSlider extends BaseRemoteElement {
 				place-content: center space-evenly;
 				align-items: center;
 				position: relative;
-				height: var(--height);
 				width: 100%;
-				border-radius: var(--border-radius);
 				border: none;
 				padding: 0px;
 				box-sizing: border-box;
@@ -125,25 +123,26 @@ export class RemoteSlider extends BaseRemoteElement {
 				overflow: hidden;
 				font-size: inherit;
 				color: inherit;
+			}
+
+			.container {
+				all: inherit;
+				overflow: hidden;
+				height: 50px;
+				border-radius: var(--border-radius);
 
 				--color: var(--primary-text-color);
-				--height: 50px;
 				--background: var(--secondary-background-color);
 				--background-height: 50px;
 				--border-radius: 25px;
 			}
 
-			.container {
-				all: inherit;
-				height: 100%;
-				overflow: hidden;
-			}
-
 			.slider-background {
 				position: absolute;
 				width: inherit;
-				height: inherit;
+				height: var(--background-height);
 				background: var(--background);
+				border-radius: var(--border-radius);
 			}
 
 			.slider,
