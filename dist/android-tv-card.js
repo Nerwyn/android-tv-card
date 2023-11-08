@@ -108,6 +108,7 @@
 				ha-icon-button,
 				ha-icon,
 				svg {
+					display: flex;
 					height: var(--size);
 					width: var(--size);
 				}
