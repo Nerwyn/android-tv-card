@@ -80,9 +80,12 @@ export class RemoteButton extends BaseRemoteElement {
 		return [
 			super.styles as CSSResult,
 			css`
+				:host {
+					--size: 48px;
+				}
 				ha-icon-button {
-					width: 48px;
-					height: 48px;
+					height: var(--size);
+					width: var(--size);
 					cursor: pointer;
 					--mdc-icon-size: 100%;
 					position: relative;
@@ -94,8 +97,8 @@ export class RemoteButton extends BaseRemoteElement {
 					align-items: center;
 				}
 				ha-icon {
-					height: inherit !important;
-					width: inherit !important;
+					height: var(--size);
+					width: var(--size);
 				}
 			`,
 		];
