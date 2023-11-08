@@ -251,6 +251,10 @@ class AndroidTVCard extends LitElement {
 	buildKeyboard(): TemplateResult {
 		const info = this.getInfo('keyboard');
 
+		const style = {
+			...this.config.button_style,
+			...info.style,
+		};
 		return html`<remote-keyboard
 			.hass=${this.hass}
 			.hapticEnabled=${this.config.enable_button_feedback || true}
@@ -260,12 +264,17 @@ class AndroidTVCard extends LitElement {
 			.customIcon=${this.customIcons[info.icon ?? ''] ?? ''}
 			.keyboardId=${this.config.keyboard_id}
 			.keyboardMode=${this.config.keyboard_mode}
+			._style=${style}
 		/>`;
 	}
 
 	buildTextbox(): TemplateResult {
 		const info = this.getInfo('textbox');
 
+		const style = {
+			...this.config.button_style,
+			...info.style,
+		};
 		return html`<remote-textbox
 			.hass=${this.hass}
 			.hapticEnabled=${this.config.enable_button_feedback || true}
@@ -275,12 +284,17 @@ class AndroidTVCard extends LitElement {
 			.customIcon=${this.customIcons[info.icon ?? ''] ?? ''}
 			.keyboardId=${this.config.keyboard_id}
 			.keyboardMode=${this.config.keyboard_mode}
+			._style=${style}
 		/>`;
 	}
 
 	buildSearch(): TemplateResult {
 		const info = this.getInfo('search');
 
+		const style = {
+			...this.config.button_style,
+			...info.style,
+		};
 		return html`<remote-search
 			.hass=${this.hass}
 			.hapticEnabled=${this.config.enable_button_feedback || true}
@@ -290,6 +304,7 @@ class AndroidTVCard extends LitElement {
 			.customIcon=${this.customIcons[info.icon ?? ''] ?? ''}
 			.keyboardId=${this.config.keyboard_id}
 			.keyboardMode=${this.config.keyboard_mode}
+			._style=${style}
 		/>`;
 	}
 

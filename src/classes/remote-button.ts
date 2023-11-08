@@ -93,6 +93,10 @@ export class RemoteButton extends BaseRemoteElement {
 					text-align: center;
 					align-items: center;
 				}
+				ha-icon {
+					height: inherit !important;
+					width: inherit !important;
+				}
 			`,
 		];
 	}
