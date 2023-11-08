@@ -92,6 +92,7 @@ export class RemoteButton extends BaseRemoteElement {
 			css`
 				:host {
 					--size: 48px;
+					--mdc-icon-button-size: var(--size);
 				}
 				ha-icon-button,
 				ha-icon,
