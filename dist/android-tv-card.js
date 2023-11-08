@@ -172,9 +172,9 @@
 				place-content: center space-evenly;
 				align-items: center;
 				position: relative;
-				height: 50px;
+				height: var(--height);
 				width: 100%;
-				border-radius: 25px;
+				border-radius: var(--border-radius);
 				border: none;
 				padding: 0px;
 				box-sizing: border-box;
@@ -183,6 +183,12 @@
 				overflow: hidden;
 				font-size: inherit;
 				color: inherit;
+
+				--color: var(--primary-text-color);
+				--height: 50px;
+				--background: var(--secondary-background-color);
+				--background-height: 50px;
+				--border-radius: 25px;
 			}
 
 			.container {
@@ -195,7 +201,7 @@
 				position: absolute;
 				width: inherit;
 				height: inherit;
-				background: var(--secondary-background-color);
+				background: var(--background);
 			}
 
 			.slider,
@@ -205,26 +211,21 @@
 				-webkit-appearance: none;
 				-moz-appearance: none;
 				height: inherit;
-				border-radius: 25px;
-				background: none;
-			}
-
-			.slider,
-			.slider-off {
 				width: inherit;
+				border-radius: var(--border-radius);
+				background: none;
 				overflow: hidden;
 			}
 
 			.slider::-webkit-slider-thumb {
 				appearance: none;
 				-webkit-appearance: none;
-				height: 20px;
-				width: 4px;
-				border-radius: 12px;
-				background: var(--primary-text-color);
+				height: var(--background-height);
+				width: 24px;
 				cursor: pointer;
 				z-index: 1;
-				box-shadow: -100vw 0 0 100vw var(--primary-text-color);
+				background: var(--color);
+				box-shadow: -100vw 0 0 100vw var(--color);
 			}
 
 			.slider-off::-webkit-slider-thumb {
