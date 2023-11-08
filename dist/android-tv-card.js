@@ -9,7 +9,7 @@
 			._style=${o}
 		/>`:s.html`<div
 				class="empty-button"
-				style=${(0,c.styleMap)(o)}
+				style=${(0,c.styleMap)({"--size":o["--size"]})}
 			></div>`}buildVolumeButtons(){return[this.buildButton("volume_down"),this.buildButton("volume_mute"),this.buildButton("volume_up")]}buildVolumeSlider(){var e;const t=null!==(e=this.config.slider_range)&&void 0!==e?e:[0,1];return s.html`<remote-slider
 			.hass=${this.hass}
 			.hapticEnabled=${this.config.enable_slider_feedback}

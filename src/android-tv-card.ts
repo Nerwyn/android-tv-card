@@ -184,7 +184,7 @@ class AndroidTVCard extends LitElement {
 		if (!Object.keys(info).length) {
 			return html`<div
 				class="empty-button"
-				style=${styleMap(style)}
+				style=${styleMap({ '--size': style['--size'] })}
 			></div>`;
 		}
 
