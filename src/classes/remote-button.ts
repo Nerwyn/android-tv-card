@@ -93,9 +93,13 @@ export class RemoteButton extends BaseRemoteElement {
 				:host {
 					--size: 48px;
 				}
-				ha-icon-button {
+				ha-icon-button,
+				ha-icon,
+				svg {
 					height: var(--size);
 					width: var(--size);
+				}
+				ha-icon-button {
 					cursor: pointer;
 					--mdc-icon-size: 100%;
 					position: relative;
@@ -105,10 +109,6 @@ export class RemoteButton extends BaseRemoteElement {
 					justify-content: center;
 					text-align: center;
 					align-items: center;
-				}
-				ha-icon {
-					height: var(--size);
-					width: var(--size);
 				}
 			`,
 		];
