@@ -139,10 +139,7 @@ export class RemoteSlider extends BaseRemoteElement {
 				position: absolute;
 				width: inherit;
 				height: inherit;
-				background: var(
-					--lovelace-background,
-					var(--primary-background-color)
-				);
+				background: var(--secondary-background-color);
 			}
 
 			.slider,

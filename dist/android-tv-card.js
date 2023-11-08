@@ -181,10 +181,7 @@
 				position: absolute;
 				width: inherit;
 				height: inherit;
-				background: var(
-					--lovelace-background,
-					var(--primary-background-color)
-				);
+				background: var(--secondary-background-color);
 			}
 
 			.slider,
@@ -243,10 +240,7 @@
 				width: -moz-available;
 				width: -webkit-fill-available;
 				width: fill-available;
-				background: var(
-					--lovelace-background,
-					var(--primary-background-color)
-				);
+				background: var(--secondary-background-color);
 				touch-action: none;
 				text-align: center;
 			}
