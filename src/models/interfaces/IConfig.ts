@@ -16,6 +16,7 @@ export interface IConfig {
 	custom_icons?: Record<string, string>;
 
 	enable_button_feedback?: boolean;
+	button_style?: StyleInfo;
 
 	enable_touchpad_feedback?: boolean;
 	enable_double_click?: boolean;

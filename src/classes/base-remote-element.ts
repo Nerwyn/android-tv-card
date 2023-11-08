@@ -11,7 +11,7 @@ export class BaseRemoteElement extends LitElement {
 	@property({ attribute: false }) hass!: HomeAssistant;
 	@property({ attribute: false }) hapticEnabled?: boolean;
 	@property({ attribute: false }) remoteId?: string;
-	@property({ attribute: false }) elementStyle?: StyleInfo;
+	@property({ attribute: false }) _style?: StyleInfo;
 
 	longPress?: boolean = false;
 

@@ -170,6 +170,10 @@ class AndroidTVCard extends LitElement {
 
 	buildButton(element_name: string): TemplateResult {
 		const info = this.getInfo(element_name);
+		const style = {
+			...this.config.button_style,
+			...info.style,
+		};
 
 		return html`<remote-button
 			.hass=${this.hass}
@@ -178,6 +182,7 @@ class AndroidTVCard extends LitElement {
 			.info=${info}
 			.actionKey="${element_name}"
 			.customIcon=${this.customIcons[info.icon ?? ''] ?? ''}
+			._style=${style}
 		/>`;
 	}
 
@@ -197,7 +202,7 @@ class AndroidTVCard extends LitElement {
 			.hapticEnabled=${this.config.enable_slider_feedback}
 			.mediaPlayerId=${this.config.media_player_id}
 			.range=${range}
-			.elementStyle=${this.config.slider_style}
+			._style=${this.config.slider_style}
 		/>`;
 	}
 
@@ -225,12 +230,12 @@ class AndroidTVCard extends LitElement {
 		};
 
 		return html`<remote-touchpad
-			.elementStyle=${this.config.touchpad_style}
 			.hass=${this.hass}
 			.hapticEnabled=${this.config.enable_touchpad_feedback || true}
 			.remoteId=${this.config.remote_id}
 			.enableDoubleClick=${this.config.enable_double_click || false}
 			.info=${info}
+			._style=${this.config.touchpad_style}
 		/>`;
 	}
 

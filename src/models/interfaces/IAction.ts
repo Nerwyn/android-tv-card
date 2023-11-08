@@ -1,17 +1,20 @@
-export interface IIcon {
+import { StyleInfo } from 'lit/directives/style-map.js';
+
+export interface IStyle {
 	icon?: string;
 	svg_path?: string;
+	style?: StyleInfo;
 }
 
-export interface IKey extends IIcon {
+export interface IKey extends IStyle {
 	key: string;
 }
 
-export interface ISource extends IIcon {
+export interface ISource extends IStyle {
 	source: string;
 }
 
-export interface IServiceCall extends IIcon {
+export interface IServiceCall extends IStyle {
 	service: string;
 	data?: IData;
 	target?: ITarget;

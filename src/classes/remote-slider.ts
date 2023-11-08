@@ -101,9 +101,7 @@ export class RemoteSlider extends BaseRemoteElement {
 			/>
 		`;
 
-		const style = {};
-
-		return html`<div class="container" style=${styleMap(style)}>
+		return html`<div class="container" style=${styleMap(this._style ?? {})}>
 			${background}${slider}
 		</div>`;
 	}
