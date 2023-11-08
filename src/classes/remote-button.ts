@@ -100,6 +100,10 @@ export class RemoteButton extends BaseRemoteElement {
 					height: var(--size);
 					width: var(--size);
 				}
+				:host(ha-svg-icon) {
+					height: var(--size);
+					width: var(--size);
+				}
 			`,
 		];
 	}
