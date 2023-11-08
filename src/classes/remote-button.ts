@@ -58,7 +58,19 @@ export class RemoteButton extends BaseRemoteElement {
 
 	render(inputTemplate?: TemplateResult<1>) {
 		const icon = this.info.icon;
-		const svg_path = this.info.svg_path ?? this.customIcon;
+		const svgPath = this.info.svg_path ?? this.customIcon;
+
+		let svg = html``;
+		let haIcon = html``;
+		if (svgPath) {
+			svg = html`
+				<svg viewbox="0 0 24 24">
+					<path d=${svgPath}></path>
+				</svg>
+			`;
+		} else if (icon) {
+			haIcon = html`<ha-icon .icon="${icon}"></ha-icon>`;
+		}
 
 		return html`
 			<ha-icon-button
@@ -68,10 +80,8 @@ export class RemoteButton extends BaseRemoteElement {
 				@touchstart=${this.onlongClickStart}
 				@touchend=${this.onlongClickEnd}
 				.action=${this.actionKey}
-				.path=${svg_path}
 			>
-				<ha-icon .icon="${!svg_path ? icon : ''}"></ha-icon>
-				${inputTemplate}
+				${svg}${haIcon}${inputTemplate}
 			</ha-icon-button>
 		`;
 	}
@@ -97,10 +107,6 @@ export class RemoteButton extends BaseRemoteElement {
 					align-items: center;
 				}
 				ha-icon {
-					height: var(--size);
-					width: var(--size);
-				}
-				:host(ha-svg-icon) {
 					height: var(--size);
 					width: var(--size);
 				}
