@@ -2,6 +2,7 @@ import { version } from '../package.json';
 
 import { LitElement, TemplateResult, html, css } from 'lit';
 import { property } from 'lit/decorators.js';
+import { styleMap } from 'lit/directives/style-map.js';
 
 import { HomeAssistant, applyThemesOnElement } from 'custom-card-helpers';
 
@@ -175,15 +176,17 @@ class AndroidTVCard extends LitElement {
 
 	buildButton(element_name: string): TemplateResult {
 		const info = this.getInfo(element_name);
-
-		if (!Object.keys(info).length) {
-			return html`<div class="empty-button"></div>`;
-		}
-
 		const style = {
 			...this.config.button_style,
 			...info.style,
 		};
+
+		if (!Object.keys(info).length) {
+			return html`<div
+				class="empty-button style=${styleMap(style)}"
+			></div>`;
+		}
+
 		return html`<remote-button
 			.hass=${this.hass}
 			.hapticEnabled=${this.config.enable_button_feedback || true}
@@ -413,9 +416,10 @@ class AndroidTVCard extends LitElement {
 				align-items: center;
 			}
 			.empty-button {
-				width: 48px;
-				height: 48px;
+				width: var(--size);
+				height: var(--size);
 				position: relative;
+				--size: 48px;
 			}
 		`;
 	}
