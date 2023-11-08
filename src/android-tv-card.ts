@@ -153,9 +153,14 @@ class AndroidTVCard extends LitElement {
 			this.customKeys[action] ||
 			this.customSources[action] ||
 			defaultInfo;
+
+		if (!Object.keys(info).length) {
+			return {} as IAction;
+		}
+
 		if (!(info?.icon || info.svg_path)) {
-			info.icon = defaultInfo?.icon ?? '';
-			info.svg_path = defaultInfo?.svg_path ?? '';
+			info.icon = defaultInfo?.icon ?? undefined;
+			info.svg_path = defaultInfo?.svg_path ?? undefined;
 		}
 		return info;
 	}
@@ -170,11 +175,15 @@ class AndroidTVCard extends LitElement {
 
 	buildButton(element_name: string): TemplateResult {
 		const info = this.getInfo(element_name);
+
+		if (!Object.keys(info).length) {
+			return html`<div class="empty-button"></div>`;
+		}
+
 		const style = {
 			...this.config.button_style,
 			...info.style,
 		};
-
 		return html`<remote-button
 			.hass=${this.hass}
 			.hapticEnabled=${this.config.enable_button_feedback || true}
