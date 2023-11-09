@@ -161,7 +161,7 @@ class AndroidTVCard extends LitElement {
 			defaultInfo;
 
 		if (!Object.keys(info).length) {
-			if (['slider', 'volume_slider'].includes(action)) {
+			if (action == 'slider') {
 				return {
 					service: 'media_player.volume_set',
 					data: {
@@ -228,7 +228,7 @@ class AndroidTVCard extends LitElement {
 			.hapticEnabled=${this.config.enable_slider_feedback}
 			.sliderId=${this.config.slider_id}
 			.range=${this.config.slider_range ?? [0, 1]}
-			.info=${this.getInfo('volume_slider')}
+			.info=${this.getInfo('slider')}
 			.sliderAttribute=${this.config.slider_attribute?.toLowerCase()}
 			._style=${this.config.slider_style}
 		/>`;
