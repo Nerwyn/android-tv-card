@@ -77,7 +77,7 @@ export class RemoteSlider extends BaseRemoteElement {
 		if (!this.newValue && this.newValue != 0) {
 			this.newValue = this.value as number;
 		}
-		const data = this.info.data ?? {};
+		const data = JSON.parse(JSON.stringify(this.info.data ?? {}));
 		for (const key in data) {
 			if (data[key] == 'VALUE') {
 				data[key] = this.newValue;
