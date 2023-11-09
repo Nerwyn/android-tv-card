@@ -13,14 +13,13 @@
 
 <a href="https://www.buymeacoffee.com/nerwyn" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-blue.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
 
-📦 This repo is a fork of [tv-card](https://github.com/usernein/tv-card), which is a fork of another [tv-card](https://github.com/marrobHD/tv-card), and includes the same features and improvements usernein made, like:
+📦 This repo is a fork of [tv-card](https://github.com/usernein/tv-card), which is a fork of another [tv-card](https://github.com/marrobHD/tv-card) merged with two other projects, and includes the same features and improvements usernein made, like:
 
-- Fully functional touchpad for navigation (thanks to [iablon's Touchpad Card](https://github.com/iablon/HomeAssistant-Touchpad-Card))
-- Slider for volume (thanks to [AnthonMS's Slider Card](https://github.com/AnthonMS/my-cards#slider-card))
-- Much easier setup
-- Implements haptic feedback
-- Customizable layout, you can choose the order of the rows and buttons
-- All rows and buttons are optional, you can change whatever you _(don't)_ like
+- Touchpad for navigation
+- Slider for volume
+- Haptic feedback
+- Customizable layout
+- Everything optional
 
 Along with a many other changes and improvements:
 
@@ -28,6 +27,7 @@ Along with a many other changes and improvements:
 
 - Refactored to use proper types (no anys!) and separated large objects like the default keys and sources into their own files.
 - Proper use of packages such as `lit-element` and `custom-card-helpers`.
+- Separates out buttons, touchpad, and slider into separate lit elements for better stability and maintainability.
 - Provides a clean base on which to add future features.
 
 **Redesigned for the [Android TV Remote integration](https://www.home-assistant.io/integrations/androidtv_remote/) (but can be used for anything)**
@@ -42,13 +42,15 @@ Along with a many other changes and improvements:
 
 **Fully customizable touchpad**
 
-- Swipe actions are now remappable by creating `custom_keys` for `up`, `down`, `left`, `right`, and `center`.
+- Touchpad actions are now remappable by creating custom keys for `up`, `down`, `left`, `right`, and `center`.
 - Enable double taps on the touchpad by setting `enable_double_click` to true.
   - _Due to limitations in iOS's webview, double click does not work on iPhone and iPad._
 - Double taps default to `back` but can be remapped by changing the value of `double_click_keycode`.
 - Remap long clicks on the touchpad by setting `long_click_keycode` to a different key name.
   - _Due to limitations on desktop browsers, touchpad swiping and long clicks do not work with a mouse._
-- Adjust touchpad height by changing the value of `touchpad_height` (default is 250px).
+- Alter touchpad CSS using `touchpad_style`.
+  - Soft deprecated option `touchpad_height` is now `height` within the `touchpad_style` object.
+- Touchpad style now follows theme.
 
 **Better row handling and columns**
 
@@ -59,13 +61,25 @@ Along with a many other changes and improvements:
 - Empty buttons are no longer clickable.
 - Create columns by creating an array within a row array (see examples). Create an array within that array to create another row. Experiment with nesting rows and columns to make weird remote layouts.
 
-**Better icon handling**
+**Better button icon handling**
 
 - Many more default keys and sources with SVG icons for sources with no material design icon present in Home Assistant's default material design icon list.
   - _Not all default keys and sources are working or tested at this time, please let me know if you find the correct source/activity names for the ones that are incorrect._
   - _Also let me know if you find a key or source that is not listed here and you want to add to the default lists!_
 - Custom keys and sources that replace default ones will now inherit the default icons if no new ones are given.
-- Easily switch to alternate volume icons by setting `alt_volume_icons` to true.
+- Alter CSS of all buttons using `button_style`.
+- Alter CSS of an individual button by including a `style` object in a custom key or source.
+- Touchpad haptics can now be toggled.
+
+**Fully native slider**
+
+- Slider has been replaced with a native solution rather than an embedding an external card.
+  - Greatly improves the stability of the slider as it now renders consistently with the rest of the card.
+- Slider is now animated like Home Assistant tile and Mushroom sliders.
+- Alter CSS of slider using `slider_style`.
+- Change slider range using `slider_range`.
+  - Defaults to [0,1] but can be changed for media players that use different volume ranges.
+- Slider style now follows theme.
 
 **Keyboard support**
 
@@ -81,9 +95,7 @@ Along with a many other changes and improvements:
 
 Many thanks to the original authors. Getting this to work with Android TV was straightforward and all of the frontend heavy lifting they did has provided an excellent base on which to build my personal ultimate Android TV remote.
 
-[Home Assistant Community Forums Thread](https://community.home-assistant.io/t/android-tv-card-a-tv-card-fork-for-android-tv/585089)
-
-## Demo
+# Demo
 
 ```yaml
 type: custom:android-tv-card
@@ -111,13 +123,13 @@ rows:
 
 <img src="assets/screenshot.png" alt="ex" width="300"/>
 
-## Installation
+# Installation
 
-### Step 1
+## Step 1
 
 This project is now available on [HACS](https://hacs.xyz/)! Search for it under frontend repositories.
 
-### Step 2
+## Step 2
 
 When in edit mode on a lovelace view, click add card and search for Android TV Card. Create a remote config like the below examples.
 
@@ -143,33 +155,30 @@ rows:
     - fast_forward
 ```
 
-## Options
+# Options
 
-All fields are technically optional except for `type`, but the card will not function unless you customize it using the below options.
+## Basic
 
-| Name                   | Type     | Description                                                                                                                                                                                                                                                  |
-| ---------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| type                   | string   | `custom:android-tv-card`                                                                                                                                                                                                                                     |
-| remote_id              | string   | The `remote` entity id to control, required for default commands.                                                                                                                                                                                            |
-| media_player_id        | string   | The `media_player` entity id to use for the optional volume slider (not required for volume buttons).                                                                                                                                                        |
-| keyboard_id            | string   | The `media_player` entity id to use to send keyboard events. Requires the [Android Debug Bridge integration](https://www.home-assistant.io/integrations/androidtv/) for Android TV, and other media platform integration for other supported ones.           |
-| keyboard_mode          | string   | The media platform type for sending keyboard commands. Defaults to `ANDROID TV`. The only other currently supported method is `KODI`.                                                                                                                        |
-| title                  | string   | Title to display in the card header.                                                                                                                                                                                                                         |
-| rows                   | string[] | Defines the buttons used in the card. Each row within rows defines a row of buttons (or slider and touchpad). Sub-arrays within these rows will display as columns, and sub-arrays within those will alternate between rows and columns.                     |
-| enable_double_click    | boolean  | Enable double clicks on the touchpad. Defaults to `false`. Enabling this introduces a 200ms delay to single clicks.                                                                                                                                          |
-| double_click_keycode   | string   | The key for double clicks on the touchpad. Defaults to `back`.                                                                                                                                                                                               |
-| long_click_keycode     | string   | The key for long clicks on the touchpad. Defaults to a long `center` click.                                                                                                                                                                                  |
-| enable_button_feedback | boolean  | Enable vibration feedback on the buttons and touchpad, defaults to `true`.                                                                                                                                                                                   |
-| enable_slider_feedback | boolean  | Enable vibration feedback on the volume slider, defaults to `true`.                                                                                                                                                                                          |
-| slider_config          | object   | Custom configuration for the volume slider. See [slider-card](https://github.com/AnthonMS/my-cards). Requires `media_player_id`. Not required to use `volume_slider`.                                                                                        |
-| custom_keys            | object   | Custom keys for the remote control. Each item is an object that can optionally have an `icon` (will use original key icon if overwriting an existing one and icon is not provided) and at least one of the following properties: `key`, `source`, `service`. |
-| custom_sources         | object   | Custom sources for the remote control. Same object as above, but letting you split keys and sources.                                                                                                                                                         |
-| touchpad_height        | string   | Change touchpad height to a custom value, must include [units](https://www.w3schools.com/cssref/css_units.php). Defaults to `250px`.                                                                                                                         |
-| alt_volume_icons       | boolean  | Use alternate volume up, down, and mute icons `mdi:volume-high`, `mdi:volume-medium`, and `mdi:volume-variant-off`.                                                                                                                                          |
+| Name  | Type   | Description                          |
+| ----- | ------ | ------------------------------------ |
+| type  | string | Must be `custom:android-tv-card`     |
+| title | string | Title to display in the card header. |
 
+All fields are technically optional except for `type`, but the card will not function unless you customize it using the above options.
 Using only these options you will get an empty card (or almost empty, if you set a title).
+
+## Buttons
+
+| Name                   | Type     | Description                                                                                                                                                                                                                              |
+| ---------------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| rows                   | string[] | Defines the buttons used in the card. Each row within rows defines a row of buttons (or slider and touchpad). Sub-arrays within these rows will display as columns, and sub-arrays within those will alternate between rows and columns. |
+| remote_id              | string   | The `remote` entity id to control, required for default commands.                                                                                                                                                                        |
+| enable_button_feedback | boolean  | Enable vibration feedback on the buttons, defaults to `true`.                                                                                                                                                                            |
+| button_style           | object   | CSS style to apply to all buttons.                                                                                                                                                                                                       |
+
 In order to include the buttons, you need to specify in the config the rows you want and which buttons you want in it.
-You do it by declaring the rows as arrays and its buttons as values, like this:
+You do it by declaring the rows as arrays and its buttons as values.
+See [this file](https://github.com/Nerwyn/android-tv-card/blob/main/src/models/defaultKeys.ts) for a list of default keys, and [this file](https://github.com/Nerwyn/android-tv-card/blob/main/src/models/defaultSources.ts) for a list of default sources.
 
 ```yaml
 rows:
@@ -179,26 +188,44 @@ rows:
     - fast_forward
 ```
 
-There is no hard limit to the number of rows or buttons you can add.
+There is no hard limit to the number of rows, columns, or buttons you can add.
+
+### Button Style
+
+You can declare a global button style using the `button_style` option, like so.
+
+```yaml
+button_style:
+  '--size': 32px
+  color: var(--secondary-text-color)
+```
+
+#### Example options:
+
+| Name             | Description                                                                                                                         |
+| ---------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| --size           | Sets the width and height of the button icon and all of it's sub elements.                                                          |
+| color            | Color of the button.                                                                                                                |
+| background-image | Image to set the button to. Use with `background-size: contain`, `background-repeat: no-repeat`, and `background-position: center`. |
 
 ### Special Elements
 
-This card also supports the following special button shortcuts and elements which can be added to any row or column.
+This card also supports the following special button shortcuts and elements which can be added to any row or column. `volume_slider` and `navigation_touchpad` will be further explained below.
 
 | Name                | Type     | Description                                                                                                                     |
 | ------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------- |
 | volume_buttons      | buttons  | Shorthand to generate a set of volume down, volume mute, and volume up buttons in a row or column.                              |
 | navigation_buttons  | buttons  | Shorthand to generate a set of up, down, left, right, and center buttons arranged in a d-pad across three rows within a column. |
-| volume_slider       | slider   | A slider that controls the entity defined by `media_player_id`. Requires [slider-card](https://github.com/AnthonMS/my-cards).   |
+| volume_slider       | slider   | A slider that controls the entity defined by `media_player_id`.                                                                 |
 | navigation_touchpad | touchpad | A touchpad that functions the same as navigation buttons but uses swipe actions instead.                                        |
 
-## **Notice**
+## Custom Keys, Sources, and Icons
 
-This card uses `remote.send_command` to send keys to the TV.
-
-Further information on possible commands can be found on the [Home Assistant Android TV page](https://www.home-assistant.io/integrations/androidtv_remote/). If your TV is from another brand or simply the TV integration does not use `remote.send_command` for sending keys, you can still use this card by setting [custom buttons](#custom-buttons) with services to send keys to your TV (or do whatever you want) in your way (just like the original [tv-card](https://github.com/marrobHD/tv-card)). You can also remap the touchpad by creating custom keys for `up`, `down`, `left`, `right`, and `center` along with changing the long and double tap actions by changing `long_click_keycode` and `double_click_keycode` (enable double tap by setting `enable_double_click` to true).
-
-## Custom Buttons
+| Name           | Type   | Description                                                                                                                                                                                                                                                  |
+| -------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| custom_keys    | object | Custom keys for the remote control. Each item is an object that can optionally have an `icon` (will use original key icon if overwriting an existing one and icon is not provided) and at least one of the following properties: `key`, `source`, `service`. |
+| custom_sources | object | Custom sources for the remote control. Same object as above, but letting you split keys and sources.                                                                                                                                                         |
+| custom_icons   | object | Custom icons for the remote control. Defined using svg paths.                                                                                                                                                                                                |
 
 If you want to add custom buttons to the remote control (of if you want to reconfigure the existing buttons), you can do it by adding an object to the `custom_keys` option:
 
@@ -261,89 +288,33 @@ custom_keys:
       entity_id: media_player.tv
 ```
 
-Inside each button you may define `icon` and either `key`, `source` or `service`, as you've seen.
+Inside each button you can define either a `key` or `source`.
 
-| Option  | internal function                         | Description                                                                                                                                                      |
-| ------- | ----------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| icon    |                                           | The icon to show in the button. If empty the original key or source icon will be used if it exists, otherwise it will be empty.                                  |
-| key     | `remote.send_command(command=key)`        | The key to send to the TV via `remote.send_command`.                                                                                                             |
-| source  | `remote.turn_on(activity=source)`         | The source to switch to via `remote.turn_on`.                                                                                                                    |
-| service | `hass.callService(domain, service, data)` | A string representing service to call. Use the format `domain.service`, e.g. `"light.turn_on"`.                                                                  |
-| data    | Data to be passed with `service`          | Additional data to pass to the service call. See the Home Assistant documentation or go to Developer Tools > Services to see available options for each service. |
-| target  | Target of the `service`                   | The entity IDs, device IDs, or area IDs to call the service on.                                                                                                  |
+| Option | Service Call                            | Description                                          |
+| ------ | --------------------------------------- | ---------------------------------------------------- |
+| key    | `remote.send_command`, `{command: key}` | The key to send to the TV via `remote.send_command`. |
+| source | `remote.turn_on`, `{activity: source}`  | The source to switch to via `remote.turn_on`.        |
 
-If an icon is not provided for a custom key or source that overwrites a predefined key or source, the original icon will be used instead.
+Alternatively you can define any service call. Use the services tab under developer tools in Home Assistant to learn more.
+
+| Option  | Service Call                     | Description                                                                                                                                                      |
+| ------- | -------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| service | `domain.service`, `{...data}`    | A string representing service to call. Use the format `domain.service`, e.g. `"light.turn_on"`.                                                                  |
+| data    | Data to be passed with `service` | Additional data to pass to the service call. See the Home Assistant documentation or go to Developer Tools > Services to see available options for each service. |
+| target  | Target of the `service`          | The entity IDs, device IDs, or area IDs to call the service on.                                                                                                  |
 
 `target`, `data`, and `service_data` (soft deprecated name for `data`) all get internally merged into one object since `hass.callService` only has a single data field for target and data. You can safely put all information into one object with any of these names. This was done so that you can easily design service calls using Home Assistant's service developer tool and copy the YAML to custom button configurations in this card.
 
-### Custom Touchpad Commands
+You can define an icon and CSS style for each button.
 
-The touchpad can be customized using `custom_keys` so that it can be used with other devices
+| Option | Description                                                                                                                                                |
+| ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| icon   | The icon to show in the button. Can be a Home Assistant built in mdi icon, an icon defined by another custom integration, or a custom icon as shown below. |
+| style  | CSS style to apply to this specific button. Is applied on top of `button_style`.                                                                           |
 
-Touchpad swipe and single click commands can be remapped by creating custom keys for `left`, `right`, `up`, `down`, and `center`.
+If an icon is not provided for a custom key or source that overwrites a predefined key or source, the original icon will be used instead.
 
-```yaml
-custom_keys:
-  up:
-    service: kodi.call_method
-    target:
-      entity_id: media_player.kodi
-    data:
-      method: Input.Up
-  down:
-    service: kodi.call_method
-    target:
-      entity_id: media_player.kodi
-    data:
-      method: Input.Down
-  left:
-    service: kodi.call_method
-    target:
-      entity_id: media_player.kodi
-    data:
-      method: Input.Left
-  right:
-    service: kodi.call_method
-    target:
-      entity_id: media_player.kodi
-    data:
-      method: Input.Right
-  center:
-    service: kodi.call_method
-    target:
-      entity_id: media_player.kodi
-    data:
-      method: Input.Select
-```
-
-Touchpad double click commands can be remapped by either setting `double_click_keycode` in the config if you just want to change the Android TV functionality, creating a custom key for `back` if you want to change the default back functionality, or both.
-
-```yaml
-enable_double_click: true
-double_click_keycode: back
-custom_keys:
-  back:
-    service: kodi.call_method
-    target:
-      entity_id: media_player.kodi
-    data:
-      method: Input.Back
-```
-
-Touchpad long click commands can be changed to a different command and custom key by setting `long_click_keycode` in the config. By default the long click command sends a long `center` click, which on Android TV will peform a `menu` command on a selected item if available and a `center` command if not. This will not work on other devices and has to be remapped like so.
-
-```yaml
-long_click_keycode: menu
-custom_keys:
-  menu:
-    service: kodi.call_method
-    target:
-      entity_id: media_player.kodi
-    data:
-      method: Input.ContextMenu
-```
-
-## Custom Icons
+### Custom Icons
 
 You can customize any icon with a custom svg path using the `custom_icons` option.
 
@@ -387,11 +358,130 @@ custom_sources:
     source: hbomax://deeplink
 ```
 
-## Keyboard Input
+## Volume Slider
+
+| Name                   | Type             | Description                                                                                           |
+| ---------------------- | ---------------- | ----------------------------------------------------------------------------------------------------- |
+| media_player_id        | string           | The `media_player` entity id to use for the optional volume slider (not required for volume buttons). |
+| enable_slider_feedback | boolean          | Enable vibration feedback on the volume slider, defaults to `true`.                                   |
+| slider_range           | [number, number] | The range of the slider, defaults to [0,1].                                                           |
+| slider_style           | object           | CSS style to apply to the slider.                                                                     |
+
+`media_player_id` is only used to call the `media_player.volume_set` service in conjuction with the slider. `volume_buttons` uses `remote_id`.
+
+### Slider Style
+
+Similary to `button_style`, `slider_style` can be used to change the CSS of the slider.
+
+| Name                | Description                                                               |
+| ------------------- | ------------------------------------------------------------------------- |
+| --color             | Color of the slider thumb / percentage on.                                |
+| --background        | Slider background color.                                                  |
+| height              | Slider thumb / percentage on height.                                      |
+| --background-height | Slider background height. Maximum is contrained by the foreground height. |
+| --border-radius     | Border radius of the entire slider.                                       |
+
+## Touchpad
+
+| Name                 | Type    | Description                                                                                                         |
+| -------------------- | ------- | ------------------------------------------------------------------------------------------------------------------- |
+| enable_double_click  | boolean | Enable double clicks on the touchpad. Defaults to `false`. Enabling this introduces a 200ms delay to single clicks. |
+| double_click_keycode | string  | The key for double clicks on the touchpad. Defaults to `back`.                                                      |
+| long_click_keycode   | string  | The key for long clicks on the touchpad. Defaults to a long `center` click.                                         |
+| touchpad_style       | object  | CSS style to appy to the touchpad.                                                                                  |
+
+Touchpad double clicks are disabled by default. Enabling them introduces a 0.2 second delay to single taps.
+
+Touchpad long clicks default to remote key long clicks, but can be changed to a different key or service call using `long_click_keycode`.
+
+### Touchpad Style
+
+| Name             | Description                                                                                                                               |
+| ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| height           | Height of the touchpad, including units. Defaults to 250px.                                                                               |
+| background       | Color of the touchpad. Follows theme by default.                                                                                          |
+| background-image | Image to overlay on the touchpad. Use with `background-size: contain`, `background-repeat: no-repeat`, and `background-position: center`. |
+| opacity          | Opacity of the touchpad.                                                                                                                  |
+
+### Custom Touchpad Commands
+
+The touchpad can be customized using `custom_keys` so that it can be used with other devices
+
+Touchpad swipe and single click commands can be remapped by creating custom keys for `left`, `right`, `up`, `down`, and `center`.
+
+```yaml
+custom_keys:
+  up:
+    service: kodi.call_method
+    target:
+      entity_id: media_player.kodi
+    data:
+      method: Input.Up
+  down:
+    service: kodi.call_method
+    target:
+      entity_id: media_player.kodi
+    data:
+      method: Input.Down
+  left:
+    service: kodi.call_method
+    target:
+      entity_id: media_player.kodi
+    data:
+      method: Input.Left
+  right:
+    service: kodi.call_method
+    target:
+      entity_id: media_player.kodi
+    data:
+      method: Input.Right
+  center:
+    service: kodi.call_method
+    target:
+      entity_id: media_player.kodi
+    data:
+      method: Input.Select
+```
+
+Touchpad double click commands can be remapped by either setting `double_click_keycode` in the config to a different key if you just want to change the Android TV functionality, creating a custom key for `back` if you want to change the default back functionality, or both. Remember, you must set `enable_double_click` to true to do this.
+
+```yaml
+enable_double_click: true
+double_click_keycode: back
+custom_keys:
+  back:
+    service: kodi.call_method
+    target:
+      entity_id: media_player.kodi
+    data:
+      method: Input.Back
+```
+
+Touchpad long click commands can be changed to a different command and custom key by setting `long_click_keycode` in the config. By default the long click command sends a long `center` click, which on Android TV will peform a `menu` command on a selected item if available and a `center` command if not. This will not work on other devices and has to be remapped like so.
+
+```yaml
+long_click_keycode: menu
+custom_keys:
+  menu:
+    service: kodi.call_method
+    target:
+      entity_id: media_player.kodi
+    data:
+      method: Input.ContextMenu
+```
+
+## Keyboard
+
+| Name          | Type   | Description                                                                                                                                                                                                                                        |
+| ------------- | ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| keyboard_id   | string | The `media_player` entity id to use to send keyboard events. Requires the [Android Debug Bridge integration](https://www.home-assistant.io/integrations/androidtv/) for Android TV, and other media platform integration for other supported ones. |
+| keyboard_mode | string | The media platform type for sending keyboard commands. Defaults to `ANDROID TV`. The only other currently supported method is `KODI`.                                                                                                              |
 
 You can use the [Android Debug Bridge integration](https://www.home-assistant.io/integrations/androidtv/) with this card to send text to your Android TV (by default, see below for alternate media platforms). This card includes three different methods for sending text to Android TV.
 
 ### Methods
+
+To use the keyboard, create one of three buttons based on the keyboard method you want to use.
 
 #### Seamless Text Entry
 
@@ -408,8 +498,6 @@ rows:
   - - keyboard
     - search
   - - navigation_touchpad
-  - - volume_buttons
-touchpad_height: 370px
 ```
 
 <img src="assets/live_keyboard.png" alt="keyboard example" width="300"/>
@@ -422,7 +510,6 @@ Send text to Android TV in bulk by creating a button named `textbox`. Clicking o
 type: custom:android-tv-card
 remote_id: remote.google_chromecast
 keyboard_id: media_player.google_chromecast_adb
-alt_volume_icons: true
 rows:
   - - back
     - home
@@ -432,7 +519,6 @@ rows:
   - - delete
     - textbox
     - enter
-touchpad_height: 370px
 ```
 
 <img src="assets/bulk_keyboard.png" alt="keyboard example" width="300"/>
@@ -569,7 +655,6 @@ A tablet UI using columns
 ```yaml
 type: custom:android-tv-card
 remote_id: remote.google_chromecast
-alt_volume_icons: true
 rows:
   - - - - back
         - null
@@ -598,7 +683,8 @@ rows:
     - - - keyboard
         - search
       - - navigation_touchpad
-touchpad_height: 300px
+touchpad_style:
+  height: 300px
 ```
 
 Result:
@@ -607,7 +693,7 @@ Result:
 
 ### Example 6
 
-Apple TV, using card-mod to put an image in the touchpad
+Apple TV
 
 ```yaml
 type: custom:android-tv-card
@@ -619,7 +705,13 @@ rows:
   - - netflix
     - primevideo
   - - navigation_touchpad
-touchpad_height: 200px
+touchpad_style:
+  height: 200px
+  background-image: url("https://upload.wikimedia.org/wikipedia/commons/a/ab/Apple-logo.png")
+  background-size: contain
+  background-repeat: no-repeat
+  background-position: center
+  opacity: 1.0
 enable_double_click: true
 double_click_keycode: menu
 custom_keys:
@@ -660,15 +752,6 @@ custom_sources:
       source: Netflix
     target:
       entity_id: media_player.appletv
-card_mod:
-  style: |
-    toucharea {
-      background-image: url("https://upload.wikimedia.org/wikipedia/commons/a/ab/Apple-logo.png") !important;
-      background-size: contain !important;
-      background-repeat: no-repeat !important;
-      background-position: center !important;
-      opacity: 1.0;
-    }
 ```
 
 Result:
@@ -677,7 +760,7 @@ Result:
 
 ### Example 7
 
-Kodi with keyboard and touchpad, using card-mod to put an image in the touchpad. Use the [Kodi JSON-RPC API](https://kodi.wiki/view/JSON-RPC_API/v13) to add more buttons like below.
+Kodi with keyboard and touchpad. Use the [Kodi JSON-RPC API](https://kodi.wiki/view/JSON-RPC_API/v13) to add more buttons like below.
 
 ```yaml
 type: custom:android-tv-card
@@ -694,7 +777,13 @@ rows:
     - - textbox
       - null
       - search
-touchpad_height: 200px
+touchpad_style:
+  height: 200px
+  background-image: url("https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Kodi-logo-Thumbnail-light-transparent.png/600px-Kodi-logo-Thumbnail-light-transparent.png?20141126003611")
+  background-size: contain
+  background-repeat: no-repeat
+  background-position: center
+  opacity: 1.0;
 enable_double_click: true
 double_click_keycode: back
 long_click_keycode: menu
@@ -738,6 +827,9 @@ custom_keys:
   search:
     icon: mdi:kodi
     key: SEARCH
+  style:
+    color: rgb(9, 179, 232)
+    '--size': 64px
   volume_mute:
     service: kodi.call_method
     target:
@@ -784,15 +876,6 @@ custom_keys:
     data:
       method: Player.PlayPause
       playerid: 1
-card_mod:
-  style: |
-    toucharea {
-      background-image: url("https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Kodi-logo-Thumbnail-light-transparent.png/600px-Kodi-logo-Thumbnail-light-transparent.png?20141126003611") !important;
-      background-size: contain !important;
-      background-repeat: no-repeat !important;
-      background-position: center !important;
-      opacity: 1.0;
-    }
 ```
 
 Result:
@@ -840,7 +923,8 @@ type: custom:android-tv-card
 entity_id: media_player.marantz_sr7013
 rows:
   - - navigation_touchpad
-touchpad_height: 200px
+touchpad_style:
+  height: 200px
 enable_double_click: true
 double_click_keycode: back
 custom_keys:
@@ -888,7 +972,8 @@ Even more disorder with columns and special elements in the same row as buttons
 
 ```yaml
 type: custom:android-tv-card
-remote_id: remote.lounge_google_tv
+remote_id: remote.google_chromecast
+media_player_id: media_player.google_chromecast
 rows:
   - - - home
       - menu
@@ -914,14 +999,44 @@ A simple gamepad
 
 ```yaml
 type: custom:android-tv-card
-remote_id: remote.lounge_google_tv
+remote_id: remote.google_chromecast
 rows:
   - - navigation_buttons
-    - - - 'y'
-      - - x
+    - - - x
+      - - 'y'
         - null
-        - b
-      - - a
+        - a
+      - - b
+custom_keys:
+  a:
+    key: a
+    style:
+      '--size': 48px
+      padding: 0
+      color: '#C1121C'
+  b:
+    key: b
+    style:
+      '--size': 48px
+      padding: 0
+      color: '#F7BA0B'
+  x:
+    key: x
+    style:
+      '--size': 48px
+      padding: 0
+      color: '#00387b'
+  'y':
+    key: 'y'
+    style:
+      '--size': 48px
+      padding: 0
+      color: '#007243'
+button_style:
+  '--size': 24px
+  background: rgb(27,27,27)
+  padding: 8px
+  border-radius: 24px
 ```
 
 Result:
