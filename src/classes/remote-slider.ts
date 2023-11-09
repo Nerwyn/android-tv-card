@@ -20,8 +20,8 @@ export class RemoteSlider extends BaseRemoteElement {
 	value: number = 0;
 	oldValue?: number;
 	newValue?: number;
-	step: number = (this.range[1] - this.range[0]) / 100;
-	speed: number = (this.range[1] - this.range[0]) / 50;
+	step: number = 0.01;
+	speed: number = 0.02;
 
 	onInput(e: InputEvent) {
 		e.preventDefault();
@@ -103,6 +103,9 @@ export class RemoteSlider extends BaseRemoteElement {
 		if (this.newValue == undefined) {
 			this.newValue = this.value;
 		}
+
+		this.step = (this.range[1] - this.range[0]) / 100;
+		this.speed = (this.range[1] - this.range[0]) / 50;
 
 		let sliderClass = 'slider';
 		if (!this.value || this.value <= this.range[0]) {
