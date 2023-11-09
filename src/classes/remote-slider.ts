@@ -2,12 +2,20 @@ import { html, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
+import { IServiceCall } from '../models';
 import { BaseRemoteElement } from './base-remote-element';
 
 @customElement('remote-slider')
 export class RemoteSlider extends BaseRemoteElement {
 	@property({ attribute: false }) mediaPlayerId!: string;
 	@property({ attribute: false }) range: [number, number] = [0, 1];
+	@property({ attribute: false }) info: IServiceCall = {
+		service: 'media_player.volume_set',
+		data: {
+			entity_id: this.mediaPlayerId,
+			volume_level: 'VALUE',
+		},
+	};
 
 	value: number = 0;
 	oldValue?: number;
@@ -65,14 +73,20 @@ export class RemoteSlider extends BaseRemoteElement {
 	}
 
 	onEnd(_e: MouseEvent | TouchEvent) {
-		const [domain, service] = ['media_player', 'volume_set'];
+		const [domain, service] = this.info.service.split('.');
 		if (!this.newValue && this.newValue != 0) {
 			this.newValue = this.value as number;
 		}
-		const data = {
-			volume_level: this.newValue,
-			entity_id: this.mediaPlayerId,
-		};
+		const data = this.info.data ?? {};
+		for (const key in data) {
+			if (data[key] == 'VALUE') {
+				data[key] = this.newValue;
+			} else if (data[key].toString().includes('VALUE')) {
+				data[key] = data[key]
+					.toString()
+					.replace('VALUE', this.newValue.toString());
+			}
+		}
 		this.fireHapticEvent('light');
 		this.hass.callService(domain, service, data);
 		this.value = this.newValue;

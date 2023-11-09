@@ -156,7 +156,17 @@ class AndroidTVCard extends LitElement {
 			defaultInfo;
 
 		if (!Object.keys(info).length) {
-			return {} as IAction;
+			if (action == 'volume_slider') {
+				return {
+					service: 'media_player.volume_set',
+					data: {
+						entity_id: this.config.media_player_id!,
+						volume_level: 'VALUE',
+					},
+				};
+			} else {
+				return {} as IAction;
+			}
 		}
 
 		if (!(info?.icon || info.svg_path)) {
@@ -209,12 +219,14 @@ class AndroidTVCard extends LitElement {
 
 	buildVolumeSlider(): TemplateResult {
 		const range = this.config.slider_range ?? [0, 1];
+		const info = this.getInfo('volume_slider');
 
 		return html`<remote-slider
 			.hass=${this.hass}
 			.hapticEnabled=${this.config.enable_slider_feedback}
 			.mediaPlayerId=${this.config.media_player_id}
 			.range=${range}
+			.info=${info}
 			._style=${this.config.slider_style}
 		/>`;
 	}
