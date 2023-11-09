@@ -60,15 +60,8 @@ export class RemoteButton extends BaseRemoteElement {
 		const icon = this.info.icon;
 		const svgPath = this.info.svg_path ?? this.customIcon;
 
-		let svg = html``;
 		let haIcon = html``;
-		if (svgPath) {
-			svg = html`
-				<svg viewbox="0 0 24 24">
-					<path d=${svgPath}></path>
-				</svg>
-			`;
-		} else if (icon) {
+		if (icon) {
 			haIcon = html`<ha-icon .icon="${icon}"></ha-icon>`;
 		}
 
@@ -80,8 +73,9 @@ export class RemoteButton extends BaseRemoteElement {
 				@touchstart=${this.onlongClickStart}
 				@touchend=${this.onlongClickEnd}
 				.action=${this.actionKey}
+				.path=${svgPath}
 			>
-				${svg}${haIcon}${inputTemplate}
+				${haIcon}${inputTemplate}
 			</ha-icon-button>
 		`;
 	}
@@ -108,8 +102,8 @@ export class RemoteButton extends BaseRemoteElement {
 					align-items: center;
 
 					--size: 48px;
+					--mdc-icon-size: var(--size);
 					--mdc-icon-button-size: var(--size);
-					--mdc-icon-size: 100%;
 				}
 			`,
 		];
