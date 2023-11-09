@@ -29,6 +29,10 @@ export class RemoteSlider extends BaseRemoteElement {
 		slider.value = start.toString();
 		this.newValue = end;
 
+		if (end > this.range[0]) {
+			slider.className = 'slider';
+		}
+
 		let i = start;
 		if (start > end) {
 			const id = setInterval(() => {
@@ -38,6 +42,9 @@ export class RemoteSlider extends BaseRemoteElement {
 				if (end >= i) {
 					clearInterval(id);
 					slider.value = end.toString();
+					if (end <= this.range[0]) {
+						slider.className = 'slider-off';
+					}
 				}
 			}, 1);
 		} else if (start < end) {
