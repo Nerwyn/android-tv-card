@@ -377,6 +377,12 @@ custom_keys:
       brightness_pct: VALUE
 ```
 
+You can change the attribute that the slider tracks by setting `slider_attribute` to either `state` or an entity specific attribute.
+
+```yaml
+slider_attribute: brightness
+```
+
 ### Slider Style
 
 Similary to `button_style`, `slider_style` can be used to change the CSS of the slider.

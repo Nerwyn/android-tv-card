@@ -229,7 +229,7 @@ class AndroidTVCard extends LitElement {
 			.sliderId=${this.config.slider_id}
 			.range=${this.config.slider_range ?? [0, 1]}
 			.info=${this.getInfo('volume_slider')}
-			.sliderAttribute=${this.config.slider_attribute}
+			.sliderAttribute=${this.config.slider_attribute?.toLowerCase()}
 			._style=${this.config.slider_style}
 		/>`;
 	}

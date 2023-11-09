@@ -10,13 +10,13 @@
 		/>`:s.html`<div
 				class="empty-button"
 				style=${(0,c.styleMap)({"--size":o["--size"]})}
-			></div>`}buildVolumeButtons(){return[this.buildButton("volume_down"),this.buildButton("volume_mute"),this.buildButton("volume_up")]}buildSlider(){var e;return s.html`<remote-slider
+			></div>`}buildVolumeButtons(){return[this.buildButton("volume_down"),this.buildButton("volume_mute"),this.buildButton("volume_up")]}buildSlider(){var e,t;return s.html`<remote-slider
 			.hass=${this.hass}
 			.hapticEnabled=${this.config.enable_slider_feedback}
 			.sliderId=${this.config.slider_id}
 			.range=${null!==(e=this.config.slider_range)&&void 0!==e?e:[0,1]}
 			.info=${this.getInfo("volume_slider")}
-			.sliderAttribute=${this.config.slider_attribute}
+			.sliderAttribute=${null===(t=this.config.slider_attribute)||void 0===t?void 0:t.toLowerCase()}
 			._style=${this.config.slider_style}
 		/>`}buildDPad(){return[this.buildRow([this.buildButton("up")]),this.buildRow([this.buildButton("left"),this.buildButton("center"),this.buildButton("right")]),this.buildRow([this.buildButton("down")])]}buildTouchpad(){var e,t;const i={up:this.getInfo("up"),down:this.getInfo("down"),left:this.getInfo("left"),right:this.getInfo("right"),center:this.getInfo("center"),double:this.getInfo(null!==(e=this.config.double_click_keycode)&&void 0!==e?e:"back"),long:this.getInfo(null!==(t=this.config.long_click_keycode)&&void 0!==t?t:"center")};return s.html`<remote-touchpad
 			.hass=${this.hass}
