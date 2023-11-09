@@ -7,15 +7,10 @@ import { BaseRemoteElement } from './base-remote-element';
 
 @customElement('remote-slider')
 export class RemoteSlider extends BaseRemoteElement {
-	@property({ attribute: false }) mediaPlayerId!: string;
+	@property({ attribute: false }) sliderId!: string;
+	@property({ attribute: false }) sliderAttribute?: string;
 	@property({ attribute: false }) range: [number, number] = [0, 1];
-	@property({ attribute: false }) info: IServiceCall = {
-		service: 'media_player.volume_set',
-		data: {
-			entity_id: this.mediaPlayerId,
-			volume_level: 'VALUE',
-		},
-	};
+	@property({ attribute: false }) info!: IServiceCall;
 
 	value: number = 0;
 	oldValue?: number;
@@ -95,8 +90,20 @@ export class RemoteSlider extends BaseRemoteElement {
 	render() {
 		const background = html`<div class="slider-background"></div>`;
 
-		this.value =
-			this.hass.states[this.mediaPlayerId].attributes.volume_level ?? 0;
+		if (this.sliderAttribute) {
+			if (this.sliderAttribute == 'state') {
+				this.value = parseFloat(this.hass.states[this.sliderId].state);
+			} else {
+				this.value =
+					this.hass.states[this.sliderId].attributes[
+						this.sliderAttribute
+					];
+			}
+		} else {
+			this.value =
+				this.hass.states[this.sliderId].attributes.volume_level ?? 0;
+		}
+
 		if (this.oldValue == undefined) {
 			this.oldValue = this.value;
 		}

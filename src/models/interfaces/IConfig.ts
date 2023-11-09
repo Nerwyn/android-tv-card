@@ -7,7 +7,6 @@ export interface IConfig {
 	title?: string;
 
 	remote_id?: string;
-	media_player_id?: string;
 	keyboard_id?: string;
 	keyboard_mode?: KeyboardMode;
 
@@ -24,6 +23,8 @@ export interface IConfig {
 	long_click_keycode?: string;
 	touchpad_style?: StyleInfo;
 
+	slider_id?: string;
+	slider_attribute?: string;
 	enable_slider_feedback?: boolean;
 	slider_range?: [number, number];
 	slider_style?: StyleInfo;

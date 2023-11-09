@@ -33,12 +33,8 @@ Along with a many other changes and improvements:
 **Redesigned for the [Android TV Remote integration](https://www.home-assistant.io/integrations/androidtv_remote/) (but can be used for anything)**
 
 - Uses `remote.send_command` to send commands to an Android TV for all default keys and sources using Android TV Remote entity ID `remote_id`.
-- `media_player_id` is still present just for the volume slider (not buttons).
-
-**Navigation behavior tweaked to mimic the Google TV remote**
-
-- Hold press/touch/swipe actions only repeat for directional and volume keys, and perform a long press for anything else.
 - Navigation speed increased to be closer to (but not as crazy fast) as the Google TV remote.
+- Hold press/touch/swipe actions only repeat for directional and volume keys, and perform a long press for anything else.
 
 **Fully customizable touchpad**
 
@@ -49,15 +45,14 @@ Along with a many other changes and improvements:
 - Remap long clicks on the touchpad by setting `long_click_keycode` to a different key name.
   - _Due to limitations on desktop browsers, touchpad swiping and long clicks do not work with a mouse._
 - Alter touchpad CSS using `touchpad_style`.
-  - Soft deprecated option `touchpad_height` is now `height` within the `touchpad_style` object.
 - Touchpad style now follows theme.
 
 **Better row handling and columns**
 
 - Rows now exist in a new `rows` array with no limit on the number of rows you can add.
   - Legacy configs that use `_row` key names will still work but are not recommended.
-- Volume sliders and navigation touchpads can now be placed in rows alongside other buttons.
-  - For special volume and navigation features use `volume_buttons`, `volume_slider`, `navigation_buttons`, and `navigation_touchpad` as button names within a row.
+- Sliders and touchpads can now be placed in rows alongside other buttons.
+  - For special volume and navigation features use `volume_buttons`, `slider`, `dpad`, and `touchpad` as button names within a row.
 - Empty buttons are no longer clickable.
 - Create columns by creating an array within a row array (see examples). Create an array within that array to create another row. Experiment with nesting rows and columns to make weird remote layouts.
 
@@ -76,6 +71,7 @@ Along with a many other changes and improvements:
 - Slider has been replaced with a native solution rather than an embedding an external card.
   - Greatly improves the stability of the slider as it now renders consistently with the rest of the card.
 - Slider is now animated like Home Assistant tile and Mushroom sliders.
+- Slider purpose can be changed by creating a custom key for `slider`.
 - Alter CSS of slider using `slider_style`.
 - Change slider range using `slider_range`.
   - Defaults to [0,1] but can be changed for media players that use different volume ranges.
@@ -100,7 +96,7 @@ Many thanks to the original authors. Getting this to work with Android TV was st
 ```yaml
 type: custom:android-tv-card
 remote_id: remote.google_chromecast
-media_player_id: media_player.google_chromecast
+slider_id: media_player.google_chromecast
 keyboard_id: media_player.google_chromecast_adb
 title: Example
 rows:
@@ -109,13 +105,13 @@ rows:
     - home
   - - keyboard
     - search
-    - volume_slider
+    - slider
   - - - netflix
       - null
       - youtube
       - null
       - spotify
-    - navigation_touchpad
+    - touchpad
   - - previous
     - play_pause
     - next
@@ -136,7 +132,7 @@ When in edit mode on a lovelace view, click add card and search for Android TV C
 ```yaml
 type: custom:android-tv-card
 remote_id: remote.google_chromecast
-media_player_id: media_player.google_chromecast
+slider_id: media_player.google_chromecast
 rows:
   - - power
     - channel_up
@@ -145,7 +141,7 @@ rows:
   - - netflix
     - youtube
     - spotify
-  - - volume_slider
+  - - slider
   - - navigation_touchpad
   - - back
     - home
@@ -210,13 +206,13 @@ button_style:
 
 ### Special Elements
 
-This card also supports the following special button shortcuts and elements which can be added to any row or column. `volume_slider` and `navigation_touchpad` will be further explained below.
+This card also supports the following special button shortcuts and elements which can be added to any row or column. `slider` and `navigation_touchpad` will be further explained below.
 
 | Name                | Type     | Description                                                                                                                     |
 | ------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------- |
 | volume_buttons      | buttons  | Shorthand to generate a set of volume down, volume mute, and volume up buttons in a row or column.                              |
-| navigation_buttons  | buttons  | Shorthand to generate a set of up, down, left, right, and center buttons arranged in a d-pad across three rows within a column. |
-| volume_slider       | slider   | A slider that controls the entity defined by `media_player_id`.                                                                 |
+| dpad                | buttons  | Shorthand to generate a set of up, down, left, right, and center buttons arranged in a d-pad across three rows within a column. |
+| slider              | slider   | A slider that controls the entity defined by `slider_id`.                                                                       |
 | navigation_touchpad | touchpad | A touchpad that functions the same as navigation buttons but uses swipe actions instead.                                        |
 
 ## Custom Keys, Sources, and Icons
@@ -303,7 +299,7 @@ Alternatively you can define any service call. Use the services tab under develo
 | data    | Data to be passed with `service` | Additional data to pass to the service call. See the Home Assistant documentation or go to Developer Tools > Services to see available options for each service. |
 | target  | Target of the `service`          | The entity IDs, device IDs, or area IDs to call the service on.                                                                                                  |
 
-`target`, `data`, and `service_data` (soft deprecated name for `data`) all get internally merged into one object since `hass.callService` only has a single data field for target and data. You can safely put all information into one object with any of these names. This was done so that you can easily design service calls using Home Assistant's service developer tool and copy the YAML to custom button configurations in this card.
+`data` and `target` get internally merged into one object since `hass.callService` only has a single data field. You can safely put all information into one object with any of these names. This was done so that you can easily design service calls using Home Assistant's service developer tool and copy the YAML to custom button configurations in this card.
 
 You can define an icon and CSS style for each button.
 
@@ -358,16 +354,28 @@ custom_sources:
     source: hbomax://deeplink
 ```
 
-## Volume Slider
+## Slider
 
-| Name                   | Type             | Description                                                                                           |
-| ---------------------- | ---------------- | ----------------------------------------------------------------------------------------------------- |
-| media_player_id        | string           | The `media_player` entity id to use for the optional volume slider (not required for volume buttons). |
-| enable_slider_feedback | boolean          | Enable vibration feedback on the volume slider, defaults to `true`.                                   |
-| slider_range           | [number, number] | The range of the slider, defaults to [0,1].                                                           |
-| slider_style           | object           | CSS style to apply to the slider.                                                                     |
+| Name                   | Type             | Description                                                  |
+| ---------------------- | ---------------- | ------------------------------------------------------------ |
+| slider_id              | string           | The entity id to use for the optional slider.                |
+| slider_attribute       | string           |                                                              |
+| enable_slider_feedback | boolean          | Enable vibration feedback on the slider, defaults to `true`. |
+| slider_range           | [number, number] | The range of the slider, defaults to [0,1].                  |
+| slider_style           | object           | CSS style to apply to the slider.                            |
 
-`media_player_id` is only used to call the `media_player.volume_set` service in conjuction with the slider. `volume_buttons` uses `remote_id`.
+By default the slider calls the `media_player.volume_set` service, with `entity_id` set to `slider_id` and `volume_level` set to the slider value.
+
+You can change this by creating a custom key for `slider`. Set the value which you wish to set using the slider to `VALUE`.
+
+```yaml
+custom_keys:
+  slider:
+    service: light.turn_on
+    data:
+      entity_id: light.sunroom_ceiling
+      brightness_pct: VALUE
+```
 
 ### Slider Style
 
@@ -547,7 +555,7 @@ Playing with order, moving and repeating buttons:
 ```yaml
 type: custom:android-tv-card
 remote_id: remote.google_chromecast
-media_player_id: media_player.google_chromecast
+slider_id: media_player.google_chromecast
 title: Example 1
 rows:
   - - power
@@ -559,7 +567,7 @@ rows:
     - spotify
     - netflix
   - - navigation_touchpad
-  - - volume_slider
+  - - slider
   - - channel_up
     - channel_down
     - info
@@ -581,7 +589,7 @@ Buttons, buttons everywhere!
 ```yaml
 type: custom:android-tv-card
 remote_id: remote.google_chromecast
-media_player_id: media_player.google_chromecast
+slider_id: media_player.google_chromecast
 title: Example 2
 rows:
   - - power
@@ -592,7 +600,7 @@ rows:
     - youtube
     - spotify
   - - volume_buttons
-  - - navigation_buttons
+  - - dpad
   - - back
     - home
     - tv
@@ -613,14 +621,14 @@ Using less
 ```yaml
 type: custom:android-tv-card
 remote_id: remote.google_chromecast
-media_player_id: media_player.google_chromecast
+slider_id: media_player.google_chromecast
 title: Example 3
 rows:
   - - power
     - netflix
     - youtube
     - spotify
-  - - volume_slider
+  - - slider
   - - navigation_touchpad
   - - back
     - home
@@ -973,7 +981,7 @@ Even more disorder with columns and special elements in the same row as buttons
 ```yaml
 type: custom:android-tv-card
 remote_id: remote.google_chromecast
-media_player_id: media_player.google_chromecast
+slider_id: media_player.google_chromecast
 rows:
   - - - home
       - menu
@@ -985,7 +993,7 @@ rows:
       - max
       - primevideo
     - navigation_touchpad
-  - - volume_slider
+  - - slider
     - search
 ```
 
@@ -1001,7 +1009,7 @@ A simple gamepad
 type: custom:android-tv-card
 remote_id: remote.google_chromecast
 rows:
-  - - navigation_buttons
+  - - dpad
     - - - x
       - - 'y'
         - null

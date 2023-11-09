@@ -84,6 +84,11 @@ class AndroidTVCard extends LitElement {
 		if ('adb_id' in config && !('keyboard_id' in config)) {
 			config.keyboard_id = (config as Record<string, string>).adb_id;
 		}
+		if ('media_player_id' in config && !('slider_id' in config)) {
+			config.slider_id = (
+				config as Record<string, string>
+			).media_player_id;
+		}
 		if ('touchpad_height' in config && !('touchpad_style' in config)) {
 			config.touchpad_style = {
 				height: (config as Record<string, string>).touchpad_height,
@@ -156,11 +161,11 @@ class AndroidTVCard extends LitElement {
 			defaultInfo;
 
 		if (!Object.keys(info).length) {
-			if (action == 'volume_slider') {
+			if (['slider', 'volume_slider'].includes(action)) {
 				return {
 					service: 'media_player.volume_set',
 					data: {
-						entity_id: this.config.media_player_id!,
+						entity_id: this.config.slider_id!,
 						volume_level: 'VALUE',
 					},
 				};
@@ -217,21 +222,19 @@ class AndroidTVCard extends LitElement {
 		];
 	}
 
-	buildVolumeSlider(): TemplateResult {
-		const range = this.config.slider_range ?? [0, 1];
-		const info = this.getInfo('volume_slider');
-
+	buildSlider(): TemplateResult {
 		return html`<remote-slider
 			.hass=${this.hass}
 			.hapticEnabled=${this.config.enable_slider_feedback}
-			.mediaPlayerId=${this.config.media_player_id}
-			.range=${range}
-			.info=${info}
+			.sliderId=${this.config.slider_id}
+			.range=${this.config.slider_range ?? [0, 1]}
+			.info=${this.getInfo('volume_slider')}
+			.sliderAttribute=${this.config.slider_attribute}
 			._style=${this.config.slider_style}
 		/>`;
 	}
 
-	buildNavigationButtons(): TemplateResult[] {
+	buildDPad(): TemplateResult[] {
 		return [
 			this.buildRow([this.buildButton('up')]),
 			this.buildRow([
@@ -334,21 +337,27 @@ class AndroidTVCard extends LitElement {
 				row_content.push(this.buildElements(element_name, !isColumn));
 			} else {
 				switch (element_name) {
+					case 'vol_buttons':
 					case 'volume_buttons': {
 						row_content.push(...this.buildVolumeButtons());
 						break;
 					}
+					case 'slider':
 					case 'volume_slider': {
-						row_content.push(this.buildVolumeSlider());
+						row_content.push(this.buildSlider());
 						break;
 					}
 
+					case 'dpad':
+					case 'd_pad':
+					case 'direction_pad':
+					case 'nav_buttons':
 					case 'navigation_buttons': {
-						row_content.push(
-							this.buildColumn(this.buildNavigationButtons()),
-						);
+						row_content.push(this.buildColumn(this.buildDPad()));
 						break;
 					}
+					case 'touchpad':
+					case 'nav_touchpad':
 					case 'navigation_touchpad': {
 						row_content.push(this.buildTouchpad());
 						break;
