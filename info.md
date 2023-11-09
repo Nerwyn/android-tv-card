@@ -15,11 +15,9 @@ A remote card for Home Assistant that also allows for a greater level of customi
   - Also supports Kodi
 - Example alternate media platform remote configs for Kodi, Apple TV, Sony Bravia TV, and Denon/Marantz in the README examples.
 
-**Sample overview:**
-
 <img src="https://github.com/Nerwyn/android-tv-card/blob/main/assets/screenshot.png" alt="screenshot" width="300"/>
 
-Add this to your lovelace configuration:
+Add this to your lovelace configuration to start:
 
 ```yaml
 type: custom:android-tv-card
@@ -45,6 +43,6 @@ rows:
     - next
 ```
 
-You may want to set custom buttons for your tv. [Check it out](https://github.com/Nerwyn/android-tv-card/blob/main/README.md#notice).
+You may want to set custom buttons for your tv. [Check it out](https://github.com/Nerwyn/android-tv-card/blob/main/README.md#custom-keys-sources-and-icons).
 
 Look at [README](https://github.com/Nerwyn/android-tv-card/blob/main/README.md) for more information

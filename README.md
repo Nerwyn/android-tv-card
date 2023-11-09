@@ -52,7 +52,7 @@ Along with a many other changes and improvements:
 - Rows now exist in a new `rows` array with no limit on the number of rows you can add.
   - Legacy configs that use `_row` key names will still work but are not recommended.
 - Sliders and touchpads can now be placed in rows alongside other buttons.
-  - For special volume and navigation features use `volume_buttons`, `slider`, `dpad`, and `touchpad` as button names within a row.
+  - For special volume and navigation features use `vol_buttons`, `slider`, `dpad`, and `touchpad` as button names within a row.
 - Empty buttons are no longer clickable.
 - Create columns by creating an array within a row array (see examples). Create an array within that array to create another row. Experiment with nesting rows and columns to make weird remote layouts.
 
@@ -142,7 +142,7 @@ rows:
     - youtube
     - spotify
   - - slider
-  - - navigation_touchpad
+  - - touchpad
   - - back
     - home
     - tv
@@ -206,14 +206,14 @@ button_style:
 
 ### Special Elements
 
-This card also supports the following special button shortcuts and elements which can be added to any row or column. `slider` and `navigation_touchpad` will be further explained below.
+This card also supports the following special button shortcuts and elements which can be added to any row or column. `slider` and `touchpad` will be further explained below.
 
-| Name                | Type     | Description                                                                                                                     |
-| ------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| volume_buttons      | buttons  | Shorthand to generate a set of volume down, volume mute, and volume up buttons in a row or column.                              |
-| dpad                | buttons  | Shorthand to generate a set of up, down, left, right, and center buttons arranged in a d-pad across three rows within a column. |
-| slider              | slider   | A slider that controls the entity defined by `slider_id`.                                                                       |
-| navigation_touchpad | touchpad | A touchpad that functions the same as navigation buttons but uses swipe actions instead.                                        |
+| Name        | Type     | Description                                                                                                                     |
+| ----------- | -------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| vol_buttons | buttons  | Shorthand to generate a set of volume down, volume mute, and volume up buttons in a row or column.                              |
+| dpad        | buttons  | Shorthand to generate a set of up, down, left, right, and center buttons arranged in a d-pad across three rows within a column. |
+| slider      | slider   | A slider that controls the entity defined by `slider_id`.                                                                       |
+| touchpad    | touchpad | A touchpad that functions the same as navigation buttons but uses swipe actions instead.                                        |
 
 ## Custom Keys, Sources, and Icons
 
@@ -511,7 +511,7 @@ rows:
     - play_pause
   - - keyboard
     - search
-  - - navigation_touchpad
+  - - touchpad
 ```
 
 <img src="assets/live_keyboard.png" alt="keyboard example" width="300"/>
@@ -528,8 +528,8 @@ rows:
   - - back
     - home
     - play_pause
-  - - volume_buttons
-  - - navigation_touchpad
+  - - vol_buttons
+  - - touchpad
   - - delete
     - textbox
     - enter
@@ -572,7 +572,7 @@ rows:
   - - youtube
     - spotify
     - netflix
-  - - navigation_touchpad
+  - - touchpad
   - - slider
   - - channel_up
     - channel_down
@@ -605,7 +605,7 @@ rows:
   - - netflix
     - youtube
     - spotify
-  - - volume_buttons
+  - - vol_buttons
   - - dpad
   - - back
     - home
@@ -635,7 +635,7 @@ rows:
     - youtube
     - spotify
   - - slider
-  - - navigation_touchpad
+  - - touchpad
   - - back
     - home
 ```
@@ -696,7 +696,7 @@ rows:
         - spotify
     - - - keyboard
         - search
-      - - navigation_touchpad
+      - - touchpad
 touchpad_style:
   height: 300px
 ```
@@ -718,7 +718,7 @@ rows:
     - menu
   - - netflix
     - primevideo
-  - - navigation_touchpad
+  - - touchpad
 touchpad_style:
   height: 200px
   background-image: url("https://upload.wikimedia.org/wikipedia/commons/a/ab/Apple-logo.png")
@@ -786,8 +786,8 @@ rows:
     - menu
   - - info
     - play_pause
-  - - - volume_buttons
-    - navigation_touchpad
+  - - - vol_buttons
+    - touchpad
     - - textbox
       - null
       - search
@@ -904,7 +904,7 @@ Sony Bravia KD.xx TV
 type: custom:android-tv-card
 remote_id: remote.sony_kd_75xf8596
 rows:
-  - - navigation_touchpad
+  - - touchpad
 enable_double_click: true
 double_click_keycode: back
 custom_keys:
@@ -936,7 +936,7 @@ Marantz Receiver
 type: custom:android-tv-card
 entity_id: media_player.marantz_sr7013
 rows:
-  - - navigation_touchpad
+  - - touchpad
 touchpad_style:
   height: 200px
 enable_double_click: true
@@ -998,7 +998,7 @@ rows:
       - disney
       - max
       - primevideo
-    - navigation_touchpad
+    - touchpad
   - - slider
     - search
 ```
