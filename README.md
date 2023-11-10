@@ -356,13 +356,13 @@ custom_sources:
 
 ## Slider
 
-| Name                   | Type             | Description                                                  |
-| ---------------------- | ---------------- | ------------------------------------------------------------ |
-| slider_id              | string           | The entity id to use for the optional slider.                |
-| slider_attribute       | string           |                                                              |
-| enable_slider_feedback | boolean          | Enable vibration feedback on the slider, defaults to `true`. |
-| slider_range           | [number, number] | The range of the slider, defaults to [0,1].                  |
-| slider_style           | object           | CSS style to apply to the slider.                            |
+| Name                   | Type             | Description                                                                 |
+| ---------------------- | ---------------- | --------------------------------------------------------------------------- |
+| slider_id              | string           | The entity id to use for the optional slider.                               |
+| slider_attribute       | string           | An attribute (or state) for the slider to track, defaults to `volume_level` |
+| enable_slider_feedback | boolean          | Enable vibration feedback on the slider, defaults to `true`.                |
+| slider_range           | [number, number] | The range of the slider, defaults to [0,1].                                 |
+| slider_style           | object           | CSS style to apply to the slider.                                           |
 
 By default the slider calls the `media_player.volume_set` service, with `entity_id` set to `slider_id` and `volume_level` set to the slider value.
 
