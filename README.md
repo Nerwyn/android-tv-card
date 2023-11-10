@@ -208,12 +208,12 @@ button_style:
 
 This card also supports the following special button shortcuts and elements which can be added to any row or column. `slider` and `touchpad` will be further explained below.
 
-| Name        | Type     | Description                                                                                                                     |
-| ----------- | -------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| vol_buttons | buttons  | Shorthand to generate a set of volume down, volume mute, and volume up buttons in a row or column.                              |
-| dpad        | buttons  | Shorthand to generate a set of up, down, left, right, and center buttons arranged in a d-pad across three rows within a column. |
-| slider      | slider   | A slider that controls the entity defined by `slider_id`.                                                                       |
-| touchpad    | touchpad | A touchpad that functions the same as navigation buttons but uses swipe actions instead.                                        |
+| Name                                                        | Type     | Description                                                                                                                     |
+| ----------------------------------------------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| vol_buttons, volume_buttons                                 | buttons  | Shorthand to generate a set of volume down, volume mute, and volume up buttons in a row or column.                              |
+| dpad, d_pad, direction_pad, nav_buttons, navigation_buttons | buttons  | Shorthand to generate a set of up, down, left, right, and center buttons arranged in a d-pad across three rows within a column. |
+| slider, volume_slider                                       | slider   | A slider that controls the entity defined by `slider_id`.                                                                       |
+| touchpad, nav_touchpad, navigation_touchpad                 | touchpad | A touchpad that functions the same as navigation buttons but uses swipe actions instead.                                        |
 
 ## Custom Keys, Sources, and Icons
 
