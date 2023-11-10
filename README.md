@@ -982,7 +982,7 @@ custom_keys:
 
 ### Example 10
 
-Even more disorder with columns and special elements in the same row as buttons
+Even more disorder with columns and special elements in the same row as buttons, and stylized everything.
 
 ```yaml
 type: custom:android-tv-card
@@ -1001,6 +1001,38 @@ rows:
     - touchpad
   - - slider
     - search
+custom_sources:
+  netflix:
+    source: netflix
+    style:
+      color: rgb(229, 9, 20)
+  hulu:
+    source: hulu
+    style:
+      color: rgb(28, 231, 131)
+  disney:
+    source: disney
+    style:
+      color: rgb(17, 60, 207)
+  max:
+    source: max
+    style:
+      color: rgb(0, 35, 246)
+  primevideo:
+    source: primevideo
+    style:
+      color: rgb(0, 165, 222)
+touchpad_style:
+  background: >-
+    linear-gradient(217deg, rgba(255,0,0,.8), rgba(255,0,0,0) 70.71%),
+    linear-gradient(127deg, rgba(0,255,0,.8), rgba(0,255,0,0) 70.71%),
+    linear-gradient(336deg, rgba(0,0,255,.8), rgba(0,0,255,0) 70.71%)
+slider_style:
+  '--border-radius': 4px
+  height: 24px
+  '--background-height': 12px
+  '--color': darkred
+  '--background': red
 ```
 
 Result:
