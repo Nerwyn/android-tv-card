@@ -383,6 +383,14 @@ You can change the attribute that the slider tracks by setting `slider_attribute
 slider_attribute: brightness
 ```
 
+While most Home Assistant media player's use a volume range of [0,1], you can changes this as needed by setting `slider_range`.
+
+```yaml
+slider_range:
+  - 0
+  - 0.6
+```
+
 ### Slider Style
 
 Similary to `button_style`, `slider_style` can be used to change the CSS of the slider.
@@ -1022,6 +1030,9 @@ custom_sources:
     source: primevideo
     style:
       color: rgb(0, 165, 222)
+slider_range:
+  - 0
+  - 0.6
 touchpad_style:
   background: >-
     linear-gradient(217deg, rgba(255,0,0,.8), rgba(255,0,0,0) 70.71%),
