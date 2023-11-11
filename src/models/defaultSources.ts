@@ -55,11 +55,22 @@ export const defaultSources: Record<string, ISource> = {
 		source: 'piavpn://', // UNTESTED
 		svg_path: svg.PIA,
 	},
+	rakutenviki: {
+		source: 'viki://home', // UNTESTED
+		icon: svg.RAKUTENVIKI,
+	},
+	skyshowtime: {
+		source: 'https://www.skyshowtime.com/deeplink', // UNTESTED
+		icon: svg.SHOWTIME,
+	},
 	spotify: { source: 'spotify://', icon: 'mdi:spotify' },
-
 	surfshark: {
 		source: 'https://surfshark.com/locations-ul', // UNTESTED
 		svg_path: svg.SURFSHARK,
+	},
+	videoland: {
+		source: 'videoland-v2://',
+		svg_path: svg.VIDEOLAND,
 	},
 	vudu: {
 		source: 'vuduapp://',
