@@ -66,6 +66,9 @@ class AndroidTVCard extends LitElement {
 		config = JSON.parse(JSON.stringify(config));
 		config = { theme: 'default', ...config };
 
+		// Set toggles to default values if not provided
+		config = this.setToggles(config);
+
 		// Legacy config upgrades
 		config = this.updateDeprecatedKeys(config);
 		config = this.convertToRowsArray(config);
@@ -158,6 +161,22 @@ class AndroidTVCard extends LitElement {
 		return config;
 	}
 
+	setToggles(config: IConfig): IConfig {
+		const toggles: IConfig = {
+			enable_button_feedback: true,
+			enable_touchpad_feedback: true,
+			enable_double_click: false,
+			enable_slider_feedback: true,
+		};
+		let toggle: keyof IConfig;
+		for (toggle in toggles) {
+			if (!(toggle in config)) {
+				config[toggle] = toggles[toggle] as undefined;
+			}
+		}
+		return config;
+	}
+
 	getInfo(action: string): IAction {
 		const defaultInfo = defaultKeys[action] || defaultSources[action] || {};
 		const info =
@@ -210,7 +229,7 @@ class AndroidTVCard extends LitElement {
 
 		return html`<remote-button
 			.hass=${this.hass}
-			.hapticEnabled=${this.config.enable_button_feedback || true}
+			.hapticEnabled=${this.config.enable_button_feedback}
 			.remoteId=${this.config.remote_id}
 			.info=${info}
 			.actionKey="${element_name}"
@@ -264,9 +283,9 @@ class AndroidTVCard extends LitElement {
 
 		return html`<remote-touchpad
 			.hass=${this.hass}
-			.hapticEnabled=${this.config.enable_touchpad_feedback || true}
+			.hapticEnabled=${this.config.enable_touchpad_feedback}
 			.remoteId=${this.config.remote_id}
-			.enableDoubleClick=${this.config.enable_double_click || false}
+			.enableDoubleClick=${this.config.enable_double_click}
 			.info=${info}
 			._style=${this.config.touchpad_style}
 		/>`;
@@ -281,7 +300,7 @@ class AndroidTVCard extends LitElement {
 		};
 		return html`<remote-keyboard
 			.hass=${this.hass}
-			.hapticEnabled=${this.config.enable_button_feedback || true}
+			.hapticEnabled=${this.config.enable_button_feedback}
 			.remoteId=${this.config.remote_id}
 			.info=${info}
 			.actionKey="keyboard"
@@ -301,7 +320,7 @@ class AndroidTVCard extends LitElement {
 		};
 		return html`<remote-textbox
 			.hass=${this.hass}
-			.hapticEnabled=${this.config.enable_button_feedback || true}
+			.hapticEnabled=${this.config.enable_button_feedback}
 			.remoteId=${this.config.remote_id}
 			.info=${info}
 			.actionKey="textbox"
@@ -321,7 +340,7 @@ class AndroidTVCard extends LitElement {
 		};
 		return html`<remote-search
 			.hass=${this.hass}
-			.hapticEnabled=${this.config.enable_button_feedback || true}
+			.hapticEnabled=${this.config.enable_button_feedback}
 			.remoteId=${this.config.remote_id}
 			.info=${info}
 			.actionKey="search"
