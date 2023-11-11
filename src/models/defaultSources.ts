@@ -57,11 +57,11 @@ export const defaultSources: Record<string, ISource> = {
 	},
 	rakutenviki: {
 		source: 'viki://home', // UNTESTED
-		icon: svg.RAKUTENVIKI,
+		svg_path: svg.RAKUTENVIKI,
 	},
 	skyshowtime: {
 		source: 'https://www.skyshowtime.com/deeplink', // UNTESTED
-		icon: svg.SHOWTIME,
+		svg_path: svg.SHOWTIME,
 	},
 	spotify: { source: 'spotify://', icon: 'mdi:spotify' },
 	surfshark: {
