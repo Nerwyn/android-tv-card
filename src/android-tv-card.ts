@@ -94,9 +94,9 @@ class AndroidTVCard extends LitElement {
 				config.touchpad_style = {};
 			}
 			if (!('height' in config.touchpad_style!)) {
-				config.touchpad_style = {
-					height: (config as Record<string, string>).touchpad_height,
-				};
+				config.touchpad_style!.height = (
+					config as Record<string, string>
+				).touchpad_height;
 			}
 		}
 		return config;
