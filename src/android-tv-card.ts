@@ -89,10 +89,15 @@ class AndroidTVCard extends LitElement {
 				config as Record<string, string>
 			).media_player_id;
 		}
-		if ('touchpad_height' in config && !('touchpad_style' in config)) {
-			config.touchpad_style = {
-				height: (config as Record<string, string>).touchpad_height,
-			};
+		if ('touchpad_height' in config) {
+			if (!('touchpad_style' in config)) {
+				config.touchpad_style = {};
+			}
+			if (!('height' in config.touchpad_style!)) {
+				config.touchpad_style = {
+					height: (config as Record<string, string>).touchpad_height,
+				};
+			}
 		}
 		return config;
 	}
