@@ -55,12 +55,16 @@ export const defaultSources: Record<string, ISource> = {
 		source: 'piavpn://', // UNTESTED
 		svg_path: svg.PIA,
 	},
+	rakutentv: {
+		source: 'https://rakutentv.page.link',
+		svg_path: svg.RAKUTENTV,
+	},
 	rakutenviki: {
 		source: 'viki://home', // UNTESTED
 		svg_path: svg.RAKUTENVIKI,
 	},
 	skyshowtime: {
-		source: 'https://www.skyshowtime.com/deeplink', // UNTESTED
+		source: 'https://www.skyshowtime.com/deeplink',
 		svg_path: svg.SHOWTIME,
 	},
 	spotify: { source: 'spotify://', icon: 'mdi:spotify' },
