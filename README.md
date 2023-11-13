@@ -1011,23 +1011,23 @@ rows:
     - search
 custom_sources:
   netflix:
-    source: netflix
+    source: 'netflix://'
     style:
       color: rgb(229, 9, 20)
   hulu:
-    source: hulu
+    source: 'hulu://'
     style:
       color: rgb(28, 231, 131)
   disney:
-    source: disney
+    source: 'https://www.disneyplus.com'
     style:
       color: rgb(17, 60, 207)
   max:
-    source: max
+    source: 'https://play.max.com'
     style:
       color: rgb(0, 35, 246)
   primevideo:
-    source: primevideo
+    source: 'https://app.primevideo.com'
     style:
       color: rgb(0, 165, 222)
 slider_range:
