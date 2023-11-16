@@ -76,7 +76,6 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		window.initialY = e.touches[0].clientY;
 	}
 
-	@eventOptions({ passive: true })
 	onTouchEnd(e: Event) {
 		if (this.touchLongClick) {
 			this.touchLongClick = false;
