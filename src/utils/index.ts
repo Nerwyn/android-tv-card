@@ -1,1 +1,1 @@
-export * from './renderTemplates';
+export * from './renderTemplate';
