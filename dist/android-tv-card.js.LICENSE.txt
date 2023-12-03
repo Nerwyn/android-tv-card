@@ -1,3 +1,5 @@
+/*! Browser bundle of nunjucks 3.2.4  */
+
 /**
  * @license
  * Copyright 2017 Google LLC

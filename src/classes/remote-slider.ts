@@ -3,6 +3,8 @@ import { customElement, property } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
 import { IServiceCall } from '../models';
+import { renderTemplate } from '../utils';
+
 import { BaseRemoteElement } from './base-remote-element';
 
 @customElement('remote-slider')
@@ -68,12 +70,16 @@ export class RemoteSlider extends BaseRemoteElement {
 	}
 
 	onEnd(_e: MouseEvent | TouchEvent) {
-		const [domain, service] = this.info.service.split('.');
+		const [domain, service] = renderTemplate(
+			this.hass,
+			this.info.service,
+		).split('.');
 		if (!this.newValue && this.newValue != 0) {
 			this.newValue = this.value as number;
 		}
-		const data = JSON.parse(JSON.stringify(this.info.data ?? {}));
+		const data = structuredClone(this.info.data ?? {});
 		for (const key in data) {
+			data[key] = renderTemplate(this.hass, data[key] as string);
 			if (data[key] == 'VALUE') {
 				data[key] = this.newValue;
 			} else if (data[key].toString().includes('VALUE')) {
@@ -89,19 +95,22 @@ export class RemoteSlider extends BaseRemoteElement {
 
 	render() {
 		const background = html`<div class="slider-background"></div>`;
+		const sliderId = renderTemplate(this.hass, this.sliderId);
+		const sliderAttribute = renderTemplate(
+			this.hass,
+			this.sliderAttribute as string,
+		);
 
-		if (this.sliderAttribute) {
-			if (this.sliderAttribute == 'state') {
-				this.value = parseFloat(this.hass.states[this.sliderId].state);
+		if (sliderAttribute) {
+			if (sliderAttribute == 'state') {
+				this.value = parseFloat(this.hass.states[sliderId].state);
 			} else {
 				this.value =
-					this.hass.states[this.sliderId].attributes[
-						this.sliderAttribute
-					];
+					this.hass.states[sliderId].attributes[sliderAttribute];
 			}
 		} else {
 			this.value =
-				this.hass.states[this.sliderId].attributes.volume_level ?? 0;
+				this.hass.states[sliderId].attributes.volume_level ?? 0;
 		}
 
 		if (this.oldValue == undefined) {
@@ -111,19 +120,26 @@ export class RemoteSlider extends BaseRemoteElement {
 			this.newValue = this.value;
 		}
 
-		this.step = (this.range[1] - this.range[0]) / 100;
-		this.speed = (this.range[1] - this.range[0]) / 50;
+		const end = parseFloat(
+			renderTemplate(this.hass, this.range[0] as unknown as string),
+		);
+		const start = parseFloat(
+			renderTemplate(this.hass, this.range[1] as unknown as string),
+		);
+
+		this.step = (start - end) / 100;
+		this.speed = 2 * this.step;
 
 		let sliderClass = 'slider';
-		if (!this.value || this.value <= this.range[0]) {
+		if (!this.value || this.value <= end) {
 			sliderClass = 'slider-off';
 		}
 		const slider = html`
 			<input
 				type="range"
 				class="${sliderClass}"
-				min="${this.range[0]}"
-				max="${this.range[1]}"
+				min="${end}"
+				max="${start}"
 				step=${this.step}
 				value="${this.value}"
 				@input=${this.onInput}
@@ -132,7 +148,12 @@ export class RemoteSlider extends BaseRemoteElement {
 			/>
 		`;
 
-		return html`<div class="container" style=${styleMap(this._style ?? {})}>
+		const style = structuredClone(this._style ?? {});
+		for (const key in style) {
+			style[key] = renderTemplate(this.hass, style[key] as string);
+		}
+
+		return html`<div class="container" style=${styleMap(style)}>
 			${background}${slider}
 		</div>`;
 	}

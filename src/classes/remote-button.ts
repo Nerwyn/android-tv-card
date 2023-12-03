@@ -5,6 +5,8 @@ import { customElement, property } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
 import { IAction } from '../models';
+import { renderTemplate } from '../utils';
+
 import { BaseRemoteElement } from './base-remote-element';
 
 @customElement('remote-button')
@@ -57,22 +59,31 @@ export class RemoteButton extends BaseRemoteElement {
 	}
 
 	render(inputTemplate?: TemplateResult<1>) {
-		const icon = this.info.icon;
-		const svgPath = this.info.svg_path ?? this.customIcon;
+		const icon = renderTemplate(this.hass, this.info.icon as string);
+		const svgPath =
+			renderTemplate(this.hass, this.info.svg_path as string) ??
+			renderTemplate(this.hass, this.customIcon as string);
 
 		let haIcon = html``;
 		if (icon) {
 			haIcon = html`<ha-icon .icon="${icon}"></ha-icon>`;
 		}
 
+		const style = structuredClone(this._style ?? {});
+		for (const key in style) {
+			style[key] = renderTemplate(this.hass, style[key] as string);
+		}
+
+		const action = renderTemplate(this.hass, this.actionKey);
+
 		return html`
 			<ha-icon-button
-				title="${this.actionKey}"
-				style=${styleMap(this._style ?? {})}
+				title="${action}"
+				style=${styleMap(style)}
 				@click=${this.onClick}
 				@touchstart=${this.onlongClickStart}
 				@touchend=${this.onlongClickEnd}
-				.action=${this.actionKey}
+				.action=${action}
 				.path=${svgPath}
 			>
 				${haIcon}${inputTemplate}

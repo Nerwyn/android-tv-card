@@ -5,6 +5,7 @@ import { customElement, property } from 'lit/decorators.js';
 import { StyleInfo } from 'lit/directives/style-map.js';
 
 import { IData, IKey, ISource, IAction } from '../models';
+import { renderTemplate } from '../utils';
 
 @customElement('base-remote-element')
 export class BaseRemoteElement extends LitElement {
@@ -16,7 +17,13 @@ export class BaseRemoteElement extends LitElement {
 	longPress?: boolean = false;
 
 	fireHapticEvent(haptic: HapticType) {
-		if (this.hapticEnabled ?? true) {
+		if (
+			renderTemplate(
+				this.hass,
+				this.hapticEnabled as unknown as string,
+			) ??
+			true
+		) {
 			forwardHaptic(haptic);
 		}
 	}
@@ -28,19 +35,25 @@ export class BaseRemoteElement extends LitElement {
 		} else if ('source' in info) {
 			this.changeSource((info as ISource).source);
 		} else if ('service' in info) {
-			const data = JSON.parse(JSON.stringify(info.data || {}));
+			const data = structuredClone(info.data || {});
+			for (const key in data) {
+				data[key] = renderTemplate(this.hass, data[key] as string);
+			}
 			if (longPress && info.service == 'remote.send_command') {
 				data.hold_secs = 0.5;
 			}
-			const [domain, service] = info.service.split('.', 2);
+			const [domain, service] = renderTemplate(
+				this.hass,
+				info.service,
+			).split('.', 2);
 			this.hass.callService(domain, service, data);
 		}
 	}
 
 	sendCommand(key: string, longPress: boolean = false) {
 		const data: IData = {
-			entity_id: this.remoteId!,
-			command: key,
+			entity_id: renderTemplate(this.hass, this.remoteId as string),
+			command: renderTemplate(this.hass, key),
 		};
 		if (longPress) {
 			data.hold_secs = 0.5;
@@ -50,8 +63,8 @@ export class BaseRemoteElement extends LitElement {
 
 	changeSource(source: string) {
 		this.hass.callService('remote', 'turn_on', {
-			entity_id: this.remoteId,
-			activity: source,
+			entity_id: renderTemplate(this.hass, this.remoteId as string),
+			activity: renderTemplate(this.hass, source),
 		});
 	}
 

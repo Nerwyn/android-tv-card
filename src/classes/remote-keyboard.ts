@@ -2,6 +2,8 @@ import { CSSResult, html, css } from 'lit';
 import { customElement } from 'lit/decorators.js';
 
 import { IData } from '../models';
+import { renderTemplate } from '../utils';
+
 import { BaseKeyboardElement } from './base-keyboard-element';
 
 @customElement('remote-keyboard')
@@ -9,9 +11,11 @@ export class RemoteKeyboard extends BaseKeyboardElement {
 	onClick(e: Event, _longpress: boolean) {
 		e.stopImmediatePropagation();
 		this.fireHapticEvent('light');
-		(
-			(e.currentTarget as HTMLInputElement).children[1] as HTMLElement
-		).focus();
+		for (const element of (e.currentTarget as HTMLElement).children) {
+			if (element.nodeName.toLowerCase() == 'input') {
+				(element as HTMLInputElement).focus();
+			}
+		}
 	}
 
 	onKeyDown(e: KeyboardEvent) {
@@ -33,9 +37,14 @@ export class RemoteKeyboard extends BaseKeyboardElement {
 				(e.currentTarget as HTMLInputElement).focus();
 			}
 
-			switch ((this.keyboardMode ?? '').toUpperCase()) {
+			switch (
+				renderTemplate(this.hass, this.keyboardMode).toUpperCase()
+			) {
 				case 'KODI':
 					break;
+				case 'ANDROID':
+				case 'ANDROIDTV':
+				case 'ANDROID_TV':
 				case 'ANDROID TV':
 				default:
 					this.sendCommand(key);
@@ -49,23 +58,24 @@ export class RemoteKeyboard extends BaseKeyboardElement {
 
 		const text = e.data;
 		if (text) {
-			let data: IData;
-			switch ((this.keyboardMode ?? '').toUpperCase()) {
+			const data: IData = {
+				entity_id: renderTemplate(this.hass, this.keyboardId),
+			};
+			switch (
+				renderTemplate(this.hass, this.keyboardMode).toUpperCase()
+			) {
 				case 'KODI':
-					data = {
-						entity_id: this.keyboardId,
-						method: 'Input.SendText',
-						text: text,
-						done: false,
-					};
+					data.method = 'Input.SendText';
+					data.text = text;
+					data.done = false;
 					this.hass.callService('kodi', 'call_method', data);
 					break;
+				case 'ANDROID':
+				case 'ANDROIDTV':
+				case 'ANDROID_TV':
 				case 'ANDROID TV':
 				default:
-					data = {
-						entity_id: this.keyboardId,
-						command: 'input text "' + text + '"',
-					};
+					data.command = `input text "${text}"`;
 					this.hass.callService('androidtv', 'adb_command', data);
 					break;
 			}
@@ -78,23 +88,24 @@ export class RemoteKeyboard extends BaseKeyboardElement {
 
 		const text = e.clipboardData?.getData('Text');
 		if (text) {
-			let data: IData;
-			switch ((this.keyboardMode ?? '').toUpperCase()) {
+			const data: IData = {
+				entity_id: renderTemplate(this.hass, this.keyboardId),
+			};
+			switch (
+				renderTemplate(this.hass, this.keyboardMode).toUpperCase()
+			) {
 				case 'KODI':
-					data = {
-						entity_id: this.keyboardId,
-						method: 'Input.SendText',
-						text: text,
-						done: false,
-					};
+					data.method = 'Input.SendText';
+					data.text = text;
+					data.done = false;
 					this.hass.callService('kodi', 'call_method', data);
 					break;
+				case 'ANDROID':
+				case 'ANDROIDTV':
+				case 'ANDROID_TV':
 				case 'ANDROID TV':
 				default:
-					data = {
-						entity_id: this.keyboardId,
-						command: 'input text "' + text + '"',
-					};
+					data.command = `input text "${text}"`;
 					this.hass.callService('androidtv', 'adb_command', data);
 					break;
 			}

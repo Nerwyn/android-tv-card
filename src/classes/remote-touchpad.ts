@@ -3,6 +3,8 @@ import { customElement, property, eventOptions } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
 import { IAction, TouchAction } from '../models';
+import { renderTemplate } from '../utils';
+
 import { BaseRemoteElement } from './base-remote-element';
 
 @customElement('remote-touchpad')
@@ -30,7 +32,13 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		if (e.detail && e.detail > this.clickCount) {
 			this.clickCount++;
 		}
-		if (this.enableDoubleClick ?? false) {
+		if (
+			renderTemplate(
+				this.hass,
+				this.enableDoubleClick as unknown as string,
+			) == 'true' ??
+			false
+		) {
 			if (this.clickCount == 2) {
 				this.onDblClick(e);
 			} else {
@@ -121,9 +129,14 @@ export class RemoteTouchpad extends BaseRemoteElement {
 	}
 
 	render() {
+		const style = structuredClone(this._style ?? {});
+		for (const key in style) {
+			style[key] = renderTemplate(this.hass, style[key] as string);
+		}
+
 		return html`
 			<toucharea
-				style=${styleMap(this._style ?? {})}
+				style=${styleMap(style)}
 				@click=${this.onClick}
 				@touchstart=${this.onTouchStart}
 				@touchmove=${this.onTouchMove}

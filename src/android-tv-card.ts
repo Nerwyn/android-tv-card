@@ -16,6 +16,7 @@ import {
 	IData,
 	IServiceCall,
 } from './models';
+import { renderTemplate } from './utils';
 
 import './classes/remote-button';
 import './classes/remote-keyboard';
@@ -63,7 +64,7 @@ class AndroidTVCard extends LitElement {
 		if (!config) {
 			throw new Error('Invalid configuration');
 		}
-		config = JSON.parse(JSON.stringify(config));
+		config = structuredClone(config);
 		config = { theme: 'default', ...config };
 
 		// Set toggles to default values if not provided
@@ -213,8 +214,8 @@ class AndroidTVCard extends LitElement {
 		return html` <div class="column">${content}</div> `;
 	}
 
-	buildButton(element_name: string): TemplateResult {
-		const info = this.getInfo(element_name);
+	buildButton(elementName: string): TemplateResult {
+		const info = this.getInfo(elementName);
 		const style = {
 			...this.config.button_style,
 			...info.style,
@@ -232,7 +233,7 @@ class AndroidTVCard extends LitElement {
 			.hapticEnabled=${this.config.enable_button_feedback}
 			.remoteId=${this.config.remote_id}
 			.info=${info}
-			.actionKey="${element_name}"
+			.actionKey="${elementName}"
 			.customIcon=${this.customIcons[info.icon ?? ''] ?? ''}
 			._style=${style}
 		/>`;
@@ -355,20 +356,25 @@ class AndroidTVCard extends LitElement {
 		if (typeof row == 'string') {
 			row = [row];
 		}
-		const row_content: TemplateResult[] = [];
-		for (const element_name of row) {
-			if (typeof element_name == 'object' && element_name != null) {
-				row_content.push(this.buildElements(element_name, !isColumn));
+		const rowContent: TemplateResult[] = [];
+		for (let elementName of row) {
+			elementName = renderTemplate(this.hass, elementName as string);
+			if (typeof elementName == 'object' && elementName != null) {
+				rowContent.push(this.buildElements(elementName, !isColumn));
 			} else {
-				switch (element_name) {
+				switch (elementName) {
 					case 'vol_buttons':
 					case 'volume_buttons': {
-						row_content.push(...this.buildVolumeButtons());
+						const volumeButtons = this.buildVolumeButtons();
+						if (isColumn) {
+							volumeButtons.reverse();
+						}
+						rowContent.push(...volumeButtons);
 						break;
 					}
 					case 'slider':
 					case 'volume_slider': {
-						row_content.push(this.buildSlider());
+						rowContent.push(this.buildSlider());
 						break;
 					}
 
@@ -377,41 +383,41 @@ class AndroidTVCard extends LitElement {
 					case 'direction_pad':
 					case 'nav_buttons':
 					case 'navigation_buttons': {
-						row_content.push(this.buildColumn(this.buildDPad()));
+						rowContent.push(this.buildColumn(this.buildDPad()));
 						break;
 					}
 					case 'touchpad':
 					case 'nav_touchpad':
 					case 'navigation_touchpad': {
-						row_content.push(this.buildTouchpad());
+						rowContent.push(this.buildTouchpad());
 						break;
 					}
 
 					case 'keyboard': {
-						row_content.push(this.buildKeyboard());
+						rowContent.push(this.buildKeyboard());
 						break;
 					}
 
 					case 'textbox': {
-						row_content.push(this.buildTextbox());
+						rowContent.push(this.buildTextbox());
 						break;
 					}
 
 					case 'search': {
-						row_content.push(this.buildSearch());
+						rowContent.push(this.buildSearch());
 						break;
 					}
 
 					default: {
-						row_content.push(this.buildButton(element_name));
+						rowContent.push(this.buildButton(elementName));
 						break;
 					}
 				}
 			}
 		}
 		return isColumn
-			? this.buildColumn(row_content)
-			: this.buildRow(row_content);
+			? this.buildColumn(rowContent)
+			: this.buildRow(rowContent);
 	}
 
 	render() {
@@ -422,8 +428,8 @@ class AndroidTVCard extends LitElement {
 		const content: TemplateResult[] = [];
 
 		for (const row of this.config.rows!) {
-			const row_content = this.buildElements(row as string[]);
-			content.push(row_content);
+			const rowContent = this.buildElements(row as string[]);
+			content.push(rowContent);
 		}
 
 		return html`<ha-card .header="${this.config.title}"
