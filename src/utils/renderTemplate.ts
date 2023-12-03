@@ -34,6 +34,9 @@ export function renderTemplate(hass: HomeAssistant, str: string): string {
 			) {
 				return _iif(hass, condition, if_true, if_false, if_none);
 			},
+			match_media(mediaquery: string) {
+				return _match_media(mediaquery);
+			},
 		};
 
 		str = renderString(structuredClone(str), context).trim();
@@ -117,4 +120,8 @@ function _iif(
 	} else {
 		return rendered;
 	}
+}
+
+function _match_media(mediaquery: string) {
+	return window.matchMedia(mediaquery).matches;
 }
