@@ -36,7 +36,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			renderTemplate(
 				this.hass,
 				this.enableDoubleClick as unknown as string,
-			) == 'true' ??
+			) ??
 			false
 		) {
 			if (this.clickCount == 2) {
