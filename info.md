@@ -14,6 +14,7 @@ A remote card for Home Assistant that also allows for a greater level of customi
     - `search`: Google Assistant search.
   - Also supports Kodi
 - Example alternate media platform remote configs for Kodi, Apple TV, Sony Bravia TV, and Denon/Marantz in the README examples.
+- Template support
 
 <img src="https://github.com/Nerwyn/android-tv-card/blob/main/assets/screenshot.png" alt="screenshot" width="300"/>
 

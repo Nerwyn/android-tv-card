@@ -89,6 +89,12 @@ Along with a many other changes and improvements:
     - Works well if you are experiencing [this issue](https://github.com/home-assistant/core/issues/94063).
 - Can also be used for Kodi (see below)
 
+**Template support**
+
+- Supports Home Assistant jinja2 style templating using nunjucks.
+- Uses the same syntax as normal Home Assistant templating with a subset of functions.
+  - If there are additional functions you want implemented, please make a feature request.
+
 Many thanks to the original authors. Getting this to work with Android TV was straightforward and all of the frontend heavy lifting they did has provided an excellent base on which to build my personal ultimate Android TV remote.
 
 # Demo
@@ -559,6 +565,27 @@ You can also use the keyboard to send text on the following alternate platforms 
 | `KODI`         | Does not support backspace, delete, enter, left, and right but these can be used with the on screen keyboard. Seamless mode does not work as the Kodi `Input.SendText` method clears the textbox before sending text. |
 
 More may be added as requested if there is a way to do so through their Home Assistant (or possibly community made) integrations.
+
+## Templating
+
+All fields support nunjucks templating. Nunjucks is a templating engine for JavaScript, which is heavily based on the jinja2 templating engine which Home Assistant uses. While the syntax of nunjucks and jinja2 is almost identical, you may find the [nunjucks documentation](https://mozilla.github.io/nunjucks/templating.html) useful.
+
+### Functions
+
+I've recreated a subset of the Home Assistant template functions for you to use as defined by the [Home Assistant templating documentation](https://www.home-assistant.io/docs/configuration/templating/), along with some other useful variables. If there are additional functions that you want implemented, please make a feature request.
+
+| Name          | Arguments                             | Description                                                                                                                                                                                                                                                          |
+| ------------- | ------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| True          |                                       | Python `True` equivalent to JavaScript `true`.                                                                                                                                                                                                                       |
+| False         |                                       | Python `False` equivalent to JavaScript `false`.                                                                                                                                                                                                                     |
+| None          |                                       | Python `None` equivalent to JavaScript `null`.                                                                                                                                                                                                                       |
+| states        | entity_id                             | Returns the state string of the given entity.                                                                                                                                                                                                                        |
+| is_state      | entity_id, value                      | Compares an entity's state with a specified state or list of states and returns `true` or `false`.                                                                                                                                                                   |
+| state_attr    | entity_id, attribute                  | Returns the value of the attribute or `undefined` if it doesn't exist.                                                                                                                                                                                               |
+| is_state_attr | entity_id, attribute, value           | Tests if the given entity attribute is the specified value.                                                                                                                                                                                                          |
+| has_value     | entity_id                             | Tests if the given entity is not unknown or unavailable.                                                                                                                                                                                                             |
+| iif           | condition, if_true, if_false, if_none | Immediate if. Returns the value of `if_true` if the condition is true, the value of `if_false` if it's false, and the value of `if_none` if it's `undefined`, `null`, or an empty string. All arguments except `condition` are optional. Cannot be used as a filter. |
+| match_media   | mediaquery                            | Returns the boolean result of the provided [CSS media query](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_media_queries/Using_media_queries).                                                                                                                |
 
 ## Examples and Alternate Media Platforms
 

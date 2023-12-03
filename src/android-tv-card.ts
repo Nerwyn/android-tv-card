@@ -432,7 +432,8 @@ class AndroidTVCard extends LitElement {
 			content.push(rowContent);
 		}
 
-		return html`<ha-card .header="${this.config.title}"
+		return html`<ha-card
+			.header="${renderTemplate(this.hass, this.config.title as string)}"
 			>${content}</ha-card
 		>`;
 	}
