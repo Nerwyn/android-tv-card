@@ -2,8 +2,9 @@ import { html, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
+import { renderTemplate } from 'ha-nunjucks';
+
 import { IServiceCall } from '../models';
-import { renderTemplate } from '../utils';
 
 import { BaseRemoteElement } from './base-remote-element';
 
@@ -70,9 +71,8 @@ export class RemoteSlider extends BaseRemoteElement {
 	}
 
 	onEnd(_e: MouseEvent | TouchEvent) {
-		const [domain, service] = renderTemplate(
-			this.hass,
-			this.info.service,
+		const [domain, service] = (
+			renderTemplate(this.hass, this.info.service) as string
 		).split('.');
 		if (!this.newValue && this.newValue != 0) {
 			this.newValue = this.value as number;
@@ -95,11 +95,11 @@ export class RemoteSlider extends BaseRemoteElement {
 
 	render() {
 		const background = html`<div class="slider-background"></div>`;
-		const sliderId = renderTemplate(this.hass, this.sliderId);
+		const sliderId = renderTemplate(this.hass, this.sliderId) as string;
 		const sliderAttribute = renderTemplate(
 			this.hass,
 			this.sliderAttribute as string,
-		);
+		) as string;
 
 		if (sliderAttribute) {
 			if (sliderAttribute == 'state') {
@@ -121,10 +121,16 @@ export class RemoteSlider extends BaseRemoteElement {
 		}
 
 		const end = parseFloat(
-			renderTemplate(this.hass, this.range[0] as unknown as string),
+			renderTemplate(
+				this.hass,
+				this.range[0] as unknown as string,
+			) as string,
 		);
 		const start = parseFloat(
-			renderTemplate(this.hass, this.range[1] as unknown as string),
+			renderTemplate(
+				this.hass,
+				this.range[1] as unknown as string,
+			) as string,
 		);
 
 		this.step = (start - end) / 100;
@@ -150,7 +156,10 @@ export class RemoteSlider extends BaseRemoteElement {
 
 		const style = structuredClone(this._style ?? {});
 		for (const key in style) {
-			style[key] = renderTemplate(this.hass, style[key] as string);
+			style[key] = renderTemplate(
+				this.hass,
+				style[key] as string,
+			) as string;
 		}
 
 		return html`<div class="container" style=${styleMap(style)}>

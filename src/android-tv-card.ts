@@ -5,6 +5,7 @@ import { property } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
 import { HomeAssistant, applyThemesOnElement } from 'custom-card-helpers';
+import { renderTemplate } from 'ha-nunjucks';
 
 import {
 	IConfig,
@@ -16,7 +17,6 @@ import {
 	IData,
 	IServiceCall,
 } from './models';
-import { renderTemplate } from './utils';
 
 import './classes/remote-button';
 import './classes/remote-keyboard';
@@ -358,7 +358,10 @@ class AndroidTVCard extends LitElement {
 		}
 		const rowContent: TemplateResult[] = [];
 		for (let elementName of row) {
-			elementName = renderTemplate(this.hass, elementName as string);
+			elementName = renderTemplate(
+				this.hass,
+				elementName as string,
+			) as string;
 			if (typeof elementName == 'object' && elementName != null) {
 				rowContent.push(this.buildElements(elementName, !isColumn));
 			} else {

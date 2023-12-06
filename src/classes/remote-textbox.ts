@@ -1,7 +1,8 @@
 import { customElement } from 'lit/decorators.js';
 
+import { renderTemplate } from 'ha-nunjucks';
+
 import { IData } from '../models';
-import { renderTemplate } from '../utils';
 
 import { BaseKeyboardElement } from './base-keyboard-element';
 
@@ -16,7 +17,9 @@ export class RemoteTextbox extends BaseKeyboardElement {
 				entity_id: renderTemplate(this.hass, this.keyboardId),
 			};
 			switch (
-				renderTemplate(this.hass, this.keyboardMode).toUpperCase()
+				(
+					renderTemplate(this.hass, this.keyboardMode) as string
+				).toUpperCase()
 			) {
 				case 'KODI':
 					data.method = 'Input.SendText';

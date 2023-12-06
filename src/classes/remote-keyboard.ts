@@ -1,8 +1,9 @@
 import { CSSResult, html, css } from 'lit';
 import { customElement } from 'lit/decorators.js';
 
+import { renderTemplate } from 'ha-nunjucks';
+
 import { IData } from '../models';
-import { renderTemplate } from '../utils';
 
 import { BaseKeyboardElement } from './base-keyboard-element';
 
@@ -38,7 +39,9 @@ export class RemoteKeyboard extends BaseKeyboardElement {
 			}
 
 			switch (
-				renderTemplate(this.hass, this.keyboardMode).toUpperCase()
+				(
+					renderTemplate(this.hass, this.keyboardMode) as string
+				).toUpperCase()
 			) {
 				case 'KODI':
 					break;
@@ -62,7 +65,9 @@ export class RemoteKeyboard extends BaseKeyboardElement {
 				entity_id: renderTemplate(this.hass, this.keyboardId),
 			};
 			switch (
-				renderTemplate(this.hass, this.keyboardMode).toUpperCase()
+				(
+					renderTemplate(this.hass, this.keyboardMode) as string
+				).toUpperCase()
 			) {
 				case 'KODI':
 					data.method = 'Input.SendText';
@@ -92,7 +97,9 @@ export class RemoteKeyboard extends BaseKeyboardElement {
 				entity_id: renderTemplate(this.hass, this.keyboardId),
 			};
 			switch (
-				renderTemplate(this.hass, this.keyboardMode).toUpperCase()
+				(
+					renderTemplate(this.hass, this.keyboardMode) as string
+				).toUpperCase()
 			) {
 				case 'KODI':
 					data.method = 'Input.SendText';

@@ -1,11 +1,11 @@
-import { HomeAssistant, HapticType, forwardHaptic } from 'custom-card-helpers';
-
 import { LitElement, CSSResult, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { StyleInfo } from 'lit/directives/style-map.js';
 
+import { HomeAssistant, HapticType, forwardHaptic } from 'custom-card-helpers';
+import { renderTemplate } from 'ha-nunjucks';
+
 import { IData, IKey, ISource, IAction } from '../models';
-import { renderTemplate } from '../utils';
 
 @customElement('base-remote-element')
 export class BaseRemoteElement extends LitElement {
@@ -42,9 +42,8 @@ export class BaseRemoteElement extends LitElement {
 			if (longPress && info.service == 'remote.send_command') {
 				data.hold_secs = 0.5;
 			}
-			const [domain, service] = renderTemplate(
-				this.hass,
-				info.service,
+			const [domain, service] = (
+				renderTemplate(this.hass, info.service) as string
 			).split('.', 2);
 			this.hass.callService(domain, service, data);
 		}

@@ -1,11 +1,11 @@
-import { HapticType } from 'custom-card-helpers';
-
 import { TemplateResult, CSSResult, html, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
+import { HapticType } from 'custom-card-helpers';
+import { renderTemplate } from 'ha-nunjucks';
+
 import { IAction } from '../models';
-import { renderTemplate } from '../utils';
 
 import { BaseRemoteElement } from './base-remote-element';
 
@@ -59,7 +59,10 @@ export class RemoteButton extends BaseRemoteElement {
 	}
 
 	render(inputTemplate?: TemplateResult<1>) {
-		const icon = renderTemplate(this.hass, this.info.icon as string);
+		const icon = renderTemplate(
+			this.hass,
+			this.info.icon as string,
+		) as string;
 		const svgPath =
 			renderTemplate(this.hass, this.info.svg_path as string) ??
 			renderTemplate(this.hass, this.customIcon as string);
@@ -71,7 +74,10 @@ export class RemoteButton extends BaseRemoteElement {
 
 		const style = structuredClone(this._style ?? {});
 		for (const key in style) {
-			style[key] = renderTemplate(this.hass, style[key] as string);
+			style[key] = renderTemplate(
+				this.hass,
+				style[key] as string,
+			) as string;
 		}
 
 		const action = renderTemplate(this.hass, this.actionKey);

@@ -2,8 +2,9 @@ import { html, css } from 'lit';
 import { customElement, property, eventOptions } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
+import { renderTemplate } from 'ha-nunjucks';
+
 import { IAction, TouchAction } from '../models';
-import { renderTemplate } from '../utils';
 
 import { BaseRemoteElement } from './base-remote-element';
 
@@ -131,7 +132,10 @@ export class RemoteTouchpad extends BaseRemoteElement {
 	render() {
 		const style = structuredClone(this._style ?? {});
 		for (const key in style) {
-			style[key] = renderTemplate(this.hass, style[key] as string);
+			style[key] = renderTemplate(
+				this.hass,
+				style[key] as string,
+			) as string;
 		}
 
 		return html`

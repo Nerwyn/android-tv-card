@@ -1,7 +1,8 @@
 import { customElement } from 'lit/decorators.js';
 
+import { renderTemplate } from 'ha-nunjucks';
+
 import { IData } from '../models';
-import { renderTemplate } from '../utils';
 
 import { BaseKeyboardElement } from './base-keyboard-element';
 
@@ -13,7 +14,11 @@ export class RemoteSearch extends BaseKeyboardElement {
 
 		let promptText: string;
 		const entityId = renderTemplate(this.hass, this.keyboardId);
-		switch (renderTemplate(this.hass, this.keyboardMode).toUpperCase()) {
+		switch (
+			(
+				renderTemplate(this.hass, this.keyboardMode) as string
+			).toUpperCase()
+		) {
 			case 'KODI':
 				promptText = 'Global Search: ';
 				this.hass.callService('kodi', 'call_method', {
@@ -37,7 +42,9 @@ export class RemoteSearch extends BaseKeyboardElement {
 				entity_id: entityId,
 			};
 			switch (
-				renderTemplate(this.hass, this.keyboardMode).toUpperCase()
+				(
+					renderTemplate(this.hass, this.keyboardMode) as string
+				).toUpperCase()
 			) {
 				case 'KODI':
 					data.method = 'Input.SendText';
