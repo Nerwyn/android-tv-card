@@ -72,7 +72,7 @@ class AndroidTVCard extends LitElement {
 		config = this.updateDeprecatedKeys(config);
 		config = this.convertToRowsArray(config);
 		config = this.updateDeprecatedCustomKeys(config);
-		console.log(config)
+		console.log(config);
 
 		this.customActions = {
 			...(config.custom_sources || {}),
@@ -139,6 +139,7 @@ class AndroidTVCard extends LitElement {
 			'key',
 			'source',
 			'service',
+			'service_data',
 			'data',
 			'target',
 		] as (keyof Action)[];
@@ -163,7 +164,7 @@ class AndroidTVCard extends LitElement {
 					// Copy Action fields to tap_action
 					let replaceTapAction = false;
 					const tapAction = customAction.tap_action ?? {};
-					for (const actionKey in actionKeys) {
+					for (const actionKey of actionKeys) {
 						if (actionKey in customAction) {
 							replaceTapAction = true;
 							tapAction[actionKey as keyof Action] =
