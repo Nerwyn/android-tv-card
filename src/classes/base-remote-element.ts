@@ -94,10 +94,13 @@ export class BaseRemoteElement extends LitElement {
 			}
 			if (confirmation != false) {
 				let text: string;
-				if ('text' in (info.confirmation as IConfirmation)) {
+				if (
+					confirmation != true &&
+					'text' in (confirmation as IConfirmation)
+				) {
 					text = renderTemplate(
 						this.hass,
-						(info.confirmation as IConfirmation).text as string,
+						(confirmation as IConfirmation).text as string,
 					) as string;
 				} else {
 					let actionText = '';
@@ -110,14 +113,14 @@ export class BaseRemoteElement extends LitElement {
 					}
 					text = `Are you sure you want to run action '${actionText}'?`;
 				}
-				if (info.confirmation == true) {
+				if (confirmation == true) {
 					if (!confirm(text)) {
 						return false;
 					}
 				} else {
-					if ('exemptions' in (info.confirmation as IConfirmation)) {
+					if ('exemptions' in (confirmation as IConfirmation)) {
 						if (
-							!(info.confirmation as IConfirmation)
+							!(confirmation as IConfirmation)
 								.exemptions!.map((exemption) =>
 									renderTemplate(this.hass, exemption.user),
 								)
