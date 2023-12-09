@@ -5,18 +5,15 @@ import { styleMap } from 'lit/directives/style-map.js';
 import { HapticType } from 'custom-card-helpers';
 import { renderTemplate } from 'ha-nunjucks';
 
-import { IAction } from '../models';
-
 import { BaseRemoteElement } from './base-remote-element';
 
 @customElement('remote-button')
 export class RemoteButton extends BaseRemoteElement {
-	@property({ attribute: false }) info!: IAction;
 	@property({ attribute: false }) actionKey!: string;
 	@property({ attribute: false }) customIcon?: string;
 
-	timer?: ReturnType<typeof setTimeout>;
-	interval?: ReturnType<typeof setInterval>;
+	longTimer?: ReturnType<typeof setTimeout>;
+	longInterval?: ReturnType<typeof setInterval>;
 
 	onClick(_e: Event, longPress: boolean = false) {
 		let haptic: HapticType = longPress ? 'medium' : 'light';
@@ -25,17 +22,22 @@ export class RemoteButton extends BaseRemoteElement {
 		}
 		this.fireHapticEvent(haptic);
 
-		this.sendAction(this.info, longPress);
+		let action = this.info.tap_action!;
+		if (longPress && 'hold_action' in this.info) {
+			action = this.info.hold_action!;
+		}
+
+		this.sendAction(action, longPress);
 	}
 
 	onlongClickStart(e: Event) {
-		this.timer = setTimeout(() => {
+		this.longTimer = setTimeout(() => {
 			this.longPress = true;
 
 			// Only repeat hold action for directional keys and volume
 			// prettier-ignore
 			if (['up', 'down', 'left', 'right', 'volume_up', 'volume_down', 'delete'].includes(this.actionKey)) {
-				this.interval = setInterval(() => {
+				this.longInterval = setInterval(() => {
 					this.onClick(e, false)
 				}, 100);
 			} else {
@@ -51,11 +53,11 @@ export class RemoteButton extends BaseRemoteElement {
 			e.preventDefault();
 		}
 
-		clearTimeout(this.timer as ReturnType<typeof setTimeout>);
-		clearInterval(this.interval as ReturnType<typeof setInterval>);
+		clearTimeout(this.longTimer as ReturnType<typeof setTimeout>);
+		clearInterval(this.longInterval as ReturnType<typeof setInterval>);
 
-		this.timer = undefined;
-		this.interval = undefined;
+		this.longTimer = undefined;
+		this.longInterval = undefined;
 	}
 
 	render(inputTemplate?: TemplateResult<1>) {

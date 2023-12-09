@@ -12,7 +12,7 @@ import { RippleHandlers } from '@material/mwc-ripple/ripple-handlers';
 
 import { renderTemplate } from 'ha-nunjucks';
 
-import { IAction, TouchAction } from '../models';
+import { Action, TouchAction } from '../models';
 
 import { BaseRemoteElement } from './base-remote-element';
 
@@ -25,7 +25,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 	});
 
 	@property({ attribute: false }) enableDoubleClick?: boolean;
-	@property({ attribute: false }) info!: Record<TouchAction, IAction>;
+	@property({ attribute: false }) touchInfo!: Record<TouchAction, Action>;
 
 	clickTimer?: ReturnType<typeof setTimeout>;
 	clickCount: number = 0;
@@ -41,7 +41,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			clearTimeout(this.clickTimer as ReturnType<typeof setTimeout>);
 			this.clickTimer = undefined;
 			this.fireHapticEvent('light');
-			this.sendAction(this.info['center']);
+			this.sendAction(this.touchInfo['center']);
 			this.clickCount = 0;
 		};
 		if (e.detail && e.detail > this.clickCount) {
@@ -70,7 +70,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		this.clickCount = 0;
 
 		this.fireHapticEvent('success');
-		const info = this.info.double;
+		const info = this.touchInfo.double;
 		this.sendAction(info);
 	}
 
@@ -89,11 +89,13 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			) {
 				this.touchInterval = setInterval(() => {
 					this.fireHapticEvent('selection');
-					this.sendAction(this.info[this.touchAction as TouchAction]);
+					this.sendAction(
+						this.touchInfo[this.touchAction as TouchAction],
+					);
 				}, 100);
 			} else {
 				this.fireHapticEvent('medium');
-				this.sendAction(this.info.long, true);
+				this.sendAction(this.touchInfo.long, true);
 			}
 		}, 500);
 
@@ -141,7 +143,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		}
 		this.fireHapticEvent('selection');
 		this.touchAction = action as TouchAction;
-		this.sendAction(this.info[action as TouchAction]);
+		this.sendAction(this.touchInfo[action as TouchAction]);
 
 		window.initialX = undefined;
 		window.initialY = undefined;

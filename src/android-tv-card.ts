@@ -9,9 +9,8 @@ import { renderTemplate } from 'ha-nunjucks';
 
 import {
 	IConfig,
-	IKey,
-	ISource,
 	IAction,
+	Action,
 	defaultKeys,
 	defaultSources,
 	IData,
@@ -34,8 +33,7 @@ class AndroidTVCard extends LitElement {
 	@property({ attribute: false }) hass!: HomeAssistant;
 	@property({ attribute: false }) private config!: IConfig;
 
-	customKeys: Record<string, IKey | IServiceCall> = {};
-	customSources: Record<string, ISource | IServiceCall> = {};
+	customActions: Record<string, IAction> = {};
 	customIcons: Record<string, string> = {};
 
 	static get properties() {
@@ -73,10 +71,12 @@ class AndroidTVCard extends LitElement {
 		// Legacy config upgrades
 		config = this.updateDeprecatedKeys(config);
 		config = this.convertToRowsArray(config);
-		config = this.combineServiceFields(config);
+		config = this.updateDeprecatedCustomKeys(config);
 
-		this.customKeys = config.custom_keys || {};
-		this.customSources = config.custom_sources || {};
+		this.customActions = {
+			...(config.custom_sources || {}),
+			...(config.custom_keys || {}),
+		};
 		this.customIcons = config.custom_icons || {};
 
 		await window.loadCardHelpers();
@@ -129,31 +129,69 @@ class AndroidTVCard extends LitElement {
 		return config;
 	}
 
-	combineServiceFields(config: IConfig) {
+	updateDeprecatedCustomKeys(config: IConfig) {
 		const customActionKeys = [
 			'custom_keys',
 			'custom_sources',
 		] as (keyof IConfig)[];
+		const actionKeys = [
+			'key',
+			'source',
+			'service',
+			'data',
+			'target',
+		] as (keyof Action)[];
+		const actionTypes = [
+			'tap_action',
+			'hold_action',
+			'double_tap_action',
+		] as (keyof IAction)[];
 
-		for (const key of customActionKeys) {
-			if (key in config) {
-				const customActions = config[key as keyof IConfig] as Record<
-					string,
-					IAction
-				>;
-				for (const name in customActions) {
-					const customAction = customActions[name];
-					if ('service' in customAction) {
-						customAction.data = {
-							...customAction.data,
-							...(
-								customAction as unknown as Record<
-									string,
-									IData | undefined
-								>
-							).service_data,
-							...customAction.target,
-						};
+		for (const customActionKey of customActionKeys) {
+			// Check custom keys and custom sources arrays
+
+			if (customActionKey in config) {
+				const customActions = config[
+					customActionKey as keyof IConfig
+				] as Record<string, IAction>;
+
+				// For each custom key or source
+				for (const customActionName in customActions) {
+					const customAction = customActions[customActionName];
+
+					// Copy Action fields to tap_action
+					let replaceTapAction = false;
+					const tapAction = customAction.tap_action ?? {};
+					for (const actionKey in actionKeys) {
+						if (actionKey in customAction) {
+							replaceTapAction = true;
+							tapAction[actionKey as keyof Action] =
+								customAction[actionKey as keyof Action];
+						}
+					}
+					if (replaceTapAction) {
+						customAction.tap_action = tapAction as Action;
+					}
+
+					// Merge service_data, target, and data fields
+					for (const actionType in actionTypes) {
+						if (actionType in customAction) {
+							const action = customAction[
+								actionType as keyof IAction
+							] as IServiceCall;
+							if ('service' in action) {
+								action.data = {
+									...action.data,
+									...(
+										action as unknown as Record<
+											string,
+											IData | undefined
+										>
+									).service_data,
+									...action.target,
+								};
+							}
+						}
 					}
 				}
 			}
@@ -180,18 +218,17 @@ class AndroidTVCard extends LitElement {
 
 	getInfo(action: string): IAction {
 		const defaultInfo = defaultKeys[action] || defaultSources[action] || {};
-		const info =
-			this.customKeys[action] ||
-			this.customSources[action] ||
-			defaultInfo;
+		const info = this.customActions[action] || defaultInfo;
 
 		if (!Object.keys(info).length) {
 			if (action == 'slider') {
 				return {
-					service: 'media_player.volume_set',
-					data: {
-						entity_id: this.config.slider_id!,
-						volume_level: 'VALUE',
+					tap_action: {
+						service: 'media_player.volume_set',
+						data: {
+							entity_id: this.config.slider_id!,
+							volume_level: 'VALUE',
+						},
 					},
 				};
 			} else {
@@ -273,13 +310,15 @@ class AndroidTVCard extends LitElement {
 
 	buildTouchpad(): TemplateResult {
 		const info = {
-			up: this.getInfo('up'),
-			down: this.getInfo('down'),
-			left: this.getInfo('left'),
-			right: this.getInfo('right'),
-			center: this.getInfo('center'),
-			double: this.getInfo(this.config.double_click_keycode ?? 'back'),
-			long: this.getInfo(this.config.long_click_keycode ?? 'center'),
+			up: this.getInfo('up').tap_action,
+			down: this.getInfo('down').tap_action,
+			left: this.getInfo('left').tap_action,
+			right: this.getInfo('right').tap_action,
+			center: this.getInfo('center').tap_action,
+			double: this.getInfo(this.config.double_click_keycode ?? 'back')
+				.tap_action,
+			long: this.getInfo(this.config.long_click_keycode ?? 'center')
+				.tap_action,
 		};
 
 		return html`<remote-touchpad

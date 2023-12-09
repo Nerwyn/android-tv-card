@@ -13,7 +13,6 @@ export class RemoteSlider extends BaseRemoteElement {
 	@property({ attribute: false }) sliderId!: string;
 	@property({ attribute: false }) sliderAttribute?: string;
 	@property({ attribute: false }) range: [number, number] = [0, 1];
-	@property({ attribute: false }) info!: IServiceCall;
 
 	value: number = 0;
 	oldValue?: number;
@@ -72,12 +71,17 @@ export class RemoteSlider extends BaseRemoteElement {
 
 	onEnd(_e: MouseEvent | TouchEvent) {
 		const [domain, service] = (
-			renderTemplate(this.hass, this.info.service) as string
+			renderTemplate(
+				this.hass,
+				(this.info.tap_action as IServiceCall).service,
+			) as string
 		).split('.');
 		if (!this.newValue && this.newValue != 0) {
 			this.newValue = this.value as number;
 		}
-		const data = structuredClone(this.info.data ?? {});
+		const data = structuredClone(
+			(this.info.tap_action as IServiceCall).data ?? {},
+		);
 		for (const key in data) {
 			data[key] = renderTemplate(this.hass, data[key] as string);
 			if (data[key] == 'VALUE') {

@@ -1,88 +1,88 @@
-import { ISource, svg } from '.';
+import { IAction, svg } from '.';
 
 /**
  * This is a list of common streaming apps, their icons, and the deep links to open them in Android TV, mostly collected from the following Home Assistant Community Forum guide.
  * Not all have been tested, if any do not work please let me know!
  * https://community.home-assistant.io/t/android-tv-remote-app-links-deep-linking-guide/567921
  */
-export const defaultSources: Record<string, ISource> = {
+export const defaultSources: Record<string, IAction> = {
 	appletv: {
-		source: 'https://tv.apple.com', // UNTESTED
+		tap_action: { source: 'https://tv.apple.com' }, // UNTESTED
 		svg_path: svg.APPLETV,
 	},
 	crunchyroll: {
-		source: 'crunchyroll://', // UNTESTED
+		tap_action: { source: 'crunchyroll://' }, // UNTESTED
 		svg_path: svg.CRUNCHYROLL,
 	},
 	disney: {
-		source: 'https://www.disneyplus.com',
+		tap_action: { source: 'https://www.disneyplus.com' },
 		svg_path: svg.DISNEY,
 	},
 	emby: {
-		source: 'embyatv://tv.emby.embyatv/startapp', // UNTESTED
+		tap_action: { source: 'embyatv://tv.emby.embyatv/startapp' }, // UNTESTED
 		icon: 'mdi:emby',
 	},
 	foxsports: {
-		source: 'foxsports://live', // UNTESTED
+		tap_action: { source: 'foxsports://live' }, // UNTESTED
 		svg_path: svg.FOXSPORTS,
 	},
 	hulu: {
-		source: 'hulu://', // BROKEN
+		tap_action: { source: 'hulu://' }, // BROKEN
 		icon: 'mdi:hulu',
 	},
 	max: {
-		source: 'https://play.max.com', // BROKEN
+		tap_action: { source: 'https://play.max.com' }, // BROKEN
 		svg_path: svg.MAX,
 	},
 	mlbtv: {
-		source: 'mlbatbat://', // UNTESTED
+		tap_action: { source: 'mlbatbat://' }, // UNTESTED
 		svg_path: svg.MLBTV,
 	},
 	nba: {
-		source: 'gametime://', // UNTESTED
+		tap_action: { source: 'gametime://' }, // UNTESTED
 		svg_path: svg.NBA,
 	},
-	netflix: { source: 'netflix://', icon: 'mdi:netflix' },
+	netflix: { tap_action: { source: 'netflix://' }, icon: 'mdi:netflix' },
 	plex: {
-		source: 'plex://',
+		tap_action: { source: 'plex://' },
 		icon: 'mdi:plex',
 	},
 	primevideo: {
-		source: 'https://app.primevideo.com',
+		tap_action: { source: 'https://app.primevideo.com' },
 		svg_path: svg.PRIMEVIDEO,
 	},
 	pia: {
-		source: 'piavpn://', // UNTESTED
+		tap_action: { source: 'piavpn://' }, // UNTESTED
 		svg_path: svg.PIA,
 	},
 	rakutentv: {
-		source: 'https://rakutentv.page.link',
+		tap_action: { source: 'https://rakutentv.page.link' },
 		svg_path: svg.RAKUTENTV,
 	},
 	rakutenviki: {
-		source: 'viki://home', // UNTESTED
+		tap_action: { source: 'viki://home' }, // UNTESTED
 		svg_path: svg.RAKUTENVIKI,
 	},
 	skyshowtime: {
-		source: 'https://www.skyshowtime.com/deeplink',
+		tap_action: { source: 'https://www.skyshowtime.com/deeplink' },
 		svg_path: svg.SHOWTIME,
 	},
-	spotify: { source: 'spotify://', icon: 'mdi:spotify' },
+	spotify: { tap_action: { source: 'spotify://' }, icon: 'mdi:spotify' },
 	surfshark: {
-		source: 'https://surfshark.com/locations-ul', // UNTESTED
+		tap_action: { source: 'https://surfshark.com/locations-ul' }, // UNTESTED
 		svg_path: svg.SURFSHARK,
 	},
 	videoland: {
-		source: 'videoland-v2://',
+		tap_action: { source: 'videoland-v2://' },
 		svg_path: svg.VIDEOLAND,
 	},
 	vudu: {
-		source: 'vuduapp://',
+		tap_action: { source: 'vuduapp://' },
 		svg_path: svg.VUDU,
 	},
-	youtube: { source: 'vnd.youtube://', icon: 'mdi:youtube' },
+	youtube: { tap_action: { source: 'vnd.youtube://' }, icon: 'mdi:youtube' },
 	youtubetv: {
-		source: 'https://tv.youtube.com', // UNTESTED
+		tap_action: { source: 'https://tv.youtube.com' }, // UNTESTED
 		icon: 'mdi:youtube-tv',
 	},
 };
