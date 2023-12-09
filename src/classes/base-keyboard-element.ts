@@ -6,5 +6,5 @@ import { RemoteButton } from './remote-button';
 @customElement('base-keyboard-element')
 export class BaseKeyboardElement extends RemoteButton {
 	@property({ attribute: false }) keyboardId!: string;
-	@property({ attribute: false }) keyboardMode: KeyboardMode = 'ANDROID TV';
+	@property({ attribute: false }) keyboardMode!: KeyboardMode;
 }
