@@ -72,6 +72,7 @@ class AndroidTVCard extends LitElement {
 		config = this.updateDeprecatedKeys(config);
 		config = this.convertToRowsArray(config);
 		config = this.updateDeprecatedCustomKeys(config);
+		console.log(config)
 
 		this.customActions = {
 			...(config.custom_sources || {}),
