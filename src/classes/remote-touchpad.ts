@@ -170,7 +170,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 				@mouseenter=${this._rippleHandlers.startHover}
 				@mouseleave=${this._rippleHandlers.endHover}
 			>
-				<mwc-ripple><mwc-ripple>
+				<mwc-ripple></mwc-ripple>
 			</toucharea>
 		`;
 	}

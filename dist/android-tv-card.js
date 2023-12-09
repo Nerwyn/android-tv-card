@@ -252,7 +252,7 @@
 				@mouseenter=${this._rippleHandlers.startHover}
 				@mouseleave=${this._rippleHandlers.endHover}
 			>
-				<mwc-ripple><mwc-ripple>
+				<mwc-ripple></mwc-ripple>
 			</toucharea>
 		`}static get styles(){return r.css`
 			:host {
