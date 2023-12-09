@@ -72,7 +72,6 @@ class AndroidTVCard extends LitElement {
 		config = this.updateDeprecatedKeys(config);
 		config = this.convertToRowsArray(config);
 		config = this.updateDeprecatedCustomKeys(config);
-		console.log(config);
 
 		this.customActions = {
 			...(config.custom_sources || {}),
@@ -328,7 +327,7 @@ class AndroidTVCard extends LitElement {
 			.hapticEnabled=${this.config.enable_touchpad_feedback}
 			.remoteId=${this.config.remote_id}
 			.enableDoubleClick=${this.config.enable_double_click}
-			.info=${info}
+			.touchInfo=${info}
 			._style=${this.config.touchpad_style}
 		/>`;
 	}
