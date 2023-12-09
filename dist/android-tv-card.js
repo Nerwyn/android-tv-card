@@ -18,7 +18,7 @@
 			.info=${this.getInfo("slider")}
 			.sliderAttribute=${null===(t=this.config.slider_attribute)||void 0===t?void 0:t.toLowerCase()}
 			._style=${this.config.slider_style}
-		/>`}buildDPad(){return[this.buildRow([this.buildButton("up")]),this.buildRow([this.buildButton("left"),this.buildButton("center"),this.buildButton("right")]),this.buildRow([this.buildButton("down")])]}buildTouchpad(){var e,t;const n={up:this.getInfo("up").tap_action,down:this.getInfo("down").tap_action,left:this.getInfo("left").tap_action,right:this.getInfo("right").tap_action,center:this.getInfo("center").tap_action,double:this.getInfo(null!==(e=this.config.double_click_keycode)&&void 0!==e?e:"back").tap_action,long:this.getInfo(null!==(t=this.config.long_click_keycode)&&void 0!==t?t:"center").tap_action};return s.html`<remote-touchpad
+		/>`}buildDPad(){return[this.buildRow([this.buildButton("up")]),this.buildRow([this.buildButton("left"),this.buildButton("center"),this.buildButton("right")]),this.buildRow([this.buildButton("down")])]}buildTouchpad(){var e,t;const n={up:this.getInfo("up").tap_action,down:this.getInfo("down").tap_action,left:this.getInfo("left").tap_action,right:this.getInfo("right").tap_action,center:this.getInfo("center").tap_action,double:this.getInfo(null!==(e=this.config.double_click_keycode)&&void 0!==e?e:"back").tap_action,long:this.getInfo(null!==(t=this.config.long_click_keycode)&&void 0!==t?t:"center").tap_action};return console.log(n),s.html`<remote-touchpad
 			.hass=${this.hass}
 			.hapticEnabled=${this.config.enable_touchpad_feedback}
 			.remoteId=${this.config.remote_id}

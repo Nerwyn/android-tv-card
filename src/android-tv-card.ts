@@ -321,6 +321,7 @@ class AndroidTVCard extends LitElement {
 			long: this.getInfo(this.config.long_click_keycode ?? 'center')
 				.tap_action,
 		};
+		console.log(info);
 
 		return html`<remote-touchpad
 			.hass=${this.hass}
