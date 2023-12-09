@@ -88,9 +88,10 @@ export class RemoteTouchpad extends BaseRemoteElement {
 				)
 			) {
 				this.touchInterval = setInterval(() => {
-					this._rippleHandlers.startPress(e);
+					this._rippleHandlers.endPress();
 					this.fireHapticEvent('selection');
 					this.sendAction(this.info[this.touchAction as TouchAction]);
+					this._rippleHandlers.startPress(e);
 				}, 100);
 			} else {
 				this.fireHapticEvent('medium');
@@ -203,7 +204,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 				left: unset;
 				height: inherit;
 				width: inherit;
-				--mdc-ripple-press-opacity: 0.06;
+				--mdc-ripple-press-opacity: 0.04;
 			}
 		`;
 	}
