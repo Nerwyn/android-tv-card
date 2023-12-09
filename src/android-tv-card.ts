@@ -175,7 +175,7 @@ class AndroidTVCard extends LitElement {
 					}
 
 					// Merge service_data, target, and data fields
-					for (const actionType in actionTypes) {
+					for (const actionType of actionTypes) {
 						if (actionType in customAction) {
 							const action = customAction[
 								actionType as keyof IAction
