@@ -193,6 +193,15 @@ export class RemoteTouchpad extends BaseRemoteElement {
 				);
 				touch-action: none;
 				text-align: center;
+				position: relative;
+				z-index: 0;
+				overflow: hidden;
+			}
+			mwc-ripple {
+				top: unset;
+				left: unset;
+				height: inherit;
+				width: inherit;
 			}
 		`;
 	}
