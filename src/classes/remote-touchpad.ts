@@ -76,8 +76,6 @@ export class RemoteTouchpad extends BaseRemoteElement {
 
 	@eventOptions({ passive: true })
 	onTouchStart(e: TouchEvent) {
-		this._rippleHandlers.startPress(e);
-
 		this.touchTimer = setTimeout(() => {
 			this.touchLongClick = true;
 
@@ -88,13 +86,13 @@ export class RemoteTouchpad extends BaseRemoteElement {
 				)
 			) {
 				this.touchInterval = setInterval(async () => {
-					this._rippleHandlers.startPress(e);
+					this._rippleHandlers.endPress();
 
 					this.fireHapticEvent('selection');
 					this.sendAction(this.info[this.touchAction as TouchAction]);
 
 					await new Promise((resolve) => setTimeout(resolve, 200));
-					this._rippleHandlers.endPress();
+					this._rippleHandlers.startPress(e);
 				}, 200);
 			} else {
 				this.fireHapticEvent('medium');
