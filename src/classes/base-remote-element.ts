@@ -41,6 +41,7 @@ export class BaseRemoteElement extends LitElement {
 		longPress: boolean = false,
 		_doubleTap: boolean = false,
 	) {
+		console.log(info);
 		if (!this.handleConfirmation(info)) {
 			return;
 		}

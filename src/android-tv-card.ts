@@ -77,7 +77,6 @@ class AndroidTVCard extends LitElement {
 			...(config.custom_sources || {}),
 			...(config.custom_keys || {}),
 		};
-		console.log(this.customActions);
 		this.customIcons = config.custom_icons || {};
 
 		await window.loadCardHelpers();
@@ -242,7 +241,6 @@ class AndroidTVCard extends LitElement {
 			info.icon = defaultInfo?.icon ?? undefined;
 			info.svg_path = defaultInfo?.svg_path ?? undefined;
 		}
-		console.log(info)
 		return info;
 	}
 
@@ -323,7 +321,6 @@ class AndroidTVCard extends LitElement {
 			long: this.getInfo(this.config.long_click_keycode ?? 'center')
 				.tap_action,
 		};
-		console.log(info);
 
 		return html`<remote-touchpad
 			.hass=${this.hass}
