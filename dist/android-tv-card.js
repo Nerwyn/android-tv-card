@@ -106,6 +106,17 @@
 				${c}${e}
 			</ha-icon-button>
 		`}static get styles(){return[super.styles,r.css`
+				:host {
+					border-radius: var(--size);
+					position: relative;
+					overflow: hidden;
+					z-index: 0;
+
+					--size: 48px !important;
+					--mdc-icon-size: var(--size) !important;
+					--mdc-icon-button-size: var(--size) !important;
+				}
+
 				ha-icon-button,
 				ha-icon,
 				svg {
@@ -122,10 +133,6 @@
 					justify-content: center;
 					text-align: center;
 					align-items: center;
-
-					--size: 48px;
-					--mdc-icon-size: var(--size);
-					--mdc-icon-button-size: var(--size);
 				}
 			`]}};t.RemoteButton=l,i([(0,o.property)({attribute:!1})],l.prototype,"actionKey",void 0),i([(0,o.property)({attribute:!1})],l.prototype,"customIcon",void 0),t.RemoteButton=l=i([(0,o.customElement)("remote-button")],l)},389:function(e,t,n){"use strict";var i=this&&this.__decorate||function(e,t,n,i){var r,o=arguments.length,s=o<3?t:null===i?i=Object.getOwnPropertyDescriptor(t,n):i;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)s=Reflect.decorate(e,t,n,i);else for(var a=e.length-1;a>=0;a--)(r=e[a])&&(s=(o<3?r(s):o>3?r(t,n,s):r(t,n))||s);return o>3&&s&&Object.defineProperty(t,n,s),s};Object.defineProperty(t,"__esModule",{value:!0}),t.RemoteKeyboard=void 0;const r=n(677),o=n(595),s=n(839),a=n(32);let c=class extends a.BaseKeyboardElement{onClick(e,t){e.stopImmediatePropagation(),this.fireHapticEvent("light");for(const t of e.currentTarget.children)"input"==t.nodeName.toLowerCase()&&t.focus()}onKeyDown(e){var t;e.stopImmediatePropagation();const n={Backspace:"DEL",Delete:"FOWARD_DEL",Enter:"ENTER",ArrowLeft:"DPAD_LEFT",ArrowRight:"DPAD_RIGHT"}[null!==(t=e.key)&&void 0!==t?t:""];n&&(""!=e.currentTarget.value&&(e.currentTarget.blur(),e.currentTarget.value="",e.currentTarget.focus()),"KODI"===(0,s.renderTemplate)(this.hass,this.keyboardMode).toUpperCase()||this.sendCommand(n))}onInput(e){e.stopImmediatePropagation();const t=e.data;if(t){const e={entity_id:(0,s.renderTemplate)(this.hass,this.keyboardId)};"KODI"===(0,s.renderTemplate)(this.hass,this.keyboardMode).toUpperCase()?(e.method="Input.SendText",e.text=t,e.done=!1,this.hass.callService("kodi","call_method",e)):(e.command=`input text "${t}"`,this.hass.callService("androidtv","adb_command",e))}}onPaste(e){var t;e.stopImmediatePropagation(),e.preventDefault();const n=null===(t=e.clipboardData)||void 0===t?void 0:t.getData("Text");if(n){const e={entity_id:(0,s.renderTemplate)(this.hass,this.keyboardId)};"KODI"===(0,s.renderTemplate)(this.hass,this.keyboardMode).toUpperCase()?(e.method="Input.SendText",e.text=n,e.done=!1,this.hass.callService("kodi","call_method",e)):(e.command=`input text "${n}"`,this.hass.callService("androidtv","adb_command",e))}e.currentTarget.blur(),e.currentTarget.value="",e.currentTarget.focus()}onFocus(e){e.currentTarget.value="",e.currentTarget.parentElement.children[0].style.color="var(--state-active-color)",e.currentTarget.style.zIndex="9",e.currentTarget.parentElement.style.zIndex="1"}onFocusOut(e){e.currentTarget.value="",e.currentTarget.parentElement.children[0].style.color="",e.currentTarget.style.zIndex="",e.currentTarget.parentElement.style.zIndex=""}render(){const e=r.html`
 			<input
