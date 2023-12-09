@@ -1,6 +1,14 @@
 import { html, css } from 'lit';
-import { customElement, property, eventOptions } from 'lit/decorators.js';
+import {
+	customElement,
+	eventOptions,
+	property,
+	queryAsync,
+} from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
+
+import { Ripple } from '@material/mwc-ripple';
+import { RippleHandlers } from '@material/mwc-ripple/ripple-handlers';
 
 import { renderTemplate } from 'ha-nunjucks';
 
@@ -10,6 +18,12 @@ import { BaseRemoteElement } from './base-remote-element';
 
 @customElement('remote-touchpad')
 export class RemoteTouchpad extends BaseRemoteElement {
+	// https://github.com/home-assistant/frontend/blob/80edeebab9e6dfcd13751b5ed8ff005452826118/src/components/ha-control-button.ts#L31-L77
+	@queryAsync('mwc-ripple') private _ripple!: Promise<Ripple | null>;
+	private _rippleHandlers: RippleHandlers = new RippleHandlers(() => {
+		return this._ripple;
+	});
+
 	@property({ attribute: false }) enableDoubleClick?: boolean;
 	@property({ attribute: false }) info!: Record<TouchAction, IAction>;
 
@@ -62,6 +76,8 @@ export class RemoteTouchpad extends BaseRemoteElement {
 
 	@eventOptions({ passive: true })
 	onTouchStart(e: TouchEvent) {
+		this._rippleHandlers.startPress(e);
+
 		this.touchTimer = setTimeout(() => {
 			this.touchLongClick = true;
 
@@ -86,6 +102,8 @@ export class RemoteTouchpad extends BaseRemoteElement {
 	}
 
 	onTouchEnd(e: Event) {
+		this._rippleHandlers.endPress();
+
 		if (this.touchLongClick) {
 			this.touchLongClick = false;
 			e.stopImmediatePropagation();
@@ -145,7 +163,14 @@ export class RemoteTouchpad extends BaseRemoteElement {
 				@touchstart=${this.onTouchStart}
 				@touchmove=${this.onTouchMove}
 				@touchend=${this.onTouchEnd}
+				@focus=${this._rippleHandlers.startFocus}
+				@blur=${this._rippleHandlers.endFocus}
+				@mousedown=${this._rippleHandlers.startPress}
+				@mouseup=${this._rippleHandlers.endPress}
+				@mouseenter=${this._rippleHandlers.startHover}
+				@mouseleave=${this._rippleHandlers.endHover}
 			>
+				<mwc-ripple><mwc-ripple>
 			</toucharea>
 		`;
 	}
