@@ -77,6 +77,7 @@ class AndroidTVCard extends LitElement {
 			...(config.custom_sources || {}),
 			...(config.custom_keys || {}),
 		};
+		console.log(this.customActions);
 		this.customIcons = config.custom_icons || {};
 
 		await window.loadCardHelpers();
@@ -241,6 +242,7 @@ class AndroidTVCard extends LitElement {
 			info.icon = defaultInfo?.icon ?? undefined;
 			info.svg_path = defaultInfo?.svg_path ?? undefined;
 		}
+		console.log(info)
 		return info;
 	}
 
