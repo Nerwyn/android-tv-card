@@ -130,10 +130,7 @@ class AndroidTVCard extends LitElement {
 	}
 
 	updateDeprecatedCustomKeys(config: IConfig) {
-		const customActionKeys = [
-			'custom_keys',
-			'custom_sources',
-		] as (keyof IConfig)[];
+		const customActionKeys = ['custom_keys', 'custom_sources'];
 		const actionKeys = [
 			'key',
 			'source',
@@ -141,20 +138,15 @@ class AndroidTVCard extends LitElement {
 			'service_data',
 			'data',
 			'target',
-		] as (keyof Action)[];
-		const actionTypes = [
-			'tap_action',
-			'hold_action',
-			'double_tap_action',
-		] as (keyof IAction)[];
+		];
+		const actionTypes = ['tap_action', 'hold_action', 'double_tap_action'];
 
 		for (const customActionKey of customActionKeys) {
 			// Check custom keys and custom sources arrays
 
 			if (customActionKey in config) {
-				const customActions = config[
-					customActionKey as keyof IConfig
-				] as Record<string, IAction>;
+				const customActions =
+					config[customActionKey as 'custom_keys' | 'custom_sources'];
 
 				// For each custom key or source
 				for (const customActionName in customActions) {
@@ -162,12 +154,15 @@ class AndroidTVCard extends LitElement {
 
 					// Copy Action fields to tap_action
 					let replaceTapAction = false;
-					const tapAction = customAction.tap_action ?? {};
+					const tapAction = customAction.tap_action ?? ({} as Action);
 					for (const actionKey of actionKeys) {
 						if (actionKey in customAction) {
 							replaceTapAction = true;
-							tapAction[actionKey as keyof Action] =
-								customAction[actionKey as keyof Action];
+							(tapAction as unknown as Record<string, string>)[
+								actionKey
+							] = customAction[
+								actionKey as keyof IAction
+							] as string;
 						}
 					}
 					if (replaceTapAction) {

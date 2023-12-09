@@ -11,6 +11,10 @@ export interface IConfirmation {
 	exemptions?: IExemption[];
 }
 
+export type Confirmation = {
+	confirmation?: boolean | IConfirmation;
+};
+
 export interface IExemption {
 	user: string;
 }
@@ -39,13 +43,12 @@ export interface ITarget {
 	area_id?: string | string[];
 }
 
-export type Action = IKey | ISource | IServiceCall;
+export type Action = Confirmation & (IKey | ISource | IServiceCall);
 
 export interface IAction extends IStyle {
 	tap_action?: Action;
 	hold_action?: Action;
 	double_tap_action?: Action;
-	confirmation?: IConfirmation;
 }
 
 export type TouchAction =
