@@ -19,9 +19,9 @@ import { BaseRemoteElement } from './base-remote-element';
 @customElement('remote-touchpad')
 export class RemoteTouchpad extends BaseRemoteElement {
 	// https://github.com/home-assistant/frontend/blob/80edeebab9e6dfcd13751b5ed8ff005452826118/src/components/ha-control-button.ts#L31-L77
-	@queryAsync('mwc-ripple') private _ripple?: Promise<Ripple | null>;
+	@queryAsync('mwc-ripple') private _ripple!: Promise<Ripple | null>;
 	private _rippleHandlers: RippleHandlers = new RippleHandlers(() => {
-		return this._ripple as Promise<Ripple>;
+		return this._ripple;
 	});
 
 	@property({ attribute: false }) enableDoubleClick?: boolean;
@@ -87,12 +87,15 @@ export class RemoteTouchpad extends BaseRemoteElement {
 					this.touchAction as TouchAction,
 				)
 			) {
-				this.touchInterval = setInterval(() => {
-					this._ripple = undefined;
+				this.touchInterval = setInterval(async () => {
+					this._rippleHandlers.startPress(e);
+
 					this.fireHapticEvent('selection');
 					this.sendAction(this.info[this.touchAction as TouchAction]);
-					this._rippleHandlers.startPress(e);
-				}, 100);
+
+					await new Promise((resolve) => setTimeout(resolve, 200));
+					this._rippleHandlers.endPress();
+				}, 200);
 			} else {
 				this.fireHapticEvent('medium');
 				this.sendAction(this.info.long, true);
