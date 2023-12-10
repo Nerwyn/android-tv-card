@@ -74,13 +74,12 @@ export class RemoteSlider extends BaseRemoteElement {
 
 		const data = structuredClone(this.actions.tap_action!.data ?? {});
 		for (const key in data) {
-			data[key] = renderTemplate(this.hass, data[key] as string);
 			if (data[key] == 'VALUE') {
-				data[key] = this.value;
+				data[key] = this.newValue;
 			} else if (data[key].toString().includes('VALUE')) {
 				data[key] = data[key]
 					.toString()
-					.replace('VALUE', this.value.toString());
+					.replace('VALUE', this.newValue.toString());
 			}
 		}
 
