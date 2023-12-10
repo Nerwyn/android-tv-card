@@ -16,8 +16,8 @@ export class RemoteButton extends BaseRemoteElement {
 	clickTimer?: ReturnType<typeof setTimeout>;
 	clickCount: number = 0;
 
-	longTimer?: ReturnType<typeof setTimeout>;
-	longInterval?: ReturnType<typeof setInterval>;
+	holdTimer?: ReturnType<typeof setTimeout>;
+	holdInterval?: ReturnType<typeof setInterval>;
 
 	clickAction(actionType: ActionType) {
 		clearTimeout(this.clickTimer as ReturnType<typeof setTimeout>);
@@ -71,14 +71,14 @@ export class RemoteButton extends BaseRemoteElement {
 		}
 	}
 
-	onlongClickStart(_e: TouchEvent) {
-		this.longTimer = setTimeout(() => {
+	onHoldStart(_e: TouchEvent) {
+		this.holdTimer = setTimeout(() => {
 			this.hold = true;
 
 			// Only repeat hold action for directional keys and volume
 			// prettier-ignore
 			if (['up', 'down', 'left', 'right', 'volume_up', 'volume_down', 'delete'].includes(this.actionKey)) {
-				this.longInterval = setInterval(() => {
+				this.holdInterval = setInterval(() => {
 					this.clickAction('single')
 				}, 100);
 			} else {
@@ -87,18 +87,18 @@ export class RemoteButton extends BaseRemoteElement {
 		}, 500);
 	}
 
-	onlongClickEnd(e: TouchEvent) {
+	onHoldEnd(e: TouchEvent) {
 		if (this.hold) {
 			this.hold = false;
 			e.stopImmediatePropagation();
 			e.preventDefault();
 		}
 
-		clearTimeout(this.longTimer as ReturnType<typeof setTimeout>);
-		clearInterval(this.longInterval as ReturnType<typeof setInterval>);
+		clearTimeout(this.holdTimer as ReturnType<typeof setTimeout>);
+		clearInterval(this.holdInterval as ReturnType<typeof setInterval>);
 
-		this.longTimer = undefined;
-		this.longInterval = undefined;
+		this.holdTimer = undefined;
+		this.holdInterval = undefined;
 	}
 
 	render(inputTemplate?: TemplateResult<1>) {
@@ -130,8 +130,8 @@ export class RemoteButton extends BaseRemoteElement {
 				title="${action}"
 				style=${styleMap(style)}
 				@click=${this.onClick}
-				@touchstart=${this.onlongClickStart}
-				@touchend=${this.onlongClickEnd}
+				@touchstart=${this.onHoldStart}
+				@touchend=${this.onHoldEnd}
 				.action=${action}
 				.path=${svgPath}
 			>

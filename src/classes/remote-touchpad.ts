@@ -33,7 +33,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 	touchAction?: TouchAction;
 	touchTimer?: ReturnType<typeof setTimeout>;
 	touchInterval?: ReturnType<typeof setInterval>;
-	touchLongClick: boolean = false;
+	touchHoldClick: boolean = false;
 
 	onClick(e: MouseEvent) {
 		e.stopImmediatePropagation();
@@ -78,7 +78,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		this._rippleHandlers.startPress(e);
 
 		this.touchTimer = setTimeout(() => {
-			this.touchLongClick = true;
+			this.touchHoldClick = true;
 
 			// Only repeat hold action for directional keys
 			if (
@@ -106,8 +106,8 @@ export class RemoteTouchpad extends BaseRemoteElement {
 	onTouchEnd(e: Event) {
 		this._rippleHandlers.endPress();
 
-		if (this.touchLongClick) {
-			this.touchLongClick = false;
+		if (this.touchHoldClick) {
+			this.touchHoldClick = false;
 			e.stopImmediatePropagation();
 			e.preventDefault();
 		}
