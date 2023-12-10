@@ -12,6 +12,7 @@ import {
 	IActions,
 	IAction,
 	Action,
+	TouchAction,
 	defaultKeys,
 	defaultSources,
 	IData,
@@ -315,16 +316,16 @@ class AndroidTVCard extends LitElement {
 	}
 
 	buildTouchpad(): TemplateResult {
-		const touchActions = {
-			up: this.getActions('up').tap_action,
-			down: this.getActions('down').tap_action,
-			left: this.getActions('left').tap_action,
-			right: this.getActions('right').tap_action,
-			center: this.getActions('center').tap_action,
+		const touchActions: Record<TouchAction, IAction> = {
+			up: this.getActions('up').tap_action!,
+			down: this.getActions('down').tap_action!,
+			left: this.getActions('left').tap_action!,
+			right: this.getActions('right').tap_action!,
+			center: this.getActions('center').tap_action!,
 			double: this.getActions(this.config.double_click_keycode ?? 'back')
-				.tap_action,
-			long: this.getActions(this.config.long_click_keycode ?? 'center')
-				.tap_action,
+				.tap_action!,
+			hold: this.getActions(this.config.long_click_keycode ?? 'center')
+				.tap_action!,
 		};
 
 		return html`<remote-touchpad
