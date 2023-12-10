@@ -379,7 +379,10 @@ custom_keys:
     service: light.turn_on
     data:
       entity_id: light.sunroom_ceiling
-      brightness_pct: VALUE
+      brightness: VALUE
+slider_range:
+  - 0
+  - 255
 ```
 
 You can change the attribute that the slider tracks by setting `slider_attribute` to either `state` or an entity specific attribute.
