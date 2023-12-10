@@ -34,20 +34,7 @@ export class RemoteButton extends BaseRemoteElement {
 		}
 		this.fireHapticEvent(haptic);
 
-		let action;
-		switch (actionType) {
-			case 'hold_action':
-				action = this.actions.hold_action!;
-				break;
-			case 'double_tap_action':
-				action = this.actions.double_tap_action!;
-				break;
-			case 'tap_action':
-			default:
-				action = this.actions.tap_action!;
-				break;
-		}
-		this.sendAction(action, actionType);
+		this.sendAction(actionType);
 
 		this.clickCount = 0;
 	}

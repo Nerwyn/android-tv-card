@@ -13,7 +13,7 @@ import {
 	IAction,
 	IData,
 	Action,
-	TouchAction,
+	DirectionAction,
 	defaultKeys,
 	defaultSources,
 } from './models';
@@ -191,6 +191,15 @@ class AndroidTVCard extends LitElement {
 									(action as IAction).action = 'source';
 								} else if ('service' in action) {
 									(action as IAction).action = 'call-service';
+								} else if ('navigation_path' in action) {
+									(action as IAction).action = 'navigate';
+								} else if ('url_path' in action) {
+									(action as IAction).action = 'url';
+								} else if (
+									'pipeline_id' in action ||
+									'start_listening' in action
+								) {
+									(action as IAction).action = 'assist';
 								} else {
 									(action as IAction).action = 'none';
 								}
@@ -316,16 +325,43 @@ class AndroidTVCard extends LitElement {
 	}
 
 	buildTouchpad(): TemplateResult {
-		const touchActions: Record<TouchAction, IAction> = {
-			up: this.getActions('up').tap_action!,
-			down: this.getActions('down').tap_action!,
-			left: this.getActions('left').tap_action!,
-			right: this.getActions('right').tap_action!,
-			center: this.getActions('center').tap_action!,
-			double: this.getActions(this.config.double_click_keycode ?? 'back')
-				.tap_action!,
-			hold: this.getActions(this.config.long_click_keycode ?? 'center')
-				.tap_action!,
+		// If still using old double tap toggle and key, map to center double tap action
+		const centerActions = this.getActions('center');
+		if (
+			renderTemplate(
+				this.hass,
+				this.config.enable_double_click as unknown as string,
+			) &&
+			!('double_tap_action' in centerActions)
+		) {
+			const doubleTapKeycode =
+				(renderTemplate(
+					this.hass,
+					this.config.double_click_keycode!,
+				) as string) ?? 'back';
+			const doubleTapAction = this.getActions(doubleTapKeycode);
+			centerActions.double_tap_action = doubleTapAction.tap_action;
+		}
+
+		// If still using old long click key, map to center hold action
+		if (
+			renderTemplate(this.hass, this.config.long_click_keycode!) &&
+			!('hold_action' in centerActions)
+		) {
+			const holdActionKeycode =
+				(renderTemplate(
+					this.hass,
+					this.config.long_click_keycode!,
+				) as string) ?? 'center';
+			const holdAction = this.getActions(holdActionKeycode);
+			centerActions.hold_action = holdAction.tap_action;
+		}
+
+		const touchActions: Record<DirectionAction, IActions> = {
+			up: this.getActions('up'),
+			down: this.getActions('down'),
+			left: this.getActions('left'),
+			right: this.getActions('right'),
 		};
 
 		return html`<remote-touchpad
@@ -333,6 +369,7 @@ class AndroidTVCard extends LitElement {
 			.hapticEnabled=${this.config.enable_touchpad_feedback}
 			.remoteId=${this.config.remote_id}
 			.enableDoubleClick=${this.config.enable_double_click}
+			.actions=${centerActions}
 			.touchActions=${touchActions}
 			._style=${this.config.touchpad_style}
 		/>`;

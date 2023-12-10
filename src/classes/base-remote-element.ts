@@ -29,7 +29,21 @@ export class BaseRemoteElement extends LitElement {
 		}
 	}
 
-	sendAction(action: IAction, actionType: ActionType) {
+	sendAction(actionType: ActionType, actions: IActions = this.actions) {
+		let action;
+		switch (actionType) {
+			case 'hold_action':
+				action = actions.hold_action!;
+				break;
+			case 'double_tap_action':
+				action = actions.double_tap_action!;
+				break;
+			case 'tap_action':
+			default:
+				action = actions.tap_action!;
+				break;
+		}
+
 		if (!this.handleConfirmation(action)) {
 			return;
 		}
@@ -83,7 +97,10 @@ export class BaseRemoteElement extends LitElement {
 		for (const key in data) {
 			data[key] = renderTemplate(this.hass, data[key] as string);
 		}
-		if (actionType == 'hold_action' && domainService == 'remote.send_command') {
+		if (
+			actionType == 'hold_action' &&
+			domainService == 'remote.send_command'
+		) {
 			data.hold_secs = 0.5;
 		}
 

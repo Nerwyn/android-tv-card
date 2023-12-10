@@ -12,7 +12,7 @@ import { RippleHandlers } from '@material/mwc-ripple/ripple-handlers';
 
 import { renderTemplate } from 'ha-nunjucks';
 
-import { IAction, TouchAction } from '../models';
+import { IActions, DirectionAction } from '../models';
 
 import { BaseRemoteElement } from './base-remote-element';
 
@@ -24,13 +24,15 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		return this._ripple;
 	});
 
-	@property({ attribute: false }) enableDoubleClick?: boolean;
-	@property({ attribute: false }) touchActions!: Record<TouchAction, IAction>;
+	@property({ attribute: false }) directionActions!: Record<
+		DirectionAction,
+		IActions
+	>;
 
 	clickTimer?: ReturnType<typeof setTimeout>;
 	clickCount: number = 0;
 
-	touchAction?: TouchAction;
+	touchAction?: DirectionAction;
 	touchTimer?: ReturnType<typeof setTimeout>;
 	touchInterval?: ReturnType<typeof setInterval>;
 	touchHoldClick: boolean = false;
@@ -41,19 +43,13 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			clearTimeout(this.clickTimer as ReturnType<typeof setTimeout>);
 			this.clickTimer = undefined;
 			this.fireHapticEvent('light');
-			this.sendAction(this.touchActions['center'], 'tap_action');
+			this.sendAction('tap_action');
 			this.clickCount = 0;
 		};
 		if (e.detail && e.detail > this.clickCount) {
 			this.clickCount++;
 		}
-		if (
-			renderTemplate(
-				this.hass,
-				this.enableDoubleClick as unknown as string,
-			) ??
-			false
-		) {
+		if ('double_tap_action' in this.actions) {
 			if (this.clickCount == 2) {
 				this.onDblClick(e);
 			} else {
@@ -70,7 +66,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		this.clickCount = 0;
 
 		this.fireHapticEvent('success');
-		this.sendAction(this.touchActions.double, 'double_tap_action');
+		this.sendAction('double_tap_action');
 	}
 
 	@eventOptions({ passive: true })
@@ -83,19 +79,19 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			// Only repeat hold action for directional keys
 			if (
 				['up', 'down', 'left', 'right'].includes(
-					this.touchAction as TouchAction,
+					this.touchAction as DirectionAction,
 				)
 			) {
 				this.touchInterval = setInterval(() => {
 					this.fireHapticEvent('selection');
 					this.sendAction(
-						this.touchActions[this.touchAction as TouchAction],
 						'tap_action',
+						this.directionActions[this.touchAction!],
 					);
 				}, 100);
 			} else {
 				this.fireHapticEvent('medium');
-				this.sendAction(this.touchActions.hold, 'hold_action');
+				this.sendAction('hold_action');
 			}
 		}, 500);
 
@@ -142,8 +138,8 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			action = diffY > 0 ? 'up' : 'down';
 		}
 		this.fireHapticEvent('selection');
-		this.touchAction = action as TouchAction;
-		this.sendAction(this.touchActions[action as TouchAction], 'tap_action');
+		this.touchAction = action as DirectionAction;
+		this.sendAction('tap_action', this.directionActions[this.touchAction!]);
 
 		window.initialX = undefined;
 		window.initialY = undefined;

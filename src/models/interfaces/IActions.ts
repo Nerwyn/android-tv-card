@@ -56,11 +56,4 @@ export interface IActions {
 
 export type ActionType = 'tap_action' | 'hold_action' | 'double_tap_action';
 
-export type TouchAction =
-	| 'up'
-	| 'down'
-	| 'left'
-	| 'right'
-	| 'center'
-	| 'hold'
-	| 'double';
+export type DirectionAction = 'up' | 'down' | 'left' | 'right';
