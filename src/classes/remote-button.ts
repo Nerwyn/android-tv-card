@@ -54,7 +54,7 @@ export class RemoteButton extends BaseRemoteElement {
 				}, 200);
 			}
 		} else {
-			this.clickAction('hold_action');
+			this.clickAction('tap_action');
 		}
 	}
 
