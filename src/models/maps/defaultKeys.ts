@@ -1,4 +1,4 @@
-import { IActions } from '.';
+import { IActions } from '..';
 
 /**
  * This is the list of most common commands from the Android TV Remote integration page.

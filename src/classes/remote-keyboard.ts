@@ -50,7 +50,7 @@ export class RemoteKeyboard extends BaseKeyboardElement {
 				case 'ANDROID_TV':
 				case 'ANDROID TV':
 				default:
-					this.sendCommand(key, 'single');
+					this.sendCommand(key, 'tap_action');
 					break;
 			}
 		}

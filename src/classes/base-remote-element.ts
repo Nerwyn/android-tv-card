@@ -62,7 +62,7 @@ export class BaseRemoteElement extends LitElement {
 			entity_id: renderTemplate(this.hass, this.remoteId as string),
 			command: renderTemplate(this.hass, key),
 		};
-		if (actionType == 'hold') {
+		if (actionType == 'hold_action') {
 			data.hold_secs = 0.5;
 		}
 		this.hass.callService('remote', 'send_command', data);
@@ -83,7 +83,7 @@ export class BaseRemoteElement extends LitElement {
 		for (const key in data) {
 			data[key] = renderTemplate(this.hass, data[key] as string);
 		}
-		if (actionType == 'hold' && domainService == 'remote.send_command') {
+		if (actionType == 'hold_action' && domainService == 'remote.send_command') {
 			data.hold_secs = 0.5;
 		}
 

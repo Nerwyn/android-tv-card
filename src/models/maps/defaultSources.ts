@@ -1,4 +1,4 @@
-import { IActions, svg } from '.';
+import { IActions, svg } from '..';
 
 /**
  * This is a list of common streaming apps, their icons, and the deep links to open them in Android TV, mostly collected from the following Home Assistant Community Forum guide.

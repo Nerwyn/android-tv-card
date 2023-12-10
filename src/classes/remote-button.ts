@@ -24,9 +24,9 @@ export class RemoteButton extends BaseRemoteElement {
 		this.clickTimer = undefined;
 
 		const actionToHaptic: Record<ActionType, HapticType> = {
-			single: 'light',
-			hold: 'medium',
-			double: 'success',
+			tap_action: 'light',
+			hold_action: 'medium',
+			double_tap_action: 'success',
 		};
 		let haptic = actionToHaptic[actionType];
 		if (['up', 'down', 'left', 'right'].includes(this.actionKey)) {
@@ -36,13 +36,13 @@ export class RemoteButton extends BaseRemoteElement {
 
 		let action;
 		switch (actionType) {
-			case 'hold':
+			case 'hold_action':
 				action = this.actions.hold_action!;
 				break;
-			case 'double':
+			case 'double_tap_action':
 				action = this.actions.double_tap_action!;
 				break;
-			case 'single':
+			case 'tap_action':
 			default:
 				action = this.actions.tap_action!;
 				break;
@@ -60,14 +60,14 @@ export class RemoteButton extends BaseRemoteElement {
 
 		if ('double_tap_action' in this.actions) {
 			if (this.clickCount == 2) {
-				this.clickAction('double');
+				this.clickAction('double_tap_action');
 			} else {
 				this.clickTimer = setTimeout(() => {
-					this.clickAction('single');
+					this.clickAction('tap_action');
 				}, 200);
 			}
 		} else {
-			this.clickAction('single');
+			this.clickAction('hold_action');
 		}
 	}
 
@@ -79,10 +79,10 @@ export class RemoteButton extends BaseRemoteElement {
 			// prettier-ignore
 			if (['up', 'down', 'left', 'right', 'volume_up', 'volume_down', 'delete'].includes(this.actionKey)) {
 				this.holdInterval = setInterval(() => {
-					this.clickAction('single')
+					this.clickAction('tap_action')
 				}, 100);
 			} else {
-				this.clickAction('hold')
+				this.clickAction('hold_action')
 			}
 		}, 500);
 	}

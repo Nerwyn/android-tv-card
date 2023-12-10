@@ -11,11 +11,11 @@ import {
 	IConfig,
 	IActions,
 	IAction,
+	IData,
 	Action,
 	TouchAction,
 	defaultKeys,
 	defaultSources,
-	IData,
 } from './models';
 
 import './classes/remote-button';

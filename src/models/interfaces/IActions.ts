@@ -54,7 +54,7 @@ export interface IActions {
 	double_tap_action?: IAction;
 }
 
-export type ActionType = 'single' | 'hold' | 'double';
+export type ActionType = 'tap_action' | 'hold_action' | 'double_tap_action';
 
 export type TouchAction =
 	| 'up'
