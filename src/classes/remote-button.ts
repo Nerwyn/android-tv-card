@@ -22,9 +22,9 @@ export class RemoteButton extends BaseRemoteElement {
 		}
 		this.fireHapticEvent(haptic);
 
-		let action = this.info.tap_action!;
-		if (longPress && 'hold_action' in this.info) {
-			action = this.info.hold_action!;
+		let action = this.actions.tap_action!;
+		if (longPress && 'hold_action' in this.actions) {
+			action = this.actions.hold_action!;
 		}
 
 		this.sendAction(action, longPress);
@@ -63,10 +63,10 @@ export class RemoteButton extends BaseRemoteElement {
 	render(inputTemplate?: TemplateResult<1>) {
 		const icon = renderTemplate(
 			this.hass,
-			this.info.icon as string,
+			this.actions.icon as string,
 		) as string;
 		const svgPath =
-			renderTemplate(this.hass, this.info.svg_path as string) ??
+			renderTemplate(this.hass, this.actions.svg_path as string) ??
 			renderTemplate(this.hass, this.customIcon as string);
 
 		let haIcon = html``;

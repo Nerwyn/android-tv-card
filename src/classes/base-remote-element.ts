@@ -5,19 +5,12 @@ import { StyleInfo } from 'lit/directives/style-map.js';
 import { HomeAssistant, HapticType, forwardHaptic } from 'custom-card-helpers';
 import { renderTemplate } from 'ha-nunjucks';
 
-import {
-	IConfirmation,
-	IData,
-	IKey,
-	ISource,
-	IAction,
-	Action,
-} from '../models';
+import { IConfirmation, IData, IActions, IAction } from '../models';
 
 @customElement('base-remote-element')
 export class BaseRemoteElement extends LitElement {
 	@property({ attribute: false }) hass!: HomeAssistant;
-	@property({ attribute: false }) info!: IAction;
+	@property({ attribute: false }) actions!: IActions;
 	@property({ attribute: false }) hapticEnabled?: boolean;
 	@property({ attribute: false }) remoteId?: string;
 	@property({ attribute: false }) _style?: StyleInfo;
@@ -37,31 +30,34 @@ export class BaseRemoteElement extends LitElement {
 	}
 
 	sendAction(
-		info: Action,
+		action: IAction,
 		longPress: boolean = false,
 		_doubleTap: boolean = false,
 	) {
-		if (!this.handleConfirmation(info)) {
+		if (!this.handleConfirmation(action)) {
 			return;
 		}
 
-		if ('key' in info) {
-			const key = (info as IKey).key;
-			this.sendCommand(key, longPress);
-		} else if ('source' in info) {
-			this.changeSource((info as ISource).source);
-		} else if ('service' in info) {
-			const data = structuredClone(info.data || {});
-			for (const key in data) {
-				data[key] = renderTemplate(this.hass, data[key] as string);
-			}
-			if (longPress && info.service == 'remote.send_command') {
-				data.hold_secs = 0.5;
-			}
-			const [domain, service] = (
-				renderTemplate(this.hass, info.service) as string
-			).split('.', 2);
-			this.hass.callService(domain, service, data);
+		switch (action.action) {
+			case 'navigate':
+			case 'url':
+			case 'assist':
+			case 'none':
+				break;
+			case 'call-service':
+				this.callService(
+					action.service!,
+					structuredClone(action.data || {}),
+					longPress,
+				);
+				break;
+			case 'source':
+				this.changeSource(action.source!);
+				break;
+			case 'key':
+			default:
+				this.sendCommand(action.key!, longPress);
+				break;
 		}
 	}
 
@@ -83,17 +79,36 @@ export class BaseRemoteElement extends LitElement {
 		});
 	}
 
-	handleConfirmation(info: Action): boolean {
-		if ('confirmation' in info) {
-			let confirmation = info.confirmation;
+	callService(
+		domainService: string,
+		data: IData = {},
+		longPress: boolean = false,
+	) {
+		for (const key in data) {
+			data[key] = renderTemplate(this.hass, data[key] as string);
+		}
+		if (longPress && domainService == 'remote.send_command') {
+			data.hold_secs = 0.5;
+		}
+
+		const [domain, service] = (
+			renderTemplate(this.hass, domainService) as string
+		).split('.', 2);
+
+		this.hass.callService(domain, service, data);
+	}
+
+	handleConfirmation(action: IAction): boolean {
+		if ('confirmation' in action) {
+			let confirmation = action.confirmation;
 			if (typeof confirmation == 'string') {
 				confirmation = renderTemplate(
 					this.hass,
-					info.confirmation as string,
+					action.confirmation as string,
 				) as unknown as boolean;
 			}
 			if (confirmation != false) {
-				let text: string;
+				let text: string = '';
 				if (
 					confirmation != true &&
 					'text' in (confirmation as IConfirmation)
@@ -103,15 +118,29 @@ export class BaseRemoteElement extends LitElement {
 						(confirmation as IConfirmation).text as string,
 					) as string;
 				} else {
-					let actionText = '';
-					if ('key' in info) {
-						actionText = info.key;
-					} else if ('source' in info) {
-						actionText = info.source;
-					} else if ('service' in info) {
-						actionText = info.service;
+					switch (action.action) {
+						case 'navigate':
+							text = `Are you sure you want to navigate to '${action.navigation_path}'`;
+							break;
+						case 'url':
+							text = `Are you sure you want to navigate to '${action.url_path}'?`;
+							break;
+						case 'assist':
+							text = `Are you sure you want to call assist?`;
+							break;
+						case 'none':
+							return false;
+						case 'call-service':
+							text = `Are you sure you want to run action '${action.service}'?`;
+							break;
+						case 'source':
+							text = `Are you sure you want to run action '${action.source}'?`;
+							break;
+						case 'key':
+						default:
+							text = `Are you sure you want to run action '${action.key}'?`;
+							break;
 					}
-					text = `Are you sure you want to run action '${actionText}'?`;
 				}
 				if (confirmation == true) {
 					if (!confirm(text)) {

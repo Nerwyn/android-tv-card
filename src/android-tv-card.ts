@@ -9,12 +9,12 @@ import { renderTemplate } from 'ha-nunjucks';
 
 import {
 	IConfig,
+	IActions,
 	IAction,
 	Action,
 	defaultKeys,
 	defaultSources,
 	IData,
-	IServiceCall,
 } from './models';
 
 import './classes/remote-button';
@@ -33,7 +33,7 @@ class AndroidTVCard extends LitElement {
 	@property({ attribute: false }) hass!: HomeAssistant;
 	@property({ attribute: false }) private config!: IConfig;
 
-	customActions: Record<string, IAction> = {};
+	customActions: Record<string, IActions> = {};
 	customIcons: Record<string, string> = {};
 
 	static get properties() {
@@ -65,13 +65,8 @@ class AndroidTVCard extends LitElement {
 		config = structuredClone(config);
 		config = { theme: 'default', ...config };
 
-		// Set toggles to default values if not provided
 		config = this.setToggles(config);
-
-		// Legacy config upgrades
 		config = this.updateDeprecatedKeys(config);
-		config = this.convertToRowsArray(config);
-		config = this.updateDeprecatedCustomKeys(config);
 
 		this.customActions = {
 			...(config.custom_sources || {}),
@@ -85,6 +80,7 @@ class AndroidTVCard extends LitElement {
 	}
 
 	updateDeprecatedKeys(config: IConfig) {
+		// Convert old root level key names to new
 		if ('adb_id' in config && !('keyboard_id' in config)) {
 			config.keyboard_id = (config as Record<string, string>).adb_id;
 		}
@@ -103,10 +99,8 @@ class AndroidTVCard extends LitElement {
 				).touchpad_height;
 			}
 		}
-		return config;
-	}
 
-	convertToRowsArray(config: IConfig) {
+		// Convert old _row keys into rows array
 		if (!('rows' in config) || !(config.rows || []).length) {
 			const rows: string[][] = [];
 			const rowNames = Object.keys(config).filter((row) =>
@@ -126,56 +120,56 @@ class AndroidTVCard extends LitElement {
 			}
 			config.rows = rows;
 		}
-		return config;
-	}
 
-	updateDeprecatedCustomKeys(config: IConfig) {
-		const customActionKeys = ['custom_keys', 'custom_sources'];
-		const actionKeys = [
-			'key',
-			'source',
-			'service',
-			'service_data',
-			'data',
-			'target',
-		];
-		const actionTypes = ['tap_action', 'hold_action', 'double_tap_action'];
-
-		for (const customActionKey of customActionKeys) {
+		// Update custom keys and sources to Home Assistant actions format
+		const customKeysSources = ['custom_keys', 'custom_sources'];
+		for (const customKeysOrSources of customKeysSources) {
 			// Check custom keys and custom sources arrays
 
-			if (customActionKey in config) {
+			if (customKeysOrSources in config) {
 				const customActions =
-					config[customActionKey as 'custom_keys' | 'custom_sources'];
+					config[
+						customKeysOrSources as 'custom_keys' | 'custom_sources'
+					];
 
 				// For each custom key or source
 				for (const customActionName in customActions) {
 					const customAction = customActions[customActionName];
 
-					// Copy Action fields to tap_action
-					let replaceTapAction = false;
+					// Copy action fields to tap_action
+					const actionKeys = [
+						'key',
+						'source',
+						'service',
+						'service_data',
+						'data',
+						'target',
+					];
 					const tapAction = customAction.tap_action ?? ({} as Action);
 					for (const actionKey of actionKeys) {
 						if (actionKey in customAction) {
-							replaceTapAction = true;
 							(tapAction as unknown as Record<string, string>)[
 								actionKey
 							] = customAction[
-								actionKey as keyof IAction
+								actionKey as keyof IActions
 							] as string;
 						}
 					}
-					if (replaceTapAction) {
-						customAction.tap_action = tapAction as Action;
-					}
+					customAction.tap_action = tapAction as IAction;
 
-					// Merge service_data, target, and data fields
+					// For each type of action
+					const actionTypes = [
+						'tap_action',
+						'hold_action',
+						'double_tap_action',
+					];
 					for (const actionType of actionTypes) {
 						if (actionType in customAction) {
 							const action = customAction[
-								actionType as keyof IAction
-							] as IServiceCall;
+								actionType as keyof IActions
+							] as IAction;
 							if ('service' in action) {
+								// Merge service_data, target, and data fields
 								action.data = {
 									...action.data,
 									...(
@@ -187,6 +181,17 @@ class AndroidTVCard extends LitElement {
 									...action.target,
 								};
 							}
+
+							// Populate action field
+							if (!('action' in action)) {
+								if ('key' in action) {
+									(action as IAction).action = 'key';
+								} else if ('source' in action) {
+									(action as IAction).action = 'source';
+								} else if ('service' in action) {
+									(action as IAction).action = 'call-service';
+								}
+							}
 						}
 					}
 				}
@@ -197,6 +202,7 @@ class AndroidTVCard extends LitElement {
 	}
 
 	setToggles(config: IConfig): IConfig {
+		// Set toggles to default values if not provided
 		const toggles: IConfig = {
 			enable_button_feedback: true,
 			enable_touchpad_feedback: true,
@@ -212,14 +218,16 @@ class AndroidTVCard extends LitElement {
 		return config;
 	}
 
-	getInfo(action: string): IAction {
-		const defaultInfo = defaultKeys[action] || defaultSources[action] || {};
-		const info = this.customActions[action] || defaultInfo;
+	getActions(action: string): IActions {
+		const defaultActions =
+			defaultKeys[action] || defaultSources[action] || {};
+		const actions = this.customActions[action] || defaultActions;
 
-		if (!Object.keys(info).length) {
+		if (!Object.keys(actions).length) {
 			if (action == 'slider') {
 				return {
 					tap_action: {
+						action: 'call-service',
 						service: 'media_player.volume_set',
 						data: {
 							entity_id: this.config.slider_id!,
@@ -228,15 +236,15 @@ class AndroidTVCard extends LitElement {
 					},
 				};
 			} else {
-				return {} as IAction;
+				return {} as IActions;
 			}
 		}
 
-		if (!(info?.icon || info.svg_path)) {
-			info.icon = defaultInfo?.icon ?? undefined;
-			info.svg_path = defaultInfo?.svg_path ?? undefined;
+		if (!(actions?.icon || actions.svg_path)) {
+			actions.icon = defaultActions?.icon ?? undefined;
+			actions.svg_path = defaultActions?.svg_path ?? undefined;
 		}
-		return info;
+		return actions;
 	}
 
 	buildRow(content: TemplateResult[]): TemplateResult {
@@ -248,13 +256,13 @@ class AndroidTVCard extends LitElement {
 	}
 
 	buildButton(elementName: string): TemplateResult {
-		const info = this.getInfo(elementName);
+		const actions = this.getActions(elementName);
 		const style = {
 			...this.config.button_style,
-			...info.style,
+			...actions.style,
 		};
 
-		if (!Object.keys(info).length) {
+		if (!Object.keys(actions).length) {
 			return html`<div
 				class="empty-button"
 				style=${styleMap({ '--size': style['--size'] })}
@@ -265,9 +273,9 @@ class AndroidTVCard extends LitElement {
 			.hass=${this.hass}
 			.hapticEnabled=${this.config.enable_button_feedback}
 			.remoteId=${this.config.remote_id}
-			.info=${info}
+			.actions=${actions}
 			.actionKey="${elementName}"
-			.customIcon=${this.customIcons[info.icon ?? ''] ?? ''}
+			.customIcon=${this.customIcons[actions.icon ?? ''] ?? ''}
 			._style=${style}
 		/>`;
 	}
@@ -286,7 +294,7 @@ class AndroidTVCard extends LitElement {
 			.hapticEnabled=${this.config.enable_slider_feedback}
 			.sliderId=${this.config.slider_id}
 			.range=${this.config.slider_range ?? [0, 1]}
-			.info=${this.getInfo('slider')}
+			.actions=${this.getActions('slider')}
 			.sliderAttribute=${this.config.slider_attribute?.toLowerCase()}
 			._style=${this.config.slider_style}
 		/>`;
@@ -305,15 +313,15 @@ class AndroidTVCard extends LitElement {
 	}
 
 	buildTouchpad(): TemplateResult {
-		const info = {
-			up: this.getInfo('up').tap_action,
-			down: this.getInfo('down').tap_action,
-			left: this.getInfo('left').tap_action,
-			right: this.getInfo('right').tap_action,
-			center: this.getInfo('center').tap_action,
-			double: this.getInfo(this.config.double_click_keycode ?? 'back')
+		const touchActions = {
+			up: this.getActions('up').tap_action,
+			down: this.getActions('down').tap_action,
+			left: this.getActions('left').tap_action,
+			right: this.getActions('right').tap_action,
+			center: this.getActions('center').tap_action,
+			double: this.getActions(this.config.double_click_keycode ?? 'back')
 				.tap_action,
-			long: this.getInfo(this.config.long_click_keycode ?? 'center')
+			long: this.getActions(this.config.long_click_keycode ?? 'center')
 				.tap_action,
 		};
 
@@ -322,25 +330,25 @@ class AndroidTVCard extends LitElement {
 			.hapticEnabled=${this.config.enable_touchpad_feedback}
 			.remoteId=${this.config.remote_id}
 			.enableDoubleClick=${this.config.enable_double_click}
-			.touchInfo=${info}
+			.touchActions=${touchActions}
 			._style=${this.config.touchpad_style}
 		/>`;
 	}
 
 	buildKeyboard(): TemplateResult {
-		const info = this.getInfo('keyboard');
+		const actions = this.getActions('keyboard');
 
 		const style = {
 			...this.config.button_style,
-			...info.style,
+			...actions.style,
 		};
 		return html`<remote-keyboard
 			.hass=${this.hass}
 			.hapticEnabled=${this.config.enable_button_feedback}
 			.remoteId=${this.config.remote_id}
-			.info=${info}
+			.actions=${actions}
 			.actionKey="keyboard"
-			.customIcon=${this.customIcons[info.icon ?? ''] ?? ''}
+			.customIcon=${this.customIcons[actions.icon ?? ''] ?? ''}
 			.keyboardId=${this.config.keyboard_id}
 			.keyboardMode=${this.config.keyboard_mode ?? 'ANDROID TV'}
 			._style=${style}
@@ -348,19 +356,19 @@ class AndroidTVCard extends LitElement {
 	}
 
 	buildTextbox(): TemplateResult {
-		const info = this.getInfo('textbox');
+		const actions = this.getActions('textbox');
 
 		const style = {
 			...this.config.button_style,
-			...info.style,
+			...actions.style,
 		};
 		return html`<remote-textbox
 			.hass=${this.hass}
 			.hapticEnabled=${this.config.enable_button_feedback}
 			.remoteId=${this.config.remote_id}
-			.info=${info}
+			.actions=${actions}
 			.actionKey="textbox"
-			.customIcon=${this.customIcons[info.icon ?? ''] ?? ''}
+			.customIcon=${this.customIcons[actions.icon ?? ''] ?? ''}
 			.keyboardId=${this.config.keyboard_id}
 			.keyboardMode=${this.config.keyboard_mode ?? 'ANDROID TV'}
 			._style=${style}
@@ -368,19 +376,19 @@ class AndroidTVCard extends LitElement {
 	}
 
 	buildSearch(): TemplateResult {
-		const info = this.getInfo('search');
+		const actions = this.getActions('search');
 
 		const style = {
 			...this.config.button_style,
-			...info.style,
+			...actions.style,
 		};
 		return html`<remote-search
 			.hass=${this.hass}
 			.hapticEnabled=${this.config.enable_button_feedback}
 			.remoteId=${this.config.remote_id}
-			.info=${info}
+			.actions=${actions}
 			.actionKey="search"
-			.customIcon=${this.customIcons[info.icon ?? ''] ?? ''}
+			.customIcon=${this.customIcons[actions.icon ?? ''] ?? ''}
 			.keyboardId=${this.config.keyboard_id}
 			.keyboardMode=${this.config.keyboard_mode ?? 'ANDROID TV'}
 			._style=${style}

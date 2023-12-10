@@ -4,8 +4,6 @@ import { styleMap } from 'lit/directives/style-map.js';
 
 import { renderTemplate } from 'ha-nunjucks';
 
-import { IServiceCall } from '../models';
-
 import { BaseRemoteElement } from './base-remote-element';
 
 @customElement('remote-slider')
@@ -70,30 +68,25 @@ export class RemoteSlider extends BaseRemoteElement {
 	}
 
 	onEnd(_e: MouseEvent | TouchEvent) {
-		const [domain, service] = (
-			renderTemplate(
-				this.hass,
-				(this.info.tap_action as IServiceCall).service,
-			) as string
-		).split('.');
 		if (!this.newValue && this.newValue != 0) {
 			this.newValue = this.value as number;
 		}
-		const data = structuredClone(
-			(this.info.tap_action as IServiceCall).data ?? {},
-		);
+
+		const data = structuredClone(this.actions.tap_action!.data ?? {});
 		for (const key in data) {
 			data[key] = renderTemplate(this.hass, data[key] as string);
 			if (data[key] == 'VALUE') {
-				data[key] = this.newValue;
+				data[key] = this.value;
 			} else if (data[key].toString().includes('VALUE')) {
 				data[key] = data[key]
 					.toString()
-					.replace('VALUE', this.newValue.toString());
+					.replace('VALUE', this.value.toString());
 			}
 		}
+
 		this.fireHapticEvent('light');
-		this.hass.callService(domain, service, data);
+		this.callService(this.actions.tap_action!.service!, data);
+
 		this.value = this.newValue;
 	}
 

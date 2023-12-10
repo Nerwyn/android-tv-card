@@ -1,6 +1,6 @@
 import { StyleInfo } from 'lit/directives/style-map.js';
 
-import { IAction } from '.';
+import { IActions } from '.';
 
 export interface IConfig {
 	theme?: string;
@@ -10,8 +10,8 @@ export interface IConfig {
 	keyboard_id?: string;
 	keyboard_mode?: KeyboardMode;
 
-	custom_keys?: Record<string, IAction>;
-	custom_sources?: Record<string, IAction>;
+	custom_keys?: Record<string, IActions>;
+	custom_sources?: Record<string, IActions>;
 	custom_icons?: Record<string, string>;
 
 	enable_button_feedback?: boolean;
