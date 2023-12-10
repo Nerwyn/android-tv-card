@@ -33,10 +33,10 @@ export class BaseRemoteElement extends LitElement {
 		let action;
 		switch (actionType) {
 			case 'hold_action':
-				action = actions.hold_action!;
+				action = actions.hold_action ?? actions.tap_action!;
 				break;
 			case 'double_tap_action':
-				action = actions.double_tap_action!;
+				action = actions.double_tap_action ?? actions.tap_action!;
 				break;
 			case 'tap_action':
 			default:
