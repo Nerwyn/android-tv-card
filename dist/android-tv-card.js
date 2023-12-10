@@ -24,7 +24,7 @@
 			.remoteId=${this.config.remote_id}
 			.enableDoubleClick=${this.config.enable_double_click}
 			.actions=${n}
-			.touchActions=${i}
+			.directionActions=${i}
 			._style=${this.config.touchpad_style}
 		/>`}buildKeyboard(){var e,t,n;const i=this.getActions("keyboard"),r=Object.assign(Object.assign({},this.config.button_style),i.style);return s.html`<remote-keyboard
 			.hass=${this.hass}

@@ -357,7 +357,7 @@ class AndroidTVCard extends LitElement {
 			centerActions.hold_action = holdAction.tap_action;
 		}
 
-		const touchActions: Record<DirectionAction, IActions> = {
+		const directionActions: Record<DirectionAction, IActions> = {
 			up: this.getActions('up'),
 			down: this.getActions('down'),
 			left: this.getActions('left'),
@@ -370,7 +370,7 @@ class AndroidTVCard extends LitElement {
 			.remoteId=${this.config.remote_id}
 			.enableDoubleClick=${this.config.enable_double_click}
 			.actions=${centerActions}
-			.touchActions=${touchActions}
+			.directionActions=${directionActions}
 			._style=${this.config.touchpad_style}
 		/>`;
 	}
