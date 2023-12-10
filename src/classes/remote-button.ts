@@ -5,6 +5,7 @@ import { styleMap } from 'lit/directives/style-map.js';
 import { HapticType } from 'custom-card-helpers';
 import { renderTemplate } from 'ha-nunjucks';
 
+import { ActionType } from '../models';
 import { BaseRemoteElement } from './base-remote-element';
 
 @customElement('remote-button')
@@ -12,43 +13,83 @@ export class RemoteButton extends BaseRemoteElement {
 	@property({ attribute: false }) actionKey!: string;
 	@property({ attribute: false }) customIcon?: string;
 
+	clickTimer?: ReturnType<typeof setTimeout>;
+	clickCount: number = 0;
+
 	longTimer?: ReturnType<typeof setTimeout>;
 	longInterval?: ReturnType<typeof setInterval>;
 
-	onClick(_e: Event, longPress: boolean = false) {
-		let haptic: HapticType = longPress ? 'medium' : 'light';
+	clickAction(actionType: ActionType) {
+		clearTimeout(this.clickTimer as ReturnType<typeof setTimeout>);
+		this.clickTimer = undefined;
+
+		const actionToHaptic: Record<ActionType, HapticType> = {
+			single: 'light',
+			hold: 'medium',
+			double: 'success',
+		};
+		let haptic = actionToHaptic[actionType];
 		if (['up', 'down', 'left', 'right'].includes(this.actionKey)) {
 			haptic = 'selection';
 		}
 		this.fireHapticEvent(haptic);
 
-		let action = this.actions.tap_action!;
-		if (longPress && 'hold_action' in this.actions) {
-			action = this.actions.hold_action!;
+		let action;
+		switch (actionType) {
+			case 'hold':
+				action = this.actions.hold_action!;
+				break;
+			case 'double':
+				action = this.actions.double_tap_action!;
+				break;
+			case 'single':
+			default:
+				action = this.actions.tap_action!;
+				break;
 		}
+		this.sendAction(action, actionType);
 
-		this.sendAction(action, longPress);
+		this.clickCount = 0;
 	}
 
-	onlongClickStart(e: Event) {
+	onClick(e: MouseEvent) {
+		e.stopImmediatePropagation();
+		if (e.detail && e.detail > this.clickCount) {
+			this.clickCount++;
+		}
+
+		if ('double_tap_action' in this.actions) {
+			if (this.clickCount == 2) {
+				this.clickAction('double');
+			} else {
+				this.clickTimer = setTimeout(() => {
+					this.clickAction('single');
+				}, 200);
+			}
+		} else {
+			this.clickAction('single');
+		}
+	}
+
+	onlongClickStart(_e: TouchEvent) {
 		this.longTimer = setTimeout(() => {
-			this.longPress = true;
+			this.hold = true;
 
 			// Only repeat hold action for directional keys and volume
 			// prettier-ignore
 			if (['up', 'down', 'left', 'right', 'volume_up', 'volume_down', 'delete'].includes(this.actionKey)) {
 				this.longInterval = setInterval(() => {
-					this.onClick(e, false)
+					this.clickAction('single')
 				}, 100);
 			} else {
-				this.onClick(e, true)
+				this.clickAction('hold')
 			}
 		}, 500);
 	}
 
-	onlongClickEnd(e: Event) {
-		if (this.longPress) {
-			this.longPress = false;
+	onlongClickEnd(e: TouchEvent) {
+		if (this.hold) {
+			this.hold = false;
 			e.stopImmediatePropagation();
 			e.preventDefault();
 		}

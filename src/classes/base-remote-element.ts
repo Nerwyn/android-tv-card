@@ -5,7 +5,7 @@ import { StyleInfo } from 'lit/directives/style-map.js';
 import { HomeAssistant, HapticType, forwardHaptic } from 'custom-card-helpers';
 import { renderTemplate } from 'ha-nunjucks';
 
-import { IConfirmation, IData, IActions, IAction } from '../models';
+import { IConfirmation, IData, IActions, IAction, ActionType } from '../models';
 
 @customElement('base-remote-element')
 export class BaseRemoteElement extends LitElement {
@@ -15,7 +15,7 @@ export class BaseRemoteElement extends LitElement {
 	@property({ attribute: false }) remoteId?: string;
 	@property({ attribute: false }) _style?: StyleInfo;
 
-	longPress?: boolean = false;
+	hold?: boolean = false;
 
 	fireHapticEvent(haptic: HapticType) {
 		if (
@@ -29,11 +29,7 @@ export class BaseRemoteElement extends LitElement {
 		}
 	}
 
-	sendAction(
-		action: IAction,
-		longPress: boolean = false,
-		_doubleTap: boolean = false,
-	) {
+	sendAction(action: IAction, actionType: ActionType) {
 		if (!this.handleConfirmation(action)) {
 			return;
 		}
@@ -48,7 +44,7 @@ export class BaseRemoteElement extends LitElement {
 				this.callService(
 					action.service!,
 					structuredClone(action.data || {}),
-					longPress,
+					actionType,
 				);
 				break;
 			case 'source':
@@ -56,17 +52,17 @@ export class BaseRemoteElement extends LitElement {
 				break;
 			case 'key':
 			default:
-				this.sendCommand(action.key!, longPress);
+				this.sendCommand(action.key!, actionType);
 				break;
 		}
 	}
 
-	sendCommand(key: string, longPress: boolean = false) {
+	sendCommand(key: string, actionType: ActionType) {
 		const data: IData = {
 			entity_id: renderTemplate(this.hass, this.remoteId as string),
 			command: renderTemplate(this.hass, key),
 		};
-		if (longPress) {
+		if (actionType == 'hold') {
 			data.hold_secs = 0.5;
 		}
 		this.hass.callService('remote', 'send_command', data);
@@ -82,12 +78,12 @@ export class BaseRemoteElement extends LitElement {
 	callService(
 		domainService: string,
 		data: IData = {},
-		longPress: boolean = false,
+		actionType: ActionType,
 	) {
 		for (const key in data) {
 			data[key] = renderTemplate(this.hass, data[key] as string);
 		}
-		if (longPress && domainService == 'remote.send_command') {
+		if (actionType == 'hold' && domainService == 'remote.send_command') {
 			data.hold_secs = 0.5;
 		}
 

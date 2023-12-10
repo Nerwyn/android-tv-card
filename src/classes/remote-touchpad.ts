@@ -37,11 +37,11 @@ export class RemoteTouchpad extends BaseRemoteElement {
 
 	onClick(e: MouseEvent) {
 		e.stopImmediatePropagation();
-		const click_action = () => {
+		const clickAction = () => {
 			clearTimeout(this.clickTimer as ReturnType<typeof setTimeout>);
 			this.clickTimer = undefined;
 			this.fireHapticEvent('light');
-			this.sendAction(this.touchActions['center']);
+			this.sendAction(this.touchActions['center'], 'single');
 			this.clickCount = 0;
 		};
 		if (e.detail && e.detail > this.clickCount) {
@@ -57,21 +57,20 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			if (this.clickCount == 2) {
 				this.onDblClick(e);
 			} else {
-				this.clickTimer = setTimeout(click_action, 200);
+				this.clickTimer = setTimeout(clickAction, 200);
 			}
 		} else {
-			click_action();
+			clickAction();
 		}
 	}
 
-	onDblClick(_e: Event) {
+	onDblClick(_e: MouseEvent) {
 		clearTimeout(this.clickTimer as ReturnType<typeof setTimeout>);
 		this.clickTimer = undefined;
 		this.clickCount = 0;
 
 		this.fireHapticEvent('success');
-		const info = this.touchActions.double;
-		this.sendAction(info);
+		this.sendAction(this.touchActions.double, 'double');
 	}
 
 	@eventOptions({ passive: true })
@@ -91,11 +90,12 @@ export class RemoteTouchpad extends BaseRemoteElement {
 					this.fireHapticEvent('selection');
 					this.sendAction(
 						this.touchActions[this.touchAction as TouchAction],
+						'single',
 					);
 				}, 100);
 			} else {
 				this.fireHapticEvent('medium');
-				this.sendAction(this.touchActions.long, true);
+				this.sendAction(this.touchActions.hold, 'hold');
 			}
 		}, 500);
 
@@ -143,7 +143,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		}
 		this.fireHapticEvent('selection');
 		this.touchAction = action as TouchAction;
-		this.sendAction(this.touchActions[action as TouchAction]);
+		this.sendAction(this.touchActions[action as TouchAction], 'single');
 
 		window.initialX = undefined;
 		window.initialY = undefined;

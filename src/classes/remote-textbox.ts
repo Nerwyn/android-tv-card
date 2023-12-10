@@ -8,7 +8,7 @@ import { BaseKeyboardElement } from './base-keyboard-element';
 
 @customElement('remote-textbox')
 export class RemoteTextbox extends BaseKeyboardElement {
-	onClick(e: Event, _longpress: boolean) {
+	onClick(e: Event) {
 		e.stopImmediatePropagation();
 
 		const text = prompt('Text Input: ');

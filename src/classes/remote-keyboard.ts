@@ -9,7 +9,7 @@ import { BaseKeyboardElement } from './base-keyboard-element';
 
 @customElement('remote-keyboard')
 export class RemoteKeyboard extends BaseKeyboardElement {
-	onClick(e: Event, _longpress: boolean) {
+	onClick(e: Event) {
 		e.stopImmediatePropagation();
 		this.fireHapticEvent('light');
 		for (const element of (e.currentTarget as HTMLElement).children) {
@@ -50,7 +50,7 @@ export class RemoteKeyboard extends BaseKeyboardElement {
 				case 'ANDROID_TV':
 				case 'ANDROID TV':
 				default:
-					this.sendCommand(key);
+					this.sendCommand(key, 'single');
 					break;
 			}
 		}
