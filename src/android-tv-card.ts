@@ -190,6 +190,8 @@ class AndroidTVCard extends LitElement {
 									(action as IAction).action = 'source';
 								} else if ('service' in action) {
 									(action as IAction).action = 'call-service';
+								} else {
+									(action as IAction).action = 'none';
 								}
 							}
 						}
