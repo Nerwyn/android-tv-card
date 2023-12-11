@@ -45,7 +45,10 @@ export class RemoteButton extends BaseRemoteElement {
 			this.clickCount++;
 		}
 
-		if ('double_tap_action' in this.actions) {
+		if (
+			'double_tap_action' in this.actions &&
+			this.actions.double_tap_action!.action != 'none'
+		) {
 			if (this.clickCount == 2) {
 				this.clickAction('double_tap_action');
 			} else {
