@@ -16,6 +16,7 @@ import {
 	DirectionAction,
 	defaultKeys,
 	defaultSources,
+	ActionType,
 } from './models';
 
 import './classes/remote-button';
@@ -252,10 +253,25 @@ class AndroidTVCard extends LitElement {
 			}
 		}
 
+		// Get original icon if not redefined
 		if (!(actions?.icon || actions.svg_path)) {
 			actions.icon = defaultActions?.icon ?? undefined;
 			actions.svg_path = defaultActions?.svg_path ?? undefined;
 		}
+
+		// Get original actions if not defined.
+		const actionTypes: ActionType[] = [
+			'tap_action',
+			'hold_action',
+			'double_tap_action',
+		];
+		for (const actionType in actionTypes) {
+			if (!(actionType in actions) && actionType in defaultActions) {
+				actions[actionType as ActionType] =
+					defaultActions[actionType as ActionType];
+			}
+		}
+
 		return actions;
 	}
 
