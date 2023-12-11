@@ -128,8 +128,12 @@ export class RemoteKeyboard extends BaseKeyboardElement {
 		(
 			(e.currentTarget as HTMLInputElement)
 				.previousElementSibling as HTMLElement
-		).style.color = 'var(--state-active-color)';
-		(e.currentTarget as HTMLInputElement).style.zIndex = '9 !important';
+		).style.setProperty('color', 'var(--state-active-color)');
+		(e.currentTarget as HTMLInputElement).style.setProperty(
+			'z-index',
+			'9',
+			'important',
+		);
 	}
 
 	onFocusOut(e: InputEvent) {
@@ -137,8 +141,8 @@ export class RemoteKeyboard extends BaseKeyboardElement {
 		(
 			(e.currentTarget as HTMLInputElement)
 				.previousElementSibling as HTMLElement
-		).style.color = '';
-		(e.currentTarget as HTMLInputElement).style.zIndex = '';
+		).style.removeProperty('color');
+		(e.currentTarget as HTMLInputElement).style.removeProperty('z-index');
 	}
 
 	render() {
