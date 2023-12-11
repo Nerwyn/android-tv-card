@@ -146,10 +146,19 @@ class AndroidTVCard extends LitElement {
 						'service_data',
 						'data',
 						'target',
+						'navigation_path',
+						'navigation_replace',
+						'url_path',
+						'confirmation',
+						'pipeline_id',
+						'start_listening',
 					];
-					const tapAction = customAction.tap_action ?? ({} as Action);
+					const tapAction =
+						customAction.tap_action ?? ({} as IAction);
+					let updateTapAction = false;
 					for (const actionKey of actionKeys) {
 						if (actionKey in customAction) {
+							updateTapAction = true;
 							(tapAction as unknown as Record<string, string>)[
 								actionKey
 							] = customAction[
@@ -157,7 +166,9 @@ class AndroidTVCard extends LitElement {
 							] as string;
 						}
 					}
-					customAction.tap_action = tapAction as IAction;
+					if (updateTapAction) {
+						customAction.tap_action = tapAction as IAction;
+					}
 
 					// For each type of action
 					const actionTypes = [
