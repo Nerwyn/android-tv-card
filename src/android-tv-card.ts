@@ -34,6 +34,7 @@ class AndroidTVCard extends LitElement {
 	@property({ attribute: false }) hass!: HomeAssistant;
 	@property({ attribute: false }) private config!: IConfig;
 
+	defaultActions: Record<string, IActions> = {};
 	customActions: Record<string, IActions> = {};
 	customIcons: Record<string, string> = {};
 
@@ -69,10 +70,11 @@ class AndroidTVCard extends LitElement {
 		config = this.setToggles(config);
 		config = this.updateDeprecatedKeys(config);
 
-		this.customActions = {
-			...(config.custom_sources || {}),
-			...(config.custom_keys || {}),
+		this.defaultActions = {
+			...defaultSources,
+			...defaultKeys,
 		};
+		this.customActions = config.custom_actions || {};
 		this.customIcons = config.custom_icons || {};
 
 		await window.loadCardHelpers();
@@ -122,98 +124,99 @@ class AndroidTVCard extends LitElement {
 			config.rows = rows;
 		}
 
-		// Update custom keys and sources to Home Assistant actions format
-		const customKeysSources = ['custom_keys', 'custom_sources'];
-		for (const customKeysOrSources of customKeysSources) {
-			// Check custom keys and custom sources arrays
+		// Combine custom actions, custom keys, and custom sources fields
+		config.custom_actions = {
+			...config.custom_actions,
+			...(config['custom_keys' as keyof IConfig] as unknown as Record<
+				string,
+				IActions
+			>[]),
+			...(config['custom_sources' as keyof IConfig] as unknown as Record<
+				string,
+				IActions
+			>[]),
+		} as Record<string, IActions>;
 
-			if (customKeysOrSources in config) {
-				const customActions =
-					config[
-						customKeysOrSources as 'custom_keys' | 'custom_sources'
-					];
+		if ('custom_actions' in config) {
+			const customActions = config['custom_actions'];
 
-				// For each custom key or source
-				for (const customActionName in customActions) {
-					const customAction = customActions[customActionName];
+			// For each custom key or source
+			for (const customActionName in customActions) {
+				const customAction = customActions[customActionName];
 
-					// Copy action fields to tap_action
-					const actionKeys = [
-						'key',
-						'source',
-						'service',
-						'service_data',
-						'data',
-						'target',
-						'navigation_path',
-						'navigation_replace',
-						'url_path',
-						'confirmation',
-						'pipeline_id',
-						'start_listening',
-					];
-					const tapAction =
-						customAction.tap_action ?? ({} as IAction);
-					let updateTapAction = false;
-					for (const actionKey of actionKeys) {
-						if (actionKey in customAction) {
-							updateTapAction = true;
-							(tapAction as unknown as Record<string, string>)[
-								actionKey
-							] = customAction[
-								actionKey as keyof IActions
-							] as string;
+				// Copy action fields to tap_action
+				const actionKeys = [
+					'key',
+					'source',
+					'service',
+					'service_data',
+					'data',
+					'target',
+					'navigation_path',
+					'navigation_replace',
+					'url_path',
+					'confirmation',
+					'pipeline_id',
+					'start_listening',
+				];
+				const tapAction = customAction.tap_action ?? ({} as IAction);
+				let updateTapAction = false;
+				for (const actionKey of actionKeys) {
+					if (actionKey in customAction) {
+						updateTapAction = true;
+						(tapAction as unknown as Record<string, string>)[
+							actionKey
+						] = customAction[actionKey as keyof IActions] as string;
+					}
+				}
+				if (updateTapAction) {
+					customAction.tap_action = tapAction as IAction;
+				}
+
+				// For each type of action
+				const actionTypes = [
+					'tap_action',
+					'hold_action',
+					'double_tap_action',
+				];
+				for (const actionType of actionTypes) {
+					if (actionType in customAction) {
+						const action = customAction[
+							actionType as keyof IActions
+						] as IAction;
+						if ('service' in action) {
+							// Merge service_data, target, and data fields
+							action.data = {
+								...action.data,
+								...(
+									action as unknown as Record<
+										string,
+										IData | undefined
+									>
+								).service_data,
+								...action.target,
+							};
 						}
-					}
-					if (updateTapAction) {
-						customAction.tap_action = tapAction as IAction;
-					}
 
-					// For each type of action
-					const actionTypes = [
-						'tap_action',
-						'hold_action',
-						'double_tap_action',
-					];
-					for (const actionType of actionTypes) {
-						if (actionType in customAction) {
-							const action = customAction[
-								actionType as keyof IActions
-							] as IAction;
-							if ('service' in action) {
-								// Merge service_data, target, and data fields
-								action.data = {
-									...action.data,
-									...(
-										action as unknown as Record<
-											string,
-											IData | undefined
-										>
-									).service_data,
-									...action.target,
-								};
-							}
-
-							// Populate action field
-							if (!('action' in action)) {
-								if ('key' in action) {
-									(action as IAction).action = 'key';
-								} else if ('source' in action) {
-									(action as IAction).action = 'source';
-								} else if ('service' in action) {
-									(action as IAction).action = 'call-service';
-								} else if ('navigation_path' in action) {
-									(action as IAction).action = 'navigate';
-								} else if ('url_path' in action) {
-									(action as IAction).action = 'url';
-								} else if (
-									'pipeline_id' in action ||
-									'start_listening' in action
-								) {
-									(action as IAction).action = 'assist';
-								} else {
-									(action as IAction).action = 'none';
-								}
+						// Populate action field
+						if (!('action' in action)) {
+							if ('key' in action) {
+								(action as IAction).action = 'key';
+							} else if ('source' in action) {
+								(action as IAction).action = 'source';
+							} else if ('service' in action) {
+								(action as IAction).action = 'call-service';
+							} else if ('navigation_path' in action) {
+								(action as IAction).action = 'navigate';
+							} else if ('url_path' in action) {
+								(action as IAction).action = 'url';
+							} else if (
+								'pipeline_id' in action ||
+								'start_listening' in action
+							) {
+								(action as IAction).action = 'assist';
+							} else {
+								(action as IAction).action = 'none';
 							}
 						}
 					}
@@ -242,8 +245,7 @@ class AndroidTVCard extends LitElement {
 	}
 
 	getActions(action: string): IActions {
-		const defaultActions =
-			defaultKeys[action] || defaultSources[action] || {};
+		const defaultActions = this.defaultActions[action] || {};
 		const actions = this.customActions[action] || defaultActions;
 
 		if (!Object.keys(actions).length) {

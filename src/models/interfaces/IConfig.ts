@@ -10,8 +10,7 @@ export interface IConfig {
 	keyboard_id?: string;
 	keyboard_mode?: KeyboardMode;
 
-	custom_keys?: Record<string, IActions>;
-	custom_sources?: Record<string, IActions>;
+	custom_actions?: Record<string, IActions>;
 	custom_icons?: Record<string, string>;
 
 	enable_button_feedback?: boolean;
