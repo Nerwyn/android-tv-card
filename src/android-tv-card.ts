@@ -12,7 +12,6 @@ import {
 	IActions,
 	IAction,
 	IData,
-	Action,
 	DirectionAction,
 	defaultKeys,
 	defaultSources,
