@@ -126,21 +126,19 @@ export class RemoteKeyboard extends BaseKeyboardElement {
 	onFocus(e: InputEvent) {
 		(e.currentTarget as HTMLInputElement).value = '';
 		(
-			(e.currentTarget as HTMLInputElement).parentElement!
-				.children[0] as HTMLElement
+			(e.currentTarget as HTMLInputElement)
+				.previousElementSibling as HTMLElement
 		).style.color = 'var(--state-active-color)';
-		(e.currentTarget as HTMLInputElement).style.zIndex = '9';
-		(e.currentTarget as HTMLInputElement).parentElement!.style.zIndex = '1';
+		(e.currentTarget as HTMLInputElement).style.zIndex = '9 !important';
 	}
 
 	onFocusOut(e: InputEvent) {
 		(e.currentTarget as HTMLInputElement).value = '';
 		(
-			(e.currentTarget as HTMLInputElement).parentElement!
-				.children[0] as HTMLElement
+			(e.currentTarget as HTMLInputElement)
+				.previousElementSibling as HTMLElement
 		).style.color = '';
 		(e.currentTarget as HTMLInputElement).style.zIndex = '';
-		(e.currentTarget as HTMLInputElement).parentElement!.style.zIndex = '';
 	}
 
 	render() {
@@ -178,6 +176,7 @@ export class RemoteKeyboard extends BaseKeyboardElement {
 					height: -moz-available;
 					height: -webkit-fill-available;
 					height: fill-available;
+					z-index: 0;
 				}
 			`,
 		];

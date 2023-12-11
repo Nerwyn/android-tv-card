@@ -150,6 +150,7 @@ export class RemoteButton extends BaseRemoteElement {
 					justify-content: center;
 					text-align: center;
 					align-items: center;
+					z-index: 1;
 
 					--size: 48px;
 					--mdc-icon-size: var(--size);
