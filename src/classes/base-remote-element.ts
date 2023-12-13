@@ -50,8 +50,10 @@ export class BaseRemoteElement extends LitElement {
 
 		switch (action.action) {
 			case 'navigate':
-			case 'url':
 				this.navigate(action);
+				break;
+			case 'url':
+				this.toUrl(action);
 				break;
 			case 'assist':
 			case 'none':
@@ -114,17 +116,26 @@ export class BaseRemoteElement extends LitElement {
 	}
 
 	navigate(action: IAction) {
-		let url: string;
-		if (action.action == 'navigate') {
-			url = `${window.location.origin}/${action.url_path}`;
-		} else {
-			url = action.navigation_path!;
+		if (action.navigation_path?.includes('//')) {
+			console.error(
+				'Protocol detected in navigation path. To navigate to another website use the action "url" with the key "url_path" instead.',
+			);
 		}
 		if (action.navigation_replace == true) {
-			window.location.replace(url);
+			window.location.replace(action.navigation_path!);
 		} else {
-			window.location.assign(url);
+			window.location.assign(action.navigation_path!);
 		}
+	}
+
+	toUrl(action: IAction) {
+		let url: string;
+		if (!action.url_path!.includes('//')) {
+			url = `https://${action.url_path}`;
+		} else {
+			url = action.url_path!;
+		}
+		window.location.assign(url);
 	}
 
 	handleConfirmation(action: IAction): boolean {
