@@ -120,6 +120,7 @@ export class BaseRemoteElement extends LitElement {
 			console.error(
 				'Protocol detected in navigation path. To navigate to another website use the action "url" with the key "url_path" instead.',
 			);
+			return;
 		}
 		if (action.navigation_replace == true) {
 			window.location.replace(action.navigation_path!);
