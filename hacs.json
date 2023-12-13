@@ -2,5 +2,5 @@
 	"name": "Android TV Remote Card (with touchpad and haptic feedback)",
 	"content_in_root": false,
 	"homeassistant": "2023.5.0",
-	"filename": "android-tv-card.js"
+	"filename": "android-tv-card.min.js"
 }

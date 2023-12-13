@@ -7,7 +7,7 @@ module.exports = {
 	},
 	output: {
 		path: path.resolve(__dirname, './dist'),
-		filename: 'android-tv-card.js',
+		filename: 'android-tv-card.min.js',
 	},
 	resolve: {
 		extensions: ['.ts', '.tsx', '.js'],
