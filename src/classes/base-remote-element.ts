@@ -51,6 +51,8 @@ export class BaseRemoteElement extends LitElement {
 		switch (action.action) {
 			case 'navigate':
 			case 'url':
+				this.navigate(action);
+				break;
 			case 'assist':
 			case 'none':
 				break;
@@ -109,6 +111,20 @@ export class BaseRemoteElement extends LitElement {
 		).split('.', 2);
 
 		this.hass.callService(domain, service, data);
+	}
+
+	navigate(action: IAction) {
+		let url: string;
+		if (action.action == 'navigate') {
+			url = `${window.location.origin}/${action.url_path}`;
+		} else {
+			url = action.navigation_path!;
+		}
+		if (action.navigation_replace == true) {
+			window.location.replace(url);
+		} else {
+			window.location.assign(url);
+		}
 	}
 
 	handleConfirmation(action: IAction): boolean {
