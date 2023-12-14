@@ -126,7 +126,7 @@ export class BaseRemoteElement extends LitElement {
 			window.history.replaceState(
 				window.history.state?.root ? { root: true } : null,
 				'',
-				`${window.location.pathname}#${action.navigation_path}`,
+				action.navigation_path,
 			);
 		} else {
 			window.history.pushState(null, '', action.navigation_path);
