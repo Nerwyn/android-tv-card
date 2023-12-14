@@ -179,7 +179,7 @@ Using only these options you will get an empty card (or almost empty, if you set
 
 In order to include the buttons, you need to specify in the config the rows you want and which buttons you want in it.
 You do it by declaring the rows as arrays and its buttons as values.
-See [this file](https://github.com/Nerwyn/android-tv-card/blob/main/src/models/defaultKeys.ts) for a list of default keys, and [this file](https://github.com/Nerwyn/android-tv-card/blob/main/src/models/defaultSources.ts) for a list of default sources.
+See [this file](https://github.com/Nerwyn/android-tv-card/blob/main/src/models/maps/defaultKeys.ts) for a list of default keys, and [this file](https://github.com/Nerwyn/android-tv-card/blob/main/src/models/maps/defaultSources.ts) for a list of default sources.
 
 ```yaml
 rows:
