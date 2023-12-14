@@ -152,7 +152,7 @@ export class BaseRemoteElement extends LitElement {
 
 	toUrl(action: IAction) {
 		let url = (renderTemplate(this.hass, action.url_path!) as string) ?? '';
-		if (!action.url_path!.includes('//')) {
+		if (!url.includes('//')) {
 			url = `https://${url}`;
 		}
 		window.location.assign(url);
@@ -184,10 +184,16 @@ export class BaseRemoteElement extends LitElement {
 				} else {
 					switch (action.action) {
 						case 'navigate':
-							text = `Are you sure you want to navigate to '${action.navigation_path}'`;
+							text = `Are you sure you want to navigate to '${renderTemplate(
+								this.hass,
+								action.navigation_path!,
+							)}'`;
 							break;
 						case 'url':
-							text = `Are you sure you want to navigate to '${action.url_path}'?`;
+							text = `Are you sure you want to navigate to '${renderTemplate(
+								this.hass,
+								action.url_path!,
+							)}'?`;
 							break;
 						case 'assist':
 							text = `Are you sure you want to call assist?`;
@@ -195,14 +201,23 @@ export class BaseRemoteElement extends LitElement {
 						case 'none':
 							return false;
 						case 'call-service':
-							text = `Are you sure you want to run action '${action.service}'?`;
+							text = `Are you sure you want to run action '${renderTemplate(
+								this.hass,
+								action.service!,
+							)}'?`;
 							break;
 						case 'source':
-							text = `Are you sure you want to run action '${action.source}'?`;
+							text = `Are you sure you want to run action '${renderTemplate(
+								this.hass,
+								action.source!,
+							)}'?`;
 							break;
 						case 'key':
 						default:
-							text = `Are you sure you want to run action '${action.key}'?`;
+							text = `Are you sure you want to run action '${renderTemplate(
+								this.hass,
+								action.key!,
+							)}'?`;
 							break;
 					}
 				}
