@@ -123,10 +123,21 @@ export class BaseRemoteElement extends LitElement {
 			return;
 		}
 		if (action.navigation_replace == true) {
-			window.location.replace(action.navigation_path!);
+			window.history.replaceState(
+				window.history.state?.root ? { root: true } : null,
+				'',
+				`${window.location.pathname}#${action.navigation_path}`,
+			);
 		} else {
-			window.location.assign(action.navigation_path!);
+			window.history.pushState(null, '', action.navigation_path);
 		}
+		window.dispatchEvent(
+			new Event('location-changed', {
+				bubbles: false,
+				cancelable: true,
+				composed: false,
+			}),
+		);
 	}
 
 	toUrl(action: IAction) {
