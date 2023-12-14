@@ -21,6 +21,12 @@ declare global {
 	}
 
 	interface Event {
-		detail?: Record<string, string | number | boolean>;
+		detail?: Record<
+			string,
+			| string
+			| number
+			| boolean
+			| Record<string, string | number | boolean>
+		>;
 	}
 }

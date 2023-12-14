@@ -56,6 +56,8 @@ export class BaseRemoteElement extends LitElement {
 				this.toUrl(action);
 				break;
 			case 'assist':
+				this.assist(action);
+				break;
 			case 'none':
 				break;
 			case 'call-service':
@@ -148,6 +150,34 @@ export class BaseRemoteElement extends LitElement {
 			url = action.url_path!;
 		}
 		window.location.assign(url);
+	}
+
+	assist(action: IAction) {
+		// custom-card-helpers is very out of date and is missing newer fields
+		/* eslint-disable */
+		const external = (this.hass.auth as Record<string, any>).external;
+		if (external.config.hassAssist) {
+			external.fireMessage({
+				type: 'assist/show',
+				payload: {
+					pipeline_id: action.pipeline_id ?? 'last_used',
+					start_listening: action.start_listening ?? true,
+				},
+			});
+			return;
+		} else {
+			const event = new Event('show-dialog');
+			event.detail = {
+				dialogTag: 'ha-voice-command-dialog',
+				dialogImport: 'ha-voice-command-dialog',
+				dialogParams: {
+					pipeline_id: action.pipeline_id ?? 'last_used',
+					start_listening: action.start_listening ?? false,
+				},
+			};
+			window.dispatchEvent(event);
+		}
+		/* eslint-enable */
 	}
 
 	handleConfirmation(action: IAction): boolean {
