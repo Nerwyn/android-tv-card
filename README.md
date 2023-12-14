@@ -265,7 +265,6 @@ custom_actions:
       service: light.toggle
       target:
         entity_id: light.bedroom
-    hold_action:
 
   to_hass_home:
     icon: mdi:view-dashboard
