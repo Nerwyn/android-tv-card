@@ -11,8 +11,6 @@
 
 [![My Home Assistant](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?repository=android-tv-card&owner=Nerwyn&category=Plugin)
 
-<a href="https://www.buymeacoffee.com/nerwyn" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-blue.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
-
 📦 This repo is a fork of [tv-card](https://github.com/usernein/tv-card), which is a fork of another [tv-card](https://github.com/marrobHD/tv-card) merged with two other projects, and includes the same features and improvements usernein made, like:
 
 - Touchpad for navigation
@@ -39,18 +37,20 @@ Along with a many other changes and improvements:
 **Fully customizable touchpad**
 
 - Touchpad actions are now remappable by creating custom keys for `up`, `down`, `left`, `right`, and `center`.
-- Enable double taps on the touchpad by setting `enable_double_click` to true.
-  - _Due to limitations in iOS's webview, double click does not work on iPhone and iPad._
-- Double taps default to `back` but can be remapped by changing the value of `double_click_keycode`.
-- Remap long clicks on the touchpad by setting `long_click_keycode` to a different key name.
-  - _Due to limitations on desktop browsers, touchpad swiping and long clicks do not work with a mouse._
 - Alter touchpad CSS using `touchpad_style`.
 - Touchpad style now follows theme.
+- Touchpad haptics can now be toggled.
+
+**Tap, double tap, and hold tap actions support for buttons and touchpad**
+
+- All buttons and the touchpad `center` command support tap, double tap, and long tap custom actions.
+  - Using the [Home Assistant actions](https://www.home-assistant.io/dashboards/actions/) syntax.
+- Supports the actions `call-service`, `navigate`, `url`, and `none` along with card specific actions `key` and `source`.
+- Hold actions cannot be remapped for `up`, `down`, `left`, `right`, `volume_up`, `volume_down`, and `delete` as they repeat while held.
 
 **Better row handling and columns**
 
-- Rows now exist in a new `rows` array with no limit on the number of rows you can add.
-  - Legacy configs that use `_row` key names will still work but are not recommended.
+- Rows exist in a `rows` array with no limit on the number of rows you can add.
 - Sliders and touchpads can now be placed in rows alongside other buttons.
   - For special volume and navigation features use `vol_buttons`, `slider`, `dpad`, and `touchpad` as button names within a row.
 - Empty buttons are no longer clickable.
@@ -61,17 +61,17 @@ Along with a many other changes and improvements:
 - Many more default keys and sources with SVG icons for sources with no material design icon present in Home Assistant's default material design icon list.
   - _Not all default keys and sources are working or tested at this time, please let me know if you find the correct source/activity names for the ones that are incorrect._
   - _Also let me know if you find a key or source that is not listed here and you want to add to the default lists!_
-- Custom keys and sources that replace default ones will now inherit the default icons if no new ones are given.
+- Custom actions that replace default ones will now inherit the default icons and tap actions if no new ones are given.
 - Alter CSS of all buttons using `button_style`.
-- Alter CSS of an individual button by including a `style` object in a custom key or source.
-- Touchpad haptics can now be toggled.
+- Alter CSS of an individual button by including a `style` object in a custom action.
+- Button haptics can now be toggled.
 
 **Fully native slider**
 
 - Slider has been replaced with a native solution rather than an embedding an external card.
   - Greatly improves the stability of the slider as it now renders consistently with the rest of the card.
 - Slider is now animated like Home Assistant tile and Mushroom sliders.
-- Slider purpose can be changed by creating a custom key for `slider`.
+- Slider purpose can be changed by creating a custom action for `slider`.
 - Alter CSS of slider using `slider_style`.
 - Change slider range using `slider_range`.
   - Defaults to [0,1] but can be changed for media players that use different volume ranges.
@@ -84,7 +84,7 @@ Along with a many other changes and improvements:
   - **Seamless text entry** - Create and press the button `keyboard` to pull up the on screen keyboard (on mobile, otherwise use your physical keyboard) and send keystrokes seamlessly to your Android TV.
     - Also works with backspace, delete, enter, and left and right keys.
   - **Bulk text entry** - Create and press the button `textbox` to pull up a browser prompt in which you can type in text to send to your Android TV all at once.
-    - Highly recommended that you also create keys for `delete` and `enter` so you can remove and send your input text.
+    - Highly recommended that you also create buttons for `delete` and `enter` so you can remove and send your input text.
   - **Google Assistant search** - Create and press the button `search` to pull up a browser prompt in which you can type in text to send to your Android TV to process as a Google Assistant search.
     - Works well if you are experiencing [this issue](https://github.com/home-assistant/core/issues/94063).
 - Can also be used for Kodi (see below)
@@ -220,47 +220,64 @@ This card also supports the following special button shortcuts and elements whic
 | slider, volume_slider                                       | slider   | A slider that controls the entity defined by `slider_id`.                                                                       |
 | touchpad, nav_touchpad, navigation_touchpad                 | touchpad | A touchpad that functions the same as navigation buttons but uses swipe actions instead.                                        |
 
-## Custom Keys, Sources, and Icons
+## Custom Actions
 
-| Name           | Type   | Description                                                                                                                                                                                                                                                  |
-| -------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| custom_keys    | object | Custom keys for the remote control. Each item is an object that can optionally have an `icon` (will use original key icon if overwriting an existing one and icon is not provided) and at least one of the following properties: `key`, `source`, `service`. |
-| custom_sources | object | Custom sources for the remote control. Same object as above, but letting you split keys and sources.                                                                                                                                                         |
-| custom_icons   | object | Custom icons for the remote control. Defined using svg paths.                                                                                                                                                                                                |
+| Name           | Type   | Description                                                                                                                                                                                                                                                                           |
+| -------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| custom_actions | object | Custom actions for the remote control. Each item is an object that can optionally have an `icon` (will use original key icon if overwriting an existing one and icon is not provided) and at least one of the following properties: `tap_action`, `hold_action`, `double_tap_action`. |
 
-If you want to add custom buttons to the remote control (of if you want to reconfigure the existing buttons), you can do it by adding an object to the `custom_keys` option:
+If you want to add custom buttons to the remote control (of if you want to reconfigure the existing buttons or touchpad actions), you can do it by adding an object to the `custom_actions` object. Each object should contain one or more of either `tap_action`, `hold_action`, and or `double_tap_action`.
+
+| Name              | Type              | Description                                                                                                                                                                                     |
+| ----------------- | ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| icon              | string            | Name of an icon to use. If overriding a default action uses the default icon if not defined                                                                                                     |
+| confirmation      | boolean or object | Whether to display a browser confirmation popup or not before executing an action. See [here](https://www.home-assistant.io/dashboards/actions/#options-for-confirmation) for more information. |
+| tap_action        | object            | Action to perform on single tap.                                                                                                                                                                |
+| hold_action       | object            | Action to perform when held. **_Only works on mobile._**                                                                                                                                        |
+| double_tap_action | object            | Action to perform when double tapped. Adding this introduces a 200ms delay to single tap actions. **_Does not work on iOS._**                                                                   |
+
+The following default keys cannot have hold actions added to them, as they repeat when held:
+
+- up
+- down
+- left
+- right
+- volume_up
+- volume_down
+- delete
 
 ```yaml
-custom_keys:
+custom_actions:
   input_tv:
     icon: mdi:television-classic
-    key: tv
+    tap_action:
+      action: key
+      key: tv
   browser:
     icon: mdi:web
-    source: browser
+    tap_action:
+      action: source
+      source: browser
   toggle_light:
     icon: mdi:lightbulb
-    service: light.toggle
-    target:
-      entity_id: light.bedroom
-```
+    tap_action:
+      action: call-service
+      service: light.toggle
+      target:
+        entity_id: light.bedroom
+    hold_action:
 
-The `custom_sources` exists for the same purpose, but you can use it to split the keys and sources.
-
-```yaml
-custom_keys:
-  input_tv:
-    icon: mdi:television-classic
-    key: tv
-  toggle_light:
-    icon: mdi:lightbulb
-    service: light.toggle
-    target:
-      entity_id: light.bedroom
-custom_sources:
-  browser:
-    icon: mdi:web
-    source: browser
+  to_hass_home:
+    icon: mdi:view-dashboard
+    tap_action:
+      action: navigate
+      navigation_path: /lovelace/0
+    double_tap_action:
+      action: navigate
+      navigation_path: /lovelace/1
+    hold_action:
+      action: navigate
+      navigation_path: /lovelace/2
 ```
 
 Then you can easily use these buttons in your card:
@@ -278,33 +295,140 @@ rows:
 
 <img src="assets/custom_keys.png" alt="guide" width="300"/>
 
-With custom buttons you can override existing buttons for changing its icon or even its functionality. Here I do both:
+With custom actions you can override existing buttons for changing its icon or even its functionality. Here I do both:
 
 ```yaml
-custom_keys:
+custom_actions:
   power:
     icon: mdi:power-cycle
-    service: media_player.toggle
-    target:
-      entity_id: media_player.tv
+    tap_action:
+      action: call-service
+      service: media_player.toggle
+      target:
+        entity_id: media_player.tv
 ```
 
-Inside each button you can define either a `key` or `source`.
+### Action Types
 
-| Option | Service Call                            | Description                                          |
-| ------ | --------------------------------------- | ---------------------------------------------------- |
-| key    | `remote.send_command`, `{command: key}` | The key to send to the TV via `remote.send_command`. |
-| source | `remote.turn_on`, `{activity: source}`  | The source to switch to via `remote.turn_on`.        |
+Actions follow the [Home Assistant actions](https://www.home-assistant.io/dashboards/actions/) syntax. It supports a subset of Home Assistant actions along with `key` and `source`, which are shorthands for remote service calls.
 
-Alternatively you can define any service call. Use the services tab under developer tools in Home Assistant to learn more.
+| Action       | Description                                                              |
+| ------------ | ------------------------------------------------------------------------ |
+| key          | Send a key to send to the TV via the service call `remote.send_command`. |
+| source       | Switch to a source via the service call `remote.turn_on`.                |
+| call-service | Call any Home Assistant service.                                         |
+| navigate     | Navigate to another Home Assistant page.                                 |
+| url          | Navigate to an external URL.                                             |
+| none         | Explicilty set a command to do nothing.                                  |
 
-| Option  | Service Call                     | Description                                                                                                                                                      |
-| ------- | -------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| service | `domain.service`, `{...data}`    | A string representing service to call. Use the format `domain.service`, e.g. `"light.turn_on"`.                                                                  |
-| data    | Data to be passed with `service` | Additional data to pass to the service call. See the Home Assistant documentation or go to Developer Tools > Services to see available options for each service. |
-| target  | Target of the `service`          | The entity IDs, device IDs, or area IDs to call the service on.                                                                                                  |
+Each action has a set of possible keys associated with them.
+
+#### key
+
+| Name | Description                                                                                                                                                                                                   |
+| ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| key  | Android TV key. While most Android TV remote keys are already defined as default keys, you can find a list of supported commands [here](https://www.home-assistant.io/integrations/androidtv_remote/#remote). |
+
+```yaml
+custom_actions:
+  menu:
+    icon: mdi:menu
+    tap_action:
+      action: key
+      key: MENU
+    hold_action:
+      action: key
+      key: HOME
+```
+
+By default, hold actions on keys adds `hold_secs: 0.5` to the data sent with the `remote.send_command` service call. Creating a `hold_action` on a key action overwrites this.
+
+#### source
+
+| Name   | Description                                                                                                                                                       |
+| ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| source | Android TV app. See [here](https://community.home-assistant.io/t/android-tv-remote-app-links-deep-linking-guide/567921) for a guide on Android TV app deep links. |
+
+```yaml
+custom_actions:
+  netflix:
+    icon: mdi:netflix
+    tap_action:
+      action: source
+      source: netflix://
+```
+
+#### call-service
+
+| Name    | Description                                                                                                                                                      |
+| ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| service | The service to call. Use the format `domain.service`, e.g. `"light.turn_on"`.                                                                                    |
+| data    | Additional data to pass to the service call. See the Home Assistant documentation or go to Developer Tools > Services to see available options for each service. |
+| target  | The entity IDs, device IDs, or area IDs to call the service on.                                                                                                  |
 
 `data` and `target` get internally merged into one object since `hass.callService` only has a single data field. You can safely put all information into one object with any of these names. This was done so that you can easily design service calls using Home Assistant's service developer tool and copy the YAML to custom button configurations in this card.
+
+```yaml
+custom_actions:
+  toggle_light:
+    icon: mdi:lightbulb
+    tap_action:
+      action: call-service
+      service: light.toggle
+      target:
+        entity_id: light.theater
+    double_tap_action:
+      action: call-service
+      service: light.turn_on
+      target:
+        entity_id: light.theater
+      data:
+        brightness_pct: 10
+    hold_action:
+      action: call-service
+      service: light.turn_off
+      target:
+        entity_id: light.theater
+```
+
+#### navigate
+
+| Name               | Description                                                          |
+| ------------------ | -------------------------------------------------------------------- |
+| navigation_path    | Home Assistant page to navigate to.                                  |
+| navigation_replace | Whether to replace the current page in the history with the new URL. |
+
+```yaml
+custom_actions:
+  to_hass_home:
+    icon: mdi:view-dashboard
+    tap_action:
+      action: navigate
+      navigation_path: /lovelace/0
+    double_tap_action:
+      action: navigate
+      navigation_path: /lovelace/1
+    hold_action:
+      action: navigate
+      navigation_path: /lovelace/2
+```
+
+#### url
+
+| Name     | Description                      |
+| -------- | -------------------------------- |
+| url_path | External website to navigate to. |
+
+```yaml
+custom_actions:
+  google:
+    icon: mdi:google
+    tap_action:
+      action: url
+      url_path: https://www.google.com
+```
+
+### Custom Button Style
 
 You can define an icon and CSS style for each button.
 
@@ -316,6 +440,10 @@ You can define an icon and CSS style for each button.
 If an icon is not provided for a custom key or source that overwrites a predefined key or source, the original icon will be used instead.
 
 ### Custom Icons
+
+| Name         | Type   | Description                                                   |
+| ------------ | ------ | ------------------------------------------------------------- |
+| custom_icons | object | Custom icons for the remote control. Defined using svg paths. |
 
 You can customize any icon with a custom svg path using the `custom_icons` option.
 
@@ -353,10 +481,11 @@ I highly recommend using a service like [iLoveIMG Resize SVG](https://www.ilovei
 Having defined the custom icon, you can use it on any custom button:
 
 ```yaml
-custom_sources:
+custom_actions:
   max:
     icon: hbo
-    source: hbomax://deeplink
+    tap_action:
+      source: hbomax://deeplink
 ```
 
 ## Slider
@@ -371,15 +500,16 @@ custom_sources:
 
 By default the slider calls the `media_player.volume_set` service, with `entity_id` set to `slider_id` and `volume_level` set to the slider value.
 
-You can change this by creating a custom key for `slider`. Set the value which you wish to set using the slider to `VALUE`.
+You can change this by creating a custom action for `slider`. Set the value which you wish to set using the slider to `VALUE`.
 
 ```yaml
-custom_keys:
+custom_actions:
   slider:
-    service: light.turn_on
-    data:
-      entity_id: light.sunroom_ceiling
-      brightness: VALUE
+    tap_action:
+      service: light.turn_on
+      data:
+        entity_id: light.sunroom_ceiling
+        brightness: VALUE
 slider_range:
   - 0
   - 255
@@ -420,9 +550,7 @@ Similary to `button_style`, `slider_style` can be used to change the CSS of the 
 | long_click_keycode   | string  | The key for long clicks on the touchpad. Defaults to a long `center` click.                                         |
 | touchpad_style       | object  | CSS style to appy to the touchpad.                                                                                  |
 
-Touchpad double clicks are disabled by default. Enabling them introduces a 0.2 second delay to single taps.
-
-Touchpad long clicks default to remote key long clicks, but can be changed to a different key or service call using `long_click_keycode`.
+The touchpad acts as a `center` button but also supports touch swipes to send the keys `up`, `down`, `left`, and `right`. You can remap touchpad commands by creating custom actions for these actions. This includes remapping the `center` key hold and double tap actions. Like buttons, double tap actions introduces a 200ms delay to single taps, and the hold action default adds `hold_secs: 0.5` to the service call data. Double tap and hold actions cannot be added to touchpad swipes.
 
 ### Touchpad Style
 
