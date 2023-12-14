@@ -118,36 +118,42 @@ export class BaseRemoteElement extends LitElement {
 	}
 
 	navigate(action: IAction) {
-		if (action.navigation_path?.includes('//')) {
+		const path =
+			(renderTemplate(this.hass, action.navigation_path!) as string) ??
+			'';
+		const replace =
+			(renderTemplate(
+				this.hass,
+				(action.navigation_replace as unknown as string)!,
+			) as boolean) ?? false;
+		if (path.includes('//')) {
 			console.error(
 				'Protocol detected in navigation path. To navigate to another website use the action "url" with the key "url_path" instead.',
 			);
 			return;
 		}
-		if (action.navigation_replace == true) {
+		if (replace == true) {
 			window.history.replaceState(
 				window.history.state?.root ? { root: true } : null,
 				'',
-				action.navigation_path,
+				path,
 			);
 		} else {
-			window.history.pushState(null, '', action.navigation_path);
+			window.history.pushState(null, '', path);
 		}
 		const event = new Event('location-changed', {
 			bubbles: false,
 			cancelable: true,
 			composed: false,
 		});
-		event.detail = { replace: action.navigation_replace == true };
+		event.detail = { replace: replace == true };
 		window.dispatchEvent(event);
 	}
 
 	toUrl(action: IAction) {
-		let url: string;
+		let url = (renderTemplate(this.hass, action.url_path!) as string) ?? '';
 		if (!action.url_path!.includes('//')) {
-			url = `https://${action.url_path}`;
-		} else {
-			url = action.url_path!;
+			url = `https://${url}`;
 		}
 		window.location.assign(url);
 	}
