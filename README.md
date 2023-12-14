@@ -226,7 +226,7 @@ This card also supports the following special button shortcuts and elements whic
 | -------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | custom_actions | object | Custom actions for the remote control. Each item is an object that can optionally have an `icon` (will use original key icon if overwriting an existing one and icon is not provided) and at least one of the following properties: `tap_action`, `hold_action`, `double_tap_action`. |
 
-If you want to add custom buttons to the remote control (of if you want to reconfigure the existing buttons or touchpad actions), you can do it by adding an object to the `custom_actions` object. Each object should contain one or more of either `tap_action`, `hold_action`, and or `double_tap_action`.
+If you want to add custom buttons to the remote control (or if you want to reconfigure the existing buttons or touchpad actions), you can do it by adding an object to the `custom_actions` object. Each object should contain one or more of either `tap_action`, `hold_action`, and or `double_tap_action`.
 
 | Name              | Type              | Description                                                                                                                                                                                     |
 | ----------------- | ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -321,7 +321,7 @@ Actions follow the [Home Assistant actions](https://www.home-assistant.io/dashbo
 | url          | Navigate to an external URL.                                             |
 | none         | Explicilty set a command to do nothing.                                  |
 
-Each action has a set of possible keys associated with them.
+Each action has a set of possible options associated with them. If `action` is not provided the card will guess which type of action it is by the options used.
 
 #### key
 
@@ -543,14 +543,10 @@ Similary to `button_style`, `slider_style` can be used to change the CSS of the 
 
 ## Touchpad
 
-| Name                 | Type    | Description                                                                                                         |
-| -------------------- | ------- | ------------------------------------------------------------------------------------------------------------------- |
-| enable_double_click  | boolean | Enable double clicks on the touchpad. Defaults to `false`. Enabling this introduces a 200ms delay to single clicks. |
-| double_click_keycode | string  | The key for double clicks on the touchpad. Defaults to `back`.                                                      |
-| long_click_keycode   | string  | The key for long clicks on the touchpad. Defaults to a long `center` click.                                         |
-| touchpad_style       | object  | CSS style to appy to the touchpad.                                                                                  |
-
-The touchpad acts as a `center` button but also supports touch swipes to send the keys `up`, `down`, `left`, and `right`. You can remap touchpad commands by creating custom actions for these actions. This includes remapping the `center` key hold and double tap actions. Like buttons, double tap actions introduces a 200ms delay to single taps, and the hold action default adds `hold_secs: 0.5` to the service call data. Double tap and hold actions cannot be added to touchpad swipes.
+| Name                     | Type    | Description                                                    |
+| ------------------------ | ------- | -------------------------------------------------------------- |
+| touchpad_style           | object  | CSS style to appy to the touchpad.                             |
+| enable_touchpad_feedback | boolean | Enable vibration feedback on the touchpad, defaults to `true`. |
 
 ### Touchpad Style
 
@@ -563,69 +559,59 @@ The touchpad acts as a `center` button but also supports touch swipes to send th
 
 ### Custom Touchpad Commands
 
-The touchpad can be customized using `custom_keys` so that it can be used with other devices
+The touchpad can be customized using `custom_actions` so that it can be used with other devices. The touchpad acts as a `center` button but also supports touch swipes to send the keys `up`, `down`, `left`, and `right`. You can remap touchpad commands by creating custom actions for these actions. This includes remapping the `center` key hold and double tap actions.
 
-Touchpad swipe and single click commands can be remapped by creating custom keys for `left`, `right`, `up`, `down`, and `center`.
+Like buttons, double tap actions introduces a 200ms delay to single taps, and the hold action default adds `hold_secs: 0.5` to the service call data. Double tap and hold actions cannot be added to touchpad directional swipes, just the `center` action.
 
 ```yaml
-custom_keys:
+custom_actions:
   up:
-    service: kodi.call_method
-    target:
-      entity_id: media_player.kodi
-    data:
-      method: Input.Up
+    tap_action:
+      service: kodi.call_method
+      target:
+        entity_id: media_player.kodi
+      data:
+        method: Input.Up
   down:
-    service: kodi.call_method
-    target:
-      entity_id: media_player.kodi
-    data:
-      method: Input.Down
+    tap_action:
+      service: kodi.call_method
+      target:
+        entity_id: media_player.kodi
+      data:
+        method: Input.Down
   left:
-    service: kodi.call_method
-    target:
-      entity_id: media_player.kodi
-    data:
-      method: Input.Left
+    tap_action:
+      service: kodi.call_method
+      target:
+        entity_id: media_player.kodi
+      data:
+        method: Input.Left
   right:
-    service: kodi.call_method
-    target:
-      entity_id: media_player.kodi
-    data:
-      method: Input.Right
+    tap_action:
+      service: kodi.call_method
+      target:
+        entity_id: media_player.kodi
+      data:
+        method: Input.Right
   center:
-    service: kodi.call_method
-    target:
-      entity_id: media_player.kodi
-    data:
-      method: Input.Select
-```
-
-Touchpad double click commands can be remapped by either setting `double_click_keycode` in the config to a different key if you just want to change the Android TV functionality, creating a custom key for `back` if you want to change the default back functionality, or both. Remember, you must set `enable_double_click` to true to do this.
-
-```yaml
-enable_double_click: true
-double_click_keycode: back
-custom_keys:
-  back:
-    service: kodi.call_method
-    target:
-      entity_id: media_player.kodi
-    data:
-      method: Input.Back
-```
-
-Touchpad long click commands can be changed to a different command and custom key by setting `long_click_keycode` in the config. By default the long click command sends a long `center` click, which on Android TV will peform a `menu` command on a selected item if available and a `center` command if not. This will not work on other devices and has to be remapped like so.
-
-```yaml
-long_click_keycode: menu
-custom_keys:
-  menu:
-    service: kodi.call_method
-    target:
-      entity_id: media_player.kodi
-    data:
-      method: Input.ContextMenu
+    tap_action:
+      service: kodi.call_method
+      target:
+        entity_id: media_player.kodi
+      data:
+        method: Input.Select
+    double_tap_action:
+      service: kodi.call_method
+      target:
+        entity_id: media_player.kodi
+      data:
+        method: Input.Back
+    hold_action:
+      service: kodi.call_method
+      target:
+        entity_id: media_player.kodi
+      data:
+        method: Input.ContextMenu
 ```
 
 ## Keyboard
@@ -874,46 +860,59 @@ touchpad_style:
   background-repeat: no-repeat
   background-position: center
   opacity: 1.0
-enable_double_click: true
-double_click_keycode: menu
-custom_keys:
+custom_actions:
   up:
-    icon: mdi:chevron-up
-    key: up
+    tap_action:
+      action: key
+      key: up
   down:
-    icon: mdi:chevron-down
-    key: down
+    icon: mdi:chevron-downtap_action:
+      action: key
+      key: down
   left:
-    icon: mdi:chevron-left
-    key: left
+    tap_action:
+      action: key
+      key: up
   right:
-    icon: mdi:chevron-right
-    key: right
+    tap_action:
+      action: key
+      key: right
   center:
-    icon: mdi:checkbox-blank-circle
-    key: select
+    tap_action:
+      action: key
+      key: select
+    double_tap_action:
+      action: key
+      key: menu
   play:
-    icon: mdi:play
-    key: play
+    tap_action:
+      action: key
+      key: play
   pause:
-    icon: mdi:pause
-    key: pause
+    tap_action:
+      action: key
+      key: pause
   menu:
     icon: mdi:apple
-    key: menu
-custom_sources:
+    tap_action:
+      action: key
+      key: menu
   primevideo:
-    service: media_player.select_source
-    data:
-      source: Prime Video
-    target:
-      entity_id: media_player.appletv
+    tap_action:
+      action: call-service
+      service: media_player.select_source
+      data:
+        source: Prime Video
+      target:
+        entity_id: media_player.appletv
   netflix:
-    service: media_player.select_source
-    data:
-      source: Netflix
-    target:
-      entity_id: media_player.appletv
+    tap_action:
+      action: call-service
+      service: media_player.select_source
+      data:
+        source: Netflix
+      target:
+        entity_id: media_player.appletv
 ```
 
 Result:
@@ -946,98 +945,137 @@ touchpad_style:
   background-repeat: no-repeat
   background-position: center
   opacity: 1.0;
-enable_double_click: true
-double_click_keycode: back
-long_click_keycode: menu
-custom_keys:
+custom_actions:
   up:
-    service: kodi.call_method
-    target:
-      entity_id: media_player.kodi
-    data:
-      method: Input.Up
+    tap_action:
+      action: call-service
+      service: kodi.call_method
+      target:
+        entity_id: media_player.kodi
+      data:
+        method: Input.Up
   down:
-    service: kodi.call_method
-    target:
-      entity_id: media_player.kodi
-    data:
-      method: Input.Down
+    tap_action:
+      action: call-service
+      service: kodi.call_method
+      target:
+        entity_id: media_player.kodi
+      data:
+        method: Input.Down
   left:
-    service: kodi.call_method
-    target:
-      entity_id: media_player.kodi
-    data:
-      method: Input.Left
+    tap_action:
+      action: call-service
+      service: kodi.call_method
+      target:
+        entity_id: media_player.kodi
+      data:
+        method: Input.Left
   right:
-    service: kodi.call_method
-    target:
-      entity_id: media_player.kodi
-    data:
-      method: Input.Right
+    tap_action:
+      action: call-service
+      service: kodi.call_method
+      target:
+        entity_id: media_player.kodi
+      data:
+        method: Input.Right
   center:
-    service: kodi.call_method
-    target:
-      entity_id: media_player.kodi
-    data:
-      method: Input.Select
+    tap_action:
+      action: call-service
+      service: kodi.call_method
+      target:
+        entity_id: media_player.kodi
+      data:
+        method: Input.Select
+    double_tap_action:
+      action: call-service
+      service: kodi.call_method
+      target:
+        entity_id: media_player.kodi
+      data:
+        method: Input.Back
+    hold_action:
+      action: call-service
+      service: kodi.call_method
+      target:
+        entity_id: media_player.kodi
+      data:
+        method: Input.ContextMenu
   back:
-    service: kodi.call_method
-    target:
-      entity_id: media_player.kodi
-    data:
-      method: Input.Back
+    tap_action:
+      action: call-service
+      service: kodi.call_method
+      target:
+        entity_id: media_player.kodi
+      data:
+        method: Input.Back
   search:
     icon: mdi:kodi
-    key: SEARCH
-  style:
-    color: rgb(9, 179, 232)
-    '--size': 64px
+    tap_action:
+      action: key
+      key: SEARCH
+    style:
+      color: rgb(9, 179, 232)
+      '--size': 64px
   volume_mute:
-    service: kodi.call_method
-    target:
-      entity_id: media_player.kodi
-    data:
-      method: Application.SetMute
-      mute: toggle
+    tap_action:
+      action: call-service
+      service: kodi.call_method
+      target:
+        entity_id: media_player.kodi
+      data:
+        method: Application.SetMute
+        mute: toggle
   volume_up:
-    service: kodi.call_method
-    target:
-      entity_id: media_player.kodi
-    data:
-      method: Application.SetVolume
-      volume: increment
+    tap_action:
+      action: call-service
+      service: kodi.call_method
+      target:
+        entity_id: media_player.kodi
+      data:
+        method: Application.SetVolume
+        volume: increment
   volume_down:
-    service: kodi.call_method
-    target:
-      entity_id: media_player.kodi
-    data:
-      method: Application.SetVolume
-      volume: decrement
+    tap_action:
+      action: call-service
+      service: kodi.call_method
+      target:
+        entity_id: media_player.kodi
+      data:
+        method: Application.SetVolume
+        volume: decrement
   menu:
-    service: kodi.call_method
-    target:
-      entity_id: media_player.kodi
-    data:
-      method: Input.ContextMenu
+    tap_action:
+      action: call-service
+      service: kodi.call_method
+      target:
+        entity_id: media_player.kodi
+      data:
+        method: Input.ContextMenu
   home:
-    service: kodi.call_method
-    target:
-      entity_id: media_player.kodi
-    data:
-      method: Input.Home
+    tap_action:
+      action: call-service
+      service: kodi.call_method
+      target:
+        entity_id: media_player.kodi
+      data:
+        method: Input.Home
   info:
-    service: kodi.call_method
-    target:
-      entity_id: media_player.kodi
-    data:
-      method: Input.Info
+    tap_action:
+      action: call-service
+      service: kodi.call_method
+      target:
+        entity_id: media_player.kodi
+      data:
+        method: Input.Info
   play_pause:
-    service: kodi.call_method
-    target:
-      entity_id: media_player.kodi
-    data:
-      method: Player.PlayPause
-      playerid: 1
+    tap_action:
+      action: call-service
+      service: kodi.call_method
+      target:
+        entity_id: media_player.kodi
+      data:
+        method: Player.PlayPause
+        playerid: 1
 ```
 
 Result:
@@ -1053,27 +1091,30 @@ type: custom:android-tv-card
 remote_id: remote.sony_kd_75xf8596
 rows:
   - - touchpad
-enable_double_click: true
-double_click_keycode: back
-custom_keys:
+custom_actions:
   up:
-    icon: mdi:chevron-up
-    key: Up
+    tap_action:
+      action: key
+      key: Up
   down:
-    icon: mdi:chevron-down
-    key: Down
+    tap_action:
+      action: key
+      key: Down
   left:
-    icon: mdi:chevron-left
-    key: Left
+    tap_action:
+      action: key
+      key: Left
   right:
-    icon: mdi:chevron-right
-    key: Right
+    tap_action:
+      action: key
+      key: Right
   center:
-    icon: mdi:enter
-    key: DpadCenter
-  back:
-    icon: mdi:play
-    key: Back
+    tap_action:
+      action: key
+      key: DpadCenter
+    double_tap_action:
+      action: key
+      key: Back
 ```
 
 ### Example 9
@@ -1087,45 +1128,54 @@ rows:
   - - touchpad
 touchpad_style:
   height: 200px
-enable_double_click: true
-double_click_keycode: back
-custom_keys:
+custom_actions:
   down:
-    service: denonavr.get_command
-    target:
-      entity_id: media_player.marantz_sr7013
-    data:
-      command: /goform/formiPhoneAppDirect.xml?MNCDN
+    tap_action:
+      action: call-service
+      service: denonavr.get_command
+      target:
+        entity_id: media_player.marantz_sr7013
+      data:
+        command: /goform/formiPhoneAppDirect.xml?MNCDN
   up:
-    service: denonavr.get_command
-    target:
-      entity_id: media_player.marantz_sr7013
-    data:
-      command: /goform/formiPhoneAppDirect.xml?MNCUP
+    tap_action:
+      action: call-service
+      service: denonavr.get_command
+      target:
+        entity_id: media_player.marantz_sr7013
+      data:
+        command: /goform/formiPhoneAppDirect.xml?MNCUP
   left:
-    service: denonavr.get_command
-    target:
-      entity_id: media_player.marantz_sr7013
-    data:
-      command: /goform/formiPhoneAppDirect.xml?MNCLT
+    tap_action:
+      action: call-service
+      service: denonavr.get_command
+      target:
+        entity_id: media_player.marantz_sr7013
+      data:
+        command: /goform/formiPhoneAppDirect.xml?MNCLT
   right:
-    service: denonavr.get_command
-    target:
-      entity_id: media_player.marantz_sr7013
-    data:
-      command: /goform/formiPhoneAppDirect.xml?MNCRT
+    tap_action:
+      action: call-service
+      service: denonavr.get_command
+      target:
+        entity_id: media_player.marantz_sr7013
+      data:
+        command: /goform/formiPhoneAppDirect.xml?MNCRT
   center:
-    service: denonavr.get_command
-    target:
-      entity_id: media_player.marantz_sr7013
-    data:
-      command: /goform/formiPhoneAppDirect.xml?MNENT
-  back:
-    service: denonavr.get_command
-    target:
-      entity_id: media_player.marantz_sr7013
-    data:
-      command: /goform/formiPhoneAppDirect.xml?MNRTN
+    tap_action:
+      action: call-service
+      service: denonavr.get_command
+      target:
+        entity_id: media_player.marantz_sr7013
+      data:
+        command: /goform/formiPhoneAppDirect.xml?MNENT
+    double_tap_action:
+      action: call-service
+      service: denonavr.get_command
+      target:
+        entity_id: media_player.marantz_sr7013
+      data:
+        command: /goform/formiPhoneAppDirect.xml?MNRTN
 ```
 
 ### Example 10
@@ -1149,27 +1199,37 @@ rows:
     - touchpad
   - - slider
     - search
-custom_sources:
+custom_actions:
   netflix:
-    source: 'netflix://'
-    style:
-      color: rgb(229, 9, 20)
+    tap_action:
+      action: source
+      source: 'netflix://'
+      style:
+        color: rgb(229, 9, 20)
   hulu:
-    source: 'hulu://'
-    style:
-      color: rgb(28, 231, 131)
+    tap_action:
+      action: source
+      source: 'hulu://'
+      style:
+        color: rgb(28, 231, 131)
   disney:
-    source: 'https://www.disneyplus.com'
-    style:
-      color: rgb(17, 60, 207)
+    tap_action:
+      action: source
+      source: 'https://www.disneyplus.com'
+      style:
+        color: rgb(17, 60, 207)
   max:
-    source: 'https://play.max.com'
-    style:
-      color: rgb(0, 35, 246)
+    tap_action:
+      action: source
+      source: 'https://play.max.com'
+      style:
+        color: rgb(0, 35, 246)
   primevideo:
-    source: 'https://app.primevideo.com'
-    style:
-      color: rgb(0, 165, 222)
+    tap_action:
+      action: source
+      source: 'https://app.primevideo.com'
+      style:
+        color: rgb(0, 165, 222)
 slider_range:
   - 0
   - 0.6
@@ -1206,29 +1266,37 @@ rows:
       - - b
 custom_keys:
   a:
-    key: a
-    style:
-      '--size': 48px
-      padding: 0
-      color: '#C1121C'
+    tap_action:
+      action: key
+      key: a
+      style:
+        '--size': 48px
+        padding: 0
+        color: '#C1121C'
   b:
-    key: b
-    style:
-      '--size': 48px
-      padding: 0
-      color: '#F7BA0B'
+    tap_action:
+      action: key
+      key: b
+      style:
+        '--size': 48px
+        padding: 0
+        color: '#F7BA0B'
   x:
-    key: x
-    style:
-      '--size': 48px
-      padding: 0
-      color: '#00387b'
+    tap_action:
+      action: key
+      key: x
+      style:
+        '--size': 48px
+        padding: 0
+        color: '#00387b'
   'y':
-    key: 'y'
-    style:
-      '--size': 48px
-      padding: 0
-      color: '#007243'
+    tap_action:
+      action: key
+      key: 'y'
+      style:
+        '--size': 48px
+        padding: 0
+        color: '#007243'
 button_style:
   '--size': 24px
   background: rgb(27,27,27)
