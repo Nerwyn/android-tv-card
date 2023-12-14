@@ -19,4 +19,8 @@ declare global {
 	interface EventTarget {
 		action: string;
 	}
+
+	interface Event {
+		detail?: Record<string, string | number | boolean>;
+	}
 }

@@ -9,7 +9,7 @@ import { BaseKeyboardElement } from './base-keyboard-element';
 
 @customElement('remote-keyboard')
 export class RemoteKeyboard extends BaseKeyboardElement {
-	onClick(e: Event) {
+	onClick(e: MouseEvent) {
 		e.stopImmediatePropagation();
 		this.fireHapticEvent('light');
 		for (const element of (e.currentTarget as HTMLElement).children) {

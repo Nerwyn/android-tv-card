@@ -39,13 +39,13 @@ export class RemoteTouchpad extends BaseRemoteElement {
 
 	onClick(e: MouseEvent) {
 		e.stopImmediatePropagation();
-		console.log(this.actions)
+		console.log(this.actions);
 		const clickAction = () => {
 			clearTimeout(this.clickTimer as ReturnType<typeof setTimeout>);
 			this.clickTimer = undefined;
 			this.fireHapticEvent('light');
 			this.sendAction('tap_action');
-			console.log('sent tap action')
+			console.log('sent tap action');
 			this.clickCount = 0;
 		};
 		if (e.detail && e.detail > this.clickCount) {
@@ -76,7 +76,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 
 	@eventOptions({ passive: true })
 	onTouchStart(e: TouchEvent) {
-		this._rippleHandlers.startPress(e);
+		this._rippleHandlers.startPress(e as unknown as Event);
 
 		this.touchTimer = setTimeout(() => {
 			this.touchHoldClick = true;

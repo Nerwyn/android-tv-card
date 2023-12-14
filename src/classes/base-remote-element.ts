@@ -131,13 +131,13 @@ export class BaseRemoteElement extends LitElement {
 		} else {
 			window.history.pushState(null, '', action.navigation_path);
 		}
-		window.dispatchEvent(
-			new Event('location-changed', {
-				bubbles: false,
-				cancelable: true,
-				composed: false,
-			}),
-		);
+		const event = new Event('location-changed', {
+			bubbles: false,
+			cancelable: true,
+			composed: false,
+		});
+		event.detail = { replace: action.navigation_replace == true };
+		window.dispatchEvent(event);
 	}
 
 	toUrl(action: IAction) {
