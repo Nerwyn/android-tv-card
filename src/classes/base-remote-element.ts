@@ -153,14 +153,7 @@ export class BaseRemoteElement extends LitElement {
 	}
 
 	assist(_action: IAction) {
-		window.history.pushState(null, '', '?conversation=1');
-		const event = new Event('location-changed', {
-			bubbles: false,
-			cancelable: true,
-			composed: false,
-		});
-		event.detail = { replace: true };
-		window.dispatchEvent(event);
+		console.error('Assist has not been implemented');
 	}
 
 	handleConfirmation(action: IAction): boolean {
