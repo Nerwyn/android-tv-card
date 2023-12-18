@@ -73,7 +73,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 	}
 
 	@eventOptions({ passive: true })
-	onTouchStart(e: TouchEvent | MouseEvent) {
+	onTouchStart(e: TouchEvent) {
 		this._rippleHandlers.startPress(e as unknown as Event);
 
 		this.touchTimer = setTimeout(() => {
@@ -98,16 +98,11 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			}
 		}, 500);
 
-		if ('touches' in e) {
-			window.initialX = e.touches[0].clientX;
-			window.initialY = e.touches[0].clientY;
-		} else {
-			window.initialX = e.clientX;
-			window.initialY = e.clientY;
-		}
+		window.initialX = e.touches[0].clientX;
+		window.initialY = e.touches[0].clientY;
 	}
 
-	onTouchEnd(e: TouchEvent | MouseEvent) {
+	onTouchEnd(e: Event) {
 		this._rippleHandlers.endPress();
 
 		if (this.touchHoldClick) {
@@ -126,20 +121,13 @@ export class RemoteTouchpad extends BaseRemoteElement {
 	}
 
 	@eventOptions({ passive: true })
-	onTouchMove(e: TouchEvent | MouseEvent) {
+	onTouchMove(e: TouchEvent) {
 		if (!window.initialX || !window.initialY) {
 			return;
 		}
 
-		let currentX: number;
-		let currentY: number;
-		if ('touches' in e) {
-			currentX = e.touches[0].clientX || 0;
-			currentY = e.touches[0].clientY || 0;
-		} else {
-			currentX = e.clientX || 0;
-			currentY = e.clientY || 0;
-		}
+		const currentX = e.touches[0].clientX || 0;
+		const currentY = e.touches[0].clientY || 0;
 
 		const diffX = window.initialX - currentX;
 		const diffY = window.initialY - currentY;
@@ -176,11 +164,10 @@ export class RemoteTouchpad extends BaseRemoteElement {
 				@touchstart=${this.onTouchStart}
 				@touchmove=${this.onTouchMove}
 				@touchend=${this.onTouchEnd}
-				@mousedown=${this.onTouchStart}
-				@mouseup=${this.onTouchMove}
-				@mousemove=${this.onTouchEnd}
 				@focus=${this._rippleHandlers.startFocus}
 				@blur=${this._rippleHandlers.endFocus}
+				@mousedown=${this._rippleHandlers.startPress}
+				@mouseup=${this._rippleHandlers.endPress}
 				@mouseenter=${this._rippleHandlers.startHover}
 				@mouseleave=${this._rippleHandlers.endHover}
 			>
