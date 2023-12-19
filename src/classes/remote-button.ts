@@ -64,9 +64,7 @@ export class RemoteButton extends BaseRemoteElement {
 	}
 
 	@eventOptions({ passive: true })
-	onHoldStart(e: TouchEvent | MouseEvent) {
-		e.preventDefault();
-
+	onHoldStart(_e: TouchEvent | MouseEvent) {
 		this.holdTimer = setTimeout(() => {
 			this.hold = true;
 
