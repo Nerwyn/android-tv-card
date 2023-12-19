@@ -37,6 +37,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 	holdInterval?: ReturnType<typeof setInterval>;
 	hold: boolean = false;
 	holdStart: boolean = false;
+	holdMove: boolean = false;
 	holdAction?: DirectionAction;
 
 	initialX?: number;
@@ -126,8 +127,9 @@ export class RemoteTouchpad extends BaseRemoteElement {
 
 		this._rippleHandlers.endPress();
 
-		if (this.hold) {
+		if (this.hold || this.holdMove) {
 			this.hold = false;
+			this.holdMove = false;
 			e.stopImmediatePropagation();
 			e.preventDefault();
 		} else {
@@ -144,6 +146,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		if (!this.initialX || !this.initialY || !this.holdStart) {
 			return;
 		}
+		this.holdMove = true;
 
 		let currentX: number;
 		let currentY: number;
