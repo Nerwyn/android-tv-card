@@ -122,20 +122,33 @@ export class RemoteButton extends BaseRemoteElement {
 
 		const action = renderTemplate(this.hass, this.actionKey);
 
-		return html`
-			<ha-icon-button
-				title="${action}"
-				style=${styleMap(style)}
-				@mousedown=${this.onHoldStart}
-				@mouseup=${this.onHoldEnd}
-				@touchstart=${this.onHoldStart}
-				@touchend=${this.onHoldEnd}
-				.action=${action}
-				.path=${svgPath}
-			>
-				${haIcon}${inputTemplate}
-			</ha-icon-button>
-		`;
+		if (this.touchscreen) {
+			return html`
+				<ha-icon-button
+					title="${action}"
+					style=${styleMap(style)}
+					@touchstart=${this.onHoldStart}
+					@touchend=${this.onHoldEnd}
+					.action=${action}
+					.path=${svgPath}
+				>
+					${haIcon}${inputTemplate}
+				</ha-icon-button>
+			`;
+		} else {
+			return html`
+				<ha-icon-button
+					title="${action}"
+					style=${styleMap(style)}
+					@mousedown=${this.onHoldStart}
+					@mouseup=${this.onHoldEnd}
+					.action=${action}
+					.path=${svgPath}
+				>
+					${haIcon}${inputTemplate}
+				</ha-icon-button>
+			`;
+		}
 	}
 
 	static get styles(): CSSResult | CSSResult[] {

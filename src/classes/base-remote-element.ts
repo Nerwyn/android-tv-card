@@ -15,6 +15,8 @@ export class BaseRemoteElement extends LitElement {
 	@property({ attribute: false }) remoteId?: string;
 	@property({ attribute: false }) _style?: StyleInfo;
 
+	touchscreen = 'ontouchstart' in document.documentElement;
+
 	fireHapticEvent(haptic: HapticType) {
 		if (
 			renderTemplate(
