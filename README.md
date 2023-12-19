@@ -1286,6 +1286,7 @@ Samsung TV
 
 ```yaml
 type: custom:android-tv-card
+slider_id: media_player.samsung_tv
 custom_icons:
   dazn: >-
     m14.774 8.291.772-2.596.79 2.596zm3.848
@@ -1529,7 +1530,7 @@ rows:
   - - power
     - null
     - volume_mute
-  - - volume_slider
+  - - slider
   - - ch_up
     - ch_down
   - - netflix
@@ -1537,7 +1538,7 @@ rows:
     - DAZN
     - primevideo
     - spotify
-  - - navigation_touchpad
+  - - touchpad
   - - back
     - home
   - - 1
