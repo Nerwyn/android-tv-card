@@ -10,9 +10,10 @@ import { styleMap } from 'lit/directives/style-map.js';
 import { Ripple } from '@material/mwc-ripple';
 import { RippleHandlers } from '@material/mwc-ripple/ripple-handlers';
 
+import { HapticType } from 'custom-card-helpers';
 import { renderTemplate } from 'ha-nunjucks';
 
-import { IActions, DirectionAction } from '../models';
+import { ActionType, IActions, DirectionAction } from '../models';
 
 import { BaseRemoteElement } from './base-remote-element';
 
@@ -32,64 +33,74 @@ export class RemoteTouchpad extends BaseRemoteElement {
 	clickTimer?: ReturnType<typeof setTimeout>;
 	clickCount: number = 0;
 
-	touchAction?: DirectionAction;
-	touchTimer?: ReturnType<typeof setTimeout>;
-	touchInterval?: ReturnType<typeof setInterval>;
-	touchHoldClick: boolean = false;
+	holdTimer?: ReturnType<typeof setTimeout>;
+	holdInterval?: ReturnType<typeof setInterval>;
+	hold: boolean = false;
+	holdStart: boolean = false;
+	holdAction?: DirectionAction;
 
-	onClick(e: MouseEvent) {
-		e.stopImmediatePropagation();
-		const clickAction = () => {
-			clearTimeout(this.clickTimer as ReturnType<typeof setTimeout>);
-			this.clickTimer = undefined;
-			this.fireHapticEvent('light');
-			this.sendAction('tap_action');
-			this.clickCount = 0;
-		};
-		if (e.detail && e.detail > this.clickCount) {
-			this.clickCount++;
-		}
-		if (
-			'double_tap_action' in this.actions &&
-			this.actions.double_tap_action!.action != 'none'
-		) {
-			if (this.clickCount == 2) {
-				this.onDblClick(e);
-			} else {
-				this.clickTimer = setTimeout(clickAction, 200);
-			}
-		} else {
-			clickAction();
-		}
-	}
+	initialX?: number;
+	initialY?: number;
 
-	onDblClick(_e: MouseEvent) {
+	clickAction(actionType: ActionType) {
 		clearTimeout(this.clickTimer as ReturnType<typeof setTimeout>);
 		this.clickTimer = undefined;
 		this.clickCount = 0;
 
-		this.fireHapticEvent('success');
-		this.sendAction('double_tap_action');
+		const actionToHaptic: Record<ActionType, HapticType> = {
+			tap_action: 'light',
+			hold_action: 'medium',
+			double_tap_action: 'success',
+		};
+		const haptic = actionToHaptic[actionType];
+		this.fireHapticEvent(haptic);
+
+		this.sendAction(actionType);
+	}
+
+	onClick(e: TouchEvent | MouseEvent) {
+		e.stopImmediatePropagation();
+		this.clickCount++;
+
+		if (
+			'double_tap_action' in this.actions &&
+			this.actions.double_tap_action!.action != 'none'
+		) {
+			// Double tap action is defined
+			if (this.clickCount > 1) {
+				// Double tap action is triggered
+				this.clickAction('double_tap_action');
+			} else {
+				// Single tap action is triggered if double tap is not within 200ms
+				this.clickTimer = setTimeout(() => {
+					this.clickAction('tap_action');
+				}, 200);
+			}
+		} else {
+			// No double tap action defiend, tap action is triggered
+			this.clickAction('tap_action');
+		}
 	}
 
 	@eventOptions({ passive: true })
-	onTouchStart(e: TouchEvent) {
+	onHoldStart(e: TouchEvent | MouseEvent) {
 		this._rippleHandlers.startPress(e as unknown as Event);
+		this.holdStart = true;
 
-		this.touchTimer = setTimeout(() => {
-			this.touchHoldClick = true;
+		this.holdTimer = setTimeout(() => {
+			this.hold = true;
 
 			// Only repeat hold action for directional keys
 			if (
 				['up', 'down', 'left', 'right'].includes(
-					this.touchAction as DirectionAction,
+					this.holdAction as DirectionAction,
 				)
 			) {
-				this.touchInterval = setInterval(() => {
+				this.holdInterval = setInterval(() => {
 					this.fireHapticEvent('selection');
 					this.sendAction(
 						'tap_action',
-						this.directionActions[this.touchAction!],
+						this.directionActions[this.holdAction!],
 					);
 				}, 100);
 			} else {
@@ -98,39 +109,54 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			}
 		}, 500);
 
-		window.initialX = e.touches[0].clientX;
-		window.initialY = e.touches[0].clientY;
+		if ('touches' in e) {
+			this.initialX = e.touches[0].clientX;
+			this.initialY = e.touches[0].clientY;
+		} else {
+			this.initialX = e.clientX;
+			this.initialY = e.clientY;
+		}
 	}
 
-	onTouchEnd(e: Event) {
+	onHoldEnd(e: TouchEvent | MouseEvent) {
+		clearTimeout(this.holdTimer as ReturnType<typeof setTimeout>);
+		clearInterval(this.holdInterval as ReturnType<typeof setInterval>);
+		clearTimeout(this.clickTimer as ReturnType<typeof setTimeout>);
+		this.holdStart = false;
+
 		this._rippleHandlers.endPress();
 
-		if (this.touchHoldClick) {
-			this.touchHoldClick = false;
+		if (this.hold) {
+			this.hold = false;
 			e.stopImmediatePropagation();
 			e.preventDefault();
+		} else {
+			this.onClick(e);
 		}
-		clearTimeout(this.touchTimer as ReturnType<typeof setTimeout>);
-		clearInterval(this.touchInterval as ReturnType<typeof setInterval>);
-		clearTimeout(this.clickTimer as ReturnType<typeof setTimeout>);
 
-		this.touchAction = undefined;
-		this.touchTimer = undefined;
-		this.touchInterval = undefined;
-		this.clickTimer = undefined;
+		this.holdTimer = undefined;
+		this.holdInterval = undefined;
+		this.holdAction = undefined;
 	}
 
 	@eventOptions({ passive: true })
-	onTouchMove(e: TouchEvent) {
-		if (!window.initialX || !window.initialY) {
+	onHoldMove(e: TouchEvent | MouseEvent) {
+		if (!this.initialX || !this.initialY || !this.holdStart) {
 			return;
 		}
 
-		const currentX = e.touches[0].clientX || 0;
-		const currentY = e.touches[0].clientY || 0;
+		let currentX: number;
+		let currentY: number;
+		if ('touches' in e) {
+			currentX = e.touches[0].clientX || 0;
+			currentY = e.touches[0].clientY || 0;
+		} else {
+			currentX = e.clientX || 0;
+			currentY = e.clientY || 0;
+		}
 
-		const diffX = window.initialX - currentX;
-		const diffY = window.initialY - currentY;
+		const diffX = this.initialX - currentX;
+		const diffY = this.initialY - currentY;
 
 		let action;
 		if (Math.abs(diffX) > Math.abs(diffY)) {
@@ -141,11 +167,11 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			action = diffY > 0 ? 'up' : 'down';
 		}
 		this.fireHapticEvent('selection');
-		this.touchAction = action as DirectionAction;
-		this.sendAction('tap_action', this.directionActions[this.touchAction!]);
+		this.holdAction = action as DirectionAction;
+		this.sendAction('tap_action', this.directionActions[this.holdAction!]);
 
-		window.initialX = undefined;
-		window.initialY = undefined;
+		this.initialX = undefined;
+		this.initialY = undefined;
 	}
 
 	render() {
@@ -157,23 +183,39 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			) as string;
 		}
 
-		return html`
-			<toucharea
-				style=${styleMap(style)}
-				@click=${this.onClick}
-				@touchstart=${this.onTouchStart}
-				@touchmove=${this.onTouchMove}
-				@touchend=${this.onTouchEnd}
-				@focus=${this._rippleHandlers.startFocus}
-				@blur=${this._rippleHandlers.endFocus}
-				@mousedown=${this._rippleHandlers.startPress}
-				@mouseup=${this._rippleHandlers.endPress}
-				@mouseenter=${this._rippleHandlers.startHover}
-				@mouseleave=${this._rippleHandlers.endHover}
-			>
-				<mwc-ripple></mwc-ripple>
-			</toucharea>
-		`;
+		if (this.touchscreen) {
+			return html`
+				<toucharea
+					style=${styleMap(style)}
+					@click=${this.onClick}
+					@touchstart=${this.onHoldStart}
+					@touchend=${this.onHoldEnd}
+					@touchmove=${this.onHoldMove}
+					@mouseenter=${this._rippleHandlers.startHover}
+					@mouseleave=${this._rippleHandlers.endHover}
+					@focus=${this._rippleHandlers.startFocus}
+					@blur=${this._rippleHandlers.endFocus}
+				>
+					<mwc-ripple></mwc-ripple>
+				</toucharea>
+			`;
+		} else {
+			return html`
+				<toucharea
+					style=${styleMap(style)}
+					@click=${this.onClick}
+					@mousedown=${this.onHoldStart}
+					@mouseup=${this.onHoldEnd}
+					@mousemove=${this.onHoldMove}
+					@mouseenter=${this._rippleHandlers.startHover}
+					@mouseleave=${this._rippleHandlers.endHover}
+					@focus=${this._rippleHandlers.startFocus}
+					@blur=${this._rippleHandlers.endFocus}
+				>
+					<mwc-ripple></mwc-ripple>
+				</toucharea>
+			`;
+		}
 	}
 
 	static get styles() {

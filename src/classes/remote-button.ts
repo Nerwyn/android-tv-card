@@ -18,7 +18,7 @@ export class RemoteButton extends BaseRemoteElement {
 
 	holdTimer?: ReturnType<typeof setTimeout>;
 	holdInterval?: ReturnType<typeof setInterval>;
-	hold?: boolean = false;
+	hold: boolean = false;
 
 	clickAction(actionType: ActionType) {
 		clearTimeout(this.clickTimer as ReturnType<typeof setTimeout>);
