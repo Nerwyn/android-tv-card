@@ -122,7 +122,7 @@ rows:
     - next
 ```
 
-<img src="assets/screenshot.png" alt="ex" width="300"/>
+<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/screenshot.png" alt="ex" width="300"/>
 
 # Installation
 
@@ -292,7 +292,7 @@ rows:
     - toggle_light
 ```
 
-<img src="assets/custom_keys.png" alt="guide" width="300"/>
+<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/custom_keys.png" alt="guide" width="300"/>
 
 With custom actions you can override existing buttons for changing its icon or even its functionality. Here I do both:
 
@@ -643,7 +643,7 @@ rows:
   - - touchpad
 ```
 
-<img src="assets/live_keyboard.png" alt="keyboard example" width="300"/>
+<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/live_keyboard.png" alt="keyboard example" width="300"/>
 
 #### Bulk Text Entry
 
@@ -664,7 +664,7 @@ rows:
     - enter
 ```
 
-<img src="assets/bulk_keyboard.png" alt="keyboard example" width="300"/>
+<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/bulk_keyboard.png" alt="keyboard example" width="300"/>
 
 #### Google Assistant Search
 
@@ -719,7 +719,7 @@ rows:
 
 Result:
 
-<img src="assets/disorder.png" alt="disorder example" width="300"/>
+<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/disorder.png" alt="disorder example" width="300"/>
 
 ### Example 2
 
@@ -751,7 +751,7 @@ rows:
 
 Result:
 
-<img src="assets/buttons_everywhere.png" alt="buttons example" width="300"/>
+<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/buttons_everywhere.png" alt="buttons example" width="300"/>
 
 ### Example 3
 
@@ -775,7 +775,7 @@ rows:
 
 Result:
 
-<img src="assets/using_less.png" alt="less example" width="300"/>
+<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/using_less.png" alt="less example" width="300"/>
 
 ### Example 4
 
@@ -793,7 +793,7 @@ rows:
     - fast_forward
 ```
 
-<img src="assets/empty_buttons.png" alt="empty buttons example" width="300"/>
+<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/empty_buttons.png" alt="empty buttons example" width="300"/>
 
 ### Example 5
 
@@ -836,7 +836,7 @@ touchpad_style:
 
 Result:
 
-<img src="assets/tablet.png" alt="tablet example" width="800"/>
+<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/tablet.png" alt="tablet example" width="800"/>
 
 ### Example 6
 
@@ -916,7 +916,7 @@ custom_actions:
 
 Result:
 
-<img src="assets/appletv.png" alt="apple tv example" width="400"/>
+<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/appletv.png" alt="apple tv example" width="400"/>
 
 ### Example 7
 
@@ -1079,7 +1079,7 @@ custom_actions:
 
 Result:
 
-<img src="assets/kodi.png" alt="kodi example" width="400"/>
+<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/kodi.png" alt="kodi example" width="400"/>
 
 ### Example 8
 
@@ -1232,7 +1232,7 @@ slider_style:
 
 Result:
 
-<img src="assets/more_disorder.png" alt="more disorder example" width="500"/>
+<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/more_disorder.png" alt="more disorder example" width="500"/>
 
 ### Example 11
 
@@ -1278,7 +1278,7 @@ button_style:
 
 Result:
 
-<img src="assets/gamepad.png" alt="gamepad example" width="500"/>
+<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/gamepad.png" alt="gamepad example" width="500"/>
 
 ### Example 12
 
