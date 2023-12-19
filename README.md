@@ -1248,7 +1248,7 @@ rows:
         - null
         - a
       - - b
-custom_keys:
+custom_actions:
   a:
     style:
       '--size': 48px
