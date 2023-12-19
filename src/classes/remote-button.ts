@@ -42,17 +42,14 @@ export class RemoteButton extends BaseRemoteElement {
 
 	onClick(e: TouchEvent | MouseEvent) {
 		e.stopImmediatePropagation();
-		if (e.detail && e.detail > this.clickCount) {
-			// Tap counter
-			this.clickCount++;
-		}
+		this.clickCount++;
 
 		if (
 			'double_tap_action' in this.actions &&
 			this.actions.double_tap_action!.action != 'none'
 		) {
 			// Double tap action is defined
-			if (this.clickCount == 2) {
+			if (this.clickCount > 1) {
 				// Double tap action is triggered
 				this.clickAction('double_tap_action');
 			} else {
