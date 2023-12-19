@@ -177,6 +177,23 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		this.initialY = undefined;
 	}
 
+	onMouseLeave(_e: MouseEvent) {
+		this._rippleHandlers.endHover();
+
+		clearTimeout(this.holdTimer as ReturnType<typeof setTimeout>);
+		clearInterval(this.holdInterval as ReturnType<typeof setInterval>);
+		clearTimeout(this.clickTimer as ReturnType<typeof setTimeout>);
+		this.holdTimer = undefined;
+		this.holdInterval = undefined;
+		this.clickTimer = undefined;
+
+		this.hold = false;
+		this.holdStart = false;
+		this.holdMove = false;
+		this.holdAction = undefined;
+		this.clickCount = 0;
+	}
+
 	render() {
 		const style = structuredClone(this._style ?? {});
 		for (const key in style) {
@@ -194,7 +211,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 					@touchend=${this.onHoldEnd}
 					@touchmove=${this.onHoldMove}
 					@mouseenter=${this._rippleHandlers.startHover}
-					@mouseleave=${this._rippleHandlers.endHover}
+					@mouseleave=${this.onMouseLeave}
 					@focus=${this._rippleHandlers.startFocus}
 					@blur=${this._rippleHandlers.endFocus}
 				>
@@ -209,7 +226,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 					@mouseup=${this.onHoldEnd}
 					@mousemove=${this.onHoldMove}
 					@mouseenter=${this._rippleHandlers.startHover}
-					@mouseleave=${this._rippleHandlers.endHover}
+					@mouseleave=${this.onMouseLeave}
 					@focus=${this._rippleHandlers.startFocus}
 					@blur=${this._rippleHandlers.endFocus}
 				>
