@@ -15,8 +15,6 @@ export class BaseRemoteElement extends LitElement {
 	@property({ attribute: false }) remoteId?: string;
 	@property({ attribute: false }) _style?: StyleInfo;
 
-	hold?: boolean = false;
-
 	fireHapticEvent(haptic: HapticType) {
 		if (
 			renderTemplate(

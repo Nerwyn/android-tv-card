@@ -18,6 +18,7 @@ export class RemoteButton extends BaseRemoteElement {
 
 	holdTimer?: ReturnType<typeof setTimeout>;
 	holdInterval?: ReturnType<typeof setInterval>;
+	hold?: boolean = false;
 
 	clickAction(actionType: ActionType) {
 		clearTimeout(this.clickTimer as ReturnType<typeof setTimeout>);
@@ -39,9 +40,10 @@ export class RemoteButton extends BaseRemoteElement {
 		this.clickCount = 0;
 	}
 
-	onClick(e: MouseEvent) {
+	onClick(e: TouchEvent | MouseEvent) {
 		e.stopImmediatePropagation();
 		if (e.detail && e.detail > this.clickCount) {
+			// Tap counter
 			this.clickCount++;
 		}
 
@@ -49,19 +51,23 @@ export class RemoteButton extends BaseRemoteElement {
 			'double_tap_action' in this.actions &&
 			this.actions.double_tap_action!.action != 'none'
 		) {
+			// Double tap action is defined
 			if (this.clickCount == 2) {
+				// Double tap action is triggered
 				this.clickAction('double_tap_action');
 			} else {
+				// Single tap action is triggered if double tap is not within 200ms
 				this.clickTimer = setTimeout(() => {
 					this.clickAction('tap_action');
 				}, 200);
 			}
 		} else {
+			// No double tap action defiend, tap action is triggered
 			this.clickAction('tap_action');
 		}
 	}
 
-	onHoldStart(_e: TouchEvent) {
+	onHoldStart(_e: TouchEvent | MouseEvent) {
 		this.holdTimer = setTimeout(() => {
 			this.hold = true;
 
@@ -77,15 +83,19 @@ export class RemoteButton extends BaseRemoteElement {
 		}, 500);
 	}
 
-	onHoldEnd(e: TouchEvent) {
+	onHoldEnd(e: TouchEvent | MouseEvent) {
+		clearTimeout(this.holdTimer as ReturnType<typeof setTimeout>);
+		clearInterval(this.holdInterval as ReturnType<typeof setInterval>);
+
 		if (this.hold) {
+			// Hold action is triggered
 			this.hold = false;
 			e.stopImmediatePropagation();
 			e.preventDefault();
+		} else {
+			// Hold action is not triggered, fire tap action
+			this.onClick(e);
 		}
-
-		clearTimeout(this.holdTimer as ReturnType<typeof setTimeout>);
-		clearInterval(this.holdInterval as ReturnType<typeof setInterval>);
 
 		this.holdTimer = undefined;
 		this.holdInterval = undefined;
@@ -119,7 +129,8 @@ export class RemoteButton extends BaseRemoteElement {
 			<ha-icon-button
 				title="${action}"
 				style=${styleMap(style)}
-				@click=${this.onClick}
+				@mousedown=${this.onHoldStart}
+				@mouseup=${this.onHoldEnd}
 				@touchstart=${this.onHoldStart}
 				@touchend=${this.onHoldEnd}
 				.action=${action}
