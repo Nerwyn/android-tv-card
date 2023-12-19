@@ -1,5 +1,5 @@
 import { TemplateResult, CSSResult, html, css } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { customElement, eventOptions, property } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
 import { HapticType } from 'custom-card-helpers';
@@ -63,7 +63,10 @@ export class RemoteButton extends BaseRemoteElement {
 		}
 	}
 
-	onHoldStart(_e: TouchEvent | MouseEvent) {
+	@eventOptions({ passive: true })
+	onHoldStart(e: TouchEvent | MouseEvent) {
+		e.preventDefault();
+
 		this.holdTimer = setTimeout(() => {
 			this.hold = true;
 
