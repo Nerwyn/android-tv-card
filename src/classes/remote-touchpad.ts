@@ -187,7 +187,6 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			return html`
 				<toucharea
 					style=${styleMap(style)}
-					@click=${this.onClick}
 					@touchstart=${this.onHoldStart}
 					@touchend=${this.onHoldEnd}
 					@touchmove=${this.onHoldMove}
@@ -203,7 +202,6 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			return html`
 				<toucharea
 					style=${styleMap(style)}
-					@click=${this.onClick}
 					@mousedown=${this.onHoldStart}
 					@mouseup=${this.onHoldEnd}
 					@mousemove=${this.onHoldMove}
