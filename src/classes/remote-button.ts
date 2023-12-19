@@ -23,6 +23,7 @@ export class RemoteButton extends BaseRemoteElement {
 	clickAction(actionType: ActionType) {
 		clearTimeout(this.clickTimer as ReturnType<typeof setTimeout>);
 		this.clickTimer = undefined;
+		this.clickCount = 0;
 
 		const actionToHaptic: Record<ActionType, HapticType> = {
 			tap_action: 'light',
@@ -36,8 +37,6 @@ export class RemoteButton extends BaseRemoteElement {
 		this.fireHapticEvent(haptic);
 
 		this.sendAction(actionType);
-
-		this.clickCount = 0;
 	}
 
 	onClick(e: TouchEvent | MouseEvent) {
