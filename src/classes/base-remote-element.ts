@@ -64,7 +64,6 @@ export class BaseRemoteElement extends LitElement {
 				this.callService(
 					action.service!,
 					structuredClone(action.data || {}),
-					actionType,
 				);
 				break;
 			case 'source':
@@ -95,19 +94,9 @@ export class BaseRemoteElement extends LitElement {
 		});
 	}
 
-	callService(
-		domainService: string,
-		data: IData = {},
-		actionType: ActionType,
-	) {
+	callService(domainService: string, data: IData = {}) {
 		for (const key in data) {
 			data[key] = renderTemplate(this.hass, data[key] as string);
-		}
-		if (
-			actionType == 'hold_action' &&
-			domainService == 'remote.send_command'
-		) {
-			data.hold_secs = 0.5;
 		}
 
 		const [domain, service] = (

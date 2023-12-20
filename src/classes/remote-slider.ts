@@ -84,7 +84,7 @@ export class RemoteSlider extends BaseRemoteElement {
 		}
 
 		this.fireHapticEvent('light');
-		this.callService(this.actions.tap_action!.service!, data, 'tap_action');
+		this.callService(this.actions.tap_action!.service!, data);
 
 		this.value = this.newValue;
 	}
