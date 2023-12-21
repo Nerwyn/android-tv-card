@@ -474,13 +474,13 @@ class AndroidTVCard extends LitElement {
 				this.hass,
 				elementName as string,
 			) as string;
-			if (elementName.includes('- ')) {
+			if (typeof elementName == 'string' && elementName.includes('- ')) {
 				elementName = parse(elementName);
 			}
 			if (typeof elementName == 'object' && elementName != null) {
 				rowContent.push(this.buildElements(elementName, !isColumn));
 			} else {
-				switch (elementName.trim()) {
+				switch (elementName) {
 					case 'vol_buttons':
 					case 'volume_buttons': {
 						const volumeButtons = this.buildVolumeButtons();
