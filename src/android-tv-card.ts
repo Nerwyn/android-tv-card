@@ -473,6 +473,9 @@ class AndroidTVCard extends LitElement {
 				this.hass,
 				elementName as string,
 			) as string;
+			if (elementName.includes(',')) {
+				elementName = elementName.split(',');
+			}
 			if (typeof elementName == 'object' && elementName != null) {
 				rowContent.push(this.buildElements(elementName, !isColumn));
 			} else {
