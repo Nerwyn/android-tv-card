@@ -6,7 +6,7 @@ import { styleMap } from 'lit/directives/style-map.js';
 
 import { HomeAssistant, applyThemesOnElement } from 'custom-card-helpers';
 import { renderTemplate } from 'ha-nunjucks';
-import { parse } from 'yaml';
+import yaml from 'js-yaml';
 
 import {
 	IConfig,
@@ -475,7 +475,7 @@ class AndroidTVCard extends LitElement {
 				elementName as string,
 			) as string;
 			if (typeof elementName == 'string' && elementName.includes('- ')) {
-				elementName = parse(elementName);
+				elementName = yaml.load(elementName) as string;
 			}
 			if (typeof elementName == 'object' && elementName != null) {
 				rowContent.push(this.buildElements(elementName, !isColumn));
