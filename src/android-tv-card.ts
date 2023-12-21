@@ -6,6 +6,7 @@ import { styleMap } from 'lit/directives/style-map.js';
 
 import { HomeAssistant, applyThemesOnElement } from 'custom-card-helpers';
 import { renderTemplate } from 'ha-nunjucks';
+import { parse } from 'yaml';
 
 import {
 	IConfig,
@@ -473,13 +474,13 @@ class AndroidTVCard extends LitElement {
 				this.hass,
 				elementName as string,
 			) as string;
-			if (elementName.includes(',')) {
-				elementName = elementName.split(',');
+			if (elementName.includes('- ')) {
+				elementName = parse(elementName);
 			}
 			if (typeof elementName == 'object' && elementName != null) {
 				rowContent.push(this.buildElements(elementName, !isColumn));
 			} else {
-				switch (elementName) {
+				switch (elementName.trim()) {
 					case 'vol_buttons':
 					case 'volume_buttons': {
 						const volumeButtons = this.buildVolumeButtons();
