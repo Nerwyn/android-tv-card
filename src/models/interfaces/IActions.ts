@@ -7,6 +7,7 @@ export type Action =
 	| 'navigate'
 	| 'url'
 	| 'assist'
+	| 'more-info'
 	| 'none';
 
 export interface IData {

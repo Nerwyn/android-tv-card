@@ -59,6 +59,9 @@ export class BaseRemoteElement extends LitElement {
 			case 'assist':
 				this.assist(action);
 				break;
+			case 'more-info':
+				this.moreInfo(action);
+				break;
 			case 'none':
 				break;
 			case 'call-service':
@@ -174,6 +177,24 @@ export class BaseRemoteElement extends LitElement {
 			window.open(`${window.location.href}?conversation=1`, '_self');
 		}
 		// console.error('Assist has not been implemented');
+	}
+
+	moreInfo(action: IAction) {
+		const entityId = renderTemplate(
+			this.hass,
+			(action.data?.entity_id ||
+				action.data?.camera_image ||
+				action.data?.image_entity ||
+				'') as string,
+		);
+
+		const event = new Event('hass-more-info', {
+			bubbles: false,
+			cancelable: true,
+			composed: false,
+		});
+		event.detail = { entityId };
+		window.dispatchEvent(event);
 	}
 
 	handleConfirmation(action: IAction): boolean {
