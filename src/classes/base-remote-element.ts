@@ -154,11 +154,28 @@ export class BaseRemoteElement extends LitElement {
 		if (!url.includes('//')) {
 			url = `https://${url}`;
 		}
-		window.location.assign(url);
+		window.open(url);
 	}
 
-	assist(_action: IAction) {
-		console.error('Assist has not been implemented');
+	assist(action: IAction) {
+		// eslint-disable-next-line
+		// @ts-ignore
+		if (this.hass.auth.external.config.hasAssist) {
+			// eslint-disable-next-line
+			// @ts-ignore
+			this.hass.auth.external!.fireMessage({
+				type: 'assist/show',
+				payload: {
+					pipeline_id: action.pipeline_id,
+					start_listening: action.start_listening,
+				},
+			});
+		} else {
+			this.navigate({
+				navigation_path: `${window.location.href}?conversation=1`,
+			} as IAction);
+		}
+		// console.error('Assist has not been implemented');
 	}
 
 	handleConfirmation(action: IAction): boolean {
