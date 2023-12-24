@@ -160,10 +160,10 @@ export class BaseRemoteElement extends LitElement {
 	assist(action: IAction) {
 		// eslint-disable-next-line
 		// @ts-ignore
-		if (this.hass.auth.external.config.hasAssist) {
+		if (this.hass?.auth?.external?.config?.hasAssist) {
 			// eslint-disable-next-line
 			// @ts-ignore
-			this.hass.auth.external!.fireMessage({
+			this.hass?.auth?.external?.fireMessage({
 				type: 'assist/show',
 				payload: {
 					pipeline_id: action.pipeline_id,
