@@ -191,7 +191,7 @@ export class BaseRemoteElement extends LitElement {
 		const event = new Event('hass-more-info', {
 			bubbles: true,
 			cancelable: true,
-			composed: false,
+			composed: true,
 		});
 		event.detail = { entityId };
 		this.dispatchEvent(event);
