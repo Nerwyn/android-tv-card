@@ -15,6 +15,7 @@ export class BaseRemoteElement extends LitElement {
 	@property({ attribute: false }) remoteId?: string;
 	@property({ attribute: false }) _style?: StyleInfo;
 
+	value: number = 0;
 	touchscreen = 'ontouchstart' in document.documentElement;
 
 	fireHapticEvent(haptic: HapticType) {
@@ -61,10 +62,7 @@ export class BaseRemoteElement extends LitElement {
 			case 'none':
 				break;
 			case 'call-service':
-				this.callService(
-					action.service!,
-					structuredClone(action.data || {}),
-				);
+				this.callService(action);
 				break;
 			case 'source':
 				this.changeSource(action.source!);
@@ -94,14 +92,26 @@ export class BaseRemoteElement extends LitElement {
 		});
 	}
 
-	callService(domainService: string, data: IData = {}) {
+	callService(action: IAction) {
+		const domainService = renderTemplate(
+			this.hass,
+			action.service as string,
+		) as string;
+
+		const [domain, service] = domainService.split('.');
+		const data = structuredClone(action.data);
 		for (const key in data) {
 			data[key] = renderTemplate(this.hass, data[key] as string);
+			if (data[key]) {
+				if (data[key] == 'VALUE') {
+					data[key] = this.value;
+				} else if (data[key].toString().includes('VALUE')) {
+					data[key] = data[key]
+						.toString()
+						.replace(/VALUE/g, (this.value ?? '').toString());
+				}
+			}
 		}
-
-		const [domain, service] = (
-			renderTemplate(this.hass, domainService) as string
-		).split('.', 2);
 
 		this.hass.callService(domain, service, data);
 	}

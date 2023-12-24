@@ -210,6 +210,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 					@touchstart=${this.onHoldStart}
 					@touchend=${this.onHoldEnd}
 					@touchmove=${this.onHoldMove}
+					@touchcancel=${this._rippleHandlers.endPress}
 					@mouseenter=${this._rippleHandlers.startHover}
 					@mouseleave=${this.onMouseLeave}
 					@focus=${this._rippleHandlers.startFocus}
@@ -225,6 +226,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 					@mousedown=${this.onHoldStart}
 					@mouseup=${this.onHoldEnd}
 					@mousemove=${this.onHoldMove}
+					@touchcancel=${this._rippleHandlers.endPress}
 					@mouseenter=${this._rippleHandlers.startHover}
 					@mouseleave=${this.onMouseLeave}
 					@focus=${this._rippleHandlers.startFocus}

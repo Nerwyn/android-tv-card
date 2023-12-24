@@ -12,7 +12,6 @@ export class RemoteSlider extends BaseRemoteElement {
 	@property({ attribute: false }) sliderAttribute?: string;
 	@property({ attribute: false }) range: [number, number] = [0, 1];
 
-	value: number = 0;
 	oldValue?: number;
 	newValue?: number;
 	step: number = 0.01;
@@ -71,22 +70,10 @@ export class RemoteSlider extends BaseRemoteElement {
 		if (!this.newValue && this.newValue != 0) {
 			this.newValue = this.value as number;
 		}
-
-		const data = structuredClone(this.actions.tap_action!.data ?? {});
-		for (const key in data) {
-			if (data[key] == 'VALUE') {
-				data[key] = this.newValue;
-			} else if (data[key].toString().includes('VALUE')) {
-				data[key] = data[key]
-					.toString()
-					.replace('VALUE', this.newValue.toString());
-			}
-		}
+		this.value = this.newValue;
 
 		this.fireHapticEvent('light');
-		this.callService(this.actions.tap_action!.service!, data);
-
-		this.value = this.newValue;
+		this.sendAction('tap_action');
 	}
 
 	render() {
