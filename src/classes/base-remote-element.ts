@@ -189,7 +189,7 @@ export class BaseRemoteElement extends LitElement {
 		);
 
 		const event = new Event('hass-more-info', {
-			bubbles: false,
+			bubbles: true,
 			cancelable: true,
 			composed: false,
 		});
