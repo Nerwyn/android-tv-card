@@ -171,9 +171,7 @@ export class BaseRemoteElement extends LitElement {
 				},
 			});
 		} else {
-			this.toUrl({
-				url_path: `${window.location.href}?conversation=1`,
-			} as IAction);
+			window.open(`${window.location.href}?conversation=1`, '_self');
 		}
 		// console.error('Assist has not been implemented');
 	}
