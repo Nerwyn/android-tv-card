@@ -182,10 +182,7 @@ export class BaseRemoteElement extends LitElement {
 	moreInfo(action: IAction) {
 		const entityId = renderTemplate(
 			this.hass,
-			(action.data?.entity_id ||
-				action.data?.camera_image ||
-				action.data?.image_entity ||
-				'') as string,
+			action.data!.entity_id as string,
 		);
 
 		const event = new Event('hass-more-info', {
