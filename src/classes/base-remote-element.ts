@@ -186,6 +186,8 @@ export class BaseRemoteElement extends LitElement {
 				) as unknown as boolean;
 			}
 			if (confirmation != false) {
+				this.fireHapticEvent('warning');
+
 				let text: string = '';
 				if (
 					confirmation != true &&
