@@ -176,7 +176,6 @@ export class BaseRemoteElement extends LitElement {
 		} else {
 			window.open(`${window.location.href}?conversation=1`, '_self');
 		}
-		// console.error('Assist has not been implemented');
 	}
 
 	moreInfo(action: IAction) {
