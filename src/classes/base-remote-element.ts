@@ -194,7 +194,7 @@ export class BaseRemoteElement extends LitElement {
 			composed: false,
 		});
 		event.detail = { entityId };
-		window.dispatchEvent(event);
+		this.dispatchEvent(event);
 	}
 
 	handleConfirmation(action: IAction): boolean {
