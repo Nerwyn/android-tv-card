@@ -45,7 +45,7 @@ Along with a many other changes and improvements:
 
 - All buttons and the touchpad `center` command support tap, double tap, and long tap custom actions.
   - Using the [Home Assistant actions](https://www.home-assistant.io/dashboards/actions/) syntax.
-- Supports the actions `call-service`, `navigate`, `url`, and `none` along with card specific actions `key` and `source`.
+- Supports the actions `call-service`, `navigate`, `url`, `assist`, and `none` along with card specific actions `key` and `source`.
 - Hold actions cannot be remapped for `up`, `down`, `left`, `right`, `volume_up`, `volume_down`, and `delete` as they repeat while held.
 
 **Better row handling and columns**
@@ -311,14 +311,15 @@ custom_actions:
 
 Actions follow the [Home Assistant actions](https://www.home-assistant.io/dashboards/actions/) syntax. It supports a subset of Home Assistant actions along with `key` and `source`, which are shorthands for remote service calls.
 
-| Action       | Description                                                              |
-| ------------ | ------------------------------------------------------------------------ |
-| key          | Send a key to send to the TV via the service call `remote.send_command`. |
-| source       | Switch to a source via the service call `remote.turn_on`.                |
-| call-service | Call any Home Assistant service.                                         |
-| navigate     | Navigate to another Home Assistant page.                                 |
-| url          | Navigate to an external URL.                                             |
-| none         | Explicilty set a command to do nothing.                                  |
+| Action       | Description                                                                                      |
+| ------------ | ------------------------------------------------------------------------------------------------ |
+| key          | Send a key to send to the TV via the service call `remote.send_command`.                         |
+| source       | Switch to a source via the service call `remote.turn_on`.                                        |
+| call-service | Call any Home Assistant service.                                                                 |
+| navigate     | Navigate to another Home Assistant page.                                                         |
+| url          | Navigate to an external URL.                                                                     |
+| assist       | Open the assist dialogue. Uses the mobile dialogue if available, like in the Home Assistant app. |
+| none         | Explicilty set a command to do nothing.                                                          |
 
 Each action has a set of possible options associated with them. If `action` is not provided the card will guess which type of action it is by the options used.
 
@@ -426,6 +427,15 @@ custom_actions:
       action: url
       url_path: https://www.google.com
 ```
+
+#### assist
+
+_The following options are only available in the mobile assist dialog._
+
+| Name            | Description                                                             |
+| --------------- | ----------------------------------------------------------------------- |
+| pipeline_id     | Assist pipeline id to use.                                              |
+| start_listening | If supported, listen for voice commands when opening the assist dialog. |
 
 ### Custom Button Style
 
