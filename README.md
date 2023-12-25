@@ -45,7 +45,7 @@ Along with a many other changes and improvements:
 
 - All buttons and the touchpad `center` command support tap, double tap, and long tap custom actions.
   - Using the [Home Assistant actions](https://www.home-assistant.io/dashboards/actions/) syntax.
-- Supports the actions `call-service`, `navigate`, `url`, `assist`, 'more-info', and `none` along with card specific actions `key` and `source`.
+- Supports the actions `call-service`, `navigate`, `url`, `assist`, `more-info`, and `none` along with card specific actions `key` and `source`.
 - Hold actions cannot be remapped for `up`, `down`, `left`, `right`, `volume_up`, `volume_down`, and `delete` buttons as they repeat while held.
 
 **Better row handling and columns**
