@@ -1570,6 +1570,46 @@ rows:
     - 0
 ```
 
+### Example 13
+
+Conditional layouts using templating and an input select
+
+```yaml
+type: custom:android-tv-card
+remote_id: remote.google_tv
+slider_id: media_player.google_tv
+rows:
+  - - next_thing
+  - |
+    {% if is_state("input_select.test_select", "A") %}
+    - touchpad
+    - - slider
+    {% elif is_state("input_select.test_select", "B") %}
+    - navigation_buttons
+    - - volume_buttons
+    {% elif is_state("input_select.test_select", "C") %}
+    - - n7
+      - n8
+      - n9
+    - - n4
+      - n5
+      - n6
+    - - n1
+      - n2
+      - n3
+    {% endif %}
+custom_keys:
+  next_thing:
+    icon: mdi:skip-next-circle
+    service: input_select.select_next
+    data:
+      cycle: true
+    target:
+      entity_id: input_select.test_select
+```
+
+<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/conditional_layouts.png" alt="conditional layouts example" width="500"/>
+
 [last-commit-shield]: https://img.shields.io/github/last-commit/Nerwyn/android-tv-card?style=for-the-badge
 [commits]: https://github.com/Nerwyn/android-tv-card/commits/main
 [forum-shield]: https://img.shields.io/badge/community-forum-brightgreen.svg?style=for-the-badge

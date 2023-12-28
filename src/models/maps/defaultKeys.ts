@@ -158,7 +158,7 @@ export const defaultKeys: Record<string, IActions> = {
 	},
 	button_mode: {
 		tap_action: { action: 'key', key: 'BUTTON_MODE' },
-		icon: 'mdi:gesture-tap-buton',
+		icon: 'mdi:gesture-tap-button',
 	},
 	explorer: {
 		tap_action: { action: 'key', key: 'EXPLORER' },
