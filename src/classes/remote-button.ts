@@ -69,16 +69,18 @@ export class RemoteButton extends BaseRemoteElement {
 	onHoldStart(_e: TouchEvent | MouseEvent) {
 		this.scrolling = false;
 		this.holdTimer = setTimeout(() => {
-			this.hold = true;
+			if (!this.scrolling) {
+				this.hold = true;
 
-			// Only repeat hold action for directional keys and volume
-			// prettier-ignore
-			if (['up', 'down', 'left', 'right', 'volume_up', 'volume_down', 'delete'].includes(this.actionKey)) {
+				// Only repeat hold action for directional keys and volume
+				// prettier-ignore
+				if (['up', 'down', 'left', 'right', 'volume_up', 'volume_down', 'delete'].includes(this.actionKey)) {
 				this.holdInterval = setInterval(() => {
 					this.clickAction('tap_action')
 				}, 100);
 			} else {
 				this.clickAction('hold_action')
+			}
 			}
 		}, 500);
 	}
