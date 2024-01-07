@@ -863,12 +863,25 @@ Apple TV
 type: custom:android-tv-card
 remote_id: remote.appletv
 rows:
-  - - play
-    - pause
+  - - power
     - menu
-  - - netflix
-    - primevideo
+    - home
+  - - skip-backward
+    - play
+    - pause
+    - skip-forward
   - - touchpad
+  - - appletv
+    - netflix
+    - disney
+    - primevideo
+    - discovery+
+  - - spotify
+    - youtube
+    - max
+    - skyshowtime
+    - plex
+    - viaplay
 touchpad_style:
   height: 200px
   background-image: url("https://upload.wikimedia.org/wikipedia/commons/a/ab/Apple-logo.png")
@@ -877,12 +890,48 @@ touchpad_style:
   background-position: center
   opacity: 1.0
 custom_actions:
+  power:
+    icon: mdi:power
+    tap_action:
+      action: key
+      key: wakeup
+    hold_action:
+      action: key
+      key: suspend
+  menu:
+    icon: mdi:apple
+    tap_action:
+      action: key
+      key: menu
+  home:
+    tap_action:
+      action: key
+      key: home
+    hold_action:
+      action: more-info
+  skip-backward:
+    icon: mdi:rewind-10
+    tap_action:
+      action: key
+      key: skip_backward
+  skip-forward:
+    icon: mdi:fast-forward-10
+    action: key
+    key: skip_forward
+  play:
+    tap_action:
+      action: key
+      key: play
+  pause:
+    tap_action:
+      action: key
+      key: pause
   up:
     tap_action:
       action: key
       key: up
   down:
-    icon: mdi:chevron-downtap_action:
+    tap_action:
       action: key
       key: down
   left:
@@ -900,19 +949,6 @@ custom_actions:
     double_tap_action:
       action: key
       key: menu
-  play:
-    tap_action:
-      action: key
-      key: play
-  pause:
-    tap_action:
-      action: key
-      key: pause
-  menu:
-    icon: mdi:apple
-    tap_action:
-      action: key
-      key: menu
   primevideo:
     tap_action:
       action: call-service
@@ -927,6 +963,81 @@ custom_actions:
       service: media_player.select_source
       data:
         source: Netflix
+      target:
+        entity_id: media_player.appletv
+  spotify:
+    tap_action:
+      action: call-service
+      service: media_player.select_source
+      data:
+        source: Spotify
+      target:
+        entity_id: media_player.appletv
+  disney:
+    tap_action:
+      action: call-service
+      service: media_player.select_source
+      data:
+        source: Disney+
+      target:
+        entity_id: media_player.appletv
+  youtube:
+    tap_action:
+      action: call-service
+      service: media_player.select_source
+      data:
+        source: YouTube
+      target:
+        entity_id: media_player.appletv
+  appletv:
+    tap_action:
+      action: call-service
+      service: media_player.select_source
+      data:
+        source: TV
+      target:
+        entity_id: media_player.appletv
+  max:
+    tap_action:
+      action: call-service
+      service: media_player.select_source
+      data:
+        source: HBO Max
+      target:
+        entity_id: media_player.appletv
+  skyshowtime:
+    tap_action:
+      action: call-service
+      service: media_player.select_source
+      data:
+        source: SkyShowtime
+      target:
+        entity_id: media_player.appletv
+  plex:
+    icon: mdi:plex
+    tap_action:
+      action: call-service
+      service: media_player.select_source
+      data:
+        source: Plex
+      target:
+        entity_id: media_player.appletv
+  discovery+:
+    icon: mdi:disc
+    tap_action:
+      action: call-service
+      service: media_player.select_source
+      data:
+        source: discovery+
+      target:
+        entity_id: media_player.appletv
+  viaplay:
+    icon: mdi:play-box-outline
+    tap_action:
+      action: call-service
+      service: media_player.select_source
+      data:
+        source: Viaplay
       target:
         entity_id: media_player.appletv
 ```
