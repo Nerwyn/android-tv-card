@@ -20,6 +20,8 @@ export class RemoteButton extends BaseRemoteElement {
 	holdInterval?: ReturnType<typeof setInterval>;
 	hold: boolean = false;
 
+	scrolling: boolean = false;
+
 	clickAction(actionType: ActionType) {
 		clearTimeout(this.clickTimer as ReturnType<typeof setTimeout>);
 		this.clickTimer = undefined;
@@ -65,6 +67,7 @@ export class RemoteButton extends BaseRemoteElement {
 
 	@eventOptions({ passive: true })
 	onHoldStart(_e: TouchEvent | MouseEvent) {
+		this.scrolling = false;
 		this.holdTimer = setTimeout(() => {
 			this.hold = true;
 
@@ -84,18 +87,25 @@ export class RemoteButton extends BaseRemoteElement {
 		clearTimeout(this.holdTimer as ReturnType<typeof setTimeout>);
 		clearInterval(this.holdInterval as ReturnType<typeof setInterval>);
 
-		if (this.hold) {
-			// Hold action is triggered
-			this.hold = false;
-			e.stopImmediatePropagation();
-			e.preventDefault();
-		} else {
-			// Hold action is not triggered, fire tap action
-			this.onClick(e);
+		if (!this.scrolling) {
+			if (this.hold) {
+				// Hold action is triggered
+				this.hold = false;
+				e.stopImmediatePropagation();
+				e.preventDefault();
+			} else {
+				// Hold action is not triggered, fire tap action
+				this.onClick(e);
+			}
 		}
 
 		this.holdTimer = undefined;
 		this.holdInterval = undefined;
+		this.scrolling = false;
+	}
+
+	onHoldMove(_e: TouchEvent | MouseEvent) {
+		this.scrolling = true;
 	}
 
 	render(inputTemplate?: TemplateResult<1>) {
@@ -129,6 +139,7 @@ export class RemoteButton extends BaseRemoteElement {
 					style=${styleMap(style)}
 					@touchstart=${this.onHoldStart}
 					@touchend=${this.onHoldEnd}
+					@touchmove=${this.onHoldMove}
 					.action=${action}
 					.path=${svgPath}
 				>
@@ -142,6 +153,7 @@ export class RemoteButton extends BaseRemoteElement {
 					style=${styleMap(style)}
 					@mousedown=${this.onHoldStart}
 					@mouseup=${this.onHoldEnd}
+					@mousemove=${this.onHoldMove}
 					.action=${action}
 					.path=${svgPath}
 				>
