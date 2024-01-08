@@ -276,12 +276,16 @@ class AndroidTVCard extends LitElement {
 		}
 
 		// Get icon svg if referencing default svg or custom icon
-		const icon = renderTemplate(
+		actions.icon = renderTemplate(
 			this.hass,
 			actions.icon as string,
 		) as string;
-		if (icon && !icon?.includes(':') && icon in this.icons) {
-			actions.icon = this.icons[icon];
+		if (
+			actions.icon &&
+			!actions.icon?.includes(':') &&
+			actions.icon in this.icons
+		) {
+			actions.icon = this.icons[actions.icon];
 		}
 
 		// Get default icon if not redefined
