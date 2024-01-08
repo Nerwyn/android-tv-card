@@ -47,7 +47,6 @@ export interface IAction {
 
 export interface IActions {
 	icon?: string;
-	svg_path?: string;
 	style?: StyleInfo;
 
 	tap_action?: IAction;

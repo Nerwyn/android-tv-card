@@ -1,5 +1,5 @@
 import { html, css } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { customElement, eventOptions, property } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
 import { renderTemplate } from 'ha-nunjucks';
@@ -17,63 +17,101 @@ export class RemoteSlider extends BaseRemoteElement {
 	step: number = 0.01;
 	speed: number = 0.02;
 
+	lastX?: number;
+	lastY?: number;
+	scrolling: boolean = false;
+
 	onInput(e: InputEvent) {
-		e.preventDefault();
-		e.stopImmediatePropagation();
+		if (!this.scrolling) {
+			e.preventDefault();
+			e.stopImmediatePropagation();
 
-		this.fireHapticEvent('selection');
+			this.fireHapticEvent('selection');
 
-		const slider = e.currentTarget as HTMLInputElement;
-		const start = parseFloat(
-			(this.oldValue as unknown as string) ?? this.value,
-		);
-		const end = parseFloat(slider.value ?? start);
-		slider.value = start.toString();
-		this.newValue = end;
+			const slider = e.currentTarget as HTMLInputElement;
+			const start = parseFloat(
+				(this.oldValue as unknown as string) ?? this.value,
+			);
+			const end = parseFloat(slider.value ?? start);
+			slider.value = start.toString();
+			this.newValue = end;
 
-		if (end > this.range[0]) {
-			slider.className = 'slider';
-		}
+			if (end > this.range[0]) {
+				slider.className = 'slider';
+			}
 
-		let i = start;
-		if (start > end) {
-			const id = setInterval(() => {
-				i -= this.speed;
-				slider.value = i.toString();
+			let i = start;
+			if (start > end) {
+				const id = setInterval(() => {
+					i -= this.speed;
+					slider.value = i.toString();
 
-				if (end >= i) {
-					clearInterval(id);
-					slider.value = end.toString();
-					if (end <= this.range[0]) {
-						slider.className = 'slider-off';
+					if (end >= i) {
+						clearInterval(id);
+						slider.value = end.toString();
+						if (end <= this.range[0]) {
+							slider.className = 'slider-off';
+						}
 					}
-				}
-			}, 1);
-		} else if (start < end) {
-			const id = setInterval(() => {
-				i += this.speed;
-				slider.value = i.toString();
+				}, 1);
+			} else if (start < end) {
+				const id = setInterval(() => {
+					i += this.speed;
+					slider.value = i.toString();
 
-				if (end <= i) {
-					clearInterval(id);
-					slider.value = end.toString();
-				}
-			}, 1);
-		} else {
-			slider.value = end.toString();
+					if (end <= i) {
+						clearInterval(id);
+						slider.value = end.toString();
+					}
+				}, 1);
+			} else {
+				slider.value = end.toString();
+			}
+
+			this.oldValue = end;
 		}
-
-		this.oldValue = end;
 	}
 
 	onEnd(_e: MouseEvent | TouchEvent) {
-		if (!this.newValue && this.newValue != 0) {
-			this.newValue = this.value as number;
-		}
-		this.value = this.newValue;
+		if (!this.scrolling) {
+			if (!this.newValue && this.newValue != 0) {
+				this.newValue = this.value as number;
+			}
+			this.value = this.newValue;
 
-		this.fireHapticEvent('light');
-		this.sendAction('tap_action');
+			this.fireHapticEvent('light');
+			this.sendAction('tap_action');
+		}
+		this.lastX = undefined;
+		this.lastY = undefined;
+		this.scrolling = false;
+	}
+
+	@eventOptions({ passive: true })
+	onMove(e: TouchEvent | MouseEvent) {
+		let currentX: number;
+		if ('clientX' in e) {
+			currentX = e.clientX;
+		} else {
+			currentX = e.touches[0].clientX;
+		}
+		let currentY: number;
+		if ('clientY' in e) {
+			currentY = e.clientY;
+		} else {
+			currentY = e.touches[0].clientY;
+		}
+
+		if (this.lastY == undefined) {
+			this.lastY = currentY;
+		}
+		if (this.lastX == undefined) {
+			this.lastX = currentX;
+		} else if (
+			Math.abs(currentX - this.lastX) < Math.abs(currentY - this.lastY)
+		) {
+			this.scrolling = true;
+		}
 	}
 
 	render() {
@@ -132,8 +170,10 @@ export class RemoteSlider extends BaseRemoteElement {
 				step=${this.step}
 				value="${this.value}"
 				@input=${this.onInput}
-				@mouseup=${this.onEnd}
 				@touchend=${this.onEnd}
+				@touchmove=${this.onMove}
+				@mouseup=${this.onEnd}
+				@mousemove=${this.onMove}
 			/>
 		`;
 

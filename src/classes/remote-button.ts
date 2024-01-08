@@ -11,7 +11,7 @@ import { BaseRemoteElement } from './base-remote-element';
 @customElement('remote-button')
 export class RemoteButton extends BaseRemoteElement {
 	@property({ attribute: false }) actionKey!: string;
-	@property({ attribute: false }) customIcon?: string;
+	@property({ attribute: false }) icons!: Record<string, string>;
 
 	clickTimer?: ReturnType<typeof setTimeout>;
 	clickCount: number = 0;
@@ -19,6 +19,8 @@ export class RemoteButton extends BaseRemoteElement {
 	holdTimer?: ReturnType<typeof setTimeout>;
 	holdInterval?: ReturnType<typeof setInterval>;
 	hold: boolean = false;
+
+	scrolling: boolean = false;
 
 	clickAction(actionType: ActionType) {
 		clearTimeout(this.clickTimer as ReturnType<typeof setTimeout>);
@@ -65,17 +67,20 @@ export class RemoteButton extends BaseRemoteElement {
 
 	@eventOptions({ passive: true })
 	onHoldStart(_e: TouchEvent | MouseEvent) {
+		this.scrolling = false;
 		this.holdTimer = setTimeout(() => {
-			this.hold = true;
+			if (!this.scrolling) {
+				this.hold = true;
 
-			// Only repeat hold action for directional keys and volume
-			// prettier-ignore
-			if (['up', 'down', 'left', 'right', 'volume_up', 'volume_down', 'delete'].includes(this.actionKey)) {
-				this.holdInterval = setInterval(() => {
-					this.clickAction('tap_action')
-				}, 100);
-			} else {
-				this.clickAction('hold_action')
+				// Only repeat hold action for directional keys and volume
+				// prettier-ignore
+				if (['up', 'down', 'left', 'right', 'volume_up', 'volume_down', 'delete'].includes(this.actionKey)) {
+					this.holdInterval = setInterval(() => {
+						this.clickAction('tap_action')
+					}, 100);
+				} else {
+					this.clickAction('hold_action')
+				}
 			}
 		}, 500);
 	}
@@ -84,32 +89,38 @@ export class RemoteButton extends BaseRemoteElement {
 		clearTimeout(this.holdTimer as ReturnType<typeof setTimeout>);
 		clearInterval(this.holdInterval as ReturnType<typeof setInterval>);
 
-		if (this.hold) {
-			// Hold action is triggered
-			this.hold = false;
-			e.stopImmediatePropagation();
-			e.preventDefault();
-		} else {
-			// Hold action is not triggered, fire tap action
-			this.onClick(e);
+		if (!this.scrolling) {
+			if (this.hold) {
+				// Hold action is triggered
+				this.hold = false;
+				e.stopImmediatePropagation();
+				e.preventDefault();
+			} else {
+				// Hold action is not triggered, fire tap action
+				this.onClick(e);
+			}
 		}
 
 		this.holdTimer = undefined;
 		this.holdInterval = undefined;
+		this.scrolling = false;
+	}
+
+	@eventOptions({ passive: true })
+	onHoldMove(_e: TouchEvent | MouseEvent) {
+		this.scrolling = true;
 	}
 
 	render(inputTemplate?: TemplateResult<1>) {
-		const icon = renderTemplate(
-			this.hass,
-			this.actions.icon as string,
-		) as string;
-		const svgPath =
-			renderTemplate(this.hass, this.actions.svg_path as string) ??
-			renderTemplate(this.hass, this.customIcon as string);
+		const icon =
+			(renderTemplate(this.hass, this.actions.icon!) as string) ?? '';
 
 		let haIcon = html``;
-		if (icon) {
+		let svgPath;
+		if (icon.includes(':')) {
 			haIcon = html`<ha-icon .icon="${icon}"></ha-icon>`;
+		} else {
+			svgPath = this.icons[icon] ?? icon;
 		}
 
 		const style = structuredClone(this._style ?? {});
@@ -129,6 +140,7 @@ export class RemoteButton extends BaseRemoteElement {
 					style=${styleMap(style)}
 					@touchstart=${this.onHoldStart}
 					@touchend=${this.onHoldEnd}
+					@touchmove=${this.onHoldMove}
 					.action=${action}
 					.path=${svgPath}
 				>
@@ -142,6 +154,7 @@ export class RemoteButton extends BaseRemoteElement {
 					style=${styleMap(style)}
 					@mousedown=${this.onHoldStart}
 					@mouseup=${this.onHoldEnd}
+					@mousemove=${this.onHoldMove}
 					.action=${action}
 					.path=${svgPath}
 				>

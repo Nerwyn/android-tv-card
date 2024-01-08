@@ -56,12 +56,13 @@ Along with a many other changes and improvements:
 - Empty buttons are no longer clickable.
 - Create columns by creating an array within a row array (see examples). Create an array within that array to create another row. Experiment with nesting rows and columns to make weird remote layouts.
 
-**Better button icon handling**
+**Better button and icon handling**
 
-- Many more default keys and sources with SVG icons for sources with no material design icon present in Home Assistant's default material design icon list.
+- Many more default [keys](https://github.com/Nerwyn/android-tv-card/blob/main/src/models/maps/defaultKeys.ts) and [sources](https://github.com/Nerwyn/android-tv-card/blob/main/src/models/maps/defaultSources.ts) with SVG icons for sources with no material design icon present in Home Assistant's default material design icon list.
   - _Not all default keys and sources are working or tested at this time, please let me know if you find the correct source/activity names for the ones that are incorrect._
   - _Also let me know if you find a key or source that is not listed here and you want to add to the default lists!_
 - Custom actions that replace default ones will now inherit the default icons and tap actions if no new ones are given.
+- Default svg icons provided in this card can be used for custom actions by referencing them by name.
 - Alter CSS of all buttons using `button_style`.
 - Alter CSS of an individual button by including a `style` object in a custom action.
 - Button haptics can now be toggled.
@@ -307,6 +308,21 @@ custom_actions:
         entity_id: media_player.tv
 ```
 
+You can also reference the [default icons](https://github.com/Nerwyn/android-tv-card/blob/main/src/models/enums/svg.ts) provided with this card for default sources for other keys and sources by using the names in the linked file.
+
+```yaml
+custom_actions:
+  discovery:
+    icon: discovery
+    tap_action:
+      action: call-service
+      service: media_player.select_source
+      data:
+        source: discovery+
+      target:
+        entity_id: media_player.appletv
+```
+
 ### Action Types
 
 Actions follow the [Home Assistant actions](https://www.home-assistant.io/dashboards/actions/) syntax. It supports a subset of Home Assistant actions along with `key` and `source`, which are shorthands for remote service calls.
@@ -500,6 +516,27 @@ Having defined the custom icon, you can use it on any custom button:
 custom_actions:
   max:
     icon: hbo
+    tap_action:
+      source: hbomax://deeplink
+```
+
+You can also put the icon svg directly in the custom action.
+
+```yaml
+custom_actions:
+  max:
+    icon: >-
+      M7.042 16.896H4.414v-3.754H2.708v3.754H.01L0
+      7.22h2.708v3.6h1.706v-3.6h2.628zm12.043.046C21.795 16.94 24 14.689 24
+      11.978a4.89 4.89 0 0 0-4.915-4.92c-2.707-.002-4.09 1.991-4.432
+      2.795.003-1.207-1.187-2.632-2.58-2.634H7.59v9.674l4.181.001c1.686 0
+      2.886-1.46 2.888-2.713.385.788 1.72 2.762 4.427 2.76zm-7.665-3.936c.387 0
+      .692.382.692.817 0 .435-.305.817-.692.817h-1.33v-1.634zm.005-3.633c.387 0
+      .692.382.692.817 0 .436-.305.818-.692.818h-1.33V9.373zm1.77
+      2.607c.305-.039.813-.387.992-.61-.063.276-.068 1.074.006
+      1.35-.204-.314-.688-.701-.998-.74zm3.43 0a2.462 2.462 0 1 1 4.924 0 2.462
+      2.462 0 0 1-4.925 0zm2.462 1.936a1.936 1.936 0 1 0 0-3.872 1.936 1.936 0 0 0
+      0 3.872Z
     tap_action:
       source: hbomax://deeplink
 ```
@@ -863,12 +900,28 @@ Apple TV
 type: custom:android-tv-card
 remote_id: remote.appletv
 rows:
-  - - play
-    - pause
+  - - power
     - menu
-  - - netflix
-    - primevideo
+    - home
+  - - skip-backward
+    - play
+    - pause
+    - skip-forward
   - - touchpad
+  - - appletv
+    - netflix
+    - disney
+    - primevideo
+    - allente
+  - - nrktv
+    - tv2play
+    - max
+    - skyshowtime
+    - plex
+  - - viaplay
+    - discovery
+    - spotify
+    - youtube
 touchpad_style:
   height: 200px
   background-image: url("https://upload.wikimedia.org/wikipedia/commons/a/ab/Apple-logo.png")
@@ -877,12 +930,48 @@ touchpad_style:
   background-position: center
   opacity: 1.0
 custom_actions:
+  power:
+    icon: mdi:power
+    tap_action:
+      action: key
+      key: wakeup
+    hold_action:
+      action: key
+      key: suspend
+  menu:
+    icon: mdi:apple
+    tap_action:
+      action: key
+      key: menu
+  home:
+    tap_action:
+      action: key
+      key: home
+    hold_action:
+      action: more-info
+  skip-backward:
+    icon: mdi:rewind-10
+    tap_action:
+      action: key
+      key: skip_backward
+  skip-forward:
+    icon: mdi:fast-forward-10
+    action: key
+    key: skip_forward
+  play:
+    tap_action:
+      action: key
+      key: play
+  pause:
+    tap_action:
+      action: key
+      key: pause
   up:
     tap_action:
       action: key
       key: up
   down:
-    icon: mdi:chevron-downtap_action:
+    tap_action:
       action: key
       key: down
   left:
@@ -900,19 +989,6 @@ custom_actions:
     double_tap_action:
       action: key
       key: menu
-  play:
-    tap_action:
-      action: key
-      key: play
-  pause:
-    tap_action:
-      action: key
-      key: pause
-  menu:
-    icon: mdi:apple
-    tap_action:
-      action: key
-      key: menu
   primevideo:
     tap_action:
       action: call-service
@@ -927,6 +1003,108 @@ custom_actions:
       service: media_player.select_source
       data:
         source: Netflix
+      target:
+        entity_id: media_player.appletv
+  spotify:
+    tap_action:
+      action: call-service
+      service: media_player.select_source
+      data:
+        source: Spotify
+      target:
+        entity_id: media_player.appletv
+  disney:
+    tap_action:
+      action: call-service
+      service: media_player.select_source
+      data:
+        source: Disney+
+      target:
+        entity_id: media_player.appletv
+  youtube:
+    tap_action:
+      action: call-service
+      service: media_player.select_source
+      data:
+        source: YouTube
+      target:
+        entity_id: media_player.appletv
+  appletv:
+    tap_action:
+      action: call-service
+      service: media_player.select_source
+      data:
+        source: TV
+      target:
+        entity_id: media_player.appletv
+  max:
+    tap_action:
+      action: call-service
+      service: media_player.select_source
+      data:
+        source: HBO Max
+      target:
+        entity_id: media_player.appletv
+  skyshowtime:
+    tap_action:
+      action: call-service
+      service: media_player.select_source
+      data:
+        source: SkyShowtime
+      target:
+        entity_id: media_player.appletv
+  plex:
+    icon: mdi:plex
+    tap_action:
+      action: call-service
+      service: media_player.select_source
+      data:
+        source: Plex
+      target:
+        entity_id: media_player.appletv
+  discovery:
+    icon: discovery
+    tap_action:
+      action: call-service
+      service: media_player.select_source
+      data:
+        source: discovery+
+      target:
+        entity_id: media_player.appletv
+  viaplay:
+    icon: viaplay
+    tap_action:
+      action: call-service
+      service: media_player.select_source
+      data:
+        source: Viaplay
+      target:
+        entity_id: media_player.appletv
+  tv2play:
+    icon: tv2play
+    tap_action:
+      action: call-service
+      service: media_player.select_source
+      data:
+        source: TV 2 Play
+      target:
+        entity_id: media_player.appletv
+  nrktv:
+    icon: nrktv
+    tap_action:
+      action: call-service
+      service: media_player.select_source
+      data:
+        source: NRK TV
+      target:
+        entity_id: media_player.appletv
+  allente:
+    icon: allente
+    tap_action:
+      action: call-service
+      service: media_player.select_source
+      data:
+        source: Allente
       target:
         entity_id: media_player.appletv
 ```
