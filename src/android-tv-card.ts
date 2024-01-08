@@ -81,7 +81,6 @@ class AndroidTVCard extends LitElement {
 			...svg,
 			...config.custom_icons,
 		};
-		console.log(this.icons);
 
 		this.config = config;
 	}

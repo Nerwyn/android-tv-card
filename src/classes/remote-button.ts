@@ -119,8 +119,8 @@ export class RemoteButton extends BaseRemoteElement {
 		let svgPath;
 		if (icon.includes(':')) {
 			haIcon = html`<ha-icon .icon="${icon}"></ha-icon>`;
-		} else if (icon in this.icons) {
-			svgPath = this.icons[icon];
+		} else {
+			svgPath = this.icons[icon] ?? icon;
 		}
 
 		const style = structuredClone(this._style ?? {});
