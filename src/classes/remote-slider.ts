@@ -1,5 +1,5 @@
 import { html, css } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { customElement, eventOptions, property } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
 import { renderTemplate } from 'ha-nunjucks';
@@ -87,6 +87,7 @@ export class RemoteSlider extends BaseRemoteElement {
 		this.scrolling = false;
 	}
 
+	@eventOptions({ passive: true })
 	onMove(e: TouchEvent | MouseEvent) {
 		let currentX: number;
 		if ('clientX' in e) {

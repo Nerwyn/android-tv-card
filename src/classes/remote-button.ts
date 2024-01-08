@@ -106,6 +106,7 @@ export class RemoteButton extends BaseRemoteElement {
 		this.scrolling = false;
 	}
 
+	@eventOptions({ passive: true })
 	onHoldMove(_e: TouchEvent | MouseEvent) {
 		this.scrolling = true;
 	}
