@@ -308,6 +308,21 @@ custom_actions:
         entity_id: media_player.tv
 ```
 
+You can also reference the [default icons](https://github.com/Nerwyn/android-tv-card/blob/main/src/models/enums/svg.ts) provided with this card for default sources for other keys and sources by using the names in the linked file.
+
+```yaml
+custom_actions:
+  discovery:
+    icon: discovery
+    tap_action:
+      action: call-service
+      service: media_player.select_source
+      data:
+        source: discovery+
+      target:
+        entity_id: media_player.appletv
+```
+
 ### Action Types
 
 Actions follow the [Home Assistant actions](https://www.home-assistant.io/dashboards/actions/) syntax. It supports a subset of Home Assistant actions along with `key` and `source`, which are shorthands for remote service calls.
