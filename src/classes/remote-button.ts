@@ -11,6 +11,7 @@ import { BaseRemoteElement } from './base-remote-element';
 @customElement('remote-button')
 export class RemoteButton extends BaseRemoteElement {
 	@property({ attribute: false }) actionKey!: string;
+	@property({ attribute: false }) icons!: Record<string, string>;
 
 	clickTimer?: ReturnType<typeof setTimeout>;
 	clickCount: number = 0;
@@ -110,12 +111,15 @@ export class RemoteButton extends BaseRemoteElement {
 	}
 
 	render(inputTemplate?: TemplateResult<1>) {
+		const icon =
+			(renderTemplate(this.hass, this.actions.icon!) as string) ?? '';
+
 		let haIcon = html``;
 		let svgPath;
-		if (this.actions.icon && this.actions.icon.includes(':')) {
-			haIcon = html`<ha-icon .icon="${this.actions.icon}"></ha-icon>`;
-		} else {
-			svgPath = this.actions.icon;
+		if (icon.includes(':')) {
+			haIcon = html`<ha-icon .icon="${icon}"></ha-icon>`;
+		} else if (icon in this.icons) {
+			svgPath = this.icons[icon];
 		}
 
 		const style = structuredClone(this._style ?? {});

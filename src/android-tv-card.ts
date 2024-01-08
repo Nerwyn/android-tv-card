@@ -275,19 +275,6 @@ class AndroidTVCard extends LitElement {
 			}
 		}
 
-		// Get icon svg if referencing default svg or custom icon
-		actions.icon = renderTemplate(
-			this.hass,
-			actions.icon as string,
-		) as string;
-		if (
-			actions.icon &&
-			!actions.icon?.includes(':') &&
-			actions.icon in this.icons
-		) {
-			actions.icon = this.icons[actions.icon];
-		}
-
 		// Get default icon if not redefined
 		if (!actions?.icon) {
 			actions.icon = defaultActions?.icon ?? undefined;
@@ -337,6 +324,7 @@ class AndroidTVCard extends LitElement {
 			.remoteId=${this.config.remote_id}
 			.actions=${actions}
 			.actionKey="${elementName}"
+			.icons=${this.icons}
 			._style=${style}
 		/>`;
 	}
@@ -439,6 +427,7 @@ class AndroidTVCard extends LitElement {
 			.actionKey="keyboard"
 			.keyboardId=${this.config.keyboard_id}
 			.keyboardMode=${this.config.keyboard_mode ?? 'ANDROID TV'}
+			.icons=${this.icons}
 			._style=${style}
 		/>`;
 	}
@@ -458,6 +447,7 @@ class AndroidTVCard extends LitElement {
 			.actionKey="textbox"
 			.keyboardId=${this.config.keyboard_id}
 			.keyboardMode=${this.config.keyboard_mode ?? 'ANDROID TV'}
+			.icons=${this.icons}
 			._style=${style}
 		/>`;
 	}
@@ -477,6 +467,7 @@ class AndroidTVCard extends LitElement {
 			.actionKey="search"
 			.keyboardId=${this.config.keyboard_id}
 			.keyboardMode=${this.config.keyboard_mode ?? 'ANDROID TV'}
+			.icons=${this.icons}
 			._style=${style}
 		/>`;
 	}
