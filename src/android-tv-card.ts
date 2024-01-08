@@ -17,6 +17,7 @@ import {
 	defaultKeys,
 	defaultSources,
 	ActionType,
+	svg,
 } from './models';
 
 import './classes/remote-button';
@@ -37,7 +38,7 @@ class AndroidTVCard extends LitElement {
 
 	defaultActions: Record<string, IActions> = {};
 	customActions: Record<string, IActions> = {};
-	customIcons: Record<string, string> = {};
+	icons: Record<string, string> = {};
 
 	static get properties() {
 		return {
@@ -76,9 +77,10 @@ class AndroidTVCard extends LitElement {
 			...defaultKeys,
 		};
 		this.customActions = config.custom_actions || {};
-		this.customIcons = config.custom_icons || {};
-
-		await window.loadCardHelpers();
+		this.icons = {
+			...svg,
+			...config.custom_icons,
+		};
 
 		this.config = config;
 	}
@@ -144,6 +146,13 @@ class AndroidTVCard extends LitElement {
 			// For each custom key or source
 			for (const customActionName in customActions) {
 				const customAction = customActions[customActionName];
+
+				// Copy svg_path to icon
+				if ('svg_path' in customAction) {
+					customAction.icon = customAction[
+						'svg_path' as keyof IActions
+					] as string;
+				}
 
 				// Copy action fields to tap_action
 				const actionKeys = [
@@ -266,10 +275,18 @@ class AndroidTVCard extends LitElement {
 			}
 		}
 
-		// Get original icon if not redefined
-		if (!(actions?.icon || actions.svg_path)) {
+		// Get icon svg if referencing default svg or custom icon
+		const icon = renderTemplate(
+			this.hass,
+			actions.icon as string,
+		) as string;
+		if (icon && !icon?.includes(':') && icon in this.icons) {
+			actions.icon = this.icons[icon];
+		}
+
+		// Get default icon if not redefined
+		if (!actions?.icon) {
 			actions.icon = defaultActions?.icon ?? undefined;
-			actions.svg_path = defaultActions?.svg_path ?? undefined;
 		}
 
 		// Get original actions if not defined.
@@ -316,7 +333,6 @@ class AndroidTVCard extends LitElement {
 			.remoteId=${this.config.remote_id}
 			.actions=${actions}
 			.actionKey="${elementName}"
-			.customIcon=${this.customIcons[actions.icon ?? ''] ?? ''}
 			._style=${style}
 		/>`;
 	}
@@ -417,7 +433,6 @@ class AndroidTVCard extends LitElement {
 			.remoteId=${this.config.remote_id}
 			.actions=${actions}
 			.actionKey="keyboard"
-			.customIcon=${this.customIcons[actions.icon ?? ''] ?? ''}
 			.keyboardId=${this.config.keyboard_id}
 			.keyboardMode=${this.config.keyboard_mode ?? 'ANDROID TV'}
 			._style=${style}
@@ -437,7 +452,6 @@ class AndroidTVCard extends LitElement {
 			.remoteId=${this.config.remote_id}
 			.actions=${actions}
 			.actionKey="textbox"
-			.customIcon=${this.customIcons[actions.icon ?? ''] ?? ''}
 			.keyboardId=${this.config.keyboard_id}
 			.keyboardMode=${this.config.keyboard_mode ?? 'ANDROID TV'}
 			._style=${style}
@@ -457,7 +471,6 @@ class AndroidTVCard extends LitElement {
 			.remoteId=${this.config.remote_id}
 			.actions=${actions}
 			.actionKey="search"
-			.customIcon=${this.customIcons[actions.icon ?? ''] ?? ''}
 			.keyboardId=${this.config.keyboard_id}
 			.keyboardMode=${this.config.keyboard_mode ?? 'ANDROID TV'}
 			._style=${style}

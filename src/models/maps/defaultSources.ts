@@ -8,15 +8,15 @@ import { IActions, svg } from '..';
 export const defaultSources: Record<string, IActions> = {
 	appletv: {
 		tap_action: { action: 'source', source: 'https://tv.apple.com' }, // UNTESTED
-		svg_path: svg.APPLETV,
+		icon: svg.appletv,
 	},
 	crunchyroll: {
 		tap_action: { action: 'source', source: 'crunchyroll://' }, // UNTESTED
-		svg_path: svg.CRUNCHYROLL,
+		icon: svg.crunchyroll,
 	},
 	disney: {
 		tap_action: { action: 'source', source: 'https://www.disneyplus.com' },
-		svg_path: svg.DISNEY,
+		icon: svg.disney,
 	},
 	emby: {
 		tap_action: {
@@ -27,7 +27,7 @@ export const defaultSources: Record<string, IActions> = {
 	},
 	foxsports: {
 		tap_action: { action: 'source', source: 'foxsports://live' }, // UNTESTED
-		svg_path: svg.FOXSPORTS,
+		icon: svg.foxsports,
 	},
 	hulu: {
 		tap_action: { action: 'source', source: 'hulu://' }, // BROKEN
@@ -35,15 +35,15 @@ export const defaultSources: Record<string, IActions> = {
 	},
 	max: {
 		tap_action: { action: 'source', source: 'https://play.max.com' }, // BROKEN
-		svg_path: svg.MAX,
+		icon: svg.max,
 	},
 	mlbtv: {
 		tap_action: { action: 'source', source: 'mlbatbat://' }, // UNTESTED
-		svg_path: svg.MLBTV,
+		icon: svg.mlbtv,
 	},
 	nba: {
 		tap_action: { action: 'source', source: 'gametime://' }, // UNTESTED
-		svg_path: svg.NBA,
+		icon: svg.nba,
 	},
 	netflix: {
 		tap_action: { action: 'source', source: 'netflix://' },
@@ -55,26 +55,26 @@ export const defaultSources: Record<string, IActions> = {
 	},
 	primevideo: {
 		tap_action: { action: 'source', source: 'https://app.primevideo.com' },
-		svg_path: svg.PRIMEVIDEO,
+		icon: svg.primevideo,
 	},
 	pia: {
 		tap_action: { action: 'source', source: 'piavpn://' }, // UNTESTED
-		svg_path: svg.PIA,
+		icon: svg.pia,
 	},
 	rakutentv: {
 		tap_action: { action: 'source', source: 'https://rakutentv.page.link' },
-		svg_path: svg.RAKUTENTV,
+		icon: svg.rakutentv,
 	},
 	rakutenviki: {
 		tap_action: { action: 'source', source: 'viki://home' }, // UNTESTED
-		svg_path: svg.RAKUTENVIKI,
+		icon: svg.rakutenviki,
 	},
 	skyshowtime: {
 		tap_action: {
 			action: 'source',
 			source: 'https://www.skyshowtime.com/deeplink',
 		},
-		svg_path: svg.SHOWTIME,
+		icon: svg.showtime,
 	},
 	spotify: {
 		tap_action: { action: 'source', source: 'spotify://' },
@@ -85,15 +85,15 @@ export const defaultSources: Record<string, IActions> = {
 			action: 'source',
 			source: 'https://surfshark.com/locations-ul',
 		}, // UNTESTED
-		svg_path: svg.SURFSHARK,
+		icon: svg.surfshark,
 	},
 	videoland: {
 		tap_action: { action: 'source', source: 'videoland-v2://' },
-		svg_path: svg.VIDEOLAND,
+		icon: svg.videoland,
 	},
 	vudu: {
 		tap_action: { action: 'source', source: 'vuduapp://' },
-		svg_path: svg.VUDU,
+		icon: svg.vudu,
 	},
 	youtube: {
 		tap_action: { action: 'source', source: 'vnd.youtube://' },

@@ -11,7 +11,6 @@ import { BaseRemoteElement } from './base-remote-element';
 @customElement('remote-button')
 export class RemoteButton extends BaseRemoteElement {
 	@property({ attribute: false }) actionKey!: string;
-	@property({ attribute: false }) customIcon?: string;
 
 	clickTimer?: ReturnType<typeof setTimeout>;
 	clickCount: number = 0;
@@ -75,12 +74,12 @@ export class RemoteButton extends BaseRemoteElement {
 				// Only repeat hold action for directional keys and volume
 				// prettier-ignore
 				if (['up', 'down', 'left', 'right', 'volume_up', 'volume_down', 'delete'].includes(this.actionKey)) {
-				this.holdInterval = setInterval(() => {
-					this.clickAction('tap_action')
-				}, 100);
-			} else {
-				this.clickAction('hold_action')
-			}
+					this.holdInterval = setInterval(() => {
+						this.clickAction('tap_action')
+					}, 100);
+				} else {
+					this.clickAction('hold_action')
+				}
 			}
 		}, 500);
 	}
@@ -111,17 +110,12 @@ export class RemoteButton extends BaseRemoteElement {
 	}
 
 	render(inputTemplate?: TemplateResult<1>) {
-		const icon = renderTemplate(
-			this.hass,
-			this.actions.icon as string,
-		) as string;
-		const svgPath =
-			renderTemplate(this.hass, this.actions.svg_path as string) ??
-			renderTemplate(this.hass, this.customIcon as string);
-
 		let haIcon = html``;
-		if (icon) {
-			haIcon = html`<ha-icon .icon="${icon}"></ha-icon>`;
+		let svgPath;
+		if (this.actions.icon && this.actions.icon.includes(':')) {
+			haIcon = html`<ha-icon .icon="${this.actions.icon}"></ha-icon>`;
+		} else {
+			svgPath = this.actions.icon;
 		}
 
 		const style = structuredClone(this._style ?? {});
