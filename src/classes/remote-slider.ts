@@ -259,9 +259,10 @@ export class RemoteSlider extends BaseRemoteElement {
 				-webkit-appearance: none;
 				height: var(--background-height);
 				width: 24px;
+				border-color: var(--color);
+				background: var(--color);
 				cursor: pointer;
 				z-index: 1;
-				background: var(--color);
 				box-shadow: -100vw 0 0 100vw var(--color);
 			}
 
