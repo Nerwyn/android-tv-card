@@ -108,7 +108,8 @@ export class RemoteSlider extends BaseRemoteElement {
 		if (this.lastX == undefined) {
 			this.lastX = currentX;
 		} else if (
-			Math.abs(currentX - this.lastX) < Math.abs(currentY - this.lastY)
+			Math.abs(currentX - this.lastX) <
+			Math.abs(currentY - this.lastY) - 20
 		) {
 			this.scrolling = true;
 		}
