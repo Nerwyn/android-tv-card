@@ -590,7 +590,7 @@ Similary to `button_style`, `slider_style` can be used to change the CSS of the 
 | ------------------- | ------------------------------------------------------------------------- |
 | --color             | Color of the slider thumb / percentage on.                                |
 | --background        | Slider background color.                                                  |
-| height              | Slider thumb / percentage on height.                                      |
+| --height            | Slider thumb / percentage on height.                                      |
 | --background-height | Slider background height. Maximum is contrained by the foreground height. |
 | --border-radius     | Border radius of the entire slider.                                       |
 
@@ -1419,7 +1419,7 @@ touchpad_style:
     linear-gradient(336deg, rgba(0,0,255,.8), rgba(0,0,255,0) 70.71%)
 slider_style:
   '--border-radius': 4px
-  height: 24px
+  '--height': 24px
   '--background-height': 12px
   '--color': darkred
   '--background': red
