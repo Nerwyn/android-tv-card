@@ -616,3 +616,7 @@ window.customCards.push({
 	name: 'Android TV Card',
 	description: 'Remote for Android TV',
 });
+
+if (!window.structuredClone) {
+	window.structuredClone = (obj) => JSON.parse(JSON.stringify(obj));
+}
