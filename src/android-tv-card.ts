@@ -233,6 +233,7 @@ class AndroidTVCard extends LitElement {
 				}
 			}
 		}
+		console.log(config);
 
 		return config;
 	}
