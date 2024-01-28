@@ -193,19 +193,6 @@ class AndroidTVCard extends LitElement {
 					const action = customAction[
 						actionType as keyof IActions
 					] as IAction;
-					if (['call-service', 'more-info'].includes(action.action)) {
-						// Merge service_data, target, and data fields
-						action.data = {
-							...action.data,
-							...(
-								action as unknown as Record<
-									string,
-									IData | undefined
-								>
-							).service_data,
-							...action.target,
-						};
-					}
 
 					// Populate action field
 					if (!('action' in action)) {
@@ -227,6 +214,20 @@ class AndroidTVCard extends LitElement {
 						} else {
 							(action as IAction).action = 'none';
 						}
+					}
+
+					// Merge service_data, target, and data fields
+					if (['call-service', 'more-info'].includes(action.action)) {
+						action.data = {
+							...action.data,
+							...(
+								action as unknown as Record<
+									string,
+									IData | undefined
+								>
+							).service_data,
+							...action.target,
+						};
 					}
 				}
 			}
