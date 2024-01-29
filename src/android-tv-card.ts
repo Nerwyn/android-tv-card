@@ -217,7 +217,11 @@ class AndroidTVCard extends LitElement {
 					}
 
 					// Merge service_data, target, and data fields
-					if (['call-service', 'more-info'].includes(action.action)) {
+					if (
+						['data', 'target', 'service_data'].some(
+							(key) => key in action,
+						)
+					) {
 						action.data = {
 							...action.data,
 							...(
