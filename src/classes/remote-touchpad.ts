@@ -95,6 +95,11 @@ export class RemoteTouchpad extends BaseRemoteElement {
 						console.log(this.targetTouches.length);
 					}
 					this.clickTimer = setTimeout(() => {
+						console.log('Debug 5');
+						console.log(this.targetTouches);
+						if (this.targetTouches) {
+							console.log(this.targetTouches.length);
+						}
 						this.clickAction(
 							this.targetTouches && this.targetTouches.length > 1
 								? 'multi_tap_action'
@@ -105,7 +110,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			}
 		} else {
 			// No double tap action defined, tap action is triggered
-			console.log('Debug 5');
+			console.log('Debug 6');
 			console.log(this.targetTouches);
 			if (this.targetTouches) {
 				console.log(this.targetTouches.length);
