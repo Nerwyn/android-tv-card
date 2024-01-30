@@ -1,5 +1,10 @@
 import { html, css } from 'lit';
-import { customElement, property, queryAsync } from 'lit/decorators.js';
+import {
+	customElement,
+	eventOptions,
+	property,
+	queryAsync,
+} from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
 import { Ripple } from '@material/mwc-ripple';
@@ -88,6 +93,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		this.endAction();
 	}
 
+	@eventOptions({ passive: true })
 	onHoldStart(e: TouchEvent | MouseEvent) {
 		this._rippleHandlers.startPress(e as unknown as Event);
 		this.holdStart = true;
@@ -166,6 +172,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		}
 	}
 
+	@eventOptions({ passive: true })
 	onHoldMove(e: TouchEvent | MouseEvent) {
 		if (!this.initialX || !this.initialY || !this.holdStart) {
 			return;
