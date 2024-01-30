@@ -191,7 +191,8 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		const diffY = this.initialY - currentY;
 
 		// Only consider significant enough movement
-		if (Math.abs(diffX) > 1 || Math.abs(diffY) > 1) {
+		const sensitivity = 2;
+		if (Math.abs(Math.abs(diffX) - Math.abs(diffY)) > sensitivity) {
 			if (Math.abs(diffX) > Math.abs(diffY)) {
 				// Sliding horizontally
 				this.holdAction = diffX > 0 ? 'left' : 'right';
