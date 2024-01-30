@@ -112,8 +112,8 @@ export class RemoteTouchpad extends BaseRemoteElement {
 
 		if ('targetTouches' in e) {
 			const targetTouches = e.targetTouches
-			this.initialX = e.targetTouches[0].clientX;
-			this.initialY = e.targetTouches[0].clientY;
+			this.initialX = targetTouches[0].clientX;
+			this.initialY = targetTouches[0].clientY;
 			
 			// Multi touch debug logging
 			alert('targetTouches: ' + targetTouches.length)
