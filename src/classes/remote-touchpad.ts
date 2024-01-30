@@ -110,9 +110,15 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			}
 		}, 500);
 
-		if ('touches' in e) {
-			this.initialX = e.touches[0].clientX;
-			this.initialY = e.touches[0].clientY;
+		if ('targetTouches' in e) {
+			const targetTouches = e.targetTouches
+			this.initialX = e.targetTouches[0].clientX;
+			this.initialY = e.targetTouches[0].clientY;
+			
+			// Multi touch debug logging
+			alert('targetTouches: ' + targetTouches.length)
+			console.log(targetTouches)
+
 		} else {
 			this.initialX = e.clientX;
 			this.initialY = e.clientY;
@@ -120,18 +126,6 @@ export class RemoteTouchpad extends BaseRemoteElement {
 	}
 
 	onHoldEnd(e: TouchEvent | MouseEvent) {
-		// Multi touch debug logging
-		if ('touches' in e) {
-			const touches = e.touches
-			alert('touches: ' + touches.length)
-			console.log(touches)
-		}
-		if ('targetTouches' in e) {
-			const targetTouches = e.touches
-			alert('targetTouches: ' + targetTouches.length)
-			console.log(targetTouches)
-		}
-
 		clearTimeout(this.holdTimer as ReturnType<typeof setTimeout>);
 		clearInterval(this.holdInterval as ReturnType<typeof setInterval>);
 		clearTimeout(this.clickTimer as ReturnType<typeof setTimeout>);
