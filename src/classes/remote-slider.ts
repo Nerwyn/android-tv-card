@@ -36,7 +36,13 @@ export class RemoteSlider extends BaseRemoteElement {
 			slider.value = start.toString();
 			this.newValue = end;
 
-			if (end > this.range[0]) {
+			if (
+				end >
+				(renderTemplate(
+					this.hass,
+					this.range[0] as unknown as string,
+				) as unknown as number)
+			) {
 				slider.className = 'slider';
 			}
 
