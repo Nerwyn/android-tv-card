@@ -108,15 +108,14 @@ export class RemoteTouchpad extends BaseRemoteElement {
 								this.cancelEndAction();
 							}
 							this.fireHapticEvent('selection');
-							let action: ActionType = 'tap_action';
 							if (this.targetTouches) {
 								console.log(this.targetTouches.length);
-								if (this.targetTouches.length > 1) {
-									action = 'multi_tap_action';
-								}
 							}
 							this.sendAction(
-								action,
+								this.targetTouches &&
+									this.targetTouches.length > 1
+									? 'multi_tap_action'
+									: 'tap_action',
 								this.directionActions[this.holdAction!],
 							);
 							console.log(this.holdAction);
@@ -135,15 +134,15 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		}
 
 		if ('targetTouches' in e) {
-			let initialX = 0;
-			let initialY = 0;
+			let totalX = 0;
+			let totalY = 0;
 			this.targetTouches = e.targetTouches;
 			for (const touch of this.targetTouches) {
-				initialX += touch.clientX;
-				initialY += touch.clientY;
+				totalX += touch.clientX;
+				totalY += touch.clientY;
 			}
-			this.initialX = initialX / this.targetTouches.length;
-			this.initialY = initialY / this.targetTouches.length;
+			this.initialX = totalX / this.targetTouches.length;
+			this.initialY = totalY / this.targetTouches.length;
 
 			console.log(this.targetTouches.length);
 		} else {
@@ -193,12 +192,12 @@ export class RemoteTouchpad extends BaseRemoteElement {
 
 		const diffX = this.initialX - currentX;
 		const diffY = this.initialY - currentY;
-		console.log('initialX: ' + this.initialX)
-		console.log('initialY: ' + this.initialY)
-		console.log('currentX: ' + currentX)
-		console.log('currentY: ' + currentY)
-		console.log('diffX: ' + diffX)
-		console.log('diffY: ' + diffY)
+		console.log('initialX: ' + this.initialX);
+		console.log('initialY: ' + this.initialY);
+		console.log('currentX: ' + currentX);
+		console.log('currentY: ' + currentY);
+		console.log('diffX: ' + diffX);
+		console.log('diffY: ' + diffY);
 
 		let action;
 		if (Math.abs(diffX) > Math.abs(diffY)) {
@@ -217,8 +216,8 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			this.directionActions[this.holdAction!],
 		);
 
-		this.initialX = undefined;
-		this.initialY = undefined;
+		// this.initialX = undefined;
+		// this.initialY = undefined;
 	}
 
 	onMouseLeave(_e: MouseEvent) {
@@ -245,6 +244,9 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		this.holdMove = false;
 		this.holdAction = undefined;
 		this.clickCount = 0;
+
+		this.initialX = undefined;
+		this.initialY = undefined;
 		this.targetTouches = undefined;
 	}
 
