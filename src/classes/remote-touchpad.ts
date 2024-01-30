@@ -89,7 +89,6 @@ export class RemoteTouchpad extends BaseRemoteElement {
 	}
 
 	onHoldStart(e: TouchEvent | MouseEvent) {
-		e.preventDefault();
 		this._rippleHandlers.startPress(e as unknown as Event);
 		this.holdStart = true;
 
@@ -171,8 +170,6 @@ export class RemoteTouchpad extends BaseRemoteElement {
 	}
 
 	onHoldMove(e: TouchEvent | MouseEvent) {
-		e.preventDefault();
-
 		if (!this.initialX || !this.initialY || !this.holdStart) {
 			return;
 		}
