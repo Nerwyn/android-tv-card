@@ -54,22 +54,24 @@ export class RemoteTouchpad extends BaseRemoteElement {
 
 	onClick(e: TouchEvent | MouseEvent) {
 		e.stopImmediatePropagation();
-		if (this.targetTouches) {
-			// Track number of fingers used during double taps to prevent it being triggered immediately
-			if (
-				!this.doubleTapCount ||
-				this.targetTouches.length == this.doubleTapCount
-			) {
-				this.doubleTapCount++;
-				this.clickCount++;
-			} else if (this.targetTouches.length > this.doubleTapCount) {
-				this.doubleTapCount = this.targetTouches.length;
-			}
-			console.log('clickCount: ' + this.clickCount);
-			console.log('doubleTapCount: ' + this.doubleTapCount);
-		} else {
-			this.clickCount++;
-		}
+		this.clickCount++;
+		const doubleTapThreshold = this.targetTouches?.length || 1;
+		// if (this.targetTouches) {
+		// 	// Track number of fingers used during double taps to prevent it being triggered immediately
+		// 	if (
+		// 		!this.doubleTapCount ||
+		// 		this.targetTouches.length == this.doubleTapCount
+		// 	) {
+		// 		this.doubleTapCount++;
+		// 		this.clickCount++;
+		// 	} else if (this.targetTouches.length > this.doubleTapCount) {
+		// 		this.doubleTapCount = this.targetTouches.length;
+		// 	}
+		// 	console.log('clickCount: ' + this.clickCount);
+		// 	console.log('doubleTapCount: ' + this.doubleTapCount);
+		// } else {
+		// 	this.clickCount++;
+		// }
 
 		console.log('Debug 1');
 		console.log(this.targetTouches);
@@ -90,7 +92,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			}
 
 			// Double tap action is defined
-			if (this.clickCount > 1) {
+			if (this.clickCount > doubleTapThreshold) {
 				// Double tap action is triggered
 				console.log('Debug 3');
 				console.log(this.targetTouches);
