@@ -172,7 +172,6 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		if (!this.initialX || !this.initialY || !this.holdStart) {
 			return;
 		}
-		this.holdMove = true;
 
 		let currentX: number = 0;
 		let currentY: number = 0;
@@ -207,14 +206,17 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			// Sliding vertically
 			action = diffY > 0 ? 'up' : 'down';
 		}
-		this.fireHapticEvent('selection');
-		this.holdAction = action as DirectionAction;
-		this.sendAction(
-			this.targetTouches && this.targetTouches.length > 1
-				? 'multi_tap_action'
-				: 'tap_action',
-			this.directionActions[this.holdAction!],
-		);
+		if (!this.holdMove) {
+			this.fireHapticEvent('selection');
+			this.holdAction = action as DirectionAction;
+			this.sendAction(
+				this.targetTouches && this.targetTouches.length > 1
+					? 'multi_tap_action'
+					: 'tap_action',
+				this.directionActions[this.holdAction!],
+			);
+			this.holdMove = true;
+		}
 
 		// this.initialX = undefined;
 		// this.initialY = undefined;
