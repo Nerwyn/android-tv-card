@@ -88,6 +88,9 @@ export class RemoteTouchpad extends BaseRemoteElement {
 					? 'multi_tap_action'
 					: 'tap_action',
 			);
+			if (this.targetTouches) {
+				console.log(this.targetTouches.length);
+			}
 		}
 
 		this.endAction();
@@ -114,9 +117,6 @@ export class RemoteTouchpad extends BaseRemoteElement {
 								this.endAction();
 							}
 							this.fireHapticEvent('selection');
-							if (this.targetTouches) {
-								console.log(this.targetTouches.length);
-							}
 							this.sendAction(
 								this.targetTouches &&
 									this.targetTouches.length > 1
@@ -124,7 +124,6 @@ export class RemoteTouchpad extends BaseRemoteElement {
 									: 'tap_action',
 								this.directionActions[this.holdAction!],
 							);
-							console.log(this.holdAction);
 						}, 100);
 					}
 				} else {
@@ -149,8 +148,6 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			}
 			this.initialX = totalX / this.targetTouches.length;
 			this.initialY = totalY / this.targetTouches.length;
-
-			console.log(this.targetTouches.length);
 		} else {
 			this.initialX = e.clientX;
 			this.initialY = e.clientY;
@@ -188,7 +185,6 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			}
 			currentX = currentX / this.targetTouches.length;
 			currentY = currentY / this.targetTouches.length;
-			console.log(this.targetTouches.length);
 		} else {
 			currentX = e.clientX || 0;
 			currentY = e.clientY || 0;
@@ -216,13 +212,6 @@ export class RemoteTouchpad extends BaseRemoteElement {
 					this.directionActions[this.holdAction!],
 				);
 				this.holdMove = true;
-
-				console.log('initialX: ' + this.initialX);
-				console.log('initialY: ' + this.initialY);
-				console.log('currentX: ' + currentX);
-				console.log('currentY: ' + currentY);
-				console.log('diffX: ' + diffX);
-				console.log('diffY: ' + diffY);
 			}
 		}
 	}
