@@ -94,11 +94,17 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		this.holdStart = true;
 
 		if ('targetTouches' in e) {
-			const targetTouches = e.targetTouches;
-			this.initialX = targetTouches[0].clientX;
-			this.initialY = targetTouches[0].clientY;
-			this.targetTouches = targetTouches;
-			console.log(targetTouches.length);
+			let initialX = 0;
+			let initialY = 0;
+			this.targetTouches = e.targetTouches;
+			for (const touch of this.targetTouches) {
+				initialX += touch.clientX;
+				initialY += touch.clientY;
+			}
+			this.initialX = initialX / this.targetTouches.length;
+			this.initialY = initialY / this.targetTouches.length;
+
+			console.log(this.targetTouches.length);
 		} else {
 			this.initialX = e.clientX;
 			this.initialY = e.clientY;
@@ -175,12 +181,16 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		}
 		this.holdMove = true;
 
-		let currentX: number;
-		let currentY: number;
+		let currentX: number = 0;
+		let currentY: number = 0;
 		if ('targetTouches' in e) {
 			this.targetTouches = e.targetTouches;
-			currentX = this.targetTouches[0].clientX || 0;
-			currentY = this.targetTouches[0].clientY || 0;
+			for (const touch of this.targetTouches) {
+				currentX += touch.clientX;
+				currentY += touch.clientY;
+			}
+			currentX = currentX / this.targetTouches.length;
+			currentY = currentY / this.targetTouches.length;
 			console.log(this.targetTouches.length);
 		} else {
 			currentX = e.clientX || 0;
