@@ -81,6 +81,16 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			// No double tap action defiend, tap action is triggered
 			this.clickAction('tap_action');
 		}
+
+		// Multi touch debug logging
+		if ('touches' in e) {
+			console.log(e)
+			alert('touches: ' + e.touches.length)
+		}
+		if ('targetTouches' in e) {
+			console.log(e)
+			alert('targetTouches: ' + e.targetTouches.length)
+		}
 	}
 
 	@eventOptions({ passive: true })
