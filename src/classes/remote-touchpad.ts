@@ -120,6 +120,9 @@ export class RemoteTouchpad extends BaseRemoteElement {
 								this.cancelEndAction();
 							}
 							this.fireHapticEvent('selection');
+							if (this.targetTouches) {
+								console.log(this.targetTouches.length);
+							}
 							this.sendAction(
 								this.targetTouches &&
 									this.targetTouches.length > 1
