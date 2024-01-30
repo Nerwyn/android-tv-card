@@ -60,7 +60,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 				!this.doubleTapCount ||
 				this.targetTouches.length == this.doubleTapCount
 			) {
-				this.doubleTapCount = this.targetTouches.length;
+				this.doubleTapCount++;
 				this.clickCount++;
 			} else if (this.targetTouches.length > this.doubleTapCount) {
 				this.doubleTapCount = this.targetTouches.length;
