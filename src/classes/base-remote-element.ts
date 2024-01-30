@@ -39,6 +39,8 @@ export class BaseRemoteElement extends LitElement {
 		}
 	}
 
+	cancelEndAction() {}
+
 	sendAction(actionType: ActionType, actions: IActions = this.actions) {
 		let action;
 		switch (actionType) {
@@ -75,31 +77,36 @@ export class BaseRemoteElement extends LitElement {
 			return;
 		}
 
-		switch (action.action) {
-			case 'navigate':
-				this.navigate(action);
-				break;
-			case 'url':
-				this.toUrl(action);
-				break;
-			case 'assist':
-				this.assist(action);
-				break;
-			case 'more-info':
-				this.moreInfo(action);
-				break;
-			case 'none':
-				break;
-			case 'call-service':
-				this.callService(action);
-				break;
-			case 'source':
-				this.changeSource(action.source!);
-				break;
-			case 'key':
-			default:
-				this.sendCommand(action.key!, actionType);
-				break;
+		try {
+			switch (action.action) {
+				case 'navigate':
+					this.navigate(action);
+					break;
+				case 'url':
+					this.toUrl(action);
+					break;
+				case 'assist':
+					this.assist(action);
+					break;
+				case 'more-info':
+					this.moreInfo(action);
+					break;
+				case 'none':
+					break;
+				case 'call-service':
+					this.callService(action);
+					break;
+				case 'source':
+					this.changeSource(action.source!);
+					break;
+				case 'key':
+				default:
+					this.sendCommand(action.key!, actionType);
+					break;
+			}
+		} catch (e) {
+			this.cancelEndAction();
+			throw e;
 		}
 	}
 
