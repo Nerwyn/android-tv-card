@@ -67,11 +67,15 @@ export class RemoteTouchpad extends BaseRemoteElement {
 				);
 			} else {
 				// Single tap action is triggered if double tap is not within 200ms
-				this.clickTimer = setTimeout(() => {
-					this.clickAction(
-						this.touchCount > 1 ? 'multi_tap_action' : 'tap_action',
-					);
-				}, 200);
+				if (!this.clickTimer) {
+					this.clickTimer = setTimeout(() => {
+						this.clickAction(
+							this.touchCount > 1
+								? 'multi_tap_action'
+								: 'tap_action',
+						);
+					}, 200);
+				}
 			}
 		} else {
 			// No double tap action defiend, tap action is triggered
@@ -98,33 +102,41 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			this.initialY = e.clientY;
 		}
 
-		this.holdTimer = setTimeout(() => {
-			this.hold = true;
+		if (!this.holdTimer) {
+			this.holdTimer = setTimeout(() => {
+				this.hold = true;
 
-			// Only repeat hold action for directional keys
-			if (
-				['up', 'down', 'left', 'right'].includes(
-					this.holdAction as DirectionAction,
-				)
-			) {
-				this.holdInterval = setInterval(() => {
-					this.fireHapticEvent('selection');
-					this.sendAction(
-						this.touchCount > 1 ? 'multi_tap_action' : 'tap_action',
-						this.directionActions[this.holdAction!],
-					);
-					if (!this.hold) {
-						this.cancelEndAction();
+				// Only repeat hold action for directional keys
+				if (
+					['up', 'down', 'left', 'right'].includes(
+						this.holdAction as DirectionAction,
+					)
+				) {
+					if (!this.holdInterval) {
+						this.holdInterval = setInterval(() => {
+							this.fireHapticEvent('selection');
+							this.sendAction(
+								this.touchCount > 1
+									? 'multi_tap_action'
+									: 'tap_action',
+								this.directionActions[this.holdAction!],
+							);
+							if (!this.hold) {
+								this.cancelEndAction();
+							}
+						}, 100);
 					}
-				}, 100);
-			} else {
-				this.fireHapticEvent('medium');
-				this.sendAction(
-					this.touchCount > 1 ? 'multi_hold_action' : 'hold_action',
-				);
-				this.cancelEndAction();
-			}
-		}, 500);
+				} else {
+					this.fireHapticEvent('medium');
+					this.sendAction(
+						this.touchCount > 1
+							? 'multi_hold_action'
+							: 'hold_action',
+					);
+					this.cancelEndAction();
+				}
+			}, 500);
+		}
 	}
 
 	onHoldEnd(e: TouchEvent | MouseEvent) {
