@@ -48,15 +48,17 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		this.fireHapticEvent(haptic);
 
 		this.sendAction(actionType);
-		if (this.targetTouches) {
-			console.log(this.targetTouches.length);
-		}
 		this.endAction();
 	}
 
 	onClick(e: TouchEvent | MouseEvent) {
 		e.stopImmediatePropagation();
 		this.clickCount++;
+
+		console.log(this.targetTouches);
+		if (this.targetTouches) {
+			console.log(this.targetTouches.length);
+		}
 
 		if (
 			('double_tap_action' in this.actions &&
