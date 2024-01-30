@@ -93,23 +93,6 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		this._rippleHandlers.startPress(e as unknown as Event);
 		this.holdStart = true;
 
-		if ('targetTouches' in e) {
-			let initialX = 0;
-			let initialY = 0;
-			this.targetTouches = e.targetTouches;
-			for (const touch of this.targetTouches) {
-				initialX += touch.clientX;
-				initialY += touch.clientY;
-			}
-			this.initialX = initialX / this.targetTouches.length;
-			this.initialY = initialY / this.targetTouches.length;
-
-			console.log(this.targetTouches.length);
-		} else {
-			this.initialX = e.clientX;
-			this.initialY = e.clientY;
-		}
-
 		if (!this.holdTimer) {
 			this.holdTimer = setTimeout(() => {
 				this.hold = true;
@@ -153,6 +136,23 @@ export class RemoteTouchpad extends BaseRemoteElement {
 					this.cancelEndAction();
 				}
 			}, 500);
+		}
+
+		if ('targetTouches' in e) {
+			let initialX = 0;
+			let initialY = 0;
+			this.targetTouches = e.targetTouches;
+			for (const touch of this.targetTouches) {
+				initialX += touch.clientX;
+				initialY += touch.clientY;
+			}
+			this.initialX = initialX / this.targetTouches.length;
+			this.initialY = initialY / this.targetTouches.length;
+
+			console.log(this.targetTouches.length);
+		} else {
+			this.initialX = e.clientX;
+			this.initialY = e.clientY;
 		}
 	}
 
