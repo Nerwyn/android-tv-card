@@ -51,8 +51,10 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		this.clickCount++;
 
 		if (
-			'double_tap_action' in this.actions &&
-			this.actions.double_tap_action!.action != 'none'
+			('double_tap_action' in this.actions &&
+				this.actions.double_tap_action!.action != 'none') ||
+			('multi_double_tap_action' in this.actions &&
+				this.actions.multi_double_tap_action!.action != 'none')
 		) {
 			// Double tap action is defined
 			if (this.clickCount > 1) {
