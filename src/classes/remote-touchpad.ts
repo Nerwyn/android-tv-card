@@ -121,8 +121,6 @@ export class RemoteTouchpad extends BaseRemoteElement {
 					: 'tap_action',
 			);
 		}
-
-		this.endAction();
 	}
 
 	@eventOptions({ passive: true })
