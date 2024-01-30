@@ -39,7 +39,7 @@ export class BaseRemoteElement extends LitElement {
 		}
 	}
 
-	cancelEndAction() {}
+	endAction() {}
 
 	sendAction(actionType: ActionType, actions: IActions = this.actions) {
 		let action;
@@ -105,7 +105,7 @@ export class BaseRemoteElement extends LitElement {
 					break;
 			}
 		} catch (e) {
-			this.cancelEndAction();
+			this.endAction();
 			throw e;
 		}
 	}

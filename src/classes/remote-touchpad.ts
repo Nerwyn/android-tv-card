@@ -43,7 +43,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		this.fireHapticEvent(haptic);
 
 		this.sendAction(actionType);
-		this.cancelEndAction();
+		this.endAction();
 	}
 
 	onClick(e: TouchEvent | MouseEvent) {
@@ -85,7 +85,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			);
 		}
 
-		this.cancelEndAction();
+		this.endAction();
 	}
 
 	onHoldStart(e: TouchEvent | MouseEvent) {
@@ -105,7 +105,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 					if (!this.holdInterval) {
 						this.holdInterval = setInterval(() => {
 							if (!this.hold) {
-								this.cancelEndAction();
+								this.endAction();
 							}
 							this.fireHapticEvent('selection');
 							if (this.targetTouches) {
@@ -128,7 +128,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 							? 'multi_hold_action'
 							: 'hold_action',
 					);
-					this.cancelEndAction();
+					this.endAction();
 				}
 			}, 500);
 		}
@@ -154,12 +154,23 @@ export class RemoteTouchpad extends BaseRemoteElement {
 	onHoldEnd(e: TouchEvent | MouseEvent) {
 		this._rippleHandlers.endPress();
 
-		if (this.hold || this.holdMove) {
-			this.hold = false;
-			this.holdMove = false;
+		if (this.hold) {
 			e.stopImmediatePropagation();
 			e.preventDefault();
-			this.cancelEndAction();
+			this.endAction();
+		} else if (this.holdMove) {
+			e.stopImmediatePropagation();
+			e.preventDefault();
+
+			this.fireHapticEvent('selection');
+			this.sendAction(
+				this.targetTouches && this.targetTouches.length > 1
+					? 'multi_tap_action'
+					: 'tap_action',
+				this.directionActions[this.holdAction!],
+			);
+
+			this.endAction();
 		} else if (
 			(this.touchscreen && this.targetTouches) ||
 			!this.touchscreen
@@ -172,6 +183,8 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		if (!this.initialX || !this.initialY || !this.holdStart) {
 			return;
 		}
+
+		this.holdMove = true;
 
 		let currentX: number = 0;
 		let currentY: number = 0;
@@ -198,41 +211,26 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		console.log('diffX: ' + diffX);
 		console.log('diffY: ' + diffY);
 
-		let action;
 		if (Math.abs(diffX) > Math.abs(diffY)) {
 			// Sliding horizontally
-			action = diffX > 0 ? 'left' : 'right';
+			this.holdAction = diffX > 0 ? 'left' : 'right';
 		} else {
 			// Sliding vertically
-			action = diffY > 0 ? 'up' : 'down';
+			this.holdAction = diffY > 0 ? 'up' : 'down';
 		}
-		if (!this.holdMove) {
-			this.fireHapticEvent('selection');
-			this.holdAction = action as DirectionAction;
-			this.sendAction(
-				this.targetTouches && this.targetTouches.length > 1
-					? 'multi_tap_action'
-					: 'tap_action',
-				this.directionActions[this.holdAction!],
-			);
-			this.holdMove = true;
-		}
-
-		// this.initialX = undefined;
-		// this.initialY = undefined;
 	}
 
 	onMouseLeave(_e: MouseEvent) {
 		this._rippleHandlers.endHover();
-		this.cancelEndAction();
+		this.endAction();
 	}
 
 	onTouchCancel(_e: TouchEvent) {
 		this._rippleHandlers.endPress();
-		this.cancelEndAction();
+		this.endAction();
 	}
 
-	cancelEndAction() {
+	endAction() {
 		clearTimeout(this.holdTimer as ReturnType<typeof setTimeout>);
 		clearInterval(this.holdInterval as ReturnType<typeof setInterval>);
 		clearTimeout(this.clickTimer as ReturnType<typeof setTimeout>);
