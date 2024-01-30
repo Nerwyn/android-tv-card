@@ -40,8 +40,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 
 	clickAction(actionType: ActionType) {
 		clearTimeout(this.clickTimer as ReturnType<typeof setTimeout>);
-		this.clickTimer = undefined;
-		this.clickCount = 0;
+		this.cancelEndAction();
 
 		const haptic = this.actionToHaptic[actionType];
 		this.fireHapticEvent(haptic);
@@ -81,12 +80,11 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			);
 		}
 
-		this.touchCount = 0;
+		this.cancelEndAction();
 	}
 
 	onHoldStart(e: TouchEvent | MouseEvent) {
 		e.preventDefault();
-
 		this._rippleHandlers.startPress(e as unknown as Event);
 		this.holdStart = true;
 
@@ -127,12 +125,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 
 	onHoldEnd(e: TouchEvent | MouseEvent) {
 		e.preventDefault();
-
-		clearTimeout(this.holdTimer as ReturnType<typeof setTimeout>);
-		clearInterval(this.holdInterval as ReturnType<typeof setInterval>);
-		clearTimeout(this.clickTimer as ReturnType<typeof setTimeout>);
-		this.holdStart = false;
-
+		this.cancelEndAction();
 		this._rippleHandlers.endPress();
 
 		if (this.hold || this.holdMove) {
@@ -143,10 +136,6 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		} else {
 			this.onClick(e);
 		}
-
-		this.holdTimer = undefined;
-		this.holdInterval = undefined;
-		this.holdAction = undefined;
 	}
 
 	onHoldMove(e: TouchEvent | MouseEvent) {
@@ -191,20 +180,21 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		this.initialY = undefined;
 	}
 
-	onMouseLeave(e: MouseEvent) {
+	onMouseLeave(_e: MouseEvent) {
 		this._rippleHandlers.endHover();
-		this.onEndCancel(e);
+		this.cancelEndAction();
 	}
 
-	onTouchCancel(e: TouchEvent) {
+	onTouchCancel(_e: TouchEvent) {
 		this._rippleHandlers.endPress();
-		this.onEndCancel(e);
+		this.cancelEndAction();
 	}
 
-	onEndCancel(_e: TouchEvent | MouseEvent) {
+	cancelEndAction() {
 		clearTimeout(this.holdTimer as ReturnType<typeof setTimeout>);
 		clearInterval(this.holdInterval as ReturnType<typeof setInterval>);
 		clearTimeout(this.clickTimer as ReturnType<typeof setTimeout>);
+
 		this.holdTimer = undefined;
 		this.holdInterval = undefined;
 		this.clickTimer = undefined;
@@ -214,6 +204,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		this.holdMove = false;
 		this.holdAction = undefined;
 		this.clickCount = 0;
+		this.touchCount = 0;
 	}
 
 	render() {
