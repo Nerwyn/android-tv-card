@@ -48,6 +48,9 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		this.fireHapticEvent(haptic);
 
 		this.sendAction(actionType);
+		if (this.targetTouches) {
+			console.log(this.targetTouches.length);
+		}
 		this.endAction();
 	}
 
@@ -78,9 +81,6 @@ export class RemoteTouchpad extends BaseRemoteElement {
 								? 'multi_tap_action'
 								: 'tap_action',
 						);
-						if (this.targetTouches) {
-							console.log(this.targetTouches.length);
-						}
 					}, 200);
 				}
 			}
@@ -91,9 +91,6 @@ export class RemoteTouchpad extends BaseRemoteElement {
 					? 'multi_tap_action'
 					: 'tap_action',
 			);
-			if (this.targetTouches) {
-				console.log(this.targetTouches.length);
-			}
 		}
 
 		this.endAction();
