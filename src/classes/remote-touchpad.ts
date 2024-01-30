@@ -131,7 +131,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 								action,
 								this.directionActions[this.holdAction!],
 							);
-							console.log(action);
+							console.log(this.holdAction);
 							console.log(
 								this.directionActions[this.holdAction!][action],
 							);
