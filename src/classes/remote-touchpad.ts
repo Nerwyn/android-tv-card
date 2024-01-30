@@ -84,12 +84,14 @@ export class RemoteTouchpad extends BaseRemoteElement {
 
 		// Multi touch debug logging
 		if ('touches' in e) {
-			console.log(e)
-			alert('touches: ' + e.touches.length)
+			const touches = e.touches
+			console.log(touches)
+			alert('touches: ' + touches.length)
 		}
 		if ('targetTouches' in e) {
-			console.log(e)
-			alert('targetTouches: ' + e.targetTouches.length)
+			const targetTouches = e.touches
+			console.log(targetTouches)
+			alert('targetTouches: ' + targetTouches.length)
 		}
 	}
 
