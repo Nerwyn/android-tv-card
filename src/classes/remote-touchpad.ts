@@ -90,6 +90,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			this.initialX = targetTouches[0].clientX;
 			this.initialY = targetTouches[0].clientY;
 			this.multiTap = targetTouches.length > 1;
+			console.log(targetTouches.length);
 		} else {
 			this.initialX = e.clientX;
 			this.initialY = e.clientY;
@@ -159,6 +160,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			currentX = targetTouches[0].clientX || 0;
 			currentY = targetTouches[0].clientY || 0;
 			this.multiTap = targetTouches.length > 1;
+			console.log(targetTouches.length);
 		} else {
 			currentX = e.clientX || 0;
 			currentY = e.clientY || 0;
