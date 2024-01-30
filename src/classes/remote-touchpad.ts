@@ -121,9 +121,6 @@ export class RemoteTouchpad extends BaseRemoteElement {
 								this.directionActions[this.holdAction!],
 							);
 							console.log(this.holdAction);
-							console.log(
-								this.directionActions[this.holdAction!][action],
-							);
 						}, 100);
 					}
 				} else {
@@ -199,6 +196,12 @@ export class RemoteTouchpad extends BaseRemoteElement {
 
 		const diffX = this.initialX - currentX;
 		const diffY = this.initialY - currentY;
+		console.log('initialX: ' + this.initialX)
+		console.log('initialY: ' + this.initialY)
+		console.log('currentX: ' + currentX)
+		console.log('currentY: ' + currentY)
+		console.log('diffX: ' + diffX)
+		console.log('diffY: ' + diffY)
 
 		let action;
 		if (Math.abs(diffX) > Math.abs(diffY)) {
