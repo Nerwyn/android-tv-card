@@ -113,6 +113,9 @@ export class RemoteTouchpad extends BaseRemoteElement {
 						this.touchCount > 1 ? 'multi_tap_action' : 'tap_action',
 						this.directionActions[this.holdAction!],
 					);
+					if (!this.hold) {
+						this.cancelEndAction();
+					}
 				}, 100);
 			} else {
 				this.fireHapticEvent('medium');
