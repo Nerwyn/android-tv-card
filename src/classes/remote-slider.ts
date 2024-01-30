@@ -55,7 +55,13 @@ export class RemoteSlider extends BaseRemoteElement {
 					if (end >= i) {
 						clearInterval(id);
 						slider.value = end.toString();
-						if (end <= this.range[0]) {
+						if (
+							end <=
+							(renderTemplate(
+								this.hass,
+								this.range[0] as unknown as string,
+							) as unknown as number)
+						) {
 							slider.className = 'slider-off';
 						}
 					}
