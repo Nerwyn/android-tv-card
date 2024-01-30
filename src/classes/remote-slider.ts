@@ -171,7 +171,7 @@ export class RemoteSlider extends BaseRemoteElement {
 		this.speed = 2 * this.step;
 
 		let sliderClass = 'slider';
-		if (!this.value || this.value <= end) {
+		if (this.value == undefined || this.value <= end) {
 			sliderClass = 'slider-off';
 		}
 		const slider = html`
