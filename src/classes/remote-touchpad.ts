@@ -42,7 +42,6 @@ export class RemoteTouchpad extends BaseRemoteElement {
 	initialX?: number;
 	initialY?: number;
 	targetTouches?: TouchList;
-	doubleTapCount: number = 0;
 
 	clickAction(actionType: ActionType) {
 		const haptic = this.actionToHaptic[actionType];
@@ -56,28 +55,6 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		e.stopImmediatePropagation();
 		this.clickCount++;
 		const doubleTapThreshold = this.targetTouches?.length || 1;
-		// if (this.targetTouches) {
-		// 	// Track number of fingers used during double taps to prevent it being triggered immediately
-		// 	if (
-		// 		!this.doubleTapCount ||
-		// 		this.targetTouches.length == this.doubleTapCount
-		// 	) {
-		// 		this.doubleTapCount++;
-		// 		this.clickCount++;
-		// 	} else if (this.targetTouches.length > this.doubleTapCount) {
-		// 		this.doubleTapCount = this.targetTouches.length;
-		// 	}
-		// 	console.log('clickCount: ' + this.clickCount);
-		// 	console.log('doubleTapCount: ' + this.doubleTapCount);
-		// } else {
-		// 	this.clickCount++;
-		// }
-
-		console.log('Debug 1');
-		console.log(this.targetTouches);
-		if (this.targetTouches) {
-			console.log(this.targetTouches.length);
-		}
 
 		if (
 			('double_tap_action' in this.actions &&
@@ -85,20 +62,9 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			('multi_double_tap_action' in this.actions &&
 				this.actions.multi_double_tap_action!.action != 'none')
 		) {
-			console.log('Debug 2');
-			console.log(this.targetTouches);
-			if (this.targetTouches) {
-				console.log(this.targetTouches.length);
-			}
-
 			// Double tap action is defined
 			if (this.clickCount > doubleTapThreshold) {
 				// Double tap action is triggered
-				console.log('Debug 3');
-				console.log(this.targetTouches);
-				if (this.targetTouches) {
-					console.log(this.targetTouches.length);
-				}
 				this.clickAction(
 					this.targetTouches && this.targetTouches.length > 1
 						? 'multi_double_tap_action'
@@ -107,17 +73,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			} else {
 				// Single tap action is triggered if double tap is not within 200ms
 				if (!this.clickTimer) {
-					console.log('Debug 4');
-					console.log(this.targetTouches);
-					if (this.targetTouches) {
-						console.log(this.targetTouches.length);
-					}
 					this.clickTimer = setTimeout(() => {
-						console.log('Debug 5');
-						console.log(this.targetTouches);
-						if (this.targetTouches) {
-							console.log(this.targetTouches.length);
-						}
 						this.clickAction(
 							this.targetTouches && this.targetTouches.length > 1
 								? 'multi_tap_action'
@@ -128,11 +84,6 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			}
 		} else {
 			// No double tap action defined, tap action is triggered
-			console.log('Debug 6');
-			console.log(this.targetTouches);
-			if (this.targetTouches) {
-				console.log(this.targetTouches.length);
-			}
 			this.clickAction(
 				this.targetTouches && this.targetTouches.length > 1
 					? 'multi_tap_action'
@@ -289,7 +240,6 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		this.initialX = undefined;
 		this.initialY = undefined;
 		this.targetTouches = undefined;
-		this.doubleTapCount = 0;
 	}
 
 	render() {
