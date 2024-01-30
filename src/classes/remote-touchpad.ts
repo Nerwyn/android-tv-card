@@ -123,8 +123,10 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		}
 	}
 
-	@eventOptions({ passive: true })
+	// @eventOptions({ passive: true })
 	onHoldStart(e: TouchEvent | MouseEvent) {
+		e.preventDefault();
+
 		this._rippleHandlers.startPress(e as unknown as Event);
 		this.holdStart = true;
 
