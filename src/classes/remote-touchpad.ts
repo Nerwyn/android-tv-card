@@ -190,29 +190,32 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		const diffX = this.initialX - currentX;
 		const diffY = this.initialY - currentY;
 
-		if (Math.abs(diffX) > Math.abs(diffY)) {
-			// Sliding horizontally
-			this.holdAction = diffX > 0 ? 'left' : 'right';
-		} else {
-			// Sliding vertically
-			this.holdAction = diffY > 0 ? 'up' : 'down';
-		}
-		if (!this.holdMove) {
-			this.fireHapticEvent('selection');
-			this.sendAction(
-				this.targetTouches && this.targetTouches.length > 1
-					? 'multi_tap_action'
-					: 'tap_action',
-				this.directionActions[this.holdAction!],
-			);
-			this.holdMove = true;
+		// Only consider significant enough movement
+		if (Math.abs(diffX) > 1 || Math.abs(diffY) > 1) {
+			if (Math.abs(diffX) > Math.abs(diffY)) {
+				// Sliding horizontally
+				this.holdAction = diffX > 0 ? 'left' : 'right';
+			} else {
+				// Sliding vertically
+				this.holdAction = diffY > 0 ? 'up' : 'down';
+			}
+			if (!this.holdMove) {
+				this.fireHapticEvent('selection');
+				this.sendAction(
+					this.targetTouches && this.targetTouches.length > 1
+						? 'multi_tap_action'
+						: 'tap_action',
+					this.directionActions[this.holdAction!],
+				);
+				this.holdMove = true;
 
-			console.log('initialX: ' + this.initialX);
-			console.log('initialY: ' + this.initialY);
-			console.log('currentX: ' + currentX);
-			console.log('currentY: ' + currentY);
-			console.log('diffX: ' + diffX);
-			console.log('diffY: ' + diffY);
+				console.log('initialX: ' + this.initialX);
+				console.log('initialY: ' + this.initialY);
+				console.log('currentX: ' + currentX);
+				console.log('currentY: ' + currentY);
+				console.log('diffX: ' + diffX);
+				console.log('diffY: ' + diffY);
+			}
 		}
 	}
 
