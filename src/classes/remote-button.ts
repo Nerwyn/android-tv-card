@@ -2,7 +2,6 @@ import { TemplateResult, CSSResult, html, css } from 'lit';
 import { customElement, eventOptions, property } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
-import { HapticType } from 'custom-card-helpers';
 import { renderTemplate } from 'ha-nunjucks';
 
 import { ActionType } from '../models';
@@ -27,12 +26,7 @@ export class RemoteButton extends BaseRemoteElement {
 		this.clickTimer = undefined;
 		this.clickCount = 0;
 
-		const actionToHaptic: Record<ActionType, HapticType> = {
-			tap_action: 'light',
-			hold_action: 'medium',
-			double_tap_action: 'success',
-		};
-		let haptic = actionToHaptic[actionType];
+		let haptic = this.actionToHaptic[actionType];
 		if (['up', 'down', 'left', 'right'].includes(this.actionKey)) {
 			haptic = 'selection';
 		}

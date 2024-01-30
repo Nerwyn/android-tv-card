@@ -10,7 +10,6 @@ import { styleMap } from 'lit/directives/style-map.js';
 import { Ripple } from '@material/mwc-ripple';
 import { RippleHandlers } from '@material/mwc-ripple/ripple-handlers';
 
-import { HapticType } from 'custom-card-helpers';
 import { renderTemplate } from 'ha-nunjucks';
 
 import { ActionType, IActions, DirectionAction } from '../models';
@@ -42,18 +41,14 @@ export class RemoteTouchpad extends BaseRemoteElement {
 
 	initialX?: number;
 	initialY?: number;
+	touchCount: number = 0;
 
 	clickAction(actionType: ActionType) {
 		clearTimeout(this.clickTimer as ReturnType<typeof setTimeout>);
 		this.clickTimer = undefined;
 		this.clickCount = 0;
 
-		const actionToHaptic: Record<ActionType, HapticType> = {
-			tap_action: 'light',
-			hold_action: 'medium',
-			double_tap_action: 'success',
-		};
-		const haptic = actionToHaptic[actionType];
+		const haptic = this.actionToHaptic[actionType];
 		this.fireHapticEvent(haptic);
 
 		this.sendAction(actionType);
@@ -70,23 +65,43 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			// Double tap action is defined
 			if (this.clickCount > 1) {
 				// Double tap action is triggered
-				this.clickAction('double_tap_action');
+				this.clickAction(
+					this.touchCount > 1
+						? 'multi_double_tap_action'
+						: 'double_tap_action',
+				);
 			} else {
 				// Single tap action is triggered if double tap is not within 200ms
 				this.clickTimer = setTimeout(() => {
-					this.clickAction('tap_action');
+					this.clickAction(
+						this.touchCount > 1 ? 'multi_tap_action' : 'tap_action',
+					);
 				}, 200);
 			}
 		} else {
 			// No double tap action defiend, tap action is triggered
-			this.clickAction('tap_action');
+			this.clickAction(
+				this.touchCount > 1 ? 'multi_tap_action' : 'tap_action',
+			);
 		}
+
+		this.touchCount = 0;
 	}
 
 	@eventOptions({ passive: true })
 	onHoldStart(e: TouchEvent | MouseEvent) {
 		this._rippleHandlers.startPress(e as unknown as Event);
 		this.holdStart = true;
+
+		if ('targetTouches' in e) {
+			const targetTouches = e.targetTouches;
+			this.initialX = targetTouches[0].clientX;
+			this.initialY = targetTouches[0].clientY;
+			this.touchCount = targetTouches.length;
+		} else {
+			this.initialX = e.clientX;
+			this.initialY = e.clientY;
+		}
 
 		this.holdTimer = setTimeout(() => {
 			this.hold = true;
@@ -100,29 +115,17 @@ export class RemoteTouchpad extends BaseRemoteElement {
 				this.holdInterval = setInterval(() => {
 					this.fireHapticEvent('selection');
 					this.sendAction(
-						'tap_action',
+						this.touchCount > 1 ? 'multi_tap_action' : 'tap_action',
 						this.directionActions[this.holdAction!],
 					);
 				}, 100);
 			} else {
 				this.fireHapticEvent('medium');
-				this.sendAction('hold_action');
+				this.sendAction(
+					this.touchCount > 1 ? 'multi_hold_action' : 'hold_action',
+				);
 			}
 		}, 500);
-
-		if ('targetTouches' in e) {
-			const targetTouches = e.targetTouches
-			this.initialX = targetTouches[0].clientX;
-			this.initialY = targetTouches[0].clientY;
-			
-			// Multi touch debug logging
-			alert('targetTouches: ' + targetTouches.length)
-			console.log(targetTouches)
-
-		} else {
-			this.initialX = e.clientX;
-			this.initialY = e.clientY;
-		}
 	}
 
 	onHoldEnd(e: TouchEvent | MouseEvent) {
@@ -157,8 +160,10 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		let currentX: number;
 		let currentY: number;
 		if ('touches' in e) {
-			currentX = e.touches[0].clientX || 0;
-			currentY = e.touches[0].clientY || 0;
+			const targetTouches = e.targetTouches;
+			currentX = targetTouches[0].clientX || 0;
+			currentY = targetTouches[0].clientY || 0;
+			this.touchCount = targetTouches.length;
 		} else {
 			currentX = e.clientX || 0;
 			currentY = e.clientY || 0;
@@ -177,7 +182,10 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		}
 		this.fireHapticEvent('selection');
 		this.holdAction = action as DirectionAction;
-		this.sendAction('tap_action', this.directionActions[this.holdAction!]);
+		this.sendAction(
+			this.touchCount > 1 ? 'multi_tap_action' : 'tap_action',
+			this.directionActions[this.holdAction!],
+		);
 
 		this.initialX = undefined;
 		this.initialY = undefined;

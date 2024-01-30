@@ -288,6 +288,9 @@ class AndroidTVCard extends LitElement {
 			'tap_action',
 			'hold_action',
 			'double_tap_action',
+			'multi_tap_action',
+			'multi_hold_action',
+			'multi_double_tap_action',
 		];
 		for (const actionType of actionTypes) {
 			if (!(actionType in actions) && actionType in defaultActions) {
