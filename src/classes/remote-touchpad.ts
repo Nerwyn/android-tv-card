@@ -42,7 +42,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 	initialX?: number;
 	initialY?: number;
 	targetTouches?: TouchList;
-	doubleTapTouches: number = 0;
+	doubleTapCount: number = 0;
 
 	clickAction(actionType: ActionType) {
 		const haptic = this.actionToHaptic[actionType];
@@ -57,14 +57,16 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		if (this.targetTouches) {
 			// Track number of fingers used during double taps to prevent it being triggered immediately
 			if (
-				!this.doubleTapTouches ||
-				this.targetTouches.length == this.doubleTapTouches
+				!this.doubleTapCount ||
+				this.targetTouches.length == this.doubleTapCount
 			) {
-				this.doubleTapTouches = this.targetTouches.length;
+				this.doubleTapCount = this.targetTouches.length;
 				this.clickCount++;
-			} else if (this.targetTouches.length > this.doubleTapTouches) {
-				this.doubleTapTouches = this.targetTouches.length;
+			} else if (this.targetTouches.length > this.doubleTapCount) {
+				this.doubleTapCount = this.targetTouches.length;
 			}
+			console.log('clickCount: ' + this.clickCount);
+			console.log('doubleTapCount: ' + this.doubleTapCount);
 		} else {
 			this.clickCount++;
 		}
@@ -285,7 +287,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		this.initialX = undefined;
 		this.initialY = undefined;
 		this.targetTouches = undefined;
-		this.doubleTapTouches = 0;
+		this.doubleTapCount = 0;
 	}
 
 	render() {
