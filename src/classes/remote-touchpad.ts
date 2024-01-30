@@ -140,7 +140,6 @@ export class RemoteTouchpad extends BaseRemoteElement {
 	}
 
 	onHoldEnd(e: TouchEvent | MouseEvent) {
-		e.preventDefault();
 		this.cancelEndAction();
 		this._rippleHandlers.endPress();
 
@@ -164,7 +163,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 
 		let currentX: number;
 		let currentY: number;
-		if ('touches' in e) {
+		if ('targetTouches' in e) {
 			const targetTouches = e.targetTouches;
 			currentX = targetTouches[0].clientX || 0;
 			currentY = targetTouches[0].clientY || 0;
