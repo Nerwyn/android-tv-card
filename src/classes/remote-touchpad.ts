@@ -120,6 +120,18 @@ export class RemoteTouchpad extends BaseRemoteElement {
 	}
 
 	onHoldEnd(e: TouchEvent | MouseEvent) {
+		// Multi touch debug logging
+		if ('touches' in e) {
+			const touches = e.touches
+			alert('touches: ' + touches.length)
+			console.log(touches)
+		}
+		if ('targetTouches' in e) {
+			const targetTouches = e.touches
+			alert('targetTouches: ' + targetTouches.length)
+			console.log(targetTouches)
+		}
+
 		clearTimeout(this.holdTimer as ReturnType<typeof setTimeout>);
 		clearInterval(this.holdInterval as ReturnType<typeof setInterval>);
 		clearTimeout(this.clickTimer as ReturnType<typeof setTimeout>);
@@ -139,18 +151,6 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		this.holdTimer = undefined;
 		this.holdInterval = undefined;
 		this.holdAction = undefined;
-
-		// Multi touch debug logging
-		if ('touches' in e) {
-			const touches = e.touches
-			console.log(touches)
-			alert('touches: ' + touches.length)
-		}
-		if ('targetTouches' in e) {
-			const targetTouches = e.touches
-			console.log(targetTouches)
-			alert('targetTouches: ' + targetTouches.length)
-		}
 	}
 
 	@eventOptions({ passive: true })
