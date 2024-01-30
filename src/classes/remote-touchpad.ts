@@ -154,22 +154,9 @@ export class RemoteTouchpad extends BaseRemoteElement {
 	onHoldEnd(e: TouchEvent | MouseEvent) {
 		this._rippleHandlers.endPress();
 
-		if (this.hold) {
+		if (this.hold || this.holdMove) {
 			e.stopImmediatePropagation();
 			e.preventDefault();
-			this.endAction();
-		} else if (this.holdMove) {
-			e.stopImmediatePropagation();
-			e.preventDefault();
-
-			this.fireHapticEvent('selection');
-			this.sendAction(
-				this.targetTouches && this.targetTouches.length > 1
-					? 'multi_tap_action'
-					: 'tap_action',
-				this.directionActions[this.holdAction!],
-			);
-
 			this.endAction();
 		} else if (
 			(this.touchscreen && this.targetTouches) ||
@@ -183,8 +170,6 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		if (!this.initialX || !this.initialY || !this.holdStart) {
 			return;
 		}
-
-		this.holdMove = true;
 
 		let currentX: number = 0;
 		let currentY: number = 0;
@@ -217,6 +202,16 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		} else {
 			// Sliding vertically
 			this.holdAction = diffY > 0 ? 'up' : 'down';
+		}
+		if (!this.holdMove) {
+			this.fireHapticEvent('selection');
+			this.sendAction(
+				this.targetTouches && this.targetTouches.length > 1
+					? 'multi_tap_action'
+					: 'tap_action',
+				this.directionActions[this.holdAction!],
+			);
+			this.holdMove = true;
 		}
 	}
 
