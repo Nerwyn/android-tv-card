@@ -39,18 +39,15 @@ export class RemoteTouchpad extends BaseRemoteElement {
 	multiTap = false;
 
 	clickAction(actionType: ActionType) {
-		clearTimeout(this.clickTimer as ReturnType<typeof setTimeout>);
-		this.cancelEndAction();
-
 		const haptic = this.actionToHaptic[actionType];
 		this.fireHapticEvent(haptic);
 
 		this.sendAction(actionType);
+		this.cancelEndAction();
 	}
 
 	onClick(e: TouchEvent | MouseEvent) {
 		e.stopImmediatePropagation();
-		e.preventDefault();
 		this.clickCount++;
 
 		if (
