@@ -91,6 +91,7 @@ export class BaseRemoteElement extends LitElement {
 				case 'more-info':
 					this.moreInfo(action);
 					break;
+				case 'repeat':
 				case 'none':
 					break;
 				case 'call-service':

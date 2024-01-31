@@ -3,6 +3,7 @@ import { StyleInfo } from 'lit/directives/style-map.js';
 export type Action =
 	| 'key'
 	| 'source'
+	| 'repeat'
 	| 'call-service'
 	| 'navigate'
 	| 'url'

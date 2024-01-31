@@ -66,9 +66,7 @@ export class RemoteButton extends BaseRemoteElement {
 			if (!this.scrolling) {
 				this.hold = true;
 
-				// Only repeat hold action for directional keys and volume
-				// prettier-ignore
-				if (['up', 'down', 'left', 'right', 'volume_up', 'volume_down', 'delete'].includes(this.actionKey)) {
+				if (this.actions.hold_action?.action == 'repeat') {
 					this.holdInterval = setInterval(() => {
 						this.clickAction('tap_action')
 					}, 100);
