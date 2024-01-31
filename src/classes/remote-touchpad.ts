@@ -101,25 +101,33 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			this.holdTimer = setTimeout(() => {
 				this.hold = true;
 
-				// Only repeat hold action for directional keys
+				const getAction = () =>
+					this.holdAction
+						? this.directionActions[this.holdAction]
+						: this.actions;
+				const action = getAction();
+				const getActionType = () =>
+					this.targetTouches && this.targetTouches.length > 1
+						? 'multi_tap_action'
+						: 'tap_action';
+				const actionType = getActionType();
+
+				let repeat = action.hold_action?.action == 'repeat';
 				if (
-					['up', 'down', 'left', 'right'].includes(
-						this.holdAction as DirectionAction,
-					)
+					actionType == 'multi_tap_action' &&
+					'multi_hold_action' in action
 				) {
+					repeat = action.multi_hold_action?.action == 'repeat';
+				}
+
+				if (repeat) {
 					if (!this.holdInterval) {
 						this.holdInterval = setInterval(() => {
 							if (!this.hold) {
 								this.endAction();
 							}
 							this.fireHapticEvent('selection');
-							this.sendAction(
-								this.targetTouches &&
-									this.targetTouches.length > 1
-									? 'multi_tap_action'
-									: 'tap_action',
-								this.directionActions[this.holdAction!],
-							);
+							this.sendAction(getActionType(), getAction());
 						}, 100);
 					}
 				} else {
@@ -128,6 +136,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 						this.targetTouches && this.targetTouches.length > 1
 							? 'multi_hold_action'
 							: 'hold_action',
+						action,
 					);
 					this.endAction();
 				}
