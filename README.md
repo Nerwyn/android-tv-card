@@ -32,21 +32,22 @@ Along with a many other changes and improvements:
 
 - Uses `remote.send_command` to send commands to an Android TV for all default keys and sources using Android TV Remote entity ID `remote_id`.
 - Navigation speed increased to be closer to (but not as crazy fast) as the Google TV remote.
-- Hold press/touch/swipe actions only repeat for directional and volume keys, and perform a long press for anything else.
 
 **Fully customizable touchpad**
 
-- Touchpad actions are now remappable by creating custom keys for `up`, `down`, `left`, `right`, and `center`.
+- Touchpad actions are now remappable by creating custom actions for `up`, `down`, `left`, `right`, and `center`.
 - Alter touchpad CSS using `touchpad_style`.
 - Touchpad style now follows theme.
 - Touchpad haptics can now be toggled.
+- Supports multi touch gestures for all swipe directions and the center tap, meaning you can program the touchpad with up to twenty-two different actions.
 
 **Tap, double tap, and hold tap actions support for buttons and touchpad on all platforms**
 
 - All buttons and the touchpad `center` command support tap, double tap, and long tap custom actions.
   - Using the [Home Assistant actions](https://www.home-assistant.io/dashboards/actions/) syntax.
 - Supports the actions `call-service`, `navigate`, `url`, `assist`, `more-info`, and `none` along with card specific actions `key` and `source`.
-- Hold actions cannot be remapped for `up`, `down`, `left`, `right`, `volume_up`, `volume_down`, and `delete` buttons as they repeat while held.
+- Hold actions can be set to either their own action or to repeat the tap action ten times a second by setting action to `repeat`.
+  - Hold actions for default keys `up`, `down`, `left`, `right`, `volume_up`, `volume_down`, `delete`, and `forward_delete` are set to `repeat` by default but can be changed using custom actions.
 
 **Better row handling and columns**
 
@@ -234,10 +235,10 @@ If you want to add custom buttons to the remote control (or if you want to recon
 | icon              | string            | Name of an icon to use. If overriding a default action uses the default icon if not defined                                                                                                     |
 | confirmation      | boolean or object | Whether to display a browser confirmation popup or not before executing an action. See [here](https://www.home-assistant.io/dashboards/actions/#options-for-confirmation) for more information. |
 | tap_action        | object            | Action to perform on single tap.                                                                                                                                                                |
-| hold_action       | object            | Action to perform when held.                                                                                                                                                                    |
+| hold_action       | object            | Action to perform when held. Can also be set to `repeat` to repeat ten times a second.                                                                                                          |
 | double_tap_action | object            | Action to perform when double tapped. Adding this introduces a 200ms delay to single tap actions.                                                                                               |
 
-The following default keys cannot have hold actions added to them, as they repeat when held:
+The following default keys have hold actions set to `repeat` by default. You can disable this by setting their hold actions to `none` or a different action. By setting a hold action to `repeat`, it will repeat ten times a second while the button is held down.
 
 - up
 - down
@@ -246,6 +247,7 @@ The following default keys cannot have hold actions added to them, as they repea
 - volume_up
 - volume_down
 - delete
+- forward_delete
 
 ```yaml
 custom_actions:
@@ -266,7 +268,8 @@ custom_actions:
       service: light.toggle
       target:
         entity_id: light.bedroom
-
+    hold_action:
+      action: repeat
   to_hass_home:
     icon: mdi:view-dashboard
     tap_action:
@@ -278,6 +281,16 @@ custom_actions:
     hold_action:
       action: navigate
       navigation_path: /lovelace/2
+  volume_up:
+    hold_action:
+      action: call-service
+      service: media_player.volume_set
+      data:
+        entity_id: media_player.google_tv
+        volume_level: 1
+  volume_down:
+    hold_action:
+      action: none
 ```
 
 Then you can easily use these buttons in your card:
@@ -327,18 +340,19 @@ custom_actions:
 
 Actions follow the [Home Assistant actions](https://www.home-assistant.io/dashboards/actions/) syntax. It supports a subset of Home Assistant actions along with `key` and `source`, which are shorthands for remote service calls.
 
-| Action       | Description                                                                                  |
-| ------------ | -------------------------------------------------------------------------------------------- |
-| key          | Send a key to send to the TV via the service call `remote.send_command`.                     |
-| source       | Switch to a source via the service call `remote.turn_on`.                                    |
-| call-service | Call any Home Assistant service.                                                             |
-| navigate     | Navigate to another Home Assistant page.                                                     |
-| url          | Navigate to an external URL.                                                                 |
-| assist       | Open the assist dialog. Uses the mobile dialog if available, like in the Home Assistant app. |
-| more-info    | Open the more info dialog.                                                                   |
-| none         | Explicilty set a command to do nothing.                                                      |
+| Action       | Description                                                                                                                                             |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| key          | Send a key to send to the TV via the service call `remote.send_command`.                                                                                |
+| source       | Switch to a source via the service call `remote.turn_on`.                                                                                               |
+| call-service | Call any Home Assistant service.                                                                                                                        |
+| navigate     | Navigate to another Home Assistant page.                                                                                                                |
+| url          | Navigate to an external URL.                                                                                                                            |
+| assist       | Open the assist dialog. Uses the mobile dialog if available, like in the Home Assistant app.                                                            |
+| more-info    | Open the more info dialog.                                                                                                                              |
+| none         | Explicilty set a command to do nothing.                                                                                                                 |
+| repeat       | Repeat the `tap_action` ten times a second while held. Only applicable to `hold_action`, acts as `none` if used in `tap_action` or `double_tap_action`. |
 
-Each action has a set of possible options associated with them. If `action` is not provided the card will guess which type of action it is by the options used.
+Most actions have a set of possible options associated with them. If `action` is not provided the card will guess which type of action it is by the options used.
 
 #### key
 
@@ -358,7 +372,7 @@ custom_actions:
       key: HOME
 ```
 
-By default, hold actions on keys adds `hold_secs: 0.5` to the data sent with the `remote.send_command` service call. Creating a `hold_action` on a key action overwrites this.
+By default, hold actions on default keys adds `hold_secs: 0.5` to the data sent with the `remote.send_command` service call. Creating a `hold_action` on a key action overwrites this.
 
 #### source
 
@@ -383,7 +397,7 @@ custom_actions:
 | data    | Additional data to pass to the service call. See the Home Assistant documentation or go to Developer Tools > Services to see available options for each service. |
 | target  | The entity IDs, device IDs, or area IDs to call the service on.                                                                                                  |
 
-`data` and `target` get internally merged into one object since `hass.callService` only has a single data field. You can safely put all information into one object with any of these names. This was done so that you can easily design service calls using Home Assistant's service developer tool and copy the YAML to custom button configurations in this card.
+`data` and `target` get internally merged into one object and can be used together or interchangeably. You can safely put all information into one object with any of these names. This was done so that you can easily design service calls using Home Assistant's service developer tool and copy the YAML to custom button configurations in this card.
 
 ```yaml
 custom_actions:
@@ -459,6 +473,40 @@ _The following options are only available in the mobile assist dialog._
 | Name           | Description                                     |
 | -------------- | ----------------------------------------------- |
 | data.entity_id | The entity ID to open the more info dialog for. |
+
+#### none
+
+None. This action does nothing.
+
+```yaml
+custom_actions:
+  volume_up:
+    hold_action:
+      action: none # volume up will no longer repeat while held
+  back:
+    tap_action:
+      action: none # you can no longer go back
+```
+
+#### repeat
+
+None. The `tap_action` must be defined, whether by the default key or as a custom action.
+
+```yaml
+custom_actions:
+  channel_up:
+    hold_action:
+      action: repeat # channel up default tap action will now repeat while held
+  toggle_light:
+    icon: mdi:lightbulb
+    tap_action:
+      action: call-service
+      service: light.toggle
+      target:
+        entity_id: light.theater
+    hold_action:
+      action: repeat # light will be toggled repeatedly while held
+```
 
 ### Custom Button Style
 
@@ -616,6 +664,8 @@ The touchpad can be customized using `custom_actions` so that it can be used wit
 
 Like buttons, double tap actions introduces a 200ms delay to single taps, and the hold action default adds `hold_secs: 0.5` to the service call data. Double tap and hold actions cannot be added to touchpad directional swipes, just the `center` action.
 
+In addition to regular tap, hold, and double tap actions, the touchpad can also be programmed with multi touch actions by creating custom actions for `multi_tap_action`, `multi_hold_action`, and `multi_double_tap_action`. These actions are triggered by perform a tap, double tap, or hold tap action with more than one finger for `center`, or a single swipe or hold swipe with more than one finger for `up`, `down`, `left`, and `right`.
+
 ```yaml
 custom_actions:
   up:
@@ -625,6 +675,13 @@ custom_actions:
         entity_id: media_player.kodi
       data:
         method: Input.Up
+    multi_tap_action:
+      service: kodi.call_method
+      target:
+        entity_id: media_player.kodi
+      data:
+        method: Application.SetVolume
+        volume: increment
   down:
     tap_action:
       service: kodi.call_method
@@ -632,6 +689,13 @@ custom_actions:
         entity_id: media_player.kodi
       data:
         method: Input.Down
+    multi_tap_action:
+      service: kodi.call_method
+      target:
+        entity_id: media_player.kodi
+      data:
+        method: Application.SetVolume
+        volume: decrement
   left:
     tap_action:
       service: kodi.call_method
@@ -665,6 +729,28 @@ custom_actions:
         entity_id: media_player.kodi
       data:
         method: Input.ContextMenu
+    multi_tap_action:
+      action: call-service
+      service: kodi.call_method
+      target:
+        entity_id: media_player.kodi
+      data:
+        method: Player.PlayPause
+        playerid: 1
+    multi_hold_action:
+      action: call-service
+      service: kodi.call_method
+      target:
+        entity_id: media_player.kodi
+      data:
+        method: Input.Home
+    multi_double_tap_action:
+      action: call-service
+      service: kodi.call_method
+      target:
+        entity_id: media_player.kodi
+      data:
+        method: Input.Info
 ```
 
 ## Keyboard
