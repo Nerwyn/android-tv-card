@@ -116,7 +116,7 @@ export class RemoteButton extends BaseRemoteElement {
 		const diffY = (this.initialY ?? currentY) - currentY;
 
 		// Only consider significant enough movement
-		const sensitivity = 2;
+		const sensitivity = 12;
 		if (Math.abs(Math.abs(diffX) - Math.abs(diffY)) > sensitivity) {
 			this.endAction();
 			this.holdMove = true;
