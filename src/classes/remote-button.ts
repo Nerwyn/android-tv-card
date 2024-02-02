@@ -209,9 +209,7 @@ export class RemoteButton extends BaseRemoteElement {
 					height: var(--size);
 					width: var(--size);
 				}
-				ha-icon-button,
-				ha-icon-button:focus,
-				ha-icon-button:hover {
+				ha-icon-button {
 					cursor: pointer;
 					position: relative;
 					display: inline-flex;
@@ -224,6 +222,7 @@ export class RemoteButton extends BaseRemoteElement {
 					--size: 48px;
 					--mdc-icon-size: var(--size);
 					--mdc-icon-button-size: var(--size);
+					-webkit-tap-highlight-color: transparent;
 				}
 			`,
 		];
