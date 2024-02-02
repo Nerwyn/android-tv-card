@@ -82,9 +82,6 @@ export class BaseRemoteElement extends LitElement {
 				case 'more-info':
 					this.moreInfo(action);
 					break;
-				case 'repeat':
-				case 'none':
-					break;
 				case 'call-service':
 					this.callService(action);
 					break;
@@ -92,8 +89,11 @@ export class BaseRemoteElement extends LitElement {
 					this.changeSource(action.source!);
 					break;
 				case 'key':
-				default:
 					this.sendCommand(action.key!, actionType);
+					break;
+				case 'repeat':
+				case 'none':
+				default:
 					break;
 			}
 		} catch (e) {

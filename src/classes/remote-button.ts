@@ -55,28 +55,20 @@ export class RemoteButton extends BaseRemoteElement {
 	@eventOptions({ passive: true })
 	onHoldStart(_e: TouchEvent | MouseEvent) {
 		this.scrolling = false;
-		console.log('hold start detected');
 
 		if (!this.holdTimer) {
-			console.log('hold timer not already active');
 			this.holdTimer = setTimeout(() => {
-				console.log('hold timer triggered');
 				if (!this.scrolling) {
-					console.log('not scrolling (hold start)');
 					this.hold = true;
 
 					if (this.actions.hold_action?.action == 'repeat') {
-						console.log('hold action is repeat');
 						if (!this.holdInterval) {
-							console.log('hold interval not already active');
 							this.holdInterval = setInterval(() => {
-								console.log('hold interval triggered');
 								this.fireHapticEvent('selection');
 								this.sendAction('tap_action');
 							}, 100);
 						}
 					} else {
-						console.log('hold action triggered NO REPEAT');
 						this.fireHapticEvent('medium');
 						this.sendAction('hold_action');
 					}
@@ -86,17 +78,13 @@ export class RemoteButton extends BaseRemoteElement {
 	}
 
 	onHoldEnd(e: TouchEvent | MouseEvent) {
-		console.log('hold end detected');
 		if (!this.scrolling) {
-			console.log('not scrolling (hold end)');
 			if (this.hold) {
-				console.log('is hold');
 				// Hold action is triggered
 				e.stopImmediatePropagation();
 				e.preventDefault();
 				this.endAction();
 			} else {
-				console.log('is not hold, trigger onClick');
 				// Hold action is not triggered, fire tap action
 				this.onClick(e);
 			}
@@ -105,12 +93,10 @@ export class RemoteButton extends BaseRemoteElement {
 
 	@eventOptions({ passive: true })
 	onHoldMove(_e: TouchEvent | MouseEvent) {
-		console.log('hold move detected');
 		this.scrolling = true;
 	}
 
 	endAction() {
-		console.log('end action');
 		clearTimeout(this.clickTimer as ReturnType<typeof setTimeout>);
 		this.clickTimer = undefined;
 		this.clickCount = 0;
