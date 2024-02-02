@@ -10,11 +10,13 @@ import { BaseKeyboardElement } from './base-keyboard-element';
 @customElement('remote-keyboard')
 export class RemoteKeyboard extends BaseKeyboardElement {
 	onHoldEnd(e: TouchEvent | MouseEvent) {
-		e.stopImmediatePropagation();
-		this.fireHapticEvent('light');
-		for (const element of (e.currentTarget as HTMLElement).children) {
-			if (element.nodeName.toLowerCase() == 'input') {
-				(element as HTMLInputElement).focus();
+		if (!this.holdMove) {
+			e.stopImmediatePropagation();
+			this.fireHapticEvent('light');
+			for (const element of (e.currentTarget as HTMLElement).children) {
+				if (element.nodeName.toLowerCase() == 'input') {
+					(element as HTMLInputElement).focus();
+				}
 			}
 		}
 	}
