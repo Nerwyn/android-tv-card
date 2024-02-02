@@ -116,11 +116,16 @@ export class RemoteButton extends BaseRemoteElement {
 		const diffY = (this.initialY ?? currentY) - currentY;
 
 		// Only consider significant enough movement
-		const sensitivity = 12;
+		const sensitivity = 8;
 		if (Math.abs(Math.abs(diffX) - Math.abs(diffY)) > sensitivity) {
 			this.endAction();
 			this.holdMove = true;
 		}
+	}
+
+	onMouseLeave(_e: MouseEvent) {
+		this.endAction();
+		this.holdMove = true;
 	}
 
 	endAction() {
@@ -183,6 +188,7 @@ export class RemoteButton extends BaseRemoteElement {
 					@mousedown=${this.onHoldStart}
 					@mouseup=${this.onHoldEnd}
 					@mousemove=${this.onHoldMove}
+					@mouseleave=${this.onMouseLeave}
 					.action=${action}
 					.path=${svgPath}
 				>
