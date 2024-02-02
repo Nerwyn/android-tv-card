@@ -109,7 +109,7 @@ export class RemoteButton extends BaseRemoteElement {
 		this.scrolling = true;
 	}
 
-	endAction(_e?: MouseEvent | TouchEvent) {
+	endAction() {
 		console.log('end action');
 		clearTimeout(this.clickTimer as ReturnType<typeof setTimeout>);
 		this.clickTimer = undefined;
@@ -154,8 +154,6 @@ export class RemoteButton extends BaseRemoteElement {
 					@touchstart=${this.onHoldStart}
 					@touchend=${this.onHoldEnd}
 					@touchmove=${this.onHoldMove}
-					@touchcancel=${this.endAction()}
-					@mouseleave=${this.endAction()}
 					.action=${action}
 					.path=${svgPath}
 				>
@@ -170,8 +168,6 @@ export class RemoteButton extends BaseRemoteElement {
 					@mousedown=${this.onHoldStart}
 					@mouseup=${this.onHoldEnd}
 					@mousemove=${this.onHoldMove}
-					@touchcancel=${this.endAction()}
-					@mouseleave=${this.endAction()}
 					.action=${action}
 					.path=${svgPath}
 				>
