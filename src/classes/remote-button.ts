@@ -18,9 +18,9 @@ export class RemoteButton extends BaseRemoteElement {
 	holdInterval?: ReturnType<typeof setInterval>;
 	hold: boolean = false;
 
+	holdMove: boolean = false;
 	initialX?: number;
 	initialY?: number;
-	scrolling: boolean = false;
 
 	onClick(e: TouchEvent | MouseEvent) {
 		e.stopImmediatePropagation();
@@ -56,7 +56,7 @@ export class RemoteButton extends BaseRemoteElement {
 
 	@eventOptions({ passive: true })
 	onHoldStart(e: TouchEvent | MouseEvent) {
-		this.scrolling = false;
+		this.holdMove = false;
 		if ('targetTouches' in e) {
 			this.initialX = e.targetTouches[0].clientX;
 			this.initialY = e.targetTouches[0].clientY;
@@ -67,7 +67,7 @@ export class RemoteButton extends BaseRemoteElement {
 
 		if (!this.holdTimer) {
 			this.holdTimer = setTimeout(() => {
-				if (!this.scrolling) {
+				if (!this.holdMove) {
 					this.hold = true;
 
 					if (this.actions.hold_action?.action == 'repeat') {
@@ -87,7 +87,7 @@ export class RemoteButton extends BaseRemoteElement {
 	}
 
 	onHoldEnd(e: TouchEvent | MouseEvent) {
-		if (!this.scrolling) {
+		if (!this.holdMove) {
 			if (this.hold) {
 				// Hold action is triggered
 				e.stopImmediatePropagation();
@@ -118,8 +118,8 @@ export class RemoteButton extends BaseRemoteElement {
 		// Only consider significant enough movement
 		const sensitivity = 2;
 		if (Math.abs(Math.abs(diffX) - Math.abs(diffY)) > sensitivity) {
-			this.scrolling = true;
 			this.endAction();
+			this.holdMove = true;
 		}
 	}
 
@@ -134,9 +134,9 @@ export class RemoteButton extends BaseRemoteElement {
 		this.holdInterval = undefined;
 		this.hold = false;
 
+		this.holdMove = false;
 		this.initialX = undefined;
 		this.initialY = undefined;
-		this.scrolling = false;
 	}
 
 	render(inputTemplate?: TemplateResult<1>) {
