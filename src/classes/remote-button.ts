@@ -106,11 +106,11 @@ export class RemoteButton extends BaseRemoteElement {
 	@eventOptions({ passive: true })
 	onHoldMove(_e: TouchEvent | MouseEvent) {
 		console.log('hold move detected');
-		this.endAction();
 		this.scrolling = true;
 	}
 
 	endAction(_e?: MouseEvent | TouchEvent) {
+		console.log('end action');
 		clearTimeout(this.clickTimer as ReturnType<typeof setTimeout>);
 		this.clickTimer = undefined;
 		this.clickCount = 0;
