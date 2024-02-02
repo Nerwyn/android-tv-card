@@ -64,9 +64,6 @@ export class RemoteButton extends BaseRemoteElement {
 					if (this.actions.hold_action?.action == 'repeat') {
 						if (!this.holdInterval) {
 							this.holdInterval = setInterval(() => {
-								if (!this.hold) {
-									this.endAction();
-								}
 								this.fireHapticEvent('selection');
 								this.sendAction('tap_action');
 							}, 100);
@@ -74,7 +71,6 @@ export class RemoteButton extends BaseRemoteElement {
 					} else {
 						this.fireHapticEvent('medium');
 						this.sendAction('hold_action');
-						this.endAction();
 					}
 				}
 			}, 500);

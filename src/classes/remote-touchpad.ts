@@ -121,9 +121,6 @@ export class RemoteTouchpad extends BaseRemoteElement {
 				if (repeat) {
 					if (!this.holdInterval) {
 						this.holdInterval = setInterval(() => {
-							if (!this.hold) {
-								this.endAction();
-							}
 							this.fireHapticEvent('selection');
 							this.sendAction(getActionType(), getAction());
 						}, 100);
@@ -136,7 +133,6 @@ export class RemoteTouchpad extends BaseRemoteElement {
 							: 'hold_action',
 						action,
 					);
-					this.endAction();
 				}
 			}, 500);
 		}
