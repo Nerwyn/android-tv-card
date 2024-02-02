@@ -209,12 +209,13 @@ export class RemoteButton extends BaseRemoteElement {
 					height: var(--size);
 					width: var(--size);
 				}
-				ha-icon-button {
+				ha-icon-button,
+				ha-icon-button:focus,
+				ha-icon-button:hover {
 					cursor: pointer;
 					position: relative;
 					display: inline-flex;
 					flex-direction: column;
-					align-content: center;
 					justify-content: center;
 					text-align: center;
 					align-items: center;
