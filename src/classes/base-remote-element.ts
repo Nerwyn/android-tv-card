@@ -18,15 +18,6 @@ export class BaseRemoteElement extends LitElement {
 	value: number = 0;
 	touchscreen = 'ontouchstart' in document.documentElement;
 
-	actionToHaptic: Record<ActionType, HapticType> = {
-		tap_action: 'light',
-		hold_action: 'medium',
-		double_tap_action: 'success',
-		multi_tap_action: 'light',
-		multi_hold_action: 'medium',
-		multi_double_tap_action: 'success',
-	};
-
 	fireHapticEvent(haptic: HapticType) {
 		if (
 			renderTemplate(

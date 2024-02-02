@@ -4,7 +4,6 @@ import { styleMap } from 'lit/directives/style-map.js';
 
 import { renderTemplate } from 'ha-nunjucks';
 
-import { ActionType } from '../models';
 import { BaseRemoteElement } from './base-remote-element';
 
 @customElement('remote-button')
@@ -21,20 +20,6 @@ export class RemoteButton extends BaseRemoteElement {
 
 	scrolling: boolean = false;
 
-	clickAction(actionType: ActionType) {
-		clearTimeout(this.clickTimer as ReturnType<typeof setTimeout>);
-		this.clickTimer = undefined;
-		this.clickCount = 0;
-
-		let haptic = this.actionToHaptic[actionType];
-		if (['up', 'down', 'left', 'right'].includes(this.actionKey)) {
-			haptic = 'selection';
-		}
-		this.fireHapticEvent(haptic);
-
-		this.sendAction(actionType);
-	}
-
 	onClick(e: TouchEvent | MouseEvent) {
 		e.stopImmediatePropagation();
 		this.clickCount++;
@@ -46,61 +31,88 @@ export class RemoteButton extends BaseRemoteElement {
 			// Double tap action is defined
 			if (this.clickCount > 1) {
 				// Double tap action is triggered
-				this.clickAction('double_tap_action');
+				this.fireHapticEvent('success');
+				this.sendAction('double_tap_action');
+				this.endAction();
 			} else {
 				// Single tap action is triggered if double tap is not within 200ms
-				this.clickTimer = setTimeout(() => {
-					this.clickAction('tap_action');
-				}, 200);
+				if (!this.clickTimer) {
+					this.clickTimer = setTimeout(() => {
+						this.fireHapticEvent('light');
+						this.sendAction('tap_action');
+						this.endAction();
+					}, 200);
+				}
 			}
 		} else {
-			// No double tap action defiend, tap action is triggered
-			this.clickAction('tap_action');
+			// No double tap action defined, tap action is triggered
+			this.fireHapticEvent('light');
+			this.sendAction('tap_action');
+			this.endAction();
 		}
 	}
 
 	@eventOptions({ passive: true })
 	onHoldStart(_e: TouchEvent | MouseEvent) {
 		this.scrolling = false;
-		this.holdTimer = setTimeout(() => {
-			if (!this.scrolling) {
-				this.hold = true;
 
-				if (this.actions.hold_action?.action == 'repeat') {
-					this.holdInterval = setInterval(() => {
-						this.clickAction('tap_action')
-					}, 100);
-				} else {
-					this.clickAction('hold_action')
+		if (!this.holdTimer) {
+			this.holdTimer = setTimeout(() => {
+				if (!this.scrolling) {
+					this.hold = true;
+
+					if (this.actions.hold_action?.action == 'repeat') {
+						if (!this.holdInterval) {
+							this.holdInterval = setInterval(() => {
+								if (!this.hold) {
+									this.endAction();
+								}
+								this.fireHapticEvent('selection');
+								this.sendAction('tap_action');
+							}, 100);
+						}
+					} else {
+						this.fireHapticEvent('medium');
+						this.sendAction('hold_action');
+						this.endAction();
+					}
 				}
-			}
-		}, 500);
+			}, 500);
+		}
 	}
 
 	onHoldEnd(e: TouchEvent | MouseEvent) {
-		clearTimeout(this.holdTimer as ReturnType<typeof setTimeout>);
-		clearInterval(this.holdInterval as ReturnType<typeof setInterval>);
-
 		if (!this.scrolling) {
 			if (this.hold) {
 				// Hold action is triggered
-				this.hold = false;
 				e.stopImmediatePropagation();
 				e.preventDefault();
+				this.endAction();
 			} else {
 				// Hold action is not triggered, fire tap action
 				this.onClick(e);
 			}
 		}
-
-		this.holdTimer = undefined;
-		this.holdInterval = undefined;
-		this.scrolling = false;
 	}
 
 	@eventOptions({ passive: true })
 	onHoldMove(_e: TouchEvent | MouseEvent) {
+		this.endAction();
 		this.scrolling = true;
+	}
+
+	endAction(_e?: MouseEvent | TouchEvent) {
+		clearTimeout(this.clickTimer as ReturnType<typeof setTimeout>);
+		this.clickTimer = undefined;
+		this.clickCount = 0;
+
+		clearTimeout(this.holdTimer as ReturnType<typeof setTimeout>);
+		clearInterval(this.holdInterval as ReturnType<typeof setInterval>);
+		this.holdTimer = undefined;
+		this.holdInterval = undefined;
+		this.hold = false;
+
+		this.scrolling = false;
 	}
 
 	render(inputTemplate?: TemplateResult<1>) {
@@ -133,6 +145,8 @@ export class RemoteButton extends BaseRemoteElement {
 					@touchstart=${this.onHoldStart}
 					@touchend=${this.onHoldEnd}
 					@touchmove=${this.onHoldMove}
+					@touchcancel=${this.endAction()}
+					@mouseleave=${this.endAction()}
 					.action=${action}
 					.path=${svgPath}
 				>
@@ -147,6 +161,8 @@ export class RemoteButton extends BaseRemoteElement {
 					@mousedown=${this.onHoldStart}
 					@mouseup=${this.onHoldEnd}
 					@mousemove=${this.onHoldMove}
+					@touchcancel=${this.endAction()}
+					@mouseleave=${this.endAction()}
 					.action=${action}
 					.path=${svgPath}
 				>

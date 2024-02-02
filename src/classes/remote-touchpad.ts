@@ -12,7 +12,7 @@ import { RippleHandlers } from '@material/mwc-ripple/ripple-handlers';
 
 import { renderTemplate } from 'ha-nunjucks';
 
-import { ActionType, IActions, DirectionAction } from '../models';
+import { IActions, DirectionAction } from '../models';
 
 import { BaseRemoteElement } from './base-remote-element';
 
@@ -43,14 +43,6 @@ export class RemoteTouchpad extends BaseRemoteElement {
 	initialY?: number;
 	targetTouches?: TouchList;
 
-	clickAction(actionType: ActionType) {
-		const haptic = this.actionToHaptic[actionType];
-		this.fireHapticEvent(haptic);
-
-		this.sendAction(actionType);
-		this.endAction();
-	}
-
 	onClick(e: TouchEvent | MouseEvent) {
 		e.stopImmediatePropagation();
 		this.clickCount++;
@@ -65,30 +57,36 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			// Double tap action is defined
 			if (this.clickCount > doubleTapThreshold) {
 				// Double tap action is triggered
-				this.clickAction(
+				this.fireHapticEvent('success');
+				this.sendAction(
 					this.targetTouches && this.targetTouches.length > 1
 						? 'multi_double_tap_action'
 						: 'double_tap_action',
 				);
+				this.endAction();
 			} else {
 				// Single tap action is triggered if double tap is not within 200ms
 				if (!this.clickTimer) {
 					this.clickTimer = setTimeout(() => {
-						this.clickAction(
+						this.fireHapticEvent('light');
+						this.sendAction(
 							this.targetTouches && this.targetTouches.length > 1
 								? 'multi_tap_action'
 								: 'tap_action',
 						);
+						this.endAction();
 					}, 200);
 				}
 			}
 		} else {
 			// No double tap action defined, tap action is triggered
-			this.clickAction(
+			this.fireHapticEvent('light');
+			this.sendAction(
 				this.targetTouches && this.targetTouches.length > 1
 					? 'multi_tap_action'
 					: 'tap_action',
 			);
+			this.endAction();
 		}
 	}
 
@@ -209,7 +207,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 				this.holdAction = diffY > 0 ? 'up' : 'down';
 			}
 			if (!this.holdMove) {
-				this.fireHapticEvent('selection');
+				this.fireHapticEvent('light');
 				this.sendAction(
 					this.targetTouches && this.targetTouches.length > 1
 						? 'multi_tap_action'
