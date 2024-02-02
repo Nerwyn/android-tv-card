@@ -9,12 +9,12 @@ export const defaultKeys: Record<string, IActions> = {
 	power: { tap_action: { action: 'key', key: 'POWER' }, icon: 'mdi:power' },
 	volume_up: {
 		tap_action: { action: 'key', key: 'VOLUME_UP' },
-		hold_action: { action: 'repeat'},
+		hold_action: { action: 'repeat' },
 		icon: 'mdi:volume-high',
 	},
 	volume_down: {
 		tap_action: { action: 'key', key: 'VOLUME_DOWN' },
-		hold_action: { action: 'repeat'},
+		hold_action: { action: 'repeat' },
 		icon: 'mdi:volume-medium',
 	},
 	volume_mute: {
@@ -28,12 +28,12 @@ export const defaultKeys: Record<string, IActions> = {
 	home: { tap_action: { action: 'key', key: 'HOME' }, icon: 'mdi:home' },
 	up: {
 		tap_action: { action: 'key', key: 'DPAD_UP' },
-		hold_action: { action: 'repeat'},
+		hold_action: { action: 'repeat' },
 		icon: 'mdi:chevron-up',
 	},
 	left: {
 		tap_action: { action: 'key', key: 'DPAD_LEFT' },
-		hold_action: { action: 'repeat'},
+		hold_action: { action: 'repeat' },
 		icon: 'mdi:chevron-left',
 	},
 	center: {
@@ -42,12 +42,12 @@ export const defaultKeys: Record<string, IActions> = {
 	},
 	right: {
 		tap_action: { action: 'key', key: 'DPAD_RIGHT' },
-		hold_action: { action: 'repeat'},
+		hold_action: { action: 'repeat' },
 		icon: 'mdi:chevron-right',
 	},
 	down: {
 		tap_action: { action: 'key', key: 'DPAD_DOWN' },
-		hold_action: { action: 'repeat'},
+		hold_action: { action: 'repeat' },
 		icon: 'mdi:chevron-down',
 	},
 	play: {
@@ -197,25 +197,25 @@ export const defaultKeys: Record<string, IActions> = {
 	},
 	delete: {
 		tap_action: { action: 'key', key: 'DEL' },
-		hold_action: { action: 'repeat'},
+		hold_action: { action: 'repeat' },
 		icon: 'mdi:backspace',
 	},
 	forward_delete: {
 		tap_action: { action: 'key', key: 'FOWARD_DEL' },
-		hold_action: { action: 'repeat'},
+		hold_action: { action: 'repeat' },
 		icon: 'mdi:backspace-reverse',
 	},
 	enter: { tap_action: { action: 'key', key: 'ENTER' }, icon: 'mdi:magnify' },
 	keyboard: {
-		tap_action: { action: 'key', key: 'KEYBOARD' },
+		tap_action: { action: 'none', key: 'KEYBOARD' },
 		icon: 'mdi:keyboard',
 	},
 	search: {
-		tap_action: { action: 'key', key: 'SEARCH' },
+		tap_action: { action: 'none', key: 'SEARCH' },
 		icon: 'mdi:google-assistant',
 	},
 	textbox: {
-		tap_action: { action: 'key', key: 'TEXTBOX' },
+		tap_action: { action: 'none', key: 'TEXTBOX' },
 		icon: 'mdi:text-box',
 	},
 };
