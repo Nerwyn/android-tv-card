@@ -18,6 +18,8 @@ export class RemoteButton extends BaseRemoteElement {
 	holdInterval?: ReturnType<typeof setInterval>;
 	hold: boolean = false;
 
+	initialX?: number;
+	initialY?: number;
 	scrolling: boolean = false;
 
 	onClick(e: TouchEvent | MouseEvent) {
@@ -53,8 +55,15 @@ export class RemoteButton extends BaseRemoteElement {
 	}
 
 	@eventOptions({ passive: true })
-	onHoldStart(_e: TouchEvent | MouseEvent) {
+	onHoldStart(e: TouchEvent | MouseEvent) {
 		this.scrolling = false;
+		if ('targetTouches' in e) {
+			this.initialX = e.targetTouches[0].clientX;
+			this.initialY = e.targetTouches[0].clientY;
+		} else {
+			this.initialX = e.clientX;
+			this.initialY = e.clientY;
+		}
 
 		if (!this.holdTimer) {
 			this.holdTimer = setTimeout(() => {
@@ -92,8 +101,26 @@ export class RemoteButton extends BaseRemoteElement {
 	}
 
 	@eventOptions({ passive: true })
-	onHoldMove(_e: TouchEvent | MouseEvent) {
-		this.scrolling = true;
+	onHoldMove(e: TouchEvent | MouseEvent) {
+		let currentX: number;
+		let currentY: number;
+		if ('targetTouches' in e) {
+			currentX = e.targetTouches[0].clientX;
+			currentY = e.targetTouches[0].clientY;
+		} else {
+			currentX = e.clientX;
+			currentY = e.clientY;
+		}
+
+		const diffX = (this.initialX ?? currentX) - currentX;
+		const diffY = (this.initialY ?? currentY) - currentY;
+
+		// Only consider significant enough movement
+		const sensitivity = 2;
+		if (Math.abs(Math.abs(diffX) - Math.abs(diffY)) > sensitivity) {
+			this.scrolling = true;
+			this.endAction();
+		}
 	}
 
 	endAction() {
@@ -107,6 +134,8 @@ export class RemoteButton extends BaseRemoteElement {
 		this.holdInterval = undefined;
 		this.hold = false;
 
+		this.initialX = undefined;
+		this.initialY = undefined;
 		this.scrolling = false;
 	}
 
