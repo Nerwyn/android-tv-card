@@ -1874,6 +1874,247 @@ custom_keys:
 
 <img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/conditional_layouts.png" alt="conditional layouts example" width="500"/>
 
+
+### Example 14
+
+RGB Remote using Broadlink RM4 Pro
+
+```yaml
+type: custom:android-tv-card
+remote_id: remote.rm4_pro
+title: TV RGB
+rows:
+  - - power
+    - null
+    - poweroff
+  - - up
+    - null
+    - down
+  - - 1
+    - 2
+    - 3
+  - - 4
+    - 5
+    - 6
+  - - 7
+    - 8
+    - 9
+  - - 10
+    - 11
+    - 12
+custom_actions:
+  '1':
+    tap_action:
+      action: call-service
+      service: remote.send_command
+      target:
+        entity_id: remote.rm4_pro
+      data:
+        device: Office TV Led
+        command: red
+    style:
+      height: 35px;
+      width: 35px;
+      background-color: red;
+      border-radius: 50%;
+  '2':
+    tap_action:
+      action: call-service
+      service: remote.send_command
+      target:
+        entity_id: remote.rm4_pro
+      data:
+        device: Office TV Led
+        command: green
+    style:
+      height: 35px;
+      width: 35px;
+      background-color: green;
+      border-radius: 50%;
+  '3':
+    tap_action:
+      action: call-service
+      service: remote.send_command
+      target:
+        entity_id: remote.rm4_pro
+      data:
+        device: Office TV Led
+        command: dark_blue
+    style:
+      height: 35px;
+      width: 35px;
+      background-color: darkblue;
+      border-radius: 50%;
+  '4':
+    tap_action:
+      action: call-service
+      service: remote.send_command
+      target:
+        entity_id: remote.rm4_pro
+      data:
+        device: Office TV Led
+        command: yellow
+    style:
+      height: 35px;
+      width: 35px;
+      background-color: yellow;
+      border-radius: 50%;
+  '5':
+    tap_action:
+      action: call-service
+      service: remote.send_command
+      target:
+        entity_id: remote.rm4_pro
+      data:
+        device: Office TV Led
+        command: yellow-orange
+    style:
+      height: 35px;
+      width: 35px;
+      background-color: goldenrod;
+      border-radius: 50%;
+  '6':
+    tap_action:
+      action: call-service
+      service: remote.send_command
+      target:
+        entity_id: remote.rm4_pro
+      data:
+        device: Office TV Led
+        command: orange
+    style:
+      height: 35px;
+      width: 35px;
+      background-color: orange;
+      border-radius: 50%;
+  '7':
+    tap_action:
+      action: call-service
+      service: remote.send_command
+      target:
+        entity_id: remote.rm4_pro
+      data:
+        device: Office TV Led
+        command: orange-light
+    style:
+      height: 35px;
+      width: 35px;
+      background-color: lightsalmon;
+      border-radius: 50%;
+  '8':
+    tap_action:
+      action: call-service
+      service: remote.send_command
+      target:
+        entity_id: remote.rm4_pro
+      data:
+        device: Office TV Led
+        command: cyan
+    style:
+      height: 35px;
+      width: 35px;
+      background-color: cyan;
+      border-radius: 50%;
+  '9':
+    tap_action:
+      action: call-service
+      service: remote.send_command
+      target:
+        entity_id: remote.rm4_pro
+      data:
+        device: Office TV Led
+        command: blue
+    style:
+      height: 35px;
+      width: 35px;
+      background-color: blue;
+      border-radius: 50%;
+  '10':
+    tap_action:
+      action: call-service
+      service: remote.send_command
+      target:
+        entity_id: remote.rm4_pro
+      data:
+        device: Office TV Led
+        command: pink
+    style:
+      height: 35px;
+      width: 35px;
+      background-color: magenta;
+      border-radius: 50%;
+  '11':
+    tap_action:
+      action: call-service
+      service: remote.send_command
+      target:
+        entity_id: remote.rm4_pro
+      data:
+        device: Office TV Led
+        command: green_light
+    style:
+      height: 35px;
+      width: 35px;
+      background-color: mediumseagreen;
+      border-radius: 50%;
+  '12':
+    tap_action:
+      action: call-service
+      service: remote.send_command
+      target:
+        entity_id: remote.rm4_pro
+      data:
+        device: Office TV Led
+        command: white
+    style:
+      height: 35px;
+      width: 35px;
+      background-color: white;
+      border-radius: 50%;
+  power:
+    tap_action:
+      action: call-service
+      service: remote.send_command
+      target:
+        entity_id: remote.rm4_pro
+      data:
+        device: Office TV Led
+        command: 'on'
+    style:
+      color: green
+  poweroff:
+    icon: mdi:power
+    tap_action:
+      action: call-service
+      service: remote.send_command
+      target:
+        entity_id: remote.rm4_pro
+      data:
+        device: Office TV Led
+        command: 'off'
+    style:
+      color: red
+  up:
+    tap_action:
+      action: call-service
+      service: remote.send_command
+      target:
+        entity_id: remote.rm4_pro
+      data:
+        device: Office TV Led
+        command: brightness+
+  down:
+    tap_action:
+      action: call-service
+      service: remote.send_command
+      target:
+        entity_id: remote.rm4_pro
+      data:
+        device: Office TV Led
+        command: brightness-
+```
+<img src="https://github.com/SylTi/android-tv-card/blob/main/assets/rgb.png" alt="rgb remote example" width="500"/>
+
 [last-commit-shield]: https://img.shields.io/github/last-commit/Nerwyn/android-tv-card?style=for-the-badge
 [commits]: https://github.com/Nerwyn/android-tv-card/commits/main
 [forum-shield]: https://img.shields.io/badge/community-forum-brightgreen.svg?style=for-the-badge
