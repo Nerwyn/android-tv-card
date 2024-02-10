@@ -1904,6 +1904,7 @@ rows:
     - 12
 custom_actions:
   '1':
+    icon: mdi:circle
     tap_action:
       action: call-service
       service: remote.send_command
@@ -1913,11 +1914,10 @@ custom_actions:
         device: Office TV Led
         command: red
     style:
-      height: 35px;
-      width: 35px;
-      background-color: red;
-      border-radius: 50%;
+      '--size': 42px
+      color: red
   '2':
+    icon: mdi:circle
     tap_action:
       action: call-service
       service: remote.send_command
@@ -1927,11 +1927,10 @@ custom_actions:
         device: Office TV Led
         command: green
     style:
-      height: 35px;
-      width: 35px;
-      background-color: green;
-      border-radius: 50%;
+      '--size': 42px
+      color: green;
   '3':
+    icon: mdi:circle
     tap_action:
       action: call-service
       service: remote.send_command
@@ -1941,11 +1940,10 @@ custom_actions:
         device: Office TV Led
         command: dark_blue
     style:
-      height: 35px;
-      width: 35px;
-      background-color: darkblue;
-      border-radius: 50%;
+      '--size': 42px
+      color: darkblue;
   '4':
+    icon: mdi:circle
     tap_action:
       action: call-service
       service: remote.send_command
@@ -1955,11 +1953,10 @@ custom_actions:
         device: Office TV Led
         command: yellow
     style:
-      height: 35px;
-      width: 35px;
-      background-color: yellow;
-      border-radius: 50%;
+      '--size': 42px
+      color: yellow;
   '5':
+    icon: mdi:circle
     tap_action:
       action: call-service
       service: remote.send_command
@@ -1969,11 +1966,10 @@ custom_actions:
         device: Office TV Led
         command: yellow-orange
     style:
-      height: 35px;
-      width: 35px;
-      background-color: goldenrod;
-      border-radius: 50%;
+      '--size': 42px
+      color: goldenrod;
   '6':
+    icon: mdi:circle
     tap_action:
       action: call-service
       service: remote.send_command
@@ -1983,11 +1979,10 @@ custom_actions:
         device: Office TV Led
         command: orange
     style:
-      height: 35px;
-      width: 35px;
-      background-color: orange;
-      border-radius: 50%;
+      '--size': 42px
+      color: orange;
   '7':
+    icon: mdi:circle
     tap_action:
       action: call-service
       service: remote.send_command
@@ -1997,11 +1992,10 @@ custom_actions:
         device: Office TV Led
         command: orange-light
     style:
-      height: 35px;
-      width: 35px;
-      background-color: lightsalmon;
-      border-radius: 50%;
+      '--size': 42px
+      color: lightsalmon;
   '8':
+    icon: mdi:circle
     tap_action:
       action: call-service
       service: remote.send_command
@@ -2011,11 +2005,10 @@ custom_actions:
         device: Office TV Led
         command: cyan
     style:
-      height: 35px;
-      width: 35px;
-      background-color: cyan;
-      border-radius: 50%;
+      '--size': 42px
+      color: cyan;
   '9':
+    icon: mdi:circle
     tap_action:
       action: call-service
       service: remote.send_command
@@ -2025,11 +2018,10 @@ custom_actions:
         device: Office TV Led
         command: blue
     style:
-      height: 35px;
-      width: 35px;
-      background-color: blue;
-      border-radius: 50%;
+      '--size': 42px
+      color: blue;
   '10':
+    icon: mdi:circle
     tap_action:
       action: call-service
       service: remote.send_command
@@ -2039,11 +2031,10 @@ custom_actions:
         device: Office TV Led
         command: pink
     style:
-      height: 35px;
-      width: 35px;
-      background-color: magenta;
-      border-radius: 50%;
+      '--size': 42px
+      color: magenta;
   '11':
+    icon: mdi:circle
     tap_action:
       action: call-service
       service: remote.send_command
@@ -2053,11 +2044,10 @@ custom_actions:
         device: Office TV Led
         command: green_light
     style:
-      height: 35px;
-      width: 35px;
-      background-color: mediumseagreen;
-      border-radius: 50%;
+      '--size': 42px
+      color: mediumseagreen;
   '12':
+    icon: mdi:circle
     tap_action:
       action: call-service
       service: remote.send_command
@@ -2067,10 +2057,8 @@ custom_actions:
         device: Office TV Led
         command: white
     style:
-      height: 35px;
-      width: 35px;
-      background-color: white;
-      border-radius: 50%;
+      '--size': 42px
+      color: white;
   power:
     tap_action:
       action: call-service
@@ -2112,8 +2100,9 @@ custom_actions:
       data:
         device: Office TV Led
         command: brightness-
+
 ```
-<img src="https://github.com/SylTi/android-tv-card/blob/main/assets/rgb.png" alt="rgb remote example" width="500"/>
+<img src="https://github.com/Nerwyn/android-tv-card/blob/main/assets/rgb.png" alt="rgb remote example" width="500"/>
 
 [last-commit-shield]: https://img.shields.io/github/last-commit/Nerwyn/android-tv-card?style=for-the-badge
 [commits]: https://github.com/Nerwyn/android-tv-card/commits/main
