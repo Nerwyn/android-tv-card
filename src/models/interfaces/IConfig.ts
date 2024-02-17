@@ -33,4 +33,4 @@ export interface IConfig {
 
 export type Row = (string | Row[])[];
 
-export type KeyboardMode = 'ANDROID TV' | 'KODI';
+export type KeyboardMode = 'ANDROID TV' | 'KODI' | 'FIRE TV';

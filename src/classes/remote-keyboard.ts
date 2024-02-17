@@ -24,16 +24,10 @@ export class RemoteKeyboard extends BaseKeyboardElement {
 	onKeyDown(e: KeyboardEvent) {
 		e.stopImmediatePropagation();
 
-		const keyToKey: Record<string, string> = {
-			Backspace: 'DEL',
-			Delete: 'FOWARD_DEL',
-			Enter: 'ENTER',
-			ArrowLeft: 'DPAD_LEFT',
-			ArrowRight: 'DPAD_RIGHT',
-		};
-
-		const key = keyToKey[e.key ?? ''];
-		if (key) {
+		const inKey = e.key;
+		let outKey: string;
+		let keyToKey: Record<string, string>;
+		if (inKey) {
 			if ((e.currentTarget as HTMLInputElement).value != '') {
 				(e.currentTarget as HTMLInputElement).blur();
 				(e.currentTarget as HTMLInputElement).value = '';
@@ -47,12 +41,33 @@ export class RemoteKeyboard extends BaseKeyboardElement {
 			) {
 				case 'KODI':
 					break;
+				case 'FIRE':
+				case 'FIRETV':
+				case 'FIRE_TV':
+				case 'FIRE TV':
+					keyToKey = {
+						Backspace: '67',
+						Delete: '112',
+						Enter: '66',
+						ArrowLeft: '21',
+						ArrowRight: '22',
+					}
+					break;
 				case 'ANDROID':
 				case 'ANDROIDTV':
 				case 'ANDROID_TV':
 				case 'ANDROID TV':
 				default:
-					this.sendCommand(key, 'tap_action');
+					keyToKey = {
+						Backspace: 'DEL',
+						Delete: 'FOWARD_DEL',
+						Enter: 'ENTER',
+						ArrowLeft: 'DPAD_LEFT',
+						ArrowRight: 'DPAD_RIGHT',
+					};
+					outKey = keyToKey[inKey ?? ''];
+
+					this.sendCommand(outKey, 'tap_action');
 					break;
 			}
 		}
@@ -77,6 +92,10 @@ export class RemoteKeyboard extends BaseKeyboardElement {
 					data.done = false;
 					this.hass.callService('kodi', 'call_method', data);
 					break;
+				case 'FIRE':
+				case 'FIRETV':
+				case 'FIRE_TV':
+				case 'FIRE TV':
 				case 'ANDROID':
 				case 'ANDROIDTV':
 				case 'ANDROID_TV':
@@ -109,6 +128,10 @@ export class RemoteKeyboard extends BaseKeyboardElement {
 					data.done = false;
 					this.hass.callService('kodi', 'call_method', data);
 					break;
+				case 'FIRE':
+				case 'FIRETV':
+				case 'FIRE_TV':
+				case 'FIRE TV':
 				case 'ANDROID':
 				case 'ANDROIDTV':
 				case 'ANDROID_TV':

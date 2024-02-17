@@ -28,6 +28,10 @@ export class RemoteSearch extends BaseKeyboardElement {
 						addonid: 'script.globalsearch',
 					});
 					break;
+				case 'FIRE':
+				case 'FIRETV':
+				case 'FIRE_TV':
+				case 'FIRE TV':
 				case 'ANDROID':
 				case 'ANDROIDTV':
 				case 'ANDROID_TV':
@@ -53,6 +57,10 @@ export class RemoteSearch extends BaseKeyboardElement {
 						data.done = true;
 						this.hass.callService('kodi', 'call_method', data);
 						break;
+					case 'FIRE':
+					case 'FIRETV':
+					case 'FIRE_TV':
+					case 'FIRE TV':
 					case 'ANDROID':
 					case 'ANDROIDTV':
 					case 'ANDROID_TV':
