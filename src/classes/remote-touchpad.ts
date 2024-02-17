@@ -191,10 +191,10 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		this._rippleHandlers.endPress();
 
 		if (!this.holdAction && 'button_press' in this.actions) {
-			this.fireHapticEvent('selection');
 			this.buttonPressEnd = performance.now();
 			if ('button_release' in this.actions) {
-				this.sendAction('button_press');
+				this.fireHapticEvent('selection');
+				this.sendAction('button_release');
 			}
 			this.endAction();
 		} else if (this.hold || this.holdMove) {
