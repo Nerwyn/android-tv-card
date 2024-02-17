@@ -51,7 +51,13 @@ export class RemoteKeyboard extends BaseKeyboardElement {
 						Enter: '66',
 						ArrowLeft: '21',
 						ArrowRight: '22',
-					}
+					};
+					outKey = keyToKey[inKey ?? ''];
+
+					this.hass.callService('androidtv', 'adb_command', {
+						entity_id: renderTemplate(this.hass, this.keyboardId),
+						command: `input keyevent ${outKey}`,
+					});
 					break;
 				case 'ANDROID':
 				case 'ANDROIDTV':
