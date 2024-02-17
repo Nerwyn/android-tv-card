@@ -67,6 +67,7 @@ export class RemoteButton extends BaseRemoteElement {
 		}
 
 		if ('button_press' in this.actions) {
+			this.fireHapticEvent('light');
 			this.buttonPressStart = performance.now();
 			this.sendAction('button_press');
 		} else if (!this.holdTimer) {
@@ -107,6 +108,7 @@ export class RemoteButton extends BaseRemoteElement {
 		if (!this.holdMove) {
 			if ('button_press' in this.actions) {
 				if ('button_release' in this.actions) {
+					this.fireHapticEvent('selection');
 					this.buttonPressEnd = performance.now();
 					this.sendAction('button_release');
 				}
