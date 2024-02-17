@@ -40,11 +40,11 @@ export class BaseRemoteElement extends LitElement {
 	sendAction(actionType: ActionType, actions: IActions = this.actions) {
 		let action: IAction;
 		switch (actionType) {
-			case 'button_press':
-				action = actions.button_press!;
+			case 'momentary_start_action':
+				action = actions.momentary_start_action!;
 				break;
-			case 'button_release':
-				action = actions.button_release!;
+			case 'momentary_release_action':
+				action = actions.momentary_release_action!;
 				break;
 			case 'multi_hold_action':
 				action =

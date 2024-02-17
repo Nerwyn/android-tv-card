@@ -60,8 +60,8 @@ export interface IActions {
 	multi_hold_action?: IAction;
 	multi_double_tap_action?: IAction;
 
-	button_press?: IAction;
-	button_release?: IAction;
+	momentary_start_action?: IAction;
+	momentary_release_action?: IAction;
 }
 
 export type ActionType =
@@ -71,7 +71,7 @@ export type ActionType =
 	| 'multi_tap_action'
 	| 'multi_hold_action'
 	| 'multi_double_tap_action'
-	| 'button_press'
-	| 'button_release';
+	| 'momentary_start_action'
+	| 'momentary_release_action';
 
 export type DirectionAction = 'up' | 'down' | 'left' | 'right';

@@ -101,10 +101,10 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		this._rippleHandlers.startPress(e as unknown as Event);
 		this.holdStart = true;
 
-		if (!this.holdAction && 'button_press' in this.actions) {
+		if (!this.holdAction && 'momentary_start_action' in this.actions) {
 			this.fireHapticEvent('light');
 			this.buttonPressStart = performance.now();
-			this.sendAction('button_press');
+			this.sendAction('momentary_start_action');
 		} else if (!this.holdTimer) {
 			this.holdTimer = setTimeout(() => {
 				this.hold = true;
@@ -190,11 +190,11 @@ export class RemoteTouchpad extends BaseRemoteElement {
 	onHoldEnd(e: TouchEvent | MouseEvent) {
 		this._rippleHandlers.endPress();
 
-		if (!this.holdAction && 'button_press' in this.actions) {
+		if (!this.holdAction && 'momentary_start_action' in this.actions) {
 			this.buttonPressEnd = performance.now();
-			if ('button_release' in this.actions) {
+			if ('momentary_release_action' in this.actions) {
 				this.fireHapticEvent('selection');
-				this.sendAction('button_release');
+				this.sendAction('momentary_release_action');
 			}
 			this.endAction();
 		} else if (this.hold || this.holdMove) {
