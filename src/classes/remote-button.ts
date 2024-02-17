@@ -66,7 +66,10 @@ export class RemoteButton extends BaseRemoteElement {
 			this.initialY = e.clientY;
 		}
 
-		if (!this.holdTimer) {
+		if ('button_press' in this.actions) {
+			this.buttonPressStart = new Date().getTime();
+			this.sendAction('button_press');
+		} else if (!this.holdTimer) {
 			this.holdTimer = setTimeout(() => {
 				if (!this.holdMove) {
 					this.hold = true;
@@ -102,7 +105,13 @@ export class RemoteButton extends BaseRemoteElement {
 
 	onHoldEnd(e: TouchEvent | MouseEvent) {
 		if (!this.holdMove) {
-			if (this.hold) {
+			if ('button_press' in this.actions) {
+				if ('button_release' in this.actions) {
+					this.buttonPressEnd = new Date().getTime();
+					this.sendAction('button_release');
+				}
+				this.endAction();
+			} else if (this.hold) {
 				// Hold action is triggered
 				e.stopImmediatePropagation();
 				e.preventDefault();
@@ -156,6 +165,8 @@ export class RemoteButton extends BaseRemoteElement {
 		this.holdMove = false;
 		this.initialX = undefined;
 		this.initialY = undefined;
+
+		super.endAction();
 	}
 
 	render(inputTemplate?: TemplateResult<1>) {

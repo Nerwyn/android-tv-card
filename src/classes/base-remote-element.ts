@@ -17,6 +17,8 @@ export class BaseRemoteElement extends LitElement {
 
 	value: number = 0;
 	touchscreen = 'ontouchstart' in document.documentElement;
+	buttonPressStart?: number;
+	buttonPressEnd?: number;
 
 	fireHapticEvent(haptic: HapticType) {
 		if (
@@ -30,7 +32,10 @@ export class BaseRemoteElement extends LitElement {
 		}
 	}
 
-	endAction() {}
+	endAction() {
+		this.buttonPressStart = undefined;
+		this.buttonPressEnd = undefined;
+	}
 
 	sendAction(actionType: ActionType, actions: IActions = this.actions) {
 		let action;
@@ -128,6 +133,10 @@ export class BaseRemoteElement extends LitElement {
 
 		const [domain, service] = domainService.split('.');
 		const data = structuredClone(action.data);
+		let holdSecs: number = 0;
+		if (this.buttonPressStart && this.buttonPressEnd) {
+			holdSecs = this.buttonPressEnd - this.buttonPressStart;
+		}
 		for (const key in data) {
 			data[key] = renderTemplate(this.hass, data[key] as string);
 			if (data[key]) {
@@ -137,6 +146,16 @@ export class BaseRemoteElement extends LitElement {
 					data[key] = data[key]
 						.toString()
 						.replace(/VALUE/g, (this.value ?? '').toString());
+				}
+
+				if (holdSecs) {
+					if (data[key] == 'HOLD_SECS') {
+						data[key] = holdSecs;
+					} else if (data[key].toString().includes('HOLD_SECS')) {
+						data[key] = data[key]
+							.toString()
+							.replace(/HOLD_SECS/g, (holdSecs ?? '').toString());
+					}
 				}
 			}
 		}

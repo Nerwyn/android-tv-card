@@ -183,10 +183,17 @@ class AndroidTVCard extends LitElement {
 			}
 
 			// For each type of action
-			const actionTypes = [
+			const actionTypes: ActionType[] = [
 				'tap_action',
 				'hold_action',
 				'double_tap_action',
+				'multi_tap_action',
+				'multi_hold_action',
+				'multi_double_tap_action',
+				'button_press',
+				'button_release',
+				'multi_button_press',
+				'multi_button_release',
 			];
 			for (const actionType of actionTypes) {
 				if (actionType in customAction) {
@@ -290,6 +297,10 @@ class AndroidTVCard extends LitElement {
 			'multi_tap_action',
 			'multi_hold_action',
 			'multi_double_tap_action',
+			'button_press',
+			'button_release',
+			'multi_button_press',
+			'multi_button_release',
 		];
 		for (const actionType of actionTypes) {
 			if (!(actionType in actions) && actionType in defaultActions) {
@@ -312,7 +323,8 @@ class AndroidTVCard extends LitElement {
 				actions.multi_hold_action?.action == 'repeat' &&
 				!('repeat_delay' in actions.multi_hold_action)
 			) {
-				actions.multi_hold_action.repeat_delay = this.config.repeat_delay;
+				actions.multi_hold_action.repeat_delay =
+					this.config.repeat_delay;
 			}
 		}
 

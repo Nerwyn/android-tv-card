@@ -55,9 +55,15 @@ export interface IActions {
 	tap_action?: IAction;
 	hold_action?: IAction;
 	double_tap_action?: IAction;
+
 	multi_tap_action?: IAction;
 	multi_hold_action?: IAction;
 	multi_double_tap_action?: IAction;
+
+	button_press?: IAction;
+	button_release?: IAction;
+	multi_button_press?: IAction;
+	multi_button_release?: IAction;
 }
 
 export type ActionType =
@@ -66,6 +72,10 @@ export type ActionType =
 	| 'double_tap_action'
 	| 'multi_tap_action'
 	| 'multi_hold_action'
-	| 'multi_double_tap_action';
+	| 'multi_double_tap_action'
+	| 'button_press'
+	| 'button_release'
+	| 'multi_button_press'
+	| 'multi_button_release';
 
 export type DirectionAction = 'up' | 'down' | 'left' | 'right';

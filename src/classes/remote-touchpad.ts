@@ -101,7 +101,18 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		this._rippleHandlers.startPress(e as unknown as Event);
 		this.holdStart = true;
 
-		if (!this.holdTimer) {
+		if (
+			!this.holdAction &&
+			('button_press' in this.actions ||
+				'multi_button_press' in this.actions)
+		) {
+			this.buttonPressStart = new Date().getTime();
+			if (this.targetTouches && this.targetTouches.length > 1) {
+				this.sendAction('multi_button_press');
+			} else {
+				this.sendAction('button_press');
+			}
+		} else if (!this.holdTimer) {
 			this.holdTimer = setTimeout(() => {
 				this.hold = true;
 
@@ -186,7 +197,24 @@ export class RemoteTouchpad extends BaseRemoteElement {
 	onHoldEnd(e: TouchEvent | MouseEvent) {
 		this._rippleHandlers.endPress();
 
-		if (this.hold || this.holdMove) {
+		if (
+			!this.holdAction &&
+			('button_press' in this.actions ||
+				'multi_button_press' in this.actions)
+		) {
+			this.buttonPressEnd = new Date().getTime();
+			if (
+				'button_release' in this.actions ||
+				'multi_button_release' in this.actions
+			) {
+				if (this.targetTouches && this.targetTouches.length > 1) {
+					this.sendAction('multi_button_press');
+				} else {
+					this.sendAction('button_press');
+				}
+			}
+			this.endAction();
+		} else if (this.hold || this.holdMove) {
 			e.stopImmediatePropagation();
 			e.preventDefault();
 			this.endAction();
@@ -273,6 +301,8 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		this.initialX = undefined;
 		this.initialY = undefined;
 		this.targetTouches = undefined;
+
+		super.endAction();
 	}
 
 	render() {
