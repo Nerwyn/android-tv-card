@@ -141,7 +141,7 @@ export class BaseRemoteElement extends LitElement {
 		const data = structuredClone(action.data);
 		let holdSecs: number = 0;
 		if (this.buttonPressStart && this.buttonPressEnd) {
-			holdSecs = this.buttonPressEnd - this.buttonPressStart;
+			holdSecs = (this.buttonPressEnd - this.buttonPressStart) / 1000;
 		}
 		for (const key in data) {
 			data[key] = renderTemplate(this.hass, data[key] as string);

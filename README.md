@@ -33,7 +33,7 @@ Along with a many other changes and improvements:
 - Uses `remote.send_command` to send commands to an Android TV for all default keys and sources using Android TV Remote entity ID `remote_id`.
 - Navigation speed increased to be closer to (but not as crazy fast) as the Google TV remote.
 
-**Fully customizable touchpad**
+**Super customizable touchpad**
 
 - Touchpad actions are now remappable by creating custom actions for `up`, `down`, `left`, `right`, and `center`.
 - Alter touchpad CSS using `touchpad_style`.
@@ -41,13 +41,16 @@ Along with a many other changes and improvements:
 - Touchpad haptics can now be toggled.
 - Supports multi touch gestures for all swipe directions and the center tap, meaning you can program the touchpad with up to twenty-two different actions.
 
-**Tap, double tap, and hold tap actions support for buttons and touchpad on all platforms**
+**Tap, double tap, hold tap, momentary, and multi-touch actions support for buttons and touchpad on all platforms**
 
 - All buttons and the touchpad `center` command support tap, double tap, and long tap custom actions.
   - Using the [Home Assistant actions](https://www.home-assistant.io/dashboards/actions/) syntax.
 - Supports the actions `call-service`, `navigate`, `url`, `assist`, `more-info`, and `none` along with card specific actions `key` and `source`.
 - Hold actions can be set to either their own action or to repeat the tap action ten times a second by setting action to `repeat`.
   - Hold actions for default keys `up`, `down`, `left`, `right`, `volume_up`, `volume_down`, `delete`, and `forward_delete` are set to `repeat` by default but can be changed using custom actions.
+  - Time between repeats can be changed by setting `repeat_delay` globally in the root of the config or for a specific custom action.
+- Configure the touchpad to perform alternate actions by using multiple fingers.
+- Use buttons and the touchpad in an alternate mometary mode where different actions are fired on the initial press and release.
 
 **Better row handling and columns**
 
@@ -89,7 +92,7 @@ Along with a many other changes and improvements:
     - Highly recommended that you also create buttons for `delete` and `enter` so you can remove and send your input text.
   - **Google Assistant search** - Create and press the button `search` to pull up a browser prompt in which you can type in text to send to your Android TV to process as a Google Assistant search.
     - Works well if you are experiencing [this issue](https://github.com/home-assistant/core/issues/94063).
-- Can also be used for Kodi (see below)
+- Can also be used for Fire TV and Kodi (see below)
 
 **Template support**
 
@@ -178,6 +181,7 @@ Using only these options you will get an empty card (or almost empty, if you set
 | remote_id              | string   | The `remote` entity id to control, required for default commands.                                                                                                                                                                        |
 | enable_button_feedback | boolean  | Enable vibration feedback on the buttons, defaults to `true`.                                                                                                                                                                            |
 | button_style           | object   | CSS style to apply to all buttons.                                                                                                                                                                                                       |
+| repeat_delay           | number   | The delay between repeats for actions configured to repeat when held (buttons and touchpad swipes). Defaults to 100ms.                                                                                                                   |
 
 In order to include the buttons, you need to specify in the config the rows you want and which buttons you want in it.
 You do it by declaring the rows as arrays and its buttons as values.
@@ -224,21 +228,23 @@ This card also supports the following special button shortcuts and elements whic
 
 ## Custom Actions
 
-| Name           | Type   | Description                                                                                                                                                                                                                                                                           |
-| -------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| custom_actions | object | Custom actions for the remote control. Each item is an object that can optionally have an `icon` (will use original key icon if overwriting an existing one and icon is not provided) and at least one of the following properties: `tap_action`, `hold_action`, `double_tap_action`. |
+| Name           | Type   | Description                                                                                                                                                                                                                                                                                                                             |
+| -------------- | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| custom_actions | object | Custom actions for the remote control. Each item is an object that can optionally have an `icon` (will use original key icon if overwriting an existing one and icon is not provided) and at least one of the following properties: `tap_action`, `hold_action`, `double_tap_action`, 'momentary_start_action`, `momentary_end_action`. |
 
 If you want to add custom buttons to the remote control (or if you want to reconfigure the existing buttons or touchpad actions), you can do it by adding an object to the `custom_actions` object. Each object should contain one or more of either `tap_action`, `hold_action`, and or `double_tap_action`.
 
-| Name              | Type              | Description                                                                                                                                                                                     |
-| ----------------- | ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| icon              | string            | Name of an icon to use. If overriding a default action uses the default icon if not defined                                                                                                     |
-| confirmation      | boolean or object | Whether to display a browser confirmation popup or not before executing an action. See [here](https://www.home-assistant.io/dashboards/actions/#options-for-confirmation) for more information. |
-| tap_action        | object            | Action to perform on single tap.                                                                                                                                                                |
-| hold_action       | object            | Action to perform when held. Can also be set to `repeat` to repeat ten times a second.                                                                                                          |
-| double_tap_action | object            | Action to perform when double tapped. Adding this introduces a 200ms delay to single tap actions.                                                                                               |
+| Name                   | Type              | Description                                                                                                                                                                                     |
+| ---------------------- | ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| icon                   | string            | Name of an icon to use. If overriding a default action uses the default icon if not defined                                                                                                     |
+| confirmation           | boolean or object | Whether to display a browser confirmation popup or not before executing an action. See [here](https://www.home-assistant.io/dashboards/actions/#options-for-confirmation) for more information. |
+| tap_action             | object            | Action to perform on single tap.                                                                                                                                                                |
+| hold_action            | object            | Action to perform when held. Can also be set to `repeat` to repeat ten times a second.                                                                                                          |
+| double_tap_action      | object            | Action to perform when double tapped. Adding this introduces a 200ms delay to single tap actions.                                                                                               |
+| momentary_start_action | object            | Action to perform when the button is initially held down. If configured normal tap and hold actions will not trigger.                                                                           |
+| momentary_end_action   | object            | Action to perform when the button is released (`momentary_start_action` must also be configured, even if it is set to `action: none`).                                                          |
 
-The following default keys have hold actions set to `repeat` by default. You can disable this by setting their hold actions to `none` or a different action. By setting a hold action to `repeat`, it will repeat ten times a second while the button is held down.
+The following default keys have hold actions set to `repeat` by default. You can disable this by setting their hold actions to `none` or a different action. By setting a hold action to `repeat`, the tap action will repeat while the button is held down. The default delay between repeats is 100ms. You can changes this by setting `repeat_delay` in the hold action to a different number, or globally by setting it in the remote config root.
 
 - up
 - down
@@ -490,9 +496,14 @@ custom_actions:
 
 #### repeat
 
-None. The `tap_action` must be defined, whether by the default key or as a custom action.
+| Name         | Description                                                                                   |
+| ------------ | --------------------------------------------------------------------------------------------- |
+| repeat_delay | Milliseconds between repeats. Defaults to 100ms. Can also be set globally in the config root. |
+
+The `tap_action` must be defined, whether by the default key or as a custom action.
 
 ```yaml
+repeat_delay: 200 # defaults to 100, applies to all actions (custom or not) unless redefined within custom action
 custom_actions:
   channel_up:
     hold_action:
@@ -506,6 +517,45 @@ custom_actions:
         entity_id: light.theater
     hold_action:
       action: repeat # light will be toggled repeatedly while held
+	  repeat_delay: 1000
+```
+
+### Momentary Button Mode
+
+As an alternative to the normal tap, hold, and double tap actions, buttons can also be used in a momentary mode. Configuring this option disables the normal tap, hold, and double tap actions.
+
+`momentary_start_action` is fired when you first press down on a button (or center of touchpad). `momentary_end_action` is fired when you release the button or touchpad and is only fired if `momentary_start_action` is configured. If you wish to only fire an action on button release you can set the `momentary_start_action` action to none.
+
+```yaml
+custom_actions:
+  momentary_light:
+    icon: mdi:ceiling-light
+    momentary_start_action:
+      action: call-service
+      service: light.turn_on
+      data:
+        entity_id: light.sunroom_ceiling
+    momentary_end_action:
+      action: call-service
+      service: light.turn_off
+      data:
+        entity_id: light.sunroom_ceiling
+```
+
+Using buttons (and touchpad center) in momentary mode also allows you to send the number of seconds elapsed in `momentary_end_action` by setting a data key value to `HOLD_SECS`.
+
+```yaml
+custom_actions:
+  fast_forward:
+    momentary_start_action:
+      action: none
+    momentary_end_action:
+      action: call-service
+      service: remote.send_command
+      data:
+        entity_id: remote.google_tv
+        command: MEDIA_FAST_FORWARD
+        hold_secs: HOLD_SECS
 ```
 
 ### Custom Button Style
@@ -660,7 +710,7 @@ Similary to `button_style`, `slider_style` can be used to change the CSS of the 
 
 ### Custom Touchpad Commands
 
-The touchpad can be customized using `custom_actions` so that it can be used with other devices. The touchpad acts as a `center` button but also supports touch swipes to send the keys `up`, `down`, `left`, and `right`. You can remap touchpad commands by creating custom actions for these actions. This includes remapping the `center` key hold and double tap actions.
+The touchpad can be customized using `custom_actions` so that it can be used with other devices. The touchpad acts as a `center` button but also supports touch swipes to send the keys `up`, `down`, `left`, and `right`. You can remap touchpad commands by creating custom actions for these actions. This includes remapping the `center` key hold and double tap actions, along with turning the touchpad into a momentary button.
 
 Like buttons, double tap actions introduces a 200ms delay to single taps, and the hold action default adds `hold_secs: 0.5` to the service call data. Double tap and hold actions cannot be added to touchpad directional swipes, just the `center` action.
 
@@ -758,7 +808,7 @@ custom_actions:
 | Name          | Type   | Description                                                                                                                                                                                                                                        |
 | ------------- | ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | keyboard_id   | string | The `media_player` entity id to use to send keyboard events. Requires the [Android Debug Bridge integration](https://www.home-assistant.io/integrations/androidtv/) for Android TV, and other media platform integration for other supported ones. |
-| keyboard_mode | string | The media platform type for sending keyboard commands. Defaults to `ANDROID TV`. The only other currently supported method is `KODI`.                                                                                                              |
+| keyboard_mode | string | The media platform type for sending keyboard commands. Defaults to `ANDROID TV`. Also supports `FIRE TV` and `KODI`.                                                                                                                               |
 
 You can use the [Android Debug Bridge integration](https://www.home-assistant.io/integrations/androidtv/) with this card to send text to your Android TV (by default, see below for alternate media platforms). This card includes three different methods for sending text to Android TV.
 
@@ -817,6 +867,7 @@ You can also use the keyboard to send text on the following alternate platforms 
 | Media Platform | Info                                                                                                                                                                                                                  |
 | -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `ANDROID TV`   | Default, not required if using Android TV                                                                                                                                                                             |
+| `FIRE TV`      | Mostly the same as Android TV, but uses ADB to send backspace, delete, enter, and left/right arrow commands.                                                                                                          |
 | `KODI`         | Does not support backspace, delete, enter, left, and right but these can be used with the on screen keyboard. Seamless mode does not work as the Kodi `Input.SendText` method clears the textbox before sending text. |
 
 More may be added as requested if there is a way to do so through their Home Assistant (or possibly community made) integrations.
@@ -1874,7 +1925,6 @@ custom_keys:
 
 <img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/conditional_layouts.png" alt="conditional layouts example" width="500"/>
 
-
 ### Example 14
 
 RGB Remote using Broadlink RM4 Pro
@@ -2100,8 +2150,8 @@ custom_actions:
       data:
         device: Office TV Led
         command: brightness-
-
 ```
+
 <img src="https://github.com/Nerwyn/android-tv-card/blob/main/assets/rgb.png" alt="rgb remote example" width="500"/>
 
 [last-commit-shield]: https://img.shields.io/github/last-commit/Nerwyn/android-tv-card?style=for-the-badge
