@@ -109,6 +109,10 @@ export class RemoteKeyboard extends BaseKeyboardElement {
 			x: '52',
 			y: '53',
 			z: '54',
+			',': '55',
+			'.': '56',
+			'	': '61',
+			' ': '62'
 		};
 		let key: string;
 
