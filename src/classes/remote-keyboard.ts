@@ -150,7 +150,7 @@ export class RemoteKeyboard extends BaseKeyboardElement {
 				case 'ANDROID_TV':
 				case 'ANDROID TV':
 				default:
-					data.command = `input keyboard text "${text}"`;
+					data.command = `input text "${text}"`;
 					this.hass.callService('androidtv', 'adb_command', data);
 					break;
 			}
