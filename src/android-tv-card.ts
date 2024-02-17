@@ -191,7 +191,7 @@ class AndroidTVCard extends LitElement {
 				'multi_hold_action',
 				'multi_double_tap_action',
 				'momentary_start_action',
-				'momentary_release_action',
+				'momentary_end_action',
 			];
 			for (const actionType of actionTypes) {
 				if (actionType in customAction) {
@@ -296,7 +296,7 @@ class AndroidTVCard extends LitElement {
 			'multi_hold_action',
 			'multi_double_tap_action',
 			'momentary_start_action',
-			'momentary_release_action',
+			'momentary_end_action',
 		];
 		for (const actionType of actionTypes) {
 			if (!(actionType in actions) && actionType in defaultActions) {

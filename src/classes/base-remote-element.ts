@@ -43,8 +43,8 @@ export class BaseRemoteElement extends LitElement {
 			case 'momentary_start_action':
 				action = actions.momentary_start_action!;
 				break;
-			case 'momentary_release_action':
-				action = actions.momentary_release_action!;
+			case 'momentary_end_action':
+				action = actions.momentary_end_action!;
 				break;
 			case 'multi_hold_action':
 				action =

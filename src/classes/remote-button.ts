@@ -107,10 +107,10 @@ export class RemoteButton extends BaseRemoteElement {
 	onHoldEnd(e: TouchEvent | MouseEvent) {
 		if (!this.holdMove) {
 			if ('momentary_start_action' in this.actions) {
-				if ('momentary_release_action' in this.actions) {
+				if ('momentary_end_action' in this.actions) {
 					this.fireHapticEvent('selection');
 					this.buttonPressEnd = performance.now();
-					this.sendAction('momentary_release_action');
+					this.sendAction('momentary_end_action');
 				}
 				this.endAction();
 			} else if (this.hold) {
