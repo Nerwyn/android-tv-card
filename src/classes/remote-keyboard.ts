@@ -54,10 +54,15 @@ export class RemoteKeyboard extends BaseKeyboardElement {
 					};
 					outKey = keyToKey[inKey ?? ''];
 
-					this.hass.callService('androidtv', 'adb_command', {
-						entity_id: renderTemplate(this.hass, this.keyboardId),
-						command: `input keyevent ${outKey}`,
-					});
+					if (outKey) {
+						this.hass.callService('androidtv', 'adb_command', {
+							entity_id: renderTemplate(
+								this.hass,
+								this.keyboardId,
+							),
+							command: `input keyevent ${outKey}`,
+						});
+					}
 					break;
 				case 'ANDROID':
 				case 'ANDROIDTV':
@@ -73,7 +78,9 @@ export class RemoteKeyboard extends BaseKeyboardElement {
 					};
 					outKey = keyToKey[inKey ?? ''];
 
-					this.sendCommand(outKey, 'tap_action');
+					if (outKey) {
+						this.sendCommand(outKey, 'tap_action');
+					}
 					break;
 			}
 		}
@@ -112,7 +119,7 @@ export class RemoteKeyboard extends BaseKeyboardElement {
 			',': '55',
 			'.': '56',
 			'	': '61',
-			' ': '62'
+			' ': '62',
 		};
 		let key: string;
 
