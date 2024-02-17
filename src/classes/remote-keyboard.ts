@@ -89,40 +89,6 @@ export class RemoteKeyboard extends BaseKeyboardElement {
 	onInput(e: InputEvent) {
 		e.stopImmediatePropagation();
 
-		const keyToKey: Record<string, string> = {
-			a: '29',
-			b: '30',
-			c: '31',
-			d: '32',
-			e: '33',
-			f: '34',
-			g: '35',
-			h: '36',
-			i: '37',
-			j: '38',
-			k: '39',
-			l: '40',
-			m: '41',
-			n: '42',
-			o: '43',
-			p: '44',
-			q: '45',
-			r: '46',
-			s: '47',
-			t: '48',
-			u: '49',
-			v: '50',
-			w: '51',
-			x: '52',
-			y: '53',
-			z: '54',
-			',': '55',
-			'.': '56',
-			'	': '61',
-			' ': '62',
-		};
-		let key: string;
-
 		const text = e.data;
 		if (text) {
 			const data: IData = {
@@ -143,12 +109,6 @@ export class RemoteKeyboard extends BaseKeyboardElement {
 				case 'FIRETV':
 				case 'FIRE_TV':
 				case 'FIRE TV':
-					for (const letter of text) {
-						key = keyToKey[letter];
-						data.command = `input keyevent ${key}`;
-						this.hass.callService('androidtv', 'adb_command', data);
-					}
-					break;
 				case 'ANDROID':
 				case 'ANDROIDTV':
 				case 'ANDROID_TV':
@@ -190,7 +150,7 @@ export class RemoteKeyboard extends BaseKeyboardElement {
 				case 'ANDROID_TV':
 				case 'ANDROID TV':
 				default:
-					data.command = `input text "${text}"`;
+					data.command = `input keyboard text "${text}"`;
 					this.hass.callService('androidtv', 'adb_command', data);
 					break;
 			}
