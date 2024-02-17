@@ -28,7 +28,8 @@ export class RemoteButton extends BaseRemoteElement {
 
 		if (
 			'double_tap_action' in this.actions &&
-			this.actions.double_tap_action!.action != 'none'
+			renderTemplate(this.hass, this.actions.double_tap_action!.action) !=
+				'none'
 		) {
 			// Double tap action is defined
 			if (this.clickCount > 1) {
@@ -70,12 +71,25 @@ export class RemoteButton extends BaseRemoteElement {
 				if (!this.holdMove) {
 					this.hold = true;
 
-					if (this.actions.hold_action?.action == 'repeat') {
+					if (
+						renderTemplate(
+							this.hass,
+							this.actions.hold_action?.action as string,
+						) == 'repeat'
+					) {
+						const repeat_delay =
+							'repeat_delay' in this.actions.hold_action!
+								? (renderTemplate(
+										this.hass,
+										this.actions.hold_action
+											.repeat_delay as unknown as string,
+								  ) as number)
+								: 100;
 						if (!this.holdInterval) {
 							this.holdInterval = setInterval(() => {
 								this.fireHapticEvent('selection');
 								this.sendAction('tap_action');
-							}, 100);
+							}, repeat_delay);
 						}
 					} else {
 						this.fireHapticEvent('medium');

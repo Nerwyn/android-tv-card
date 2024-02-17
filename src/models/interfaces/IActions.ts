@@ -44,6 +44,8 @@ export interface IAction {
 
 	pipeline_id?: string;
 	start_listening?: boolean;
+
+	repeat_delay?: number;
 }
 
 export interface IActions {

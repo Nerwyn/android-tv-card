@@ -17,10 +17,9 @@ export interface IConfig {
 	button_style?: StyleInfo;
 
 	enable_touchpad_feedback?: boolean;
-	enable_double_click?: boolean;
-	double_click_keycode?: string;
-	long_click_keycode?: string;
 	touchpad_style?: StyleInfo;
+
+	repeat_delay?: number;
 
 	slider_id?: string;
 	slider_attribute?: string;

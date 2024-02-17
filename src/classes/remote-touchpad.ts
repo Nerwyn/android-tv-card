@@ -50,9 +50,15 @@ export class RemoteTouchpad extends BaseRemoteElement {
 
 		if (
 			('double_tap_action' in this.actions &&
-				this.actions.double_tap_action!.action != 'none') ||
+				renderTemplate(
+					this.hass,
+					this.actions.double_tap_action!.action as string,
+				) != 'none') ||
 			('multi_double_tap_action' in this.actions &&
-				this.actions.multi_double_tap_action!.action != 'none')
+				renderTemplate(
+					this.hass,
+					this.actions.multi_double_tap_action!.action as string,
+				) != 'none')
 		) {
 			// Double tap action is defined
 			if (this.clickCount > doubleTapThreshold) {
@@ -110,12 +116,36 @@ export class RemoteTouchpad extends BaseRemoteElement {
 						: 'tap_action';
 				const actionType = getActionType();
 
-				let repeat = action.hold_action?.action == 'repeat';
+				let repeat =
+					renderTemplate(
+						this.hass,
+						action.hold_action?.action as string,
+					) == 'repeat';
+				let repeat_delay =
+					'repeat_delay' in action.hold_action!
+						? (renderTemplate(
+								this.hass,
+								action.hold_action
+									.repeat_delay as unknown as string,
+						  ) as number)
+						: 100;
 				if (
 					actionType == 'multi_tap_action' &&
 					'multi_hold_action' in action
 				) {
-					repeat = action.multi_hold_action?.action == 'repeat';
+					repeat =
+						renderTemplate(
+							this.hass,
+							action.multi_hold_action?.action as string,
+						) == 'repeat';
+					repeat_delay =
+						'repeat_delay' in action.multi_hold_action!
+							? (renderTemplate(
+									this.hass,
+									action.multi_hold_action
+										.repeat_delay as unknown as string,
+							  ) as number)
+							: 100;
 				}
 
 				if (repeat) {
@@ -123,7 +153,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 						this.holdInterval = setInterval(() => {
 							this.fireHapticEvent('selection');
 							this.sendAction(getActionType(), getAction());
-						}, 100);
+						}, repeat_delay);
 					}
 				} else {
 					this.fireHapticEvent('medium');

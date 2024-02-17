@@ -242,16 +242,15 @@ class AndroidTVCard extends LitElement {
 
 	setToggles(config: IConfig): IConfig {
 		// Set toggles to default values if not provided
-		const toggles: IConfig = {
+		const toggles: Record<string, boolean> = {
 			enable_button_feedback: true,
 			enable_touchpad_feedback: true,
 			enable_double_click: false,
 			enable_slider_feedback: true,
 		};
-		let toggle: keyof IConfig;
-		for (toggle in toggles) {
+		for (const toggle in toggles) {
 			if (!(toggle in config)) {
-				config[toggle] = toggles[toggle] as undefined;
+				(config as Record<string, boolean>)[toggle] = toggles[toggle];
 			}
 		}
 		return config;
@@ -296,6 +295,24 @@ class AndroidTVCard extends LitElement {
 			if (!(actionType in actions) && actionType in defaultActions) {
 				actions[actionType as ActionType] =
 					defaultActions[actionType as ActionType];
+			}
+		}
+
+		// Set repeat delay if defined globally
+		if ('repeat_delay' in this.config) {
+			if (
+				'hold_action' in actions &&
+				actions.hold_action?.action == 'repeat' &&
+				!('repeat_delay' in actions.hold_action)
+			) {
+				actions.hold_action.repeat_delay = this.config.repeat_delay;
+			}
+			if (
+				'multi_hold_action' in actions &&
+				actions.multi_hold_action?.action == 'repeat' &&
+				!('repeat_delay' in actions.multi_hold_action)
+			) {
+				actions.multi_hold_action.repeat_delay = this.config.repeat_delay;
 			}
 		}
 
@@ -373,14 +390,15 @@ class AndroidTVCard extends LitElement {
 		if (
 			renderTemplate(
 				this.hass,
-				this.config.enable_double_click as unknown as string,
+				(this.config as Record<string, string>).enable_double_click,
 			) &&
 			!('double_tap_action' in centerActions)
 		) {
 			const doubleTapKeycode =
 				(renderTemplate(
 					this.hass,
-					this.config.double_click_keycode!,
+					(this.config as Record<string, string>)
+						.double_click_keycode!,
 				) as string) ?? 'back';
 			const doubleTapAction = this.getActions(doubleTapKeycode);
 			centerActions.double_tap_action = doubleTapAction.tap_action;
@@ -388,13 +406,16 @@ class AndroidTVCard extends LitElement {
 
 		// If still using old long click key, map to center hold action
 		if (
-			renderTemplate(this.hass, this.config.long_click_keycode!) &&
+			renderTemplate(
+				this.hass,
+				(this.config as Record<string, string>).long_click_keycode!,
+			) &&
 			!('hold_action' in centerActions)
 		) {
 			const holdActionKeycode =
 				(renderTemplate(
 					this.hass,
-					this.config.long_click_keycode!,
+					(this.config as Record<string, string>).long_click_keycode!,
 				) as string) ?? 'center';
 			const holdAction = this.getActions(holdActionKeycode);
 			centerActions.hold_action = holdAction.tap_action;
@@ -411,7 +432,6 @@ class AndroidTVCard extends LitElement {
 			.hass=${this.hass}
 			.hapticEnabled=${this.config.enable_touchpad_feedback}
 			.remoteId=${this.config.remote_id}
-			.enableDoubleClick=${this.config.enable_double_click}
 			.actions=${centerActions}
 			.directionActions=${directionActions}
 			._style=${this.config.touchpad_style}
