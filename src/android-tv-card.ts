@@ -654,3 +654,6 @@ window.customCards.push({
 if (!window.structuredClone) {
 	window.structuredClone = (obj) => JSON.parse(JSON.stringify(obj));
 }
+if (!window.performance) {
+	window.performance = window.Date as unknown as Performance;
+}

@@ -67,7 +67,7 @@ export class RemoteButton extends BaseRemoteElement {
 		}
 
 		if ('button_press' in this.actions) {
-			this.buttonPressStart = Date.now();
+			this.buttonPressStart = performance.now();
 			this.sendAction('button_press');
 		} else if (!this.holdTimer) {
 			this.holdTimer = setTimeout(() => {
@@ -107,7 +107,7 @@ export class RemoteButton extends BaseRemoteElement {
 		if (!this.holdMove) {
 			if ('button_press' in this.actions) {
 				if ('button_release' in this.actions) {
-					this.buttonPressEnd = Date.now();
+					this.buttonPressEnd = performance.now();
 					this.sendAction('button_release');
 				}
 				this.endAction();
