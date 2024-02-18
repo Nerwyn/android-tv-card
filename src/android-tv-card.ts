@@ -324,6 +324,24 @@ class AndroidTVCard extends LitElement {
 			}
 		}
 
+		// Set double tap window if defined globally
+		if ('double_tap_window' in this.config) {
+			if (
+				'double_tap_action' in actions &&
+				!('double_tap_window' in actions.double_tap_action!)
+			) {
+				actions.double_tap_action!.double_tap_window =
+					this.config.double_tap_window;
+			}
+			if (
+				'multi_double_tap_action' in actions &&
+				!('double_tap_window' in actions.multi_double_tap_action!)
+			) {
+				actions.multi_double_tap_action!.double_tap_window =
+					this.config.double_tap_window;
+			}
+		}
+
 		return actions;
 	}
 

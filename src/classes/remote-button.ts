@@ -39,12 +39,20 @@ export class RemoteButton extends BaseRemoteElement {
 				this.endAction();
 			} else {
 				// Single tap action is triggered if double tap is not within 200ms
+				const doubleTapWindow: number =
+					'double_tap_window' in this.actions.double_tap_action!
+						? (renderTemplate(
+								this.hass,
+								this.actions.double_tap_action
+									.double_tap_window as unknown as string,
+						  ) as number)
+						: 200;
 				if (!this.clickTimer) {
 					this.clickTimer = setTimeout(() => {
 						this.fireHapticEvent('light');
 						this.sendAction('tap_action');
 						this.endAction();
-					}, 200);
+					}, doubleTapWindow);
 				}
 			}
 		} else {

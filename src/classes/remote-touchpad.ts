@@ -61,27 +61,32 @@ export class RemoteTouchpad extends BaseRemoteElement {
 				) != 'none')
 		) {
 			// Double tap action is defined
+			const doubleTapAction =
+				this.targetTouches && this.targetTouches.length > 1
+					? 'multi_tap_action'
+					: 'tap_action';
+
 			if (this.clickCount > doubleTapThreshold) {
 				// Double tap action is triggered
 				this.fireHapticEvent('success');
-				this.sendAction(
-					this.targetTouches && this.targetTouches.length > 1
-						? 'multi_double_tap_action'
-						: 'double_tap_action',
-				);
+				this.sendAction(doubleTapAction);
 				this.endAction();
 			} else {
 				// Single tap action is triggered if double tap is not within 200ms
 				if (!this.clickTimer) {
+					const doubleTapWindow: number =
+						'double_tap_window' in this.actions[doubleTapAction]!
+							? (renderTemplate(
+									this.hass,
+									this.actions[doubleTapAction]!
+										.double_tap_window as unknown as string,
+							  ) as number)
+							: 200;
 					this.clickTimer = setTimeout(() => {
 						this.fireHapticEvent('light');
-						this.sendAction(
-							this.targetTouches && this.targetTouches.length > 1
-								? 'multi_tap_action'
-								: 'tap_action',
-						);
+						this.sendAction(doubleTapAction);
 						this.endAction();
-					}, 200);
+					}, doubleTapWindow);
 				}
 			}
 		} else {

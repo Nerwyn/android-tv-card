@@ -20,6 +20,7 @@ export interface IConfig {
 	touchpad_style?: StyleInfo;
 
 	repeat_delay?: number;
+	double_tap_window?: number;
 
 	slider_id?: string;
 	slider_attribute?: string;

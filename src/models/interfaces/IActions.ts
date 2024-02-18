@@ -46,6 +46,7 @@ export interface IAction {
 	start_listening?: boolean;
 
 	repeat_delay?: number;
+	double_tap_window?: number;
 }
 
 export interface IActions {

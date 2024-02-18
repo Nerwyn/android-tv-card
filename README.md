@@ -46,6 +46,9 @@ Along with a many other changes and improvements:
 - All buttons and the touchpad `center` command support tap, double tap, and long tap custom actions.
   - Using the [Home Assistant actions](https://www.home-assistant.io/dashboards/actions/) syntax.
 - Supports the actions `call-service`, `navigate`, `url`, `assist`, `more-info`, and `none` along with card specific actions `key` and `source`.
+- Double tap actions are not configured by default but can be set on any button or the touchpad.
+  - If configured then there will be a default 200ms window before the single tap action is triggered.
+  - The double tap action window can be changed by setting `double_tap_window` globally in the root of the config or for a specific custom action.
 - Hold actions can be set to either their own action or to repeat the tap action ten times a second by setting action to `repeat`.
   - Hold actions for default keys `up`, `down`, `left`, `right`, `volume_up`, `volume_down`, `delete`, and `forward_delete` are set to `repeat` by default but can be changed using custom actions.
   - Time between repeats can be changed by setting `repeat_delay` globally in the root of the config or for a specific custom action.
@@ -182,6 +185,7 @@ Using only these options you will get an empty card (or almost empty, if you set
 | enable_button_feedback | boolean  | Enable vibration feedback on the buttons, defaults to `true`.                                                                                                                                                                            |
 | button_style           | object   | CSS style to apply to all buttons.                                                                                                                                                                                                       |
 | repeat_delay           | number   | The delay between repeats for actions configured to repeat when held (buttons and touchpad swipes). Defaults to 100ms.                                                                                                                   |
+| double_tap_window      | number   | The window of time in which a double tap can be triggered before a single tap is triggered isntead. Defaults to 200ms.                                                                                                                   |
 
 In order to include the buttons, you need to specify in the config the rows you want and which buttons you want in it.
 You do it by declaring the rows as arrays and its buttons as values.
@@ -240,11 +244,11 @@ If you want to add custom buttons to the remote control (or if you want to recon
 | confirmation           | boolean or object | Whether to display a browser confirmation popup or not before executing an action. See [here](https://www.home-assistant.io/dashboards/actions/#options-for-confirmation) for more information. |
 | tap_action             | object            | Action to perform on single tap.                                                                                                                                                                |
 | hold_action            | object            | Action to perform when held. Can also be set to `repeat` to repeat ten times a second.                                                                                                          |
-| double_tap_action      | object            | Action to perform when double tapped. Adding this introduces a 200ms delay to single tap actions.                                                                                               |
+| double_tap_action      | object            | Action to perform when double tapped. Adding this introduces a delay to single tap actions and is therefore not configured by default.                                                          |
 | momentary_start_action | object            | Action to perform when the button is initially held down. If configured normal tap and hold actions will not trigger.                                                                           |
 | momentary_end_action   | object            | Action to perform when the button is released (`momentary_start_action` must also be configured, even if it is set to `action: none`).                                                          |
 
-The following default keys have hold actions set to `repeat` by default. You can disable this by setting their hold actions to `none` or a different action. By setting a hold action to `repeat`, the tap action will repeat while the button is held down. The default delay between repeats is 100ms. You can changes this by setting `repeat_delay` in the hold action to a different number, or globally by setting it in the remote config root.
+The following default keys have hold actions set to `repeat` by default. You can disable this by setting their hold actions to `none` or a different action. By setting a hold action to `repeat`, the tap action will repeat while the button is held down. The default delay between repeats is 100ms. You can change this by setting `repeat_delay` in the hold action to a different number, or globally by setting it in the remote config root.
 
 - up
 - down
@@ -254,6 +258,8 @@ The following default keys have hold actions set to `repeat` by default. You can
 - volume_down
 - delete
 - forward_delete
+
+Double tap actions have a default window of 200ms to trigger before a single tap action is triggered instead. You can change this by setting `double_tap_window` in the double tap action to a different number, or globally by setting it in the remote config root.
 
 ```yaml
 custom_actions:
@@ -284,6 +290,7 @@ custom_actions:
     double_tap_action:
       action: navigate
       navigation_path: /lovelace/1
+	  double_tap_window: 400
     hold_action:
       action: navigate
       navigation_path: /lovelace/2
