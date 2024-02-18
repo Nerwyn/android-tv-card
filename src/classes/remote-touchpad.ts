@@ -72,7 +72,8 @@ export class RemoteTouchpad extends BaseRemoteElement {
 				// Single tap action is triggered if double tap is not within 200ms
 				if (!this.clickTimer) {
 					const doubleTapWindow: number =
-						'double_tap_window' in this.actions[doubleTapAction]!
+						'double_tap_window' in
+						(this.actions[doubleTapAction] ?? {})
 							? (renderTemplate(
 									this.hass,
 									this.actions[doubleTapAction]!
@@ -276,7 +277,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		const actions = this.getActions();
 
 		const holdTime =
-			'hold_time' in actions[holdAction as ActionType]!
+			'hold_time' in (actions[holdAction as ActionType] ?? {})
 				? (renderTemplate(
 						this.hass,
 						actions[holdAction as ActionType]!
@@ -297,10 +298,10 @@ export class RemoteTouchpad extends BaseRemoteElement {
 					actions.hold_action?.action as string,
 				) == 'repeat';
 			let repeat_delay =
-				'repeat_delay' in actions.hold_action!
+				'repeat_delay' in (actions.hold_action ?? {})
 					? (renderTemplate(
 							this.hass,
-							actions.hold_action
+							actions.hold_action!
 								.repeat_delay as unknown as string,
 					  ) as number)
 					: 100;
@@ -311,10 +312,10 @@ export class RemoteTouchpad extends BaseRemoteElement {
 						actions.multi_hold_action?.action as string,
 					) == 'repeat';
 				repeat_delay =
-					'repeat_delay' in actions.multi_hold_action!
+					'repeat_delay' in (actions.multi_hold_action ?? {})
 						? (renderTemplate(
 								this.hass,
-								actions.multi_hold_action
+								actions.multi_hold_action!
 									.repeat_delay as unknown as string,
 						  ) as number)
 						: 100;

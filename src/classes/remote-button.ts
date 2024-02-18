@@ -40,10 +40,11 @@ export class RemoteButton extends BaseRemoteElement {
 			} else {
 				// Single tap action is triggered if double tap is not within 200ms
 				const doubleTapWindow: number =
-					'double_tap_window' in this.actions.double_tap_action!
+					'double_tap_window' in
+					(this.actions.double_tap_action ?? {})
 						? (renderTemplate(
 								this.hass,
-								this.actions.double_tap_action
+								this.actions.double_tap_action!
 									.double_tap_window as unknown as string,
 						  ) as number)
 						: 200;
@@ -95,10 +96,10 @@ export class RemoteButton extends BaseRemoteElement {
 			this.buttonPressStart = performance.now();
 		} else if (!this.holdTimer) {
 			const holdTime =
-				'hold_time' in this.actions.hold_action!
+				'hold_time' in (this.actions.hold_action ?? {})
 					? (renderTemplate(
 							this.hass,
-							this.actions.hold_action
+							this.actions.hold_action!
 								.hold_time as unknown as string,
 					  ) as number)
 					: 500;
@@ -114,10 +115,10 @@ export class RemoteButton extends BaseRemoteElement {
 						) == 'repeat'
 					) {
 						const repeat_delay =
-							'repeat_delay' in this.actions.hold_action!
+							'repeat_delay' in (this.actions.hold_action ?? {})
 								? (renderTemplate(
 										this.hass,
-										this.actions.hold_action
+										this.actions.hold_action!
 											.repeat_delay as unknown as string,
 								  ) as number)
 								: 100;
