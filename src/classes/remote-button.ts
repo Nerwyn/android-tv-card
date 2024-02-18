@@ -74,11 +74,23 @@ export class RemoteButton extends BaseRemoteElement {
 			this.initialY = e.clientY;
 		}
 
-		if ('momentary_start_action' in this.actions) {
+		if (
+			'momentary_start_action' in this.actions &&
+			renderTemplate(
+				this.hass,
+				this.actions.momentary_start_action!.action,
+			) != 'none'
+		) {
 			this.fireHapticEvent('light');
 			this.buttonPressStart = performance.now();
 			this.sendAction('momentary_start_action');
-		} else if ('momentary_end_action' in this.actions) {
+		} else if (
+			'momentary_end_action' in this.actions &&
+			renderTemplate(
+				this.hass,
+				this.actions.momentary_end_action!.action,
+			) != 'none'
+		) {
 			this.fireHapticEvent('light');
 			this.buttonPressStart = performance.now();
 		} else if (!this.holdTimer) {
@@ -117,12 +129,24 @@ export class RemoteButton extends BaseRemoteElement {
 
 	onHoldEnd(e: TouchEvent | MouseEvent) {
 		if (!this.holdMove) {
-			if ('momentary_end_action' in this.actions) {
+			if (
+				'momentary_end_action' in this.actions &&
+				renderTemplate(
+					this.hass,
+					this.actions.momentary_end_action!.action,
+				) != 'none'
+			) {
 				this.fireHapticEvent('selection');
 				this.buttonPressEnd = performance.now();
 				this.sendAction('momentary_end_action');
 				this.endAction();
-			} else if ('momentary_start_action' in this.actions) {
+			} else if (
+				'momentary_start_action' in this.actions &&
+				renderTemplate(
+					this.hass,
+					this.actions.momentary_start_action!.action,
+				) != 'none'
+			) {
 				this.endAction();
 			} else if (this.hold) {
 				// Hold action is triggered
