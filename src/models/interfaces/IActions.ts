@@ -45,6 +45,7 @@ export interface IAction {
 	pipeline_id?: string;
 	start_listening?: boolean;
 
+	hold_time?: number;
 	repeat_delay?: number;
 	double_tap_window?: number;
 }

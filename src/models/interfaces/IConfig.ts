@@ -19,6 +19,7 @@ export interface IConfig {
 	enable_touchpad_feedback?: boolean;
 	touchpad_style?: StyleInfo;
 
+	hold_time?: number;
 	repeat_delay?: number;
 	double_tap_window?: number;
 

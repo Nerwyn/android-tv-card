@@ -11,15 +11,9 @@
 
 [![My Home Assistant](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?repository=android-tv-card&owner=Nerwyn&category=Plugin)
 
-📦 This repo is a fork of [tv-card](https://github.com/usernein/tv-card), which is a fork of another [tv-card](https://github.com/marrobHD/tv-card) merged with two other projects, and includes the same features and improvements usernein made, like:
+<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/screenshot.png" alt="ex" width="300"/>
 
-- Touchpad for navigation
-- Slider for volume
-- Haptic feedback
-- Customizable layout
-- Everything optional
-
-Along with a many other changes and improvements:
+📦 This repo is a fork of [tv-card](https://github.com/usernein/tv-card), which is a fork of another [tv-card](https://github.com/marrobHD/tv-card) merged with two other projects, and includes the same features and improvements usernein made along with a many other new features and improvements:
 
 **Ported to TypeScript**
 
@@ -33,33 +27,34 @@ Along with a many other changes and improvements:
 - Uses `remote.send_command` to send commands to an Android TV for all default keys and sources using Android TV Remote entity ID `remote_id`.
 - Navigation speed increased to be closer to (but not as crazy fast) as the Google TV remote.
 
-**Super customizable touchpad**
+[**Super customizable touchpad**](#touchpad)
 
-- Touchpad actions are now remappable by creating custom actions for `up`, `down`, `left`, `right`, and `center`.
-- Alter touchpad CSS using `touchpad_style`.
-- Touchpad style now follows theme.
+- [Touchpad actions are now remappable](#custom-touchpad-commands) by creating custom actions for `up`, `down`, `left`, `right`, and `center`.
+- Alter touchpad CSS using [`touchpad_style`](#touchpad-style).
+- [Touchpad style](#touchpad-style) now follows theme.
 - Touchpad haptics can now be toggled.
 - Supports multi touch gestures for all swipe directions and the center tap, meaning you can program the touchpad with up to twenty-two different actions.
 
 **Tap, double tap, hold tap, momentary, and multi-touch actions support for buttons and touchpad on all platforms**
 
-- All buttons and the touchpad `center` command support tap, double tap, and long tap custom actions.
+- All buttons and the touchpad `center` command support tap, double tap, and long tap [custom actions](#custom-actions).
   - Using the [Home Assistant actions](https://www.home-assistant.io/dashboards/actions/) syntax.
-- Supports the actions `call-service`, `navigate`, `url`, `assist`, `more-info`, and `none` along with card specific actions `key` and `source`.
+- Supports the [actions](#action-types) `call-service`, `navigate`, `url`, `assist`, `more-info`, and `none` along with card specific actions `key` and `source`.
 - Double tap actions are not configured by default but can be set on any button or the touchpad.
   - If configured then there will be a default 200ms window before the single tap action is triggered.
-  - The double tap action window can be changed by setting `double_tap_window` globally in the root of the config or for a specific custom action.
-- Hold actions can be set to either their own action or to repeat the tap action ten times a second by setting action to `repeat`.
-  - Hold actions for default keys `up`, `down`, `left`, `right`, `volume_up`, `volume_down`, `delete`, and `forward_delete` are set to `repeat` by default but can be changed using custom actions.
-  - Time between repeats can be changed by setting `repeat_delay` globally in the root of the config or for a specific custom action.
-- Configure the touchpad to perform alternate actions by using multiple fingers.
-- Use buttons and the touchpad in an alternate momentary mode where different actions are fired on the initial press and release.
+  - The [double tap action window](#double-tap-window) can be changed by setting `double_tap_window` globally in the root of the config or for a specific custom action.
+- Hold actions can be set to either their own action or to [repeat](#repeat) the tap action ten times a second by setting action to `repeat`.
+  - Time to trigger a hold action can be changed by setting [`hold_time`](#hold-time) globally in the root of the config or for a specific custom action.
+  - Hold actions for default keys `up`, `down`, `left`, `right`, `volume_up`, `volume_down`, `delete`, and `forward_delete` are set to `repeat`by default but can be changed using custom actions.
+  - Time between repeats can be changed by setting [`repeat_delay`](#repeat-and-repeat-delay) globally in the root of the config or for a specific custom action.
+- Configure the touchpad to perform alternate actions by using [multiple fingers](#custom-touchpad-commands).
+- Use buttons and the touchpad in an [alternate momentary mode](#momentary-button-mode) where different actions are fired on the initial press and release.
 
 **Better row handling and columns**
 
 - Rows exist in a `rows` array with no limit on the number of rows you can add.
 - Sliders and touchpads can now be placed in rows alongside other buttons.
-  - For special volume and navigation features use `vol_buttons`, `slider`, `dpad`, and `touchpad` as button names within a row.
+  - For [special volume and navigation features](#special-elements) use `vol_buttons`, `slider`, `dpad`, and `touchpad` as button names within a row.
 - Empty buttons are no longer clickable.
 - Create columns by creating an array within a row array (see examples). Create an array within that array to create another row. Experiment with nesting rows and columns to make weird remote layouts.
 
@@ -70,34 +65,34 @@ Along with a many other changes and improvements:
   - _Also let me know if you find a key or source that is not listed here and you want to add to the default lists!_
 - Custom actions that replace default ones will now inherit the default icons and tap actions if no new ones are given.
 - Default svg icons provided in this card can be used for custom actions by referencing them by name.
-- Alter CSS of all buttons using `button_style`.
+- Alter CSS of all buttons using [`button_style`](#button-style).
 - Alter CSS of an individual button by including a `style` object in a custom action.
 - Button haptics can now be toggled.
 
-**Fully native slider**
+[**Fully native slider**](#slider)
 
-- Slider has been replaced with a native solution rather than an embedding an external card.
+- [Slider](#slider) has been replaced with a native solution rather than an embedding an external card.
   - Greatly improves the stability of the slider as it now renders consistently with the rest of the card.
 - Slider is now animated like Home Assistant tile and Mushroom sliders.
 - Slider purpose can be changed by creating a custom action for `slider`.
-- Alter CSS of slider using `slider_style`.
+- Alter CSS of slider using [`slider_style`](#slider-style).
 - Change slider range using `slider_range`.
   - Defaults to [0,1] but can be changed for media players that use different volume ranges.
 - Slider style now follows theme.
 
-**Keyboard support**
+[**Keyboard support**](#keyboard)
 
 - Send text to text input fields on your Android TV using `androidtv.adb_command` by setting the media player entity ID created by the [Android Debug Bridge integration](https://www.home-assistant.io/integrations/androidtv/) to `keyboard_id`.
 - Includes three different methods:
-  - **Seamless text entry** - Create and press the button `keyboard` to pull up the on screen keyboard (on mobile, otherwise use your physical keyboard) and send keystrokes seamlessly to your Android TV.
+  - [**Seamless text entry**](#seamless-text-entry) - Create and press the button `keyboard` to pull up the on screen keyboard (on mobile, otherwise use your physical keyboard) and send keystrokes seamlessly to your Android TV.
     - Also works with backspace, delete, enter, and left and right keys.
-  - **Bulk text entry** - Create and press the button `textbox` to pull up a browser prompt in which you can type in text to send to your Android TV all at once.
+  - [**Bulk text entry**](#bulk-text-entry) - Create and press the button `textbox` to pull up a browser prompt in which you can type in text to send to your Android TV all at once.
     - Highly recommended that you also create buttons for `delete` and `enter` so you can remove and send your input text.
-  - **Google Assistant search** - Create and press the button `search` to pull up a browser prompt in which you can type in text to send to your Android TV to process as a Google Assistant search.
+  - [**Google Assistant search**](#google-assistant-search) - Create and press the button `search` to pull up a browser prompt in which you can type in text to send to your Android TV to process as a Google Assistant search.
     - Works well if you are experiencing [this issue](https://github.com/home-assistant/core/issues/94063).
-- Can also be used for Fire TV and Kodi (see below)
+- Can also be used for Fire TV and Kodi ([see below](#alternate-media-platform-support))
 
-**Template support**
+[**Template support**](#templating)
 
 - Supports Home Assistant jinja2 style templating using nunjucks.
 - Uses the same syntax as normal Home Assistant templating with a subset of functions.
@@ -129,8 +124,6 @@ rows:
     - play_pause
     - next
 ```
-
-<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/screenshot.png" alt="ex" width="300"/>
 
 # Installation
 
@@ -178,14 +171,15 @@ Using only these options you will get an empty card (or almost empty, if you set
 
 ## Buttons
 
-| Name                   | Type     | Description                                                                                                                                                                                                                              |
-| ---------------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| rows                   | string[] | Defines the buttons used in the card. Each row within rows defines a row of buttons (or slider and touchpad). Sub-arrays within these rows will display as columns, and sub-arrays within those will alternate between rows and columns. |
-| remote_id              | string   | The `remote` entity id to control, required for default commands.                                                                                                                                                                        |
-| enable_button_feedback | boolean  | Enable vibration feedback on the buttons, defaults to `true`.                                                                                                                                                                            |
-| button_style           | object   | CSS style to apply to all buttons.                                                                                                                                                                                                       |
-| repeat_delay           | number   | The delay between repeats for actions configured to repeat when held (buttons and touchpad swipes). Defaults to 100ms.                                                                                                                   |
-| double_tap_window      | number   | The window of time in which a double tap can be triggered before a single tap is triggered isntead. Defaults to 200ms.                                                                                                                   |
+| Name                                     | Type     | Description                                                                                                                                                                                                                              |
+| ---------------------------------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| rows                                     | string[] | Defines the buttons used in the card. Each row within rows defines a row of buttons (or slider and touchpad). Sub-arrays within these rows will display as columns, and sub-arrays within those will alternate between rows and columns. |
+| remote_id                                | string   | The `remote` entity id to control, required for default commands.                                                                                                                                                                        |
+| enable_button_feedback                   | boolean  | Enable vibration feedback on the buttons, defaults to `true`.                                                                                                                                                                            |
+| button_style                             | object   | CSS style to apply to all buttons.                                                                                                                                                                                                       |
+| [hold_time](#hold-time)                  | number   | The time needed to trigger a hold action when holding down a button or the touchpad. Defaults to 500ms.                                                                                                                                  |
+| [repeat_delay](#repeat-and-repeat-delay) | number   | The delay between repeats for actions configured to repeat when held (buttons and touchpad swipes). Defaults to 100ms.                                                                                                                   |
+| [double_tap_window](#double-tap-window)  | number   | The window of time in which a double tap can be triggered before a single tap is triggered isntead. Defaults to 200ms.                                                                                                                   |
 
 In order to include the buttons, you need to specify in the config the rows you want and which buttons you want in it.
 You do it by declaring the rows as arrays and its buttons as values.
@@ -234,32 +228,19 @@ This card also supports the following special button shortcuts and elements whic
 
 | Name           | Type   | Description                                                                                                                                                                                                                                                                                                                             |
 | -------------- | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| custom_actions | object | Custom actions for the remote control. Each item is an object that can optionally have an `icon` (will use original key icon if overwriting an existing one and icon is not provided) and at least one of the following properties: `tap_action`, `hold_action`, `double_tap_action`, 'momentary_start_action`, `momentary_end_action`. |
+| custom_actions | object | Custom actions for the remote control. Each item is an object that can optionally have an `icon` (will use original key icon if overwriting an existing one and icon is not provided) and at least one of the following properties: `tap_action`, `hold_action`, `double_tap_action`, `momentary_start_action`, `momentary_end_action`. |
 
 If you want to add custom buttons to the remote control (or if you want to reconfigure the existing buttons or touchpad actions), you can do it by adding an object to the `custom_actions` object. Each object should contain one or more of either `tap_action`, `hold_action`, and or `double_tap_action`.
 
-| Name                   | Type              | Description                                                                                                                                                                                     |
-| ---------------------- | ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| icon                   | string            | Name of an icon to use. If overriding a default action uses the default icon if not defined                                                                                                     |
-| confirmation           | boolean or object | Whether to display a browser confirmation popup or not before executing an action. See [here](https://www.home-assistant.io/dashboards/actions/#options-for-confirmation) for more information. |
-| tap_action             | object            | Action to perform on single tap.                                                                                                                                                                |
-| hold_action            | object            | Action to perform when held. Can also be set to `repeat` to repeat ten times a second.                                                                                                          |
-| double_tap_action      | object            | Action to perform when double tapped. Adding this introduces a delay to single tap actions and is therefore not configured by default.                                                          |
-| momentary_start_action | object            | Action to perform when the button is initially held down. If configured normal tap and hold actions will not trigger.                                                                           |
-| momentary_end_action   | object            | Action to perform when the button is released.                                                                                                                                                  |
-
-The following default keys have hold actions set to `repeat` by default. You can disable this by setting their hold actions to `none` or a different action. By setting a hold action to `repeat`, the tap action will repeat while the button is held down. The default delay between repeats is 100ms. You can change this by setting `repeat_delay` in the hold action to a different number, or globally by setting it in the remote config root.
-
-- up
-- down
-- left
-- right
-- volume_up
-- volume_down
-- delete
-- forward_delete
-
-Double tap actions have a default window of 200ms to trigger before a single tap action is triggered instead. You can change this by setting `double_tap_window` in the double tap action to a different number, or globally by setting it in the remote config root.
+| Name                                             | Type              | Description                                                                                                                                                                                     |
+| ------------------------------------------------ | ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| icon                                             | string            | Name of an icon to use. If overriding a default action uses the default icon if not defined                                                                                                     |
+| confirmation                                     | boolean or object | Whether to display a browser confirmation popup or not before executing an action. See [here](https://www.home-assistant.io/dashboards/actions/#options-for-confirmation) for more information. |
+| tap_action                                       | object            | Action to perform on single tap.                                                                                                                                                                |
+| hold_action                                      | object            | Action to perform when held. Can also be set to `repeat` to repeat the tap action when held.                                                                                                    |
+| double_tap_action                                | object            | Action to perform when double tapped. Adding this introduces a delay to single tap actions and is therefore not configured by default.                                                          |
+| [momentary_start_action](#momentary-button-mode) | object            | Action to perform when the button is initially held down. If configured normal tap and hold actions will not trigger.                                                                           |
+| [momentary_end_action](#momentary-button-mode)   | object            | Action to perform when the button is released.                                                                                                                                                  |
 
 ```yaml
 custom_actions:
@@ -280,8 +261,6 @@ custom_actions:
       service: light.toggle
       target:
         entity_id: light.bedroom
-    hold_action:
-      action: repeat
   to_hass_home:
     icon: mdi:view-dashboard
     tap_action:
@@ -290,7 +269,6 @@ custom_actions:
     double_tap_action:
       action: navigate
       navigation_path: /lovelace/1
-	  double_tap_window: 400
     hold_action:
       action: navigate
       navigation_path: /lovelace/2
@@ -301,9 +279,6 @@ custom_actions:
       data:
         entity_id: media_player.google_tv
         volume_level: 1
-  volume_down:
-    hold_action:
-      action: none
 ```
 
 Then you can easily use these buttons in your card:
@@ -349,21 +324,93 @@ custom_actions:
         entity_id: media_player.appletv
 ```
 
+### Adjustable Timings
+
+#### Hold Time
+
+Hold actions are triggered by holding down on a button or the touchpad. The default amount of time is 500ms. You can change this by setting `hold_time` in the hold action to a different number, or globally by setting it in the remote config root.
+
+```yaml
+hold_time: 1000
+custom_actions:
+to_hass_home:
+  icon: mdi:view-dashboard
+  hold_action:
+    action: navigate
+    navigation_path: /lovelace/2
+    hold_time: 600
+```
+
+#### Repeat and Repeat Delay
+
+The following default keys have hold actions set to `repeat` by default. You can disable this by setting their hold actions to `none` or a different action.
+
+- up
+- down
+- left
+- right
+- volume_up
+- volume_down
+- delete
+- forward_delete
+
+```yaml
+custom_actions:
+  toggle_light:
+    icon: mdi:lightbulb
+    tap_action:
+      action: call-service
+      service: light.toggle
+      target:
+        entity_id: light.bedroom
+    hold_action:
+      action: repeat
+  volume_up:
+    hold_action:
+      action: call-service
+      service: media_player.volume_set
+      data:
+        entity_id: media_player.google_tv
+        volume_level: 1
+  volume_down:
+    hold_action:
+      action: none
+```
+
+By setting a hold action to `repeat`, the tap action will repeat while the button is held down. The default delay between repeats is 100ms. You can change this by setting `repeat_delay` in the hold action to a different number, or globally by setting it in the remote config root. See the below section on [repeat](#repeat) for more.
+
+#### Double Tap Window
+
+Double tap actions have a default window of 200ms to trigger before a single tap action is triggered instead. You can change this by setting `double_tap_window` in the double tap action to a different number, or globally by setting it in the remote config root.
+
+```yaml
+double_tap_window: 300
+custom_actions:
+  to_hass_home:
+    icon: mdi:view-dashboard
+    double_tap_action:
+      action: navigate
+      navigation_path: /lovelace/1
+	  double_tap_window: 400
+```
+
+**NOTE**: Setting `double_tap_window` above or too close to `hold_time` can result in undesirable behavior, as the hold timer expires before the double tap window does.
+
 ### Action Types
 
 Actions follow the [Home Assistant actions](https://www.home-assistant.io/dashboards/actions/) syntax. It supports a subset of Home Assistant actions along with `key` and `source`, which are shorthands for remote service calls.
 
-| Action       | Description                                                                                                                                             |
-| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| key          | Send a key to send to the TV via the service call `remote.send_command`.                                                                                |
-| source       | Switch to a source via the service call `remote.turn_on`.                                                                                               |
-| call-service | Call any Home Assistant service.                                                                                                                        |
-| navigate     | Navigate to another Home Assistant page.                                                                                                                |
-| url          | Navigate to an external URL.                                                                                                                            |
-| assist       | Open the assist dialog. Uses the mobile dialog if available, like in the Home Assistant app.                                                            |
-| more-info    | Open the more info dialog.                                                                                                                              |
-| none         | Explicilty set a command to do nothing.                                                                                                                 |
-| repeat       | Repeat the `tap_action` ten times a second while held. Only applicable to `hold_action`, acts as `none` if used in `tap_action` or `double_tap_action`. |
+| Action                        | Description                                                                                                                                             |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [key](#key)                   | Send a key to send to the TV via the service call `remote.send_command`.                                                                                |
+| [source](#source)             | Switch to a source via the service call `remote.turn_on`.                                                                                               |
+| [call-service](#call-service) | Call any Home Assistant service.                                                                                                                        |
+| [navigate](#navigate)         | Navigate to another Home Assistant page.                                                                                                                |
+| [url](#url)                   | Navigate to an external URL.                                                                                                                            |
+| [assist](#assist)             | Open the assist dialog. Uses the mobile dialog if available, like in the Home Assistant app.                                                            |
+| [more-info](#more-info)       | Open the more info dialog.                                                                                                                              |
+| [none](#none)                 | Explicilty set a command to do nothing.                                                                                                                 |
+| [repeat](#repeat)             | Repeat the `tap_action` ten times a second while held. Only applicable to `hold_action`, acts as `none` if used in `tap_action` or `double_tap_action`. |
 
 Most actions have a set of possible options associated with them. If `action` is not provided the card will guess which type of action it is by the options used.
 

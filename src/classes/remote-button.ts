@@ -94,6 +94,15 @@ export class RemoteButton extends BaseRemoteElement {
 			this.fireHapticEvent('light');
 			this.buttonPressStart = performance.now();
 		} else if (!this.holdTimer) {
+			const holdTime =
+				'hold_time' in this.actions.hold_action!
+					? (renderTemplate(
+							this.hass,
+							this.actions.hold_action
+								.hold_time as unknown as string,
+					  ) as number)
+					: 500;
+
 			this.holdTimer = setTimeout(() => {
 				if (!this.holdMove) {
 					this.hold = true;
@@ -123,7 +132,7 @@ export class RemoteButton extends BaseRemoteElement {
 						this.sendAction('hold_action');
 					}
 				}
-			}, 500);
+			}, holdTime);
 		}
 	}
 

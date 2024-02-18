@@ -76,6 +76,8 @@ class AndroidTVCard extends LitElement {
 			...defaultSources,
 			...defaultKeys,
 		};
+		this.defaultActions.slider!.tap_action!.data!.entity_id =
+			config.slider_id ?? '';
 		this.customActions = config.custom_actions || {};
 		this.icons = {
 			...svg,
@@ -265,23 +267,6 @@ class AndroidTVCard extends LitElement {
 		const defaultActions = this.defaultActions[action] || {};
 		const actions = this.customActions[action] || defaultActions;
 
-		if (!Object.keys(actions).length) {
-			if (action == 'slider') {
-				return {
-					tap_action: {
-						action: 'call-service',
-						service: 'media_player.volume_set',
-						data: {
-							entity_id: this.config.slider_id!,
-							volume_level: 'VALUE',
-						},
-					},
-				};
-			} else {
-				return {} as IActions;
-			}
-		}
-
 		// Get default icon if not redefined
 		if (!actions?.icon) {
 			actions.icon = defaultActions?.icon ?? undefined;
@@ -302,6 +287,22 @@ class AndroidTVCard extends LitElement {
 			if (!(actionType in actions) && actionType in defaultActions) {
 				actions[actionType as ActionType] =
 					defaultActions[actionType as ActionType];
+			}
+		}
+
+		// Set hold time if defined globally
+		if ('hold_time' in this.config) {
+			if (
+				'hold_action' in actions &&
+				!('hold_time' in actions.hold_action!)
+			) {
+				actions.hold_action!.hold_time = this.config.hold_time;
+			}
+			if (
+				'multi_hold_action' in actions &&
+				!('hold_time' in actions.multi_hold_action!)
+			) {
+				actions.multi_hold_action!.hold_time = this.config.hold_time;
 			}
 		}
 

@@ -128,6 +128,19 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			this.fireHapticEvent('light');
 			this.buttonPressStart = performance.now();
 		} else if (!this.holdTimer) {
+			const holdAction =
+				this.targetTouches && this.targetTouches.length > 1
+					? 'multi_hold_action'
+					: 'hold_action';
+			const holdTime =
+				'hold_time' in this.actions[holdAction]!
+					? (renderTemplate(
+							this.hass,
+							this.actions[holdAction]!
+								.hold_time as unknown as string,
+					  ) as number)
+					: 500;
+
 			this.holdTimer = setTimeout(() => {
 				this.hold = true;
 
@@ -190,7 +203,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 						action,
 					);
 				}
-			}, 500);
+			}, holdTime);
 		}
 
 		if ('targetTouches' in e) {

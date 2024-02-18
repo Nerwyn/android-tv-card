@@ -218,4 +218,13 @@ export const defaultKeys: Record<string, IActions> = {
 		tap_action: { action: 'none', key: 'TEXTBOX' },
 		icon: 'mdi:text-box',
 	},
+	slider: {
+		tap_action: {
+			action: 'call-service',
+			service: 'media_player.volume_set',
+			data: {
+				volume_level: 'VALUE',
+			},
+		},
+	},
 };
