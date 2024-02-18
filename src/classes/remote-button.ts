@@ -78,6 +78,9 @@ export class RemoteButton extends BaseRemoteElement {
 			this.fireHapticEvent('light');
 			this.buttonPressStart = performance.now();
 			this.sendAction('momentary_start_action');
+		} else if ('momentary_end_action' in this.actions) {
+			this.fireHapticEvent('light');
+			this.buttonPressStart = performance.now();
 		} else if (!this.holdTimer) {
 			this.holdTimer = setTimeout(() => {
 				if (!this.holdMove) {
@@ -114,12 +117,12 @@ export class RemoteButton extends BaseRemoteElement {
 
 	onHoldEnd(e: TouchEvent | MouseEvent) {
 		if (!this.holdMove) {
-			if ('momentary_start_action' in this.actions) {
-				if ('momentary_end_action' in this.actions) {
-					this.fireHapticEvent('selection');
-					this.buttonPressEnd = performance.now();
-					this.sendAction('momentary_end_action');
-				}
+			if ('momentary_end_action' in this.actions) {
+				this.fireHapticEvent('selection');
+				this.buttonPressEnd = performance.now();
+				this.sendAction('momentary_end_action');
+				this.endAction();
+			} else if ('momentary_start_action' in this.actions) {
 				this.endAction();
 			} else if (this.hold) {
 				// Hold action is triggered

@@ -143,8 +143,12 @@ export class BaseRemoteElement extends LitElement {
 		if (this.buttonPressStart && this.buttonPressEnd) {
 			holdSecs = (this.buttonPressEnd - this.buttonPressStart) / 1000;
 		}
+		const context = {
+			VALUE: this.value,
+			HOLD_SECS: holdSecs ?? 0,
+		};
 		for (const key in data) {
-			data[key] = renderTemplate(this.hass, data[key] as string);
+			data[key] = renderTemplate(this.hass, data[key] as string, context);
 			if (data[key]) {
 				if (data[key] == 'VALUE') {
 					data[key] = this.value;

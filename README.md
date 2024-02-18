@@ -53,7 +53,7 @@ Along with a many other changes and improvements:
   - Hold actions for default keys `up`, `down`, `left`, `right`, `volume_up`, `volume_down`, `delete`, and `forward_delete` are set to `repeat` by default but can be changed using custom actions.
   - Time between repeats can be changed by setting `repeat_delay` globally in the root of the config or for a specific custom action.
 - Configure the touchpad to perform alternate actions by using multiple fingers.
-- Use buttons and the touchpad in an alternate mometary mode where different actions are fired on the initial press and release.
+- Use buttons and the touchpad in an alternate momentary mode where different actions are fired on the initial press and release.
 
 **Better row handling and columns**
 
@@ -246,7 +246,7 @@ If you want to add custom buttons to the remote control (or if you want to recon
 | hold_action            | object            | Action to perform when held. Can also be set to `repeat` to repeat ten times a second.                                                                                                          |
 | double_tap_action      | object            | Action to perform when double tapped. Adding this introduces a delay to single tap actions and is therefore not configured by default.                                                          |
 | momentary_start_action | object            | Action to perform when the button is initially held down. If configured normal tap and hold actions will not trigger.                                                                           |
-| momentary_end_action   | object            | Action to perform when the button is released (`momentary_start_action` must also be configured, even if it is set to `action: none`).                                                          |
+| momentary_end_action   | object            | Action to perform when the button is released.                                                                                                                                                  |
 
 The following default keys have hold actions set to `repeat` by default. You can disable this by setting their hold actions to `none` or a different action. By setting a hold action to `repeat`, the tap action will repeat while the button is held down. The default delay between repeats is 100ms. You can change this by setting `repeat_delay` in the hold action to a different number, or globally by setting it in the remote config root.
 
@@ -531,7 +531,7 @@ custom_actions:
 
 As an alternative to the normal tap, hold, and double tap actions, buttons can also be used in a momentary mode. Configuring this option disables the normal tap, hold, and double tap actions.
 
-`momentary_start_action` is fired when you first press down on a button (or center of touchpad). `momentary_end_action` is fired when you release the button or touchpad and is only fired if `momentary_start_action` is configured. If you wish to only fire an action on button release you can set the `momentary_start_action` action to none.
+`momentary_start_action` is fired when you first press down on a button (or center of touchpad). `momentary_end_action` is fired when you release the button or touchpad. While these are meant to be used together you can use one or the other.
 
 ```yaml
 custom_actions:
@@ -554,8 +554,6 @@ Using buttons (and touchpad center) in momentary mode also allows you to send th
 ```yaml
 custom_actions:
   fast_forward:
-    momentary_start_action:
-      action: none
     momentary_end_action:
       action: call-service
       service: remote.send_command
