@@ -81,7 +81,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 							: 200;
 					this.clickTimer = setTimeout(() => {
 						this.fireHapticEvent('light');
-						this.sendAction(doubleTapAction);
+						this.sendAction(`${this.getMultiPrefix()}tap_action`);
 						this.endAction();
 					}, doubleTapWindow);
 				}
