@@ -121,72 +121,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			this.fireHapticEvent('light');
 			this.buttonPressStart = performance.now();
 		} else if (!this.holdTimer) {
-			const holdAction = `${this.getMultiPrefix()}hold_action`;
-			const actions = this.getActions();
-
-			const holdTime =
-				'hold_time' in actions[holdAction as ActionType]!
-					? (renderTemplate(
-							this.hass,
-							actions[holdAction as ActionType]!
-								.hold_time as unknown as string,
-					  ) as number)
-					: 500;
-
-			this.holdTimer = setTimeout(() => {
-				this.hold = true;
-
-				const actions = this.getActions();
-
-				const actionType = this.getMultiPrefix();
-
-				let repeat =
-					renderTemplate(
-						this.hass,
-						actions.hold_action?.action as string,
-					) == 'repeat';
-				let repeat_delay =
-					'repeat_delay' in actions.hold_action!
-						? (renderTemplate(
-								this.hass,
-								actions.hold_action
-									.repeat_delay as unknown as string,
-						  ) as number)
-						: 100;
-				if (actionType == 'multi_' && 'multi_hold_action' in actions) {
-					repeat =
-						renderTemplate(
-							this.hass,
-							actions.multi_hold_action?.action as string,
-						) == 'repeat';
-					repeat_delay =
-						'repeat_delay' in actions.multi_hold_action!
-							? (renderTemplate(
-									this.hass,
-									actions.multi_hold_action
-										.repeat_delay as unknown as string,
-							  ) as number)
-							: 100;
-				}
-
-				if (repeat) {
-					if (!this.holdInterval) {
-						this.holdInterval = setInterval(() => {
-							this.fireHapticEvent('selection');
-							this.sendAction(
-								`${this.getMultiPrefix()}tap_action`,
-								this.getActions(),
-							);
-						}, repeat_delay);
-					}
-				} else {
-					this.fireHapticEvent('medium');
-					this.sendAction(
-						`${this.getMultiPrefix()}hold_action`,
-						actions,
-					);
-				}
-			}, holdTime);
+			this.setHoldTimer();
 		}
 
 		if ('targetTouches' in e) {
@@ -282,6 +217,12 @@ export class RemoteTouchpad extends BaseRemoteElement {
 					this.getActions(),
 				);
 				this.holdMove = true;
+
+				if (this.holdTimer) {
+					clearTimeout(this.holdTimer);
+					this.holdTimer = undefined;
+					this.setHoldTimer();
+				}
 			}
 		}
 	}
@@ -328,6 +269,72 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		return this.targetTouches && this.targetTouches.length > 1
 			? 'multi_'
 			: '';
+	}
+
+	setHoldTimer() {
+		const holdAction = `${this.getMultiPrefix()}hold_action`;
+		const actions = this.getActions();
+
+		const holdTime =
+			'hold_time' in actions[holdAction as ActionType]!
+				? (renderTemplate(
+						this.hass,
+						actions[holdAction as ActionType]!
+							.hold_time as unknown as string,
+				  ) as number)
+				: 500;
+
+		this.holdTimer = setTimeout(() => {
+			this.hold = true;
+
+			const actions = this.getActions();
+
+			const actionType = this.getMultiPrefix();
+
+			let repeat =
+				renderTemplate(
+					this.hass,
+					actions.hold_action?.action as string,
+				) == 'repeat';
+			let repeat_delay =
+				'repeat_delay' in actions.hold_action!
+					? (renderTemplate(
+							this.hass,
+							actions.hold_action
+								.repeat_delay as unknown as string,
+					  ) as number)
+					: 100;
+			if (actionType == 'multi_' && 'multi_hold_action' in actions) {
+				repeat =
+					renderTemplate(
+						this.hass,
+						actions.multi_hold_action?.action as string,
+					) == 'repeat';
+				repeat_delay =
+					'repeat_delay' in actions.multi_hold_action!
+						? (renderTemplate(
+								this.hass,
+								actions.multi_hold_action
+									.repeat_delay as unknown as string,
+						  ) as number)
+						: 100;
+			}
+
+			if (repeat) {
+				if (!this.holdInterval) {
+					this.holdInterval = setInterval(() => {
+						this.fireHapticEvent('selection');
+						this.sendAction(
+							`${this.getMultiPrefix()}tap_action`,
+							this.getActions(),
+						);
+					}, repeat_delay);
+				}
+			} else {
+				this.fireHapticEvent('medium');
+				this.sendAction(`${this.getMultiPrefix()}hold_action`, actions);
+			}
+		}, holdTime);
 	}
 
 	render() {
