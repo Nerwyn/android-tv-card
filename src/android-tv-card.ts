@@ -271,6 +271,7 @@ class AndroidTVCard extends LitElement {
 		if (!actions?.icon) {
 			actions.icon = defaultActions?.icon ?? undefined;
 		}
+		console.log(actions)
 
 		// Get original actions if not defined.
 		const actionTypes: ActionType[] = [
@@ -342,6 +343,7 @@ class AndroidTVCard extends LitElement {
 					this.config.double_tap_window;
 			}
 		}
+		console.log(actions)
 
 		return actions;
 	}
