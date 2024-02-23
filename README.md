@@ -391,7 +391,7 @@ custom_actions:
     double_tap_action:
       action: navigate
       navigation_path: /lovelace/1
-	  double_tap_window: 400
+    double_tap_window: 400
 ```
 
 **NOTE**: Setting `double_tap_window` above or too close to `hold_time` can result in undesirable behavior, as the hold timer expires before the double tap window does.
@@ -571,7 +571,7 @@ custom_actions:
         entity_id: light.theater
     hold_action:
       action: repeat # light will be toggled repeatedly while held
-	  repeat_delay: 1000
+    repeat_delay: 1000
 ```
 
 ### Momentary Button Mode
