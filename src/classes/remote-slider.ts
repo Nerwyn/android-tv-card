@@ -230,7 +230,7 @@ export class RemoteSlider extends BaseRemoteElement {
 
 				--color: var(--primary-text-color);
 				--height: 50px;
-				--background: var(--secondary-background-color);
+				--background: var(--primary-background-color);
 				--background-height: 50px;
 				--border-radius: 25px;
 			}

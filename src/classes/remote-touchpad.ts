@@ -394,10 +394,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 				width: -moz-available;
 				width: -webkit-fill-available;
 				width: fill-available;
-				background: var(
-					--secondary-background-color,
-					rgb(111, 118, 125)
-				);
+				background: var(--primary-background-color, rgb(111, 118, 125));
 				touch-action: none;
 				text-align: center;
 				position: relative;
