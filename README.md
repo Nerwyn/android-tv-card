@@ -932,7 +932,7 @@ All fields support nunjucks templating. Nunjucks is a templating engine for Java
 
 ### Example 1
 
-Playing with order, moving and repeating buttons:
+Playing with order, moving and repeating buttons.
 
 ```yaml
 type: custom:android-tv-card
@@ -998,7 +998,7 @@ Result:
 
 ### Example 3
 
-Using less
+Using less.
 
 ```yaml
 type: custom:android-tv-card
@@ -1022,7 +1022,7 @@ Result:
 
 ### Example 4
 
-In any row, if you add an empty or `null` item, there will be an empty button sized space:
+In any row, if you add an empty or `null` item, there will be an empty button sized space.
 
 ```yaml
 type: custom:android-tv-card
@@ -1040,7 +1040,7 @@ rows:
 
 ### Example 5
 
-A tablet UI using columns
+A tablet UI using columns.
 
 ```yaml
 type: custom:android-tv-card
@@ -1083,7 +1083,7 @@ Result:
 
 ### Example 6
 
-Apple TV
+Apple TV.
 
 ```yaml
 type: custom:android-tv-card
@@ -1467,7 +1467,7 @@ Result:
 
 ### Example 8
 
-Sony Bravia KD.xx TV
+Sony Bravia KD.xx TV.
 
 ```yaml
 type: custom:android-tv-card
@@ -1502,7 +1502,7 @@ custom_actions:
 
 ### Example 9
 
-Marantz Receiver
+Marantz Receiver.
 
 ```yaml
 type: custom:android-tv-card
@@ -1620,7 +1620,7 @@ Result:
 
 ### Example 11
 
-A simple gamepad
+A simple gamepad.
 
 ```yaml
 type: custom:android-tv-card
@@ -1666,7 +1666,7 @@ Result:
 
 ### Example 12
 
-Samsung TV
+Samsung TV.
 
 ```yaml
 type: custom:android-tv-card
@@ -1939,7 +1939,7 @@ rows:
 
 ### Example 13
 
-Conditional layouts using templating and an input select
+Conditional layouts using templating and an input select.
 
 ```yaml
 type: custom:android-tv-card
@@ -1979,7 +1979,7 @@ custom_keys:
 
 ### Example 14
 
-RGB Remote using Broadlink RM4 Pro
+RGB Remote using Broadlink RM4 Pro.
 
 ```yaml
 type: custom:android-tv-card
@@ -2205,6 +2205,56 @@ custom_actions:
 ```
 
 <img src="https://github.com/Nerwyn/android-tv-card/blob/main/assets/rgb.png" alt="rgb remote example" width="500"/>
+
+### Example 15
+
+Style the dpad to be like the Google TV app remote.
+
+```yaml
+type: custom:android-tv-card
+remote_id: remote.google_tv
+rows:
+  - - dpad
+custom_actions:
+  center:
+    style:
+      color: rgb(94, 94, 94)
+      '--size': 200px
+      background: rgb(31, 31, 31)
+      border-radius: 200px
+      margin: '-70px'
+      padding: 70px
+  up:
+    style:
+      color: rgb(197, 199, 197)
+      z-index: 2
+      top: 25px
+      height: 90px
+      width: 300px
+  down:
+    style:
+      color: rgb(197, 199, 197)
+      z-index: 2
+      bottom: 25px
+      height: 90px
+      width: 300px
+  left:
+    style:
+      color: rgb(197, 199, 197)
+      z-index: 2
+      left: 30px
+      height: 170px
+      width: 90px
+  right:
+    style:
+      color: rgb(197, 199, 197)
+      z-index: 2
+      right: 30px
+      height: 170px
+      width: 90px
+```
+
+<img src="https://github.com/Nerwyn/android-tv-card/blob/main/assets/google_tv_dpad.png" alt="google tv app styled dpad" width="500"/>
 
 [last-commit-shield]: https://img.shields.io/github/last-commit/Nerwyn/android-tv-card?style=for-the-badge
 [commits]: https://github.com/Nerwyn/android-tv-card/commits/main
