@@ -67,7 +67,9 @@ class AndroidTVCard extends LitElement {
 			throw new Error('Invalid configuration');
 		}
 		config = structuredClone(config);
-		config = { theme: 'default', ...config };
+		if (!('theme' in config)) {
+			config.theme = 'default'
+		}
 
 		config = this.setToggles(config);
 		config = this.updateDeprecatedKeys(config);
