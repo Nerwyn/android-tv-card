@@ -301,7 +301,7 @@ export class RemoteSlider extends BaseRemoteElement {
 		}
 
 		// prettier-ignore
-		return html`<div class="tooltip ${this.showTooltip ? 'faded-in' : 'faded-out'}">${this.value}</div>
+		return html`<div class="tooltip ${this.showTooltip ? 'faded-in' : 'faded-out'}">${Number(this.value).toFixed(this.precision)}</div>
 			<div class="container" style=${styleMap(style)}>${background}${slider}</div>`;
 	}
 
