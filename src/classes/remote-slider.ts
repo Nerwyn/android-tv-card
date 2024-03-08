@@ -112,7 +112,7 @@ export class RemoteSlider extends BaseRemoteElement {
 			if (!this.newValue && this.newValue != 0) {
 				this.newValue = this.value as number;
 			}
-			if (this.newValue % 1 == 0) {
+			if (this.step ?? 1 % 1 == 0) {
 				this.newValue = Math.trunc(this.newValue);
 			}
 			this.value = this.newValue;
@@ -203,7 +203,7 @@ export class RemoteSlider extends BaseRemoteElement {
 			}
 		}
 
-		if (this.value != undefined && Number(this.value) % 1 == 0) {
+		if (this.step ?? 1 % 1 == 0) {
 			this.value = Math.trunc(Number(this.value));
 		}
 	}
@@ -254,11 +254,8 @@ export class RemoteSlider extends BaseRemoteElement {
 			) as string,
 		);
 
-		let step: number;
-		if (this.step) {
-			step = this.step;
-		} else {
-			step = (start - end) / 100;
+		if (!this.step) {
+			this.step = (start - end) / 100;
 		}
 		this.speed = (start - end) / 50;
 
@@ -272,7 +269,7 @@ export class RemoteSlider extends BaseRemoteElement {
 				class="${_class}"
 				min="${end}"
 				max="${start}"
-				step=${step}
+				step=${this.step}
 				value="${this.value}"
 				@input=${this.onInput}
 				@touchstart=${this.onStart}
