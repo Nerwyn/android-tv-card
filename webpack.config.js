@@ -1,7 +1,14 @@
 const path = require('path');
+const { execSync } = require('child_process');
+
+let env =
+	execSync('git branch --show-current').toString().trim() == 'main'
+		? 'production'
+		: 'development';
+env = 'production';
 
 module.exports = {
-	mode: 'production',
+	mode: env,
 	entry: {
 		main: './src/android-tv-card.ts',
 	},
@@ -20,7 +27,5 @@ module.exports = {
 			},
 		],
 	},
-	performance: {
-		hints: false,
-	},
+	devtool: env == 'production' ? false : 'eval',
 };
