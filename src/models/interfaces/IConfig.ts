@@ -27,6 +27,7 @@ export interface IConfig {
 	slider_attribute?: string;
 	enable_slider_feedback?: boolean;
 	slider_range?: [number, number];
+	slider_step?: number;
 	slider_style?: StyleInfo;
 
 	rows?: Row[];

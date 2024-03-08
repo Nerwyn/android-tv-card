@@ -78,6 +78,8 @@
 - Alter CSS of slider using [`slider_style`](#slider-style).
 - Change slider range using `slider_range`.
   - Defaults to [0,1] but can be changed for media players that use different volume ranges.
+- Change slider step using `slider_step`.
+  - Defaults to one hundredth of slider range.
 - Slider style now follows theme.
 
 [**Keyboard support**](#keyboard)
@@ -699,6 +701,7 @@ custom_actions:
 | slider_attribute       | string           | An attribute (or state) for the slider to track, defaults to `volume_level` |
 | enable_slider_feedback | boolean          | Enable vibration feedback on the slider, defaults to `true`.                |
 | slider_range           | [number, number] | The range of the slider, defaults to [0,1].                                 |
+| slider_step            | number           | The step size of the slider, defaults to one hundredth of the range.        |
 | slider_style           | object           | CSS style to apply to the slider.                                           |
 
 By default the slider calls the `media_player.volume_set` service, with `entity_id` set to `slider_id` and `volume_level` set to the slider value.
@@ -716,6 +719,7 @@ custom_actions:
 slider_range:
   - 0
   - 255
+slider_step: 1
 ```
 
 You can change the attribute that the slider tracks by setting `slider_attribute` to either `state` or an entity specific attribute.
@@ -724,12 +728,18 @@ You can change the attribute that the slider tracks by setting `slider_attribute
 slider_attribute: brightness
 ```
 
-While most Home Assistant media player's use a volume range of [0,1], you can changes this as needed by setting `slider_range`.
+While most Home Assistant media player's use a volume range of [0,1], you can change this as needed by setting `slider_range`.
 
 ```yaml
 slider_range:
   - 0
   - 0.6
+```
+
+By default the slider will have 100 steps with step size calculated using the range. You can change the step size by setting `slider_step`.
+
+```yaml
+slider_step: 1
 ```
 
 ### Slider Style

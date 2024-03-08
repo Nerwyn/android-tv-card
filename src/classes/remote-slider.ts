@@ -11,10 +11,10 @@ export class RemoteSlider extends BaseRemoteElement {
 	@property({ attribute: false }) sliderId!: string;
 	@property({ attribute: false }) sliderAttribute?: string;
 	@property({ attribute: false }) range: [number, number] = [0, 1];
+	@property({ attribute: false }) step?: number;
 
 	oldValue?: number;
 	newValue?: number;
-	step: number = 0.01;
 	speed: number = 0.02;
 
 	getValueFromHass: boolean = true;
@@ -254,8 +254,13 @@ export class RemoteSlider extends BaseRemoteElement {
 			) as string,
 		);
 
-		this.step = (start - end) / 100;
-		this.speed = 2 * this.step;
+		let step: number;
+		if (this.step) {
+			step = this.step;
+		} else {
+			step = (start - end) / 100;
+		}
+		this.speed = 2 * step;
 
 		let _class = 'slider';
 		if (this.value == undefined || Number(this.value) <= end) {
@@ -267,7 +272,7 @@ export class RemoteSlider extends BaseRemoteElement {
 				class="${_class}"
 				min="${end}"
 				max="${start}"
-				step=${this.step}
+				step=${step}
 				value="${this.value}"
 				@input=${this.onInput}
 				@touchstart=${this.onStart}
