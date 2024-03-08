@@ -77,18 +77,14 @@ class AndroidTVCard extends LitElement {
 			...defaultKeys,
 		};
 		this.customActions = config.custom_actions || {};
-		if (config.slider_id) {
-			const slider: IActions = {
+		if (config.slider_id && !('slider' in this.customActions)) {
+			this.customActions.slider = {
 				tap_action: {
 					action: 'call-service',
 					data: {
 						entity_id: config.slider_id,
 					},
 				},
-			};
-			this.customActions = {
-				...this.customActions,
-				slider,
 			};
 		}
 		this.icons = {
