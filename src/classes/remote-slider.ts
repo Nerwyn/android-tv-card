@@ -260,7 +260,7 @@ export class RemoteSlider extends BaseRemoteElement {
 		} else {
 			step = (start - end) / 100;
 		}
-		this.speed = 2 * step;
+		this.speed = (start - end) / 50;
 
 		let _class = 'slider';
 		if (this.value == undefined || Number(this.value) <= end) {
