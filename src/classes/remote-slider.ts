@@ -264,6 +264,8 @@ export class RemoteSlider extends BaseRemoteElement {
 			const splitStep = this.step.toString().split('.');
 			if (splitStep.length > 1) {
 				this.precision = splitStep[1].length;
+			} else {
+				this.precision = 0;
 			}
 		} else {
 			this.step = (start - end) / 100;
