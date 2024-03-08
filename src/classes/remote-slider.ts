@@ -16,7 +16,7 @@ export class RemoteSlider extends BaseRemoteElement {
 	oldValue?: number;
 	newValue?: number;
 	speed: number = 0.02;
-	precision: number = 0;
+	precision: number = 2;
 
 	getValueFromHass: boolean = true;
 	showTooltip: boolean = false;
