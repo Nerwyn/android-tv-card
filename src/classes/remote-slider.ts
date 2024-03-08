@@ -229,7 +229,6 @@ export class RemoteSlider extends BaseRemoteElement {
 	}
 
 	render() {
-		console.log(this.actions)
 		const background = html`<div class="slider-background"></div>`;
 
 		this.setValue();
