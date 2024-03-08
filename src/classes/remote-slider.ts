@@ -132,6 +132,7 @@ export class RemoteSlider extends BaseRemoteElement {
 	@eventOptions({ passive: true })
 	onMove(e: TouchEvent | MouseEvent) {
 		this.getValueFromHass = false;
+		const slider = e.currentTarget as HTMLInputElement;
 
 		let currentX: number;
 		if ('clientX' in e) {
@@ -158,12 +159,20 @@ export class RemoteSlider extends BaseRemoteElement {
 			this.scrolling = true;
 			this.getValueFromHass = true;
 			this.setValue();
-			const slider = e.currentTarget as HTMLInputElement;
 			if (this.value != undefined) {
 				slider.value = this.value.toString();
 			}
 			this.showTooltip = false;
 			this.setTooltip(slider);
+
+			if (
+				this.value == undefined ||
+				Number(this.value) <= this.range[0]
+			) {
+				slider.className = 'slider-off';
+			} else {
+				slider.className = 'slider';
+			}
 		}
 	}
 
