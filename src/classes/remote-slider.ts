@@ -16,6 +16,7 @@ export class RemoteSlider extends BaseRemoteElement {
 	oldValue?: number;
 	newValue?: number;
 	speed: number = 0.02;
+	precision: number = 0;
 
 	getValueFromHass: boolean = true;
 	showTooltip: boolean = false;
@@ -219,7 +220,9 @@ export class RemoteSlider extends BaseRemoteElement {
 				const children = tooltip.childNodes;
 				for (const child of children) {
 					if (child.nodeName == '#text') {
-						child.nodeValue = this.value;
+						child.nodeValue = Number(this.value).toFixed(
+							this.precision,
+						);
 					}
 				}
 
@@ -254,7 +257,15 @@ export class RemoteSlider extends BaseRemoteElement {
 			) as string,
 		);
 
-		if (!this.step) {
+		if (this.step) {
+			this.step = Number(
+				renderTemplate(this.hass, this.step as unknown as string),
+			);
+			const splitStep = this.step.toString().split('.');
+			if (splitStep.length > 1) {
+				this.precision = splitStep[1].length;
+			}
+		} else {
 			this.step = (start - end) / 100;
 		}
 		this.speed = (start - end) / 50;

@@ -391,7 +391,6 @@ class AndroidTVCard extends LitElement {
 	}
 
 	buildSlider(): TemplateResult {
-		console.log(this.config)
 		return html`<remote-slider
 			.hass=${this.hass}
 			.hapticEnabled=${this.config.enable_slider_feedback}
