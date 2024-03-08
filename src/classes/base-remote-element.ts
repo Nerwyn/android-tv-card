@@ -15,7 +15,7 @@ export class BaseRemoteElement extends LitElement {
 	@property({ attribute: false }) remoteId?: string;
 	@property({ attribute: false }) _style?: StyleInfo;
 
-	value: number = 0;
+	value: string | number = 0;
 	touchscreen = 'ontouchstart' in document.documentElement;
 	buttonPressStart?: number;
 	buttonPressEnd?: number;
