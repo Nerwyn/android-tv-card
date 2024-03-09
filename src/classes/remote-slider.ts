@@ -113,7 +113,7 @@ export class RemoteSlider extends BaseRemoteElement {
 			if (!this.newValue && this.newValue != 0) {
 				this.newValue = this.value as number;
 			}
-			if (this.step ?? 1 % 1 == 0) {
+			if (!this.precision) {
 				this.newValue = Math.trunc(this.newValue);
 			}
 			this.value = this.newValue;
@@ -204,7 +204,7 @@ export class RemoteSlider extends BaseRemoteElement {
 			}
 		}
 
-		if (this.step ?? 1 % 1 == 0) {
+		if (!this.precision) {
 			this.value = Math.trunc(Number(this.value));
 		}
 	}

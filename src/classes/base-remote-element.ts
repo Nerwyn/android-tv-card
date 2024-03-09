@@ -169,6 +169,8 @@ export class BaseRemoteElement extends LitElement {
 				}
 			}
 		}
+		console.log(service)
+		console.log(data)
 
 		this.hass.callService(domain, service, data);
 	}
