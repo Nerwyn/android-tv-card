@@ -1,5 +1,10 @@
 import { html, css } from 'lit';
-import { customElement, eventOptions, property } from 'lit/decorators.js';
+import {
+	customElement,
+	eventOptions,
+	property,
+	state,
+} from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
 import { renderTemplate } from 'ha-nunjucks';
@@ -18,8 +23,8 @@ export class RemoteSlider extends BaseRemoteElement {
 	speed: number = 0.02;
 	precision: number = 2;
 
-	getValueFromHass: boolean = true;
-	showTooltip: boolean = false;
+	@state() getValueFromHass: boolean = true;
+	@state() showTooltip: boolean = false;
 
 	lastX?: number;
 	lastY?: number;
@@ -29,8 +34,9 @@ export class RemoteSlider extends BaseRemoteElement {
 		const slider = e.currentTarget as HTMLInputElement;
 
 		if (!this.scrolling) {
-			this.setTooltip(slider);
 			this.getValueFromHass = false;
+			// this.setTooltip(slider);
+			this.value = slider.value;
 
 			this.fireHapticEvent('selection');
 
@@ -95,7 +101,8 @@ export class RemoteSlider extends BaseRemoteElement {
 		if (!this.scrolling) {
 			const slider = e.currentTarget as HTMLInputElement;
 			this.showTooltip = true;
-			this.setTooltip(slider);
+			// this.setTooltip(slider);
+			this.value = slider.value;
 		} else {
 			this.scrolling = false;
 			this.lastX = undefined;
@@ -108,10 +115,11 @@ export class RemoteSlider extends BaseRemoteElement {
 
 		if (!this.scrolling) {
 			this.showTooltip = false;
-			this.setTooltip(slider);
+			// this.setTooltip(slider);
+			this.value = slider.value;
 
 			if (!this.newValue && this.newValue != 0) {
-				this.newValue = this.value as number;
+				this.newValue = Number(this.value);
 			}
 			if (!this.precision) {
 				this.newValue = Math.trunc(this.newValue);
@@ -164,7 +172,8 @@ export class RemoteSlider extends BaseRemoteElement {
 				slider.value = this.value.toString();
 			}
 			this.showTooltip = false;
-			this.setTooltip(slider);
+			// this.setTooltip(slider);
+			this.value = slider.value;
 
 			if (
 				this.value == undefined ||
@@ -209,36 +218,36 @@ export class RemoteSlider extends BaseRemoteElement {
 		}
 	}
 
-	setTooltip(slider: HTMLInputElement) {
-		const tooltip = slider.parentElement
-			?.previousElementSibling as HTMLElement;
-		if (tooltip) {
-			if (this.showTooltip) {
-				this.value = slider.value;
+	// setTooltip(slider: HTMLInputElement) {
+	// 	const tooltip = slider.parentElement
+	// 		?.previousElementSibling as HTMLElement;
+	// 	if (tooltip) {
+	// 		if (this.showTooltip) {
+	// 			this.value = slider.value;
 
-				// Cannot set textContent directly or lit will shriek in console and crash window
-				const children = tooltip.childNodes;
-				for (const child of children) {
-					if (child.nodeName == '#text') {
-						child.nodeValue = Number(this.value).toFixed(
-							this.precision,
-						);
-					}
-				}
+	// 			// Cannot set textContent directly or lit will shriek in console and crash window
+	// 			const children = tooltip.childNodes;
+	// 			for (const child of children) {
+	// 				if (child.nodeName == '#text') {
+	// 					child.nodeValue = Number(this.value).toFixed(
+	// 						this.precision,
+	// 					);
+	// 				}
+	// 			}
 
-				const xPosition = Math.round(
-					(slider.offsetWidth / (this.range[1] - this.range[0])) *
-						(Number(this.value) -
-							(this.range[0] + this.range[1]) / 2),
-				);
-				tooltip.style.setProperty('--x-position', `${xPosition}px`);
+	// 			const xPosition = Math.round(
+	// 				(slider.offsetWidth / (this.range[1] - this.range[0])) *
+	// 					(Number(this.value) -
+	// 						(this.range[0] + this.range[1]) / 2),
+	// 			);
+	// 			tooltip.style.setProperty('--x-position', `${xPosition}px`);
 
-				tooltip.className = 'tooltip faded-in';
-			} else {
-				tooltip.className = 'tooltip faded-out';
-			}
-		}
-	}
+	// 			tooltip.className = 'tooltip faded-in';
+	// 		} else {
+	// 			tooltip.className = 'tooltip faded-out';
+	// 		}
+	// 	}
+	// }
 
 	render() {
 		const background = html`<div class="slider-background"></div>`;
