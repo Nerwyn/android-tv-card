@@ -15,7 +15,7 @@ import { BaseRemoteElement } from './base-remote-element';
 export class RemoteSlider extends BaseRemoteElement {
 	@property({ attribute: false }) valueAttribute?: string;
 	@property({ attribute: false }) _range: [number, number] = [0, 1];
-	@property({ attribute: false }) _step: number = 0.01;
+	@property({ attribute: false }) _step?: number;
 
 	@state() getValueFromHass: boolean = true;
 	@state() showTooltip: boolean = false;
