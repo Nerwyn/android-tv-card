@@ -13,9 +13,8 @@ import { BaseRemoteElement } from './base-remote-element';
 
 @customElement('remote-slider')
 export class RemoteSlider extends BaseRemoteElement {
-	@property({ attribute: false }) sliderId!: string;
-	@property({ attribute: false }) sliderAttribute?: string;
-	@property({ attribute: false }) range: [number, number] = [0, 1];
+	@property({ attribute: false }) valueAttribute?: string;
+	@property({ attribute: false }) _range: [number, number] = [0, 1];
 	@property({ attribute: false }) step?: number;
 
 	@state() getValueFromHass: boolean = true;
@@ -25,6 +24,7 @@ export class RemoteSlider extends BaseRemoteElement {
 	oldValue?: number;
 	newValue?: number;
 	speed: number = 0.02;
+	range: [number, number] = [0, 1];
 
 	precision: number = 2;
 	tooltipPosition: number = 0;
@@ -50,13 +50,7 @@ export class RemoteSlider extends BaseRemoteElement {
 			slider.value = start.toString();
 			this.newValue = end;
 
-			if (
-				end >
-				(renderTemplate(
-					this.hass,
-					this.range[0] as unknown as string,
-				) as unknown as number)
-			) {
+			if (end > this.range[0]) {
 				this.sliderOn = true;
 			}
 
@@ -69,14 +63,7 @@ export class RemoteSlider extends BaseRemoteElement {
 					if (end >= i) {
 						clearInterval(id);
 						slider.value = end.toString();
-						if (
-							this.value == undefined ||
-							end <=
-								(renderTemplate(
-									this.hass,
-									this.range[0] as unknown as string,
-								) as unknown as number)
-						) {
+						if (this.value == undefined || end <= this.range[0]) {
 							this.sliderOn = false;
 						}
 					}
@@ -97,6 +84,9 @@ export class RemoteSlider extends BaseRemoteElement {
 			}
 
 			this.oldValue = end;
+		} else {
+			this.setValue();
+			slider.value = this.value.toString();
 		}
 	}
 
@@ -175,35 +165,32 @@ export class RemoteSlider extends BaseRemoteElement {
 				slider.value = this.value.toString();
 			}
 			this.setTooltip(slider, false);
-
-			if (
-				this.value == undefined ||
-				Number(this.value) <= this.range[0]
-			) {
-				this.sliderOn = false;
-			} else {
-				this.sliderOn = true;
-			}
+			this.sliderOn = !(
+				this.value == undefined || Number(this.value) <= this.range[0]
+			);
 		}
 	}
 
 	setValue() {
 		if (this.getValueFromHass) {
-			const sliderId = renderTemplate(this.hass, this.sliderId) as string;
-			const sliderAttribute = renderTemplate(
+			const entityId = renderTemplate(
 				this.hass,
-				this.sliderAttribute as string,
+				(this.actions.tap_action?.data?.entity_id as string) ?? '',
 			) as string;
-			if (sliderAttribute) {
-				if (sliderAttribute == 'state') {
-					this.value = parseFloat(this.hass.states[sliderId].state);
+			const valueAttribute = renderTemplate(
+				this.hass,
+				this.valueAttribute as string,
+			) as string;
+			if (valueAttribute) {
+				if (valueAttribute == 'state') {
+					this.value = parseFloat(this.hass.states[entityId].state);
 				} else {
 					this.value =
-						this.hass.states[sliderId].attributes[sliderAttribute];
+						this.hass.states[entityId].attributes[valueAttribute];
 				}
 			} else {
 				this.value =
-					this.hass.states[sliderId].attributes.volume_level ?? 0;
+					this.hass.states[entityId].attributes.volume_level ?? 0;
 			}
 
 			if (this.oldValue == undefined) {
@@ -214,7 +201,7 @@ export class RemoteSlider extends BaseRemoteElement {
 			}
 		}
 
-		if (!this.precision) {
+		if (this.value != undefined && !this.precision) {
 			this.value = Math.trunc(Number(this.value));
 		}
 	}
@@ -228,13 +215,13 @@ export class RemoteSlider extends BaseRemoteElement {
 		this.showTooltip = show;
 	}
 
-	render() {
-		this.setValue();
+	buildBackground() {
+		return html`<div class="slider-background"></div>`;
+	}
 
-		const background = html`<div class="slider-background"></div>`;
-
+	buildTooltip() {
 		// prettier-ignore
-		const tooltip = html`
+		return html`
 			<div
 				class="tooltip ${this.showTooltip ? 'faded-in' : 'faded-out'}"
 				style=${styleMap({
@@ -242,17 +229,41 @@ export class RemoteSlider extends BaseRemoteElement {
 				})}
 			>${Number(this.value).toFixed(this.precision)}</div>
 		`;
+	}
 
-		const end = parseFloat(
+	buildSlider() {
+		return html`
+			<input
+				type="range"
+				class="${this.sliderOn ? 'slider' : 'slider-off'}"
+				min="${this.range[0]}"
+				max="${this.range[1]}"
+				step=${this.step}
+				value="${this.value}"
+				@input=${this.onInput}
+				@touchstart=${this.onStart}
+				@touchend=${this.onEnd}
+				@touchmove=${this.onMove}
+				@mousedown=${this.onStart}
+				@mouseup=${this.onEnd}
+				@mousemove=${this.onMove}
+			/>
+		`;
+	}
+
+	render() {
+		this.setValue();
+
+		this.range[0] = parseFloat(
 			renderTemplate(
 				this.hass,
-				this.range[0] as unknown as string,
+				this._range[0] as unknown as string,
 			) as string,
 		);
-		const start = parseFloat(
+		this.range[1] = parseFloat(
 			renderTemplate(
 				this.hass,
-				this.range[1] as unknown as string,
+				this._range[1] as unknown as string,
 			) as string,
 		);
 
@@ -267,29 +278,13 @@ export class RemoteSlider extends BaseRemoteElement {
 				this.precision = 0;
 			}
 		} else {
-			this.step = (start - end) / 100;
+			this.step = (this.range[1] - this.range[0]) / 100;
 		}
-		this.speed = (start - end) / 50;
+		this.speed = (this.range[1] - this.range[0]) / 50;
 
-		this.sliderOn = !(this.value == undefined || Number(this.value) <= end);
-
-		const slider = html`
-			<input
-				type="range"
-				class="slider${this.sliderOn ? '' : '-off'}"
-				min="${end}"
-				max="${start}"
-				step=${this.step}
-				value="${this.value}"
-				@input=${this.onInput}
-				@touchstart=${this.onStart}
-				@touchend=${this.onEnd}
-				@touchmove=${this.onMove}
-				@mousedown=${this.onStart}
-				@mouseup=${this.onEnd}
-				@mousemove=${this.onMove}
-			/>
-		`;
+		this.sliderOn = !(
+			this.value == undefined || Number(this.value) <= this.range[0]
+		);
 
 		const style = structuredClone(this._style ?? {});
 		for (const key in style) {
@@ -300,9 +295,9 @@ export class RemoteSlider extends BaseRemoteElement {
 		}
 
 		return html`
-			${tooltip}
+			${this.buildTooltip()}
 			<div class="container" style=${styleMap(style)}>
-				${background}${slider}
+				${this.buildBackground()}${this.buildSlider()}
 			</div>
 		`;
 	}
