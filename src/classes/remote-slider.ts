@@ -15,7 +15,7 @@ import { BaseRemoteElement } from './base-remote-element';
 export class RemoteSlider extends BaseRemoteElement {
 	@property({ attribute: false }) valueAttribute?: string;
 	@property({ attribute: false }) _range: [number, number] = [0, 1];
-	@property({ attribute: false }) step?: number;
+	@property({ attribute: false }) _step: number = 0.01;
 
 	@state() getValueFromHass: boolean = true;
 	@state() showTooltip: boolean = false;
@@ -25,6 +25,7 @@ export class RemoteSlider extends BaseRemoteElement {
 	newValue?: number;
 	speed: number = 0.02;
 	range: [number, number] = [0, 1];
+	step: number = 0.01;
 
 	precision: number = 2;
 	tooltipPosition: number = 0;
@@ -263,9 +264,9 @@ export class RemoteSlider extends BaseRemoteElement {
 			) as string,
 		);
 
-		if (this.step) {
+		if (this._step) {
 			this.step = Number(
-				renderTemplate(this.hass, this.step as unknown as string),
+				renderTemplate(this.hass, this._step as unknown as string),
 			);
 			const splitStep = this.step.toString().split('.');
 			if (splitStep.length > 1) {

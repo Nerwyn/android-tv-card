@@ -395,7 +395,7 @@ class AndroidTVCard extends LitElement {
 			.hass=${this.hass}
 			.hapticEnabled=${this.config.enable_slider_feedback}
 			._range=${this.config.slider_range ?? [0, 1]}
-			.step=${this.config.slider_step}
+			._step=${this.config.slider_step}
 			.actions=${this.getActions('slider')}
 			.valueAttribute=${this.config.slider_attribute?.toLowerCase()}
 			._style=${this.config.slider_style}
