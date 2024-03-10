@@ -29,8 +29,8 @@ export class RemoteSlider extends BaseRemoteElement {
 	precision: number = 2;
 	tooltipPosition: number = 0;
 
-	lastX?: number;
-	lastY?: number;
+	startX?: number;
+	startY?: number;
 	scrolling: boolean = false;
 
 	onInput(e: InputEvent) {
@@ -109,8 +109,8 @@ export class RemoteSlider extends BaseRemoteElement {
 			this.setTooltip(slider, true);
 		} else {
 			this.scrolling = false;
-			this.lastX = undefined;
-			this.lastY = undefined;
+			this.startX = undefined;
+			this.startY = undefined;
 			this.setTooltip(slider, false);
 		}
 	}
@@ -118,6 +118,7 @@ export class RemoteSlider extends BaseRemoteElement {
 	onEnd(e: MouseEvent | TouchEvent) {
 		const slider = e.currentTarget as HTMLInputElement;
 		this.setTooltip(slider, false);
+		this.setValue();
 
 		if (!this.scrolling) {
 			if (!this.newValue && this.newValue != 0) {
@@ -131,12 +132,12 @@ export class RemoteSlider extends BaseRemoteElement {
 			this.fireHapticEvent('light');
 			this.sendAction('tap_action');
 		} else {
-			this.setValue();
 			slider.value = this.value.toString();
 		}
-		this.lastX = undefined;
-		this.lastY = undefined;
+
 		this.scrolling = false;
+		this.startX = undefined;
+		this.startY = undefined;
 		setTimeout(() => (this.getValueFromHass = true), 1000);
 	}
 
@@ -158,14 +159,14 @@ export class RemoteSlider extends BaseRemoteElement {
 			currentY = e.touches[0].clientY;
 		}
 
-		if (this.lastY == undefined) {
-			this.lastY = currentY;
+		if (this.startY == undefined) {
+			this.startY = currentY;
 		}
-		if (this.lastX == undefined) {
-			this.lastX = currentX;
+		if (this.startX == undefined) {
+			this.startX = currentX;
 		} else if (
-			Math.abs(currentX - this.lastX) <
-			Math.abs(currentY - this.lastY) - 20
+			Math.abs(currentX - this.startX) <
+			Math.abs(currentY - this.startY) - 20
 		) {
 			this.scrolling = true;
 			this.getValueFromHass = true;
@@ -174,7 +175,6 @@ export class RemoteSlider extends BaseRemoteElement {
 				slider.value = this.value.toString();
 			}
 			this.setTooltip(slider, false);
-			this.value = slider.value;
 
 			if (
 				this.value == undefined ||
@@ -229,9 +229,20 @@ export class RemoteSlider extends BaseRemoteElement {
 	}
 
 	render() {
+		this.setValue();
+
 		const background = html`<div class="slider-background"></div>`;
 
-		this.setValue();
+		// prettier-ignore
+		const tooltip = html`
+			<div
+				class="tooltip ${this.showTooltip ? 'faded-in' : 'faded-out'}"
+				style=${styleMap({
+					'--x-position': this.tooltipPosition.toString() + 'px',
+				})}
+			>${Number(this.value).toFixed(this.precision)}</div>
+		`;
+
 		const end = parseFloat(
 			renderTemplate(
 				this.hass,
@@ -279,14 +290,6 @@ export class RemoteSlider extends BaseRemoteElement {
 				@mousemove=${this.onMove}
 			/>
 		`;
-
-		// prettier-ignore
-		const tooltip = html`
-			<div
-				class="tooltip ${this.showTooltip ? 'faded-in' : 'faded-out'}"
-				style=${styleMap({'--x-position': this.tooltipPosition.toString() + 'px'})}
-			>${Number(this.value).toFixed(this.precision)}</div>
-		`
 
 		const style = structuredClone(this._style ?? {});
 		for (const key in style) {
