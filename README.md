@@ -1123,8 +1123,8 @@ rows:
     - youtube
 touchpad_style:
   height: 200px
-  background-image: url("https://upload.wikimedia.org/wikipedia/commons/a/ab/Apple-logo.png")
-  background-size: contain
+  background-image: url("https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Apple_logo_grey.svg/505px-Apple_logo_grey.svg.png")
+  background-size: 150px
   background-repeat: no-repeat
   background-position: center
   opacity: 1.0
