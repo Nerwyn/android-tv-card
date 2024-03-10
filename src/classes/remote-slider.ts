@@ -87,6 +87,7 @@ export class RemoteSlider extends BaseRemoteElement {
 		} else {
 			this.setValue();
 			slider.value = this.value.toString();
+			this.setTooltip(slider, false);
 		}
 	}
 
@@ -97,11 +98,6 @@ export class RemoteSlider extends BaseRemoteElement {
 		if (!this.scrolling) {
 			this.value = slider.value;
 			this.setTooltip(slider, true);
-		} else {
-			this.scrolling = false;
-			this.startX = undefined;
-			this.startY = undefined;
-			this.setTooltip(slider, false);
 		}
 	}
 
