@@ -284,7 +284,7 @@ export class RemoteSlider extends BaseRemoteElement {
 		const tooltip = html`
 			<div
 				class="tooltip ${this.showTooltip ? 'faded-in' : 'faded-out'}"
-				style=${styleMap({'--x-position': this.tooltipPosition})}
+				style=${styleMap({'--x-position': this.tooltipPosition.toString() + 'px'})}
 			>${Number(this.value).toFixed(this.precision)}</div>
 		`
 
