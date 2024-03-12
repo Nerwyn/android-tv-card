@@ -328,6 +328,11 @@ class AndroidTVCard extends LitElement {
 			actions.icon = defaultActions?.icon;
 		}
 
+		// Get default slider tap_action if not redefined
+		if (action == 'slider' && !('tap_action' in actions)) {
+			actions.tap_action = defaultActions.tap_action;
+		}
+
 		// Get original actions if not defined.
 		const actionTypes: ActionType[] = [
 			'tap_action',

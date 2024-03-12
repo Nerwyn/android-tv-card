@@ -67,7 +67,7 @@
 - Default svg icons provided in this card can be used for custom actions by referencing them by name.
 - Alter CSS of all buttons using [`button_style`](#button-style).
 - Alter CSS of an individual button by including a `style` object in a custom action.
-- Button haptics can now be toggled.
+- Button haptics can now be toggled globally or on the individual custom action level.
 
 [**Fully native slider**](#slider)
 
@@ -75,12 +75,13 @@
   - Greatly improves the stability of the slider as it now renders consistently with the rest of the card.
 - Slider is now animated like Home Assistant tile and Mushroom sliders.
 - Slider purpose can be changed by creating a custom action for `slider`.
-- Alter CSS of slider using [`slider_style`](#slider-style).
-- Change slider range using `slider_range`.
-  - Defaults to [0,1] but can be changed for media players that use different volume ranges.
-- Change slider step using `slider_step`.
-  - Defaults to one hundredth of slider range.
+- Alter CSS of slider by using the [`style`](#slider-style) field in the `slider` custom action.
+- Change slider range, step size, and attribute to work with different entities and services.
+  - Range defaults to [0,1] but can be changed for media players that use different volume ranges.
+  - Step defaults to one hundredth of slider range.
+  - Attribute defaults to state but can instead be used to track any numeric attribute of an entity.
 - Slider style now follows theme.
+- Slider has a tooltip which shows up when the slider is held down on which displays it's current value.
 
 [**Keyboard support**](#keyboard)
 
@@ -177,7 +178,7 @@ Using only these options you will get an empty card (or almost empty, if you set
 | ---------------------------------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | rows                                     | string[] | Defines the buttons used in the card. Each row within rows defines a row of buttons (or slider and touchpad). Sub-arrays within these rows will display as columns, and sub-arrays within those will alternate between rows and columns. |
 | remote_id                                | string   | The `remote` entity id to control, required for default commands.                                                                                                                                                                        |
-| enable_button_feedback                   | boolean  | Enable vibration feedback on the buttons, defaults to `true`.                                                                                                                                                                            |
+| button_haptics                           | boolean  | Enable haptics on the buttons, defaults to `true`.                                                                                                                                                                                       |
 | button_style                             | object   | CSS style to apply to all buttons.                                                                                                                                                                                                       |
 | [hold_time](#hold-time)                  | number   | The time needed to trigger a hold action when holding down a button or the touchpad. Defaults to 500ms.                                                                                                                                  |
 | [repeat_delay](#repeat-and-repeat-delay) | number   | The delay between repeats for actions configured to repeat when held (buttons and touchpad swipes). Defaults to 100ms.                                                                                                                   |
@@ -223,8 +224,8 @@ This card also supports the following special button shortcuts and elements whic
 | ----------------------------------------------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------- |
 | vol_buttons, volume_buttons                                 | buttons  | Shorthand to generate a set of volume down, volume mute, and volume up buttons in a row or column.                              |
 | dpad, d_pad, direction_pad, nav_buttons, navigation_buttons | buttons  | Shorthand to generate a set of up, down, left, right, and center buttons arranged in a d-pad across three rows within a column. |
-| slider, volume_slider                                       | slider   | A slider that controls the entity defined by `slider_id`.                                                                       |
-| touchpad, nav_touchpad, navigation_touchpad                 | touchpad | A touchpad that functions the same as navigation buttons but uses swipe actions instead.                                        |
+| [slider](#slider), volume_slider                            | slider   | A slider that controls the entity defined by `slider_id`.                                                                       |
+| [touchpad](#touchpad), nav_touchpad, navigation_touchpad    | touchpad | A touchpad that functions the same as navigation buttons but uses swipe actions instead.                                        |
 
 ## Custom Actions
 
@@ -237,6 +238,7 @@ If you want to add custom buttons to the remote control (or if you want to recon
 | Name                                             | Type              | Description                                                                                                                                                                                     |
 | ------------------------------------------------ | ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | icon                                             | string            | Name of an icon to use. If overriding a default action uses the default icon if not defined                                                                                                     |
+| haptics                                          | boolean           | Enable haptics on a specific action (does not apply to touchpad), defaults to `true`.                                                                                                           |
 | confirmation                                     | boolean or object | Whether to display a browser confirmation popup or not before executing an action. See [here](https://www.home-assistant.io/dashboards/actions/#options-for-confirmation) for more information. |
 | tap_action                                       | object            | Action to perform on single tap.                                                                                                                                                                |
 | hold_action                                      | object            | Action to perform when held. Can also be set to `repeat` to repeat the tap action when held.                                                                                                    |
@@ -695,14 +697,9 @@ custom_actions:
 
 ## Slider
 
-| Name                   | Type             | Description                                                                 |
-| ---------------------- | ---------------- | --------------------------------------------------------------------------- |
-| slider_id              | string           | The entity id to use for the optional slider.                               |
-| slider_attribute       | string           | An attribute (or state) for the slider to track, defaults to `volume_level` |
-| enable_slider_feedback | boolean          | Enable vibration feedback on the slider, defaults to `true`.                |
-| slider_range           | [number, number] | The range of the slider, defaults to [0,1].                                 |
-| slider_step            | number           | The step size of the slider, defaults to one hundredth of the range.        |
-| slider_style           | object           | CSS style to apply to the slider.                                           |
+| Name      | Type   | Description                          |
+| --------- | ------ | ------------------------------------ |
+| slider_id | string | The entity id to use for the slider. |
 
 By default the slider calls the `media_player.volume_set` service, with `entity_id` set to `slider_id` and `volume_level` set to the slider value.
 
@@ -716,35 +713,50 @@ custom_actions:
       data:
         entity_id: light.sunroom_ceiling
         brightness: VALUE
-slider_range:
-  - 0
-  - 255
-slider_step: 1
+    range:
+      - 0
+      - 255
+    step: 1
 ```
 
-You can change the attribute that the slider tracks by setting `slider_attribute` to either `state` or an entity specific attribute.
+You can change several other attributes of the slider by setting them in a custom action for the slider.
+
+| Name      | Type             | Description                                                                                         |
+| --------- | ---------------- | --------------------------------------------------------------------------------------------------- |
+| attribute | string           | An attribute (or state) for the slider to track, defaults to `volume_level`                         |
+| range     | [number, number] | The range of the slider, defaults to [0,1].                                                         |
+| step      | number           | The step size of the slider, defaults to one hundredth of the range.                                |
+| tooltip   | boolean          | Whether or not to display a tooltip with the slider value when it's held down on, defaults to true. |
+
+You can change the attribute that the slider tracks by setting `attribute` to either `state` or an entity specific attribute.
 
 ```yaml
-slider_attribute: brightness
+custom_actions:
+	slider:
+		attribute: brightness
 ```
 
-While most Home Assistant media player's use a volume range of [0,1], you can change this as needed by setting `slider_range`.
+While most Home Assistant media player's use a volume range of [0,1], you can change this as needed by setting `range`.
 
 ```yaml
-slider_range:
-  - 0
-  - 0.6
+custom_actions:
+	slider:
+    range:
+      - 0
+      - 0.6
 ```
 
-By default the slider will have 100 steps with step size calculated using the range. You can change the step size by setting `slider_step`.
+By default the slider will have 100 steps with step size calculated using the range. You can change the step size by setting `step`.
 
 ```yaml
-slider_step: 1
+custom_actions:
+	slider:
+    step: 1
 ```
 
 ### Slider Style
 
-Similary to `button_style`, `slider_style` can be used to change the CSS of the slider.
+Similar to how styles can be set for each custom action, it can be used to change the CSS of the slider. Slider also utilizes the following custom properties.
 
 | Name                | Description                                                               |
 | ------------------- | ------------------------------------------------------------------------- |
@@ -756,10 +768,12 @@ Similary to `button_style`, `slider_style` can be used to change the CSS of the 
 
 ## Touchpad
 
-| Name                     | Type    | Description                                                    |
-| ------------------------ | ------- | -------------------------------------------------------------- |
-| touchpad_style           | object  | CSS style to appy to the touchpad.                             |
-| enable_touchpad_feedback | boolean | Enable vibration feedback on the touchpad, defaults to `true`. |
+Touchpad style and haptics can be set at the root level.
+
+| Name             | Type    | Description                                         |
+| ---------------- | ------- | --------------------------------------------------- |
+| touchpad_style   | object  | CSS style to appy to the touchpad.                  |
+| touchpad_haptics | boolean | Enable haptics on the touchpad, defaults to `true`. |
 
 ### Touchpad Style
 
@@ -1608,20 +1622,21 @@ custom_actions:
   primevideo:
     style:
       color: rgb(0, 165, 222)
-slider_range:
-  - 0
-  - 0.6
+  slider:
+    range:
+      - 0
+      - 0.6
+    style:
+      '--border-radius': 4px
+      '--height': 24px
+      '--background-height': 12px
+      '--color': darkred
+      '--background': red
 touchpad_style:
   background: >-
     linear-gradient(217deg, rgba(255,0,0,.8), rgba(255,0,0,0) 70.71%),
     linear-gradient(127deg, rgba(0,255,0,.8), rgba(0,255,0,0) 70.71%),
     linear-gradient(336deg, rgba(0,0,255,.8), rgba(0,0,255,0) 70.71%)
-slider_style:
-  '--border-radius': 4px
-  '--height': 24px
-  '--background-height': 12px
-  '--color': darkred
-  '--background': red
 ```
 
 Result:
