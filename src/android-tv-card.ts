@@ -323,9 +323,17 @@ class AndroidTVCard extends LitElement {
 			this.customActions[action] || defaultActions,
 		);
 
-		// Get default icon if not redefined
-		if (!actions?.icon && defaultActions.icon) {
-			actions.icon = defaultActions?.icon;
+		// Get default icon, slider range, step, and tooltip display if not redefined
+		const defaultFields = ['icon', 'range', 'step', 'tooltip'];
+		for (const field in defaultFields) {
+			if (
+				!(field in actions) &&
+				defaultActions[field as keyof IActions]
+			) {
+				actions[field as keyof IActions] = defaultActions[
+					field as keyof IActions
+				] as unknown as undefined;
+			}
 		}
 
 		// Get original actions if not defined.
