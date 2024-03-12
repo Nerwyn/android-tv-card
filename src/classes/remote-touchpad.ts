@@ -339,7 +339,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 	}
 
 	render() {
-		const style = structuredClone(this._style ?? {});
+		const style = structuredClone(this.actions.style ?? {});
 		for (const key in style) {
 			style[key] = renderTemplate(
 				this.hass,

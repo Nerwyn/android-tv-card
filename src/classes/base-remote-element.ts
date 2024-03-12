@@ -1,6 +1,5 @@
 import { LitElement, CSSResult, css } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { StyleInfo } from 'lit/directives/style-map.js';
 
 import { HomeAssistant, HapticType, forwardHaptic } from 'custom-card-helpers';
 import { renderTemplate } from 'ha-nunjucks';
@@ -12,7 +11,6 @@ export class BaseRemoteElement extends LitElement {
 	@property({ attribute: false }) hass!: HomeAssistant;
 	@property({ attribute: false }) actions!: IActions;
 	@property({ attribute: false }) remoteId?: string;
-	@property({ attribute: false }) _style?: StyleInfo;
 
 	@state() value: string | number = 0;
 	touchscreen = 'ontouchstart' in document.documentElement;

@@ -487,6 +487,7 @@ class AndroidTVCard extends LitElement {
 			centerActions.double_tap_action = doubleTapAction.tap_action;
 		}
 		centerActions.haptics = this.config.touchpad_haptics;
+		centerActions.style = this.config.touchpad_style;
 
 		// If still using old long click key, map to center hold action
 		if (
@@ -517,13 +518,12 @@ class AndroidTVCard extends LitElement {
 			.remoteId=${this.config.remote_id}
 			.actions=${centerActions}
 			.directionActions=${directionActions}
-			._style=${this.config.touchpad_style}
 		/>`;
 	}
 
 	buildKeyboard(): TemplateResult {
 		const actions = this.getActions('keyboard');
-		const style = {
+		actions.style = {
 			...this.config.button_style,
 			...actions.style,
 		};
@@ -539,13 +539,12 @@ class AndroidTVCard extends LitElement {
 			.keyboardId=${this.config.keyboard_id}
 			.keyboardMode=${this.config.keyboard_mode ?? 'ANDROID TV'}
 			.icons=${this.icons}
-			._style=${style}
 		/>`;
 	}
 
 	buildTextbox(): TemplateResult {
 		const actions = this.getActions('textbox');
-		const style = {
+		actions.style = {
 			...this.config.button_style,
 			...actions.style,
 		};
@@ -561,13 +560,12 @@ class AndroidTVCard extends LitElement {
 			.keyboardId=${this.config.keyboard_id}
 			.keyboardMode=${this.config.keyboard_mode ?? 'ANDROID TV'}
 			.icons=${this.icons}
-			._style=${style}
 		/>`;
 	}
 
 	buildSearch(): TemplateResult {
 		const actions = this.getActions('search');
-		const style = {
+		actions.style = {
 			...this.config.button_style,
 			...actions.style,
 		};
@@ -583,7 +581,6 @@ class AndroidTVCard extends LitElement {
 			.keyboardId=${this.config.keyboard_id}
 			.keyboardMode=${this.config.keyboard_mode ?? 'ANDROID TV'}
 			.icons=${this.icons}
-			._style=${style}
 		/>`;
 	}
 
