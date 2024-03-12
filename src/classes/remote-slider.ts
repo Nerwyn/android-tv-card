@@ -190,7 +190,7 @@ export class RemoteSlider extends BaseRemoteElement {
 			) as string;
 			const valueAttribute = renderTemplate(
 				this.hass,
-				this.actions.attribute as string,
+				this.actions.value_attribute as string,
 			) as string;
 			if (valueAttribute) {
 				if (valueAttribute.toLowerCase() == 'state') {

@@ -225,9 +225,9 @@ class AndroidTVCard extends LitElement {
 				}
 				if (
 					'slider_attribute' in config &&
-					!('attribute' in customAction)
+					!('value_attribute' in customAction)
 				) {
-					customAction.attribute = (
+					customAction.value_attribute = (
 						config as Record<string, string>
 					).slider_attribute;
 				}

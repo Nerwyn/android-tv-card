@@ -55,7 +55,7 @@ export interface IActions {
 	style?: StyleInfo;
 	haptics?: boolean;
 
-	attribute?: string;
+	value_attribute?: string;
 	range?: [number, number];
 	step?: number;
 	tooltip?: boolean;

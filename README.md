@@ -76,10 +76,10 @@
 - Slider is now animated like Home Assistant tile and Mushroom sliders.
 - Slider purpose can be changed by creating a custom action for `slider`.
 - Alter CSS of slider by using the [`style`](#slider-style) field in the `slider` custom action.
-- Change slider range, step size, and attribute to work with different entities and services.
+- Change slider range, step size, and value attribute to work with different entities and services.
   - Range defaults to [0,1] but can be changed for media players that use different volume ranges.
   - Step defaults to one hundredth of slider range.
-  - Attribute defaults to state but can instead be used to track any numeric attribute of an entity.
+  - Value attribute defaults to state but can instead be used to track any numeric attribute of an entity.
 - Slider style now follows theme.
 - Slider has a tooltip which shows up when the slider is held down on which displays it's current value.
 
@@ -717,23 +717,24 @@ custom_actions:
       - 0
       - 255
     step: 1
+    value_attribute: brightness
 ```
 
 You can change several other attributes of the slider by setting them in a custom action for the slider.
 
-| Name      | Type             | Description                                                                                         |
-| --------- | ---------------- | --------------------------------------------------------------------------------------------------- |
-| attribute | string           | An attribute (or state) for the slider to track, defaults to `volume_level`                         |
-| range     | [number, number] | The range of the slider, defaults to [0,1].                                                         |
-| step      | number           | The step size of the slider, defaults to one hundredth of the range.                                |
-| tooltip   | boolean          | Whether or not to display a tooltip with the slider value when it's held down on, defaults to true. |
+| Name            | Type             | Description                                                                                         |
+| --------------- | ---------------- | --------------------------------------------------------------------------------------------------- |
+| value_attribute | string           | An entity attribute (or state) for the slider to track, defaults to `volume_level`                  |
+| range           | [number, number] | The range of the slider, defaults to [0,1].                                                         |
+| step            | number           | The step size of the slider, defaults to one hundredth of the range.                                |
+| tooltip         | boolean          | Whether or not to display a tooltip with the slider value when it's held down on, defaults to true. |
 
-You can change the attribute that the slider tracks by setting `attribute` to either `state` or an entity specific attribute.
+You can change the entity attribute that the slider tracks by setting `value_attribute` to either `state` or an entity specific attribute.
 
 ```yaml
 custom_actions:
-	slider:
-		attribute: brightness
+slider:
+	value_attribute: brightness
 ```
 
 While most Home Assistant media player's use a volume range of [0,1], you can change this as needed by setting `range`.
