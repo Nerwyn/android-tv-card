@@ -319,7 +319,9 @@ class AndroidTVCard extends LitElement {
 
 	getActions(action: string): IActions {
 		const defaultActions = this.defaultActions[action] || {};
-		const actions = this.customActions[action] || defaultActions;
+		const actions = structuredClone(
+			this.customActions[action] || defaultActions,
+		);
 
 		// Get default icon if not redefined
 		if (!actions?.icon && defaultActions.icon) {
