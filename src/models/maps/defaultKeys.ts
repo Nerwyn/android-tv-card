@@ -219,9 +219,6 @@ export const defaultKeys: Record<string, IActions> = {
 		icon: 'mdi:text-box',
 	},
 	slider: {
-		range: [0, 1],
-		step: 0.01,
-		tooltip: true,
 		tap_action: {
 			action: 'call-service',
 			service: 'media_player.volume_set',

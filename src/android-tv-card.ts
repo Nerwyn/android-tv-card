@@ -328,17 +328,6 @@ class AndroidTVCard extends LitElement {
 			actions.icon = defaultActions?.icon;
 		}
 
-		// Get default slider range, step, and tooltip display
-		if (!('range' in actions) && 'range' in defaultActions) {
-			actions.range = defaultActions?.range;
-		}
-		if (!('step' in actions) && 'step' in defaultActions) {
-			actions.step = defaultActions?.step;
-		}
-		if (!('tooltip' in actions) && 'tooltip' in defaultActions) {
-			actions.tooltip = defaultActions?.tooltip;
-		}
-
 		// Get original actions if not defined.
 		const actionTypes: ActionType[] = [
 			'tap_action',

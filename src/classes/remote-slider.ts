@@ -1,9 +1,5 @@
 import { html, css } from 'lit';
-import {
-	customElement,
-	eventOptions,
-	state,
-} from 'lit/decorators.js';
+import { customElement, eventOptions, state } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
 import { renderTemplate } from 'ha-nunjucks';
@@ -249,9 +245,13 @@ export class RemoteSlider extends BaseRemoteElement {
 		const tooltipText = `${Number(this.currentValue).toFixed(
 			this.precision,
 		)}`;
-		const display = renderTemplate(
-			this.hass,
-			this.actions.tooltip as unknown as string,
+		const display = (
+			'tooltip' in this.actions
+				? renderTemplate(
+						this.hass,
+						this.actions.tooltip as unknown as string,
+				  )
+				: true
 		)
 			? 'initial'
 			: 'none';
