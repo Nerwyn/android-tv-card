@@ -324,18 +324,18 @@ class AndroidTVCard extends LitElement {
 		);
 
 		// Get default icon if not redefined
-		if (!actions?.icon && defaultActions.icon) {
+		if (!('icon' in actions) && 'icon' in defaultActions) {
 			actions.icon = defaultActions?.icon;
 		}
 
 		// Get default slider range, step, and tooltip display
-		if (!actions?.range && defaultActions.range) {
+		if (!('range' in actions) && 'range' in defaultActions) {
 			actions.range = defaultActions?.range;
 		}
-		if (!actions?.tooltip && defaultActions.tooltip) {
-			actions.tooltip = defaultActions?.tooltip;
+		if (!('step' in actions) && 'step' in defaultActions) {
+			actions.step = defaultActions?.step;
 		}
-		if (!actions?.tooltip && defaultActions.tooltip) {
+		if (!('tooltip' in actions) && 'tooltip' in defaultActions) {
 			actions.tooltip = defaultActions?.tooltip;
 		}
 
