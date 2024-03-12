@@ -77,7 +77,7 @@ class AndroidTVCard extends LitElement {
 			...defaultKeys,
 		};
 		this.customActions = config.custom_actions || {};
-		if (config.slider_id && !this.customActions.slider.tap_action) {
+		if (config.slider_id && !this.customActions.slider?.tap_action) {
 			this.customActions.slider = {
 				...(this.customActions.slider ?? {}),
 				...structuredClone(defaultKeys.slider),
