@@ -11,7 +11,6 @@ import { IConfirmation, IData, IActions, IAction, ActionType } from '../models';
 export class BaseRemoteElement extends LitElement {
 	@property({ attribute: false }) hass!: HomeAssistant;
 	@property({ attribute: false }) actions!: IActions;
-	@property({ attribute: false }) hapticEnabled?: boolean;
 	@property({ attribute: false }) remoteId?: string;
 	@property({ attribute: false }) _style?: StyleInfo;
 
@@ -24,7 +23,7 @@ export class BaseRemoteElement extends LitElement {
 		if (
 			renderTemplate(
 				this.hass,
-				this.hapticEnabled as unknown as string,
+				this.actions.haptics as unknown as string,
 			) ??
 			true
 		) {

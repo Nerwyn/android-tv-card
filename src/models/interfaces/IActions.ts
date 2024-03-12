@@ -53,6 +53,12 @@ export interface IAction {
 export interface IActions {
 	icon?: string;
 	style?: StyleInfo;
+	haptics?: boolean;
+
+	attribute?: string;
+	range?: [number, number];
+	step?: number;
+	tooltip?: boolean;
 
 	tap_action?: IAction;
 	hold_action?: IAction;

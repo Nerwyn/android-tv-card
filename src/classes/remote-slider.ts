@@ -2,7 +2,6 @@ import { html, css } from 'lit';
 import {
 	customElement,
 	eventOptions,
-	property,
 	state,
 } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
@@ -13,10 +12,6 @@ import { BaseRemoteElement } from './base-remote-element';
 
 @customElement('remote-slider')
 export class RemoteSlider extends BaseRemoteElement {
-	@property({ attribute: false }) valueAttribute?: string;
-	@property({ attribute: false }) _range: [number, number] = [0, 1];
-	@property({ attribute: false }) _step?: number;
-
 	@state() getValueFromHass: boolean = true;
 	@state() showTooltip: boolean = false;
 	@state() sliderOn: boolean = true;
@@ -199,15 +194,15 @@ export class RemoteSlider extends BaseRemoteElement {
 			) as string;
 			const valueAttribute = renderTemplate(
 				this.hass,
-				this.valueAttribute as string,
+				this.actions.attribute as string,
 			) as string;
 			if (valueAttribute) {
-				if (valueAttribute == 'state') {
+				if (valueAttribute.toLowerCase() == 'state') {
 					this.value = parseFloat(this.hass.states[entityId].state);
 				} else {
 					let value =
 						this.hass.states[entityId].attributes[valueAttribute];
-					if (valueAttribute == 'brightness') {
+					if (valueAttribute.toLowerCase() == 'brightness') {
 						value = Math.round((100 * parseInt(value ?? 0)) / 255);
 					}
 					this.value = value;
@@ -254,12 +249,19 @@ export class RemoteSlider extends BaseRemoteElement {
 		const tooltipText = `${Number(this.currentValue).toFixed(
 			this.precision,
 		)}`;
+		const display = renderTemplate(
+			this.hass,
+			this.actions.tooltip as unknown as string,
+		)
+			? 'initial'
+			: 'none';
 		// prettier-ignore
 		return html`
 			<div
 				class="tooltip ${this.showTooltip ? 'faded-in' : 'faded-out'}"
 				style=${styleMap({
 					'--x-position': this.tooltipPosition.toString() + 'px',
+					display: display
 				})}
 			>${tooltipText}</div>
 		`;
@@ -297,24 +299,29 @@ export class RemoteSlider extends BaseRemoteElement {
 			this.currentValue = this.value;
 		}
 
-		this.range[0] = parseFloat(
-			renderTemplate(
-				this.hass,
-				this._range[0] as unknown as string,
-			) as string,
-		);
-		this.range[1] = parseFloat(
-			renderTemplate(
-				this.hass,
-				this._range[1] as unknown as string,
-			) as string,
-		);
+		if ('range' in this.actions) {
+			this.range[0] = parseFloat(
+				renderTemplate(
+					this.hass,
+					this.actions.range![0] as unknown as string,
+				) as string,
+			);
+			this.range[1] = parseFloat(
+				renderTemplate(
+					this.hass,
+					this.actions.range![1] as unknown as string,
+				) as string,
+			);
+		}
 
 		this.speed = (this.range[1] - this.range[0]) / 50;
 
-		if (this._step) {
+		if ('step' in this.actions) {
 			this.step = Number(
-				renderTemplate(this.hass, this._step as unknown as string),
+				renderTemplate(
+					this.hass,
+					this.actions.step as unknown as string,
+				),
 			);
 		} else {
 			this.step = (this.range[1] - this.range[0]) / 100;
@@ -326,7 +333,7 @@ export class RemoteSlider extends BaseRemoteElement {
 			this.precision = 0;
 		}
 
-		const style = structuredClone(this._style ?? {});
+		const style = structuredClone(this.actions.style ?? {});
 		for (const key in style) {
 			style[key] = renderTemplate(
 				this.hass,

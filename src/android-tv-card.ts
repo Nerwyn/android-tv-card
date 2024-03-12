@@ -2,7 +2,7 @@ import { version } from '../package.json';
 
 import { LitElement, TemplateResult, html, css } from 'lit';
 import { property } from 'lit/decorators.js';
-import { styleMap } from 'lit/directives/style-map.js';
+import { StyleInfo, styleMap } from 'lit/directives/style-map.js';
 
 import { HomeAssistant, applyThemesOnElement } from 'custom-card-helpers';
 import { renderTemplate } from 'ha-nunjucks';
@@ -111,6 +111,22 @@ class AndroidTVCard extends LitElement {
 			}
 		}
 
+		// Old haptic feedback toggle names
+		if ('enable_button_feedback' in config) {
+			if (!('button_haptics' in config)) {
+				config.button_haptics = (config as Record<string, boolean>)[
+					'enable_button_feedback'
+				];
+			}
+		}
+		if ('enable_touchpad_feedback' in config) {
+			if (!('touchpad_haptics' in config)) {
+				config.touchpad_haptics = (config as Record<string, boolean>)[
+					'enable_touchpad_feedback'
+				];
+			}
+		}
+
 		// Convert old _row keys into rows array
 		if (!('rows' in config) || !(config.rows || []).length) {
 			const rows: string[][] = [];
@@ -185,6 +201,41 @@ class AndroidTVCard extends LitElement {
 			}
 			if (updateTapAction) {
 				customAction.tap_action = tapAction as IAction;
+			}
+
+			// Copy slider fields
+			if (customActionName == 'slider') {
+				if ('slider_style' in config && !('style' in customAction)) {
+					customAction.style = (
+						config as Record<string, StyleInfo>
+					).slider_style;
+				}
+				if ('slider_range' in config && !('range' in customAction)) {
+					customAction.range = (
+						config as Record<string, [number, number]>
+					).slider_range;
+				}
+				if ('slider_step' in config && !('step' in customAction)) {
+					customAction.step = (
+						config as Record<string, number>
+					).slider_step;
+				}
+				if (
+					'slider_attribute' in config &&
+					!('attribute' in customAction)
+				) {
+					customAction.attribute = (
+						config as Record<string, string>
+					).slider_attribute;
+				}
+				if (
+					'enable_slider_feedback' in config &&
+					!('haptics' in customAction)
+				) {
+					customAction.haptics = (
+						config as Record<string, boolean>
+					).enable_slider_feedback;
+				}
 			}
 
 			// For each type of action
@@ -359,6 +410,7 @@ class AndroidTVCard extends LitElement {
 
 	buildButton(elementName: string): TemplateResult {
 		const actions = this.getActions(elementName);
+
 		const style = {
 			...this.config.button_style,
 			...actions.style,
@@ -371,9 +423,13 @@ class AndroidTVCard extends LitElement {
 			></div>`;
 		}
 
+		actions.style = style;
+		if (!('haptics' in actions)) {
+			actions.haptics = this.config.button_haptics;
+		}
+
 		return html`<remote-button
 			.hass=${this.hass}
-			.hapticEnabled=${this.config.enable_button_feedback}
 			.remoteId=${this.config.remote_id}
 			.actions=${actions}
 			.actionKey="${elementName}"
@@ -393,12 +449,7 @@ class AndroidTVCard extends LitElement {
 	buildSlider(): TemplateResult {
 		return html`<remote-slider
 			.hass=${this.hass}
-			.hapticEnabled=${this.config.enable_slider_feedback}
-			._range=${this.config.slider_range ?? [0, 1]}
-			._step=${this.config.slider_step}
 			.actions=${this.getActions('slider')}
-			.valueAttribute=${this.config.slider_attribute?.toLowerCase()}
-			._style=${this.config.slider_style}
 		/>`;
 	}
 
@@ -433,6 +484,7 @@ class AndroidTVCard extends LitElement {
 			const doubleTapAction = this.getActions(doubleTapKeycode);
 			centerActions.double_tap_action = doubleTapAction.tap_action;
 		}
+		centerActions.haptics = this.config.touchpad_haptics;
 
 		// If still using old long click key, map to center hold action
 		if (
@@ -460,7 +512,6 @@ class AndroidTVCard extends LitElement {
 
 		return html`<remote-touchpad
 			.hass=${this.hass}
-			.hapticEnabled=${this.config.enable_touchpad_feedback}
 			.remoteId=${this.config.remote_id}
 			.actions=${centerActions}
 			.directionActions=${directionActions}
@@ -470,14 +521,16 @@ class AndroidTVCard extends LitElement {
 
 	buildKeyboard(): TemplateResult {
 		const actions = this.getActions('keyboard');
-
 		const style = {
 			...this.config.button_style,
 			...actions.style,
 		};
+		if (!('haptics' in actions)) {
+			actions.haptics = this.config.button_haptics;
+		}
+
 		return html`<remote-keyboard
 			.hass=${this.hass}
-			.hapticEnabled=${this.config.enable_button_feedback}
 			.remoteId=${this.config.remote_id}
 			.actions=${actions}
 			.actionKey="keyboard"
@@ -490,14 +543,16 @@ class AndroidTVCard extends LitElement {
 
 	buildTextbox(): TemplateResult {
 		const actions = this.getActions('textbox');
-
 		const style = {
 			...this.config.button_style,
 			...actions.style,
 		};
+		if (!('haptics' in actions)) {
+			actions.haptics = this.config.button_haptics;
+		}
+
 		return html`<remote-textbox
 			.hass=${this.hass}
-			.hapticEnabled=${this.config.enable_button_feedback}
 			.remoteId=${this.config.remote_id}
 			.actions=${actions}
 			.actionKey="textbox"
@@ -510,14 +565,16 @@ class AndroidTVCard extends LitElement {
 
 	buildSearch(): TemplateResult {
 		const actions = this.getActions('search');
-
 		const style = {
 			...this.config.button_style,
 			...actions.style,
 		};
+		if (!('haptics' in actions)) {
+			actions.haptics = this.config.button_haptics;
+		}
+
 		return html`<remote-search
 			.hass=${this.hass}
-			.hapticEnabled=${this.config.enable_button_feedback}
 			.remoteId=${this.config.remote_id}
 			.actions=${actions}
 			.actionKey="search"
