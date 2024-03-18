@@ -759,13 +759,13 @@ custom_actions:
 
 Similar to how styles can be set for each custom action, it can be used to change the CSS of the slider. Slider also utilizes the following custom properties.
 
-| Name                | Description                                                               |
-| ------------------- | ------------------------------------------------------------------------- |
-| --color             | Color of the slider thumb / percentage on.                                |
-| --background        | Slider background color.                                                  |
-| --height            | Slider thumb / percentage on height.                                      |
-| --background-height | Slider background height. Maximum is contrained by the foreground height. |
-| --border-radius     | Border radius of the entire slider.                                       |
+| Name                | Description                                                                |
+| ------------------- | -------------------------------------------------------------------------- |
+| --color             | Color of the slider thumb / percentage on.                                 |
+| --background        | Slider background color.                                                   |
+| --height            | Slider thumb / percentage on height.                                       |
+| --background-height | Slider background height. Maximum is constrained by the foreground height. |
+| --border-radius     | Border radius of the entire slider.                                        |
 
 ## Touchpad
 
