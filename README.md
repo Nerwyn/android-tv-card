@@ -734,14 +734,14 @@ You can change the entity attribute that the slider tracks by setting `value_att
 ```yaml
 custom_actions:
 slider:
-	value_attribute: brightness
+  value_attribute: brightness
 ```
 
 While most Home Assistant media player's use a volume range of [0,1], you can change this as needed by setting `range`.
 
 ```yaml
 custom_actions:
-	slider:
+  slider:
     range:
       - 0
       - 0.6
@@ -751,7 +751,7 @@ By default the slider will have 100 steps with step size calculated using the ra
 
 ```yaml
 custom_actions:
-	slider:
+  slider:
     step: 1
 ```
 
