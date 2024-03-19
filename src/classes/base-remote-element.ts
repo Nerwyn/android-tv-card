@@ -1,10 +1,5 @@
 import { LitElement, CSSResult, css } from 'lit';
-import {
-	customElement,
-	eventOptions,
-	property,
-	state,
-} from 'lit/decorators.js';
+import { customElement, property, state } from 'lit/decorators.js';
 
 import { HomeAssistant, HapticType, forwardHaptic } from 'custom-card-helpers';
 import { renderTemplate } from 'ha-nunjucks';
@@ -335,23 +330,23 @@ export class BaseRemoteElement extends LitElement {
 		return true;
 	}
 
-	onMouseDown(_e: MouseEvent | TouchEvent) {}
-	onMouseUp(_e: MouseEvent | TouchEvent) {}
-	onMouseMove(_e: MouseEvent | TouchEvent) {}
-	@eventOptions({ passive: true })
-	onTouchStart(e: TouchEvent) {
-		e.preventDefault();
-		this.onMouseDown(e);
-	}
-	onTouchEnd(e: TouchEvent) {
-		e.preventDefault();
-		this.onMouseUp(e);
-	}
-	@eventOptions({ passive: true })
-	onTouchMove(e: TouchEvent) {
-		e.preventDefault();
-		this.onMouseMove(e);
-	}
+	// onMouseDown(_e: MouseEvent | TouchEvent) {}
+	// onMouseUp(_e: MouseEvent | TouchEvent) {}
+	// onMouseMove(_e: MouseEvent | TouchEvent) {}
+	// @eventOptions({ passive: true })
+	// onTouchStart(e: TouchEvent) {
+	// 	e.preventDefault();
+	// 	this.onMouseDown(e);
+	// }
+	// onTouchEnd(e: TouchEvent) {
+	// 	e.preventDefault();
+	// 	this.onMouseUp(e);
+	// }
+	// @eventOptions({ passive: true })
+	// onTouchMove(e: TouchEvent) {
+	// 	e.preventDefault();
+	// 	this.onMouseMove(e);
+	// }
 
 	render() {}
 

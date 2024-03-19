@@ -65,7 +65,7 @@ export class RemoteButton extends BaseRemoteElement {
 	}
 
 	@eventOptions({ passive: true })
-	onMouseDown(e: TouchEvent | MouseEvent) {
+	onHoldStart(e: TouchEvent | MouseEvent) {
 		this.holdMove = false;
 		if ('targetTouches' in e) {
 			this.initialX = e.targetTouches[0].clientX;
@@ -137,7 +137,7 @@ export class RemoteButton extends BaseRemoteElement {
 		}
 	}
 
-	onMouseUp(e: TouchEvent | MouseEvent) {
+	onHoldEnd(e: TouchEvent | MouseEvent) {
 		if (!this.holdMove) {
 			if (
 				'momentary_end_action' in this.actions &&
@@ -171,7 +171,7 @@ export class RemoteButton extends BaseRemoteElement {
 	}
 
 	@eventOptions({ passive: true })
-	onMouseMove(e: TouchEvent | MouseEvent) {
+	onHoldMove(e: TouchEvent | MouseEvent) {
 		let currentX: number;
 		let currentY: number;
 		if ('targetTouches' in e) {
@@ -272,13 +272,13 @@ export class RemoteButton extends BaseRemoteElement {
 			<ha-icon-button
 				title="${action}"
 				style=${styleMap(style)}
-				@mousedown=${this.onMouseDown}
-				@mouseup=${this.onMouseUp}
-				@mousemove=${this.onMouseMove}
+				@mousedown=${this.onHoldStart}
+				@mouseup=${this.onHoldEnd}
+				@mousemove=${this.onHoldMove}
 				@mouseleave=${this.onMouseLeave}
-				@touchstart=${this.onTouchStart}
-				@touchend=${this.onTouchEnd}
-				@touchmove=${this.onTouchMove}
+				@touchstart=${this.onHoldStart}
+				@touchend=${this.onHoldEnd}
+				@touchmove=${this.onHoldMove}
 				.action=${action}
 				.path=${svgPath}
 			>
