@@ -96,7 +96,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 	}
 
 	@eventOptions({ passive: true })
-	onHoldStart(e: TouchEvent | MouseEvent) {
+	onMouseDown(e: TouchEvent | MouseEvent) {
 		this._rippleHandlers.startPress(e as unknown as Event);
 		this.holdStart = true;
 
@@ -141,7 +141,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		}
 	}
 
-	onHoldEnd(e: TouchEvent | MouseEvent) {
+	onMouseUp(e: TouchEvent | MouseEvent) {
 		this._rippleHandlers.endPress();
 
 		if (
@@ -169,16 +169,13 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			e.stopImmediatePropagation();
 			e.preventDefault();
 			this.endAction();
-		} else if (
-			(this.touchscreen && this.targetTouches) ||
-			!this.touchscreen
-		) {
+		} else {
 			this.onClick(e);
 		}
 	}
 
 	@eventOptions({ passive: true })
-	onHoldMove(e: TouchEvent | MouseEvent) {
+	onMouseMove(e: TouchEvent | MouseEvent) {
 		if (!this.initialX || !this.initialY || !this.holdStart) {
 			return;
 		}
@@ -347,39 +344,24 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			) as string;
 		}
 
-		if (this.touchscreen) {
-			return html`
-				<toucharea
-					style=${styleMap(style)}
-					@touchstart=${this.onHoldStart}
-					@touchend=${this.onHoldEnd}
-					@touchmove=${this.onHoldMove}
-					@touchcancel=${this.onTouchCancel}
-					@mouseenter=${this._rippleHandlers.startHover}
-					@mouseleave=${this.onMouseLeave}
-					@focus=${this._rippleHandlers.startFocus}
-					@blur=${this._rippleHandlers.endFocus}
-				>
-					<mwc-ripple></mwc-ripple>
-				</toucharea>
-			`;
-		} else {
-			return html`
-				<toucharea
-					style=${styleMap(style)}
-					@mousedown=${this.onHoldStart}
-					@mouseup=${this.onHoldEnd}
-					@mousemove=${this.onHoldMove}
-					@touchcancel=${this.onTouchCancel}
-					@mouseenter=${this._rippleHandlers.startHover}
-					@mouseleave=${this.onMouseLeave}
-					@focus=${this._rippleHandlers.startFocus}
-					@blur=${this._rippleHandlers.endFocus}
-				>
-					<mwc-ripple></mwc-ripple>
-				</toucharea>
-			`;
-		}
+		return html`
+			<toucharea
+				style=${styleMap(style)}
+				@mousedown=${this.onMouseDown}
+				@mouseup=${this.onMouseUp}
+				@mousemove=${this.onMouseMove}
+				@mouseenter=${this._rippleHandlers.startHover}
+				@mouseleave=${this.onMouseLeave}
+				@touchstart=${this.onTouchStart}
+				@touchend=${this.onTouchEnd}
+				@touchmove=${this.onTouchMove}
+				@touchcancel=${this.onTouchCancel}
+				@focus=${this._rippleHandlers.startFocus}
+				@blur=${this._rippleHandlers.endFocus}
+			>
+				<mwc-ripple></mwc-ripple>
+			</toucharea>
+		`;
 	}
 
 	static get styles() {

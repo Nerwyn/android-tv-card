@@ -237,37 +237,6 @@ export class RemoteButton extends BaseRemoteElement {
 		}
 
 		const action = renderTemplate(this.hass, this.actionKey);
-
-		// if (this.touchscreen) {
-		// 	return html`
-		// 		<ha-icon-button
-		// 			title="${action}"
-		// 			style=${styleMap(style)}
-		// 			@touchstart=${this.onHoldStart}
-		// 			@touchend=${this.onHoldEnd}
-		// 			@touchmove=${this.onHoldMove}
-		// 			.action=${action}
-		// 			.path=${svgPath}
-		// 		>
-		// 			${haIcon}${inputTemplate}
-		// 		</ha-icon-button>
-		// 	`;
-		// } else {
-		// 	return html`
-		// 		<ha-icon-button
-		// 			title="${action}"
-		// 			style=${styleMap(style)}
-		// 			@mousedown=${this.onHoldStart}
-		// 			@mouseup=${this.onHoldEnd}
-		// 			@mousemove=${this.onHoldMove}
-		// 			@mouseleave=${this.onMouseLeave}
-		// 			.action=${action}
-		// 			.path=${svgPath}
-		// 		>
-		// 			${haIcon}${inputTemplate}
-		// 		</ha-icon-button>
-		// 	`;
-		// }
 		return html`
 			<ha-icon-button
 				title="${action}"
