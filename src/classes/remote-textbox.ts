@@ -8,7 +8,7 @@ import { BaseKeyboardElement } from './base-keyboard-element';
 
 @customElement('remote-textbox')
 export class RemoteTextbox extends BaseKeyboardElement {
-	onHoldEnd(e: TouchEvent | MouseEvent) {
+	onMouseUp(e: TouchEvent | MouseEvent) {
 		if (!this.holdMove) {
 			e.stopImmediatePropagation();
 

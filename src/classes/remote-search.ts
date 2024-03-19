@@ -8,7 +8,7 @@ import { BaseKeyboardElement } from './base-keyboard-element';
 
 @customElement('remote-search')
 export class RemoteSearch extends BaseKeyboardElement {
-	onHoldEnd(e: TouchEvent | MouseEvent) {
+	onMouseUp(e: TouchEvent | MouseEvent) {
 		if (!this.holdMove) {
 			e.stopImmediatePropagation();
 			this.fireHapticEvent('light');
