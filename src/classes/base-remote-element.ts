@@ -330,6 +330,22 @@ export class BaseRemoteElement extends LitElement {
 		return true;
 	}
 
+	onMouseDown(_e: MouseEvent | TouchEvent) {}
+	onMouseUp(_e: MouseEvent | TouchEvent) {}
+	onMouseMove(_e: MouseEvent | TouchEvent) {}
+	onTouchStart(e: TouchEvent) {
+		e.preventDefault();
+		this.onMouseDown(e);
+	}
+	onTouchEnd(e: TouchEvent) {
+		e.preventDefault();
+		this.onMouseUp(e);
+	}
+	onTouchMove(e: TouchEvent) {
+		e.preventDefault();
+		this.onMouseMove(e);
+	}
+
 	render() {}
 
 	static get styles(): CSSResult | CSSResult[] {

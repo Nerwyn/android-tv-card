@@ -65,7 +65,7 @@ export class RemoteButton extends BaseRemoteElement {
 	}
 
 	@eventOptions({ passive: true })
-	onHoldStart(e: TouchEvent | MouseEvent) {
+	onMouseDown(e: TouchEvent | MouseEvent) {
 		this.holdMove = false;
 		if ('targetTouches' in e) {
 			this.initialX = e.targetTouches[0].clientX;
@@ -137,7 +137,7 @@ export class RemoteButton extends BaseRemoteElement {
 		}
 	}
 
-	onHoldEnd(e: TouchEvent | MouseEvent) {
+	onMouseUp(e: TouchEvent | MouseEvent) {
 		if (!this.holdMove) {
 			if (
 				'momentary_end_action' in this.actions &&
@@ -171,7 +171,7 @@ export class RemoteButton extends BaseRemoteElement {
 	}
 
 	@eventOptions({ passive: true })
-	onHoldMove(e: TouchEvent | MouseEvent) {
+	onMouseMove(e: TouchEvent | MouseEvent) {
 		let currentX: number;
 		let currentY: number;
 		if ('targetTouches' in e) {
@@ -238,36 +238,53 @@ export class RemoteButton extends BaseRemoteElement {
 
 		const action = renderTemplate(this.hass, this.actionKey);
 
-		if (this.touchscreen) {
-			return html`
-				<ha-icon-button
-					title="${action}"
-					style=${styleMap(style)}
-					@touchstart=${this.onHoldStart}
-					@touchend=${this.onHoldEnd}
-					@touchmove=${this.onHoldMove}
-					.action=${action}
-					.path=${svgPath}
-				>
-					${haIcon}${inputTemplate}
-				</ha-icon-button>
-			`;
-		} else {
-			return html`
-				<ha-icon-button
-					title="${action}"
-					style=${styleMap(style)}
-					@mousedown=${this.onHoldStart}
-					@mouseup=${this.onHoldEnd}
-					@mousemove=${this.onHoldMove}
-					@mouseleave=${this.onMouseLeave}
-					.action=${action}
-					.path=${svgPath}
-				>
-					${haIcon}${inputTemplate}
-				</ha-icon-button>
-			`;
-		}
+		// if (this.touchscreen) {
+		// 	return html`
+		// 		<ha-icon-button
+		// 			title="${action}"
+		// 			style=${styleMap(style)}
+		// 			@touchstart=${this.onHoldStart}
+		// 			@touchend=${this.onHoldEnd}
+		// 			@touchmove=${this.onHoldMove}
+		// 			.action=${action}
+		// 			.path=${svgPath}
+		// 		>
+		// 			${haIcon}${inputTemplate}
+		// 		</ha-icon-button>
+		// 	`;
+		// } else {
+		// 	return html`
+		// 		<ha-icon-button
+		// 			title="${action}"
+		// 			style=${styleMap(style)}
+		// 			@mousedown=${this.onHoldStart}
+		// 			@mouseup=${this.onHoldEnd}
+		// 			@mousemove=${this.onHoldMove}
+		// 			@mouseleave=${this.onMouseLeave}
+		// 			.action=${action}
+		// 			.path=${svgPath}
+		// 		>
+		// 			${haIcon}${inputTemplate}
+		// 		</ha-icon-button>
+		// 	`;
+		// }
+		return html`
+			<ha-icon-button
+				title="${action}"
+				style=${styleMap(style)}
+				@mousedown=${this.onMouseDown}
+				@mouseup=${this.onMouseUp}
+				@mousemove=${this.onMouseMove}
+				@mouseleave=${this.onMouseLeave}
+				@touchstart=${this.onTouchStart}
+				@touchend=${this.onTouchEnd}
+				@touchmove=${this.onTouchMove}
+				.action=${action}
+				.path=${svgPath}
+			>
+				${haIcon}${inputTemplate}
+			</ha-icon-button>
+		`;
 	}
 
 	static get styles(): CSSResult | CSSResult[] {
