@@ -21,6 +21,21 @@ export class RemoteKeyboard extends BaseKeyboardElement {
 		}
 	}
 
+	onTouchEnd(e: TouchEvent | MouseEvent) {
+		e.preventDefault();
+
+		// Have to redefine this so current target and it's children is defined
+		if (!this.holdMove) {
+			e.stopImmediatePropagation();
+			this.fireHapticEvent('light');
+			for (const element of (e.currentTarget as HTMLElement).children) {
+				if (element.nodeName.toLowerCase() == 'input') {
+					(element as HTMLInputElement).focus();
+				}
+			}
+		}
+	}
+
 	onKeyDown(e: KeyboardEvent) {
 		e.stopImmediatePropagation();
 
