@@ -98,7 +98,7 @@ export class RemoteSlider extends BaseRemoteElement {
 	}
 
 	@eventOptions({ passive: true })
-	onStart(e: MouseEvent | TouchEvent) {
+	onMouseDown(e: MouseEvent | TouchEvent) {
 		const slider = e.currentTarget as HTMLInputElement;
 
 		if (!this.scrolling) {
@@ -110,7 +110,7 @@ export class RemoteSlider extends BaseRemoteElement {
 		}
 	}
 
-	onEnd(e: MouseEvent | TouchEvent) {
+	onMouseUp(e: MouseEvent | TouchEvent) {
 		const slider = e.currentTarget as HTMLInputElement;
 		this.setTooltip(slider, false);
 		this.setValue();
@@ -145,7 +145,7 @@ export class RemoteSlider extends BaseRemoteElement {
 	}
 
 	@eventOptions({ passive: true })
-	onMove(e: TouchEvent | MouseEvent) {
+	onMouseMove(e: TouchEvent | MouseEvent) {
 		const slider = e.currentTarget as HTMLInputElement;
 
 		let currentX: number;
@@ -283,12 +283,12 @@ export class RemoteSlider extends BaseRemoteElement {
 				step=${this.step}
 				value="${value}"
 				@input=${this.onInput}
-				@touchstart=${this.onStart}
-				@touchend=${this.onEnd}
-				@touchmove=${this.onMove}
-				@mousedown=${this.onStart}
-				@mouseup=${this.onEnd}
-				@mousemove=${this.onMove}
+				@mousedown=${this.onMouseDown}
+				@mouseup=${this.onMouseUp}
+				@mousemove=${this.onMouseMove}
+				@touchstart=${this.onTouchStart}
+				@touchend=${this.onTouchEnd}
+				@touchmove=${this.onTouchMove}
 			/>
 		`;
 	}
