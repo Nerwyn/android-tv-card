@@ -14,7 +14,7 @@ export class RemoteSlider extends BaseRemoteElement {
 	@state() currentValue = this.value;
 
 	class: string = 'slider';
-	// oldValue?: number;
+	oldValue?: number;
 	newValue?: number;
 	speed: number = 0.02;
 	range: [number, number] = [0, 1];
@@ -32,8 +32,6 @@ export class RemoteSlider extends BaseRemoteElement {
 		const slider = e.currentTarget as HTMLInputElement;
 
 		if (!this.scrolling) {
-			const start = parseFloat((this.value as string) ?? '0');
-
 			this.getValueFromHass = false;
 			clearTimeout(this.getValueFromHassTimer);
 			this.value = slider.value;
@@ -42,12 +40,11 @@ export class RemoteSlider extends BaseRemoteElement {
 
 			this.fireHapticEvent('selection');
 
-			// const start = parseFloat(
-			// 	(this.oldValue as unknown as string) ?? this.value ?? '0',
-			// );
+			const start = parseFloat(
+				(this.oldValue as unknown as string) ?? this.value ?? '0',
+			);
 			const end = parseFloat(slider.value ?? start);
-			// slider.value = start.toString();
-
+			slider.value = start.toString();
 			this.newValue = end;
 
 			if (end > this.range[0]) {
@@ -56,18 +53,15 @@ export class RemoteSlider extends BaseRemoteElement {
 
 			let i = start;
 			if (start > end) {
-				console.log('Going down');
 				const id = setInterval(() => {
 					i -= this.speed;
-					// slider.value = i.toString();
-					// this.currentValue = slider.value;
-					this.currentValue = i.toString();
+					slider.value = i.toString();
+					this.currentValue = slider.value;
 
 					if (end >= i) {
 						clearInterval(id);
-						// slider.value = end.toString();
-						// this.currentValue = slider.value;
-						this.currentValue = end.toString();
+						slider.value = end.toString();
+						this.currentValue = slider.value;
 						if (
 							this.value == undefined ||
 							(end <= this.range[0] &&
@@ -78,33 +72,28 @@ export class RemoteSlider extends BaseRemoteElement {
 					}
 				}, 1);
 			} else if (start < end) {
-				console.log('Going up');
 				this.sliderOn = true;
 				const id = setInterval(() => {
 					i += this.speed;
-					// slider.value = i.toString();
-					// this.currentValue = slider.value;
-					this.currentValue = i.toString();
+					slider.value = i.toString();
+					this.currentValue = slider.value;
 
 					if (end <= i) {
 						clearInterval(id);
-						// slider.value = end.toString();
-						// this.currentValue = slider.value;
-						this.currentValue = end.toString();
+						slider.value = end.toString();
+						this.currentValue = slider.value;
 					}
 				}, 1);
 			} else {
-				// slider.value = end.toString();
-				this.currentValue = end.toString();
+				slider.value = end.toString();
 			}
 
-			// this.oldValue = end;
+			this.oldValue = end;
 		} else {
 			this.setValue();
-			// slider.value = (this.value ?? 0).toString();
-			this.currentValue = (this.value ?? 0).toString();
+			slider.value = (this.value ?? 0).toString();
 			this.setTooltip(slider, false);
-			// this.currentValue = slider.value;
+			this.currentValue = slider.value;
 		}
 	}
 
@@ -142,9 +131,8 @@ export class RemoteSlider extends BaseRemoteElement {
 				this.getValueFromHass = true;
 			}
 			this.setValue();
-			// slider.value = (this.value ?? 0).toString();
-			// this.currentValue = slider.value;
-			this.currentValue = (this.value ?? 0).toString();
+			slider.value = (this.value ?? 0).toString();
+			this.currentValue = slider.value;
 		}
 
 		this.scrolling = false;
@@ -185,9 +173,8 @@ export class RemoteSlider extends BaseRemoteElement {
 			this.scrolling = true;
 			this.getValueFromHass = true;
 			this.setValue();
-			// slider.value = (this.value ?? 0).toString();
-			// this.currentValue = slider.value;
-			this.currentValue = (this.value ?? 0).toString();
+			slider.value = (this.value ?? 0).toString();
+			this.currentValue = slider.value;
 			this.setTooltip(slider, false);
 			this.sliderOn = !(
 				this.value == undefined || Number(this.value) <= this.range[0]
@@ -221,9 +208,9 @@ export class RemoteSlider extends BaseRemoteElement {
 					this.hass.states[entityId].attributes.volume_level ?? 0;
 			}
 
-			// if (this.oldValue == undefined) {
-			// 	this.oldValue = Number(this.value);
-			// }
+			if (this.oldValue == undefined) {
+				this.oldValue = Number(this.value);
+			}
 			if (this.newValue == undefined) {
 				this.newValue = Number(this.value);
 			}
