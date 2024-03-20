@@ -375,9 +375,11 @@ export class BaseRemoteElement extends LitElement {
 	}
 
 	onContextMenu(e: PointerEvent) {
-		e.preventDefault();
-		e.stopPropagation();
-		return false;
+		if (!this.fireMouseEvent) {
+			e.preventDefault();
+			e.stopPropagation();
+			return false;
+		}
 	}
 
 	render() {}
