@@ -1,5 +1,10 @@
 import { LitElement, CSSResult, css } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import {
+	customElement,
+	eventOptions,
+	property,
+	state,
+} from 'lit/decorators.js';
 
 import { HomeAssistant, HapticType, forwardHaptic } from 'custom-card-helpers';
 import { renderTemplate } from 'ha-nunjucks';
@@ -15,6 +20,7 @@ export class BaseRemoteElement extends LitElement {
 	@state() value: string | number = 0;
 	buttonPressStart?: number;
 	buttonPressEnd?: number;
+	fireMouseEvent?: boolean = true;
 
 	fireHapticEvent(haptic: HapticType) {
 		if (
@@ -329,20 +335,45 @@ export class BaseRemoteElement extends LitElement {
 		return true;
 	}
 
-	onMouseDown(_e: MouseEvent | TouchEvent) {}
-	onMouseUp(_e: MouseEvent | TouchEvent) {}
-	onMouseMove(_e: MouseEvent | TouchEvent) {}
+	// Skeletons for overridden event handlers
+	onStart(_e: MouseEvent | TouchEvent) {}
+	onEnd(_e: MouseEvent | TouchEvent) {}
+	onMove(_e: MouseEvent | TouchEvent) {}
+
+	@eventOptions({ passive: true })
+	onMouseDown(e: MouseEvent | TouchEvent) {
+		if (this.fireMouseEvent) {
+			this.onStart(e);
+		}
+		this.fireMouseEvent = true;
+	}
+	onMouseUp(e: MouseEvent | TouchEvent) {
+		if (this.fireMouseEvent) {
+			this.onEnd(e);
+		}
+		this.fireMouseEvent = true;
+	}
+	@eventOptions({ passive: true })
+	onMouseMove(e: MouseEvent | TouchEvent) {
+		if (this.fireMouseEvent) {
+			this.onMove(e);
+		}
+		this.fireMouseEvent = true;
+	}
+
+	@eventOptions({ passive: true })
 	onTouchStart(e: TouchEvent) {
-		e.preventDefault();
-		this.onMouseDown(e);
+		this.onStart(e);
+		this.fireMouseEvent = false;
 	}
 	onTouchEnd(e: TouchEvent) {
-		e.preventDefault();
-		this.onMouseUp(e);
+		this.onEnd(e);
+		this.fireMouseEvent = false;
 	}
+	@eventOptions({ passive: true })
 	onTouchMove(e: TouchEvent) {
-		e.preventDefault();
-		this.onMouseMove(e);
+		this.onMove(e);
+		this.fireMouseEvent = false;
 	}
 
 	render() {}

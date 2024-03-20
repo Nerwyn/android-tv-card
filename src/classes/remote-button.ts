@@ -1,5 +1,5 @@
 import { TemplateResult, CSSResult, html, css } from 'lit';
-import { customElement, eventOptions, property } from 'lit/decorators.js';
+import { customElement, property } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
 import { renderTemplate } from 'ha-nunjucks';
@@ -64,8 +64,7 @@ export class RemoteButton extends BaseRemoteElement {
 		}
 	}
 
-	@eventOptions({ passive: true })
-	onMouseDown(e: TouchEvent | MouseEvent) {
+	onStart(e: TouchEvent | MouseEvent) {
 		this.holdMove = false;
 		if ('targetTouches' in e) {
 			this.initialX = e.targetTouches[0].clientX;
@@ -137,7 +136,7 @@ export class RemoteButton extends BaseRemoteElement {
 		}
 	}
 
-	onMouseUp(e: TouchEvent | MouseEvent) {
+	onEnd(e: TouchEvent | MouseEvent) {
 		if (!this.holdMove) {
 			if (
 				'momentary_end_action' in this.actions &&
@@ -170,8 +169,7 @@ export class RemoteButton extends BaseRemoteElement {
 		}
 	}
 
-	@eventOptions({ passive: true })
-	onMouseMove(e: TouchEvent | MouseEvent) {
+	onMove(e: TouchEvent | MouseEvent) {
 		let currentX: number;
 		let currentY: number;
 		if ('targetTouches' in e) {

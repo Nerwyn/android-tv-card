@@ -1,5 +1,5 @@
 import { html, css } from 'lit';
-import { customElement, eventOptions, state } from 'lit/decorators.js';
+import { customElement, state } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
 import { renderTemplate } from 'ha-nunjucks';
@@ -97,8 +97,7 @@ export class RemoteSlider extends BaseRemoteElement {
 		}
 	}
 
-	@eventOptions({ passive: true })
-	onMouseDown(e: MouseEvent | TouchEvent) {
+	onStart(e: MouseEvent | TouchEvent) {
 		const slider = e.currentTarget as HTMLInputElement;
 
 		if (!this.scrolling) {
@@ -110,7 +109,7 @@ export class RemoteSlider extends BaseRemoteElement {
 		}
 	}
 
-	onMouseUp(e: MouseEvent | TouchEvent) {
+	onEnd(e: MouseEvent | TouchEvent) {
 		const slider = e.currentTarget as HTMLInputElement;
 		this.setTooltip(slider, false);
 		this.setValue();
@@ -144,8 +143,7 @@ export class RemoteSlider extends BaseRemoteElement {
 		);
 	}
 
-	@eventOptions({ passive: true })
-	onMouseMove(e: TouchEvent | MouseEvent) {
+	onMove(e: TouchEvent | MouseEvent) {
 		const slider = e.currentTarget as HTMLInputElement;
 
 		let currentX: number;
