@@ -374,6 +374,10 @@ export class BaseRemoteElement extends LitElement {
 		this.fireMouseEvent = false;
 	}
 
+	onContextMenu(_e: PointerEvent) {
+		return false;
+	}
+
 	render() {}
 
 	static get styles(): CSSResult | CSSResult[] {

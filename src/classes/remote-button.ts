@@ -246,6 +246,7 @@ export class RemoteButton extends BaseRemoteElement {
 				@touchstart=${this.onTouchStart}
 				@touchend=${this.onTouchEnd}
 				@touchmove=${this.onTouchMove}
+				@contextmenu=${this.onContextMenu}
 				.action=${action}
 				.path=${svgPath}
 			>

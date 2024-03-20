@@ -351,6 +351,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 				@touchcancel=${this.onTouchCancel}
 				@focus=${this._rippleHandlers.startFocus}
 				@blur=${this._rippleHandlers.endFocus}
+				@contextmenu=${this.onContextMenu}
 			>
 				<mwc-ripple></mwc-ripple>
 			</toucharea>
