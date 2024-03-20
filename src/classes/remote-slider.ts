@@ -46,7 +46,6 @@ export class RemoteSlider extends BaseRemoteElement {
 			// 	(this.oldValue as unknown as string) ?? this.value ?? '0',
 			// );
 			const end = parseFloat(slider.value ?? start);
-			this.value;
 			// slider.value = start.toString();
 
 			this.newValue = end;
@@ -57,6 +56,7 @@ export class RemoteSlider extends BaseRemoteElement {
 
 			let i = start;
 			if (start > end) {
+				console.log('Going down');
 				const id = setInterval(() => {
 					i -= this.speed;
 					// slider.value = i.toString();
@@ -78,6 +78,7 @@ export class RemoteSlider extends BaseRemoteElement {
 					}
 				}, 1);
 			} else if (start < end) {
+				console.log('Going up');
 				this.sliderOn = true;
 				const id = setInterval(() => {
 					i += this.speed;
