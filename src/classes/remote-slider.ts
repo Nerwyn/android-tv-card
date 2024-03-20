@@ -28,7 +28,8 @@ export class RemoteSlider extends BaseRemoteElement {
 	scrolling: boolean = false;
 	getValueFromHassTimer?: ReturnType<typeof setTimeout>;
 
-	onInput(e: InputEvent) {
+	@eventOptions({ passive: true })
+	onMouseDown(e: MouseEvent | TouchEvent) {
 		const slider = e.currentTarget as HTMLInputElement;
 
 		if (!this.scrolling) {
@@ -97,18 +98,18 @@ export class RemoteSlider extends BaseRemoteElement {
 		}
 	}
 
-	@eventOptions({ passive: true })
-	onMouseDown(e: MouseEvent | TouchEvent) {
-		const slider = e.currentTarget as HTMLInputElement;
+	// @eventOptions({ passive: true })
+	// onMouseDown(e: MouseEvent | TouchEvent) {
+	// 	const slider = e.currentTarget as HTMLInputElement;
 
-		if (!this.scrolling) {
-			this.getValueFromHass = false;
-			clearTimeout(this.getValueFromHassTimer);
-			this.value = slider.value;
-			this.currentValue = slider.value;
-			this.setTooltip(slider, true);
-		}
-	}
+	// 	if (!this.scrolling) {
+	// 		this.getValueFromHass = false;
+	// 		clearTimeout(this.getValueFromHassTimer);
+	// 		this.value = slider.value;
+	// 		this.currentValue = slider.value;
+	// 		this.setTooltip(slider, true);
+	// 	}
+	// }
 
 	onMouseUp(e: MouseEvent | TouchEvent) {
 		const slider = e.currentTarget as HTMLInputElement;
@@ -282,7 +283,6 @@ export class RemoteSlider extends BaseRemoteElement {
 				max="${this.range[1]}"
 				step=${this.step}
 				value="${value}"
-				@input=${this.onInput}
 				@mousedown=${this.onMouseDown}
 				@mouseup=${this.onMouseUp}
 				@mousemove=${this.onMouseMove}
