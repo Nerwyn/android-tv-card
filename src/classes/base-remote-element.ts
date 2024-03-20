@@ -351,14 +351,12 @@ export class BaseRemoteElement extends LitElement {
 		if (this.fireMouseEvent) {
 			this.onEnd(e);
 		}
-		this.fireMouseEvent = true;
 	}
 	@eventOptions({ passive: true })
 	onMouseMove(e: MouseEvent | TouchEvent) {
 		if (this.fireMouseEvent) {
 			this.onMove(e);
 		}
-		this.fireMouseEvent = true;
 	}
 
 	@eventOptions({ passive: true })
