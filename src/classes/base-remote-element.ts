@@ -361,17 +361,17 @@ export class BaseRemoteElement extends LitElement {
 
 	@eventOptions({ passive: true })
 	onTouchStart(e: TouchEvent) {
-		this.onStart(e);
 		this.fireMouseEvent = false;
+		this.onStart(e);
 	}
 	onTouchEnd(e: TouchEvent) {
-		this.onEnd(e);
 		this.fireMouseEvent = false;
+		this.onEnd(e);
 	}
 	@eventOptions({ passive: true })
 	onTouchMove(e: TouchEvent) {
-		this.onMove(e);
 		this.fireMouseEvent = false;
+		this.onMove(e);
 	}
 
 	onContextMenu(e: PointerEvent) {
