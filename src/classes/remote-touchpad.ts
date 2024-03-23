@@ -137,6 +137,11 @@ export class RemoteTouchpad extends BaseRemoteElement {
 
 	onEnd(e: TouchEvent | MouseEvent) {
 		this._rippleHandlers.endPress();
+		if ('targetTouches' in e) {
+			console.log(e.targetTouches)
+		} else {
+			console.log('no targetTouches')
+		}
 
 		if (
 			!this.holdAction &&
