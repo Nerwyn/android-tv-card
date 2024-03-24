@@ -163,6 +163,9 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			e.stopImmediatePropagation();
 			e.preventDefault();
 			this.endAction();
+			if ('targetTouches' in e && e.targetTouches.length) {
+				this.hold = true;
+			}
 		} else if (!('targetTouches' in e) || !e.targetTouches.length) {
 			this.onClick(e);
 		}
