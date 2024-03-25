@@ -1692,7 +1692,7 @@ Result:
 
 ### Example 12
 
-Samsung TV.
+Samsung TV, using [ha-samsungtv-smart](https://github.com/ollo69/ha-samsungtv-smart).
 
 ```yaml
 type: custom:android-tv-card
