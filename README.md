@@ -729,7 +729,7 @@ You can change several other attributes of the slider by setting them in a custo
 | step            | number           | The step size of the slider, defaults to one hundredth of the range.                                |
 | tooltip         | boolean          | Whether or not to display a tooltip with the slider value when it's held down on, defaults to true. |
 
-You can change the entity attribute that the slider tracks by setting `value_attribute` to either `state` or an entity specific attribute.
+You can change the entity attribute that the slider tracks by setting `value_attribute` to either `state` or an entity specific attribute. If the attribute which you wish to use is an array, you can also further include the index at the end of the attribute name in brackets (like `hs_color[0]`).
 
 ```yaml
 custom_actions:

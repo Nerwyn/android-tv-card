@@ -150,25 +150,15 @@ export class BaseRemoteElement extends LitElement {
 			HOLD_SECS: holdSecs ?? 0,
 		};
 		for (const key in data) {
-			data[key] = renderTemplate(this.hass, data[key] as string, context);
-			if (data[key]) {
-				if (data[key] == 'VALUE') {
-					data[key] = this.value;
-				} else if (data[key].toString().includes('VALUE')) {
-					data[key] = data[key]
-						.toString()
-						.replace(/VALUE/g, (this.value ?? '').toString());
+			if (Array.isArray(data[key])) {
+				for (const i in data[key] as string[]) {
+					(data[key] as string[])[i] = this.replaceValue(
+						(data[key] as string[])[i],
+						context,
+					) as string;
 				}
-
-				if (holdSecs) {
-					if (data[key] == 'HOLD_SECS') {
-						data[key] = holdSecs;
-					} else if (data[key].toString().includes('HOLD_SECS')) {
-						data[key] = data[key]
-							.toString()
-							.replace(/HOLD_SECS/g, (holdSecs ?? '').toString());
-					}
-				}
+			} else {
+				data[key] = this.replaceValue(data[key] as string, context);
 			}
 		}
 		this.hass.callService(domain, service, data);
@@ -333,6 +323,37 @@ export class BaseRemoteElement extends LitElement {
 			}
 		}
 		return true;
+	}
+
+	replaceValue(
+		str: string | number | boolean,
+		context: object,
+	): string | number | boolean {
+		str = renderTemplate(this.hass, str as string, context);
+
+		if (str) {
+			if (str == 'VALUE') {
+				str = this.value;
+			} else if (str.toString().includes('VALUE')) {
+				str = str
+					.toString()
+					.replace(/VALUE/g, (this.value ?? '').toString());
+			}
+			if ('HOLD_SECS' in context) {
+				if (str == 'HOLD_SECS') {
+					str = context.HOLD_SECS as string;
+				} else if (str.toString().includes('HOLD_SECS')) {
+					str = str
+						.toString()
+						.replace(
+							/HOLD_SECS/g,
+							(context.HOLD_SECS ?? '').toString(),
+						);
+				}
+			}
+		}
+
+		return str;
 	}
 
 	// Skeletons for overridden event handlers

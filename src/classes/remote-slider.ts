@@ -186,7 +186,7 @@ export class RemoteSlider extends BaseRemoteElement {
 				this.hass,
 				(this.actions.tap_action?.data?.entity_id as string) ?? '',
 			) as string;
-			const valueAttribute = renderTemplate(
+			let valueAttribute = renderTemplate(
 				this.hass,
 				this.actions.value_attribute as string,
 			) as string;
@@ -194,8 +194,33 @@ export class RemoteSlider extends BaseRemoteElement {
 				if (valueAttribute.toLowerCase() == 'state') {
 					this.value = parseFloat(this.hass.states[entityId].state);
 				} else {
-					let value =
-						this.hass.states[entityId].attributes[valueAttribute];
+					let value;
+					const indexMatch = valueAttribute.match(/\[\d+\]$/);
+
+					if (indexMatch) {
+						const index = parseInt(
+							indexMatch[0].replace(/\[|\]/g, ''),
+						);
+						valueAttribute = valueAttribute.replace(
+							indexMatch[0],
+							'',
+						);
+						value =
+							this.hass.states[entityId].attributes[
+								valueAttribute
+							];
+						if (value && value.length) {
+							value = value[index];
+						} else {
+							value == undefined;
+						}
+					} else {
+						value =
+							this.hass.states[entityId].attributes[
+								valueAttribute
+							];
+					}
+
 					if (valueAttribute.toLowerCase() == 'brightness') {
 						value = Math.round((100 * parseInt(value ?? 0)) / 255);
 					}
