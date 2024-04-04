@@ -40,6 +40,9 @@ class AndroidTVCard extends LitElement {
 	customActions: Record<string, IActions> = {};
 	icons: Record<string, string> = {};
 
+	nRows: number = 0;
+	nColumns: number = 0;
+
 	static get properties() {
 		return {
 			hass: {},
@@ -411,11 +414,15 @@ class AndroidTVCard extends LitElement {
 	}
 
 	buildRow(content: TemplateResult[]): TemplateResult {
-		return html` <div class="row">${content}</div> `;
+		this.nRows++;
+		return html` <div class="row" id="row-${this.nRows}">${content}</div> `;
 	}
 
 	buildColumn(content: TemplateResult[]): TemplateResult {
-		return html` <div class="column">${content}</div> `;
+		this.nColumns++;
+		return html`
+			<div class="column" id="column-${this.nColumns}">${content}</div>
+		`;
 	}
 
 	buildButton(elementName: string): TemplateResult {
