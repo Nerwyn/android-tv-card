@@ -680,6 +680,8 @@ class AndroidTVCard extends LitElement {
 
 		const content: TemplateResult[] = [];
 
+		this.nRows = 0;
+		this.nColumns = 0;
 		for (const row of this.config.rows!) {
 			const rowContent = this.buildElements(row as string[]);
 			content.push(rowContent);
