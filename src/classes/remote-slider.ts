@@ -223,9 +223,7 @@ export class RemoteSlider extends BaseRemoteElement {
 					this.hass.states[entityId].attributes.volume_level ?? 0;
 			}
 
-			if (this.oldValue == undefined) {
-				this.oldValue = Number(this.value);
-			}
+			this.oldValue = Number(this.value);
 			if (this.newValue == undefined) {
 				this.newValue = Number(this.value);
 			}
