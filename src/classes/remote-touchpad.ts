@@ -33,7 +33,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 	holdStart: boolean = false;
 	holdMove: boolean = false;
 	holdAction?: DirectionAction;
-	
+
 	targetTouches?: TouchList;
 
 	onClick(e: TouchEvent | MouseEvent) {
@@ -330,17 +330,9 @@ export class RemoteTouchpad extends BaseRemoteElement {
 	}
 
 	render() {
-		const style = structuredClone(this.actions.style ?? {});
-		for (const key in style) {
-			style[key] = renderTemplate(
-				this.hass,
-				style[key] as string,
-			) as string;
-		}
-
 		return html`
 			<toucharea
-				style=${styleMap(style)}
+				style=${styleMap(this.buildStyle(this.actions.style ?? {}))}
 				@mousedown=${this.onMouseDown}
 				@mouseup=${this.onMouseUp}
 				@mousemove=${this.onMouseMove}

@@ -5,6 +5,7 @@ import {
 	property,
 	state,
 } from 'lit/decorators.js';
+import { StyleInfo } from 'lit/directives/style-map.js';
 
 import { HomeAssistant, HapticType, forwardHaptic } from 'custom-card-helpers';
 import { renderTemplate } from 'ha-nunjucks';
@@ -359,6 +360,14 @@ export class BaseRemoteElement extends LitElement {
 		}
 
 		return str;
+	}
+
+	buildStyle(_style: StyleInfo = {}) {
+		const style = structuredClone(_style);
+		for (const key in style) {
+			style[key] = this.replaceValue(style[key] as string) as string;
+		}
+		return style;
 	}
 
 	// Skeletons for overridden event handlers

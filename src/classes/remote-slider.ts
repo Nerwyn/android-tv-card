@@ -53,6 +53,7 @@ export class RemoteSlider extends BaseRemoteElement {
 				const id = setInterval(() => {
 					i -= this.speed;
 					this.currentValue = i;
+					this.setTooltip(slider, this.showTooltip);
 
 					if (end >= i) {
 						clearInterval(id);
@@ -77,6 +78,7 @@ export class RemoteSlider extends BaseRemoteElement {
 					if (end <= i) {
 						clearInterval(id);
 						this.currentValue = end;
+						this.setTooltip(slider, this.showTooltip);
 					}
 				}, 1);
 			} else {
@@ -85,6 +87,9 @@ export class RemoteSlider extends BaseRemoteElement {
 
 			this.oldValue = end;
 		} else {
+			if (this.value == undefined) {
+				this.getValueFromHass = true;
+			}
 			this.setValue();
 			this.currentValue = this.value ?? 0;
 			this.setTooltip(slider, false);
@@ -131,7 +136,7 @@ export class RemoteSlider extends BaseRemoteElement {
 		this.resetGetValueFromHass();
 	}
 
-	onMove(e: TouchEvent | MouseEvent) {
+	onMove(e: MouseEvent | TouchEvent) {
 		const slider = e.currentTarget as HTMLInputElement;
 
 		let currentX: number;
@@ -268,6 +273,8 @@ export class RemoteSlider extends BaseRemoteElement {
 		const tooltipText = `${Number(this.currentValue).toFixed(
 			this.precision,
 		)}`;
+
+		// Deprecated tooltip hide/show field
 		const display = (
 			'tooltip' in this.actions
 				? renderTemplate(
@@ -278,6 +285,7 @@ export class RemoteSlider extends BaseRemoteElement {
 		)
 			? 'initial'
 			: 'none';
+
 		// prettier-ignore
 		return html`
 			<div
@@ -358,17 +366,12 @@ export class RemoteSlider extends BaseRemoteElement {
 			this.precision = 0;
 		}
 
-		const style = structuredClone(this.actions.style ?? {});
-		for (const key in style) {
-			style[key] = renderTemplate(
-				this.hass,
-				style[key] as string,
-			) as string;
-		}
-
 		return html`
 			${this.buildTooltip()}
-			<div class="container" style=${styleMap(style)}>
+			<div
+				class="container"
+				style=${styleMap(this.buildStyle(this.actions.style ?? {}))}
+			>
 				${this.buildBackground()}${this.buildSlider()}
 			</div>
 		`;

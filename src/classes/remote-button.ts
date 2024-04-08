@@ -218,19 +218,11 @@ export class RemoteButton extends BaseRemoteElement {
 			svgPath = this.icons[icon] ?? icon;
 		}
 
-		const style = structuredClone(this.actions.style ?? {});
-		for (const key in style) {
-			style[key] = renderTemplate(
-				this.hass,
-				style[key] as string,
-			) as string;
-		}
-
 		const action = renderTemplate(this.hass, this.actionKey);
 		return html`
 			<ha-icon-button
 				title="${action}"
-				style=${styleMap(style)}
+				style=${styleMap(this.buildStyle(this.actions.style ?? {}))}
 				@mousedown=${this.onMouseDown}
 				@mouseup=${this.onMouseUp}
 				@mousemove=${this.onMouseMove}
