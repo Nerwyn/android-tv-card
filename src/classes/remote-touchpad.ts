@@ -33,9 +33,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 	holdStart: boolean = false;
 	holdMove: boolean = false;
 	holdAction?: DirectionAction;
-
-	initialX?: number;
-	initialY?: number;
+	
 	targetTouches?: TouchList;
 
 	onClick(e: TouchEvent | MouseEvent) {

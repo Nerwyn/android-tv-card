@@ -9,7 +9,7 @@ import { BaseKeyboardElement } from './base-keyboard-element';
 @customElement('remote-textbox')
 export class RemoteTextbox extends BaseKeyboardElement {
 	onEnd(e: TouchEvent | MouseEvent) {
-		if (!this.holdMove) {
+		if (!this.swiping) {
 			e.stopImmediatePropagation();
 
 			const text = prompt('Text Input: ');

@@ -56,6 +56,7 @@ export interface IActions {
 	haptics?: boolean;
 
 	value_attribute?: string;
+	value_from_hass_delay?: boolean;
 	range?: [number, number];
 	step?: number;
 	tooltip?: boolean;

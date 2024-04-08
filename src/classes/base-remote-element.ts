@@ -22,6 +22,10 @@ export class BaseRemoteElement extends LitElement {
 	buttonPressEnd?: number;
 	fireMouseEvent?: boolean = true;
 
+	initialX?: number;
+	initialY?: number;
+	swiping?: boolean;
+
 	fireHapticEvent(haptic: HapticType) {
 		if (
 			renderTemplate(
@@ -37,6 +41,10 @@ export class BaseRemoteElement extends LitElement {
 	endAction() {
 		this.buttonPressStart = undefined;
 		this.buttonPressEnd = undefined;
+
+		this.swiping = false;
+		this.initialX = undefined;
+		this.initialY = undefined;
 	}
 
 	sendAction(actionType: ActionType, actions: IActions = this.actions) {
@@ -141,24 +149,15 @@ export class BaseRemoteElement extends LitElement {
 
 		const [domain, service] = domainService.split('.');
 		const data = structuredClone(action.data);
-		let holdSecs: number = 0;
-		if (this.buttonPressStart && this.buttonPressEnd) {
-			holdSecs = (this.buttonPressEnd - this.buttonPressStart) / 1000;
-		}
-		const context = {
-			VALUE: this.value,
-			HOLD_SECS: holdSecs ?? 0,
-		};
 		for (const key in data) {
 			if (Array.isArray(data[key])) {
 				for (const i in data[key] as string[]) {
 					(data[key] as string[])[i] = this.replaceValue(
 						(data[key] as string[])[i],
-						context,
 					) as string;
 				}
 			} else {
-				data[key] = this.replaceValue(data[key] as string, context);
+				data[key] = this.replaceValue(data[key] as string);
 			}
 		}
 		this.hass.callService(domain, service, data);
@@ -327,28 +326,34 @@ export class BaseRemoteElement extends LitElement {
 
 	replaceValue(
 		str: string | number | boolean,
-		context: object,
+		context?: Record<string, string | number | boolean>,
 	): string | number | boolean {
+		if (!context) {
+			let holdSecs: number = 0;
+			if (this.buttonPressStart && this.buttonPressEnd) {
+				holdSecs = (this.buttonPressEnd - this.buttonPressStart) / 1000;
+			}
+			context = {
+				VALUE: this.value,
+				HOLD_SECS: holdSecs ?? 0,
+			};
+		}
 		str = renderTemplate(this.hass, str as string, context);
 
-		if (str) {
-			if (str == 'VALUE') {
-				str = this.value;
-			} else if (str.toString().includes('VALUE')) {
-				str = str
-					.toString()
-					.replace(/VALUE/g, (this.value ?? '').toString());
-			}
-			if ('HOLD_SECS' in context) {
-				if (str == 'HOLD_SECS') {
-					str = context.HOLD_SECS as string;
-				} else if (str.toString().includes('HOLD_SECS')) {
-					str = str
-						.toString()
-						.replace(
-							/HOLD_SECS/g,
-							(context.HOLD_SECS ?? '').toString(),
-						);
+		// Legacy VALUE interpolation (and others)
+		if (typeof str == 'string') {
+			for (const key in context) {
+				if (key in context) {
+					if (str == key) {
+						str = context[key] as string;
+					} else if (str.toString().includes(key)) {
+						str = str
+							.toString()
+							.replace(
+								new RegExp(key, 'g'),
+								(context[key] ?? '').toString(),
+							);
+					}
 				}
 			}
 		}

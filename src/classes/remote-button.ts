@@ -18,10 +18,6 @@ export class RemoteButton extends BaseRemoteElement {
 	holdInterval?: ReturnType<typeof setInterval>;
 	hold: boolean = false;
 
-	holdMove: boolean = false;
-	initialX?: number;
-	initialY?: number;
-
 	onClick(e: TouchEvent | MouseEvent) {
 		e.stopImmediatePropagation();
 		this.clickCount++;
@@ -65,7 +61,7 @@ export class RemoteButton extends BaseRemoteElement {
 	}
 
 	onStart(e: TouchEvent | MouseEvent) {
-		this.holdMove = false;
+		this.swiping = false;
 		if ('targetTouches' in e) {
 			this.initialX = e.targetTouches[0].clientX;
 			this.initialY = e.targetTouches[0].clientY;
@@ -104,7 +100,7 @@ export class RemoteButton extends BaseRemoteElement {
 					: 500;
 
 			this.holdTimer = setTimeout(() => {
-				if (!this.holdMove) {
+				if (!this.swiping) {
 					this.hold = true;
 
 					if (
@@ -137,7 +133,7 @@ export class RemoteButton extends BaseRemoteElement {
 	}
 
 	onEnd(e: TouchEvent | MouseEvent) {
-		if (!this.holdMove) {
+		if (!this.swiping) {
 			if (
 				'momentary_end_action' in this.actions &&
 				renderTemplate(
@@ -187,13 +183,13 @@ export class RemoteButton extends BaseRemoteElement {
 		const sensitivity = 8;
 		if (Math.abs(Math.abs(diffX) - Math.abs(diffY)) > sensitivity) {
 			this.endAction();
-			this.holdMove = true;
+			this.swiping = true;
 		}
 	}
 
 	onMouseLeave(_e: MouseEvent) {
 		this.endAction();
-		this.holdMove = true;
+		this.swiping = true;
 	}
 
 	endAction() {
@@ -206,10 +202,6 @@ export class RemoteButton extends BaseRemoteElement {
 		this.holdTimer = undefined;
 		this.holdInterval = undefined;
 		this.hold = false;
-
-		this.holdMove = false;
-		this.initialX = undefined;
-		this.initialY = undefined;
 
 		super.endAction();
 	}

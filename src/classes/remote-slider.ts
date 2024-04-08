@@ -8,7 +8,6 @@ import { BaseRemoteElement } from './base-remote-element';
 
 @customElement('remote-slider')
 export class RemoteSlider extends BaseRemoteElement {
-	@state() getValueFromHass: boolean = true;
 	@state() showTooltip: boolean = false;
 	@state() sliderOn: boolean = true;
 	@state() currentValue = this.value;
@@ -23,19 +22,17 @@ export class RemoteSlider extends BaseRemoteElement {
 	precision: number = 2;
 	tooltipPosition: number = 0;
 
-	startX?: number;
-	startY?: number;
-	scrolling: boolean = false;
+	getValueFromHass: boolean = true;
 	getValueFromHassTimer?: ReturnType<typeof setTimeout>;
 
 	onInput(e: InputEvent) {
 		const slider = e.currentTarget as HTMLInputElement;
 
-		if (!this.scrolling) {
+		if (!this.swiping) {
 			this.getValueFromHass = false;
 			clearTimeout(this.getValueFromHassTimer);
-			this.value = slider.value;
 			this.currentValue = slider.value;
+			this.value = slider.value;
 			this.setTooltip(slider, true);
 
 			this.fireHapticEvent('selection');
@@ -92,19 +89,19 @@ export class RemoteSlider extends BaseRemoteElement {
 		} else {
 			this.setValue();
 			slider.value = (this.value ?? 0).toString();
-			this.setTooltip(slider, false);
 			this.currentValue = slider.value;
+			this.setTooltip(slider, false);
 		}
 	}
 
 	onStart(e: MouseEvent | TouchEvent) {
 		const slider = e.currentTarget as HTMLInputElement;
 
-		if (!this.scrolling) {
+		if (!this.swiping) {
 			this.getValueFromHass = false;
 			clearTimeout(this.getValueFromHassTimer);
-			this.value = slider.value;
 			this.currentValue = slider.value;
+			this.value = slider.value;
 			this.setTooltip(slider, true);
 		}
 	}
@@ -114,7 +111,7 @@ export class RemoteSlider extends BaseRemoteElement {
 		this.setTooltip(slider, false);
 		this.setValue();
 
-		if (!this.scrolling) {
+		if (!this.swiping) {
 			if (!this.newValue && this.newValue != 0) {
 				this.newValue = Number(this.value);
 			}
@@ -134,13 +131,8 @@ export class RemoteSlider extends BaseRemoteElement {
 			this.currentValue = slider.value;
 		}
 
-		this.scrolling = false;
-		this.startX = undefined;
-		this.startY = undefined;
-		this.getValueFromHassTimer = setTimeout(
-			() => (this.getValueFromHass = true),
-			1000,
-		);
+		this.endAction();
+		this.resetGetValueFromHass();
 	}
 
 	onMove(e: TouchEvent | MouseEvent) {
@@ -159,16 +151,16 @@ export class RemoteSlider extends BaseRemoteElement {
 			currentY = e.touches[0].clientY;
 		}
 
-		if (this.startY == undefined) {
-			this.startY = currentY;
+		if (this.initialY == undefined) {
+			this.initialY = currentY;
 		}
-		if (this.startX == undefined) {
-			this.startX = currentX;
+		if (this.initialX == undefined) {
+			this.initialX = currentX;
 		} else if (
-			Math.abs(currentX - this.startX) <
-			Math.abs(currentY - this.startY) - 20
+			Math.abs(currentX - this.initialX) <
+			Math.abs(currentY - this.initialY) - 20
 		) {
-			this.scrolling = true;
+			this.swiping = true;
 			this.getValueFromHass = true;
 			this.setValue();
 			slider.value = (this.value ?? 0).toString();
@@ -258,6 +250,19 @@ export class RemoteSlider extends BaseRemoteElement {
 		}
 
 		this.showTooltip = show;
+	}
+
+	resetGetValueFromHass() {
+		const valueFromHassDelay =
+			'value_from_hass_delay' in this.actions
+				? (this.replaceValue(
+						this.actions.value_from_hass_delay as unknown as string,
+				  ) as number)
+				: 1000;
+		this.getValueFromHassTimer = setTimeout(
+			() => (this.getValueFromHass = true),
+			valueFromHassDelay,
+		);
 	}
 
 	buildBackground() {
