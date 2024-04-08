@@ -57,6 +57,7 @@ export class RemoteSlider extends BaseRemoteElement {
 					if (end >= i) {
 						clearInterval(id);
 						this.currentValue = end;
+						this.setTooltip(slider, this.showTooltip);
 						if (
 							this.value == undefined ||
 							(end <= this.range[0] &&
@@ -71,6 +72,7 @@ export class RemoteSlider extends BaseRemoteElement {
 				const id = setInterval(() => {
 					i += this.speed;
 					this.currentValue = i;
+					this.setTooltip(slider, this.showTooltip);
 
 					if (end <= i) {
 						clearInterval(id);
