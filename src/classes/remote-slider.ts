@@ -31,9 +31,7 @@ export class RemoteSlider extends BaseRemoteElement {
 		if (!this.swiping) {
 			this.getValueFromHass = false;
 			clearTimeout(this.getValueFromHassTimer);
-			this.currentValue = slider.value;
 			this.value = slider.value;
-			this.setTooltip(slider, true);
 
 			this.fireHapticEvent('selection');
 
@@ -41,8 +39,10 @@ export class RemoteSlider extends BaseRemoteElement {
 				(this.oldValue as unknown as string) ?? this.value ?? '0',
 			);
 			const end = parseFloat(slider.value ?? start);
-			slider.value = start.toString();
 			this.newValue = end;
+
+			this.currentValue = start;
+			this.setTooltip(slider, true);
 
 			if (end > this.range[0]) {
 				this.sliderOn = true;
@@ -52,13 +52,11 @@ export class RemoteSlider extends BaseRemoteElement {
 			if (start > end) {
 				const id = setInterval(() => {
 					i -= this.speed;
-					slider.value = i.toString();
-					this.currentValue = slider.value;
+					this.currentValue = i;
 
 					if (end >= i) {
 						clearInterval(id);
-						slider.value = end.toString();
-						this.currentValue = slider.value;
+						this.currentValue = end;
 						if (
 							this.value == undefined ||
 							(end <= this.range[0] &&
@@ -72,24 +70,21 @@ export class RemoteSlider extends BaseRemoteElement {
 				this.sliderOn = true;
 				const id = setInterval(() => {
 					i += this.speed;
-					slider.value = i.toString();
-					this.currentValue = slider.value;
+					this.currentValue = i;
 
 					if (end <= i) {
 						clearInterval(id);
-						slider.value = end.toString();
-						this.currentValue = slider.value;
+						this.currentValue = end;
 					}
 				}, 1);
 			} else {
-				slider.value = end.toString();
+				this.currentValue = end;
 			}
 
 			this.oldValue = end;
 		} else {
 			this.setValue();
-			slider.value = (this.value ?? 0).toString();
-			this.currentValue = slider.value;
+			this.currentValue = this.value ?? 0;
 			this.setTooltip(slider, false);
 		}
 	}
@@ -127,8 +122,7 @@ export class RemoteSlider extends BaseRemoteElement {
 				this.getValueFromHass = true;
 			}
 			this.setValue();
-			slider.value = (this.value ?? 0).toString();
-			this.currentValue = slider.value;
+			this.currentValue = this.value ?? 0;
 		}
 
 		this.endAction();
@@ -163,8 +157,7 @@ export class RemoteSlider extends BaseRemoteElement {
 			this.swiping = true;
 			this.getValueFromHass = true;
 			this.setValue();
-			slider.value = (this.value ?? 0).toString();
-			this.currentValue = slider.value;
+			this.currentValue = this.value ?? 0;
 			this.setTooltip(slider, false);
 			this.sliderOn = !(
 				this.value == undefined || Number(this.value) <= this.range[0]
