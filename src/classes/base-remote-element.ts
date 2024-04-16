@@ -374,10 +374,16 @@ export class BaseRemoteElement extends LitElement {
 		return str;
 	}
 
-	buildStyle(_style: StyleInfo = {}) {
+	buildStyle(
+		_style: StyleInfo = {},
+		context?: Record<string, string | number | boolean>,
+	) {
 		const style = structuredClone(_style);
 		for (const key in style) {
-			style[key] = this.replaceValue(style[key] as string) as string;
+			style[key] = this.replaceValue(
+				style[key] as string,
+				context,
+			) as string;
 		}
 		return style;
 	}

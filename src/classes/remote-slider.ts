@@ -1,6 +1,6 @@
 import { html, css } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
-import { styleMap } from 'lit/directives/style-map.js';
+import { StyleInfo, styleMap } from 'lit/directives/style-map.js';
 
 import { renderTemplate } from 'ha-nunjucks';
 
@@ -268,31 +268,34 @@ export class RemoteSlider extends BaseRemoteElement {
 	}
 
 	buildTooltip() {
-		const tooltipText = `${Number(this.currentValue).toFixed(
-			this.precision,
-		)}`;
+		const context = {
+			VALUE: `${Number(this.currentValue).toFixed(this.precision)}`,
+			X_POSITION: this.tooltipPosition.toString(),
+		};
+		const style: StyleInfo = {
+			...this.buildStyle(this.actions.tooltip_style ?? {}, context),
+		};
 
 		// Deprecated tooltip hide/show field
-		const display = (
-			'tooltip' in this.actions
-				? renderTemplate(
-						this.hass,
-						this.actions.tooltip as unknown as string,
-				  )
-				: true
-		)
-			? 'initial'
-			: 'none';
+		if ('tooltip' in this.actions) {
+			style.display = (
+				this.actions
+					? renderTemplate(
+							this.hass,
+							this.actions.tooltip as unknown as string,
+					  )
+					: true
+			)
+				? 'initial'
+				: 'none';
+		}
 
 		// prettier-ignore
 		return html`
 			<div
 				class="tooltip ${this.showTooltip ? 'faded-in' : 'faded-out'}"
-				style=${styleMap({
-					'--x-position': this.tooltipPosition.toString() + 'px',
-					display: display
-				})}
-			>${tooltipText}</div>
+				style=${styleMap(style)}
+			></div>
 		`;
 	}
 
@@ -364,6 +367,18 @@ export class RemoteSlider extends BaseRemoteElement {
 			this.precision = 0;
 		}
 
+		this.actions.tooltip_style = {
+			'--tooltip-label':
+				'--tooltip-label' in (this.actions?.style ?? {})
+					? this.actions.style!['--tooltip-label']
+					: '{{ VALUE }}',
+			'--tooltip-x-position':
+				'--tooltip-x-position' in (this.actions?.style ?? {})
+					? this.actions.style!['--tooltip-x-position']
+					: '{{ X_POSITION }}px',
+			...this.actions.tooltip_style,
+		};
+
 		return html`
 			${this.buildTooltip()}
 			<div
@@ -392,6 +407,12 @@ export class RemoteSlider extends BaseRemoteElement {
 				overflow: visible;
 				font-size: inherit;
 				color: inherit;
+
+				--color: var(--primary-text-color);
+				--height: 50px;
+				--background: var(--primary-background-color);
+				--background-height: 50px;
+				--border-radius: 25px;
 			}
 
 			.container {
@@ -399,12 +420,6 @@ export class RemoteSlider extends BaseRemoteElement {
 				overflow: hidden;
 				height: var(--height);
 				border-radius: var(--border-radius);
-
-				--color: var(--primary-text-color);
-				--height: 50px;
-				--background: var(--primary-background-color);
-				--background-height: 50px;
-				--border-radius: 25px;
 			}
 
 			.slider-background {
@@ -470,8 +485,7 @@ export class RemoteSlider extends BaseRemoteElement {
 				width: fit-content;
 				line-height: 20px;
 				top: -29px;
-				transform: translateX(var(--x-position));
-				--x-position: 0px;
+				transform: translateX(var(--tooltip-x-position));
 			}
 			.faded-out {
 				opacity: 0;
@@ -483,6 +497,9 @@ export class RemoteSlider extends BaseRemoteElement {
 			.faded-in {
 				opacity: 1;
 				transition: opacity 540ms ease-in-out 0s;
+			}
+			.tooltip::after {
+				content: var(--tooltip-label);
 			}
 		`;
 	}

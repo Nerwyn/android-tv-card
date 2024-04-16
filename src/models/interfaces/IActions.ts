@@ -62,13 +62,13 @@ export interface IAction {
 export interface IActions {
 	icon?: string;
 	style?: StyleInfo;
+	tooltip_style?: StyleInfo;
 	haptics?: boolean;
 
 	value_attribute?: string;
 	value_from_hass_delay?: boolean;
 	range?: [number, number];
 	step?: number;
-	tooltip?: boolean;
 
 	tap_action?: IAction;
 	hold_action?: IAction;
