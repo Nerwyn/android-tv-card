@@ -20,7 +20,7 @@ export class RemoteSlider extends BaseRemoteElement {
 	step: number = 0.01;
 
 	precision: number = 2;
-	tooltipPosition: number = 0;
+	tooltipOffset: number = 0;
 
 	getValueFromHass: boolean = true;
 	getValueFromHassTimer?: ReturnType<typeof setTimeout>;
@@ -240,7 +240,7 @@ export class RemoteSlider extends BaseRemoteElement {
 
 	setTooltip(slider: HTMLInputElement, show: boolean) {
 		if (show) {
-			this.tooltipPosition = Math.round(
+			this.tooltipOffset = Math.round(
 				(slider.offsetWidth / (this.range[1] - this.range[0])) *
 					(Number(this.currentValue) -
 						(this.range[0] + this.range[1]) / 2),
@@ -270,7 +270,7 @@ export class RemoteSlider extends BaseRemoteElement {
 	buildTooltip() {
 		const context = {
 			VALUE: `${Number(this.currentValue).toFixed(this.precision)}`,
-			X_POSITION: this.tooltipPosition.toString(),
+			POSITION: this.tooltipOffset.toString(),
 		};
 		const style: StyleInfo = {
 			...this.buildStyle(this.actions.tooltip_style ?? {}, context),
@@ -373,10 +373,14 @@ export class RemoteSlider extends BaseRemoteElement {
 				'--tooltip-label' in (this.actions?.style ?? {})
 					? this.actions.style!['--tooltip-label']
 					: '{{ VALUE }}',
-			'--tooltip-x-position':
-				'--tooltip-x-position' in (this.actions?.style ?? {})
-					? this.actions.style!['--tooltip-x-position']
-					: '{{ X_POSITION }}px',
+			'--tooltip-offset':
+				'--tooltip-offset' in (this.actions?.style ?? {})
+					? this.actions.style!['--tooltip-offset']
+					: '{{ POSITION }}px',
+			'--tooltip-transform':
+				'--tooltip-transform' in (this.actions?.style ?? {})
+					? this.actions.style!['--tooltip-transform']
+					: 'translateX(var(--tooltip-x-position))',
 			...this.actions.tooltip_style,
 		};
 
@@ -486,7 +490,7 @@ export class RemoteSlider extends BaseRemoteElement {
 				width: fit-content;
 				line-height: 20px;
 				top: -29px;
-				transform: translateX(var(--tooltip-x-position));
+				transform: var(--tooltip-transform);
 			}
 			.faded-out {
 				opacity: 0;
