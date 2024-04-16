@@ -9,6 +9,7 @@ export type Action =
 	| 'url'
 	| 'assist'
 	| 'more-info'
+	| 'fire-dom-event'
 	| 'none';
 
 export interface IData {
@@ -24,6 +25,12 @@ export interface ITarget {
 export interface IConfirmation {
 	text?: string;
 	exemptions?: [{ user: string }];
+}
+
+export interface IBrowserMod {
+	service?: string;
+	data?: IData;
+	target?: ITarget;
 }
 
 export interface IAction {
@@ -44,6 +51,8 @@ export interface IAction {
 
 	pipeline_id?: string;
 	start_listening?: boolean;
+
+	browser_mod?: IBrowserMod;
 
 	hold_time?: number;
 	repeat_delay?: number;

@@ -23,9 +23,9 @@ export class BaseRemoteElement extends LitElement {
 	buttonPressEnd?: number;
 	fireMouseEvent?: boolean = true;
 
+	swiping?: boolean = false;
 	initialX?: number;
 	initialY?: number;
-	swiping?: boolean;
 
 	fireHapticEvent(haptic: HapticType) {
 		if (
@@ -112,6 +112,9 @@ export class BaseRemoteElement extends LitElement {
 					break;
 				case 'key':
 					this.sendCommand(action.key!, actionType);
+					break;
+				case 'fire-dom-event':
+					this.fireDomEvent(action);
 					break;
 				case 'repeat':
 				case 'none':
@@ -235,6 +238,15 @@ export class BaseRemoteElement extends LitElement {
 			composed: true,
 		});
 		event.detail = { entityId };
+		this.dispatchEvent(event);
+	}
+
+	fireDomEvent(action: IAction) {
+		const event = new Event('ll-custom', {
+			composed: true,
+			bubbles: true,
+		});
+		event.detail = action;
 		this.dispatchEvent(event);
 	}
 

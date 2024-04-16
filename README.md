@@ -39,7 +39,7 @@
 
 - All buttons and the touchpad `center` command support tap, double tap, and long tap [custom actions](#custom-actions).
   - Using the [Home Assistant actions](https://www.home-assistant.io/dashboards/actions/) syntax.
-- Supports the [actions](#action-types) `call-service`, `navigate`, `url`, `assist`, `more-info`, and `none` along with card specific actions `key` and `source`.
+- Supports the [actions](#action-types) `call-service`, `navigate`, `url`, `assist`, `more-info`, and `none` along with card specific actions `key` and `source` and `fire-dom-event`.
 - Double tap actions are not configured by default but can be set on any button or the touchpad.
   - If configured then there will be a default 200ms window before the single tap action is triggered.
   - The [double tap action window](#double-tap-window) can be changed by setting `double_tap_window` globally in the root of the config or for a specific custom action.
@@ -404,17 +404,18 @@ custom_actions:
 
 Actions follow the [Home Assistant actions](https://www.home-assistant.io/dashboards/actions/) syntax. It supports a subset of Home Assistant actions along with `key` and `source`, which are shorthands for remote service calls.
 
-| Action                        | Description                                                                                                                                             |
-| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [key](#key)                   | Send a key to send to the TV via the service call `remote.send_command`.                                                                                |
-| [source](#source)             | Switch to a source via the service call `remote.turn_on`.                                                                                               |
-| [call-service](#call-service) | Call any Home Assistant service.                                                                                                                        |
-| [navigate](#navigate)         | Navigate to another Home Assistant page.                                                                                                                |
-| [url](#url)                   | Navigate to an external URL.                                                                                                                            |
-| [assist](#assist)             | Open the assist dialog. Uses the mobile dialog if available, like in the Home Assistant app.                                                            |
-| [more-info](#more-info)       | Open the more info dialog.                                                                                                                              |
-| [none](#none)                 | Explicilty set a command to do nothing.                                                                                                                 |
-| [repeat](#repeat)             | Repeat the `tap_action` ten times a second while held. Only applicable to `hold_action`, acts as `none` if used in `tap_action` or `double_tap_action`. |
+| Action                            | Description                                                                                                                                             |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [key](#key)                       | Send a key to send to the TV via the service call `remote.send_command`.                                                                                |
+| [source](#source)                 | Switch to a source via the service call `remote.turn_on`.                                                                                               |
+| [call-service](#call-service)     | Call any Home Assistant service.                                                                                                                        |
+| [navigate](#navigate)             | Navigate to another Home Assistant page.                                                                                                                |
+| [url](#url)                       | Navigate to an external URL.                                                                                                                            |
+| [assist](#assist)                 | Open the assist dialog. Uses the mobile dialog if available, like in the Home Assistant app.                                                            |
+| [more-info](#more-info)           | Open the more info dialog.                                                                                                                              |
+| [fire-dom-event](#fire-dom-event) | Fire a browser dom event using whatever information is in the Action object. Useful for opening browser-mod popup cards.                                |
+| [repeat](#repeat)                 | Repeat the `tap_action` ten times a second while held. Only applicable to `hold_action`, acts as `none` if used in `tap_action` or `double_tap_action`. |
+| [none](#none)                     | Explicilty set a command to do nothing.                                                                                                                 |
 
 Most actions have a set of possible options associated with them. If `action` is not provided the card will guess which type of action it is by the options used.
 
@@ -538,18 +539,26 @@ _The following options are only available in the mobile assist dialog._
 | -------------- | ----------------------------------------------- |
 | data.entity_id | The entity ID to open the more info dialog for. |
 
-#### none
+#### fire-dom-event
 
-None. This action does nothing.
+| Name        | Description                                                                                                                                                       |
+| ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| browser_mod | A field expected by [browser mod](https://github.com/thomasloven/hass-browser_mod?tab=readme-ov-file#how-do-i-update-a-popup-from-the-browser-mod-15) for popups. |
 
 ```yaml
 custom_actions:
-  volume_up:
-    hold_action:
-      action: none # volume up will no longer repeat while held
-  back:
+  map:
+    icon: mdi:map
     tap_action:
-      action: none # you can no longer go back
+      action: fire-dom-event
+      browser_mod:
+        service: browser_mod.more_info
+        data:
+          large: true
+          entity: zone.home
+          ignore_popup_card: false
+        target:
+          entity: THIS
 ```
 
 #### repeat
@@ -576,6 +585,20 @@ custom_actions:
     hold_action:
       action: repeat # light will be toggled repeatedly while held
     repeat_delay: 1000
+```
+
+#### none
+
+None. This action does nothing.
+
+```yaml
+custom_actions:
+  volume_up:
+    hold_action:
+      action: none # volume up will no longer repeat while held
+  back:
+    tap_action:
+      action: none # you can no longer go back
 ```
 
 ### Momentary Button Mode
