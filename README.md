@@ -750,7 +750,6 @@ You can change several other attributes of the slider by setting them in a custo
 | value_attribute | string           | An entity attribute (or state) for the slider to track, defaults to `volume_level`                          |
 | range           | [number, number] | The range of the slider, defaults to [0,1].                                                                 |
 | step            | number           | The step size of the slider, defaults to one hundredth of the range.                                        |
-| tooltip_style   | IStyle           | Custom style for the tooltip. Includes `--x-position` for the tooltip location and `--label` for it's text. |
 
 You can change the entity attribute that the slider tracks by setting `value_attribute` to either `state` or an entity specific attribute. If the attribute which you wish to use is an array, you can also further include the index at the end of the attribute name in brackets (like `hs_color[0]`).
 

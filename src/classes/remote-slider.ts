@@ -272,9 +272,19 @@ export class RemoteSlider extends BaseRemoteElement {
 			VALUE: `${Number(this.currentValue).toFixed(this.precision)}`,
 			POSITION: this.tooltipOffset.toString(),
 		};
-		const style: StyleInfo = {
-			...this.buildStyle(this.actions.tooltip_style ?? {}, context),
-		};
+		const style: StyleInfo = this.buildStyle(
+			{
+				'--tooltip-label':
+					this.actions?.style?.['--tooltip-label'] ?? '{{ VALUE }}',
+				'--tooltip-offset':
+					this.actions?.style?.['--tooltip-offset'] ??
+					'{{ POSITION }}px',
+				'--tooltip-transform':
+					this.actions?.style?.['--tooltip-transform'] ??
+					'translateX(var(--tooltip-offset))',
+			},
+			context,
+		);
 		style['--tooltip-label'] = `"${style['--tooltip-label']}"`;
 
 		// Deprecated tooltip hide/show field
@@ -367,22 +377,6 @@ export class RemoteSlider extends BaseRemoteElement {
 		} else {
 			this.precision = 0;
 		}
-
-		this.actions.tooltip_style = {
-			'--tooltip-label':
-				'--tooltip-label' in (this.actions?.style ?? {})
-					? this.actions.style!['--tooltip-label']
-					: '{{ VALUE }}',
-			'--tooltip-offset':
-				'--tooltip-offset' in (this.actions?.style ?? {})
-					? this.actions.style!['--tooltip-offset']
-					: '{{ POSITION }}px',
-			'--tooltip-transform':
-				'--tooltip-transform' in (this.actions?.style ?? {})
-					? this.actions.style!['--tooltip-transform']
-					: 'translateX(var(--tooltip-x-position))',
-			...this.actions.tooltip_style,
-		};
 
 		return html`
 			${this.buildTooltip()}

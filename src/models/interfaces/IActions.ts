@@ -62,7 +62,6 @@ export interface IAction {
 export interface IActions {
 	icon?: string;
 	style?: StyleInfo;
-	tooltip_style?: StyleInfo;
 	haptics?: boolean;
 
 	value_attribute?: string;
