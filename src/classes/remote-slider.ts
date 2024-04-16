@@ -276,8 +276,8 @@ export class RemoteSlider extends BaseRemoteElement {
 			...this.buildStyle(this.actions.tooltip_style ?? {}, context),
 		};
 		style[
-			'--tooltip-x-positition'
-		] = `"${style['--tooltip-x-positition']}"`;
+			'--tooltip-x-position'
+		] = `"${style['--tooltip-x-position']}"`;
 
 		// Deprecated tooltip hide/show field
 		if ('tooltip' in this.actions) {
