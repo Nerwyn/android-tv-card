@@ -270,7 +270,7 @@ export class RemoteSlider extends BaseRemoteElement {
 	buildTooltip() {
 		const context = {
 			VALUE: `${Number(this.currentValue).toFixed(this.precision)}`,
-			POSITION: this.tooltipOffset.toString(),
+			OFFSET: this.tooltipOffset.toString(),
 		};
 		const style: StyleInfo = this.buildStyle(
 			{
@@ -278,7 +278,7 @@ export class RemoteSlider extends BaseRemoteElement {
 					this.actions?.style?.['--tooltip-label'] ?? '{{ VALUE }}',
 				'--tooltip-offset':
 					this.actions?.style?.['--tooltip-offset'] ??
-					'{{ POSITION }}px',
+					'{{ OFFSET }}px',
 				'--tooltip-transform':
 					this.actions?.style?.['--tooltip-transform'] ??
 					'translateX(var(--tooltip-offset))',
