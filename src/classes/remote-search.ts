@@ -1,7 +1,5 @@
 import { customElement } from 'lit/decorators.js';
 
-import { renderTemplate } from 'ha-nunjucks';
-
 import { IData } from '../models';
 
 import { BaseKeyboardElement } from './base-keyboard-element';
@@ -14,11 +12,9 @@ export class RemoteSearch extends BaseKeyboardElement {
 			this.fireHapticEvent('light');
 
 			let promptText: string;
-			const entityId = renderTemplate(this.hass, this.keyboardId);
+			const entityId = this.renderTemplate(this.keyboardId);
 			switch (
-				(
-					renderTemplate(this.hass, this.keyboardMode) as string
-				).toUpperCase()
+				(this.renderTemplate(this.keyboardMode) as string).toUpperCase()
 			) {
 				case 'KODI':
 					promptText = 'Global Search: ';
@@ -48,7 +44,7 @@ export class RemoteSearch extends BaseKeyboardElement {
 				};
 				switch (
 					(
-						renderTemplate(this.hass, this.keyboardMode) as string
+						this.renderTemplate(this.keyboardMode) as string
 					).toUpperCase()
 				) {
 					case 'KODI':

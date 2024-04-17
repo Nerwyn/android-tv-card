@@ -2,8 +2,6 @@ import { html, css } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import { StyleInfo, styleMap } from 'lit/directives/style-map.js';
 
-import { renderTemplate } from 'ha-nunjucks';
-
 import { BaseRemoteElement } from './base-remote-element';
 
 @customElement('remote-slider')
@@ -174,12 +172,10 @@ export class RemoteSlider extends BaseRemoteElement {
 
 	setValue() {
 		if (this.getValueFromHass) {
-			const entityId = renderTemplate(
-				this.hass,
+			const entityId = this.renderTemplate(
 				(this.actions.tap_action?.data?.entity_id as string) ?? '',
 			) as string;
-			let valueAttribute = renderTemplate(
-				this.hass,
+			let valueAttribute = this.renderTemplate(
 				this.actions.value_attribute as string,
 			) as string;
 			if (valueAttribute) {
@@ -253,7 +249,7 @@ export class RemoteSlider extends BaseRemoteElement {
 	resetGetValueFromHass() {
 		const valueFromHassDelay =
 			'value_from_hass_delay' in this.actions
-				? (this.replaceValue(
+				? (this.renderTemplate(
 						this.actions.value_from_hass_delay as unknown as string,
 				  ) as number)
 				: 1000;
@@ -291,8 +287,7 @@ export class RemoteSlider extends BaseRemoteElement {
 		if ('tooltip' in this.actions) {
 			style.display = (
 				this.actions
-					? renderTemplate(
-							this.hass,
+					? this.renderTemplate(
 							this.actions.tooltip as unknown as string,
 					  )
 					: true
@@ -346,14 +341,12 @@ export class RemoteSlider extends BaseRemoteElement {
 
 		if ('range' in this.actions) {
 			this.range[0] = parseFloat(
-				renderTemplate(
-					this.hass,
+				this.renderTemplate(
 					this.actions.range![0] as unknown as string,
 				) as string,
 			);
 			this.range[1] = parseFloat(
-				renderTemplate(
-					this.hass,
+				this.renderTemplate(
 					this.actions.range![1] as unknown as string,
 				) as string,
 			);
@@ -363,10 +356,7 @@ export class RemoteSlider extends BaseRemoteElement {
 
 		if ('step' in this.actions) {
 			this.step = Number(
-				renderTemplate(
-					this.hass,
-					this.actions.step as unknown as string,
-				),
+				this.renderTemplate(this.actions.step as unknown as string),
 			);
 		} else {
 			this.step = (this.range[1] - this.range[0]) / 100;

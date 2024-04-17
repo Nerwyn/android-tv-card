@@ -164,10 +164,13 @@ rows:
 
 ## Basic
 
-| Name  | Type   | Description                          |
-| ----- | ------ | ------------------------------------ |
-| type  | string | Must be `custom:android-tv-card`     |
-| title | string | Title to display in the card header. |
+| Name               | Type    | Description                                                                                                                                                         |
+| ------------------ | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| type               | string  | Must be `custom:android-tv-card`                                                                                                                                    |
+| title              | string  | Title to display in the card header.                                                                                                                                |
+| remote_id          | string  | The `remote` entity id to control, required for default `key` and `source` actions. Also autofills into service call data when `autofill_entity_id` is set to true. |
+| media_player_id    | string  | A `media_player` entity ID to autofill into service call data when `autofill_entity_id` is set to true. Also populates `slider_id` if it is not present.            |
+| autofill_entity_id | boolean | Enable autofilling of the entity ID of `remote` and `media_player` service calls if no target IDs are provided, defaults to `false`.                                |
 
 All fields are technically optional except for `type`, but the card will not function unless you customize it using the above options.
 Using only these options you will get an empty card (or almost empty, if you set a title).
@@ -177,7 +180,6 @@ Using only these options you will get an empty card (or almost empty, if you set
 | Name                                     | Type     | Description                                                                                                                                                                                                                              |
 | ---------------------------------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | rows                                     | string[] | Defines the buttons used in the card. Each row within rows defines a row of buttons (or slider and touchpad). Sub-arrays within these rows will display as columns, and sub-arrays within those will alternate between rows and columns. |
-| remote_id                                | string   | The `remote` entity id to control, required for default commands.                                                                                                                                                                        |
 | button_haptics                           | boolean  | Enable haptics on the buttons, defaults to `true`.                                                                                                                                                                                       |
 | button_style                             | object   | CSS style to apply to all buttons.                                                                                                                                                                                                       |
 | [hold_time](#hold-time)                  | number   | The time needed to trigger a hold action when holding down a button or the touchpad. Defaults to 500ms.                                                                                                                                  |
@@ -745,11 +747,11 @@ custom_actions:
 
 You can change several other attributes of the slider by setting them in a custom action for the slider.
 
-| Name            | Type             | Description                                                                                                 |
-| --------------- | ---------------- | ----------------------------------------------------------------------------------------------------------- |
-| value_attribute | string           | An entity attribute (or state) for the slider to track, defaults to `volume_level`                          |
-| range           | [number, number] | The range of the slider, defaults to [0,1].                                                                 |
-| step            | number           | The step size of the slider, defaults to one hundredth of the range.                                        |
+| Name            | Type             | Description                                                                        |
+| --------------- | ---------------- | ---------------------------------------------------------------------------------- |
+| value_attribute | string           | An entity attribute (or state) for the slider to track, defaults to `volume_level` |
+| range           | [number, number] | The range of the slider, defaults to [0,1].                                        |
+| step            | number           | The step size of the slider, defaults to one hundredth of the range.               |
 
 You can change the entity attribute that the slider tracks by setting `value_attribute` to either `state` or an entity specific attribute. If the attribute which you wish to use is an array, you can also further include the index at the end of the attribute name in brackets (like `hs_color[0]`).
 
@@ -811,7 +813,7 @@ Touchpad style and haptics can be set at the root level.
 
 The touchpad can be customized using `custom_actions` so that it can be used with other devices. The touchpad acts as a `center` button but also supports touch swipes to send the keys `up`, `down`, `left`, and `right`. You can remap touchpad commands by creating custom actions for these actions. This includes remapping the `center` key hold and double tap actions, along with turning the touchpad into a momentary button.
 
-Like buttons, double tap actions introduces a 200ms delay to single taps, and the hold action default adds `hold_secs: 0.5` to the service call data. Double tap and hold actions cannot be added to touchpad directional swipes, just the `center` action.
+Like buttons, double tap actions introduces a 200ms delay to single taps, and the hold action default adds `hold_secs: 0.5` to the `remote.send_command` data. Double tap and hold actions cannot be added to touchpad directional swipes, just the `center` action.
 
 In addition to regular tap, hold, and double tap actions, the touchpad can also be programmed with multi touch actions by creating custom actions for `multi_tap_action`, `multi_hold_action`, and `multi_double_tap_action`. These actions are triggered by perform a tap, double tap, or hold tap action with more than one finger for `center`, or a single swipe or hold swipe with more than one finger for `up`, `down`, `left`, and `right`.
 

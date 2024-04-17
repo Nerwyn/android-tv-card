@@ -5,8 +5,6 @@ import { styleMap } from 'lit/directives/style-map.js';
 import { Ripple } from '@material/mwc-ripple';
 import { RippleHandlers } from '@material/mwc-ripple/ripple-handlers';
 
-import { renderTemplate } from 'ha-nunjucks';
-
 import { IActions, ActionType, DirectionAction } from '../models';
 
 import { BaseRemoteElement } from './base-remote-element';
@@ -43,13 +41,11 @@ export class RemoteTouchpad extends BaseRemoteElement {
 
 		if (
 			('double_tap_action' in this.actions &&
-				renderTemplate(
-					this.hass,
+				this.renderTemplate(
 					this.actions.double_tap_action!.action as string,
 				) != 'none') ||
 			('multi_double_tap_action' in this.actions &&
-				renderTemplate(
-					this.hass,
+				this.renderTemplate(
 					this.actions.multi_double_tap_action!.action as string,
 				) != 'none')
 		) {
@@ -67,8 +63,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 					const doubleTapWindow: number =
 						'double_tap_window' in
 						(this.actions[doubleTapAction] ?? {})
-							? (renderTemplate(
-									this.hass,
+							? (this.renderTemplate(
 									this.actions[doubleTapAction]!
 										.double_tap_window as unknown as string,
 							  ) as number)
@@ -95,10 +90,8 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		if (
 			!this.holdAction &&
 			'momentary_start_action' in this.actions &&
-			renderTemplate(
-				this.hass,
-				this.actions.momentary_start_action!.action,
-			) != 'none'
+			this.renderTemplate(this.actions.momentary_start_action!.action) !=
+				'none'
 		) {
 			this.fireHapticEvent('light');
 			this.buttonPressStart = performance.now();
@@ -106,10 +99,8 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		} else if (
 			!this.holdAction &&
 			'momentary_end_action' in this.actions &&
-			renderTemplate(
-				this.hass,
-				this.actions.momentary_end_action!.action,
-			) != 'none'
+			this.renderTemplate(this.actions.momentary_end_action!.action) !=
+				'none'
 		) {
 			this.fireHapticEvent('light');
 			this.buttonPressStart = performance.now();
@@ -139,10 +130,8 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		if (
 			!this.holdAction &&
 			'momentary_end_action' in this.actions &&
-			renderTemplate(
-				this.hass,
-				this.actions.momentary_end_action!.action,
-			) != 'none'
+			this.renderTemplate(this.actions.momentary_end_action!.action) !=
+				'none'
 		) {
 			this.buttonPressEnd = performance.now();
 			this.fireHapticEvent('selection');
@@ -151,10 +140,8 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		} else if (
 			!this.holdAction &&
 			'momentary_start_action' in this.actions &&
-			renderTemplate(
-				this.hass,
-				this.actions.momentary_start_action!.action,
-			) != 'none'
+			this.renderTemplate(this.actions.momentary_start_action!.action) !=
+				'none'
 		) {
 			this.endAction();
 		} else if (this.hold || this.holdMove) {
@@ -269,8 +256,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 
 		const holdTime =
 			'hold_time' in (actions[holdAction as ActionType] ?? {})
-				? (renderTemplate(
-						this.hass,
+				? (this.renderTemplate(
 						actions[holdAction as ActionType]!
 							.hold_time as unknown as string,
 				  ) as number)
@@ -284,28 +270,23 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			const actionType = this.getMultiPrefix();
 
 			let repeat =
-				renderTemplate(
-					this.hass,
-					actions.hold_action?.action as string,
-				) == 'repeat';
+				this.renderTemplate(actions.hold_action?.action as string) ==
+				'repeat';
 			let repeat_delay =
 				'repeat_delay' in (actions.hold_action ?? {})
-					? (renderTemplate(
-							this.hass,
+					? (this.renderTemplate(
 							actions.hold_action!
 								.repeat_delay as unknown as string,
 					  ) as number)
 					: 100;
 			if (actionType == 'multi_' && 'multi_hold_action' in actions) {
 				repeat =
-					renderTemplate(
-						this.hass,
+					this.renderTemplate(
 						actions.multi_hold_action?.action as string,
 					) == 'repeat';
 				repeat_delay =
 					'repeat_delay' in (actions.multi_hold_action ?? {})
-						? (renderTemplate(
-								this.hass,
+						? (this.renderTemplate(
 								actions.multi_hold_action!
 									.repeat_delay as unknown as string,
 						  ) as number)

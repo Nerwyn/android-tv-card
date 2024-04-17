@@ -10,6 +10,8 @@ export interface IConfig {
 	keyboard_id?: string;
 	keyboard_mode?: KeyboardMode;
 	slider_id?: string;
+	media_player_id?: string;
+	autofill_entity_id?: boolean;
 
 	custom_actions?: Record<string, IActions>;
 	custom_icons?: Record<string, string>;

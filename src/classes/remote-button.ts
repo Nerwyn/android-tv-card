@@ -2,8 +2,6 @@ import { TemplateResult, CSSResult, html, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
-import { renderTemplate } from 'ha-nunjucks';
-
 import { BaseRemoteElement } from './base-remote-element';
 
 @customElement('remote-button')
@@ -24,7 +22,7 @@ export class RemoteButton extends BaseRemoteElement {
 
 		if (
 			'double_tap_action' in this.actions &&
-			renderTemplate(this.hass, this.actions.double_tap_action!.action) !=
+			this.renderTemplate(this.actions.double_tap_action!.action) !=
 				'none'
 		) {
 			// Double tap action is defined
@@ -38,8 +36,7 @@ export class RemoteButton extends BaseRemoteElement {
 				const doubleTapWindow: number =
 					'double_tap_window' in
 					(this.actions.double_tap_action ?? {})
-						? (renderTemplate(
-								this.hass,
+						? (this.renderTemplate(
 								this.actions.double_tap_action!
 									.double_tap_window as unknown as string,
 						  ) as number)
@@ -72,28 +69,23 @@ export class RemoteButton extends BaseRemoteElement {
 
 		if (
 			'momentary_start_action' in this.actions &&
-			renderTemplate(
-				this.hass,
-				this.actions.momentary_start_action!.action,
-			) != 'none'
+			this.renderTemplate(this.actions.momentary_start_action!.action) !=
+				'none'
 		) {
 			this.fireHapticEvent('light');
 			this.buttonPressStart = performance.now();
 			this.sendAction('momentary_start_action');
 		} else if (
 			'momentary_end_action' in this.actions &&
-			renderTemplate(
-				this.hass,
-				this.actions.momentary_end_action!.action,
-			) != 'none'
+			this.renderTemplate(this.actions.momentary_end_action!.action) !=
+				'none'
 		) {
 			this.fireHapticEvent('light');
 			this.buttonPressStart = performance.now();
 		} else if (!this.holdTimer) {
 			const holdTime =
 				'hold_time' in (this.actions.hold_action ?? {})
-					? (renderTemplate(
-							this.hass,
+					? (this.renderTemplate(
 							this.actions.hold_action!
 								.hold_time as unknown as string,
 					  ) as number)
@@ -104,15 +96,13 @@ export class RemoteButton extends BaseRemoteElement {
 					this.hold = true;
 
 					if (
-						renderTemplate(
-							this.hass,
+						this.renderTemplate(
 							this.actions.hold_action?.action as string,
 						) == 'repeat'
 					) {
 						const repeat_delay =
 							'repeat_delay' in (this.actions.hold_action ?? {})
-								? (renderTemplate(
-										this.hass,
+								? (this.renderTemplate(
 										this.actions.hold_action!
 											.repeat_delay as unknown as string,
 								  ) as number)
@@ -136,8 +126,7 @@ export class RemoteButton extends BaseRemoteElement {
 		if (!this.swiping) {
 			if (
 				'momentary_end_action' in this.actions &&
-				renderTemplate(
-					this.hass,
+				this.renderTemplate(
 					this.actions.momentary_end_action!.action,
 				) != 'none'
 			) {
@@ -147,8 +136,7 @@ export class RemoteButton extends BaseRemoteElement {
 				this.endAction();
 			} else if (
 				'momentary_start_action' in this.actions &&
-				renderTemplate(
-					this.hass,
+				this.renderTemplate(
 					this.actions.momentary_start_action!.action,
 				) != 'none'
 			) {
@@ -207,8 +195,7 @@ export class RemoteButton extends BaseRemoteElement {
 	}
 
 	render(inputTemplate?: TemplateResult<1>) {
-		const icon =
-			(renderTemplate(this.hass, this.actions.icon!) as string) ?? '';
+		const icon = (this.renderTemplate(this.actions.icon!) as string) ?? '';
 
 		let haIcon = html``;
 		let svgPath;
@@ -218,7 +205,7 @@ export class RemoteButton extends BaseRemoteElement {
 			svgPath = this.icons[icon] ?? icon;
 		}
 
-		const action = renderTemplate(this.hass, this.actionKey);
+		const action = this.renderTemplate(this.actionKey);
 		return html`
 			<ha-icon-button
 				title="${action}"

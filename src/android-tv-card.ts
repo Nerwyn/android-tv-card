@@ -80,7 +80,7 @@ class AndroidTVCard extends LitElement {
 			...structuredClone(defaultKeys),
 		};
 		this.customActions = config.custom_actions || {};
-		if (config.slider_id && !this.customActions.slider?.tap_action) {
+		if ('slider_id' in config && !this.customActions.slider?.tap_action) {
 			this.customActions.slider = {
 				...(this.customActions.slider ?? {}),
 				...this.defaultActions.slider,
@@ -449,7 +449,9 @@ class AndroidTVCard extends LitElement {
 
 		return html`<remote-button
 			.hass=${this.hass}
+			.autofillEntityId=${this.config.autofill_entity_id}
 			.remoteId=${this.config.remote_id}
+			.mediaPlayerId=${this.config.media_player_id}
 			.actions=${actions}
 			.actionKey="${elementName}"
 			.icons=${this.icons}
@@ -532,7 +534,9 @@ class AndroidTVCard extends LitElement {
 
 		return html`<remote-touchpad
 			.hass=${this.hass}
+			.autofillEntityId=${this.config.autofill_entity_id}
 			.remoteId=${this.config.remote_id}
+			.mediaPlayerId=${this.config.media_player_id}
 			.actions=${centerActions}
 			.directionActions=${directionActions}
 		/>`;
@@ -571,7 +575,6 @@ class AndroidTVCard extends LitElement {
 
 		return html`<remote-textbox
 			.hass=${this.hass}
-			.remoteId=${this.config.remote_id}
 			.actions=${actions}
 			.actionKey="textbox"
 			.keyboardId=${this.config.keyboard_id}
@@ -592,7 +595,6 @@ class AndroidTVCard extends LitElement {
 
 		return html`<remote-search
 			.hass=${this.hass}
-			.remoteId=${this.config.remote_id}
 			.actions=${actions}
 			.actionKey="search"
 			.keyboardId=${this.config.keyboard_id}

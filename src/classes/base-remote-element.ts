@@ -16,7 +16,9 @@ import { IConfirmation, IData, IActions, IAction, ActionType } from '../models';
 export class BaseRemoteElement extends LitElement {
 	@property({ attribute: false }) hass!: HomeAssistant;
 	@property({ attribute: false }) actions!: IActions;
+	@property({ attribute: false }) autofillEntityId: boolean = false;
 	@property({ attribute: false }) remoteId?: string;
+	@property({ attribute: false }) mediaPlayerId?: string;
 
 	@state() value: string | number = 0;
 	buttonPressStart?: number;
@@ -29,10 +31,7 @@ export class BaseRemoteElement extends LitElement {
 
 	fireHapticEvent(haptic: HapticType) {
 		if (
-			renderTemplate(
-				this.hass,
-				this.actions.haptics as unknown as string,
-			) ??
+			this.renderTemplate(this.actions.haptics as unknown as string) ??
 			true
 		) {
 			forwardHaptic(haptic);
@@ -129,8 +128,8 @@ export class BaseRemoteElement extends LitElement {
 
 	sendCommand(key: string, actionType: ActionType) {
 		const data: IData = {
-			entity_id: renderTemplate(this.hass, this.remoteId as string),
-			command: renderTemplate(this.hass, key),
+			entity_id: this.renderTemplate(this.remoteId as string),
+			command: this.renderTemplate(key),
 		};
 		if (actionType == 'hold_action' && !('hold_action' in this.actions)) {
 			data.hold_secs = 0.5;
@@ -140,41 +139,65 @@ export class BaseRemoteElement extends LitElement {
 
 	changeSource(source: string) {
 		this.hass.callService('remote', 'turn_on', {
-			entity_id: renderTemplate(this.hass, this.remoteId as string),
-			activity: renderTemplate(this.hass, source),
+			entity_id: this.renderTemplate(this.remoteId as string),
+			activity: this.renderTemplate(source),
 		});
 	}
 
 	callService(action: IAction) {
-		const domainService = renderTemplate(
-			this.hass,
+		const domainService = this.renderTemplate(
 			action.service as string,
 		) as string;
 
 		const [domain, service] = domainService.split('.');
-		const data = structuredClone(action.data);
+		let data = structuredClone(action.data);
 		for (const key in data) {
 			if (Array.isArray(data[key])) {
 				for (const i in data[key] as string[]) {
-					(data[key] as string[])[i] = this.replaceValue(
+					(data[key] as string[])[i] = this.renderTemplate(
 						(data[key] as string[])[i],
 					) as string;
 				}
 			} else {
-				data[key] = this.replaceValue(data[key] as string);
+				data[key] = this.renderTemplate(data[key] as string);
 			}
 		}
+
+		if (this.renderTemplate(this.autofillEntityId)) {
+			let entityId: string | undefined;
+			switch (domain) {
+				case 'remote':
+					entityId = this.remoteId;
+					break;
+				case 'media_player':
+					entityId = this.mediaPlayerId;
+					break;
+				default:
+					break;
+			}
+			if (
+				entityId &&
+				!('entity_id' in (data ?? {})) &&
+				!('device_id' in (data ?? {})) &&
+				!('area_id' in (data ?? {}))
+			) {
+				data = {
+					...data,
+					entity_id: entityId,
+				};
+			}
+		}
+
 		this.hass.callService(domain, service, data);
 	}
 
 	navigate(action: IAction) {
 		const path =
-			(renderTemplate(this.hass, action.navigation_path!) as string) ??
+			(this.renderTemplate(action.navigation_path as string) as string) ??
 			'';
 		const replace =
-			(renderTemplate(
-				this.hass,
-				(action.navigation_replace as unknown as string)!,
+			(this.renderTemplate(
+				action.navigation_replace as unknown as string,
 			) as boolean) ?? false;
 		if (path.includes('//')) {
 			console.error(
@@ -201,7 +224,8 @@ export class BaseRemoteElement extends LitElement {
 	}
 
 	toUrl(action: IAction) {
-		let url = (renderTemplate(this.hass, action.url_path!) as string) ?? '';
+		let url =
+			(this.renderTemplate(action.url_path as string) as string) ?? '';
 		if (!url.includes('//')) {
 			url = `https://${url}`;
 		}
@@ -227,10 +251,7 @@ export class BaseRemoteElement extends LitElement {
 	}
 
 	moreInfo(action: IAction) {
-		const entityId = renderTemplate(
-			this.hass,
-			action.data!.entity_id as string,
-		);
+		const entityId = this.renderTemplate(action.data?.entity_id as string);
 
 		const event = new Event('hass-more-info', {
 			bubbles: true,
@@ -254,8 +275,7 @@ export class BaseRemoteElement extends LitElement {
 		if ('confirmation' in action) {
 			let confirmation = action.confirmation;
 			if (typeof confirmation == 'string') {
-				confirmation = renderTemplate(
-					this.hass,
+				confirmation = this.renderTemplate(
 					action.confirmation as string,
 				) as unknown as boolean;
 			}
@@ -267,22 +287,19 @@ export class BaseRemoteElement extends LitElement {
 					confirmation != true &&
 					'text' in (confirmation as IConfirmation)
 				) {
-					text = renderTemplate(
-						this.hass,
+					text = this.renderTemplate(
 						(confirmation as IConfirmation).text as string,
 					) as string;
 				} else {
 					switch (action.action) {
 						case 'navigate':
-							text = `Are you sure you want to navigate to '${renderTemplate(
-								this.hass,
-								action.navigation_path!,
+							text = `Are you sure you want to navigate to '${this.renderTemplate(
+								action.navigation_path as string,
 							)}'`;
 							break;
 						case 'url':
-							text = `Are you sure you want to navigate to '${renderTemplate(
-								this.hass,
-								action.url_path!,
+							text = `Are you sure you want to navigate to '${this.renderTemplate(
+								action.url_path as string,
 							)}'?`;
 							break;
 						case 'assist':
@@ -291,22 +308,19 @@ export class BaseRemoteElement extends LitElement {
 						case 'none':
 							return false;
 						case 'call-service':
-							text = `Are you sure you want to run action '${renderTemplate(
-								this.hass,
-								action.service!,
+							text = `Are you sure you want to run action '${this.renderTemplate(
+								action.service as string,
 							)}'?`;
 							break;
 						case 'source':
-							text = `Are you sure you want to run action '${renderTemplate(
-								this.hass,
-								action.source!,
+							text = `Are you sure you want to run action '${this.renderTemplate(
+								action.source as string,
 							)}'?`;
 							break;
 						case 'key':
 						default:
-							text = `Are you sure you want to run action '${renderTemplate(
-								this.hass,
-								action.key!,
+							text = `Are you sure you want to run action '${this.renderTemplate(
+								action.key as string,
 							)}'?`;
 							break;
 					}
@@ -320,7 +334,7 @@ export class BaseRemoteElement extends LitElement {
 						if (
 							!(confirmation as IConfirmation)
 								.exemptions!.map((exemption) =>
-									renderTemplate(this.hass, exemption.user),
+									this.renderTemplate(exemption.user),
 								)
 								.includes(this.hass.user.id)
 						) {
@@ -337,7 +351,7 @@ export class BaseRemoteElement extends LitElement {
 		return true;
 	}
 
-	replaceValue(
+	renderTemplate(
 		str: string | number | boolean,
 		context?: Record<string, string | number | boolean>,
 	): string | number | boolean {
@@ -380,7 +394,7 @@ export class BaseRemoteElement extends LitElement {
 	) {
 		const style = structuredClone(_style);
 		for (const key in style) {
-			style[key] = this.replaceValue(
+			style[key] = this.renderTemplate(
 				style[key] as string,
 				context,
 			) as string;
