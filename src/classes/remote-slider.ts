@@ -278,6 +278,8 @@ export class RemoteSlider extends BaseRemoteElement {
 				'--tooltip-transform':
 					this.actions?.style?.['--tooltip-transform'] ??
 					'translateX(var(--tooltip-offset))',
+				'--tooltip-display':
+					this.actions?.style?.['--tooltip-display'] ?? 'initial',
 			},
 			context,
 		);
@@ -285,7 +287,7 @@ export class RemoteSlider extends BaseRemoteElement {
 
 		// Deprecated tooltip hide/show field
 		if ('tooltip' in this.actions) {
-			style.display = (
+			style['--tooltip-display'] = (
 				this.actions
 					? this.renderTemplate(
 							this.actions.tooltip as unknown as string,
@@ -475,6 +477,7 @@ export class RemoteSlider extends BaseRemoteElement {
 				line-height: 20px;
 				top: -29px;
 				transform: var(--tooltip-transform);
+				display: var(--tooltip-display);
 			}
 			.faded-out {
 				opacity: 0;
