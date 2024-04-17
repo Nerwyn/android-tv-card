@@ -722,9 +722,10 @@ custom_actions:
 
 ## Slider
 
-| Name      | Type   | Description                          |
-| --------- | ------ | ------------------------------------ |
-| slider_id | string | The entity id to use for the slider. |
+| Name                  | Type   | Description                                                                                                                                                                                                                             |
+| --------------------- | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| slider_id             | string | The entity id to use for the slider.                                                                                                                                                                                                    |
+| value_from_hass_delay | number | The time the feature will wait after firing an action before it starts retrieving values from Home Assistant again. Useful for preventing bouncing between new and old values if an entity takes a while to update. Defaults to 1000ms. |
 
 By default the slider calls the `media_player.volume_set` service, with `entity_id` set to `slider_id` and `volume_level` set to the slider value.
 
@@ -743,6 +744,7 @@ custom_actions:
       - 255
     step: 1
     value_attribute: brightness
+    value_from_hass_delay: 2000
 ```
 
 You can change several other attributes of the slider by setting them in a custom action for the slider.
