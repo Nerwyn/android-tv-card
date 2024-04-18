@@ -738,7 +738,7 @@ custom_actions:
       service: light.turn_on
       data:
         entity_id: light.sunroom_ceiling
-        brightness: VALUE
+        brightness: '{{ VALUE }}'
     range:
       - 0
       - 255

@@ -455,7 +455,6 @@ class AndroidTVCard extends LitElement {
 			.actions=${actions}
 			.actionKey="${elementName}"
 			.icons=${this.icons}
-			._style=${style}
 		/>`;
 	}
 

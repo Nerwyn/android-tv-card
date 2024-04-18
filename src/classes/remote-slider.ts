@@ -266,6 +266,7 @@ export class RemoteSlider extends BaseRemoteElement {
 	buildTooltip() {
 		const context = {
 			VALUE: `${Number(this.currentValue).toFixed(this.precision)}`,
+			HOLD_SECS: '0',
 			OFFSET: this.tooltipOffset,
 		};
 		const style: StyleInfo = this.buildStyle(
@@ -287,12 +288,8 @@ export class RemoteSlider extends BaseRemoteElement {
 
 		// Deprecated tooltip hide/show field
 		if ('tooltip' in this.actions) {
-			style['--tooltip-display'] = (
-				this.actions
-					? this.renderTemplate(
-							this.actions.tooltip as unknown as string,
-					  )
-					: true
+			style['--tooltip-display'] = this.renderTemplate(
+				this.actions.tooltip as unknown as string,
 			)
 				? 'initial'
 				: 'none';
