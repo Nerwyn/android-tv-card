@@ -20,7 +20,7 @@ export class BaseRemoteElement extends LitElement {
 	@property({ attribute: false }) remoteId?: string;
 	@property({ attribute: false }) mediaPlayerId?: string;
 
-	@state() value: string | number = 0;
+	@state() value: string | number | boolean = 0;
 	buttonPressStart?: number;
 	buttonPressEnd?: number;
 	fireMouseEvent?: boolean = true;

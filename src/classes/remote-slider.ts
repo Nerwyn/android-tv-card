@@ -22,6 +22,7 @@ export class RemoteSlider extends BaseRemoteElement {
 
 	getValueFromHass: boolean = true;
 	getValueFromHassTimer?: ReturnType<typeof setTimeout>;
+	valueUpdateInterval?: ReturnType<typeof setInterval>;
 
 	onInput(e: InputEvent) {
 		const slider = e.currentTarget as HTMLInputElement;
@@ -172,6 +173,9 @@ export class RemoteSlider extends BaseRemoteElement {
 
 	setValue() {
 		if (this.getValueFromHass) {
+			clearInterval(this.valueUpdateInterval);
+			this.valueUpdateInterval = undefined;
+
 			const entityId = this.renderTemplate(
 				(this.actions.tap_action?.data?.entity_id as string) ?? '',
 			) as string;
@@ -182,7 +186,7 @@ export class RemoteSlider extends BaseRemoteElement {
 				if (valueAttribute.toLowerCase() == 'state') {
 					this.value = parseFloat(this.hass.states[entityId].state);
 				} else {
-					let value;
+					let value: string | number | boolean | string[] | number[];
 					const indexMatch = valueAttribute.match(/\[\d+\]$/);
 
 					if (indexMatch) {
@@ -197,7 +201,7 @@ export class RemoteSlider extends BaseRemoteElement {
 							this.hass.states[entityId].attributes[
 								valueAttribute
 							];
-						if (value && value.length) {
+						if (value && Array.isArray(value) && value.length) {
 							value = value[index];
 						} else {
 							value == undefined;
@@ -209,10 +213,47 @@ export class RemoteSlider extends BaseRemoteElement {
 							];
 					}
 
-					if (valueAttribute.toLowerCase() == 'brightness') {
-						value = Math.round((100 * parseInt(value ?? 0)) / 255);
+					switch (valueAttribute) {
+						case 'brightness':
+							this.value = Math.round(
+								(100 * parseInt((value as string) ?? 0)) / 255,
+							);
+							break;
+						case 'media_position':
+							try {
+								this.valueUpdateInterval = setInterval(() => {
+									if (
+										this.hass.states[entityId].state ==
+										'playing'
+									) {
+										this.value = Math.min(
+											Math.floor(
+												Math.floor(value as number) +
+													(Date.now() -
+														Date.parse(
+															this.hass.states[
+																entityId
+															].attributes
+																.media_position_updated_at,
+														)) /
+														1000,
+											),
+											Math.floor(
+												this.hass.states[entityId]
+													.attributes.media_duration,
+											),
+										);
+									}
+								}, 500);
+							} catch (e) {
+								console.error(e);
+								this.value = value as string | number | boolean;
+							}
+							break;
+						default:
+							this.value = value as string | number | boolean;
+							break;
 					}
-					this.value = value;
 				}
 			} else {
 				this.value =
@@ -257,6 +298,13 @@ export class RemoteSlider extends BaseRemoteElement {
 			() => (this.getValueFromHass = true),
 			valueFromHassDelay,
 		);
+	}
+
+	endAction() {
+		clearInterval(this.valueUpdateInterval);
+		this.valueUpdateInterval = undefined;
+
+		super.endAction();
 	}
 
 	buildBackground() {
