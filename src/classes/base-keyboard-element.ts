@@ -7,4 +7,8 @@ import { RemoteButton } from './remote-button';
 export class BaseKeyboardElement extends RemoteButton {
 	@property({ attribute: false }) keyboardId!: string;
 	@property({ attribute: false }) keyboardMode!: KeyboardMode;
+
+	onStart(_e: MouseEvent | TouchEvent) {
+		this.swiping = false;
+	}
 }
