@@ -164,13 +164,13 @@ rows:
 
 ## Basic
 
-| Name               | Type    | Description                                                                                                                                                         |
-| ------------------ | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| type               | string  | Must be `custom:android-tv-card`                                                                                                                                    |
-| title              | string  | Title to display in the card header.                                                                                                                                |
-| remote_id          | string  | The `remote` entity id to control, required for default `key` and `source` actions. Also autofills into service call data when `autofill_entity_id` is set to true. |
-| media_player_id    | string  | A `media_player` entity ID to autofill into service call data when `autofill_entity_id` is set to true. Also populates `slider_id` if it is not present.            |
-| autofill_entity_id | boolean | Enable autofilling of the entity ID of `remote` and `media_player` service calls if no target IDs are provided, defaults to `false`.                                |
+| Name               | Type    | Description                                                                                                                                                                                                  |
+| ------------------ | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| type               | string  | Must be `custom:android-tv-card`                                                                                                                                                                             |
+| title              | string  | Title to display in the card header.                                                                                                                                                                         |
+| remote_id          | string  | The `remote` entity id to control, required for default `key` and `source` actions. Also autofills into service call data when `autofill_entity_id` is set to true.                                          |
+| media_player_id    | string  | A `media_player` entity ID to autofill into service call data when `autofill_entity_id` is set to true. Also populates `slider_id` if it is not present and autofills for the `kodi` and `denonavr` domains. |
+| autofill_entity_id | boolean | Enable autofilling of the entity ID of `remote` and `media_player` service calls if no target IDs are provided, defaults to `false`.                                                                         |
 
 All fields are technically optional except for `type`, but the card will not function unless you customize it using the above options.
 Using only these options you will get an empty card (or almost empty, if you set a title).
@@ -824,88 +824,66 @@ Like buttons, double tap actions introduces a 200ms delay to single taps, and th
 In addition to regular tap, hold, and double tap actions, the touchpad can also be programmed with multi touch actions by creating custom actions for `multi_tap_action`, `multi_hold_action`, and `multi_double_tap_action`. These actions are triggered by perform a tap, double tap, or hold tap action with more than one finger for `center`, or a single swipe or hold swipe with more than one finger for `up`, `down`, `left`, and `right`.
 
 ```yaml
+media_player_id: media_player.kodi
+autofill_entity_id: true
 custom_actions:
   up:
     tap_action:
       service: kodi.call_method
-      target:
-        entity_id: media_player.kodi
       data:
         method: Input.Up
     multi_tap_action:
       service: kodi.call_method
-      target:
-        entity_id: media_player.kodi
       data:
         method: Application.SetVolume
         volume: increment
   down:
     tap_action:
       service: kodi.call_method
-      target:
-        entity_id: media_player.kodi
       data:
         method: Input.Down
     multi_tap_action:
       service: kodi.call_method
-      target:
-        entity_id: media_player.kodi
       data:
         method: Application.SetVolume
         volume: decrement
   left:
     tap_action:
       service: kodi.call_method
-      target:
-        entity_id: media_player.kodi
       data:
         method: Input.Left
   right:
     tap_action:
       service: kodi.call_method
-      target:
-        entity_id: media_player.kodi
       data:
         method: Input.Right
   center:
     tap_action:
       service: kodi.call_method
-      target:
-        entity_id: media_player.kodi
       data:
         method: Input.Select
     double_tap_action:
       service: kodi.call_method
-      target:
-        entity_id: media_player.kodi
       data:
         method: Input.Back
     hold_action:
       service: kodi.call_method
-      target:
-        entity_id: media_player.kodi
       data:
         method: Input.ContextMenu
     multi_tap_action:
       action: call-service
       service: kodi.call_method
-      target:
-        entity_id: media_player.kodi
       data:
         method: Player.PlayPause
         playerid: 1
     multi_hold_action:
       action: call-service
       service: kodi.call_method
-      target:
-        entity_id: media_player.kodi
       data:
         method: Input.Home
     multi_double_tap_action:
       action: call-service
       service: kodi.call_method
-      target:
-        entity_id: media_player.kodi
       data:
         method: Input.Info
 ```
@@ -1143,6 +1121,8 @@ Apple TV.
 ```yaml
 type: custom:android-tv-card
 remote_id: remote.appletv
+media_player_id: media_player.appletv
+autofill_entity_id: true
 rows:
   - - power
     - menu
@@ -1239,64 +1219,48 @@ custom_actions:
       service: media_player.select_source
       data:
         source: Prime Video
-      target:
-        entity_id: media_player.appletv
   netflix:
     tap_action:
       action: call-service
       service: media_player.select_source
       data:
         source: Netflix
-      target:
-        entity_id: media_player.appletv
   spotify:
     tap_action:
       action: call-service
       service: media_player.select_source
       data:
         source: Spotify
-      target:
-        entity_id: media_player.appletv
   disney:
     tap_action:
       action: call-service
       service: media_player.select_source
       data:
         source: Disney+
-      target:
-        entity_id: media_player.appletv
   youtube:
     tap_action:
       action: call-service
       service: media_player.select_source
       data:
         source: YouTube
-      target:
-        entity_id: media_player.appletv
   appletv:
     tap_action:
       action: call-service
       service: media_player.select_source
       data:
         source: TV
-      target:
-        entity_id: media_player.appletv
   max:
     tap_action:
       action: call-service
       service: media_player.select_source
       data:
         source: HBO Max
-      target:
-        entity_id: media_player.appletv
   skyshowtime:
     tap_action:
       action: call-service
       service: media_player.select_source
       data:
         source: SkyShowtime
-      target:
-        entity_id: media_player.appletv
   plex:
     icon: mdi:plex
     tap_action:
@@ -1304,8 +1268,6 @@ custom_actions:
       service: media_player.select_source
       data:
         source: Plex
-      target:
-        entity_id: media_player.appletv
   discovery:
     icon: discovery
     tap_action:
@@ -1313,8 +1275,6 @@ custom_actions:
       service: media_player.select_source
       data:
         source: discovery+
-      target:
-        entity_id: media_player.appletv
   viaplay:
     icon: viaplay
     tap_action:
@@ -1322,8 +1282,6 @@ custom_actions:
       service: media_player.select_source
       data:
         source: Viaplay
-      target:
-        entity_id: media_player.appletv
   tv2play:
     icon: tv2play
     tap_action:
@@ -1331,8 +1289,6 @@ custom_actions:
       service: media_player.select_source
       data:
         source: TV 2 Play
-      target:
-        entity_id: media_player.appletv
   nrktv:
     icon: nrktv
     tap_action:
@@ -1340,8 +1296,6 @@ custom_actions:
       service: media_player.select_source
       data:
         source: NRK TV
-      target:
-        entity_id: media_player.appletv
   allente:
     icon: allente
     tap_action:
@@ -1349,8 +1303,6 @@ custom_actions:
       service: media_player.select_source
       data:
         source: Allente
-      target:
-        entity_id: media_player.appletv
 ```
 
 Result:
@@ -1365,6 +1317,8 @@ Kodi with keyboard and touchpad. Use the [Kodi JSON-RPC API](https://kodi.wiki/v
 type: custom:android-tv-card
 keyboard_id: media_player.kodi
 keyboard_mode: KODI
+media_player_id: media_player.kodi
+autofill_entity_id: true
 rows:
   - - back
     - home
@@ -1388,62 +1342,46 @@ custom_actions:
     tap_action:
       action: call-service
       service: kodi.call_method
-      target:
-        entity_id: media_player.kodi
       data:
         method: Input.Up
   down:
     tap_action:
       action: call-service
       service: kodi.call_method
-      target:
-        entity_id: media_player.kodi
       data:
         method: Input.Down
   left:
     tap_action:
       action: call-service
       service: kodi.call_method
-      target:
-        entity_id: media_player.kodi
       data:
         method: Input.Left
   right:
     tap_action:
       action: call-service
       service: kodi.call_method
-      target:
-        entity_id: media_player.kodi
       data:
         method: Input.Right
   center:
     tap_action:
       action: call-service
       service: kodi.call_method
-      target:
-        entity_id: media_player.kodi
       data:
         method: Input.Select
     double_tap_action:
       action: call-service
       service: kodi.call_method
-      target:
-        entity_id: media_player.kodi
       data:
         method: Input.Back
     hold_action:
       action: call-service
       service: kodi.call_method
-      target:
-        entity_id: media_player.kodi
       data:
         method: Input.ContextMenu
   back:
     tap_action:
       action: call-service
       service: kodi.call_method
-      target:
-        entity_id: media_player.kodi
       data:
         method: Input.Back
   search:
@@ -1458,8 +1396,6 @@ custom_actions:
     tap_action:
       action: call-service
       service: kodi.call_method
-      target:
-        entity_id: media_player.kodi
       data:
         method: Application.SetMute
         mute: toggle
@@ -1467,8 +1403,6 @@ custom_actions:
     tap_action:
       action: call-service
       service: kodi.call_method
-      target:
-        entity_id: media_player.kodi
       data:
         method: Application.SetVolume
         volume: increment
@@ -1476,8 +1410,6 @@ custom_actions:
     tap_action:
       action: call-service
       service: kodi.call_method
-      target:
-        entity_id: media_player.kodi
       data:
         method: Application.SetVolume
         volume: decrement
@@ -1485,32 +1417,24 @@ custom_actions:
     tap_action:
       action: call-service
       service: kodi.call_method
-      target:
-        entity_id: media_player.kodi
       data:
         method: Input.ContextMenu
   home:
     tap_action:
       action: call-service
       service: kodi.call_method
-      target:
-        entity_id: media_player.kodi
       data:
         method: Input.Home
   info:
     tap_action:
       action: call-service
       service: kodi.call_method
-      target:
-        entity_id: media_player.kodi
       data:
         method: Input.Info
   play_pause:
     tap_action:
       action: call-service
       service: kodi.call_method
-      target:
-        entity_id: media_player.kodi
       data:
         method: Player.PlayPause
         playerid: 1
@@ -1561,7 +1485,8 @@ Marantz Receiver.
 
 ```yaml
 type: custom:android-tv-card
-entity_id: media_player.marantz_sr7013
+media_player_id: media_player.marantz_sr7013
+autofill_entity_id: true
 rows:
   - - touchpad
 touchpad_style:
@@ -1571,47 +1496,35 @@ custom_actions:
     tap_action:
       action: call-service
       service: denonavr.get_command
-      target:
-        entity_id: media_player.marantz_sr7013
       data:
         command: /goform/formiPhoneAppDirect.xml?MNCDN
   up:
     tap_action:
       action: call-service
       service: denonavr.get_command
-      target:
-        entity_id: media_player.marantz_sr7013
       data:
         command: /goform/formiPhoneAppDirect.xml?MNCUP
   left:
     tap_action:
       action: call-service
       service: denonavr.get_command
-      target:
-        entity_id: media_player.marantz_sr7013
       data:
         command: /goform/formiPhoneAppDirect.xml?MNCLT
   right:
     tap_action:
       action: call-service
       service: denonavr.get_command
-      target:
-        entity_id: media_player.marantz_sr7013
       data:
         command: /goform/formiPhoneAppDirect.xml?MNCRT
   center:
     tap_action:
       action: call-service
       service: denonavr.get_command
-      target:
-        entity_id: media_player.marantz_sr7013
       data:
         command: /goform/formiPhoneAppDirect.xml?MNENT
     double_tap_action:
       action: call-service
       service: denonavr.get_command
-      target:
-        entity_id: media_player.marantz_sr7013
       data:
         command: /goform/formiPhoneAppDirect.xml?MNRTN
 ```
@@ -1726,7 +1639,8 @@ Samsung TV, using [ha-samsungtv-smart](https://github.com/ollo69/ha-samsungtv-sm
 
 ```yaml
 type: custom:android-tv-card
-slider_id: media_player.samsung_tv
+media_player_id: media_player.samsung_tv
+autofill_entity_id: true
 custom_icons:
   dazn: >-
     m14.774 8.291.772-2.596.79 2.596zm3.848
@@ -1769,7 +1683,6 @@ custom_actions:
       action: call-service
       service: media_player.play_media
       data:
-        entity_id: media_player.samsung_tv
         media_content_type: send_key
         media_content_id: KEY_0
   '1':
@@ -1778,7 +1691,6 @@ custom_actions:
       action: call-service
       service: media_player.play_media
       data:
-        entity_id: media_player.samsung_tv
         media_content_type: send_key
         media_content_id: KEY_1
   '2':
@@ -1787,7 +1699,6 @@ custom_actions:
       action: call-service
       service: media_player.play_media
       data:
-        entity_id: media_player.samsung_tv
         media_content_type: send_key
         media_content_id: KEY_2
   '3':
@@ -1796,7 +1707,6 @@ custom_actions:
       action: call-service
       service: media_player.play_media
       data:
-        entity_id: media_player.samsung_tv
         media_content_type: send_key
         media_content_id: KEY_3
   '4':
@@ -1805,7 +1715,6 @@ custom_actions:
       action: call-service
       service: media_player.play_media
       data:
-        entity_id: media_player.samsung_tv
         media_content_type: send_key
         media_content_id: KEY_4
   '5':
@@ -1814,7 +1723,6 @@ custom_actions:
       action: call-service
       service: media_player.play_media
       data:
-        entity_id: media_player.samsung_tv
         media_content_type: send_key
         media_content_id: KEY_5
   '6':
@@ -1823,7 +1731,6 @@ custom_actions:
       action: call-service
       service: media_player.play_media
       data:
-        entity_id: media_player.samsung_tv
         media_content_type: send_key
         media_content_id: KEY_6
   '7':
@@ -1832,7 +1739,6 @@ custom_actions:
       action: call-service
       service: media_player.play_media
       data:
-        entity_id: media_player.samsung_tv
         media_content_type: send_key
         media_content_id: KEY_7
   '8':
@@ -1841,7 +1747,6 @@ custom_actions:
       action: call-service
       service: media_player.play_media
       data:
-        entity_id: media_player.samsung_tv
         media_content_type: send_key
         media_content_id: KEY_8
   '9':
@@ -1850,7 +1755,6 @@ custom_actions:
       action: call-service
       service: media_player.play_media
       data:
-        entity_id: media_player.samsung_tv
         media_content_type: send_key
         media_content_id: KEY_9
   up:
@@ -1858,7 +1762,6 @@ custom_actions:
       action: call-service
       service: media_player.play_media
       data:
-        entity_id: media_player.samsung_tv
         media_content_type: send_key
         media_content_id: KEY_UP
   down:
@@ -1866,7 +1769,6 @@ custom_actions:
       action: call-service
       service: media_player.play_media
       data:
-        entity_id: media_player.samsung_tv
         media_content_type: send_key
         media_content_id: KEY_DOWN
   left:
@@ -1874,7 +1776,6 @@ custom_actions:
       action: call-service
       service: media_player.play_media
       data:
-        entity_id: media_player.samsung_tv
         media_content_type: send_key
         media_content_id: KEY_LEFT
   right:
@@ -1882,7 +1783,6 @@ custom_actions:
       action: call-service
       service: media_player.play_media
       data:
-        entity_id: media_player.samsung_tv
         media_content_type: send_key
         media_content_id: KEY_RIGHT
   center:
@@ -1890,7 +1790,6 @@ custom_actions:
       action: call-service
       service: media_player.play_media
       data:
-        entity_id: media_player.samsung_tv
         media_content_type: send_key
         media_content_id: KEY_ENTER
   power:
@@ -1898,14 +1797,11 @@ custom_actions:
     tap_action:
       action: call-service
       service: media_player.toggle
-      target:
-        entity_id: media_player.samsung_tv
   home:
     tap_action:
       action: call-service
       service: media_player.play_media
       data:
-        entity_id: media_player.samsung_tv
         media_content_type: send_key
         media_content_id: KEY_HOME
   back:
@@ -1913,7 +1809,6 @@ custom_actions:
       action: call-service
       service: media_player.play_media
       data:
-        entity_id: media_player.samsung_tv
         media_content_type: send_key
         media_content_id: KEY_RETURN
   volume_mute:
@@ -1921,7 +1816,6 @@ custom_actions:
       action: call-service
       service: media_player.play_media
       data:
-        entity_id: media_player.samsung_tv
         media_content_type: send_key
         media_content_id: KEY_MUTE
   ch_up:
@@ -1930,7 +1824,6 @@ custom_actions:
       action: call-service
       service: media_player.play_media
       data:
-        entity_id: media_player.samsung_tv
         media_content_type: send_key
         media_content_id: KEY_CHUP
   ch_down:
@@ -1939,7 +1832,6 @@ custom_actions:
       action: call-service
       service: media_player.play_media
       data:
-        entity_id: media_player.samsung_tv
         media_content_type: send_key
         media_content_id: KEY_CHDOWN
   DAZN:
@@ -1948,7 +1840,6 @@ custom_actions:
       action: call-service
       service: media_player.select_source
       data:
-        entity_id: media_player.samsung_tv
         source: DAZN
   netflix:
     icon: mdi:netflix
@@ -1956,7 +1847,6 @@ custom_actions:
       action: call-service
       service: media_player.select_source
       data:
-        entity_id: media_player.samsung_tv
         source: Netflix
   youtube:
     icon: mdi:youtube
@@ -1964,7 +1854,6 @@ custom_actions:
       action: call-service
       service: media_player.select_source
       data:
-        entity_id: media_player.samsung_tv
         source: YouTube
 rows:
   - - power

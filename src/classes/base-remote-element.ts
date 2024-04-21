@@ -170,6 +170,8 @@ export class BaseRemoteElement extends LitElement {
 					entityId = this.remoteId;
 					break;
 				case 'media_player':
+				case 'kodi':
+				case 'denonavr':
 					entityId = this.mediaPlayerId;
 					break;
 				default:
