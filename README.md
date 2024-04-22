@@ -39,7 +39,7 @@
 
 - All buttons and the touchpad `center` command support tap, double tap, and long tap [custom actions](#custom-actions).
   - Using the [Home Assistant actions](https://www.home-assistant.io/dashboards/actions/) syntax.
-- Supports the [actions](#action-types) `call-service`, `navigate`, `url`, `assist`, `more-info`, and `none` along with card specific actions `key` and `source` and `fire-dom-event`.
+- Supports the [actions](#action-types) `call-service`, `navigate`, `url`, `assist`, `more-info`, and `none`, card specific actions `key` and `source`, and browser-mod popup card `fire-dom-event`.
 - Double tap actions are not configured by default but can be set on any button or the touchpad.
   - If configured then there will be a default 200ms window before the single tap action is triggered.
   - The [double tap action window](#double-tap-window) can be changed by setting `double_tap_window` globally in the root of the config or for a specific custom action.
