@@ -729,7 +729,7 @@ custom_actions:
 
 By default the slider calls the `media_player.volume_set` service, with `entity_id` set to `slider_id` and `volume_level` set to the slider value.
 
-You can change this by creating a custom action for `slider`. Set the value which you wish to set using the slider to `VALUE`.
+You can change this by creating a custom action for `slider`. Set the value which you wish to set using the slider to `'{{ VALUE }}'`.
 
 ```yaml
 custom_actions:
@@ -757,13 +757,18 @@ You can change several other attributes of the slider by setting them in a custo
 
 You can change the entity attribute that the slider tracks by setting `value_attribute` to either `state` or an entity specific attribute. If the attribute which you wish to use is an array, you can also further include the index at the end of the attribute name in brackets (like `hs_color[0]`).
 
+Some additional logic is applied for certain `value_attribute` values:
+
+- `brightness` - Converted from the default range of 0-255 to 0-100.
+- `media_position` - Updated twice a second using the current timestamp and the attribute `media_position_updated_at` when the entity state is `playing`, and locked to a max value using the attribute `media_duration`.
+
 ```yaml
 custom_actions:
 slider:
   value_attribute: brightness
 ```
 
-While most Home Assistant media player's use a volume range of [0,1], you can change this as needed by setting `range`.
+While most Home Assistant media players use a volume range of [0,1], you can change this as needed by setting `range`.
 
 ```yaml
 custom_actions:

@@ -34,7 +34,7 @@ console.info(
 
 class AndroidTVCard extends LitElement {
 	@property({ attribute: false }) hass!: HomeAssistant;
-	@property({ attribute: false }) private config!: IConfig;
+	@property({ attribute: false }) config!: IConfig;
 
 	defaultActions: Record<string, IActions> = {};
 	customActions: Record<string, IActions> = {};
@@ -58,7 +58,7 @@ class AndroidTVCard extends LitElement {
 	}
 
 	getCardSize() {
-		let numRows = this.config.rows!.length;
+		let numRows = this.config.rows?.length ?? 0;
 		if ('title' in this.config) {
 			numRows += 1;
 		}
@@ -107,14 +107,13 @@ class AndroidTVCard extends LitElement {
 			).media_player_id;
 		}
 		if ('touchpad_height' in config) {
-			if (!('touchpad_style' in config)) {
-				config.touchpad_style = {};
-			}
-			if (!('height' in config.touchpad_style!)) {
-				config.touchpad_style!.height = (
+			const style = config.touchpad_style ?? {};
+			if (!('height' in style)) {
+				style.height = (
 					config as Record<string, string>
 				).touchpad_height;
 			}
+			config.touchpad_style = style;
 		}
 
 		// Old haptic feedback toggle names
@@ -363,15 +362,21 @@ class AndroidTVCard extends LitElement {
 		if ('hold_time' in this.config) {
 			if (
 				'hold_action' in actions &&
-				!('hold_time' in actions.hold_action!)
+				!('hold_time' in (actions.hold_action ?? {}))
 			) {
-				actions.hold_action!.hold_time = this.config.hold_time;
+				actions.hold_action = {
+					...(actions.hold_action as IAction),
+					hold_time: this.config.hold_time as number,
+				};
 			}
 			if (
 				'multi_hold_action' in actions &&
-				!('hold_time' in actions.multi_hold_action!)
+				!('hold_time' in (actions.multi_hold_action ?? {}))
 			) {
-				actions.multi_hold_action!.hold_time = this.config.hold_time;
+				actions.multi_hold_action = {
+					...(actions.multi_hold_action as IAction),
+					hold_time: this.config.hold_time,
+				};
 			}
 		}
 
@@ -398,17 +403,24 @@ class AndroidTVCard extends LitElement {
 		if ('double_tap_window' in this.config) {
 			if (
 				'double_tap_action' in actions &&
-				!('double_tap_window' in actions.double_tap_action!)
+				!('double_tap_window' in (actions.double_tap_action ?? {}))
 			) {
-				actions.double_tap_action!.double_tap_window =
-					this.config.double_tap_window;
+				actions.double_tap_action = {
+					...(actions.double_tap_action as IAction),
+					double_tap_window: this.config.double_tap_window,
+				};
 			}
 			if (
 				'multi_double_tap_action' in actions &&
-				!('double_tap_window' in actions.multi_double_tap_action!)
+				!(
+					'double_tap_window' in
+					(actions.multi_double_tap_action ?? {})
+				)
 			) {
-				actions.multi_double_tap_action!.double_tap_window =
-					this.config.double_tap_window;
+				actions.multi_double_tap_action = {
+					...(actions.multi_double_tap_action as IAction),
+					double_tap_window: this.config.double_tap_window,
+				};
 			}
 		}
 
@@ -499,7 +511,7 @@ class AndroidTVCard extends LitElement {
 				(renderTemplate(
 					this.hass,
 					(this.config as Record<string, string>)
-						.double_click_keycode!,
+						.double_click_keycode,
 				) as string) ?? 'back';
 			const doubleTapAction = this.getActions(doubleTapKeycode);
 			centerActions.double_tap_action = doubleTapAction.tap_action;
@@ -511,14 +523,14 @@ class AndroidTVCard extends LitElement {
 		if (
 			renderTemplate(
 				this.hass,
-				(this.config as Record<string, string>).long_click_keycode!,
+				(this.config as Record<string, string>).long_click_keycode,
 			) &&
 			!('hold_action' in centerActions)
 		) {
 			const holdActionKeycode =
 				(renderTemplate(
 					this.hass,
-					(this.config as Record<string, string>).long_click_keycode!,
+					(this.config as Record<string, string>).long_click_keycode,
 				) as string) ?? 'center';
 			const holdAction = this.getActions(holdActionKeycode);
 			centerActions.hold_action = holdAction.tap_action;
@@ -685,7 +697,7 @@ class AndroidTVCard extends LitElement {
 
 		this.nRows = 0;
 		this.nColumns = 0;
-		for (const row of this.config.rows!) {
+		for (const row of this.config.rows ?? []) {
 			const rowContent = this.buildElements(row as string[]);
 			content.push(rowContent);
 		}

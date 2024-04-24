@@ -20,7 +20,7 @@ export class BaseRemoteElement extends LitElement {
 	@property({ attribute: false }) remoteId?: string;
 	@property({ attribute: false }) mediaPlayerId?: string;
 
-	@state() value: string | number | boolean = 0;
+	@state() value?: string | number | boolean = 0;
 	buttonPressStart?: number;
 	buttonPressEnd?: number;
 	fireMouseEvent?: boolean = true;
@@ -48,44 +48,44 @@ export class BaseRemoteElement extends LitElement {
 	}
 
 	sendAction(actionType: ActionType, actions: IActions = this.actions) {
-		let action: IAction;
+		let action;
 		switch (actionType) {
 			case 'momentary_start_action':
-				action = actions.momentary_start_action!;
+				action = actions.momentary_start_action;
 				break;
 			case 'momentary_end_action':
-				action = actions.momentary_end_action!;
+				action = actions.momentary_end_action;
 				break;
 			case 'multi_hold_action':
 				action =
 					actions.multi_hold_action ??
 					actions.hold_action ??
 					actions.multi_tap_action ??
-					actions.tap_action!;
+					actions.tap_action;
 				break;
 			case 'multi_double_tap_action':
 				action =
 					actions.multi_double_tap_action ??
 					actions.double_tap_action ??
 					actions.multi_tap_action ??
-					actions.tap_action!;
+					actions.tap_action;
 				break;
 			case 'multi_tap_action':
-				action = actions.multi_tap_action ?? actions.tap_action!;
+				action = actions.multi_tap_action ?? actions.tap_action;
 				break;
 			case 'hold_action':
-				action = actions.hold_action ?? actions.tap_action!;
+				action = actions.hold_action ?? actions.tap_action;
 				break;
 			case 'double_tap_action':
-				action = actions.double_tap_action ?? actions.tap_action!;
+				action = actions.double_tap_action ?? actions.tap_action;
 				break;
 			case 'tap_action':
 			default:
-				action = actions.tap_action!;
+				action = actions.tap_action;
 				break;
 		}
 
-		if (!this.handleConfirmation(action)) {
+		if (!action || !this.handleConfirmation(action)) {
 			return;
 		}
 
@@ -107,10 +107,10 @@ export class BaseRemoteElement extends LitElement {
 					this.callService(action);
 					break;
 				case 'source':
-					this.changeSource(action.source!);
+					this.changeSource(action.source ?? '');
 					break;
 				case 'key':
-					this.sendCommand(action.key!, actionType);
+					this.sendCommand(action.key ?? '', actionType);
 					break;
 				case 'fire-dom-event':
 					this.fireDomEvent(action);
@@ -334,8 +334,8 @@ export class BaseRemoteElement extends LitElement {
 				} else {
 					if ('exemptions' in (confirmation as IConfirmation)) {
 						if (
-							!(confirmation as IConfirmation)
-								.exemptions!.map((exemption) =>
+							!(confirmation as IConfirmation).exemptions
+								?.map((exemption) =>
 									this.renderTemplate(exemption.user),
 								)
 								.includes(this.hass.user.id)
@@ -363,7 +363,7 @@ export class BaseRemoteElement extends LitElement {
 				holdSecs = (this.buttonPressEnd - this.buttonPressStart) / 1000;
 			}
 			context = {
-				VALUE: this.value,
+				VALUE: this.value as string,
 				HOLD_SECS: holdSecs ?? 0,
 			};
 		}
