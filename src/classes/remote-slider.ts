@@ -189,113 +189,90 @@ export class RemoteSlider extends BaseRemoteElement {
 
 			let valueAttribute = (
 				this.renderTemplate(
-					this.actions.value_attribute as string,
+					this.actions.value_attribute ?? 'volume_level',
 				) as string
 			).toLowerCase();
-			if (valueAttribute) {
-				if (valueAttribute == 'state') {
-					this.value = this.hass.states[this.entityId].state;
-				} else {
-					let value:
-						| string
-						| number
-						| boolean
-						| string[]
-						| number[]
-						| undefined;
-					const indexMatch = valueAttribute.match(/\[\d+\]$/);
+			if (valueAttribute == 'state') {
+				this.value = this.hass.states[this.entityId].state;
+			} else {
+				let value:
+					| string
+					| number
+					| boolean
+					| string[]
+					| number[]
+					| undefined;
+				const indexMatch = valueAttribute.match(/\[\d+\]$/);
 
-					if (indexMatch) {
-						const index = parseInt(
-							indexMatch[0].replace(/\[|\]/g, ''),
-						);
-						valueAttribute = valueAttribute.replace(
-							indexMatch[0],
-							'',
-						);
-						value =
-							this.hass.states[this.entityId].attributes[
-								valueAttribute
-							];
-						if (value && Array.isArray(value) && value.length) {
-							value = value[index];
-						} else {
-							value == undefined;
-						}
+				if (indexMatch) {
+					const index = parseInt(indexMatch[0].replace(/\[|\]/g, ''));
+					valueAttribute = valueAttribute.replace(indexMatch[0], '');
+					value =
+						this.hass.states[this.entityId].attributes[
+							valueAttribute
+						];
+					if (value && Array.isArray(value) && value.length) {
+						value = value[index];
 					} else {
-						value =
-							this.hass.states[this.entityId].attributes[
-								valueAttribute
-							];
+						value == undefined;
 					}
+				} else {
+					value =
+						this.hass.states[this.entityId].attributes[
+							valueAttribute
+						];
+				}
 
-					if (value != undefined) {
-						switch (valueAttribute) {
-							case 'brightness':
-								this.value = Math.round(
-									(100 * parseInt((value as string) ?? 0)) /
-										255,
-								);
-								break;
-							case 'media_position':
-								try {
-									this.valueUpdateInterval = setInterval(
-										() => {
-											if (
+				if (value != undefined) {
+					switch (valueAttribute) {
+						case 'brightness':
+							this.value = Math.round(
+								(100 * parseInt((value as string) ?? 0)) / 255,
+							);
+							break;
+						case 'media_position':
+							try {
+								this.valueUpdateInterval = setInterval(() => {
+									if (
+										this.hass.states[
+											this.entityId as string
+										].state == 'playing'
+									) {
+										this.value = Math.min(
+											Math.floor(
+												Math.floor(value as number) +
+													(Date.now() -
+														Date.parse(
+															this.hass.states[
+																this
+																	.entityId as string
+															].attributes
+																.media_position_updated_at,
+														)) /
+														1000,
+											),
+											Math.floor(
 												this.hass.states[
 													this.entityId as string
-												].state == 'playing'
-											) {
-												this.value = Math.min(
-													Math.floor(
-														Math.floor(
-															value as number,
-														) +
-															(Date.now() -
-																Date.parse(
-																	this.hass
-																		.states[
-																		this
-																			.entityId as string
-																	].attributes
-																		.media_position_updated_at,
-																)) /
-																1000,
-													),
-													Math.floor(
-														this.hass.states[
-															this
-																.entityId as string
-														].attributes
-															.media_duration,
-													),
-												);
-											} else {
-												this.value = value as number;
-											}
-										},
-										500,
-									);
-								} catch (e) {
-									console.error(e);
-									this.value = value as
-										| string
-										| number
-										| boolean;
-								}
-								break;
-							default:
+												].attributes.media_duration,
+											),
+										);
+									} else {
+										this.value = value as number;
+									}
+								}, 500);
+							} catch (e) {
+								console.error(e);
 								this.value = value as string | number | boolean;
-								break;
-						}
-					} else {
-						this.value = value;
+							}
+							break;
+						default:
+							this.value = value as string | number | boolean;
+							break;
 					}
+				} else {
+					this.value = value;
 				}
-			} else {
-				this.value =
-					this.hass.states[this.entityId].attributes.volume_level ??
-					0;
 			}
 
 			this.oldValue = Number(this.value);
