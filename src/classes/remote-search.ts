@@ -20,7 +20,7 @@ export class RemoteSearch extends BaseKeyboardElement {
 						method: 'Addons.ExecuteAddon',
 						addonid: 'script.globalsearch',
 					});
-				/* falls through */
+				// fall through
 				case 'ROKU':
 				case 'FIRE':
 				case 'FIRETV':
