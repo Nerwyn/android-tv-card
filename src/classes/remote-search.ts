@@ -1,7 +1,5 @@
 import { customElement } from 'lit/decorators.js';
 
-import { IData } from '../models';
-
 import { BaseKeyboardElement } from './base-keyboard-element';
 
 @customElement('remote-search')
@@ -17,17 +15,19 @@ export class RemoteSearch extends BaseKeyboardElement {
 				(this.renderTemplate(this.keyboardMode) as string).toUpperCase()
 			) {
 				case 'KODI':
-					promptText = 'Global Search: ';
 					this.hass.callService('kodi', 'call_method', {
 						entity_id: entityId,
 						method: 'Addons.ExecuteAddon',
 						addonid: 'script.globalsearch',
 					});
-					break;
+				/* falls through */
+				case 'ROKU':
 				case 'FIRE':
 				case 'FIRETV':
 				case 'FIRE_TV':
 				case 'FIRE TV':
+					promptText = 'Global Search: ';
+					break;
 				case 'ANDROID':
 				case 'ANDROIDTV':
 				case 'ANDROID_TV':
@@ -39,19 +39,24 @@ export class RemoteSearch extends BaseKeyboardElement {
 
 			const text = prompt(promptText);
 			if (text) {
-				const data: IData = {
-					entity_id: entityId,
-				};
 				switch (
 					(
 						this.renderTemplate(this.keyboardMode) as string
 					).toUpperCase()
 				) {
 					case 'KODI':
-						data.method = 'Input.SendText';
-						data.text = text;
-						data.done = true;
-						this.hass.callService('kodi', 'call_method', data);
+						this.hass.callService('kodi', 'call_method', {
+							entity_id: entityId,
+							method: 'Input.SendText',
+							text: text,
+							done: true,
+						});
+						break;
+					case 'ROKU':
+						this.hass.callService('roku', 'search', {
+							entity_id: this.getRokuId('media_player'),
+							keyword: text,
+						});
 						break;
 					case 'FIRE':
 					case 'FIRETV':
@@ -62,8 +67,10 @@ export class RemoteSearch extends BaseKeyboardElement {
 					case 'ANDROID_TV':
 					case 'ANDROID TV':
 					default:
-						data.command = `am start -a "android.search.action.GLOBAL_SEARCH" --es query "${text}"`;
-						this.hass.callService('androidtv', 'adb_command', data);
+						this.hass.callService('androidtv', 'adb_command', {
+							entity_id: entityId,
+							command: `am start -a "android.search.action.GLOBAL_SEARCH" --es query "${text}"`,
+						});
 						break;
 				}
 			}

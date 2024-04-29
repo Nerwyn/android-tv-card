@@ -1,7 +1,5 @@
 import { customElement } from 'lit/decorators.js';
 
-import { IData } from '../models';
-
 import { BaseKeyboardElement } from './base-keyboard-element';
 
 @customElement('remote-textbox')
@@ -12,19 +10,24 @@ export class RemoteTextbox extends BaseKeyboardElement {
 
 			const text = prompt('Text Input: ');
 			if (text) {
-				const data: IData = {
-					entity_id: this.renderTemplate(this.keyboardId),
-				};
 				switch (
 					(
 						this.renderTemplate(this.keyboardMode) as string
 					).toUpperCase()
 				) {
 					case 'KODI':
-						data.method = 'Input.SendText';
-						data.text = text;
-						data.done = false;
-						this.hass.callService('kodi', 'call_method', data);
+						this.hass.callService('kodi', 'call_method', {
+							entity_id: this.renderTemplate(this.keyboardId),
+							method: 'Input.SendText',
+							text: text,
+							done: false,
+						});
+						break;
+					case 'ROKU':
+						this.hass.callService('remote', 'send_command', {
+							entity_id: this.getRokuId(),
+							command: `Lit_${text}`,
+						});
 						break;
 					case 'FIRE':
 					case 'FIRETV':
@@ -35,8 +38,10 @@ export class RemoteTextbox extends BaseKeyboardElement {
 					case 'ANDROID_TV':
 					case 'ANDROID TV':
 					default:
-						data.command = `input text "${text}"`;
-						this.hass.callService('androidtv', 'adb_command', data);
+						this.hass.callService('androidtv', 'adb_command', {
+							entity_id: this.renderTemplate(this.keyboardId),
+							command: `input text "${text}"`,
+						});
 						break;
 				}
 			}

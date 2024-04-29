@@ -93,7 +93,7 @@
     - Highly recommended that you also create buttons for `delete` and `enter` so you can remove and send your input text.
   - [**Google Assistant search**](#google-assistant-search) - Create and press the button `search` to pull up a browser prompt in which you can type in text to send to your Android TV to process as a Google Assistant search.
     - Works well if you are experiencing [this issue](https://github.com/home-assistant/core/issues/94063).
-- Can also be used for Fire TV and Kodi ([see below](#alternate-media-platform-support))
+- Can also be used for Fire TV, Kodi, and Roku ([see below](#alternate-media-platform-support))
 
 [**Template support**](#templating)
 
@@ -895,10 +895,10 @@ custom_actions:
 
 ## Keyboard
 
-| Name          | Type   | Description                                                                                                                                                                                                                                        |
-| ------------- | ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| keyboard_id   | string | The `media_player` entity id to use to send keyboard events. Requires the [Android Debug Bridge integration](https://www.home-assistant.io/integrations/androidtv/) for Android TV, and other media platform integration for other supported ones. |
-| keyboard_mode | string | The media platform type for sending keyboard commands. Defaults to `ANDROID TV`. Also supports `FIRE TV` and `KODI`.                                                                                                                               |
+| Name          | Type   | Description                                                                                                                                                                                                                         |
+| ------------- | ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| keyboard_id   | string | The entity id to use to send keyboard events. Requires the [Android Debug Bridge integration](https://www.home-assistant.io/integrations/androidtv/) for Android TV, and other media platform integration for other supported ones. |
+| keyboard_mode | string | The media platform type for sending keyboard commands. Defaults to `ANDROID TV`. Also supports `FIRE TV`, `KODI`, and `ROKU`.                                                                                                       |
 
 You can use the [Android Debug Bridge integration](https://www.home-assistant.io/integrations/androidtv/) with this card to send text to your Android TV (by default, see below for alternate media platforms). This card includes three different methods for sending text to Android TV.
 
@@ -954,11 +954,12 @@ Send text to Android TV to be processed as a Google Assistant global search by c
 
 You can also use the keyboard to send text on the following alternate platforms by setting `keyboard_id` to the entity ID of the platform and `keyboard_mode` to one of the following:
 
-| Media Platform | Info                                                                                                                                                                                                                  |
-| -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `ANDROID TV`   | Default, not required if using Android TV                                                                                                                                                                             |
-| `FIRE TV`      | Mostly the same as Android TV, but uses ADB to send backspace, delete, enter, and left/right arrow commands.                                                                                                          |
-| `KODI`         | Does not support backspace, delete, enter, left, and right but these can be used with the on screen keyboard. Seamless mode does not work as the Kodi `Input.SendText` method clears the textbox before sending text. |
+| Media Platform | Info                                                                                                                                                                                                                                                                                                      |
+| -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ANDROID TV`   | Default, not required if using Android TV                                                                                                                                                                                                                                                                 |
+| `FIRE TV`      | Mostly the same as Android TV, but uses ADB to send backspace, delete, enter, and left/right arrow commands.                                                                                                                                                                                              |
+| `KODI`         | Does not support backspace, delete, enter, left, and right but these can be used with the on screen keyboard. Seamless mode does not work as the Kodi `Input.SendText` method clears the textbox before sending text.                                                                                     |
+| `ROKU`         | Uses the Roku remote entity ID for seamless and bulk modes, and the Roku media player ID for global search. Either one can be provided as the keyboard ID, but the other must be provided as the remote or media player ID in order to support all three keyboard modes. Does not support the delete key. |
 
 More may be added as requested if there is a way to do so through their Home Assistant (or possibly community made) integrations.
 

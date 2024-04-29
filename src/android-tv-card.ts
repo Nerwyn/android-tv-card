@@ -566,6 +566,7 @@ class AndroidTVCard extends LitElement {
 		return html`<remote-keyboard
 			.hass=${this.hass}
 			.remoteId=${this.config.remote_id}
+			.mediaPlayerId=${this.config.media_player_id}
 			.actions=${actions}
 			.actionKey="keyboard"
 			.keyboardId=${this.config.keyboard_id}
@@ -586,6 +587,8 @@ class AndroidTVCard extends LitElement {
 
 		return html`<remote-textbox
 			.hass=${this.hass}
+			.remoteId=${this.config.remote_id}
+			.mediaPlayerId=${this.config.media_player_id}
 			.actions=${actions}
 			.actionKey="textbox"
 			.keyboardId=${this.config.keyboard_id}
@@ -606,6 +609,8 @@ class AndroidTVCard extends LitElement {
 
 		return html`<remote-search
 			.hass=${this.hass}
+			.remoteId=${this.config.remote_id}
+			.mediaPlayerId=${this.config.media_player_id}
 			.actions=${actions}
 			.actionKey="search"
 			.keyboardId=${this.config.keyboard_id}
