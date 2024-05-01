@@ -1,3 +1,4 @@
+import { TemplateResult } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
 import { KeyboardMode } from '../models';
@@ -31,5 +32,14 @@ export class BaseKeyboardElement extends RemoteButton {
 			}
 		}
 		return keyboardId;
+	}
+
+	render(inputTemplate?: TemplateResult<1>) {
+		this.keyboardMode = (
+			this.renderTemplate(this._keyboardMode) as string
+		).toUpperCase();
+		this.keyboardId = this.renderTemplate(this._keyboardId) as string;
+
+		return super.render(inputTemplate);
 	}
 }

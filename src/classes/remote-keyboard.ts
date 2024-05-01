@@ -226,11 +226,6 @@ export class RemoteKeyboard extends BaseKeyboardElement {
 	}
 
 	render() {
-		this.keyboardMode = (
-			this.renderTemplate(this._keyboardMode) as string
-		).toUpperCase();
-		this.keyboardId = this.renderTemplate(this._keyboardId) as string;
-
 		const inputTemplate = html`
 			<input
 				spellcheck="false"
