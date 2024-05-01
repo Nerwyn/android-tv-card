@@ -5,6 +5,9 @@ import { BaseKeyboardElement } from './base-keyboard-element';
 
 @customElement('remote-keyboard')
 export class RemoteKeyboard extends BaseKeyboardElement {
+	buffer: string = '';
+	sendInterval?: ReturnType<typeof setInterval>;
+
 	onEnd(e: TouchEvent | MouseEvent) {
 		if (!this.swiping) {
 			e.stopImmediatePropagation();
@@ -124,10 +127,28 @@ export class RemoteKeyboard extends BaseKeyboardElement {
 				case 'ANDROID_TV':
 				case 'ANDROID TV':
 				default:
-					this.hass.callService('androidtv', 'adb_command', {
-						entity_id: this.renderTemplate(this.keyboardId),
-						command: `input text "${text}"`,
-					});
+					this.buffer += text;
+					if (this.buffer.length) {
+						this.sendInterval = setInterval(() => {
+							const input = `${this.buffer}`;
+							this.hass.callService('androidtv', 'adb_command', {
+								entity_id: this.renderTemplate(this.keyboardId),
+								command: `input text "${this.buffer}"`,
+							});
+							this.buffer = this.buffer.replace(input, '');
+
+							if (!this.buffer.length) {
+								clearInterval(this.sendInterval);
+							}
+						}, 100);
+					} else {
+						clearInterval(this.sendInterval);
+					}
+
+					// this.hass.callService('androidtv', 'adb_command', {
+					// 	entity_id: this.renderTemplate(this.keyboardId),
+					// 	command: `input text "${this.buffer}"`,
+					// });
 					break;
 			}
 		}
