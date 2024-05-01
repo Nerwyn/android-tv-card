@@ -5,9 +5,6 @@ import { BaseKeyboardElement } from './base-keyboard-element';
 
 @customElement('remote-keyboard')
 export class RemoteKeyboard extends BaseKeyboardElement {
-	buffer: string = '';
-	sendInterval?: ReturnType<typeof setInterval>;
-
 	onEnd(e: TouchEvent | MouseEvent) {
 		if (!this.swiping) {
 			e.stopImmediatePropagation();
@@ -123,11 +120,10 @@ export class RemoteKeyboard extends BaseKeyboardElement {
 				case 'ANDROID_TV':
 				case 'ANDROID TV':
 				default:
-					this.buffer += text;
-					// this.hass.callService('androidtv', 'adb_command', {
-					// 	entity_id: this.keyboardId,
-					// 	command: `input text "${this.buffer}"`,
-					// });
+					this.hass.callService('androidtv', 'adb_command', {
+						entity_id: this.keyboardId,
+						command: `input text "${text}"`,
+					});
 					break;
 			}
 		}
@@ -187,31 +183,6 @@ export class RemoteKeyboard extends BaseKeyboardElement {
 			'9',
 			'important',
 		);
-		switch (this.keyboardMode) {
-			case 'KODI':
-			case 'ROKU':
-				break;
-			case 'FIRE':
-			case 'FIRETV':
-			case 'FIRE_TV':
-			case 'FIRE TV':
-			case 'ANDROID':
-			case 'ANDROIDTV':
-			case 'ANDROID_TV':
-			case 'ANDROID TV':
-			default:
-				this.sendInterval = setInterval(() => {
-					if (this.buffer) {
-						const input = `${this.buffer}`;
-						this.hass.callService('androidtv', 'adb_command', {
-							entity_id: this.keyboardId,
-							command: `input text "${input}"`,
-						});
-						this.buffer = this.buffer.replace(input, '');
-					}
-				}, 50);
-				break;
-		}
 	}
 
 	onFocusOut(e: InputEvent) {
@@ -221,8 +192,6 @@ export class RemoteKeyboard extends BaseKeyboardElement {
 				.previousElementSibling as HTMLElement
 		).style.removeProperty('color');
 		(e.currentTarget as HTMLInputElement).style.removeProperty('z-index');
-		clearInterval(this.sendInterval);
-		this.sendInterval = undefined;
 	}
 
 	render() {
