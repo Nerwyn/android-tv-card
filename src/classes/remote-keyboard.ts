@@ -209,7 +209,7 @@ export class RemoteKeyboard extends BaseKeyboardElement {
 						});
 						this.buffer = this.buffer.replace(input, '');
 					}
-				}, 500);
+				}, 200);
 				break;
 		}
 	}
