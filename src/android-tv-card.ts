@@ -569,8 +569,8 @@ class AndroidTVCard extends LitElement {
 			.mediaPlayerId=${this.config.media_player_id}
 			.actions=${actions}
 			.actionKey="keyboard"
-			.keyboardId=${this.config.keyboard_id}
-			.keyboardMode=${this.config.keyboard_mode ?? 'ANDROID TV'}
+			._keyboardId=${this.config.keyboard_id}
+			._keyboardMode=${this.config.keyboard_mode ?? 'ANDROID TV'}
 			.icons=${this.icons}
 		/>`;
 	}
@@ -591,8 +591,8 @@ class AndroidTVCard extends LitElement {
 			.mediaPlayerId=${this.config.media_player_id}
 			.actions=${actions}
 			.actionKey="textbox"
-			.keyboardId=${this.config.keyboard_id}
-			.keyboardMode=${this.config.keyboard_mode ?? 'ANDROID TV'}
+			._keyboardId=${this.config.keyboard_id}
+			._keyboardMode=${this.config.keyboard_mode ?? 'ANDROID TV'}
 			.icons=${this.icons}
 		/>`;
 	}
@@ -613,8 +613,8 @@ class AndroidTVCard extends LitElement {
 			.mediaPlayerId=${this.config.media_player_id}
 			.actions=${actions}
 			.actionKey="search"
-			.keyboardId=${this.config.keyboard_id}
-			.keyboardMode=${this.config.keyboard_mode ?? 'ANDROID TV'}
+			._keyboardId=${this.config.keyboard_id}
+			._keyboardMode=${this.config.keyboard_mode ?? 'ANDROID TV'}
 			.icons=${this.icons}
 		/>`;
 	}

@@ -17,7 +17,7 @@ export class RemoteTextbox extends BaseKeyboardElement {
 				) {
 					case 'KODI':
 						this.hass.callService('kodi', 'call_method', {
-							entity_id: this.renderTemplate(this.keyboardId),
+							entity_id: this.keyboardId,
 							method: 'Input.SendText',
 							text: text,
 							done: false,
@@ -39,7 +39,7 @@ export class RemoteTextbox extends BaseKeyboardElement {
 					case 'ANDROID TV':
 					default:
 						this.hass.callService('androidtv', 'adb_command', {
-							entity_id: this.renderTemplate(this.keyboardId),
+							entity_id: this.keyboardId,
 							command: `input text "${text}"`,
 						});
 						break;

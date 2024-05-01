@@ -10,13 +10,10 @@ export class RemoteSearch extends BaseKeyboardElement {
 			this.fireHapticEvent('light');
 
 			let promptText: string;
-			const entityId = this.renderTemplate(this.keyboardId);
-			switch (
-				(this.renderTemplate(this.keyboardMode) as string).toUpperCase()
-			) {
+			switch (this.keyboardMode) {
 				case 'KODI':
 					this.hass.callService('kodi', 'call_method', {
-						entity_id: entityId,
+						entity_id: this.keyboardId,
 						method: 'Addons.ExecuteAddon',
 						addonid: 'script.globalsearch',
 					});
@@ -39,14 +36,10 @@ export class RemoteSearch extends BaseKeyboardElement {
 
 			const text = prompt(promptText);
 			if (text) {
-				switch (
-					(
-						this.renderTemplate(this.keyboardMode) as string
-					).toUpperCase()
-				) {
+				switch (this.keyboardMode) {
 					case 'KODI':
 						this.hass.callService('kodi', 'call_method', {
-							entity_id: entityId,
+							entity_id: this.keyboardId,
 							method: 'Input.SendText',
 							text: text,
 							done: true,
@@ -68,7 +61,7 @@ export class RemoteSearch extends BaseKeyboardElement {
 					case 'ANDROID TV':
 					default:
 						this.hass.callService('androidtv', 'adb_command', {
-							entity_id: entityId,
+							entity_id: this.keyboardId,
 							command: `am start -a "android.search.action.GLOBAL_SEARCH" --es query "${text}"`,
 						});
 						break;
