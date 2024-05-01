@@ -128,7 +128,7 @@ export class RemoteKeyboard extends BaseKeyboardElement {
 				case 'ANDROID TV':
 				default:
 					this.buffer += text;
-					if (this.buffer.length) {
+					if (this.buffer.length && !this.sendInterval) {
 						this.sendInterval = setInterval(() => {
 							const input = `${this.buffer}`;
 							this.hass.callService('androidtv', 'adb_command', {
@@ -139,10 +139,12 @@ export class RemoteKeyboard extends BaseKeyboardElement {
 
 							if (!this.buffer.length) {
 								clearInterval(this.sendInterval);
+								this.sendInterval = undefined;
 							}
 						}, 100);
 					} else {
 						clearInterval(this.sendInterval);
+						this.sendInterval = undefined;
 					}
 
 					// this.hass.callService('androidtv', 'adb_command', {
