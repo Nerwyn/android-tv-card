@@ -213,7 +213,7 @@ export class RemoteKeyboard extends BaseKeyboardElement {
 						const input = `${this.buffer}`;
 						this.hass.callService('androidtv', 'adb_command', {
 							entity_id: this.renderTemplate(this.keyboardId),
-							command: `input text "${this.buffer}"`,
+							command: `input text "${input}"`,
 						});
 						this.buffer = this.buffer.replace(input, '');
 					}
