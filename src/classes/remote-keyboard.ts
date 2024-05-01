@@ -142,9 +142,6 @@ export class RemoteKeyboard extends BaseKeyboardElement {
 								this.sendInterval = undefined;
 							}
 						}, 100);
-					} else {
-						clearInterval(this.sendInterval);
-						this.sendInterval = undefined;
 					}
 
 					// this.hass.callService('androidtv', 'adb_command', {
