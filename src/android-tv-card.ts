@@ -4,7 +4,7 @@ import { LitElement, TemplateResult, html, css } from 'lit';
 import { property } from 'lit/decorators.js';
 import { StyleInfo, styleMap } from 'lit/directives/style-map.js';
 
-import { HomeAssistant, applyThemesOnElement } from 'custom-card-helpers';
+import { HomeAssistant } from 'custom-card-helpers';
 import { renderTemplate } from 'ha-nunjucks';
 import { load } from 'js-yaml';
 
@@ -750,10 +750,6 @@ class AndroidTVCard extends LitElement {
 				--size: 48px;
 			}
 		`;
-	}
-
-	applyThemesOnElement(element: Element, themes: Themes, localTheme: string) {
-		applyThemesOnElement(element, themes, localTheme);
 	}
 }
 
