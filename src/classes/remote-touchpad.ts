@@ -316,25 +316,23 @@ export class RemoteTouchpad extends BaseRemoteElement {
 
 	render() {
 		return html`
-			<ha-card>
-				<toucharea
-					style=${styleMap(this.buildStyle(this.actions.style ?? {}))}
-					@mousedown=${this.onMouseDown}
-					@mouseup=${this.onMouseUp}
-					@mousemove=${this.onMouseMove}
-					@mouseenter=${this._rippleHandlers.startHover}
-					@mouseleave=${this.onMouseLeave}
-					@touchstart=${this.onTouchStart}
-					@touchend=${this.onTouchEnd}
-					@touchmove=${this.onTouchMove}
-					@touchcancel=${this.onTouchCancel}
-					@focus=${this._rippleHandlers.startFocus}
-					@blur=${this._rippleHandlers.endFocus}
-					@contextmenu=${this.onContextMenu}
-				>
-					<mwc-ripple></mwc-ripple>
-				</toucharea>
-			</ha-card>
+			<toucharea
+				style=${styleMap(this.buildStyle(this.actions.style ?? {}))}
+				@mousedown=${this.onMouseDown}
+				@mouseup=${this.onMouseUp}
+				@mousemove=${this.onMouseMove}
+				@mouseenter=${this._rippleHandlers.startHover}
+				@mouseleave=${this.onMouseLeave}
+				@touchstart=${this.onTouchStart}
+				@touchend=${this.onTouchEnd}
+				@touchmove=${this.onTouchMove}
+				@touchcancel=${this.onTouchCancel}
+				@focus=${this._rippleHandlers.startFocus}
+				@blur=${this._rippleHandlers.endFocus}
+				@contextmenu=${this.onContextMenu}
+			>
+				<mwc-ripple></mwc-ripple>
+			</toucharea>
 		`;
 	}
 

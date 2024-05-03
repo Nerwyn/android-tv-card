@@ -210,24 +210,22 @@ export class RemoteButton extends BaseRemoteElement {
 
 		const action = this.renderTemplate(this.actionKey);
 		return html`
-			<ha-card>
-				<ha-icon-button
-					title="${action}"
-					style=${styleMap(this.buildStyle(this.actions.style ?? {}))}
-					@mousedown=${this.onMouseDown}
-					@mouseup=${this.onMouseUp}
-					@mousemove=${this.onMouseMove}
-					@mouseleave=${this.onMouseLeave}
-					@touchstart=${this.onTouchStart}
-					@touchend=${this.onTouchEnd}
-					@touchmove=${this.onTouchMove}
-					@contextmenu=${this.onContextMenu}
-					.action=${action}
-					.path=${svgPath}
-				>
-					${haIcon}${inputTemplate}
-				</ha-icon-button>
-			</ha-card>
+			<ha-icon-button
+				title="${action}"
+				style=${styleMap(this.buildStyle(this.actions.style ?? {}))}
+				@mousedown=${this.onMouseDown}
+				@mouseup=${this.onMouseUp}
+				@mousemove=${this.onMouseMove}
+				@mouseleave=${this.onMouseLeave}
+				@touchstart=${this.onTouchStart}
+				@touchend=${this.onTouchEnd}
+				@touchmove=${this.onTouchMove}
+				@contextmenu=${this.onContextMenu}
+				.action=${action}
+				.path=${svgPath}
+			>
+				${haIcon}${inputTemplate}
+			</ha-icon-button>
 		`;
 	}
 

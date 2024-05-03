@@ -427,15 +427,13 @@ export class RemoteSlider extends BaseRemoteElement {
 		}
 
 		return html`
-			<ha-card>
-				${this.buildTooltip()}
-				<div
-					class="container"
-					style=${styleMap(this.buildStyle(this.actions.style ?? {}))}
-				>
-					${this.buildBackground()}${this.buildSlider()}
-				</div>
-			</ha-card>
+			${this.buildTooltip()}
+			<div
+				class="container"
+				style=${styleMap(this.buildStyle(this.actions.style ?? {}))}
+			>
+				${this.buildBackground()}${this.buildSlider()}
+			</div>
 		`;
 	}
 
