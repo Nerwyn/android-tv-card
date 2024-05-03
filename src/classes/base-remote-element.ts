@@ -454,6 +454,10 @@ export class BaseRemoteElement extends LitElement {
 	render() {}
 
 	static get styles(): CSSResult | CSSResult[] {
-		return css``;
+		return css`
+			ha-card {
+				padding: 0px;
+			}
+		`;
 	}
 }
