@@ -1,4 +1,4 @@
-import { CSSResult, html, css } from 'lit';
+import { html, css } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import { StyleInfo, styleMap } from 'lit/directives/style-map.js';
 
@@ -437,121 +437,118 @@ export class RemoteSlider extends BaseRemoteElement {
 		`;
 	}
 
-	static get styles(): CSSResult | CSSResult[] {
-		return [
-			super.styles as CSSResult,
-			css`
-				:host {
-					display: flex;
-					flex-flow: column;
-					place-content: center space-evenly;
-					align-items: center;
-					position: relative;
-					width: 100%;
-					border: none;
-					padding: 0px;
-					box-sizing: border-box;
-					line-height: 0;
-					outline: 0px;
-					overflow: visible;
-					font-size: inherit;
-					color: inherit;
+	static get styles() {
+		return css`
+			:host {
+				display: flex;
+				flex-flow: column;
+				place-content: center space-evenly;
+				align-items: center;
+				position: relative;
+				width: 100%;
+				border: none;
+				padding: 0px;
+				box-sizing: border-box;
+				line-height: 0;
+				outline: 0px;
+				overflow: visible;
+				font-size: inherit;
+				color: inherit;
 
-					--color: var(--primary-text-color);
-					--height: 50px;
-					--background: var(--primary-background-color);
-					--background-height: 50px;
-					--border-radius: 25px;
-				}
+				--color: var(--primary-text-color);
+				--height: 50px;
+				--background: var(--primary-background-color);
+				--background-height: 50px;
+				--border-radius: 25px;
+			}
 
-				.container {
-					all: inherit;
-					overflow: hidden;
-					height: var(--height);
-					border-radius: var(--border-radius);
-				}
+			.container {
+				all: inherit;
+				overflow: hidden;
+				height: var(--height);
+				border-radius: var(--border-radius);
+			}
 
-				.slider-background {
-					position: absolute;
-					width: inherit;
-					height: var(--background-height);
-					background: var(--background);
-					border-radius: var(--border-radius);
-				}
+			.slider-background {
+				position: absolute;
+				width: inherit;
+				height: var(--background-height);
+				background: var(--background);
+				border-radius: var(--border-radius);
+			}
 
-				.slider,
-				.slider-off {
-					position: absolute;
-					appearance: none;
-					-webkit-appearance: none;
-					-moz-appearance: none;
-					height: var(--height);
-					width: inherit;
-					border-radius: var(--border-radius);
-					background: none;
-					overflow: hidden;
-				}
+			.slider,
+			.slider-off {
+				position: absolute;
+				appearance: none;
+				-webkit-appearance: none;
+				-moz-appearance: none;
+				height: var(--height);
+				width: inherit;
+				border-radius: var(--border-radius);
+				background: none;
+				overflow: hidden;
+			}
 
-				.slider::-webkit-slider-thumb {
-					appearance: none;
-					-webkit-appearance: none;
-					height: var(--height);
-					width: 24px;
-					cursor: pointer;
-					z-index: 1;
-					background: var(--color);
-					box-shadow: -100vw 0 0 100vw var(--color);
-				}
+			.slider::-webkit-slider-thumb {
+				appearance: none;
+				-webkit-appearance: none;
+				height: var(--height);
+				width: 24px;
+				cursor: pointer;
+				z-index: 1;
+				background: var(--color);
+				box-shadow: -100vw 0 0 100vw var(--color);
+			}
 
-				.slider::-moz-range-thumb {
-					appearance: none;
-					-webkit-appearance: none;
-					height: var(--height);
-					width: 24px;
-					border-color: var(--color);
-					background: var(--color);
-					cursor: pointer;
-					z-index: 1;
-					box-shadow: -100vw 0 0 100vw var(--color);
-				}
+			.slider::-moz-range-thumb {
+				appearance: none;
+				-webkit-appearance: none;
+				height: var(--height);
+				width: 24px;
+				border-color: var(--color);
+				background: var(--color);
+				cursor: pointer;
+				z-index: 1;
+				box-shadow: -100vw 0 0 100vw var(--color);
+			}
 
-				.slider-off::-webkit-slider-thumb {
-					visibility: hidden;
-				}
+			.slider-off::-webkit-slider-thumb {
+				visibility: hidden;
+			}
 
-				.slider-off::-moz-range-thumb {
-					visibility: hidden;
-				}
+			.slider-off::-moz-range-thumb {
+				visibility: hidden;
+			}
 
-				.tooltip {
-					z-index: 3;
-					background: var(--clear-background-color);
-					color: var(--primary-text-color);
-					position: absolute;
-					border-radius: 0.8em;
-					padding: 0.2em 0.4em;
-					height: 20px;
-					width: fit-content;
-					line-height: 20px;
-					top: -29px;
-					transform: var(--tooltip-transform);
-					display: var(--tooltip-display);
-				}
-				.faded-out {
-					opacity: 0;
-					transition:
-						opacity 180ms ease-in-out 0s,
-						left 180ms ease-in-out 0s,
-						bottom 180ms ease-in-out 0s;
-				}
-				.faded-in {
-					opacity: 1;
-					transition: opacity 540ms ease-in-out 0s;
-				}
-				.tooltip::after {
-					content: var(--tooltip-label);
-				}
-			`,
-		];
+			.tooltip {
+				z-index: 3;
+				background: var(--clear-background-color);
+				color: var(--primary-text-color);
+				position: absolute;
+				border-radius: 0.8em;
+				padding: 0.2em 0.4em;
+				height: 20px;
+				width: fit-content;
+				line-height: 20px;
+				top: -29px;
+				transform: var(--tooltip-transform);
+				display: var(--tooltip-display);
+			}
+			.faded-out {
+				opacity: 0;
+				transition:
+					opacity 180ms ease-in-out 0s,
+					left 180ms ease-in-out 0s,
+					bottom 180ms ease-in-out 0s;
+			}
+			.faded-in {
+				opacity: 1;
+				transition: opacity 540ms ease-in-out 0s;
+			}
+			.tooltip::after {
+				content: var(--tooltip-label);
+			}
+		`;
 	}
 }

@@ -1,4 +1,4 @@
-import { LitElement, CSSResult, css } from 'lit';
+import { LitElement, css } from 'lit';
 import {
 	customElement,
 	eventOptions,
@@ -453,11 +453,7 @@ export class BaseRemoteElement extends LitElement {
 
 	render() {}
 
-	static get styles(): CSSResult | CSSResult[] {
-		return css`
-			ha-card {
-				padding: 0px;
-			}
-		`;
+	static get styles() {
+		return css``;
 	}
 }
