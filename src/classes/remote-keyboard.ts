@@ -1,4 +1,4 @@
-import { html, css } from 'lit';
+import { CSSResult, html, css } from 'lit';
 import { customElement } from 'lit/decorators.js';
 
 import { BaseKeyboardElement } from './base-keyboard-element';
@@ -213,22 +213,25 @@ export class RemoteKeyboard extends BaseKeyboardElement {
 		return super.render(inputTemplate);
 	}
 
-	static get styles() {
-		return css`
-			input {
-				opacity: 0;
-				filter: alpha(opacity=0);
-				top: 0;
-				left: 0;
-				position: absolute;
-				width: -moz-available;
-				width: -webkit-fill-available;
-				width: fill-available;
-				height: -moz-available;
-				height: -webkit-fill-available;
-				height: fill-available;
-				z-index: 0;
-			}
-		`;
+	static get styles(): CSSResult | CSSResult[] {
+		return [
+			super.styles as CSSResult,
+			css`
+				input {
+					opacity: 0;
+					filter: alpha(opacity=0);
+					top: 0;
+					left: 0;
+					position: absolute;
+					width: -moz-available;
+					width: -webkit-fill-available;
+					width: fill-available;
+					height: -moz-available;
+					height: -webkit-fill-available;
+					height: fill-available;
+					z-index: 0;
+				}
+			`,
+		];
 	}
 }

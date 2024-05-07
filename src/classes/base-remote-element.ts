@@ -1,4 +1,4 @@
-import { LitElement, css } from 'lit';
+import { LitElement, CSSResult, css } from 'lit';
 import {
 	customElement,
 	eventOptions,
@@ -453,7 +453,7 @@ export class BaseRemoteElement extends LitElement {
 
 	render() {}
 
-	static get styles() {
+	static get styles(): CSSResult | CSSResult[] {
 		return css``;
 	}
 }

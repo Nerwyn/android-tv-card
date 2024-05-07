@@ -1,4 +1,4 @@
-import { TemplateResult, html, css } from 'lit';
+import { CSSResult, TemplateResult, html, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
@@ -229,30 +229,32 @@ export class RemoteButton extends BaseRemoteElement {
 		`;
 	}
 
-	static get styles() {
-		return css`
-			ha-icon-button,
-			ha-icon,
-			svg {
-				display: flex;
-				height: var(--size);
-				width: var(--size);
-			}
-			ha-icon-button {
-				cursor: pointer;
-				position: relative;
-				display: inline-flex;
-				flex-direction: column;
-				justify-content: center;
-				text-align: center;
-				align-items: center;
-				z-index: 1;
-
-				--size: 48px;
-				--mdc-icon-size: var(--size);
-				--mdc-icon-button-size: var(--size);
-				-webkit-tap-highlight-color: transparent;
-			}
-		`;
+	static get styles(): CSSResult | CSSResult[] {
+		return [
+			super.styles as CSSResult,
+			css`
+				ha-icon-button,
+				ha-icon,
+				svg {
+					display: flex;
+					height: var(--size);
+					width: var(--size);
+				}
+				ha-icon-button {
+					cursor: pointer;
+					position: relative;
+					display: inline-flex;
+					flex-direction: column;
+					justify-content: center;
+					text-align: center;
+					align-items: center;
+					z-index: 1;
+					--size: 48px;
+					--mdc-icon-size: var(--size);
+					--mdc-icon-button-size: var(--size);
+					-webkit-tap-highlight-color: transparent;
+				}
+			`,
+		];
 	}
 }

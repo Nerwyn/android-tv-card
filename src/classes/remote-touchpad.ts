@@ -1,4 +1,4 @@
-import { html, css } from 'lit';
+import { CSSResult, html, css } from 'lit';
 import { customElement, property, queryAsync } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
@@ -336,32 +336,38 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		`;
 	}
 
-	static get styles() {
-		return css`
-			:host {
-				display: contents;
-			}
-			toucharea {
-				border-radius: 32px;
-				flex-grow: 1;
-				height: 250px;
-				width: -moz-available;
-				width: -webkit-fill-available;
-				width: fill-available;
-				background: var(--primary-background-color, rgb(111, 118, 125));
-				touch-action: none;
-				text-align: center;
-				position: relative;
-				z-index: 0;
-				overflow: hidden;
-				--mdc-ripple-press-opacity: 0.04;
-			}
-			mwc-ripple {
-				top: unset;
-				left: unset;
-				height: inherit;
-				width: inherit;
-			}
-		`;
+	static get styles(): CSSResult | CSSResult[] {
+		return [
+			super.styles as CSSResult,
+			css`
+				:host {
+					display: contents;
+				}
+				toucharea {
+					border-radius: 32px;
+					flex-grow: 1;
+					height: 250px;
+					width: -moz-available;
+					width: -webkit-fill-available;
+					width: fill-available;
+					background: var(
+						--primary-background-color,
+						rgb(111, 118, 125)
+					);
+					touch-action: none;
+					text-align: center;
+					position: relative;
+					z-index: 0;
+					overflow: hidden;
+					--mdc-ripple-press-opacity: 0.04;
+				}
+				mwc-ripple {
+					top: unset;
+					left: unset;
+					height: inherit;
+					width: inherit;
+				}
+			`,
+		];
 	}
 }
