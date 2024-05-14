@@ -1649,51 +1649,43 @@ remote_id: remote.samsung_tv
 media_player_id: media_player.samsung_tv
 autofill_entity_id: true
 custom_actions:
-  '0':
-    icon: mdi:numeric-0
+  n0:
     tap_action:
       action: key
       key: KEY_0
-  '1':
-    icon: mdi:numeric-1
+  n1:
     tap_action:
       action: key
       key: KEY_1
-  '2':
-    icon: mdi:numeric-2
+  n2:
     tap_action:
       action: key
       key: KEY_2
-  '3':
-    icon: mdi:numeric-3
+  n3:
     tap_action:
       action: key
       key: KEY_3
-  '4':
-    icon: mdi:numeric-4
+  n4:
     tap_action:
       action: key
       key: KEY_4
-  '5':
-    icon: mdi:numeric-5
+  n5:
     tap_action:
       action: key
       key: KEY_5
-  '6':
-    icon: mdi:numeric-6
+  n6:
     tap_action:
       action: key
       key: KEY_6
-  '7':
-    icon: mdi:numeric-7
+  n7:
     tap_action:
       action: key
       key: KEY_7
-  '8':
+  n8:
     tap_action:
       action: key
       key: KEY_8
-  '9':
+  n9:
     tap_action:
       action: key
       key: KEY_9
@@ -1727,11 +1719,8 @@ custom_actions:
       service: media_player.toggle
   home:
     tap_action:
-      action: call-service
-      service: media_player.play_media
-      data:
-        media_content_type: send_key
-        media_content_id: KEY_HOME
+      action: key
+      key: KEY_HOME
   back:
     tap_action:
       action: key
@@ -1781,16 +1770,16 @@ rows:
   - - touchpad
   - - back
     - home
-  - - 1
-    - 2
-    - 3
-    - 4
-    - 5
-  - - 6
-    - 7
-    - 8
-    - 9
-    - 0
+  - - n1
+    - n2
+    - n3
+    - n4
+    - n5
+  - - n6
+    - n7
+    - n8
+    - n9
+    - n0
 ```
 
 ### Example 13
