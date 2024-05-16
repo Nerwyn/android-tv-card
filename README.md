@@ -1757,6 +1757,13 @@ custom_actions:
       service: media_player.select_source
       data:
         source: Prime Video
+  DAZN:
+    icon: dazn
+    tap_action:
+      action: call-service
+      service: media_player.select_source
+      data:
+        source: DAZN
 rows:
   - - power
     - null
@@ -1766,7 +1773,9 @@ rows:
     - ch_down
   - - netflix
     - youtube
+    - DAZN
     - primevideo
+    - spotify
   - - touchpad
   - - back
     - home
