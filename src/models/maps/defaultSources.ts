@@ -80,6 +80,10 @@ export const defaultSources: Record<string, IActions> = {
 		tap_action: { action: 'source', source: 'spotify://' },
 		icon: 'mdi:spotify',
 	},
+	starplus: {
+		tap_action: { action: 'source', source: 'https://www.starplus.com' },
+		icon: svg.starplus,
+	},
 	surfshark: {
 		tap_action: {
 			action: 'source',
