@@ -370,9 +370,9 @@ export class BaseRemoteElement extends LitElement {
 			this.valueUpdateInterval = undefined;
 
 			let valueAttribute = (
-				this.renderTemplate(
+				(this.renderTemplate(
 					this.actions.value_attribute as string,
-				) as string
+				) as string) ?? 'state'
 			).toLowerCase();
 			if (!this.hass.states[this.entityId]) {
 				this.value = undefined;
