@@ -17,14 +17,7 @@ export class RemoteSlider extends BaseRemoteElement {
 	range: [number, number] = [0, 1];
 	step: number = 0.01;
 	intervalId?: ReturnType<typeof setTimeout>;
-
-	precision: number = 2;
 	tooltipOffset: number = 0;
-
-	entityId?: string;
-	getValueFromHass: boolean = true;
-	getValueFromHassTimer?: ReturnType<typeof setTimeout>;
-	valueUpdateInterval?: ReturnType<typeof setInterval>;
 
 	onInput(e: InputEvent) {
 		const slider = e.currentTarget as HTMLInputElement;
@@ -63,13 +56,6 @@ export class RemoteSlider extends BaseRemoteElement {
 						this.intervalId = undefined;
 						this.currentValue = end;
 						this.setTooltip(slider, this.showTooltip);
-						if (
-							this.value == undefined ||
-							(end <= this.range[0] &&
-								this.class != 'slider-line-thumb')
-						) {
-							this.sliderOn = false;
-						}
 					}
 				}, 1);
 			} else if (start < end) {
@@ -172,121 +158,17 @@ export class RemoteSlider extends BaseRemoteElement {
 			this.setValue();
 			this.currentValue = this.value ?? 0;
 			this.setTooltip(slider, false);
-			this.sliderOn = !(
-				this.value == undefined || Number(this.value) <= this.range[0]
-			);
+			this.setSliderState(this.value as number);
 		}
 	}
 
 	setValue() {
-		this.entityId = this.renderTemplate(
-			this.actions.tap_action?.data?.entity_id as string,
-		) as string;
-
-		if (this.getValueFromHass && this.entityId) {
-			clearInterval(this.valueUpdateInterval);
-			this.valueUpdateInterval = undefined;
-
-			let valueAttribute = (
-				this.renderTemplate(
-					this.actions.value_attribute ?? 'volume_level',
-				) as string
-			).toLowerCase();
-			if (valueAttribute == 'state') {
-				this.value = this.hass.states[this.entityId].state;
-			} else {
-				let value:
-					| string
-					| number
-					| boolean
-					| string[]
-					| number[]
-					| undefined;
-				const indexMatch = valueAttribute.match(/\[\d+\]$/);
-
-				if (indexMatch) {
-					const index = parseInt(indexMatch[0].replace(/\[|\]/g, ''));
-					valueAttribute = valueAttribute.replace(indexMatch[0], '');
-					value =
-						this.hass.states[this.entityId].attributes[
-							valueAttribute
-						];
-					if (value && Array.isArray(value) && value.length) {
-						value = value[index];
-					} else {
-						value == undefined;
-					}
-				} else {
-					value =
-						this.hass.states[this.entityId].attributes[
-							valueAttribute
-						];
-				}
-
-				if (value != undefined) {
-					switch (valueAttribute) {
-						case 'brightness':
-							this.value = Math.round(
-								(100 * parseInt((value as string) ?? 0)) / 255,
-							);
-							break;
-						case 'media_position':
-							try {
-								this.valueUpdateInterval = setInterval(() => {
-									if (
-										this.hass.states[
-											this.entityId as string
-										].state == 'playing'
-									) {
-										this.value = Math.min(
-											Math.floor(
-												Math.floor(value as number) +
-													(Date.now() -
-														Date.parse(
-															this.hass.states[
-																this
-																	.entityId as string
-															].attributes
-																.media_position_updated_at,
-														)) /
-														1000,
-											),
-											Math.floor(
-												this.hass.states[
-													this.entityId as string
-												].attributes.media_duration,
-											),
-										);
-									} else {
-										this.value = value as number;
-									}
-								}, 500);
-							} catch (e) {
-								console.error(e);
-								this.value = value as string | number | boolean;
-							}
-							break;
-						default:
-							this.value = value as string | number | boolean;
-							break;
-					}
-				} else {
-					this.value = value;
-				}
-			}
-
+		super.setValue();
+		if (this.getValueFromHass) {
 			this.oldValue = Number(this.value);
 			if (this.newValue == undefined) {
 				this.newValue = Number(this.value);
 			}
-		}
-
-		if (
-			this.value != undefined &&
-			typeof this.value == 'number' &&
-			!this.precision
-		) {
-			this.value = Math.trunc(Number(this.value));
 		}
 	}
 
@@ -300,6 +182,16 @@ export class RemoteSlider extends BaseRemoteElement {
 		}
 
 		this.showTooltip = show;
+	}
+
+	setSliderState(value: number) {
+		this.sliderOn =
+			!(
+				value == undefined ||
+				this.hass.states[this.entityId as string].state == 'off' ||
+				(this.entityId?.startsWith('timer.') &&
+					this.hass.states[this.entityId as string].state == 'idle')
+			) || (Number(value) as number) > this.range[0];
 	}
 
 	resetGetValueFromHass() {
@@ -369,7 +261,7 @@ export class RemoteSlider extends BaseRemoteElement {
 
 	buildSlider() {
 		const value = this.getValueFromHass ? this.value : this.currentValue;
-		this.sliderOn = !(value == undefined || Number(value) <= this.range[0]);
+		this.setSliderState(value as number);
 		return html`
 			<input
 				type="range"

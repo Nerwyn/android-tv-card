@@ -21,6 +21,13 @@ export class BaseRemoteElement extends LitElement {
 	@property({ attribute: false }) mediaPlayerId?: string;
 
 	@state() value?: string | number | boolean = 0;
+	entityId?: string;
+	getValueFromHass: boolean = true;
+	getValueFromHassTimer?: ReturnType<typeof setTimeout>;
+	valueUpdateInterval?: ReturnType<typeof setInterval>;
+
+	precision: number = 2;
+
 	buttonPressStart?: number;
 	buttonPressEnd?: number;
 	fireMouseEvent?: boolean = true;
@@ -353,20 +360,208 @@ export class BaseRemoteElement extends LitElement {
 		return true;
 	}
 
+	setValue() {
+		this.entityId = this.renderTemplate(
+			(this.actions.tap_action?.data?.entity_id as string) ?? '',
+		) as string;
+
+		if (this.getValueFromHass && this.entityId) {
+			clearInterval(this.valueUpdateInterval);
+			this.valueUpdateInterval = undefined;
+
+			let valueAttribute = (
+				this.renderTemplate(
+					this.actions.value_attribute ?? 'volume_level',
+				) as string
+			).toLowerCase();
+			if (valueAttribute == 'state') {
+				this.value = this.hass.states[this.entityId].state;
+			} else {
+				let value:
+					| string
+					| number
+					| boolean
+					| string[]
+					| number[]
+					| undefined;
+				const indexMatch = valueAttribute.match(/\[\d+\]$/);
+
+				if (indexMatch) {
+					const index = parseInt(indexMatch[0].replace(/\[|\]/g, ''));
+					valueAttribute = valueAttribute.replace(indexMatch[0], '');
+					value =
+						this.hass.states[this.entityId].attributes[
+							valueAttribute
+						];
+					if (value && Array.isArray(value) && value.length) {
+						value = value[index];
+					} else {
+						value == undefined;
+					}
+				} else {
+					value =
+						this.hass.states[this.entityId].attributes[
+							valueAttribute
+						];
+				}
+
+				if (value != undefined || valueAttribute == 'elapsed') {
+					switch (valueAttribute) {
+						case 'brightness':
+							this.value = Math.round(
+								(100 * parseInt((value as string) ?? 0)) / 255,
+							);
+							break;
+						case 'media_position':
+							try {
+								const setIntervalValue = () => {
+									if (
+										this.hass.states[
+											this.entityId as string
+										].state == 'playing'
+									) {
+										this.value = Math.min(
+											Math.floor(
+												Math.floor(value as number) +
+													(Date.now() -
+														Date.parse(
+															this.hass.states[
+																this
+																	.entityId as string
+															].attributes
+																.media_position_updated_at,
+														)) /
+														1000,
+											),
+											Math.floor(
+												this.hass.states[
+													this.entityId as string
+												].attributes.media_duration,
+											),
+										);
+									} else {
+										this.value = value as number;
+									}
+								};
+
+								setIntervalValue();
+								this.valueUpdateInterval = setInterval(
+									setIntervalValue,
+									500,
+								);
+							} catch (e) {
+								console.error(e);
+								this.value = value as string | number | boolean;
+							}
+							break;
+						case 'elapsed':
+							if (this.entityId.startsWith('timer.')) {
+								if (
+									this.hass.states[this.entityId as string]
+										.state == 'idle'
+								) {
+									this.value = 0;
+								} else {
+									const durationHMS =
+										this.hass.states[
+											this.entityId as string
+										].attributes.duration.split(':');
+									const durationSeconds =
+										parseInt(durationHMS[0]) * 3600 +
+										parseInt(durationHMS[1]) * 60 +
+										parseInt(durationHMS[2]);
+									const endSeconds = Date.parse(
+										this.hass.states[
+											this.entityId as string
+										].attributes.finishes_at,
+									);
+									try {
+										const setIntervalValue = () => {
+											if (
+												this.hass.states[
+													this.entityId as string
+												].state == 'active'
+											) {
+												const remainingSeconds =
+													(endSeconds - Date.now()) /
+													1000;
+												const value = Math.floor(
+													durationSeconds -
+														remainingSeconds,
+												);
+												this.value = Math.min(
+													value,
+													durationSeconds,
+												);
+											} else {
+												const remainingHMS =
+													this.hass.states[
+														this.entityId as string
+													].attributes.remaining.split(
+														':',
+													);
+												const remainingSeconds =
+													parseInt(remainingHMS[0]) *
+														3600 +
+													parseInt(remainingHMS[1]) *
+														60 +
+													parseInt(remainingHMS[2]);
+												this.value = Math.floor(
+													durationSeconds -
+														remainingSeconds,
+												);
+											}
+										};
+
+										setIntervalValue();
+										this.valueUpdateInterval = setInterval(
+											setIntervalValue,
+											500,
+										);
+									} catch (e) {
+										console.error(e);
+										this.value = 0;
+									}
+								}
+								break;
+							}
+						// falls through
+						default:
+							this.value = value as string | number | boolean;
+							break;
+					}
+				} else {
+					this.value = value;
+				}
+			}
+		}
+
+		if (
+			this.value != undefined &&
+			typeof this.value == 'number' &&
+			!this.precision
+		) {
+			this.value = Math.trunc(Number(this.value));
+		}
+	}
+
 	renderTemplate(
 		str: string | number | boolean,
-		context?: Record<string, string | number | boolean>,
+		context?: object,
 	): string | number | boolean {
-		if (!context) {
-			let holdSecs: number = 0;
-			if (this.buttonPressStart && this.buttonPressEnd) {
-				holdSecs = (this.buttonPressEnd - this.buttonPressStart) / 1000;
-			}
-			context = {
-				VALUE: this.value as string,
-				HOLD_SECS: holdSecs ?? 0,
-			};
+		let holdSecs: number = 0;
+		if (this.buttonPressStart && this.buttonPressEnd) {
+			holdSecs = (this.buttonPressEnd - this.buttonPressStart) / 1000;
 		}
+		context = {
+			VALUE: this.value as string,
+			HOLD_SECS: holdSecs ?? 0,
+			config: {
+				...this.actions,
+				entity: this.entityId,
+			},
+		};
+
 		str = renderTemplate(this.hass, str as string, context);
 
 		// Legacy VALUE interpolation (and others)
@@ -374,13 +569,16 @@ export class BaseRemoteElement extends LitElement {
 			for (const key in context) {
 				if (key in context) {
 					if (str == key) {
-						str = context[key] as string;
+						str = context[key as keyof object] as string;
 					} else if (str.toString().includes(key)) {
 						str = str
 							.toString()
 							.replace(
 								new RegExp(key, 'g'),
-								(context[key] ?? '').toString(),
+								(
+									(context[key as keyof object] as string) ??
+									''
+								).toString(),
 							);
 					}
 				}
@@ -390,10 +588,7 @@ export class BaseRemoteElement extends LitElement {
 		return str;
 	}
 
-	buildStyle(
-		_style: StyleInfo = {},
-		context?: Record<string, string | number | boolean>,
-	) {
+	buildStyle(_style: StyleInfo = {}, context?: object) {
 		const style = structuredClone(_style);
 		for (const key in style) {
 			style[key] = this.renderTemplate(
@@ -450,8 +645,6 @@ export class BaseRemoteElement extends LitElement {
 			return false;
 		}
 	}
-
-	render() {}
 
 	static get styles(): CSSResult | CSSResult[] {
 		return css``;

@@ -198,8 +198,9 @@ export class RemoteButton extends BaseRemoteElement {
 	}
 
 	render(inputTemplate?: TemplateResult<1>) {
+		this.setValue();
+		
 		const icon = this.renderTemplate(this.actions.icon ?? '') as string;
-
 		let haIcon = html``;
 		let svgPath;
 		if (icon.includes(':')) {
