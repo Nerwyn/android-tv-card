@@ -229,9 +229,9 @@ class AndroidTVCard extends LitElement {
 					'slider_attribute' in config &&
 					!('value_attribute' in customAction)
 				) {
-					customAction.value_attribute = (
-						config as Record<string, string>
-					).slider_attribute;
+					customAction.value_attribute =
+						(config as Record<string, string>).slider_attribute ??
+						'volume_level';
 				}
 				if (
 					'enable_slider_feedback' in config &&
@@ -241,6 +241,10 @@ class AndroidTVCard extends LitElement {
 						config as Record<string, boolean>
 					).enable_slider_feedback;
 				}
+			} else {
+				// Set default value attribute to state if not slider
+				customAction.value_attribute =
+					customAction.value_attribute ?? 'state';
 			}
 
 			// For each type of action

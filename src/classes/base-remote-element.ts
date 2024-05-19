@@ -371,7 +371,7 @@ export class BaseRemoteElement extends LitElement {
 
 			let valueAttribute = (
 				this.renderTemplate(
-					this.actions.value_attribute ?? 'volume_level',
+					this.actions.value_attribute as string,
 				) as string
 			).toLowerCase();
 			if (valueAttribute == 'state') {
