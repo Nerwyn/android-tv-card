@@ -261,10 +261,20 @@ export class RemoteSlider extends BaseRemoteElement {
 	buildSlider() {
 		const value = this.getValueFromHass ? this.value : this.currentValue;
 		this.setSliderState(value as number);
+
+		const style: StyleInfo = {};
+		if (
+			this.renderTemplate(this.actions.tap_action?.action as string) ==
+			'none'
+		) {
+			style['pointer-events'] = 'none';
+		}
+
 		return html`
 			<input
 				type="range"
 				class="${this.sliderOn ? 'slider' : 'slider-off'}"
+				style=${styleMap(style)}
 				min="${this.range[0]}"
 				max="${this.range[1]}"
 				step=${this.step}

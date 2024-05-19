@@ -749,11 +749,11 @@ custom_actions:
 
 You can change several other attributes of the slider by setting them in a custom action for the slider.
 
-| Name            | Type             | Description                                                                        |
-| --------------- | ---------------- | ---------------------------------------------------------------------------------- |
-| value_attribute | string           | An entity attribute (or state) for the slider to track, defaults to `volume_level` |
-| range           | [number, number] | The range of the slider, defaults to [0,1].                                        |
-| step            | number           | The step size of the slider, defaults to one hundredth of the range.               |
+| Name            | Type             | Description                                                                                                                             |
+| --------------- | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| value_attribute | string           | An entity attribute (or state) for the slider to track, defaults to `volume_level` for the slider and `state` for buttons and touchpad. |
+| range           | [number, number] | The range of the slider, defaults to [0,1].                                                                                             |
+| step            | number           | The step size of the slider, defaults to one hundredth of the range.                                                                    |
 
 You can change the entity attribute that the slider tracks by setting `value_attribute` to either `state` or an entity specific attribute. If the attribute which you wish to use is an array, you can also further include the index at the end of the attribute name in brackets (like `hs_color[0]`).
 
@@ -761,6 +761,8 @@ Some additional logic is applied for certain `value_attribute` values:
 
 - `brightness` - Converted from the default range of 0-255 to 0-100.
 - `media_position` - Updated twice a second using the current timestamp and the attribute `media_position_updated_at` when the entity state is `playing`, and locked to a max value using the attribute `media_duration`.
+- `elapsed` - Only for timer entities. Updated twice a second using the the current timestamp and the attributes `duration`, `remaining`, and `finishes_at`, and locked to a max value using the attribute `duration`.
+  - _NOTE_: `elapsed` is not an actual attribute of timer entities, but is a possible `value_attribute` for timer entities for the purpose of displaying accurate timer elapsed values. Timer entities do have an attribute `remaining`, which only updates when the timer state changes. The actual `remaining` attribute can be calculated using the `elapsed` value and the timer `duration` attribute.
 
 ```yaml
 custom_actions:
