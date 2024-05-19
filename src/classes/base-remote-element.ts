@@ -374,7 +374,9 @@ export class BaseRemoteElement extends LitElement {
 					this.actions.value_attribute as string,
 				) as string
 			).toLowerCase();
-			if (valueAttribute == 'state') {
+			if (!this.hass.states[this.entityId]) {
+				this.value = undefined;
+			} else if (valueAttribute == 'state') {
 				this.value = this.hass.states[this.entityId].state;
 			} else {
 				let value:
