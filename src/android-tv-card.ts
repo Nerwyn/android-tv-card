@@ -497,13 +497,14 @@ class AndroidTVCard extends LitElement {
 		];
 	}
 
-	buildTouchpad(): TemplateResult {
+	buildTouchpad(context: object): TemplateResult {
 		// If still using old double tap toggle and key, map to center double tap action
 		const centerActions = this.getActions('center');
 		if (
 			renderTemplate(
 				this.hass,
 				(this.config as Record<string, string>).enable_double_click,
+				context,
 			) &&
 			!('double_tap_action' in centerActions)
 		) {
@@ -512,6 +513,7 @@ class AndroidTVCard extends LitElement {
 					this.hass,
 					(this.config as Record<string, string>)
 						.double_click_keycode,
+					context,
 				) as string) ?? 'back';
 			const doubleTapAction = this.getActions(doubleTapKeycode);
 			centerActions.double_tap_action = doubleTapAction.tap_action;
@@ -524,6 +526,7 @@ class AndroidTVCard extends LitElement {
 			renderTemplate(
 				this.hass,
 				(this.config as Record<string, string>).long_click_keycode,
+				context,
 			) &&
 			!('hold_action' in centerActions)
 		) {
@@ -531,6 +534,7 @@ class AndroidTVCard extends LitElement {
 				(renderTemplate(
 					this.hass,
 					(this.config as Record<string, string>).long_click_keycode,
+					context,
 				) as string) ?? 'center';
 			const holdAction = this.getActions(holdActionKeycode);
 			centerActions.hold_action = holdAction.tap_action;
@@ -619,7 +623,11 @@ class AndroidTVCard extends LitElement {
 		/>`;
 	}
 
-	buildElements(row: (string | string[])[], isColumn: boolean = false) {
+	buildElements(
+		row: (string | string[])[],
+		isColumn: boolean = false,
+		context: object = {},
+	) {
 		if (typeof row == 'string') {
 			row = [row];
 		}
@@ -628,12 +636,15 @@ class AndroidTVCard extends LitElement {
 			elementName = renderTemplate(
 				this.hass,
 				elementName as string,
+				context,
 			) as string;
 			if (typeof elementName == 'string' && elementName.includes('- ')) {
 				elementName = load(elementName) as string;
 			}
 			if (typeof elementName == 'object' && elementName != null) {
-				rowContent.push(this.buildElements(elementName, !isColumn));
+				rowContent.push(
+					this.buildElements(elementName, !isColumn, context),
+				);
 			} else {
 				switch (elementName) {
 					case 'vol_buttons':
@@ -662,7 +673,7 @@ class AndroidTVCard extends LitElement {
 					case 'touchpad':
 					case 'nav_touchpad':
 					case 'navigation_touchpad': {
-						rowContent.push(this.buildTouchpad());
+						rowContent.push(this.buildTouchpad(context));
 						break;
 					}
 
@@ -698,17 +709,39 @@ class AndroidTVCard extends LitElement {
 			return html``;
 		}
 
+		const context = {
+			config: {
+				...this.config,
+				entity: renderTemplate(
+					this.hass,
+					this.config.remote_id ??
+						this.config.media_player_id ??
+						this.config.keyboard_id ??
+						this.config.slider_id ??
+						'',
+				),
+			},
+		};
+
 		const content: TemplateResult[] = [];
 
 		this.nRows = 0;
 		this.nColumns = 0;
 		for (const row of this.config.rows ?? []) {
-			const rowContent = this.buildElements(row as string[]);
+			const rowContent = this.buildElements(
+				row as string[],
+				false,
+				context,
+			);
 			content.push(rowContent);
 		}
 
 		return html`<ha-card
-			.header="${renderTemplate(this.hass, this.config.title as string)}"
+			.header="${renderTemplate(
+				this.hass,
+				this.config.title as string,
+				context,
+			)}"
 			>${content}</ha-card
 		>`;
 	}
