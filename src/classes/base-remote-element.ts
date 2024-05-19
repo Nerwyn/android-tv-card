@@ -560,6 +560,7 @@ export class BaseRemoteElement extends LitElement {
 				...this.actions,
 				entity: this.entityId,
 			},
+			...context,
 		};
 
 		str = renderTemplate(this.hass, str as string, context);
