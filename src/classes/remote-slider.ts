@@ -388,7 +388,7 @@ export class RemoteSlider extends BaseRemoteElement {
 					appearance: none;
 					-webkit-appearance: none;
 					height: var(--height);
-					width: 24px;
+					width: 16px;
 					cursor: pointer;
 					z-index: 1;
 					background: var(--color);
@@ -399,7 +399,7 @@ export class RemoteSlider extends BaseRemoteElement {
 					appearance: none;
 					-webkit-appearance: none;
 					height: var(--height);
-					width: 24px;
+					width: 16px;
 					border-color: var(--color);
 					background: var(--color);
 					cursor: pointer;
