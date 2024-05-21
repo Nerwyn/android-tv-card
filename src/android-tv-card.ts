@@ -225,13 +225,14 @@ class AndroidTVCard extends LitElement {
 						config as Record<string, number>
 					).slider_step;
 				}
-				if (
-					'slider_attribute' in config &&
-					!('value_attribute' in customAction)
-				) {
-					customAction.value_attribute =
-						(config as Record<string, string>).slider_attribute ??
-						'volume_level';
+				if (!('value_attribute' in customAction)) {
+					if ('slider_attribute' in config) {
+						customAction.value_attribute =
+							(config as Record<string, string>)
+								.slider_attribute ?? 'volume_level';
+					} else {
+						customAction.value_attribute = 'volume_level';
+					}
 				}
 				if (
 					'enable_slider_feedback' in config &&
