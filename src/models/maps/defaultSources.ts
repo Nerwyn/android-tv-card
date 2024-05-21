@@ -34,7 +34,10 @@ export const defaultSources: Record<string, IActions> = {
 		icon: 'mdi:hulu',
 	},
 	max: {
-		tap_action: { action: 'source', source: 'https://play.max.com' }, // BROKEN
+		tap_action: {
+			action: 'source',
+			source: 'market://launch?id=com.wbd.stream',
+		}, // BROKEN
 		icon: svg.max,
 	},
 	mlbtv: {
