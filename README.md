@@ -2108,9 +2108,16 @@ custom_actions:
       right: 30px
       height: 170px
       width: 90px
+card_mod:
+  style: |
+    #row-1,
+    #row-2,
+    #row-3 {
+      justify-content: center
+    }
 ```
 
-<img src="https://github.com/Nerwyn/android-tv-card/blob/main/assets/google_tv_dpad.png" alt="google tv app styled dpad" width="500"/>
+<img src="https://github.com/Nerwyn/android-tv-card/blob/main/assets/google_tv_dpad.png" alt="`google `tv app styled dpad" width="500"/>
 
 [last-commit-shield]: https://img.shields.io/github/last-commit/Nerwyn/android-tv-card?style=for-the-badge
 [commits]: https://github.com/Nerwyn/android-tv-card/commits/main
