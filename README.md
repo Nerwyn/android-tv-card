@@ -625,7 +625,7 @@ custom_actions:
         entity_id: light.sunroom_ceiling
 ```
 
-Using buttons (and touchpad center) in momentary mode also allows you to send the number of seconds elapsed in `momentary_end_action` by setting a data key value to `HOLD_SECS`.
+Using buttons (and touchpad center) in momentary mode also allows you to send the number of seconds elapsed in `momentary_end_action` by setting a data key value to `hold_secs`.
 
 ```yaml
 custom_actions:
@@ -636,7 +636,7 @@ custom_actions:
       data:
         entity_id: remote.google_tv
         command: MEDIA_FAST_FORWARD
-        hold_secs: HOLD_SECS
+        hold_secs: hold_secs
 ```
 
 ### Custom Button Style
@@ -729,7 +729,7 @@ custom_actions:
 
 By default the slider calls the `media_player.volume_set` service, with `entity_id` set to `slider_id` and `volume_level` set to the slider value.
 
-You can change this by creating a custom action for `slider`. Set the value which you wish to set using the slider to `'{{ VALUE }}'`.
+You can change this by creating a custom action for `slider`. Set the value which you wish to set using the slider to `'{{ value }}'`.
 
 ```yaml
 custom_actions:
@@ -738,7 +738,7 @@ custom_actions:
       service: light.turn_on
       data:
         entity_id: light.sunroom_ceiling
-        brightness: '{{ VALUE }}'
+        brightness: '{{ value }}'
     range:
       - 0
       - 255
@@ -799,8 +799,8 @@ Similar to how styles can be set for each custom action, it can be used to chang
 | --height            | Slider thumb / percentage on height.                                                  |
 | --background-height | Slider background height. Maximum is constrained by the foreground height.            |
 | --border-radius     | Border radius of the entire slider.                                                   |
-| --tooltip-label     | Tooltip label template, defaults to `{{ VALUE }}`.                                    |
-| --tooltip-offset    | Tooltip offset from center, defaults to `{{ OFFSET }}px`.                             |
+| --tooltip-label     | Tooltip label template, defaults to `{{ value }}`.                                    |
+| --tooltip-offset    | Tooltip offset from center, defaults to `{{ offset }}px`.                             |
 | --tooltip-transform | Tooltip location transform function, defaults to `translateX(var(--tooltip-offset))`. |
 | --tooltip-display   | Tooltip display value, set to `none` to hide tooltip, defaults to `initial`.          |
 

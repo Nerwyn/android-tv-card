@@ -228,11 +228,11 @@ export class RemoteSlider extends BaseRemoteElement {
 		const style: StyleInfo = this.buildStyle(
 			{
 				'--tooltip-label': `"${
-					this.actions?.style?.['--tooltip-label'] ?? '{{ VALUE }}'
+					this.actions?.style?.['--tooltip-label'] ?? '{{ value }}'
 				}"`,
 				'--tooltip-offset':
 					this.actions?.style?.['--tooltip-offset'] ??
-					'{{ OFFSET }}px',
+					'{{ offset }}px',
 				'--tooltip-transform':
 					this.actions?.style?.['--tooltip-transform'] ??
 					'translateX(var(--tooltip-offset))',

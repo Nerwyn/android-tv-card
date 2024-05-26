@@ -223,7 +223,7 @@ export const defaultKeys: Record<string, IActions> = {
 			action: 'call-service',
 			service: 'media_player.volume_set',
 			data: {
-				volume_level: 'VALUE',
+				volume_level: '{{ value }}',
 			},
 		},
 	},
