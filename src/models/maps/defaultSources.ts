@@ -89,7 +89,7 @@ export const defaultSources: Record<string, IActions> = {
 	},
 	stremio: {
 		tap_action: { action: 'source', source: 'stremio://' },
-		icon: 'mdi:play-circle',
+		icon: svg.stremio,
 	},
 	surfshark: {
 		tap_action: {
