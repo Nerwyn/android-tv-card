@@ -558,6 +558,8 @@ export class BaseRemoteElement extends LitElement {
 		context = {
 			VALUE: this.value as string,
 			HOLD_SECS: holdSecs ?? 0,
+			value: this.value as string,
+			hold_secs: holdSecs ?? 0,
 			config: {
 				...this.actions,
 				entity: this.entityId,
@@ -565,25 +567,25 @@ export class BaseRemoteElement extends LitElement {
 			...context,
 		};
 
-		str = renderTemplate(this.hass, str as string, context);
+		const res = renderTemplate(this.hass, str as string, context);
+		if (res != str) {
+			return res;
+		}
 
 		// Legacy VALUE interpolation (and others)
 		if (typeof str == 'string') {
-			for (const key in context) {
-				if (key in context) {
-					if (str == key) {
-						str = context[key as keyof object] as string;
-					} else if (str.toString().includes(key)) {
-						str = str
-							.toString()
-							.replace(
-								new RegExp(key, 'g'),
-								(
-									(context[key as keyof object] as string) ??
-									''
-								).toString(),
-							);
-					}
+			for (const key of ['VALUE', 'HOLD_SECS']) {
+				if (str == key) {
+					return context[key as keyof object] as string;
+				} else if (str.toString().includes(key)) {
+					return str
+						.toString()
+						.replace(
+							new RegExp(key, 'g'),
+							(
+								(context[key as keyof object] as string) ?? ''
+							).toString(),
+						);
 				}
 			}
 		}

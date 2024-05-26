@@ -87,6 +87,10 @@ export const defaultSources: Record<string, IActions> = {
 		tap_action: { action: 'source', source: 'https://www.starplus.com' },
 		icon: svg.starplus,
 	},
+	stremio: {
+		tap_action: { action: 'source', source: 'stremio://' },
+		icon: 'mdi:play-circle',
+	},
 	surfshark: {
 		tap_action: {
 			action: 'source',
