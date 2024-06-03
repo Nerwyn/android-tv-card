@@ -233,8 +233,8 @@ export class RemoteSlider extends BaseRemoteElement {
 				'--tooltip-transform':
 					this.actions?.style?.['--tooltip-transform'] ??
 					(this.vertical
-						? 'translate(-50px, calc(-1 * var(--tooltip-offset) + 40px))'
-						: 'translateX(var(--tooltip-offset))'),
+						? 'translate(-50px, calc(-1 * var(--tooltip-offset)))'
+						: 'translate(var(--tooltip-offset), -40px)'),
 				'--tooltip-display':
 					this.actions?.style?.['--tooltip-display'] ?? 'initial',
 			},
@@ -460,10 +460,10 @@ export class RemoteSlider extends BaseRemoteElement {
 					height: 20px;
 					width: fit-content;
 					line-height: 20px;
-					top: -29px;
 					transform: var(--tooltip-transform);
 					display: var(--tooltip-display);
 				}
+
 				.faded-out {
 					opacity: 0;
 					transition:
