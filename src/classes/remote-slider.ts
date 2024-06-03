@@ -232,9 +232,9 @@ export class RemoteSlider extends BaseRemoteElement {
 					'{{ offset }}px',
 				'--tooltip-transform':
 					this.actions?.style?.['--tooltip-transform'] ??
-					this.vertical
+					(this.vertical
 						? 'translate(-50px, calc(-1 * var(--tooltip-offset) + 40px))'
-						: 'translateX(var(--tooltip-offset))',
+						: 'translateX(var(--tooltip-offset))'),
 				'--tooltip-display':
 					this.actions?.style?.['--tooltip-display'] ?? 'initial',
 			},
