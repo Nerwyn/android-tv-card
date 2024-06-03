@@ -16,6 +16,7 @@ export class RemoteSlider extends BaseRemoteElement {
 	speed: number = 0.02;
 	range: [number, number] = [0, 1];
 	step: number = 0.01;
+	vertical: boolean = false;
 	intervalId?: ReturnType<typeof setTimeout>;
 	tooltipOffset: number = 0;
 
@@ -129,36 +130,38 @@ export class RemoteSlider extends BaseRemoteElement {
 	}
 
 	onMove(e: MouseEvent | TouchEvent) {
-		const slider = e.currentTarget as HTMLInputElement;
+		if (!this.vertical) {
+			const slider = e.currentTarget as HTMLInputElement;
 
-		let currentX: number;
-		if ('clientX' in e) {
-			currentX = e.clientX;
-		} else {
-			currentX = e.touches[0].clientX;
-		}
-		let currentY: number;
-		if ('clientY' in e) {
-			currentY = e.clientY;
-		} else {
-			currentY = e.touches[0].clientY;
-		}
+			let currentX: number;
+			if ('clientX' in e) {
+				currentX = e.clientX;
+			} else {
+				currentX = e.touches[0].clientX;
+			}
+			let currentY: number;
+			if ('clientY' in e) {
+				currentY = e.clientY;
+			} else {
+				currentY = e.touches[0].clientY;
+			}
 
-		if (this.initialY == undefined) {
-			this.initialY = currentY;
-		}
-		if (this.initialX == undefined) {
-			this.initialX = currentX;
-		} else if (
-			Math.abs(currentX - this.initialX) <
-			Math.abs(currentY - this.initialY) - 20
-		) {
-			this.swiping = true;
-			this.getValueFromHass = true;
-			this.setValue();
-			this.currentValue = this.value ?? 0;
-			this.setTooltip(slider, false);
-			this.setSliderState(this.value as number);
+			if (this.initialY == undefined) {
+				this.initialY = currentY;
+			}
+			if (this.initialX == undefined) {
+				this.initialX = currentX;
+			} else if (
+				Math.abs(currentX - this.initialX) <
+				Math.abs(currentY - this.initialY) - 20
+			) {
+				this.swiping = true;
+				this.getValueFromHass = true;
+				this.setValue();
+				this.currentValue = this.value ?? 0;
+				this.setTooltip(slider, false);
+				this.setSliderState(this.value as number);
+			}
 		}
 	}
 
@@ -334,9 +337,10 @@ export class RemoteSlider extends BaseRemoteElement {
 		};
 
 		const style = this.actions.style ?? {};
-		if (
-			this.renderTemplate(this.actions.vertical ?? false, context) == true
-		) {
+		this.vertical =
+			this.renderTemplate(this.actions.vertical ?? false, context) ==
+			true;
+		if (this.vertical) {
 			style['transform'] = 'rotate(270deg)';
 		}
 
