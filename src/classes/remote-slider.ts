@@ -356,6 +356,7 @@ export class RemoteSlider extends BaseRemoteElement {
 					place-content: center space-evenly;
 					align-items: center;
 					position: relative;
+					height: 50px;
 					width: 100%;
 					border: none;
 					border-radius: 25px;
@@ -368,7 +369,6 @@ export class RemoteSlider extends BaseRemoteElement {
 					color: inherit;
 
 					--color: var(--primary-text-color);
-					--height: 50px;
 					--background: var(--primary-background-color);
 					--background-height: 50px;
 				}
@@ -376,7 +376,7 @@ export class RemoteSlider extends BaseRemoteElement {
 				.container {
 					all: inherit;
 					overflow: hidden;
-					height: var(--height);
+					height: 100%;
 				}
 
 				.slider-background {
@@ -392,7 +392,7 @@ export class RemoteSlider extends BaseRemoteElement {
 					appearance: none;
 					-webkit-appearance: none;
 					-moz-appearance: none;
-					height: var(--height);
+					height: 100%;
 					width: inherit;
 					background: none;
 					overflow: hidden;
@@ -401,7 +401,7 @@ export class RemoteSlider extends BaseRemoteElement {
 				.slider::-webkit-slider-thumb {
 					appearance: none;
 					-webkit-appearance: none;
-					height: var(--height);
+					height: 100%;
 					width: 16px;
 					cursor: pointer;
 					z-index: 1;
@@ -412,7 +412,7 @@ export class RemoteSlider extends BaseRemoteElement {
 				.slider::-moz-range-thumb {
 					appearance: none;
 					-webkit-appearance: none;
-					height: var(--height);
+					height: 100%;
 					width: 16px;
 					border-color: var(--color);
 					background: var(--color);
