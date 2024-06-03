@@ -80,13 +80,15 @@ class AndroidTVCard extends LitElement {
 			...structuredClone(defaultKeys),
 		};
 		this.customActions = config.custom_actions || {};
-		if ('slider_id' in config && this.customActions.slider) {
-			this.customActions.slider = this.mergeDeep(
-				this.defaultActions.slider,
-				this.customActions.slider,
-			);
+		if (this.customActions.slider) {
+			this.customActions.slider = {
+				...this.defaultActions.slider,
+				...this.customActions.slider,
+			};
+		}
+		if (config.slider_id) {
 			this.customActions.slider.tap_action!.data!.entity_id =
-				config.slider_id as string;
+				config.slider_id;
 		}
 		this.icons = {
 			...structuredClone(svg),
