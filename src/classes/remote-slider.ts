@@ -356,7 +356,7 @@ export class RemoteSlider extends BaseRemoteElement {
 					place-content: center space-evenly;
 					align-items: center;
 					position: relative;
-					height: 50px;
+					height: fit-content;
 					width: 100%;
 					border: none;
 					border-radius: 25px;
@@ -376,7 +376,7 @@ export class RemoteSlider extends BaseRemoteElement {
 				.container {
 					all: inherit;
 					overflow: hidden;
-					height: 100%;
+					height: 50px;
 				}
 
 				.slider-background {
