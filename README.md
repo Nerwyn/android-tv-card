@@ -722,10 +722,11 @@ custom_actions:
 
 ## Slider
 
-| Name                  | Type   | Description                                                                                                                                                                                                                             |
-| --------------------- | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| slider_id             | string | The entity id to use for the slider.                                                                                                                                                                                                    |
-| value_from_hass_delay | number | The time the feature will wait after firing an action before it starts retrieving values from Home Assistant again. Useful for preventing bouncing between new and old values if an entity takes a while to update. Defaults to 1000ms. |
+| Name                  | Type    | Description                                                                                                                                                                                                                             |
+| --------------------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| slider_id             | string  | The entity id to use for the slider.                                                                                                                                                                                                    |
+| value_from_hass_delay | number  | The time the feature will wait after firing an action before it starts retrieving values from Home Assistant again. Useful for preventing bouncing between new and old values if an entity takes a while to update. Defaults to 1000ms. |
+| vertical              | boolean | Renders a vertical slider when true. `style.width` must be set to explicitly set the slider height. Defaults to false.                                                                                                                  |
 
 By default the slider calls the `media_player.volume_set` service, with `entity_id` set to `slider_id` and `volume_level` set to the slider value.
 
@@ -796,9 +797,7 @@ Similar to how styles can be set for each custom action, it can be used to chang
 | ------------------- | ------------------------------------------------------------------------------------- |
 | --color             | Color of the slider thumb / percentage on.                                            |
 | --background        | Slider background color.                                                              |
-| --height            | Slider thumb / percentage on height.                                                  |
 | --background-height | Slider background height. Maximum is constrained by the foreground height.            |
-| --border-radius     | Border radius of the entire slider.                                                   |
 | --tooltip-label     | Tooltip label template, defaults to `{{ value }}`.                                    |
 | --tooltip-offset    | Tooltip offset from center, defaults to `{{ offset }}px`.                             |
 | --tooltip-transform | Tooltip location transform function, defaults to `translateX(var(--tooltip-offset))`. |
