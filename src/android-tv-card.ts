@@ -80,11 +80,11 @@ class AndroidTVCard extends LitElement {
 			...structuredClone(defaultKeys),
 		};
 		this.customActions = config.custom_actions || {};
-		if ('slider_id' in config && !this.customActions.slider?.tap_action) {
-			this.customActions.slider = {
-				...(this.customActions.slider ?? {}),
-				...this.defaultActions.slider,
-			};
+		if ('slider_id' in config && this.customActions.slider) {
+			this.customActions.slider = this.mergeDeep(
+				this.defaultActions.slider,
+				this.customActions.slider,
+			);
 			this.customActions.slider.tap_action!.data!.entity_id =
 				config.slider_id as string;
 		}
@@ -430,6 +430,36 @@ class AndroidTVCard extends LitElement {
 		}
 
 		return actions;
+	}
+
+	mergeDeep(target: object, ...sources: [object]): object {
+		function isObject(item: object) {
+			return item && typeof item === 'object' && !Array.isArray(item);
+		}
+
+		if (!sources.length) {
+			return target;
+		}
+		const source: object = sources.shift() as object;
+
+		if (isObject(target) && isObject(source)) {
+			for (const key in source) {
+				if (isObject(source[key as keyof object])) {
+					if (!target[key as keyof object])
+						Object.assign(target, { [key]: {} });
+					this.mergeDeep(
+						target[key as keyof object],
+						source[key as keyof object],
+					);
+				} else {
+					Object.assign(target, {
+						[key]: source[key as keyof object],
+					});
+				}
+			}
+		}
+
+		return this.mergeDeep(target, ...sources);
 	}
 
 	buildRow(content: TemplateResult[]): TemplateResult {
