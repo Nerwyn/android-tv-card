@@ -218,13 +218,7 @@ export class RemoteSlider extends BaseRemoteElement {
 		return html`<div class="slider-background"></div>`;
 	}
 
-	buildTooltip() {
-		const context = {
-			VALUE: `${Number(this.currentValue).toFixed(this.precision)}`,
-			OFFSET: this.tooltipOffset,
-			value: `${Number(this.currentValue).toFixed(this.precision)}`,
-			offset: this.tooltipOffset,
-		};
+	buildTooltip(context: object) {
 		const style: StyleInfo = this.buildStyle(
 			{
 				'--tooltip-label': `"${
@@ -246,6 +240,7 @@ export class RemoteSlider extends BaseRemoteElement {
 		if ('tooltip' in this.actions) {
 			style['--tooltip-display'] = this.renderTemplate(
 				this.actions.tooltip as unknown as string,
+				context,
 			)
 				? 'initial'
 				: 'none';
@@ -260,14 +255,16 @@ export class RemoteSlider extends BaseRemoteElement {
 		`;
 	}
 
-	buildSlider() {
-		const value = this.getValueFromHass ? this.value : this.currentValue;
-		this.setSliderState(value as number);
+	buildSlider(context: object) {
+		const value = context['value' as keyof typeof context] as number;
+		this.setSliderState(value);
 
 		const style: StyleInfo = {};
 		if (
-			this.renderTemplate(this.actions.tap_action?.action as string) ==
-			'none'
+			this.renderTemplate(
+				this.actions.tap_action?.action as string,
+				context,
+			) == 'none'
 		) {
 			style['pointer-events'] = 'none';
 		}
@@ -329,13 +326,22 @@ export class RemoteSlider extends BaseRemoteElement {
 			this.precision = 0;
 		}
 
+		const context = {
+			VALUE: this.getValueFromHass ? this.value : this.currentValue,
+			OFFSET: this.tooltipOffset,
+			value: this.getValueFromHass ? this.value : this.currentValue,
+			offset: this.tooltipOffset,
+		};
+
 		return html`
-			${this.buildTooltip()}
+			${this.buildTooltip(context)}
 			<div
 				class="container"
-				style=${styleMap(this.buildStyle(this.actions.style ?? {}))}
+				style=${styleMap(
+					this.buildStyle(this.actions.style ?? {}, context),
+				)}
 			>
-				${this.buildBackground()}${this.buildSlider()}
+				${this.buildBackground()}${this.buildSlider(context)}
 			</div>
 		`;
 	}
@@ -352,6 +358,7 @@ export class RemoteSlider extends BaseRemoteElement {
 					position: relative;
 					width: 100%;
 					border: none;
+					border-radius: 25px;
 					padding: 0px;
 					box-sizing: border-box;
 					line-height: 0;
@@ -364,14 +371,12 @@ export class RemoteSlider extends BaseRemoteElement {
 					--height: 50px;
 					--background: var(--primary-background-color);
 					--background-height: 50px;
-					--border-radius: 25px;
 				}
 
 				.container {
 					all: inherit;
 					overflow: hidden;
 					height: var(--height);
-					border-radius: var(--border-radius);
 				}
 
 				.slider-background {
@@ -379,7 +384,6 @@ export class RemoteSlider extends BaseRemoteElement {
 					width: inherit;
 					height: var(--background-height);
 					background: var(--background);
-					border-radius: var(--border-radius);
 				}
 
 				.slider,
@@ -390,7 +394,6 @@ export class RemoteSlider extends BaseRemoteElement {
 					-moz-appearance: none;
 					height: var(--height);
 					width: inherit;
-					border-radius: var(--border-radius);
 					background: none;
 					overflow: hidden;
 				}

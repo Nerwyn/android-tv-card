@@ -26,7 +26,7 @@ export class BaseRemoteElement extends LitElement {
 	getValueFromHassTimer?: ReturnType<typeof setTimeout>;
 	valueUpdateInterval?: ReturnType<typeof setInterval>;
 
-	precision: number = 2;
+	precision?: number;
 
 	buttonPressStart?: number;
 	buttonPressEnd?: number;
@@ -537,14 +537,6 @@ export class BaseRemoteElement extends LitElement {
 				}
 			}
 		}
-
-		if (
-			this.value != undefined &&
-			typeof this.value == 'number' &&
-			!this.precision
-		) {
-			this.value = Math.trunc(Number(this.value));
-		}
 	}
 
 	renderTemplate(
@@ -566,6 +558,24 @@ export class BaseRemoteElement extends LitElement {
 			},
 			...context,
 		};
+		context = {
+			render: (str2: string) => this.renderTemplate(str2, context),
+			...context,
+		};
+
+		let value: string | number = context['value' as keyof typeof context];
+		if (
+			value != undefined &&
+			typeof value == 'number' &&
+			this.precision != undefined
+		) {
+			value = Number(value).toFixed(this.precision);
+			context = {
+				...context,
+				VALUE: value,
+				value: value,
+			};
+		}
 
 		const res = renderTemplate(this.hass, str as string, context);
 		if (res != str) {
@@ -578,14 +588,10 @@ export class BaseRemoteElement extends LitElement {
 				if (str == key) {
 					return context[key as keyof object] as string;
 				} else if (str.toString().includes(key)) {
-					return str
-						.toString()
-						.replace(
-							new RegExp(key, 'g'),
-							(
-								(context[key as keyof object] as string) ?? ''
-							).toString(),
-						);
+					str = str.replace(
+						new RegExp(key, 'g'),
+						(context[key as keyof object] ?? '') as string,
+					);
 				}
 			}
 		}
