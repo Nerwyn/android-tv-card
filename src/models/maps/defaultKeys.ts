@@ -219,7 +219,6 @@ export const defaultKeys: Record<string, IActions> = {
 		icon: 'mdi:text-box',
 	},
 	slider: {
-		step: 0.01,
 		range: [0, 1],
 		value_attribute: 'volume_level',
 		tap_action: {
