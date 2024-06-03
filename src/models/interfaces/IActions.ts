@@ -68,6 +68,7 @@ export interface IActions {
 	value_from_hass_delay?: boolean;
 	range?: [number, number];
 	step?: number;
+	vertical?: boolean;
 
 	tap_action?: IAction;
 	hold_action?: IAction;

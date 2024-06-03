@@ -268,6 +268,11 @@ export class RemoteSlider extends BaseRemoteElement {
 		) {
 			style['pointer-events'] = 'none';
 		}
+		if (
+			this.renderTemplate(this.actions.vertical ?? false, context) == true
+		) {
+			style['transform'] = 'rotate(270deg)';
+		}
 
 		return html`
 			<input
@@ -353,6 +358,7 @@ export class RemoteSlider extends BaseRemoteElement {
 				:host {
 					display: flex;
 					flex-flow: column;
+					flex-grow: 0;
 					place-content: center space-evenly;
 					align-items: center;
 					position: relative;
