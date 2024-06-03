@@ -1579,8 +1579,8 @@ custom_actions:
       - 0
       - 0.6
     style:
-      '--border-radius': 4px
-      '--height': 24px
+      height: 24px
+      border-radius: 4px
       '--background-height': 12px
       '--color': darkred
       '--background': red
