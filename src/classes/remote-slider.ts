@@ -268,11 +268,6 @@ export class RemoteSlider extends BaseRemoteElement {
 		) {
 			style['pointer-events'] = 'none';
 		}
-		if (
-			this.renderTemplate(this.actions.vertical ?? false, context) == true
-		) {
-			style['transform'] = 'rotate(270deg)';
-		}
 
 		return html`
 			<input
@@ -338,13 +333,18 @@ export class RemoteSlider extends BaseRemoteElement {
 			offset: this.tooltipOffset,
 		};
 
+		const style = this.actions.style ?? {};
+		if (
+			this.renderTemplate(this.actions.vertical ?? false, context) == true
+		) {
+			style['transform'] = 'rotate(270deg)';
+		}
+
 		return html`
 			${this.buildTooltip(context)}
 			<div
 				class="container"
-				style=${styleMap(
-					this.buildStyle(this.actions.style ?? {}, context),
-				)}
+				style=${styleMap(this.buildStyle(style, context))}
 			>
 				${this.buildBackground()}${this.buildSlider(context)}
 			</div>
@@ -375,8 +375,6 @@ export class RemoteSlider extends BaseRemoteElement {
 					color: inherit;
 
 					--color: var(--primary-text-color);
-					--background: var(--primary-background-color);
-					--background-height: 50px;
 				}
 
 				.container {
@@ -388,8 +386,11 @@ export class RemoteSlider extends BaseRemoteElement {
 				.slider-background {
 					position: absolute;
 					width: inherit;
-					height: var(--background-height);
-					background: var(--background);
+					height: var(--background-height, 100%);
+					background: var(
+						--background,
+						var(--primary-background-color)
+					);
 				}
 
 				.slider,
