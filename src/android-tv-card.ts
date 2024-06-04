@@ -537,88 +537,9 @@ class AndroidTVCard extends LitElement {
 	buildPad(buttons: string[]): TemplateResult {
 		return html`
 			<div class="button-pad">
-				${buttons.map((button) => this.buildButton(button))}
+				${buttons.map((b) => this.buildButton(b))}
 			</div>
 		`;
-	}
-
-	buildDPad(): TemplateResult {
-		return this.buildPad([
-			'',
-			'up',
-			'',
-			'left',
-			'center',
-			'right',
-			'',
-			'down',
-			'',
-		]);
-		// return html`
-		// 	<div class="button-pad">
-		// 		${this.buildButton('')}${this.buildButton('up')}
-		// 		${this.buildButton('')}${this.buildButton('left')}
-		// 		${this.buildButton('center')}${this.buildButton('right')}
-		// 		${this.buildButton('')}${this.buildButton('down')}
-		// 		${this.buildButton('')}
-		// 	</div>
-		// `;
-	}
-
-	buildGamepadX(): TemplateResult {
-		return html`
-			<div class="button-pad">
-				${this.buildButton('')}${this.buildButton('y')}
-				${this.buildButton('')}${this.buildButton('x')}
-				${this.buildButton('')}${this.buildButton('b')}
-				${this.buildButton('')}${this.buildButton('a')}
-				${this.buildButton('')}
-			</div>
-		`;
-	}
-
-	buildGamepadN(): TemplateResult {
-		return html`
-			<div class="button-pad">
-				${this.buildButton('')}${this.buildButton('x')}
-				${this.buildButton('')}${this.buildButton('y')}
-				${this.buildButton('')}${this.buildButton('a')}
-				${this.buildButton('')}${this.buildButton('b')}
-				${this.buildButton('')}
-			</div>
-		`;
-	}
-
-	buildNumpad(): TemplateResult {
-		return html`
-			<div class="button-pad">
-				${this.buildButton('n7')} ${this.buildButton('n8')}
-				${this.buildButton('n9')} ${this.buildButton('n4')}
-				${this.buildButton('n5')} ${this.buildButton('n6')}
-				${this.buildButton('n1')} ${this.buildButton('n2')}
-				${this.buildButton('n3')}
-			</div>
-		`;
-	}
-
-	buildNumButtons(): TemplateResult {
-		return this.buildColumn([
-			this.buildRow([
-				this.buildButton('n7'),
-				this.buildButton('n8'),
-				this.buildButton('n9'),
-			]),
-			this.buildRow([
-				this.buildButton('n4'),
-				this.buildButton('n5'),
-				this.buildButton('n6'),
-			]),
-			this.buildRow([
-				this.buildButton('n1'),
-				this.buildButton('n2'),
-				this.buildButton('n3'),
-			]),
-		]);
 	}
 
 	buildTouchpad(context: object): TemplateResult {
@@ -793,29 +714,75 @@ class AndroidTVCard extends LitElement {
 					case 'dpad':
 					case 'd_pad':
 					case 'direction_pad': {
-						rowContent.push(this.buildDPad());
+						rowContent.push(
+							this.buildPad([
+								'',
+								'up',
+								'',
+								'left',
+								'center',
+								'right',
+								'',
+								'down',
+								'',
+							]),
+						);
 						break;
 					}
-
-					case 'num_buttons':
-					case 'number_buttons': {
-						rowContent.push(this.buildNumButtons());
+					case 'numpad':
+					case 'num_pad':
+					case 'number_pad': {
+						rowContent.push(
+							this.buildPad([
+								'n7',
+								'n8',
+								'n9',
+								'n4',
+								'n5',
+								'n6',
+								'n1',
+								'n2',
+								'n3',
+							]),
+						);
 						break;
 					}
+					case 'xpad':
+					case 'x_pad':
+					case 'gamepad':
+					case 'xgamepad':
+					case 'x_gamepad':
+						rowContent.push(
+							this.buildPad([
+								'',
+								'y',
+								'',
+								'x',
+								'',
+								'b',
+								'',
+								'a',
+								'',
+							]),
+						);
+						break;
 					case 'npad':
 					case 'n_pad':
-					case 'number_pad': {
-						rowContent.push(this.buildNumpad());
-						break;
-					}
-					case 'gamepad':
-					case 'gamepadx':
-					case 'gamepad_x':
-						rowContent.push(this.buildGamepadX());
-						break;
-					case 'gamepadn':
-					case 'gamepad_n':
-						rowContent.push(this.buildGamepadN());
+					case 'ngamepad':
+					case 'n_gamepad':
+						rowContent.push(
+							this.buildPad([
+								'',
+								'x',
+								'',
+								'y',
+								'',
+								'a',
+								'',
+								'b',
+								'',
+							]),
+						);
 						break;
 					case 'touchpad':
 					case 'nav_touchpad':

@@ -54,7 +54,7 @@
 
 - Rows exist in a `rows` array with no limit on the number of rows you can add.
 - Sliders and touchpads can now be placed in rows alongside other buttons.
-  - For [special volume and navigation features](#special-elements) use `vol_buttons`, `slider`, `dpad`, and `touchpad` as button names within a row.
+  - For [special volume and navigation features](#special-elements) use `vol_buttons`, `slider`, `touchpad`, and `nav_buttons`, `dpad`, `numpad`, `xpad`, or `npad` as element names within a row.
 - Empty buttons are no longer clickable.
 - Create columns by creating an array within a row array (see examples). Create an array within that array to create another row. Experiment with nesting rows and columns to make weird remote layouts.
 
@@ -222,15 +222,16 @@ button_style:
 
 This card also supports the following special button shortcuts and elements which can be added to any row or column. `slider` and `touchpad` will be further explained below.
 
-| Name                                                        | Type     | Description                                                                                         |
-| ----------------------------------------------------------- | -------- | --------------------------------------------------------------------------------------------------- |
-| vol_buttons, volume_buttons                                 | buttons  | Shorthand to generate a set of volume down, volume mute, and volume up buttons in a row or column.  |
-| dpad, d_pad, direction_pad, nav_buttons, navigation_buttons | buttons  | Shorthand to generate a set of up, down, left, right, and center buttons arranged in a square grid. |
-| npad, n_pad, number_pad, num_buttons, number_buttons        | buttons  | Shorthand to generate a set of 0-9 buttons arranged in a square grid.                               |
-| gamepad, gamepadx, gamepad_x                                | buttons  | Shorthand to generate a set of A, B, X, and Y buttons arranged in a cross in a square grid.         |
-| gamepadn, gamepad_n                                         | buttons  | Shorthand to generate a set of A, B, X, and Y buttons arranged in a cross in a square grid.         |
-| [slider](#slider), volume_slider                            | slider   | A slider that controls the entity defined by `slider_id`.                                           |
-| [touchpad](#touchpad), nav_touchpad, navigation_touchpad    | touchpad | A touchpad that functions the same as navigation buttons but uses swipe actions instead.            |
+| Name                                                     | Type     | Description                                                                                                 |
+| -------------------------------------------------------- | -------- | ----------------------------------------------------------------------------------------------------------- |
+| [touchpad](#touchpad), nav_touchpad, navigation_touchpad | touchpad | A touchpad that functions the same as navigation buttons but uses swipe actions instead.                    |
+| [slider](#slider), volume_slider                         | slider   | A slider that controls the entity defined by `slider_id`.                                                   |
+| vol_buttons, volume_buttons                              | buttons  | Shorthand to generate a set of volume down, volume mute, and volume up buttons in a row or column.          |
+| nav_buttons, navigation_buttons                          | buttons  | Shorthand to generate a set of up, down, left, right, and center buttons across three rows within a column. |
+| dpad, d_pad, direction_pad,                              | buttons  | Shorthand to generate a set of up, down, left, right, and center buttons arranged in a square grid.         |
+| numpad, num_pad, number_pad                              | buttons  | Shorthand to generate a set of 0-9 buttons arranged in a square grid.                                       |
+| xpad, x_pad, gamepad, xgamepad, x_gamepad                | buttons  | Shorthand to generate a set of A, B, X, and Y buttons arranged in a square grid.                            |
+| npad, n_pad, ngamepad, n_gamepad                         | buttons  | Shorthand to generate a set of A, B, X, and Y buttons arranged in a square grid.                            |
 
 ## Custom Actions
 
