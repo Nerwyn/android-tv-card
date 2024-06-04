@@ -225,7 +225,7 @@ export class RemoteSlider extends BaseRemoteElement {
 		}
 		return html`<div
 			class="slider-background"
-			style=${this.buildStyle(style, context)}
+			style=${styleMap(this.buildStyle(style, context))}
 		></div>`;
 	}
 
@@ -290,7 +290,7 @@ export class RemoteSlider extends BaseRemoteElement {
 			<input
 				type="range"
 				class="${this.sliderOn ? 'slider' : 'slider-off'}"
-				style=${styleMap(style)}
+				style=${styleMap(this.buildStyle(style, context))}
 				min="${this.range[0]}"
 				max="${this.range[1]}"
 				step=${this.step}
