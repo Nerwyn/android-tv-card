@@ -522,19 +522,40 @@ class AndroidTVCard extends LitElement {
 		/>`;
 	}
 
+	buildNavButtons(): TemplateResult {
+		return this.buildColumn([
+			this.buildRow([this.buildButton('up')]),
+			this.buildRow([
+				this.buildButton('left'),
+				this.buildButton('center'),
+				this.buildButton('right'),
+			]),
+			this.buildRow([this.buildButton('down')]),
+		]);
+	}
+
+	buildPad(buttons: string[]): TemplateResult {
+		return html`
+			<div class="button-pad">
+				${buttons.map((button) => this.buildButton(button))}
+			</div>
+		`;
+	}
+
 	buildDPad(): TemplateResult {
-		return html`
-			<div class="button-pad">
-				${this.buildButton('')}${this.buildButton('up')}
-				${this.buildButton('')}${this.buildButton('left')}
-				${this.buildButton('center')}${this.buildButton('right')}
-				${this.buildButton('')}${this.buildButton('down')}
-				${this.buildButton('')}
-			</div>
-		`;
+		return this.buildPad(['', 'up', '', 'left', 'right', '', 'down', '']);
+		// return html`
+		// 	<div class="button-pad">
+		// 		${this.buildButton('')}${this.buildButton('up')}
+		// 		${this.buildButton('')}${this.buildButton('left')}
+		// 		${this.buildButton('center')}${this.buildButton('right')}
+		// 		${this.buildButton('')}${this.buildButton('down')}
+		// 		${this.buildButton('')}
+		// 	</div>
+		// `;
 	}
 
-	buildGamePadX(): TemplateResult {
+	buildGamepadX(): TemplateResult {
 		return html`
 			<div class="button-pad">
 				${this.buildButton('')}${this.buildButton('y')}
@@ -546,7 +567,7 @@ class AndroidTVCard extends LitElement {
 		`;
 	}
 
-	buildGamePadN(): TemplateResult {
+	buildGamepadN(): TemplateResult {
 		return html`
 			<div class="button-pad">
 				${this.buildButton('')}${this.buildButton('x')}
@@ -558,7 +579,7 @@ class AndroidTVCard extends LitElement {
 		`;
 	}
 
-	buildNumberPad(): TemplateResult {
+	buildNumpad(): TemplateResult {
 		return html`
 			<div class="button-pad">
 				${this.buildButton('n7')} ${this.buildButton('n8')}
@@ -568,6 +589,26 @@ class AndroidTVCard extends LitElement {
 				${this.buildButton('n3')}
 			</div>
 		`;
+	}
+
+	buildNumButtons(): TemplateResult {
+		return this.buildColumn([
+			this.buildRow([
+				this.buildButton('n7'),
+				this.buildButton('n8'),
+				this.buildButton('n9'),
+			]),
+			this.buildRow([
+				this.buildButton('n4'),
+				this.buildButton('n5'),
+				this.buildButton('n6'),
+			]),
+			this.buildRow([
+				this.buildButton('n1'),
+				this.buildButton('n2'),
+				this.buildButton('n3'),
+			]),
+		]);
 	}
 
 	buildTouchpad(context: object): TemplateResult {
@@ -734,31 +775,37 @@ class AndroidTVCard extends LitElement {
 						rowContent.push(this.buildSlider());
 						break;
 					}
-
-					case 'dpad':
-					case 'd_pad':
-					case 'direction_pad':
 					case 'nav_buttons':
 					case 'navigation_buttons': {
+						rowContent.push(this.buildNavButtons());
+						break;
+					}
+					case 'dpad':
+					case 'd_pad':
+					case 'direction_pad': {
 						rowContent.push(this.buildDPad());
+						break;
+					}
+
+					case 'num_buttons':
+					case 'number_buttons': {
+						rowContent.push(this.buildNumButtons());
 						break;
 					}
 					case 'npad':
 					case 'n_pad':
-					case 'number_pad':
-					case 'num_buttons':
-					case 'number_buttons': {
-						rowContent.push(this.buildNumberPad());
+					case 'number_pad': {
+						rowContent.push(this.buildNumpad());
 						break;
 					}
 					case 'gamepad':
 					case 'gamepadx':
 					case 'gamepad_x':
-						rowContent.push(this.buildGamePadX());
+						rowContent.push(this.buildGamepadX());
 						break;
 					case 'gamepadn':
 					case 'gamepad_n':
-						rowContent.push(this.buildGamePadN());
+						rowContent.push(this.buildGamepadN());
 						break;
 					case 'touchpad':
 					case 'nav_touchpad':
