@@ -787,6 +787,7 @@ class AndroidTVCard extends LitElement {
 		return css`
 			ha-card {
 				padding: 12px;
+				--size: 48px;
 			}
 			.row {
 				display: flex;
@@ -817,7 +818,6 @@ class AndroidTVCard extends LitElement {
 				width: var(--size);
 				height: var(--size);
 				position: relative;
-				--size: 48px;
 			}
 			.button-pad {
 				display: grid;
