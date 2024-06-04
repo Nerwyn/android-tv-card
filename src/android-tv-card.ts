@@ -522,16 +522,16 @@ class AndroidTVCard extends LitElement {
 		/>`;
 	}
 
-	buildDPad(): TemplateResult[] {
-		return [
-			this.buildRow([this.buildButton('up')]),
-			this.buildRow([
-				this.buildButton('left'),
-				this.buildButton('center'),
-				this.buildButton('right'),
-			]),
-			this.buildRow([this.buildButton('down')]),
-		];
+	buildDPad(): TemplateResult {
+		return html`
+			<div class="button-pad">
+				${this.buildButton('')} ${this.buildButton('up')}
+				${this.buildButton('')} ${this.buildButton('left')}
+				${this.buildButton('center')} ${this.buildButton('right')}
+				${this.buildButton('')} ${this.buildButton('down')}
+				${this.buildButton('')}
+			</div>
+		`;
 	}
 
 	buildTouchpad(context: object): TemplateResult {
@@ -704,7 +704,7 @@ class AndroidTVCard extends LitElement {
 					case 'direction_pad':
 					case 'nav_buttons':
 					case 'navigation_buttons': {
-						rowContent.push(this.buildColumn(this.buildDPad()));
+						rowContent.push(this.buildDPad());
 						break;
 					}
 					case 'touchpad':
@@ -818,6 +818,12 @@ class AndroidTVCard extends LitElement {
 				height: var(--size);
 				position: relative;
 				--size: 48px;
+			}
+			.button-pad {
+				display: grid;
+				grid-template-rows: repeat(3, var(--size));
+				grid-template-columns: repeat(3, var(--size));
+				grid-gap: 8px;
 			}
 		`;
 	}
