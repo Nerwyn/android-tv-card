@@ -525,11 +525,47 @@ class AndroidTVCard extends LitElement {
 	buildDPad(): TemplateResult {
 		return html`
 			<div class="button-pad">
-				${this.buildButton('')} ${this.buildButton('up')}
-				${this.buildButton('')} ${this.buildButton('left')}
-				${this.buildButton('center')} ${this.buildButton('right')}
-				${this.buildButton('')} ${this.buildButton('down')}
+				${this.buildButton('')}${this.buildButton('up')}
+				${this.buildButton('')}${this.buildButton('left')}
+				${this.buildButton('center')}${this.buildButton('right')}
+				${this.buildButton('')}${this.buildButton('down')}
 				${this.buildButton('')}
+			</div>
+		`;
+	}
+
+	buildGamePadX(): TemplateResult {
+		return html`
+			<div class="button-pad">
+				${this.buildButton('')}${this.buildButton('y')}
+				${this.buildButton('')}${this.buildButton('x')}
+				${this.buildButton('')}${this.buildButton('b')}
+				${this.buildButton('')}${this.buildButton('a')}
+				${this.buildButton('')}
+			</div>
+		`;
+	}
+
+	buildGamePadN(): TemplateResult {
+		return html`
+			<div class="button-pad">
+				${this.buildButton('')}${this.buildButton('x')}
+				${this.buildButton('')}${this.buildButton('y')}
+				${this.buildButton('')}${this.buildButton('a')}
+				${this.buildButton('')}${this.buildButton('b')}
+				${this.buildButton('')}
+			</div>
+		`;
+	}
+
+	buildNumberPad(): TemplateResult {
+		return html`
+			<div class="button-pad">
+				${this.buildButton('n7')} ${this.buildButton('n8')}
+				${this.buildButton('n9')} ${this.buildButton('n4')}
+				${this.buildButton('n5')} ${this.buildButton('n6')}
+				${this.buildButton('n1')} ${this.buildButton('n2')}
+				${this.buildButton('n3')}
 			</div>
 		`;
 	}
@@ -707,6 +743,23 @@ class AndroidTVCard extends LitElement {
 						rowContent.push(this.buildDPad());
 						break;
 					}
+					case 'npad':
+					case 'n_pad':
+					case 'number_pad':
+					case 'num_buttons':
+					case 'number_buttons': {
+						rowContent.push(this.buildNumberPad());
+						break;
+					}
+					case 'gamepad':
+					case 'gamepadx':
+					case 'gamepad_x':
+						rowContent.push(this.buildGamePadX());
+						break;
+					case 'gamepadn':
+					case 'gamepad_n':
+						rowContent.push(this.buildGamePadN());
+						break;
 					case 'touchpad':
 					case 'nav_touchpad':
 					case 'navigation_touchpad': {
@@ -823,7 +876,7 @@ class AndroidTVCard extends LitElement {
 				display: grid;
 				grid-template-rows: repeat(3, var(--size));
 				grid-template-columns: repeat(3, var(--size));
-				grid-gap: 8px;
+				grid-gap: 8px 16px;
 			}
 		`;
 	}

@@ -222,12 +222,15 @@ button_style:
 
 This card also supports the following special button shortcuts and elements which can be added to any row or column. `slider` and `touchpad` will be further explained below.
 
-| Name                                                        | Type     | Description                                                                                                                     |
-| ----------------------------------------------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| vol_buttons, volume_buttons                                 | buttons  | Shorthand to generate a set of volume down, volume mute, and volume up buttons in a row or column.                              |
-| dpad, d_pad, direction_pad, nav_buttons, navigation_buttons | buttons  | Shorthand to generate a set of up, down, left, right, and center buttons arranged in a d-pad across three rows within a column. |
-| [slider](#slider), volume_slider                            | slider   | A slider that controls the entity defined by `slider_id`.                                                                       |
-| [touchpad](#touchpad), nav_touchpad, navigation_touchpad    | touchpad | A touchpad that functions the same as navigation buttons but uses swipe actions instead.                                        |
+| Name                                                        | Type     | Description                                                                                         |
+| ----------------------------------------------------------- | -------- | --------------------------------------------------------------------------------------------------- |
+| vol_buttons, volume_buttons                                 | buttons  | Shorthand to generate a set of volume down, volume mute, and volume up buttons in a row or column.  |
+| dpad, d_pad, direction_pad, nav_buttons, navigation_buttons | buttons  | Shorthand to generate a set of up, down, left, right, and center buttons arranged in a square grid. |
+| npad, n_pad, number_pad, num_buttons, number_buttons        | buttons  | Shorthand to generate a set of 0-9 buttons arranged in a square grid.                               |
+| gamepad, gamepadx, gamepad_x                                | buttons  | Shorthand to generate a set of A, B, X, and Y buttons arranged in a cross in a square grid.         |
+| gamepadn, gamepad_n                                         | buttons  | Shorthand to generate a set of A, B, X, and Y buttons arranged in a cross in a square grid.         |
+| [slider](#slider), volume_slider                            | slider   | A slider that controls the entity defined by `slider_id`.                                           |
+| [touchpad](#touchpad), nav_touchpad, navigation_touchpad    | touchpad | A touchpad that functions the same as navigation buttons but uses swipe actions instead.            |
 
 ## Custom Actions
 
