@@ -273,6 +273,9 @@ export class RemoteSlider extends BaseRemoteElement {
 		) {
 			style['pointer-events'] = 'none';
 		}
+		if (this.vertical) {
+			style['transform'] = 'rotateZ(270deg)';
+		}
 
 		return html`
 			<input
@@ -343,7 +346,6 @@ export class RemoteSlider extends BaseRemoteElement {
 			this.renderTemplate(this.actions.vertical ?? false, context) ==
 			true;
 		if (this.vertical) {
-			style.transform = 'rotateZ(270deg)';
 			if (style['--vertical-width']) {
 				this.style.width = style['--vertical-width'] as string;
 			} else {
