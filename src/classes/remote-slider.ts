@@ -355,8 +355,8 @@ export class RemoteSlider extends BaseRemoteElement {
 			this.renderTemplate(this.actions.vertical ?? false, context) ==
 			true;
 		if (this.vertical) {
-			if (style['--vertical-width']) {
-				this.style.width = style['--vertical-width'] as string;
+			if (style.width) {
+				this.style.width = style.width as string;
 			} else {
 				this.style.width = '50px';
 			}

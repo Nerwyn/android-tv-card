@@ -793,16 +793,15 @@ custom_actions:
 
 Similar to how styles can be set for each custom action, it can be used to change the CSS of the slider. Slider also utilizes the following custom properties.
 
-| Name                | Description                                                                                                    |
-| ------------------- | -------------------------------------------------------------------------------------------------------------- |
-| --color             | Color of the slider thumb / percentage on.                                                                     |
-| --background        | Slider background color.                                                                                       |
-| --background-height | Slider background height. Maximum is constrained by the foreground height.                                     |
-| --tooltip-label     | Tooltip label template, defaults to `{{ value }}`.                                                             |
-| --tooltip-offset    | Tooltip offset from center, defaults to `{{ offset }}px`.                                                      |
-| --tooltip-transform | Tooltip location transform function, defaults to `translate(var(--tooltip-offset), -40px)`.                    |
-| --tooltip-display   | Tooltip display value, set to `none` to hide tooltip, defaults to `initial`.                                   |
-| --vertical-width    | The overall width of a vertical slider. Width of the slider itself must be set using height. Defaults to 50px. |
+| Name                | Description                                                                                 |
+| ------------------- | ------------------------------------------------------------------------------------------- |
+| --color             | Color of the slider thumb / percentage on.                                                  |
+| --background        | Slider background color.                                                                    |
+| --background-height | Slider background height. Maximum is constrained by the foreground height.                  |
+| --tooltip-label     | Tooltip label template, defaults to `{{ value }}`.                                          |
+| --tooltip-offset    | Tooltip offset from center, defaults to `{{ offset }}px`.                                   |
+| --tooltip-transform | Tooltip location transform function, defaults to `translate(var(--tooltip-offset), -40px)`. |
+| --tooltip-display   | Tooltip display value, set to `none` to hide tooltip, defaults to `initial`.                |
 
 ## Touchpad
 
