@@ -543,7 +543,17 @@ class AndroidTVCard extends LitElement {
 	}
 
 	buildDPad(): TemplateResult {
-		return this.buildPad(['', 'up', '', 'left', 'right', '', 'down', '']);
+		return this.buildPad([
+			'',
+			'up',
+			'',
+			'left',
+			'center',
+			'right',
+			'',
+			'down',
+			'',
+		]);
 		// return html`
 		// 	<div class="button-pad">
 		// 		${this.buildButton('')}${this.buildButton('up')}
