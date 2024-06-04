@@ -217,8 +217,16 @@ export class RemoteSlider extends BaseRemoteElement {
 		super.endAction();
 	}
 
-	buildBackground() {
-		return html`<div class="slider-background"></div>`;
+	buildBackground(context: object) {
+		const style: StyleInfo = {};
+		if (this.vertical) {
+			style['transform'] = 'rotateZ(270deg)';
+			style['width'] = this.actions.style?.height ?? '50px';
+		}
+		return html`<div
+			class="slider-background"
+			style=${this.buildStyle(style, context)}
+		></div>`;
 	}
 
 	buildTooltip(context: object) {
@@ -275,6 +283,7 @@ export class RemoteSlider extends BaseRemoteElement {
 		}
 		if (this.vertical) {
 			style['transform'] = 'rotateZ(270deg)';
+			style['width'] = this.actions.style?.height ?? '50px';
 		}
 
 		return html`
@@ -351,8 +360,8 @@ export class RemoteSlider extends BaseRemoteElement {
 			} else {
 				this.style.width = '50px';
 			}
-			if (style.width) {
-				this.style.height = style.width as string;
+			if (style.height) {
+				this.style.height = style.height as string;
 			}
 		}
 
@@ -362,7 +371,7 @@ export class RemoteSlider extends BaseRemoteElement {
 				class="container"
 				style=${styleMap(this.buildStyle(style, context))}
 			>
-				${this.buildBackground()}${this.buildSlider(context)}
+				${this.buildBackground(context)}${this.buildSlider(context)}
 			</div>
 		`;
 	}
