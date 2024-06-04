@@ -471,6 +471,7 @@ export class RemoteSlider extends BaseRemoteElement {
 					height: 20px;
 					width: fit-content;
 					line-height: 20px;
+					pointer-events: none;
 					transform: var(--tooltip-transform);
 					display: var(--tooltip-display);
 				}
