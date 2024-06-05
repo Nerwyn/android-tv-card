@@ -660,13 +660,17 @@ export class BaseRemoteElement extends LitElement {
 
 	buildIcon(icon?: string): TemplateResult<1> {
 		if (icon) {
+			let iconElement = html``;
 			if (icon.includes(':')) {
-				return html`<ha-icon .icon="${icon}"></ha-icon>`;
+				iconElement = html` <ha-icon .icon="${icon}"></ha-icon> `;
 			} else {
-				return html`<ha-svg-icon .path=${
-					this.icons[icon] ?? icon
-				}></ha-svg-icon`;
+				iconElement = html`
+					<ha-svg-icon
+						.path=${this.icons[icon] ?? icon}
+					></ha-svg-icon>
+				`;
 			}
+			return html`<div class=".icon">${iconElement}</div`;
 		}
 		return html``;
 	}
@@ -685,6 +689,11 @@ export class BaseRemoteElement extends LitElement {
 				width: var(--size, 48px);
 				z-index: 2;
 				pointer-events: none;
+			}
+
+			.icon {
+				display: var(--icon-display);
+				transform: var(--icon-transform);
 			}
 		`;
 	}

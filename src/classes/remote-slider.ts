@@ -17,7 +17,7 @@ export class RemoteSlider extends BaseRemoteElement {
 	step: number = 0.01;
 	vertical: boolean = false;
 	intervalId?: ReturnType<typeof setTimeout>;
-	tooltipOffset: number = 0;
+	offset: number = 0;
 
 	onInput(e: InputEvent) {
 		const slider = e.currentTarget as HTMLInputElement;
@@ -36,7 +36,7 @@ export class RemoteSlider extends BaseRemoteElement {
 			this.newValue = end;
 
 			this.currentValue = start;
-			this.setTooltip(slider, true);
+			this.setTooltip(true);
 
 			if (end > this.range[0]) {
 				this.sliderOn = true;
@@ -49,13 +49,13 @@ export class RemoteSlider extends BaseRemoteElement {
 				this.intervalId = setInterval(() => {
 					i -= this.speed;
 					this.currentValue = i;
-					this.setTooltip(slider, this.showTooltip);
+					this.setTooltip();
 
 					if (end >= i) {
 						clearInterval(this.intervalId);
 						this.intervalId = undefined;
 						this.currentValue = end;
-						this.setTooltip(slider, this.showTooltip);
+						this.setTooltip();
 					}
 				}, 1);
 			} else if (start < end) {
@@ -63,13 +63,13 @@ export class RemoteSlider extends BaseRemoteElement {
 				this.intervalId = setInterval(() => {
 					i += this.speed;
 					this.currentValue = i;
-					this.setTooltip(slider, this.showTooltip);
+					this.setTooltip();
 
 					if (end <= i) {
 						clearInterval(this.intervalId);
 						this.intervalId = undefined;
 						this.currentValue = end;
-						this.setTooltip(slider, this.showTooltip);
+						this.setTooltip();
 					}
 				}, 1);
 			} else {
@@ -83,7 +83,7 @@ export class RemoteSlider extends BaseRemoteElement {
 			}
 			this.setValue();
 			this.currentValue = this.value ?? 0;
-			this.setTooltip(slider, false);
+			this.setTooltip(false);
 		}
 	}
 
@@ -95,14 +95,13 @@ export class RemoteSlider extends BaseRemoteElement {
 			clearTimeout(this.getValueFromHassTimer);
 			this.currentValue = slider.value;
 			this.value = slider.value;
-			this.setTooltip(slider, true);
+			this.setTooltip(true);
 			this.sliderOn = true;
 		}
 	}
 
-	onEnd(e: MouseEvent | TouchEvent) {
-		const slider = e.currentTarget as HTMLInputElement;
-		this.setTooltip(slider, false);
+	onEnd(_e: MouseEvent | TouchEvent) {
+		this.setTooltip(false);
 		this.setValue();
 
 		if (!this.swiping) {
@@ -130,8 +129,6 @@ export class RemoteSlider extends BaseRemoteElement {
 
 	onMove(e: MouseEvent | TouchEvent) {
 		if (!this.vertical) {
-			const slider = e.currentTarget as HTMLInputElement;
-
 			let currentX: number;
 			if ('clientX' in e) {
 				currentX = e.clientX;
@@ -158,7 +155,7 @@ export class RemoteSlider extends BaseRemoteElement {
 				this.getValueFromHass = true;
 				this.setValue();
 				this.currentValue = this.value ?? 0;
-				this.setTooltip(slider, false);
+				this.setTooltip(false);
 				this.setSliderState(this.value as number);
 			}
 		}
@@ -174,16 +171,16 @@ export class RemoteSlider extends BaseRemoteElement {
 		}
 	}
 
-	setTooltip(slider: HTMLInputElement, show: boolean) {
-		if (show) {
-			this.tooltipOffset = Math.round(
-				(slider.offsetWidth / (this.range[1] - this.range[0])) *
-					(Number(this.currentValue) -
-						(this.range[0] + this.range[1]) / 2),
-			);
-		}
+	setTooltip(show?: boolean) {
+		this.offset = Math.round(
+			(this.offsetWidth / (this.range[1] - this.range[0])) *
+				(Number(this.currentValue) -
+					(this.range[0] + this.range[1]) / 2),
+		);
 
-		this.showTooltip = show;
+		if (show != undefined) {
+			this.showTooltip = show;
+		}
 	}
 
 	setSliderState(value: number) {
@@ -344,9 +341,10 @@ export class RemoteSlider extends BaseRemoteElement {
 
 		const context = {
 			VALUE: this.getValueFromHass ? this.value : this.currentValue,
-			OFFSET: this.tooltipOffset,
+			OFFSET: this.offset,
 			value: this.getValueFromHass ? this.value : this.currentValue,
-			offset: this.tooltipOffset,
+			offset: this.offset,
+			width: this.offsetWidth,
 		};
 
 		const style = this.actions.style ?? {};
@@ -379,6 +377,17 @@ export class RemoteSlider extends BaseRemoteElement {
 				)}
 			</div>
 		`;
+	}
+
+	updated() {
+		let offsetWidth: number;
+		const interval = setInterval(() => {
+			this.setTooltip();
+			if (this.offsetWidth == offsetWidth) {
+				clearInterval(interval);
+			}
+			offsetWidth = this.offsetWidth;
+		}, 200);
 	}
 
 	static get styles(): CSSResult | CSSResult[] {
