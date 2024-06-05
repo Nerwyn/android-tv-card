@@ -82,6 +82,7 @@
   - Value attribute defaults to state but can instead be used to track any numeric attribute of an entity.
 - Slider style now follows theme.
 - Slider has a tooltip which shows up when the slider is held down on which displays it's current value.
+- Slider can be given an optional icon which follows the thumb.
 
 [**Keyboard support**](#keyboard)
 
@@ -726,11 +727,15 @@ custom_actions:
 
 ## Slider
 
-| Name                  | Type    | Description                                                                                                                                                                                                                             |
-| --------------------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| slider_id             | string  | The entity id to use for the slider.                                                                                                                                                                                                    |
-| value_from_hass_delay | number  | The time the feature will wait after firing an action before it starts retrieving values from Home Assistant again. Useful for preventing bouncing between new and old values if an entity takes a while to update. Defaults to 1000ms. |
-| vertical              | boolean | Renders a vertical slider when true. `style.width` must be set to explicitly set the slider height. Defaults to false.                                                                                                                  |
+| Name                  | Type             | Description                                                                                                                                                                                                                             |
+| --------------------- | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| slider_id             | string           | The entity id to use for the slider.                                                                                                                                                                                                    |
+| value_from_hass_delay | number           | The time the feature will wait after firing an action before it starts retrieving values from Home Assistant again. Useful for preventing bouncing between new and old values if an entity takes a while to update. Defaults to 1000ms. |
+| vertical              | boolean          | Renders a vertical slider when true. `style.width` must be set to explicitly set the slider height. Defaults to false.                                                                                                                  |
+| icon                  | string           | The name of the optional slider icon. Follows the slider thumb by default but this can be changed with style options.                                                                                                                   |
+| value_attribute       | string           | An entity attribute (or state) for the slider to track, defaults to `volume_level` for the slider and `state` for buttons and touchpad.                                                                                                 |
+| range                 | [number, number] | The range of the slider, defaults to [0,1].                                                                                                                                                                                             |
+| step                  | number           | The step size of the slider, defaults to one hundredth of the range.                                                                                                                                                                    |
 
 By default the slider calls the `media_player.volume_set` service, with `entity_id` set to `slider_id` and `volume_level` set to the slider value.
 
@@ -751,14 +756,6 @@ custom_actions:
     value_attribute: brightness
     value_from_hass_delay: 2000
 ```
-
-You can change several other attributes of the slider by setting them in a custom action for the slider.
-
-| Name            | Type             | Description                                                                                                                             |
-| --------------- | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| value_attribute | string           | An entity attribute (or state) for the slider to track, defaults to `volume_level` for the slider and `state` for buttons and touchpad. |
-| range           | [number, number] | The range of the slider, defaults to [0,1].                                                                                             |
-| step            | number           | The step size of the slider, defaults to one hundredth of the range.                                                                    |
 
 You can change the entity attribute that the slider tracks by setting `value_attribute` to either `state` or an entity specific attribute. If the attribute which you wish to use is an array, you can also further include the index at the end of the attribute name in brackets (like `hs_color[0]`).
 
@@ -797,15 +794,22 @@ custom_actions:
 
 Similar to how styles can be set for each custom action, it can be used to change the CSS of the slider. Slider also utilizes the following custom properties.
 
-| Name                | Description                                                                                 |
-| ------------------- | ------------------------------------------------------------------------------------------- |
-| --color             | Color of the slider thumb / percentage on.                                                  |
-| --background        | Slider background color.                                                                    |
-| --background-height | Slider background height. Maximum is constrained by the foreground height.                  |
-| --tooltip-label     | Tooltip label template, defaults to `{{ value }}`.                                          |
-| --tooltip-offset    | Tooltip offset from center, defaults to `{{ offset }}px`.                                   |
-| --tooltip-transform | Tooltip location transform function, defaults to `translate(var(--tooltip-offset), -40px)`. |
-| --tooltip-display   | Tooltip display value, set to `none` to hide tooltip, defaults to `initial`.                |
+| Name                  | Description                                                                                 |
+| --------------------- | ------------------------------------------------------------------------------------------- |
+| --color               | Color of the slider thumb / percentage on.                                                  |
+| --background          | Slider background color.                                                                    |
+| --background-height   | Slider background height. Maximum is constrained by the foreground height.                  |
+| --tooltip-label       | Tooltip label template, defaults to `{{ value }}`.                                          |
+| --tooltip-offset      | Tooltip offset from center, defaults to `{{ offset }}px`.                                   |
+| --tooltip-transform   | Tooltip location transform function, defaults to `translate(var(--tooltip-offset), -40px)`. |
+| --tooltip-display     | Tooltip display value, set to `none` to hide tooltip, defaults to `initial`.                |
+| color                 | Color of the slider icon. Defaults to the slider background color.                          |
+| --size                | Size of the slider icon. Defaults to 32px.                                                  |
+| --icon-transform      | Transform function for the slider icon. Set to track the slider thumb by default.           |
+| --icon-display        | Display mode of the icon. Defaults to flex.                                                 |
+| --thumb-width         | Width of the slider thumb. Defaults to 32px.                                                |
+| --thumb-border-radius | Border radius of the slider thumb. Defaults to 0.                                           |
+| --thumb-box-shadow    | Box shadow of the slider thumb.                                                             |
 
 ## Touchpad
 
