@@ -809,7 +809,7 @@ Similar to how styles can be set for each custom action, it can be used to chang
 | --icon-display        | Display mode of the icon. Defaults to `flex`.                                                                                                |
 | --thumb-width         | Width of the slider thumb. Defaults to `50px`.                                                                                               |
 | --thumb-border-radius | Border radius of the slider thumb. Defaults to `50px`.                                                                                       |
-| --thumb-box-shadow    | Box shadow of the slider thumb. Defaults to `calc(-100vw - 25px) 0 0 100vw var(--color)`.                                                    |
+| --thumb-box-shadow    | Box shadow of the slider thumb. Defaults to `calc(-100vw - (var(--thumb-width, 50px) / 2)) 0 0 100vw var(--color)`.                          |
 
 ## Touchpad
 
