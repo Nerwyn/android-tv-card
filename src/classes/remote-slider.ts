@@ -149,7 +149,7 @@ export class RemoteSlider extends BaseRemoteElement {
 				this.initialX = currentX;
 			} else if (
 				Math.abs(currentX - this.initialX) <
-				Math.abs(currentY - this.initialY) - 20
+				Math.abs(currentY - this.initialY) - 50
 			) {
 				this.swiping = true;
 				this.getValueFromHass = true;
