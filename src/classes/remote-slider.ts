@@ -361,6 +361,15 @@ export class RemoteSlider extends BaseRemoteElement {
 				this.style.height = style.height as string;
 			}
 		}
+		if (!style['--icon-transform']) {
+			if (this.vertical) {
+				style['--icon-transform'] =
+					'translateY({{ offset * ((width - 32) / width) }}px)';
+			} else {
+				style['--icon-transform'] =
+					'translateX({{ offset * ((width - 32) / width) }}px)';
+			}
+		}
 
 		return html`
 			${this.buildTooltip(context)}
@@ -448,8 +457,8 @@ export class RemoteSlider extends BaseRemoteElement {
 				.slider::-webkit-slider-thumb {
 					appearance: none;
 					-webkit-appearance: none;
-					height: 100%;
-					width: 16px;
+					height: 50px;
+					width: 32px;
 					cursor: pointer;
 					background: var(--color);
 					border-color: var(--color);
@@ -459,8 +468,8 @@ export class RemoteSlider extends BaseRemoteElement {
 				.slider::-moz-range-thumb {
 					appearance: none;
 					-webkit-appearance: none;
-					height: 100%;
-					width: 16px;
+					height: 50px;
+					width: 32px;
 					cursor: pointer;
 					background: var(--color);
 					border-color: var(--color);
