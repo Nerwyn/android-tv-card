@@ -479,7 +479,7 @@ export class RemoteSlider extends BaseRemoteElement {
 					border-color: rgb(0, 0, 0, 0);
 					z-index: 1;
 					box-shadow: var(
-						var(--thumb-box-shadow),
+						--thumb-box-shadow,
 						calc(-100vw - 16px) 0 0 100vw var(--color)
 					);
 					border-radius: var(--thumb-border-radius, 0);
@@ -494,7 +494,7 @@ export class RemoteSlider extends BaseRemoteElement {
 					border-color: rgb(0, 0, 0, 0);
 					z-index: 1;
 					box-shadow: var(
-						var(--thumb-box-shadow),
+						--thumb-box-shadow,
 						calc(-100vw - 16px) 0 0 100vw var(--color)
 					);
 					border-radius: var(--thumb-border-radius, 0);
