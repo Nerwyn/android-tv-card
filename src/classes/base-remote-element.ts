@@ -670,7 +670,7 @@ export class BaseRemoteElement extends LitElement {
 					></ha-svg-icon>
 				`;
 			}
-			return html`<div class=".icon">${iconElement}</div`;
+			return html`<div class="icon">${iconElement}</div`;
 		}
 		return html``;
 	}
@@ -692,6 +692,7 @@ export class BaseRemoteElement extends LitElement {
 			}
 
 			.icon {
+				pointer-events: none;
 				display: var(--icon-display);
 				transform: var(--icon-transform);
 			}

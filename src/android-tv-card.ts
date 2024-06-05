@@ -891,14 +891,14 @@ class AndroidTVCard extends LitElement {
 				align-items: center;
 			}
 			.empty-button {
-				width: var(--size);
-				height: var(--size);
+				width: var(--size, 48px);
+				height: var(--size, 48px);
 				position: relative;
 			}
 			.button-pad {
 				display: grid;
-				grid-template-rows: repeat(3, var(--size));
-				grid-template-columns: repeat(3, var(--size));
+				grid-template-rows: repeat(3, var(--size, 48px));
+				grid-template-columns: repeat(3, var(--size, 48px));
 				grid-gap: 8px 16px;
 			}
 		`;
