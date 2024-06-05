@@ -424,7 +424,7 @@ export class RemoteSlider extends BaseRemoteElement {
 					outline: 0px;
 					overflow: visible;
 					font-size: inherit;
-					color: var(--background, var(--primary-background-color));
+					color: inherit;
 
 					--color: var(--primary-text-color);
 					--mdc-icon-size: var(--size, 32px);
@@ -516,6 +516,10 @@ export class RemoteSlider extends BaseRemoteElement {
 				}
 				.tooltip::after {
 					content: var(--tooltip-label);
+				}
+
+				.icon {
+					color: var(--background, var(--primary-background-color));
 				}
 			`,
 		];
