@@ -663,7 +663,7 @@ export class BaseRemoteElement extends LitElement {
 			if (icon.includes(':')) {
 				return html`<ha-icon .icon="${icon}"></ha-icon>`;
 			} else {
-				return html`<ha-svg-icon ${
+				return html`<ha-svg-icon .path=${
 					this.icons[icon] ?? icon
 				}></ha-svg-icon`;
 			}

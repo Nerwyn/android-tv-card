@@ -10,7 +10,6 @@ export class RemoteSlider extends BaseRemoteElement {
 	@state() sliderOn: boolean = true;
 	@state() currentValue = this.value;
 
-	class: string = 'slider';
 	oldValue?: number;
 	newValue?: number;
 	speed: number = 0.02;
@@ -289,7 +288,7 @@ export class RemoteSlider extends BaseRemoteElement {
 		return html`
 			<input
 				type="range"
-				class="${this.sliderOn ? 'slider' : 'slider-off'}"
+				class="${this.sliderOn ? 'slider' : 'slider off'}"
 				style=${styleMap(this.buildStyle(style, context))}
 				min="${this.range[0]}"
 				max="${this.range[1]}"
