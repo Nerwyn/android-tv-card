@@ -161,6 +161,15 @@ export class RemoteSlider extends BaseRemoteElement {
 		}
 	}
 
+	onLeave(_e: MouseEvent) {
+		this.swiping = true;
+		this.getValueFromHass = true;
+		this.setValue();
+		this.currentValue = this.value ?? 0;
+		this.setTooltip(false);
+		this.setSliderState(this.value as number);
+	}
+
 	setValue() {
 		super.setValue();
 		if (this.getValueFromHass) {
@@ -296,6 +305,7 @@ export class RemoteSlider extends BaseRemoteElement {
 				@mousedown=${this.onMouseDown}
 				@mouseup=${this.onMouseUp}
 				@mousemove=${this.onMouseMove}
+				@mouseleave=${this.onLeave}
 				@touchstart=${this.onTouchStart}
 				@touchend=${this.onTouchEnd}
 				@touchmove=${this.onTouchMove}
@@ -463,12 +473,16 @@ export class RemoteSlider extends BaseRemoteElement {
 					appearance: none;
 					-webkit-appearance: none;
 					height: 50px;
-					width: 32px;
+					width: var(--thumb-width, 32px);
 					cursor: pointer;
 					background: var(--color);
 					border-color: rgb(0, 0, 0, 0);
 					z-index: 1;
-					box-shadow: -100vw 0 0 100vw var(--color);
+					box-shadow: var(
+						var(--thumb-box-shadow),
+						calc(-100vw - 16px) 0 0 100vw var(--color)
+					);
+					border-radius: var(--thumb-border-radius, 0);
 				}
 				.slider::-moz-range-thumb {
 					appearance: none;
@@ -479,7 +493,11 @@ export class RemoteSlider extends BaseRemoteElement {
 					background: var(--color);
 					border-color: rgb(0, 0, 0, 0);
 					z-index: 1;
-					box-shadow: -100vw 0 0 100vw var(--color);
+					box-shadow: var(
+						var(--thumb-box-shadow),
+						calc(-100vw - 16px) 0 0 100vw var(--color)
+					);
+					border-radius: var(--thumb-border-radius, 0);
 				}
 
 				.off::-webkit-slider-thumb {
