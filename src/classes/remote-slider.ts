@@ -17,7 +17,7 @@ export class RemoteSlider extends BaseRemoteElement {
 	step: number = 0.01;
 	vertical: boolean = false;
 	intervalId?: ReturnType<typeof setTimeout>;
-	offset: number = 0;
+	tooltipOffset: number = 0;
 
 	onInput(e: InputEvent) {
 		const slider = e.currentTarget as HTMLInputElement;
@@ -172,7 +172,7 @@ export class RemoteSlider extends BaseRemoteElement {
 	}
 
 	setTooltip(show?: boolean) {
-		this.offset = Math.round(
+		this.tooltipOffset = Math.round(
 			(this.offsetWidth / (this.range[1] - this.range[0])) *
 				(Number(this.currentValue) -
 					(this.range[0] + this.range[1]) / 2),
@@ -339,11 +339,15 @@ export class RemoteSlider extends BaseRemoteElement {
 			this.precision = 0;
 		}
 
+		if (this.offsetWidth) {
+			this.setTooltip();
+		}
+
 		const context = {
 			VALUE: this.getValueFromHass ? this.value : this.currentValue,
-			OFFSET: this.offset,
+			OFFSET: this.tooltipOffset,
 			value: this.getValueFromHass ? this.value : this.currentValue,
-			offset: this.offset,
+			offset: this.tooltipOffset,
 			width: this.offsetWidth,
 		};
 
