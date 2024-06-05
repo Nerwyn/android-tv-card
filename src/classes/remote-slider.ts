@@ -434,6 +434,7 @@ export class RemoteSlider extends BaseRemoteElement {
 					all: inherit;
 					overflow: hidden;
 					height: 50px;
+					color: var(--background, var(--primary-background-color));
 				}
 
 				.background {
@@ -465,7 +466,7 @@ export class RemoteSlider extends BaseRemoteElement {
 					width: 32px;
 					cursor: pointer;
 					background: var(--color);
-					border-color: var(--color);
+					border-color: rgb(0, 0, 0, 0);
 					z-index: 1;
 					box-shadow: -100vw 0 0 100vw var(--color);
 				}
@@ -476,7 +477,7 @@ export class RemoteSlider extends BaseRemoteElement {
 					width: 32px;
 					cursor: pointer;
 					background: var(--color);
-					border-color: var(--color);
+					border-color: rgb(0, 0, 0, 0);
 					z-index: 1;
 					box-shadow: -100vw 0 0 100vw var(--color);
 				}
@@ -516,10 +517,6 @@ export class RemoteSlider extends BaseRemoteElement {
 				}
 				.tooltip::after {
 					content: var(--tooltip-label);
-				}
-
-				.icon {
-					color: var(--background, var(--primary-background-color));
 				}
 			`,
 		];
