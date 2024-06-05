@@ -1,4 +1,4 @@
-import { LitElement, CSSResult, css } from 'lit';
+import { LitElement, CSSResult, TemplateResult, html, css } from 'lit';
 import {
 	customElement,
 	eventOptions,
@@ -16,6 +16,7 @@ import { IConfirmation, IData, IActions, IAction, ActionType } from '../models';
 export class BaseRemoteElement extends LitElement {
 	@property({ attribute: false }) hass!: HomeAssistant;
 	@property({ attribute: false }) actions!: IActions;
+	@property({ attribute: false }) icons!: Record<string, string>;
 	@property({ attribute: false }) autofillEntityId: boolean = false;
 	@property({ attribute: false }) remoteId?: string;
 	@property({ attribute: false }) mediaPlayerId?: string;
@@ -657,7 +658,29 @@ export class BaseRemoteElement extends LitElement {
 		}
 	}
 
+	buildIcon(icon?: string): TemplateResult<1> {
+		if (icon) {
+			if (icon.includes(':')) {
+				return html`<ha-icon .icon="${icon}"></ha-icon>`;
+			} else {
+				return html`<ha-svg-icon ${
+					this.icons[icon] ?? icon
+				}></ha-svg-icon`;
+			}
+		}
+		return html``;
+	}
+
 	static get styles(): CSSResult | CSSResult[] {
-		return css``;
+		return css`
+			ha-icon,
+			svg {
+				display: flex;
+				height: var(--size, 48px);
+				width: var(--size, 48px);
+				z-index: 2;
+				pointer-events: none;
+			}
+		`;
 	}
 }

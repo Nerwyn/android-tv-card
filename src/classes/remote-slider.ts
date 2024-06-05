@@ -224,7 +224,7 @@ export class RemoteSlider extends BaseRemoteElement {
 			style['width'] = this.actions.style?.height ?? '50px';
 		}
 		return html`<div
-			class="slider-background"
+			class="background"
 			style=${styleMap(this.buildStyle(style, context))}
 		></div>`;
 	}
@@ -372,6 +372,12 @@ export class RemoteSlider extends BaseRemoteElement {
 				style=${styleMap(this.buildStyle(style, context))}
 			>
 				${this.buildBackground(context)}${this.buildSlider(context)}
+				${this.buildIcon(
+					this.renderTemplate(
+						this.actions.icon ?? '',
+						context,
+					) as string,
+				)}
 			</div>
 		`;
 	}
@@ -408,7 +414,7 @@ export class RemoteSlider extends BaseRemoteElement {
 					height: 50px;
 				}
 
-				.slider-background {
+				.background {
 					position: absolute;
 					width: inherit;
 					height: var(--background-height, 100%);
@@ -419,7 +425,7 @@ export class RemoteSlider extends BaseRemoteElement {
 				}
 
 				.slider,
-				.slider-off {
+				.off {
 					position: absolute;
 					appearance: none;
 					-webkit-appearance: none;
@@ -430,34 +436,21 @@ export class RemoteSlider extends BaseRemoteElement {
 					overflow: hidden;
 				}
 
-				.slider::-webkit-slider-thumb {
-					appearance: none;
-					-webkit-appearance: none;
-					height: 100%;
-					width: 16px;
-					cursor: pointer;
-					z-index: 1;
-					background: var(--color);
-					box-shadow: -100vw 0 0 100vw var(--color);
-				}
-
+				.slider::-webkit-slider-thumb,
 				.slider::-moz-range-thumb {
 					appearance: none;
 					-webkit-appearance: none;
 					height: 100%;
 					width: 16px;
-					border-color: var(--color);
-					background: var(--color);
 					cursor: pointer;
+					background: var(--color);
+					border-color: var(--color);
 					z-index: 1;
 					box-shadow: -100vw 0 0 100vw var(--color);
 				}
 
-				.slider-off::-webkit-slider-thumb {
-					visibility: hidden;
-				}
-
-				.slider-off::-moz-range-thumb {
+				.off::-webkit-slider-thumb,
+				.off::-moz-range-thumb {
 					visibility: hidden;
 				}
 

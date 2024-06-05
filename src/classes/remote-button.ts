@@ -7,7 +7,6 @@ import { BaseRemoteElement } from './base-remote-element';
 @customElement('remote-button')
 export class RemoteButton extends BaseRemoteElement {
 	@property({ attribute: false }) actionKey!: string;
-	@property({ attribute: false }) icons!: Record<string, string>;
 
 	clickTimer?: ReturnType<typeof setTimeout>;
 	clickCount: number = 0;
@@ -199,15 +198,6 @@ export class RemoteButton extends BaseRemoteElement {
 
 	render(inputTemplate?: TemplateResult<1>) {
 		this.setValue();
-		
-		const icon = this.renderTemplate(this.actions.icon ?? '') as string;
-		let haIcon = html``;
-		let svgPath;
-		if (icon.includes(':')) {
-			haIcon = html`<ha-icon .icon="${icon}"></ha-icon>`;
-		} else {
-			svgPath = this.icons[icon] ?? icon;
-		}
 
 		const action = this.renderTemplate(this.actionKey);
 		return html`
@@ -223,9 +213,10 @@ export class RemoteButton extends BaseRemoteElement {
 				@touchmove=${this.onTouchMove}
 				@contextmenu=${this.onContextMenu}
 				.action=${action}
-				.path=${svgPath}
 			>
-				${haIcon}${inputTemplate}
+				${this.buildIcon(
+					this.renderTemplate(this.actions.icon ?? '') as string,
+				)}${inputTemplate}
 			</ha-icon-button>
 		`;
 	}
@@ -234,26 +225,20 @@ export class RemoteButton extends BaseRemoteElement {
 		return [
 			super.styles as CSSResult,
 			css`
-				ha-icon-button,
-				ha-icon,
-				svg {
-					display: flex;
-					height: var(--size);
-					width: var(--size);
-				}
 				ha-icon-button {
-					cursor: pointer;
-					position: relative;
 					display: inline-flex;
 					flex-direction: column;
 					justify-content: center;
 					text-align: center;
 					align-items: center;
+					height: var(--size, 48px);
+					width: var(--size, 48px);
+					cursor: pointer;
+					position: relative;
 					z-index: 1;
-					--size: 48px;
-					--mdc-icon-size: var(--size);
-					--mdc-icon-button-size: var(--size);
 					-webkit-tap-highlight-color: transparent;
+					--mdc-icon-size: var(--size, 48px);
+					--mdc-icon-button-size: var(--size, 48px);
 				}
 			`,
 		];
