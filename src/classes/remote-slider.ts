@@ -116,11 +116,11 @@ export class RemoteSlider extends BaseRemoteElement {
 			this.fireHapticEvent('light');
 			this.sendAction('tap_action');
 		} else {
-			if (this.value == undefined) {
-				this.getValueFromHass = true;
-			}
+			this.getValueFromHass = true;
 			this.setValue();
 			this.currentValue = this.value ?? 0;
+			this.setTooltip();
+			this.setSliderState(this.currentValue as number);
 		}
 
 		this.endAction();
@@ -159,15 +159,6 @@ export class RemoteSlider extends BaseRemoteElement {
 				this.setSliderState(this.value as number);
 			}
 		}
-	}
-
-	onLeave(_e: MouseEvent) {
-		this.swiping = true;
-		this.getValueFromHass = true;
-		this.setValue();
-		this.currentValue = this.value ?? 0;
-		this.setTooltip(false);
-		this.setSliderState(this.value as number);
 	}
 
 	setValue() {
@@ -305,7 +296,6 @@ export class RemoteSlider extends BaseRemoteElement {
 				@mousedown=${this.onMouseDown}
 				@mouseup=${this.onMouseUp}
 				@mousemove=${this.onMouseMove}
-				@mouseleave=${this.onLeave}
 				@touchstart=${this.onTouchStart}
 				@touchend=${this.onTouchEnd}
 				@touchmove=${this.onTouchMove}
