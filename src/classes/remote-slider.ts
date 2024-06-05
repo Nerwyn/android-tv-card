@@ -435,7 +435,17 @@ export class RemoteSlider extends BaseRemoteElement {
 					overflow: hidden;
 				}
 
-				.slider::-webkit-slider-thumb,
+				.slider::-webkit-slider-thumb {
+					appearance: none;
+					-webkit-appearance: none;
+					height: 100%;
+					width: 16px;
+					cursor: pointer;
+					background: var(--color);
+					border-color: var(--color);
+					z-index: 1;
+					box-shadow: -100vw 0 0 100vw var(--color);
+				}
 				.slider::-moz-range-thumb {
 					appearance: none;
 					-webkit-appearance: none;
@@ -448,7 +458,9 @@ export class RemoteSlider extends BaseRemoteElement {
 					box-shadow: -100vw 0 0 100vw var(--color);
 				}
 
-				.off::-webkit-slider-thumb,
+				.off::-webkit-slider-thumb {
+					visibility: hidden;
+				}
 				.off::-moz-range-thumb {
 					visibility: hidden;
 				}
