@@ -675,7 +675,11 @@ export class BaseRemoteElement extends LitElement {
 		return css`
 			ha-icon,
 			svg {
-				display: flex;
+				display: inline-flex;
+				flex-direction: column;
+				justify-content: center;
+				text-align: center;
+				align-items: center;
 				height: var(--size, 48px);
 				width: var(--size, 48px);
 				z-index: 2;

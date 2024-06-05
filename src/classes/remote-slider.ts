@@ -405,6 +405,7 @@ export class RemoteSlider extends BaseRemoteElement {
 					color: inherit;
 
 					--color: var(--primary-text-color);
+					--mdc-icon-size: var(--size, 32px);
 				}
 
 				.container {
