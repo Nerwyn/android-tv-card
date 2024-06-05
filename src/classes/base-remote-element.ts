@@ -693,7 +693,7 @@ export class BaseRemoteElement extends LitElement {
 
 			.icon {
 				pointer-events: none;
-				display: var(--icon-display);
+				display: var(--icon-display, flex);
 				transform: var(--icon-transform);
 			}
 		`;
