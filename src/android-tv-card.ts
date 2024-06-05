@@ -864,7 +864,6 @@ class AndroidTVCard extends LitElement {
 		return css`
 			ha-card {
 				padding: 12px;
-				--size: 48px;
 			}
 			.row {
 				display: flex;
