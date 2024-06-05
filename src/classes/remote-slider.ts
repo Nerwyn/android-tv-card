@@ -425,6 +425,7 @@ export class RemoteSlider extends BaseRemoteElement {
 					overflow: visible;
 					font-size: inherit;
 					color: inherit;
+					pointer-events: none;
 
 					--color: var(--primary-text-color);
 					--mdc-icon-size: var(--size, 32px);
@@ -453,6 +454,7 @@ export class RemoteSlider extends BaseRemoteElement {
 					appearance: none;
 					-webkit-appearance: none;
 					-moz-appearance: none;
+					pointer-events: all;
 					height: 100%;
 					width: inherit;
 					background: none;
@@ -507,7 +509,6 @@ export class RemoteSlider extends BaseRemoteElement {
 					height: 20px;
 					width: fit-content;
 					line-height: 20px;
-					pointer-events: none;
 					transform: var(--tooltip-transform);
 					display: var(--tooltip-display);
 				}
