@@ -368,10 +368,10 @@ export class RemoteSlider extends BaseRemoteElement {
 		if (!style['--icon-transform']) {
 			if (this.vertical) {
 				style['--icon-transform'] =
-					'translateY({{ offset * ((width - 32) / width) }}px)';
+					'translateY({{ offset * ((width - 50) / width) }}px)';
 			} else {
 				style['--icon-transform'] =
-					'translateX({{ offset * ((width - 32) / width) }}px)';
+					'translateX({{ offset * ((width - 50) / width) }}px)';
 			}
 		}
 
@@ -465,31 +465,31 @@ export class RemoteSlider extends BaseRemoteElement {
 					appearance: none;
 					-webkit-appearance: none;
 					height: 50px;
-					width: var(--thumb-width, 32px);
+					width: var(--thumb-width, 50px);
 					cursor: pointer;
 					background: var(--color);
 					border-color: rgb(0, 0, 0, 0);
 					z-index: 1;
 					box-shadow: var(
 						--thumb-box-shadow,
-						calc(-100vw - 16px) 0 0 100vw var(--color)
+						calc(-100vw - 25px) 0 0 100vw var(--color)
 					);
-					border-radius: var(--thumb-border-radius, 0);
+					border-radius: var(--thumb-border-radius, 50px);
 				}
 				.slider::-moz-range-thumb {
 					appearance: none;
 					-webkit-appearance: none;
 					height: 50px;
-					width: 32px;
+					width: var(--thumb-width, 50px);
 					cursor: pointer;
 					background: var(--color);
 					border-color: rgb(0, 0, 0, 0);
 					z-index: 1;
 					box-shadow: var(
 						--thumb-box-shadow,
-						calc(-100vw - 16px) 0 0 100vw var(--color)
+						calc(-100vw - 25px) 0 0 100vw var(--color)
 					);
-					border-radius: var(--thumb-border-radius, 0);
+					border-radius: var(--thumb-border-radius, 50px);
 				}
 
 				.off::-webkit-slider-thumb {

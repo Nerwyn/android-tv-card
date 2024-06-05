@@ -794,22 +794,22 @@ custom_actions:
 
 Similar to how styles can be set for each custom action, it can be used to change the CSS of the slider. Slider also utilizes the following custom properties.
 
-| Name                  | Description                                                                                 |
-| --------------------- | ------------------------------------------------------------------------------------------- |
-| --color               | Color of the slider thumb / percentage on.                                                  |
-| --background          | Slider background color.                                                                    |
-| --background-height   | Slider background height. Maximum is constrained by the foreground height.                  |
-| --tooltip-label       | Tooltip label template, defaults to `{{ value }}`.                                          |
-| --tooltip-offset      | Tooltip offset from center, defaults to `{{ offset }}px`.                                   |
-| --tooltip-transform   | Tooltip location transform function, defaults to `translate(var(--tooltip-offset), -40px)`. |
-| --tooltip-display     | Tooltip display value, set to `none` to hide tooltip, defaults to `initial`.                |
-| color                 | Color of the slider icon. Defaults to the slider background color.                          |
-| --size                | Size of the slider icon. Defaults to 32px.                                                  |
-| --icon-transform      | Transform function for the slider icon. Set to track the slider thumb by default.           |
-| --icon-display        | Display mode of the icon. Defaults to flex.                                                 |
-| --thumb-width         | Width of the slider thumb. Defaults to 32px.                                                |
-| --thumb-border-radius | Border radius of the slider thumb. Defaults to 0.                                           |
-| --thumb-box-shadow    | Box shadow of the slider thumb.                                                             |
+| Name                  | Description                                                                                                                                  |
+| --------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| --color               | Color of the slider thumb / percentage on.                                                                                                   |
+| --background          | Slider background color.                                                                                                                     |
+| --background-height   | Slider background height. Maximum is constrained by the foreground height.                                                                   |
+| --tooltip-label       | Tooltip label template, defaults to `{{ value }}`.                                                                                           |
+| --tooltip-offset      | Tooltip offset from center, defaults to `{{ offset }}px`.                                                                                    |
+| --tooltip-transform   | Tooltip location transform function, defaults to `translate(var(--tooltip-offset), -40px)`.                                                  |
+| --tooltip-display     | Tooltip display value, set to `none` to hide tooltip, defaults to `initial`.                                                                 |
+| color                 | Color of the slider icon. Defaults to the slider background color.                                                                           |
+| --size                | Size of the slider icon. Defaults to 32px.                                                                                                   |
+| --icon-transform      | Transform function for the slider icon. Defaults to `translateX/Y({{ offset * ((width - 50) / width) }}px)` for horizontal/vertical sliders. |
+| --icon-display        | Display mode of the icon. Defaults to `flex`.                                                                                                |
+| --thumb-width         | Width of the slider thumb. Defaults to `50px`.                                                                                               |
+| --thumb-border-radius | Border radius of the slider thumb. Defaults to `50px`.                                                                                       |
+| --thumb-box-shadow    | Box shadow of the slider thumb. Defaults to `calc(-100vw - 25px) 0 0 100vw var(--color)`.                                                    |
 
 ## Touchpad
 
