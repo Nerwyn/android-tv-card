@@ -447,7 +447,13 @@ class AndroidTVCard extends LitElement {
 		this.nRows++;
 		const id = `row-${this.nRows}`;
 		const style = styleMap(
-			this.buildStyle(this.config.row_styles?.[id] ?? {}, context),
+			this.buildStyle(
+				{
+					...this.config.row_styles?.rows,
+					...this.config.row_styles?.[id],
+				},
+				context,
+			),
 		);
 		return html`
 			<div class="row" id="${id}" style=${style}>${content}</div>
@@ -458,7 +464,13 @@ class AndroidTVCard extends LitElement {
 		this.nColumns++;
 		const id = `column-${this.nColumns}`;
 		const style = styleMap(
-			this.buildStyle(this.config.row_styles?.[id] ?? {}, context),
+			this.buildStyle(
+				{
+					...this.config.row_styles?.columns,
+					...this.config.row_styles?.[id],
+				},
+				context,
+			),
 		);
 		return html`
 			<div class="column" id="${id}" style=${style}>${content}</div>
