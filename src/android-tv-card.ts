@@ -439,6 +439,10 @@ class AndroidTVCard extends LitElement {
 	buildButton(elementName: string): TemplateResult {
 		const actions = this.getActions(elementName);
 
+		if (elementName == '') {
+			console.log(actions)
+		}
+
 		const style = {
 			...this.config.button_style,
 			...actions.style,
