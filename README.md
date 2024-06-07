@@ -165,27 +165,28 @@ rows:
 
 ## Basic
 
-| Name               | Type    | Description                                                                                                                                                                                                  |
-| ------------------ | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| type               | string  | Must be `custom:android-tv-card`                                                                                                                                                                             |
-| title              | string  | Title to display in the card header.                                                                                                                                                                         |
-| remote_id          | string  | The `remote` entity id to control, required for default `key` and `source` actions. Also autofills into service call data when `autofill_entity_id` is set to true.                                          |
-| media_player_id    | string  | A `media_player` entity ID to autofill into service call data when `autofill_entity_id` is set to true. Also populates `slider_id` if it is not present and autofills for the `kodi` and `denonavr` domains. |
-| autofill_entity_id | boolean | Enable autofilling of the entity ID of `remote` and `media_player` service calls if no target IDs are provided, defaults to `false`.                                                                         |
+| Name               | Type                      | Description                                                                                                                                                                                                       |
+| ------------------ | ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| type               | string                    | Must be `custom:android-tv-card`                                                                                                                                                                                  |
+| title              | string                    | Title to display in the card header.                                                                                                                                                                              |
+| remote_id          | string                    | The `remote` entity id to control, required for default `key` and `source` actions. Also autofills into service call data when `autofill_entity_id` is set to true.                                               |
+| media_player_id    | string                    | A `media_player` entity ID to autofill into service call data when `autofill_entity_id` is set to true. Also populates `slider_id` if it is not present and autofills for the `kodi` and `denonavr` domains.      |
+| autofill_entity_id | boolean                   | Enable autofilling of the entity ID of `remote` and `media_player` service calls if no target IDs are provided, defaults to `false`.                                                                              |
+| rows               | string[]                  | Defines the elements used in the card. Each row within rows defines a row of elements. Sub-arrays within these rows will display as columns, and sub-arrays within those will alternate between rows and columns. |
+| row_styles         | Record<string, StyleInfo> | CSS styles for rows and columns. Can be applied globally using keys `rows` and `columns`, or by row or column IDs such as `row-1` or `column-2`.                                                                  |
 
 All fields are technically optional except for `type`, but the card will not function unless you customize it using the above options.
 Using only these options you will get an empty card (or almost empty, if you set a title).
 
 ## Buttons
 
-| Name                                     | Type     | Description                                                                                                                                                                                                                              |
-| ---------------------------------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| rows                                     | string[] | Defines the buttons used in the card. Each row within rows defines a row of buttons (or slider and touchpad). Sub-arrays within these rows will display as columns, and sub-arrays within those will alternate between rows and columns. |
-| button_haptics                           | boolean  | Enable haptics on the buttons, defaults to `true`.                                                                                                                                                                                       |
-| button_style                             | object   | CSS style to apply to all buttons.                                                                                                                                                                                                       |
-| [hold_time](#hold-time)                  | number   | The time needed to trigger a hold action when holding down a button or the touchpad. Defaults to 500ms.                                                                                                                                  |
-| [repeat_delay](#repeat-and-repeat-delay) | number   | The delay between repeats for actions configured to repeat when held (buttons and touchpad swipes). Defaults to 100ms.                                                                                                                   |
-| [double_tap_window](#double-tap-window)  | number   | The window of time in which a double tap can be triggered before a single tap is triggered isntead. Defaults to 200ms.                                                                                                                   |
+| Name                                     | Type    | Description                                                                                                            |
+| ---------------------------------------- | ------- | ---------------------------------------------------------------------------------------------------------------------- |
+| button_haptics                           | boolean | Enable haptics on the buttons, defaults to `true`.                                                                     |
+| button_style                             | object  | CSS style to apply to all buttons.                                                                                     |
+| [hold_time](#hold-time)                  | number  | The time needed to trigger a hold action when holding down a button or the touchpad. Defaults to 500ms.                |
+| [repeat_delay](#repeat-and-repeat-delay) | number  | The delay between repeats for actions configured to repeat when held (buttons and touchpad swipes). Defaults to 100ms. |
+| [double_tap_window](#double-tap-window)  | number  | The window of time in which a double tap can be triggered before a single tap is triggered isntead. Defaults to 200ms. |
 
 In order to include the buttons, you need to specify in the config the rows you want and which buttons you want in it.
 You do it by declaring the rows as arrays and its buttons as values.
