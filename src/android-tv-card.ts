@@ -315,7 +315,7 @@ class AndroidTVCard extends LitElement {
 		);
 
 		// Get default icon if not redefined
-		if (!actions.icon) {
+		if (!actions.icon && defaultActions.icon) {
 			actions.icon = defaultActions?.icon;
 		}
 
