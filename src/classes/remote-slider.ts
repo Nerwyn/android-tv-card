@@ -241,7 +241,7 @@ export class RemoteSlider extends BaseRemoteElement {
 		const style: StyleInfo = this.buildStyle(
 			{
 				'--tooltip-label': `"${
-					this.actions?.style?.['--tooltip-label'] ?? '{{ value }}'
+					this.actions?.style?.['--tooltip-label'] ?? '`{{ `value }}'
 				}"`,
 				'--tooltip-transform':
 					this.actions?.style?.['--tooltip-transform'] ??
@@ -348,10 +348,7 @@ export class RemoteSlider extends BaseRemoteElement {
 
 		const context = {
 			VALUE: this.getValueFromHass ? this.value : this.currentValue,
-			OFFSET: this.thumbOffset,
 			value: this.getValueFromHass ? this.value : this.currentValue,
-			offset: this.thumbOffset,
-			width: this.offsetWidth,
 		};
 
 		const style = this.buildStyle(this.actions.style ?? {}, context);
@@ -382,7 +379,10 @@ export class RemoteSlider extends BaseRemoteElement {
 			}
 		}
 
-		if (this.offsetWidth) {
+		if (
+			(this.vertical && this.offsetHeight) ||
+			(!this.vertical && this.offsetWidth)
+		) {
 			this.setTooltip();
 		}
 
@@ -401,20 +401,15 @@ export class RemoteSlider extends BaseRemoteElement {
 	}
 
 	updated() {
-		let offsetWidth: number;
-		let offsetHeight: number;
 		this.setTooltip();
+		let i = 0;
 		const interval = setInterval(() => {
 			this.setTooltip();
-			if (
-				this.offsetWidth == offsetWidth &&
-				this.offsetHeight == offsetHeight
-			) {
+			i++;
+			if (i > 20) {
 				clearInterval(interval);
 			}
-			offsetWidth = this.offsetWidth;
-			offsetHeight = this.offsetHeight;
-		}, 200);
+		}, 100);
 	}
 
 	static get styles(): CSSResult | CSSResult[] {
