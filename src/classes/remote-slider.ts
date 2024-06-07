@@ -179,7 +179,7 @@ export class RemoteSlider extends BaseRemoteElement {
 			width = this.offsetHeight;
 		}
 
-		const maxOffset = width - this.thumbWidth;
+		const maxOffset = (width - this.thumbWidth) / 2;
 		this.thumbOffset = Math.min(
 			Math.max(
 				Math.round(
@@ -188,9 +188,9 @@ export class RemoteSlider extends BaseRemoteElement {
 						(Number(this.currentValue) -
 							(this.range[0] + this.range[1]) / 2),
 				),
-				maxOffset,
+				-1 * maxOffset,
 			),
-			-1 * maxOffset,
+			maxOffset,
 		);
 
 		if (show != undefined) {
