@@ -316,7 +316,7 @@ class AndroidTVCard extends LitElement {
 
 		// Get default icon if not redefined
 		if (!actions.icon) {
-			actions.icon = defaultActions?.icon ?? '';
+			actions.icon = defaultActions?.icon;
 		}
 
 		// Get default slider tap_action if not redefined
@@ -438,10 +438,6 @@ class AndroidTVCard extends LitElement {
 
 	buildButton(elementName: string): TemplateResult {
 		const actions = this.getActions(elementName);
-
-		if (elementName == '') {
-			console.log(actions)
-		}
 
 		const style = {
 			...this.config.button_style,
