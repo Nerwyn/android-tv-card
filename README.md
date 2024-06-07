@@ -246,6 +246,7 @@ If you want to add custom buttons to the remote control (or if you want to recon
 | ------------------------------------------------ | ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | icon                                             | string            | Name of an icon to use. If overriding a default action uses the default icon if not defined                                                                                                     |
 | haptics                                          | boolean           | Enable haptics on a specific action (does not apply to touchpad), defaults to `true`.                                                                                                           |
+| template                                         | string            | Another default or custom action to use as a basis for this action. All fields from this action will be merged onto the template action.                                                        |
 | confirmation                                     | boolean or object | Whether to display a browser confirmation popup or not before executing an action. See [here](https://www.home-assistant.io/dashboards/actions/#options-for-confirmation) for more information. |
 | tap_action                                       | object            | Action to perform on single tap.                                                                                                                                                                |
 | hold_action                                      | object            | Action to perform when held. Can also be set to `repeat` to repeat the tap action when held.                                                                                                    |
@@ -333,6 +334,34 @@ custom_actions:
         source: discovery+
       target:
         entity_id: media_player.appletv
+```
+
+Any default or custom action can be used as a template (not to be confused with jinja2/nunjucks templates) for other custom actions by setting `template` to the template action name.
+
+```yaml
+custom_actions:
+ webostv:
+    tap_action:
+      haptics: {{ is_state('media_player.lg_smart_tv', 'on') }}
+      action: |
+        {% if is_state('media_player.lg_smart_tv', 'on') %}
+          call-service
+        {% else %}
+          none
+        {% endif %}
+      service: webostv.button
+      target:
+        entity_id: media_player.lg_smart_tv
+  left:
+    template: webostv
+    tap_action:
+      data:
+        command: LEFT
+  right:
+    template: webostv
+    tap_action:
+      data:
+        command: RIGHT
 ```
 
 ### Adjustable Timings

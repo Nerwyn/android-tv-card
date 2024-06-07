@@ -310,18 +310,25 @@ class AndroidTVCard extends LitElement {
 
 	getActions(action: string): IActions {
 		const defaultActions = this.defaultActions[action] || {};
-		const actions = structuredClone(
+		let actions = structuredClone(
 			this.customActions[action] || defaultActions,
 		);
+
+		// Apply template if defined
+		if (actions.template) {
+			const defaultTemplateActions =
+				this.defaultActions[actions.template] || {};
+			const customTemplateActions =
+				this.customActions[actions.template] || defaultTemplateActions;
+			actions = this.mergeDeep(
+				structuredClone(customTemplateActions),
+				actions,
+			);
+		}
 
 		// Get default icon if not redefined
 		if (!actions.icon && defaultActions.icon) {
 			actions.icon = defaultActions?.icon;
-		}
-
-		// Get default slider tap_action if not redefined
-		if (action == 'slider' && !actions.tap_action) {
-			actions.tap_action = defaultActions.tap_action;
 		}
 
 		// Get original actions if not defined.

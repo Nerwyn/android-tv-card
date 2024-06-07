@@ -63,6 +63,7 @@ export interface IActions {
 	icon?: string;
 	style?: StyleInfo;
 	haptics?: boolean;
+	template?: string;
 
 	value_attribute?: string;
 	value_from_hass_delay?: boolean;
