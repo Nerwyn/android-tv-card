@@ -372,9 +372,9 @@ export class RemoteSlider extends BaseRemoteElement {
 
 		style['--thumb-offset'] = '{{ offset }}px';
 		style = this.buildStyle(style, context);
-		this.thumbWidth =
-			parseInt((style['--thumb-width'] as string).replace('px', '')) ??
-			50;
+		this.thumbWidth = parseInt(
+			((style['--thumb-width'] as string) ?? '50').replace('px', ''),
+		);
 
 		if (!style['--icon-transform']) {
 			if (this.vertical) {
