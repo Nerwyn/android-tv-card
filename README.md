@@ -342,13 +342,7 @@ Any default or custom action can be used as a template (not to be confused with 
 custom_actions:
  webostv:
     tap_action:
-      haptics: {{ is_state('media_player.lg_smart_tv', 'on') }}
-      action: |
-        {% if is_state('media_player.lg_smart_tv', 'on') %}
-          call-service
-        {% else %}
-          none
-        {% endif %}
+      action: call-service
       service: webostv.button
       target:
         entity_id: media_player.lg_smart_tv
