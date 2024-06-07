@@ -1192,6 +1192,10 @@ touchpad_style:
   background-position: center
   opacity: 1.0
 custom_actions:
+  select_source:
+    tap_action:
+      action: call-service
+      service: media_player.select_source
   power:
     icon: mdi:power
     tap_action:
@@ -1252,93 +1256,78 @@ custom_actions:
       action: key
       key: menu
   primevideo:
+    template: select_source
     tap_action:
-      action: call-service
-      service: media_player.select_source
       data:
         source: Prime Video
   netflix:
+    template: select_source
     tap_action:
-      action: call-service
-      service: media_player.select_source
       data:
         source: Netflix
   spotify:
+    template: select_source
     tap_action:
-      action: call-service
-      service: media_player.select_source
       data:
         source: Spotify
   disney:
+    template: select_source
     tap_action:
-      action: call-service
-      service: media_player.select_source
       data:
         source: Disney+
   youtube:
+    template: select_source
     tap_action:
-      action: call-service
-      service: media_player.select_source
       data:
         source: YouTube
   appletv:
+    template: select_source
     tap_action:
-      action: call-service
-      service: media_player.select_source
       data:
         source: TV
   max:
+    template: select_source
     tap_action:
-      action: call-service
-      service: media_player.select_source
       data:
         source: HBO Max
   skyshowtime:
+    template: select_source
     tap_action:
-      action: call-service
-      service: media_player.select_source
       data:
         source: SkyShowtime
   plex:
-    icon: mdi:plex
+    template: select_source
     tap_action:
-      action: call-service
-      service: media_player.select_source
       data:
         source: Plex
   discovery:
+    template: select_source
     icon: discovery
     tap_action:
-      action: call-service
-      service: media_player.select_source
       data:
         source: discovery+
   viaplay:
+    template: select_source
     icon: viaplay
     tap_action:
-      action: call-service
-      service: media_player.select_source
       data:
         source: Viaplay
   tv2play:
+    template: select_source
     icon: tv2play
     tap_action:
-      action: call-service
-      service: media_player.select_source
       data:
         source: TV 2 Play
   nrktv:
+    template: select_source
     icon: nrktv
     tap_action:
-      action: call-service
-      service: media_player.select_source
       data:
         source: NRK TV
   allente:
+    template: select_source
     icon: allente
     tap_action:
-      action: call-service
-      service: media_player.select_source
       data:
         source: Allente
 ```
@@ -1376,34 +1365,33 @@ touchpad_style:
   background-position: center
   opacity: 1.0;
 custom_actions:
-  up:
+  kodi_command:
     tap_action:
       action: call-service
       service: kodi.call_method
+  up:
+    template: kodi_command
+    tap_action:
       data:
         method: Input.Up
   down:
+    template: kodi_command
     tap_action:
-      action: call-service
-      service: kodi.call_method
       data:
         method: Input.Down
   left:
+    template: kodi_command
     tap_action:
-      action: call-service
-      service: kodi.call_method
       data:
         method: Input.Left
   right:
+    template: kodi_command
     tap_action:
-      action: call-service
-      service: kodi.call_method
       data:
         method: Input.Right
   center:
+    template: kodi_command
     tap_action:
-      action: call-service
-      service: kodi.call_method
       data:
         method: Input.Select
     double_tap_action:
@@ -1417,62 +1405,53 @@ custom_actions:
       data:
         method: Input.ContextMenu
   back:
+    template: kodi_command
     tap_action:
-      action: call-service
-      service: kodi.call_method
       data:
         method: Input.Back
   search:
+    template: kodi_command
     icon: mdi:kodi
     tap_action:
-      action: key
-      key: SEARCH
     style:
       color: rgb(9, 179, 232)
       '--size': 64px
   volume_mute:
+    template: kodi_command
     tap_action:
-      action: call-service
-      service: kodi.call_method
       data:
         method: Application.SetMute
         mute: toggle
   volume_up:
+    template: kodi_command
     tap_action:
-      action: call-service
-      service: kodi.call_method
       data:
         method: Application.SetVolume
         volume: increment
   volume_down:
+    template: kodi_command
     tap_action:
-      action: call-service
-      service: kodi.call_method
       data:
         method: Application.SetVolume
         volume: decrement
   menu:
+    template: kodi_command
     tap_action:
-      action: call-service
-      service: kodi.call_method
       data:
         method: Input.ContextMenu
   home:
+    template: kodi_command
     tap_action:
-      action: call-service
-      service: kodi.call_method
       data:
         method: Input.Home
   info:
+    template: kodi_command
     tap_action:
-      action: call-service
-      service: kodi.call_method
       data:
         method: Input.Info
   play_pause:
+    template: kodi_command
     tap_action:
-      action: call-service
-      service: kodi.call_method
       data:
         method: Player.PlayPause
         playerid: 1
@@ -1530,34 +1509,33 @@ rows:
 touchpad_style:
   height: 200px
 custom_actions:
-  down:
+  denonavr_command:
     tap_action:
       action: call-service
       service: denonavr.get_command
+  down:
+    template: denonavr_command
+    tap_action:
       data:
         command: /goform/formiPhoneAppDirect.xml?MNCDN
   up:
+    template: denonavr_command
     tap_action:
-      action: call-service
-      service: denonavr.get_command
       data:
         command: /goform/formiPhoneAppDirect.xml?MNCUP
   left:
+    template: denonavr_command
     tap_action:
-      action: call-service
-      service: denonavr.get_command
       data:
         command: /goform/formiPhoneAppDirect.xml?MNCLT
   right:
+    template: denonavr_command
     tap_action:
-      action: call-service
-      service: denonavr.get_command
       data:
         command: /goform/formiPhoneAppDirect.xml?MNCRT
   center:
+    template: denonavr_command
     tap_action:
-      action: call-service
-      service: denonavr.get_command
       data:
         command: /goform/formiPhoneAppDirect.xml?MNENT
     double_tap_action:
@@ -1666,6 +1644,9 @@ button_style:
   padding: 8px
   margin: 4px
   border-radius: 24px
+row_styles:
+  rows:
+    justify-content: center
 ```
 
 Result:
@@ -2139,13 +2120,13 @@ custom_actions:
       right: 30px
       height: 170px
       width: 90px
-card_mod:
-  style: |
-    #row-1,
-    #row-2,
-    #row-3 {
-      justify-content: center
-    }
+row_styles:
+  row-1:
+    justify-content: center
+  row-2:
+    justify-content: center
+  row-3:
+    justify-content: center
 ```
 
 <img src="https://github.com/Nerwyn/android-tv-card/blob/main/assets/google_tv_dpad.png" alt="`google `tv app styled dpad" width="500"/>
