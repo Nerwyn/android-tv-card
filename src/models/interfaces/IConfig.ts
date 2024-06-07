@@ -27,6 +27,7 @@ export interface IConfig {
 	double_tap_window?: number;
 
 	rows?: Row[];
+	row_styles?: Record<string, StyleInfo>;
 }
 
 export type Row = (string | Row[])[];

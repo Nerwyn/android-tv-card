@@ -431,19 +431,41 @@ class AndroidTVCard extends LitElement {
 		return this.mergeDeep(target, ...sources);
 	}
 
-	buildRow(content: TemplateResult[]): TemplateResult {
-		this.nRows++;
-		return html` <div class="row" id="row-${this.nRows}">${content}</div> `;
+	buildStyle(_style: StyleInfo = {}, context?: object) {
+		const style = structuredClone(_style);
+		for (const key in style) {
+			style[key] = renderTemplate(
+				this.hass,
+				style[key] as string,
+				context,
+			) as string;
+		}
+		return style;
 	}
 
-	buildColumn(content: TemplateResult[]): TemplateResult {
-		this.nColumns++;
+	buildRow(content: TemplateResult[], context: object): TemplateResult {
+		this.nRows++;
+		const id = `row-${this.nRows}`;
+		const style = styleMap(
+			this.buildStyle(this.config.row_styles?.[id] ?? {}, context),
+		);
 		return html`
-			<div class="column" id="column-${this.nColumns}">${content}</div>
+			<div class="row" id="${id}" style=${style}>${content}</div>
 		`;
 	}
 
-	buildButton(elementName: string): TemplateResult {
+	buildColumn(content: TemplateResult[], context: object): TemplateResult {
+		this.nColumns++;
+		const id = `column-${this.nColumns}`;
+		const style = styleMap(
+			this.buildStyle(this.config.row_styles?.[id] ?? {}, context),
+		);
+		return html`
+			<div class="column" id="${id}" style=${style}>${content}</div>
+		`;
+	}
+
+	buildButton(elementName: string, context: object): TemplateResult {
 		const actions = this.getActions(elementName);
 
 		const style = {
@@ -454,7 +476,13 @@ class AndroidTVCard extends LitElement {
 		if (!Object.keys(actions).length) {
 			return html`<div
 				class="empty-button"
-				style=${styleMap({ '--size': style['--size'] })}
+				style=${styleMap({
+					'--size': renderTemplate(
+						this.hass,
+						style['--size'] as string,
+						context,
+					) as string,
+				})}
 			></div>`;
 		}
 
@@ -474,11 +502,11 @@ class AndroidTVCard extends LitElement {
 		/>`;
 	}
 
-	buildVolumeButtons(): TemplateResult[] {
+	buildVolumeButtons(context: object): TemplateResult[] {
 		return [
-			this.buildButton('volume_down'),
-			this.buildButton('volume_mute'),
-			this.buildButton('volume_up'),
+			this.buildButton('volume_down', context),
+			this.buildButton('volume_mute', context),
+			this.buildButton('volume_up', context),
 		];
 	}
 
@@ -489,22 +517,28 @@ class AndroidTVCard extends LitElement {
 		/>`;
 	}
 
-	buildNavButtons(): TemplateResult {
-		return this.buildColumn([
-			this.buildRow([this.buildButton('up')]),
-			this.buildRow([
-				this.buildButton('left'),
-				this.buildButton('center'),
-				this.buildButton('right'),
-			]),
-			this.buildRow([this.buildButton('down')]),
-		]);
+	buildNavButtons(context: object): TemplateResult {
+		return this.buildColumn(
+			[
+				this.buildRow([this.buildButton('up', context)], context),
+				this.buildRow(
+					[
+						this.buildButton('left', context),
+						this.buildButton('center', context),
+						this.buildButton('right', context),
+					],
+					context,
+				),
+				this.buildRow([this.buildButton('down', context)], context),
+			],
+			context,
+		);
 	}
 
-	buildPad(buttons: string[]): TemplateResult {
+	buildPad(buttons: string[], context: object): TemplateResult {
 		return html`
 			<div class="button-pad">
-				${buttons.map((b) => this.buildButton(b))}
+				${buttons.map((b) => this.buildButton(b, context))}
 			</div>
 		`;
 	}
@@ -661,7 +695,7 @@ class AndroidTVCard extends LitElement {
 				switch (elementName) {
 					case 'vol_buttons':
 					case 'volume_buttons': {
-						const volumeButtons = this.buildVolumeButtons();
+						const volumeButtons = this.buildVolumeButtons(context);
 						if (isColumn) {
 							volumeButtons.reverse();
 						}
@@ -675,24 +709,27 @@ class AndroidTVCard extends LitElement {
 					}
 					case 'nav_buttons':
 					case 'navigation_buttons': {
-						rowContent.push(this.buildNavButtons());
+						rowContent.push(this.buildNavButtons(context));
 						break;
 					}
 					case 'dpad':
 					case 'd_pad':
 					case 'direction_pad': {
 						rowContent.push(
-							this.buildPad([
-								'',
-								'up',
-								'',
-								'left',
-								'center',
-								'right',
-								'',
-								'down',
-								'',
-							]),
+							this.buildPad(
+								[
+									'',
+									'up',
+									'',
+									'left',
+									'center',
+									'right',
+									'',
+									'down',
+									'',
+								],
+								context,
+							),
 						);
 						break;
 					}
@@ -700,17 +737,20 @@ class AndroidTVCard extends LitElement {
 					case 'num_pad':
 					case 'number_pad': {
 						rowContent.push(
-							this.buildPad([
-								'n7',
-								'n8',
-								'n9',
-								'n4',
-								'n5',
-								'n6',
-								'n1',
-								'n2',
-								'n3',
-							]),
+							this.buildPad(
+								[
+									'n7',
+									'n8',
+									'n9',
+									'n4',
+									'n5',
+									'n6',
+									'n1',
+									'n2',
+									'n3',
+								],
+								context,
+							),
 						);
 						break;
 					}
@@ -720,17 +760,10 @@ class AndroidTVCard extends LitElement {
 					case 'xgamepad':
 					case 'x_gamepad':
 						rowContent.push(
-							this.buildPad([
-								'',
-								'y',
-								'',
-								'x',
-								'',
-								'b',
-								'',
-								'a',
-								'',
-							]),
+							this.buildPad(
+								['', 'y', '', 'x', '', 'b', '', 'a', ''],
+								context,
+							),
 						);
 						break;
 					case 'npad':
@@ -738,17 +771,10 @@ class AndroidTVCard extends LitElement {
 					case 'ngamepad':
 					case 'n_gamepad':
 						rowContent.push(
-							this.buildPad([
-								'',
-								'x',
-								'',
-								'y',
-								'',
-								'a',
-								'',
-								'b',
-								'',
-							]),
+							this.buildPad(
+								['', 'x', '', 'y', '', 'a', '', 'b', ''],
+								context,
+							),
 						);
 						break;
 					case 'touchpad':
@@ -774,15 +800,15 @@ class AndroidTVCard extends LitElement {
 					}
 
 					default: {
-						rowContent.push(this.buildButton(elementName));
+						rowContent.push(this.buildButton(elementName, context));
 						break;
 					}
 				}
 			}
 		}
 		return isColumn
-			? this.buildColumn(rowContent)
-			: this.buildRow(rowContent);
+			? this.buildColumn(rowContent, context)
+			: this.buildRow(rowContent, context);
 	}
 
 	render() {
@@ -832,6 +858,7 @@ class AndroidTVCard extends LitElement {
 			ha-card {
 				padding: 12px;
 			}
+
 			.row {
 				display: flex;
 				flex-wrap: nowrap;
