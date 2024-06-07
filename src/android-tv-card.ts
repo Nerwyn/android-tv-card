@@ -59,7 +59,7 @@ class AndroidTVCard extends LitElement {
 
 	getCardSize() {
 		let numRows = this.config.rows?.length ?? 0;
-		if ('title' in this.config) {
+		if (this.config.title) {
 			numRows += 1;
 		}
 		return numRows;
@@ -100,17 +100,15 @@ class AndroidTVCard extends LitElement {
 
 	updateDeprecatedKeys(config: IConfig) {
 		// Convert old root level key names to new
-		if ('adb_id' in config && !('keyboard_id' in config)) {
+		if ('adb_id' in config) {
 			config.keyboard_id = (config as Record<string, string>).adb_id;
 		}
-		if ('media_player_id' in config && !('slider_id' in config)) {
-			config.slider_id = (
-				config as Record<string, string>
-			).media_player_id;
+		if (config.media_player_id && !config.slider_id) {
+			config.slider_id = config.media_player_id;
 		}
 		if ('touchpad_height' in config) {
 			const style = config.touchpad_style ?? {};
-			if (!('height' in style)) {
+			if (!style.height) {
 				style.height = (
 					config as Record<string, string>
 				).touchpad_height;
@@ -120,22 +118,18 @@ class AndroidTVCard extends LitElement {
 
 		// Old haptic feedback toggle names
 		if ('enable_button_feedback' in config) {
-			if (!('button_haptics' in config)) {
-				config.button_haptics = (config as Record<string, boolean>)[
-					'enable_button_feedback'
-				];
-			}
+			config.button_haptics = (
+				config as Record<string, boolean>
+			).enable_button_feedback;
 		}
 		if ('enable_touchpad_feedback' in config) {
-			if (!('touchpad_haptics' in config)) {
-				config.touchpad_haptics = (config as Record<string, boolean>)[
-					'enable_touchpad_feedback'
-				];
-			}
+			config.touchpad_haptics = (
+				config as Record<string, boolean>
+			).enable_touchpad_feedback;
 		}
 
 		// Convert old _row keys into rows array
-		if (!('rows' in config) || !(config.rows || []).length) {
+		if (!config.rows) {
 			const rows: string[][] = [];
 			const rowNames = Object.keys(config).filter((row) =>
 				row.includes('_row'),
@@ -168,7 +162,7 @@ class AndroidTVCard extends LitElement {
 			>[]),
 		} as Record<string, IActions>;
 
-		const customActions = config['custom_actions'];
+		const customActions = config.custom_actions;
 
 		// For each custom key or source
 		for (const customActionName in customActions) {
@@ -176,9 +170,7 @@ class AndroidTVCard extends LitElement {
 
 			// Copy svg_path to icon
 			if ('svg_path' in customAction) {
-				customAction.icon = customAction[
-					'svg_path' as keyof IActions
-				] as string;
+				customAction.icon = customAction.svg_path as string;
 			}
 
 			// Copy action fields to tap_action
@@ -212,42 +204,27 @@ class AndroidTVCard extends LitElement {
 
 			// Copy slider fields
 			if (customActionName == 'slider') {
-				if ('slider_style' in config && !('style' in customAction)) {
-					customAction.style = (
-						config as Record<string, StyleInfo>
-					).slider_style;
+				if ('slider_style' in config) {
+					customAction.style = config.slider_style as StyleInfo;
 				}
-				if ('slider_range' in config && !('range' in customAction)) {
-					customAction.range = (
-						config as Record<string, [number, number]>
-					).slider_range;
+				if ('slider_range' in config) {
+					customAction.range = config.slider_range as [
+						number,
+						number,
+					];
 				}
-				if ('slider_step' in config && !('step' in customAction)) {
-					customAction.step = (
-						config as Record<string, number>
-					).slider_step;
+				if ('slider_step' in config) {
+					customAction.step = config.slider_step as number;
 				}
-				if (!('value_attribute' in customAction)) {
-					if ('slider_attribute' in config) {
-						customAction.value_attribute =
-							(config as Record<string, string>)
-								.slider_attribute ?? 'volume_level';
-					} else {
-						customAction.value_attribute = 'volume_level';
-					}
+				if ('slider_attribute' in config) {
+					customAction.value_attribute =
+						config.slider_attribute as string;
 				}
-				if (
-					'enable_slider_feedback' in config &&
-					!('haptics' in customAction)
-				) {
-					customAction.haptics = (
-						config as Record<string, boolean>
-					).enable_slider_feedback;
+
+				if ('enable_slider_feedback' in config) {
+					customAction.haptics =
+						config.enable_slider_feedback as boolean;
 				}
-			} else {
-				// Set default value attribute to state if not slider
-				customAction.value_attribute =
-					customAction.value_attribute ?? 'state';
 			}
 
 			// For each type of action
@@ -268,26 +245,26 @@ class AndroidTVCard extends LitElement {
 					] as IAction;
 
 					// Populate action field
-					if (!('action' in action)) {
-						if ('key' in action) {
-							(action as IAction).action = 'key';
-						} else if ('source' in action) {
-							(action as IAction).action = 'source';
-						} else if ('service' in action) {
-							(action as IAction).action = 'call-service';
-						} else if ('navigation_path' in action) {
-							(action as IAction).action = 'navigate';
-						} else if ('url_path' in action) {
-							(action as IAction).action = 'url';
-						} else if ('fire-dom-event' in action) {
-							(action as IAction).action = 'fire-dom-event';
+					if (!action.action) {
+						if (action.key) {
+							action.action = 'key';
+						} else if (action.source) {
+							action.action = 'source';
+						} else if (action.service) {
+							action.action = 'call-service';
+						} else if (action.navigation_path) {
+							action.action = 'navigate';
+						} else if (action.url_path) {
+							action.action = 'url';
+						} else if (action.browser_mod) {
+							action.action = 'fire-dom-event';
 						} else if (
-							'pipeline_id' in action ||
-							'start_listening' in action
+							action.pipeline_id ||
+							action.start_listening
 						) {
-							(action as IAction).action = 'assist';
+							action.action = 'assist';
 						} else {
-							(action as IAction).action = 'none';
+							action.action = 'none';
 						}
 					}
 
@@ -338,12 +315,12 @@ class AndroidTVCard extends LitElement {
 		);
 
 		// Get default icon if not redefined
-		if (!('icon' in actions) && 'icon' in defaultActions) {
-			actions.icon = defaultActions?.icon;
+		if (!actions.icon) {
+			actions.icon = defaultActions?.icon ?? '';
 		}
 
 		// Get default slider tap_action if not redefined
-		if (action == 'slider' && !('tap_action' in actions)) {
+		if (action == 'slider' && !actions.tap_action) {
 			actions.tap_action = defaultActions.tap_action;
 		}
 
@@ -359,47 +336,37 @@ class AndroidTVCard extends LitElement {
 			'momentary_end_action',
 		];
 		for (const actionType of actionTypes) {
-			if (!(actionType in actions) && actionType in defaultActions) {
-				actions[actionType as ActionType] =
-					defaultActions[actionType as ActionType];
+			if (!actions[actionType] && defaultActions[actionType]) {
+				actions[actionType] = defaultActions[actionType];
 			}
 		}
 
 		// Set hold time if defined globally
-		if ('hold_time' in this.config) {
-			if (
-				'hold_action' in actions &&
-				!('hold_time' in (actions.hold_action ?? {}))
-			) {
-				actions.hold_action = {
-					...(actions.hold_action as IAction),
-					hold_time: this.config.hold_time as number,
-				};
+		if (this.config.hold_time) {
+			if (actions.hold_action && !actions.hold_action?.hold_time) {
+				actions.hold_action.hold_time = this.config.hold_time;
 			}
 			if (
-				'multi_hold_action' in actions &&
-				!('hold_time' in (actions.multi_hold_action ?? {}))
+				actions.multi_hold_action &&
+				!actions.multi_hold_action?.hold_time
 			) {
-				actions.multi_hold_action = {
-					...(actions.multi_hold_action as IAction),
-					hold_time: this.config.hold_time,
-				};
+				actions.multi_hold_action.hold_time = this.config.hold_time;
 			}
 		}
 
 		// Set repeat delay if defined globally
-		if ('repeat_delay' in this.config) {
+		if (this.config.repeat_delay) {
 			if (
-				'hold_action' in actions &&
+				actions.hold_action &&
 				actions.hold_action?.action == 'repeat' &&
-				!('repeat_delay' in actions.hold_action)
+				!actions.hold_action.repeat_delay
 			) {
 				actions.hold_action.repeat_delay = this.config.repeat_delay;
 			}
 			if (
-				'multi_hold_action' in actions &&
+				actions.multi_hold_action &&
 				actions.multi_hold_action?.action == 'repeat' &&
-				!('repeat_delay' in actions.multi_hold_action)
+				!actions.multi_hold_action.repeat_delay
 			) {
 				actions.multi_hold_action.repeat_delay =
 					this.config.repeat_delay;
@@ -407,27 +374,20 @@ class AndroidTVCard extends LitElement {
 		}
 
 		// Set double tap window if defined globally
-		if ('double_tap_window' in this.config) {
+		if (this.config.double_tap_window) {
 			if (
-				'double_tap_action' in actions &&
-				!('double_tap_window' in (actions.double_tap_action ?? {}))
+				actions.double_tap_action &&
+				!actions.double_tap_action.double_tap_window
 			) {
-				actions.double_tap_action = {
-					...(actions.double_tap_action as IAction),
-					double_tap_window: this.config.double_tap_window,
-				};
+				actions.double_tap_action.double_tap_window =
+					this.config.double_tap_window;
 			}
 			if (
-				'multi_double_tap_action' in actions &&
-				!(
-					'double_tap_window' in
-					(actions.multi_double_tap_action ?? {})
-				)
+				actions.multi_double_tap_action &&
+				!actions.multi_double_tap_action.double_tap_window
 			) {
-				actions.multi_double_tap_action = {
-					...(actions.multi_double_tap_action as IAction),
-					double_tap_window: this.config.double_tap_window,
-				};
+				actions.multi_double_tap_action.double_tap_window =
+					this.config.double_tap_window;
 			}
 		}
 
@@ -551,7 +511,7 @@ class AndroidTVCard extends LitElement {
 				(this.config as Record<string, string>).enable_double_click,
 				context,
 			) &&
-			!('double_tap_action' in centerActions)
+			!centerActions.double_tap_action
 		) {
 			const doubleTapKeycode =
 				(renderTemplate(
@@ -573,7 +533,7 @@ class AndroidTVCard extends LitElement {
 				(this.config as Record<string, string>).long_click_keycode,
 				context,
 			) &&
-			!('hold_action' in centerActions)
+			!centerActions.hold_action
 		) {
 			const holdActionKeycode =
 				(renderTemplate(

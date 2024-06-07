@@ -201,12 +201,9 @@ export class RemoteSlider extends BaseRemoteElement {
 	}
 
 	resetGetValueFromHass() {
-		const valueFromHassDelay =
-			'value_from_hass_delay' in this.actions
-				? (this.renderTemplate(
-						this.actions.value_from_hass_delay as unknown as string,
-				  ) as number)
-				: 1000;
+		const valueFromHassDelay = this.renderTemplate(
+			this.actions.value_from_hass_delay ?? 1000,
+		) as number;
 		this.getValueFromHassTimer = setTimeout(
 			() => (this.getValueFromHass = true),
 			valueFromHassDelay,
@@ -329,10 +326,8 @@ export class RemoteSlider extends BaseRemoteElement {
 
 		this.speed = (this.range[1] - this.range[0]) / 50;
 
-		if ('step' in this.actions) {
-			this.step = Number(
-				this.renderTemplate(this.actions.step as unknown as string),
-			);
+		if (this.actions.step) {
+			this.step = Number(this.renderTemplate(this.actions.step));
 		} else {
 			this.step = (this.range[1] - this.range[0]) / 100;
 		}

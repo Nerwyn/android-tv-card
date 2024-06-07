@@ -20,7 +20,6 @@ export class RemoteButton extends BaseRemoteElement {
 		this.clickCount++;
 
 		if (
-			'double_tap_action' in this.actions &&
 			this.renderTemplate(
 				this.actions.double_tap_action?.action ?? 'none',
 			) != 'none'
@@ -68,7 +67,6 @@ export class RemoteButton extends BaseRemoteElement {
 		}
 
 		if (
-			'momentary_start_action' in this.actions &&
 			this.renderTemplate(
 				this.actions.momentary_start_action?.action ?? 'none',
 			) != 'none'
@@ -77,7 +75,6 @@ export class RemoteButton extends BaseRemoteElement {
 			this.buttonPressStart = performance.now();
 			this.sendAction('momentary_start_action');
 		} else if (
-			'momentary_end_action' in this.actions &&
 			this.renderTemplate(
 				this.actions.momentary_end_action?.action ?? 'none',
 			) != 'none'
@@ -85,13 +82,9 @@ export class RemoteButton extends BaseRemoteElement {
 			this.fireHapticEvent('light');
 			this.buttonPressStart = performance.now();
 		} else if (!this.holdTimer) {
-			const holdTime =
-				'hold_time' in (this.actions.hold_action ?? {})
-					? (this.renderTemplate(
-							this.actions.hold_action
-								?.hold_time as unknown as string,
-					  ) as number)
-					: 500;
+			const holdTime = this.renderTemplate(
+				this.actions.hold_action?.hold_time ?? 500,
+			) as number;
 
 			this.holdTimer = setTimeout(() => {
 				if (!this.swiping) {
@@ -102,13 +95,9 @@ export class RemoteButton extends BaseRemoteElement {
 							this.actions.hold_action?.action as string,
 						) == 'repeat'
 					) {
-						const repeat_delay =
-							'repeat_delay' in (this.actions.hold_action ?? {})
-								? (this.renderTemplate(
-										this.actions.hold_action
-											?.repeat_delay as unknown as string,
-								  ) as number)
-								: 100;
+						const repeat_delay = this.renderTemplate(
+							this.actions.hold_action?.repeat_delay ?? 100,
+						) as number;
 						if (!this.holdInterval) {
 							this.holdInterval = setInterval(() => {
 								this.fireHapticEvent('selection');
@@ -127,7 +116,6 @@ export class RemoteButton extends BaseRemoteElement {
 	onEnd(e: TouchEvent | MouseEvent) {
 		if (!this.swiping) {
 			if (
-				'momentary_end_action' in this.actions &&
 				this.renderTemplate(
 					this.actions.momentary_end_action?.action ?? 'none',
 				) != 'none'
@@ -137,7 +125,6 @@ export class RemoteButton extends BaseRemoteElement {
 				this.sendAction('momentary_end_action');
 				this.endAction();
 			} else if (
-				'momentary_start_action' in this.actions &&
 				this.renderTemplate(
 					this.actions.momentary_start_action?.action ?? 'none',
 				) != 'none'

@@ -139,7 +139,7 @@ export class BaseRemoteElement extends LitElement {
 			entity_id: this.renderTemplate(this.remoteId as string),
 			command: this.renderTemplate(key),
 		};
-		if (actionType == 'hold_action' && !('hold_action' in this.actions)) {
+		if (actionType == 'hold_action' && !this.actions.hold_action) {
 			data.hold_secs = 0.5;
 		}
 		this.hass.callService('remote', 'send_command', data);
@@ -187,9 +187,9 @@ export class BaseRemoteElement extends LitElement {
 			}
 			if (
 				entityId &&
-				!('entity_id' in (data ?? {})) &&
-				!('device_id' in (data ?? {})) &&
-				!('area_id' in (data ?? {}))
+				!data?.entity_id &&
+				!data?.device_id &&
+				!data?.area_id
 			) {
 				data = {
 					...data,
@@ -295,10 +295,10 @@ export class BaseRemoteElement extends LitElement {
 				let text: string = '';
 				if (
 					confirmation != true &&
-					'text' in (confirmation as IConfirmation)
+					(confirmation as IConfirmation).text
 				) {
 					text = this.renderTemplate(
-						(confirmation as IConfirmation).text as string,
+						confirmation?.text as string,
 					) as string;
 				} else {
 					switch (action.action) {
@@ -340,7 +340,7 @@ export class BaseRemoteElement extends LitElement {
 						return false;
 					}
 				} else {
-					if ('exemptions' in (confirmation as IConfirmation)) {
+					if (confirmation?.exemptions) {
 						if (
 							!(confirmation as IConfirmation).exemptions
 								?.map((exemption) =>

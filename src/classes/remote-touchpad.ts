@@ -40,14 +40,12 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		const doubleTapThreshold = this.targetTouches?.length || 1;
 
 		if (
-			('double_tap_action' in this.actions &&
-				this.renderTemplate(
-					this.actions.double_tap_action?.action as string,
-				) != 'none') ||
-			('multi_double_tap_action' in this.actions &&
-				this.renderTemplate(
-					this.actions.multi_double_tap_action?.action as string,
-				) != 'none')
+			this.renderTemplate(
+				this.actions.double_tap_action?.action ?? 'none',
+			) != 'none' ||
+			this.renderTemplate(
+				this.actions.multi_double_tap_action?.action ?? 'none',
+			) != 'none'
 		) {
 			// Double tap action is defined
 			const doubleTapAction: ActionType = `${this.getMultiPrefix()}double_tap_action`;
@@ -89,7 +87,6 @@ export class RemoteTouchpad extends BaseRemoteElement {
 
 		if (
 			!this.holdAction &&
-			'momentary_start_action' in this.actions &&
 			this.renderTemplate(
 				this.actions.momentary_start_action?.action ?? 'none',
 			) != 'none'
@@ -99,7 +96,6 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			this.sendAction('momentary_start_action');
 		} else if (
 			!this.holdAction &&
-			'momentary_end_action' in this.actions &&
 			this.renderTemplate(
 				this.actions.momentary_end_action?.action ?? 'none',
 			) != 'none'
@@ -131,7 +127,6 @@ export class RemoteTouchpad extends BaseRemoteElement {
 
 		if (
 			!this.holdAction &&
-			'momentary_end_action' in this.actions &&
 			this.renderTemplate(
 				this.actions.momentary_end_action?.action ?? 'none',
 			) != 'none'
@@ -142,7 +137,6 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			this.endAction();
 		} else if (
 			!this.holdAction &&
-			'momentary_start_action' in this.actions &&
 			this.renderTemplate(
 				this.actions.momentary_start_action?.action ?? 'none',
 			) != 'none'
@@ -152,7 +146,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			e.stopImmediatePropagation();
 			e.preventDefault();
 			this.endAction();
-			if ('targetTouches' in e && e.targetTouches.length) {
+			if ('targetTouches' in e && e.targetTouches?.length) {
 				this.hold = true;
 			}
 		} else if (!('targetTouches' in e) || !e.targetTouches.length) {
@@ -258,13 +252,9 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		const holdAction = `${this.getMultiPrefix()}hold_action`;
 		const actions = this.getActions();
 
-		const holdTime =
-			'hold_time' in (actions[holdAction as ActionType] ?? {})
-				? (this.renderTemplate(
-						actions[holdAction as ActionType]
-							?.hold_time as unknown as string,
-				  ) as number)
-				: 500;
+		const holdTime = this.renderTemplate(
+			actions[holdAction as ActionType]?.hold_time ?? 500,
+		) as number;
 
 		this.holdTimer = setTimeout(() => {
 			this.hold = true;
@@ -276,25 +266,17 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			let repeat =
 				this.renderTemplate(actions.hold_action?.action as string) ==
 				'repeat';
-			let repeat_delay =
-				'repeat_delay' in (actions.hold_action ?? {})
-					? (this.renderTemplate(
-							actions.hold_action
-								?.repeat_delay as unknown as string,
-					  ) as number)
-					: 100;
-			if (actionType == 'multi_' && 'multi_hold_action' in actions) {
+			let repeat_delay = this.renderTemplate(
+				actions.hold_action?.repeat_delay ?? 100,
+			) as number;
+			if (actionType == 'multi_' && actions.multi_hold_action) {
 				repeat =
 					this.renderTemplate(
 						actions.multi_hold_action?.action as string,
 					) == 'repeat';
-				repeat_delay =
-					'repeat_delay' in (actions.multi_hold_action ?? {})
-						? (this.renderTemplate(
-								actions.multi_hold_action
-									?.repeat_delay as unknown as string,
-						  ) as number)
-						: 100;
+				repeat_delay = this.renderTemplate(
+					actions.multi_hold_action?.repeat_delay ?? 100,
+				) as number;
 			}
 
 			if (repeat) {
