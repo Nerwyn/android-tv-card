@@ -241,7 +241,7 @@ export class RemoteSlider extends BaseRemoteElement {
 		const style: StyleInfo = this.buildStyle(
 			{
 				'--tooltip-label': `"${
-					this.actions?.style?.['--tooltip-label'] ?? '`{{ `value }}'
+					this.actions?.style?.['--tooltip-label'] ?? '`{{ value }}'
 				}"`,
 				'--tooltip-transform':
 					this.actions?.style?.['--tooltip-transform'] ??
@@ -401,15 +401,20 @@ export class RemoteSlider extends BaseRemoteElement {
 	}
 
 	updated() {
+		let offsetWidth: number;
+		let offsetHeight: number;
 		this.setTooltip();
-		let i = 0;
 		const interval = setInterval(() => {
 			this.setTooltip();
-			i++;
-			if (i > 20) {
+			if (
+				this.offsetWidth == offsetWidth ||
+				this.offsetHeight == offsetHeight
+			) {
 				clearInterval(interval);
 			}
-		}, 100);
+			offsetWidth = this.offsetWidth;
+			offsetHeight = this.offsetHeight;
+		}, 200);
 	}
 
 	static get styles(): CSSResult | CSSResult[] {
