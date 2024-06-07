@@ -355,23 +355,21 @@ export class RemoteSlider extends BaseRemoteElement {
 			width: this.offsetWidth,
 		};
 
-		let style = this.actions.style ?? {};
+		const style = this.buildStyle(this.actions.style ?? {}, context);
 		this.vertical =
 			this.renderTemplate(this.actions.vertical ?? false, context) ==
 			true;
 		if (this.vertical) {
 			if (style.width) {
-				this.style.width = style.width as string;
+				this.style.setProperty('width', style.width as string);
 			} else {
 				this.style.width = '50px';
 			}
 			if (style.height) {
-				this.style.height = style.height as string;
+				this.style.setProperty('height', style.height as string);
 			}
 		}
-
 		this.style.setProperty('--thumb-offset', `${this.thumbOffset}px`);
-		style = this.buildStyle(style, context);
 		this.thumbWidth = parseInt(
 			((style['--thumb-width'] as string) ?? '50').replace('px', ''),
 		);
@@ -381,17 +379,13 @@ export class RemoteSlider extends BaseRemoteElement {
 				style['--icon-transform'] =
 					'translateY(calc(-1 * var(--thumb-offset)))';
 			} else {
-				style['--icon-transform'] =
-					'translateX(calc(-1 * var(--thumb-offset)))';
+				style['--icon-transform'] = 'translateX(var(--thumb-offset))';
 			}
 		}
 
 		return html`
 			${this.buildTooltip(context)}
-			<div
-				class="container"
-				style=${styleMap(this.buildStyle(style, context))}
-			>
+			<div class="container" style=${styleMap(style)}>
 				${this.buildBackground(context)}${this.buildSlider(context)}
 				${this.buildIcon(
 					this.renderTemplate(
