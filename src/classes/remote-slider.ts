@@ -241,7 +241,7 @@ export class RemoteSlider extends BaseRemoteElement {
 		const style: StyleInfo = this.buildStyle(
 			{
 				'--tooltip-label': `"${
-					this.actions?.style?.['--tooltip-label'] ?? '`{{ value }}'
+					this.actions?.style?.['--tooltip-label'] ?? '{{ value }}'
 				}"`,
 				'--tooltip-transform':
 					this.actions?.style?.['--tooltip-transform'] ??
