@@ -7,6 +7,7 @@ import { BaseRemoteElement } from './base-remote-element';
 @customElement('remote-slider')
 export class RemoteSlider extends BaseRemoteElement {
 	@state() showTooltip: boolean = false;
+	@state() thumbOffset: number = 0;
 	@state() sliderOn: boolean = true;
 	@state() currentValue = this.value;
 
@@ -15,11 +16,10 @@ export class RemoteSlider extends BaseRemoteElement {
 	speed: number = 0.02;
 	range: [number, number] = [0, 1];
 	step: number = 0.01;
-	vertical: boolean = false;
 	intervalId?: ReturnType<typeof setTimeout>;
 
+	vertical: boolean = false;
 	thumbWidth: number = 50;
-	thumbOffset: number = 0;
 
 	onInput(e: InputEvent) {
 		const slider = e.currentTarget as HTMLInputElement;
@@ -346,10 +346,6 @@ export class RemoteSlider extends BaseRemoteElement {
 			this.precision = 0;
 		}
 
-		if (this.offsetWidth) {
-			this.setTooltip();
-		}
-
 		const context = {
 			VALUE: this.getValueFromHass ? this.value : this.currentValue,
 			OFFSET: this.thumbOffset,
@@ -386,6 +382,10 @@ export class RemoteSlider extends BaseRemoteElement {
 			}
 		}
 
+		if (this.offsetWidth) {
+			this.setTooltip();
+		}
+
 		return html`
 			${this.buildTooltip(context)}
 			<div class="container" style=${styleMap(style)}>
@@ -403,6 +403,7 @@ export class RemoteSlider extends BaseRemoteElement {
 	updated() {
 		let offsetWidth: number;
 		let offsetHeight: number;
+		this.setTooltip();
 		const interval = setInterval(() => {
 			this.setTooltip();
 			if (
