@@ -111,6 +111,9 @@ remote_id: remote.google_chromecast
 slider_id: media_player.google_chromecast
 keyboard_id: media_player.google_chromecast_adb
 title: Example
+custom_actions:
+  slider:
+    icon: mdi:music-note
 rows:
   - - back
     - power
@@ -1812,26 +1815,18 @@ Conditional layouts using templating and an input select.
 ```yaml
 type: custom:android-tv-card
 remote_id: remote.google_tv
-slider_id: media_player.google_tv
+slider_id: media_player.spotify_nerwyn_singh
 rows:
   - - next_thing
   - |
-    {% if is_state("input_select.test_select", "A") %}
+    {% if is_state("input_select.select_test", "A") %}
     - touchpad
     - - slider
-    {% elif is_state("input_select.test_select", "B") %}
-    - navigation_buttons
+    {% elif is_state("input_select.select_test", "B") %}
+    - dpad
     - - volume_buttons
-    {% elif is_state("input_select.test_select", "C") %}
-    - - n7
-      - n8
-      - n9
-    - - n4
-      - n5
-      - n6
-    - - n1
-      - n2
-      - n3
+    {% elif is_state("input_select.select_test", "C") %}
+    - numpad
     {% endif %}
 custom_keys:
   next_thing:
@@ -1840,7 +1835,7 @@ custom_keys:
     data:
       cycle: true
     target:
-      entity_id: input_select.test_select
+      entity_id: input_select.select_test
 ```
 
 <img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/conditional_layouts.png" alt="conditional layouts example" width="500"/>
