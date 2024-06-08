@@ -1072,20 +1072,26 @@ Result:
 
 ### Example 3
 
-Using less.
+Using less and a vertical slider.
 
 ```yaml
 type: custom:android-tv-card
 remote_id: remote.google_chromecast
 slider_id: media_player.google_chromecast
 title: Example 3
+custom_actions:
+  slider:
+    vertical: true
+    icon: mdi:volume-high
+    style:
+      height: 250px
 rows:
   - - power
     - netflix
     - youtube
     - spotify
-  - - slider
   - - touchpad
+    - slider
   - - back
     - home
 ```
