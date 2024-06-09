@@ -10,6 +10,8 @@ export class RemoteSlider extends BaseRemoteElement {
 	@state() thumbOffset: number = 0;
 	@state() sliderOn: boolean = true;
 	@state() currentValue = this.value;
+	@state() offsetWidth!: number;
+	@state() offsetHeight!: number;
 
 	oldValue?: number;
 	newValue?: number;
@@ -392,11 +394,6 @@ export class RemoteSlider extends BaseRemoteElement {
 				${this.buildIcon(this.actions.icon ?? '', context)}
 			</div>
 		`;
-	}
-
-	updated() {
-		const interval = setInterval(() => this.setThumbOffset(), 100);
-		setTimeout(() => clearInterval(interval), 2000);
 	}
 
 	static get styles(): CSSResult | CSSResult[] {
