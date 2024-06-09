@@ -380,13 +380,6 @@ export class RemoteSlider extends BaseRemoteElement {
 			}
 		}
 
-		if (
-			(this.vertical && this.offsetHeight) ||
-			(!this.vertical && this.offsetWidth)
-		) {
-			this.setThumbOffset();
-		}
-
 		return html`
 			${this.buildTooltip(context)}
 			<div class="container" style=${styleMap(style)}>
@@ -394,6 +387,12 @@ export class RemoteSlider extends BaseRemoteElement {
 				${this.buildIcon(this.actions.icon ?? '', context)}
 			</div>
 		`;
+	}
+
+	updated() {
+		this.setThumbOffset();
+		const interval = setInterval(() => this.setThumbOffset(), 100);
+		setTimeout(() => clearInterval(interval), 2000);
 	}
 
 	static get styles(): CSSResult | CSSResult[] {
