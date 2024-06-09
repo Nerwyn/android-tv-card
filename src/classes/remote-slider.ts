@@ -389,12 +389,7 @@ export class RemoteSlider extends BaseRemoteElement {
 			${this.buildTooltip(context)}
 			<div class="container" style=${styleMap(style)}>
 				${this.buildBackground(context)}${this.buildSlider(context)}
-				${this.buildIcon(
-					this.renderTemplate(
-						this.actions.icon ?? '',
-						context,
-					) as string,
-				)}
+				${this.buildIcon(this.actions.icon ?? '', context)}
 			</div>
 		`;
 	}

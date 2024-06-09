@@ -201,9 +201,7 @@ export class RemoteButton extends BaseRemoteElement {
 				@contextmenu=${this.onContextMenu}
 				.action=${action}
 			>
-				${this.buildIcon(
-					this.renderTemplate(this.actions.icon ?? '') as string,
-				)}${inputTemplate}
+				${this.buildIcon(this.actions.icon ?? '')}${inputTemplate}
 			</ha-icon-button>
 		`;
 	}

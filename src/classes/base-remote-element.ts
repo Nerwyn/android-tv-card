@@ -658,7 +658,8 @@ export class BaseRemoteElement extends LitElement {
 		}
 	}
 
-	buildIcon(icon?: string): TemplateResult<1> {
+	buildIcon(icon?: string, context?: object): TemplateResult<1> {
+		icon = this.renderTemplate(icon ?? '', context) as string;
 		if (icon) {
 			let iconElement = html``;
 			if (icon.includes(':')) {
