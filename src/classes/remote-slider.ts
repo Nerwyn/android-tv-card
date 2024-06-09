@@ -10,8 +10,7 @@ export class RemoteSlider extends BaseRemoteElement {
 	@state() thumbOffset: number = 0;
 	@state() sliderOn: boolean = true;
 	@state() currentValue = this.value;
-	@state() _offsetWidth = this.offsetWidth;
-	@state() _offsetHeight = this.offsetHeight;
+	@state() sliderWidth: number = 0;
 
 	oldValue?: number;
 	newValue?: number;
@@ -181,16 +180,15 @@ export class RemoteSlider extends BaseRemoteElement {
 	}
 
 	setThumbOffset() {
-		const width = this.vertical ? this._offsetHeight : this._offsetWidth;
-		const maxOffset = (width - this.thumbWidth) / 2;
+		const adjustedSliderWidth = this.sliderWidth - this.thumbWidth;
+		const maxOffset = adjustedSliderWidth / 2;
 		const value = Number(
 			this.getValueFromHass ? this.value : this.currentValue,
 		);
 		this.thumbOffset = Math.min(
 			Math.max(
 				Math.round(
-					((width - this.thumbWidth) /
-						(this.range[1] - this.range[0])) *
+					(adjustedSliderWidth / (this.range[1] - this.range[0])) *
 						(value - (this.range[0] + this.range[1]) / 2),
 				),
 				-1 * maxOffset,
@@ -380,10 +378,8 @@ export class RemoteSlider extends BaseRemoteElement {
 			}
 		}
 
-		if (
-			(this.vertical && this.offsetHeight) ||
-			(!this.vertical && this.offsetWidth)
-		) {
+		this.sliderWidth = this.vertical ? this.offsetHeight : this.offsetWidth;
+		if (this.sliderWidth) {
 			this.setThumbOffset();
 		}
 
