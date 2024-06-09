@@ -395,19 +395,13 @@ export class RemoteSlider extends BaseRemoteElement {
 	}
 
 	updated() {
-		let offsetWidth: number;
-		let offsetHeight: number;
 		const interval = setInterval(() => {
 			this.setThumbOffset();
-			if (
-				this.offsetWidth == offsetWidth ||
-				this.offsetHeight == offsetHeight
-			) {
-				clearInterval(interval);
-			}
-			offsetWidth = this.offsetWidth;
-			offsetHeight = this.offsetHeight;
-		}, 200);
+		}, 100);
+		this.addEventListener('load', (_e) => {
+			clearInterval(interval);
+			console.log('Page loaded!');
+		});
 	}
 
 	static get styles(): CSSResult | CSSResult[] {
