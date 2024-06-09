@@ -38,7 +38,8 @@ export class RemoteSlider extends BaseRemoteElement {
 			this.newValue = end;
 
 			this.currentValue = start;
-			this.setTooltip(true);
+			this.setThumbOffset();
+			this.showTooltip = true;
 
 			if (end > this.range[0]) {
 				this.sliderOn = true;
@@ -51,13 +52,13 @@ export class RemoteSlider extends BaseRemoteElement {
 				this.intervalId = setInterval(() => {
 					i -= this.speed;
 					this.currentValue = i;
-					this.setTooltip();
+					this.setThumbOffset();
 
 					if (end >= i) {
 						clearInterval(this.intervalId);
 						this.intervalId = undefined;
 						this.currentValue = end;
-						this.setTooltip();
+						this.setThumbOffset();
 					}
 				}, 1);
 			} else if (start < end) {
@@ -65,13 +66,13 @@ export class RemoteSlider extends BaseRemoteElement {
 				this.intervalId = setInterval(() => {
 					i += this.speed;
 					this.currentValue = i;
-					this.setTooltip();
+					this.setThumbOffset();
 
 					if (end <= i) {
 						clearInterval(this.intervalId);
 						this.intervalId = undefined;
 						this.currentValue = end;
-						this.setTooltip();
+						this.setThumbOffset();
 					}
 				}, 1);
 			} else {
@@ -85,7 +86,8 @@ export class RemoteSlider extends BaseRemoteElement {
 			}
 			this.setValue();
 			this.currentValue = this.value ?? 0;
-			this.setTooltip(false);
+			this.setThumbOffset();
+			this.showTooltip = false;
 		}
 	}
 
@@ -97,13 +99,15 @@ export class RemoteSlider extends BaseRemoteElement {
 			clearTimeout(this.getValueFromHassTimer);
 			this.currentValue = slider.value;
 			this.value = slider.value;
-			this.setTooltip(true);
+			this.setThumbOffset();
+			this.showTooltip = true;
 			this.sliderOn = true;
 		}
 	}
 
 	onEnd(_e: MouseEvent | TouchEvent) {
-		this.setTooltip(false);
+		this.setThumbOffset();
+		this.showTooltip = false;
 		this.setValue();
 
 		if (!this.swiping) {
@@ -121,7 +125,7 @@ export class RemoteSlider extends BaseRemoteElement {
 			this.getValueFromHass = true;
 			this.setValue();
 			this.currentValue = this.value ?? 0;
-			this.setTooltip();
+			this.setThumbOffset();
 			this.setSliderState(this.currentValue as number);
 		}
 
@@ -157,7 +161,8 @@ export class RemoteSlider extends BaseRemoteElement {
 				this.getValueFromHass = true;
 				this.setValue();
 				this.currentValue = this.value ?? 0;
-				this.setTooltip(false);
+				this.setThumbOffset();
+				this.showTooltip = false;
 				this.setSliderState(this.value as number);
 			}
 		}
@@ -173,29 +178,23 @@ export class RemoteSlider extends BaseRemoteElement {
 		}
 	}
 
-	setTooltip(show?: boolean) {
-		let width = this.offsetWidth;
-		if (this.vertical) {
-			width = this.offsetHeight;
-		}
-
+	setThumbOffset() {
+		const width = this.vertical ? this.offsetHeight : this.offsetWidth;
 		const maxOffset = (width - this.thumbWidth) / 2;
+		const value = Number(
+			this.getValueFromHass ? this.value : this.currentValue,
+		);
 		this.thumbOffset = Math.min(
 			Math.max(
 				Math.round(
 					((width - this.thumbWidth) /
 						(this.range[1] - this.range[0])) *
-						(Number(this.currentValue) -
-							(this.range[0] + this.range[1]) / 2),
+						(value - (this.range[0] + this.range[1]) / 2),
 				),
 				-1 * maxOffset,
 			),
 			maxOffset,
 		);
-
-		if (show != undefined) {
-			this.showTooltip = show;
-		}
 	}
 
 	setSliderState(value: number) {
@@ -383,7 +382,7 @@ export class RemoteSlider extends BaseRemoteElement {
 			(this.vertical && this.offsetHeight) ||
 			(!this.vertical && this.offsetWidth)
 		) {
-			this.setTooltip();
+			this.setThumbOffset();
 		}
 
 		return html`
@@ -403,9 +402,8 @@ export class RemoteSlider extends BaseRemoteElement {
 	updated() {
 		let offsetWidth: number;
 		let offsetHeight: number;
-		this.setTooltip();
 		const interval = setInterval(() => {
-			this.setTooltip();
+			this.setThumbOffset();
 			if (
 				this.offsetWidth == offsetWidth ||
 				this.offsetHeight == offsetHeight
