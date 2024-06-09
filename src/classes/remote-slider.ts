@@ -10,8 +10,8 @@ export class RemoteSlider extends BaseRemoteElement {
 	@state() thumbOffset: number = 0;
 	@state() sliderOn: boolean = true;
 	@state() currentValue = this.value;
-	@state() offsetWidth!: number;
-	@state() offsetHeight!: number;
+	@state() _offsetWidth = this.offsetWidth;
+	@state() _offsetHeight = this.offsetHeight;
 
 	oldValue?: number;
 	newValue?: number;
@@ -181,7 +181,7 @@ export class RemoteSlider extends BaseRemoteElement {
 	}
 
 	setThumbOffset() {
-		const width = this.vertical ? this.offsetHeight : this.offsetWidth;
+		const width = this.vertical ? this._offsetHeight : this._offsetWidth;
 		const maxOffset = (width - this.thumbWidth) / 2;
 		const value = Number(
 			this.getValueFromHass ? this.value : this.currentValue,
@@ -380,6 +380,13 @@ export class RemoteSlider extends BaseRemoteElement {
 			}
 		}
 
+		if (
+			(this.vertical && this.offsetHeight) ||
+			(!this.vertical && this.offsetWidth)
+		) {
+			this.setThumbOffset();
+		}
+
 		return html`
 			${this.buildTooltip(context)}
 			<div class="container" style=${styleMap(style)}>
@@ -387,12 +394,6 @@ export class RemoteSlider extends BaseRemoteElement {
 				${this.buildIcon(this.actions.icon ?? '', context)}
 			</div>
 		`;
-	}
-
-	updated() {
-		this.setThumbOffset();
-		const interval = setInterval(() => this.setThumbOffset(), 100);
-		setTimeout(() => clearInterval(interval), 2000);
 	}
 
 	static get styles(): CSSResult | CSSResult[] {
