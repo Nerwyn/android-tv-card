@@ -10,7 +10,6 @@ export class RemoteSlider extends BaseRemoteElement {
 	@state() thumbOffset: number = 0;
 	@state() sliderOn: boolean = true;
 	@state() currentValue = this.value;
-	@state() sliderWidth: number = 0;
 
 	oldValue?: number;
 	newValue?: number;
@@ -180,15 +179,16 @@ export class RemoteSlider extends BaseRemoteElement {
 	}
 
 	setThumbOffset() {
-		const adjustedSliderWidth = this.sliderWidth - this.thumbWidth;
-		const maxOffset = adjustedSliderWidth / 2;
+		const width = this.vertical ? this.offsetHeight : this.offsetWidth;
+		const maxOffset = (width - this.thumbWidth) / 2;
 		const value = Number(
 			this.getValueFromHass ? this.value : this.currentValue,
 		);
 		this.thumbOffset = Math.min(
 			Math.max(
 				Math.round(
-					(adjustedSliderWidth / (this.range[1] - this.range[0])) *
+					((width - this.thumbWidth) /
+						(this.range[1] - this.range[0])) *
 						(value - (this.range[0] + this.range[1]) / 2),
 				),
 				-1 * maxOffset,
@@ -378,8 +378,10 @@ export class RemoteSlider extends BaseRemoteElement {
 			}
 		}
 
-		this.sliderWidth = this.vertical ? this.offsetHeight : this.offsetWidth;
-		if (this.sliderWidth) {
+		if (
+			(this.vertical && this.offsetHeight) ||
+			(!this.vertical && this.offsetWidth)
+		) {
 			this.setThumbOffset();
 		}
 
@@ -390,6 +392,11 @@ export class RemoteSlider extends BaseRemoteElement {
 				${this.buildIcon(this.actions.icon ?? '', context)}
 			</div>
 		`;
+	}
+
+	updated() {
+		const interval = setInterval(() => this.setThumbOffset(), 100);
+		setTimeout(() => clearInterval(interval), 2000);
 	}
 
 	static get styles(): CSSResult | CSSResult[] {
