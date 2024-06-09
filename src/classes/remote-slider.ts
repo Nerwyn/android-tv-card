@@ -397,11 +397,9 @@ export class RemoteSlider extends BaseRemoteElement {
 	updated() {
 		const interval = setInterval(() => {
 			this.setThumbOffset();
+			console.log(this.thumbOffset);
 		}, 100);
-		this.addEventListener('load', (_e) => {
-			clearInterval(interval);
-			console.log('Page loaded!');
-		});
+		setTimeout(() => clearInterval(interval), 2000);
 	}
 
 	static get styles(): CSSResult | CSSResult[] {
