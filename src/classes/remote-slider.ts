@@ -20,6 +20,7 @@ export class RemoteSlider extends BaseRemoteElement {
 
 	vertical: boolean = false;
 	thumbWidth: number = 50;
+	sliderWidth: number = 0;
 
 	onInput(e: InputEvent) {
 		const slider = e.currentTarget as HTMLInputElement;
@@ -179,15 +180,14 @@ export class RemoteSlider extends BaseRemoteElement {
 	}
 
 	setThumbOffset() {
-		const width = this.vertical ? this.offsetHeight : this.offsetWidth;
-		const maxOffset = (width - this.thumbWidth) / 2;
+		const maxOffset = (this.sliderWidth - this.thumbWidth) / 2;
 		const value = Number(
 			this.getValueFromHass ? this.value : this.currentValue,
 		);
 		this.thumbOffset = Math.min(
 			Math.max(
 				Math.round(
-					((width - this.thumbWidth) /
+					((this.sliderWidth - this.thumbWidth) /
 						(this.range[1] - this.range[0])) *
 						(value - (this.range[0] + this.range[1]) / 2),
 				),
@@ -378,22 +378,14 @@ export class RemoteSlider extends BaseRemoteElement {
 			}
 		}
 
-		if (
-			(this.vertical && this.offsetHeight) ||
-			(!this.vertical && this.offsetWidth)
-		) {
-			this.setThumbOffset();
-		}
-
-		const ro = new ResizeObserver((entries) => {
+		new ResizeObserver((entries) => {
 			for (const entry of entries) {
-				const cr = entry.contentRect;
-				console.log('Element:', entry.target);
-				console.log(`Element size: ${cr.width}px x ${cr.height}px`);
-				console.log(`Element padding: ${cr.top}px ; ${cr.left}px`);
+				this.sliderWidth = this.vertical
+					? entry.contentRect.height
+					: entry.contentRect.width;
 			}
-		});
-		ro.observe(this);
+		}).observe(this);
+		this.setThumbOffset();
 
 		return html`
 			${this.buildTooltip(context)}
@@ -402,11 +394,6 @@ export class RemoteSlider extends BaseRemoteElement {
 				${this.buildIcon(this.actions.icon ?? '', context)}
 			</div>
 		`;
-	}
-
-	updated() {
-		const interval = setInterval(() => this.setThumbOffset(), 100);
-		setTimeout(() => clearInterval(interval), 2000);
 	}
 
 	static get styles(): CSSResult | CSSResult[] {
