@@ -385,6 +385,16 @@ export class RemoteSlider extends BaseRemoteElement {
 			this.setThumbOffset();
 		}
 
+		const ro = new ResizeObserver((entries) => {
+			for (const entry of entries) {
+				const cr = entry.contentRect;
+				console.log('Element:', entry.target);
+				console.log(`Element size: ${cr.width}px x ${cr.height}px`);
+				console.log(`Element padding: ${cr.top}px ; ${cr.left}px`);
+			}
+		});
+		ro.observe(this);
+
 		return html`
 			${this.buildTooltip(context)}
 			<div class="container" style=${styleMap(style)}>
