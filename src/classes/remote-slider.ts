@@ -383,9 +383,9 @@ export class RemoteSlider extends BaseRemoteElement {
 				this.sliderWidth = this.vertical
 					? entry.contentRect.height
 					: entry.contentRect.width;
+				this.setThumbOffset();
 			}
 		}).observe(this);
-		this.setThumbOffset();
 
 		return html`
 			${this.buildTooltip(context)}
