@@ -21,6 +21,14 @@ export class RemoteSlider extends BaseRemoteElement {
 	vertical: boolean = false;
 	thumbWidth: number = 50;
 	sliderWidth: number = 0;
+	resizeObserver = new ResizeObserver((entries) => {
+		for (const entry of entries) {
+			this.sliderWidth = this.vertical
+				? entry.contentRect.height
+				: entry.contentRect.width;
+			this.setThumbOffset();
+		}
+	});
 
 	onInput(e: InputEvent) {
 		const slider = e.currentTarget as HTMLInputElement;
@@ -378,14 +386,7 @@ export class RemoteSlider extends BaseRemoteElement {
 			}
 		}
 
-		new ResizeObserver((entries) => {
-			for (const entry of entries) {
-				this.sliderWidth = this.vertical
-					? entry.contentRect.height
-					: entry.contentRect.width;
-				this.setThumbOffset();
-			}
-		}).observe(this);
+		this.resizeObserver.observe(this);
 
 		return html`
 			${this.buildTooltip(context)}
@@ -394,6 +395,11 @@ export class RemoteSlider extends BaseRemoteElement {
 				${this.buildIcon(this.actions.icon ?? '', context)}
 			</div>
 		`;
+	}
+
+	disconnectedCallback(): void {
+		super.disconnectedCallback();
+		this.resizeObserver.disconnect();
 	}
 
 	static get styles(): CSSResult | CSSResult[] {
