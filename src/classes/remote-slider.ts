@@ -360,10 +360,12 @@ export class RemoteSlider extends BaseRemoteElement {
 			value: this.getValueFromHass ? this.value : this.currentValue,
 		};
 
-		const style = this.buildStyle(this.actions.style ?? {}, context);
 		this.vertical =
 			this.renderTemplate(this.actions.vertical ?? false, context) ==
 			true;
+		this.resizeObserver.observe(this);
+
+		const style = this.buildStyle(this.actions.style ?? {}, context);
 		if (this.vertical) {
 			if (style.width) {
 				this.style.setProperty('width', style.width as string);
@@ -374,14 +376,11 @@ export class RemoteSlider extends BaseRemoteElement {
 				this.style.setProperty('height', `${this.sliderWidth}px`);
 			}
 		}
-
-		this.resizeObserver.observe(this);
-		this.setThumbOffset();
-
 		this.style.setProperty('--thumb-offset', `${this.thumbOffset}px`);
 		this.thumbWidth = parseInt(
 			((style['--thumb-width'] as string) ?? '50').replace('px', ''),
 		);
+		this.setThumbOffset();
 
 		if (!style['--icon-transform']) {
 			if (this.vertical) {
