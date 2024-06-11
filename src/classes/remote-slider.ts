@@ -370,6 +370,9 @@ export class RemoteSlider extends BaseRemoteElement {
 			} else {
 				this.style.width = '50px';
 			}
+			if (!style.height) {
+				this.style.setProperty('height', `${this.sliderWidth}px`);
+			}
 		}
 
 		this.resizeObserver.observe(this);
