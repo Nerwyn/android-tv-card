@@ -8,7 +8,6 @@ import { BaseRemoteElement } from './base-remote-element';
 export class RemoteSlider extends BaseRemoteElement {
 	@state() showTooltip: boolean = false;
 	@state() thumbOffset: number = 0;
-	@state() sliderWidth: number = 0;
 	@state() sliderOn: boolean = true;
 	@state() currentValue = this.value;
 
@@ -21,6 +20,7 @@ export class RemoteSlider extends BaseRemoteElement {
 
 	vertical: boolean = false;
 	thumbWidth: number = 50;
+	sliderWidth: number = 0;
 	resizeObserver = new ResizeObserver((entries) => {
 		for (const entry of entries) {
 			this.sliderWidth = this.vertical
@@ -372,6 +372,10 @@ export class RemoteSlider extends BaseRemoteElement {
 				this.style.setProperty('height', style.height as string);
 			}
 		}
+
+		this.resizeObserver.observe(this);
+		this.setThumbOffset();
+
 		this.style.setProperty('--thumb-offset', `${this.thumbOffset}px`);
 		this.thumbWidth = parseInt(
 			((style['--thumb-width'] as string) ?? '50').replace('px', ''),
@@ -385,9 +389,6 @@ export class RemoteSlider extends BaseRemoteElement {
 				style['--icon-transform'] = 'translateX(var(--thumb-offset))';
 			}
 		}
-
-		this.resizeObserver.observe(this);
-		this.setThumbOffset();
 
 		return html`
 			${this.buildTooltip(context)}
