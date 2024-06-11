@@ -236,7 +236,8 @@ export class RemoteSlider extends BaseRemoteElement {
 		const style: StyleInfo = {};
 		if (this.vertical) {
 			style['transform'] = 'rotateZ(270deg)';
-			style['width'] = this.actions.style?.height ?? this.sliderWidth;
+			style['width'] =
+				this.actions.style?.height ?? `${this.sliderWidth}px`;
 		}
 		return html`<div
 			class="background"
@@ -295,7 +296,8 @@ export class RemoteSlider extends BaseRemoteElement {
 		}
 		if (this.vertical) {
 			style['transform'] = 'rotateZ(270deg)';
-			style['width'] = this.actions.style?.height ?? this.sliderWidth;
+			style['width'] =
+				this.actions.style?.height ?? `${this.sliderWidth}px`;
 		}
 
 		return html`
