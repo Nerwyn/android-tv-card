@@ -236,7 +236,7 @@ export class RemoteSlider extends BaseRemoteElement {
 		const style: StyleInfo = {};
 		if (this.vertical) {
 			style['transform'] = 'rotateZ(270deg)';
-			style['width'] = this.actions.style?.height ?? '50px';
+			style['width'] = this.actions.style?.height ?? this.sliderWidth;
 		}
 		return html`<div
 			class="background"
@@ -295,7 +295,7 @@ export class RemoteSlider extends BaseRemoteElement {
 		}
 		if (this.vertical) {
 			style['transform'] = 'rotateZ(270deg)';
-			style['width'] = this.actions.style?.height ?? '50px';
+			style['width'] = this.actions.style?.height ?? this.sliderWidth;
 		}
 
 		return html`
@@ -368,9 +368,6 @@ export class RemoteSlider extends BaseRemoteElement {
 			} else {
 				this.style.width = '50px';
 			}
-			if (style.height) {
-				this.style.setProperty('height', style.height as string);
-			}
 		}
 
 		this.resizeObserver.observe(this);
@@ -414,8 +411,9 @@ export class RemoteSlider extends BaseRemoteElement {
 					flex-grow: 0;
 					place-content: center space-evenly;
 					align-items: center;
+					align-self: stretch;
 					position: relative;
-					height: fit-content;
+					height: unset;
 					width: 100%;
 					border: none;
 					border-radius: 25px;
