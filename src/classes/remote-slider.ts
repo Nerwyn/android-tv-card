@@ -379,7 +379,7 @@ export class RemoteSlider extends BaseRemoteElement {
 				this.style.width = '50px';
 			}
 			if (!style.height) {
-				this.style.setProperty('height', `${this.sliderWidth}px`);
+				style.height = `${this.sliderWidth}px`;
 			}
 		}
 
