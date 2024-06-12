@@ -327,16 +327,22 @@ export class RemoteSlider extends BaseRemoteElement {
 		if (this.getValueFromHass) {
 			this.currentValue = this.value;
 		}
+		const context = {
+			VALUE: this.getValueFromHass ? this.value : this.currentValue,
+			value: this.getValueFromHass ? this.value : this.currentValue,
+		};
 
 		if (this.actions.range) {
 			this.range[0] = parseFloat(
 				this.renderTemplate(
 					this.actions.range[0] as unknown as string,
+					context,
 				) as string,
 			);
 			this.range[1] = parseFloat(
 				this.renderTemplate(
 					this.actions.range[1] as unknown as string,
+					context,
 				) as string,
 			);
 		}
@@ -344,7 +350,7 @@ export class RemoteSlider extends BaseRemoteElement {
 		this.speed = (this.range[1] - this.range[0]) / 50;
 
 		if (this.actions.step) {
-			this.step = Number(this.renderTemplate(this.actions.step));
+			this.step = Number(this.renderTemplate(this.actions.step, context));
 		} else {
 			this.step = (this.range[1] - this.range[0]) / 100;
 		}
@@ -355,15 +361,12 @@ export class RemoteSlider extends BaseRemoteElement {
 			this.precision = 0;
 		}
 
-		const context = {
-			VALUE: this.getValueFromHass ? this.value : this.currentValue,
-			value: this.getValueFromHass ? this.value : this.currentValue,
-		};
-
 		this.vertical =
 			this.renderTemplate(this.actions.vertical ?? false, context) ==
 			true;
-		this.resizeObserver.observe(this);
+		this.resizeObserver.observe(
+			this.shadowRoot?.querySelector('.container') ?? this,
+		);
 
 		const style = this.buildStyle(this.actions.style ?? {}, context);
 		this.thumbWidth = parseInt(
@@ -436,6 +439,7 @@ export class RemoteSlider extends BaseRemoteElement {
 					all: inherit;
 					overflow: hidden;
 					height: 50px;
+					align-self: center;
 					color: var(--background, var(--primary-background-color));
 					--color: var(--primary-text-color);
 					--mdc-icon-size: var(--size, 32px);
