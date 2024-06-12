@@ -758,7 +758,7 @@ custom_actions:
 | --------------------- | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | slider_id             | string           | The entity id to use for the slider.                                                                                                                                                                                                    |
 | value_from_hass_delay | number           | The time the feature will wait after firing an action before it starts retrieving values from Home Assistant again. Useful for preventing bouncing between new and old values if an entity takes a while to update. Defaults to 1000ms. |
-| vertical              | boolean          | Renders a vertical slider when true. `style.width` must be set to explicitly set the slider height. Defaults to false.                                                                                                                  |
+| vertical              | boolean          | Renders a vertical slider when true. Defaults to false.                                                                                                                                                                                 |
 | icon                  | string           | The name of the optional slider icon. Follows the slider thumb by default but this can be changed with style options.                                                                                                                   |
 | value_attribute       | string           | An entity attribute (or state) for the slider to track, defaults to `volume_level` for the slider and `state` for buttons and touchpad.                                                                                                 |
 | range                 | [number, number] | The range of the slider, defaults to [0,1].                                                                                                                                                                                             |
@@ -823,13 +823,13 @@ Similar to how styles can be set for each custom action, it can be used to chang
 
 | Name                  | Description                                                                                                                  |
 | --------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| color                 | Color of the slider icon. Defaults to the slider background color.                                                           |
 | --color               | Color of the slider thumb / percentage on.                                                                                   |
 | --background          | Slider background color.                                                                                                     |
 | --background-height   | Slider background height. Maximum is constrained by the foreground height.                                                   |
 | --tooltip-label       | Tooltip label template, defaults to `{{ value }}`.                                                                           |
 | --tooltip-transform   | Tooltip location transform function, defaults to `translate(var(--thumb-offset), -40px)`.                                    |
 | --tooltip-display     | Tooltip display value, set to `none` to hide tooltip, defaults to `initial`.                                                 |
+| color                 | Color of the slider icon. Defaults to the slider background color.                                                           |
 | --size                | Size of the slider icon. Defaults to 32px.                                                                                   |
 | --icon-transform      | Transform function for the slider icon. Defaults to `translateX(var(--thumb-offset))`.                                       |
 | --icon-display        | Display mode of the icon. Defaults to `flex`.                                                                                |
@@ -1083,8 +1083,6 @@ custom_actions:
   slider:
     vertical: true
     icon: mdi:volume-high
-    style:
-      height: 250px
 rows:
   - - power
     - netflix
