@@ -2081,7 +2081,7 @@ Style the dpad to be like the Google TV app remote.
 type: custom:android-tv-card
 remote_id: remote.google_tv
 rows:
-  - - dpad
+  - - nav_buttons
 custom_actions:
   center:
     style:
