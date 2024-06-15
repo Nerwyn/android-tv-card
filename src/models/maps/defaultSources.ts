@@ -53,7 +53,11 @@ export const defaultSources: Record<string, IActions> = {
 		icon: 'mdi:netflix',
 	},
 	paramount: {
-		tap_action: { action: 'source', source: 'https://www.paramountplus.com/'}
+		tap_action: {
+			action: 'source',
+			source: 'https://www.paramountplus.com/',
+		},
+		icon: svg.paramount,
 	},
 	plex: {
 		tap_action: { action: 'source', source: 'plex://' },
