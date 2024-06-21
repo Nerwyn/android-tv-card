@@ -234,7 +234,7 @@ This card also supports the following special button shortcuts and elements whic
 | vol_buttons, volume_buttons                              | buttons  | Shorthand to generate a set of volume down, volume mute, and volume up buttons in a row or column.          |
 | nav_buttons, navigation_buttons                          | buttons  | Shorthand to generate a set of up, down, left, right, and center buttons across three rows within a column. |
 | dpad, d_pad, direction_pad,                              | buttons  | Shorthand to generate a set of up, down, left, right, and center buttons arranged in a square grid.         |
-| numpad, num_pad, number_pad                              | buttons  | Shorthand to generate a set of 0-9 buttons arranged in a square grid.                                       |
+| numpad, num_pad, number_pad                              | buttons  | Shorthand to generate a set of 1-9 buttons arranged in a square grid. Does not include `n0`.                |
 | xpad, x_pad, gamepad, xgamepad, x_gamepad                | buttons  | Shorthand to generate a set of A, B, X, and Y buttons arranged in a square grid.                            |
 | npad, n_pad, ngamepad, n_gamepad                         | buttons  | Shorthand to generate a set of A, B, X, and Y buttons arranged in a square grid.                            |
 
