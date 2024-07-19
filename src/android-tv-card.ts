@@ -245,7 +245,7 @@ class AndroidTVCard extends LitElement {
 					] as IAction;
 
 					// Populate action field
-					if (!action.action) {
+					if (!customAction.template && !action.action) {
 						if (action.key) {
 							action.action = 'key';
 						} else if (action.source) {
