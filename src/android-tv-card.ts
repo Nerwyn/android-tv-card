@@ -239,10 +239,8 @@ class AndroidTVCard extends LitElement {
 				'momentary_end_action',
 			];
 			for (const actionType of actionTypes) {
-				if (actionType in customAction) {
-					const action = customAction[
-						actionType as keyof IActions
-					] as IAction;
+				if (customAction[actionType]) {
+					const action = customAction[actionType] as IAction;
 
 					// Populate action field
 					if (!customAction.template && !action.action) {
@@ -271,7 +269,7 @@ class AndroidTVCard extends LitElement {
 					// Merge service_data, target, and data fields
 					if (
 						['data', 'target', 'service_data'].some(
-							(key) => key in action,
+							(key) => action[key as keyof IAction],
 						)
 					) {
 						action.data = {
