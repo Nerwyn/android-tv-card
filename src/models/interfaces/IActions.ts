@@ -65,9 +65,9 @@ export interface IAction {
 
 	browser_mod?: IBrowserMod;
 
+	double_tap_window?: number;
 	hold_time?: number;
 	repeat_delay?: number;
-	double_tap_window?: number;
 }
 
 export interface IActions
@@ -77,14 +77,14 @@ export interface IActions
 
 export interface IBasicActions {
 	tap_action?: IAction;
-	hold_action?: IAction;
 	double_tap_action?: IAction;
+	hold_action?: IAction;
 }
 
 export interface IMultiActions {
 	multi_tap_action?: IAction;
-	multi_hold_action?: IAction;
 	multi_double_tap_action?: IAction;
+	multi_hold_action?: IAction;
 }
 
 export interface IMomentaryActions {

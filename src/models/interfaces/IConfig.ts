@@ -1,41 +1,9 @@
-import { StyleInfo } from 'lit/directives/style-map.js';
+import { StyleInfo } from 'lit/directives/style-map.js'; // TODO REMOVE
 
-import { IActions, IBasicActions, IMultiActions } from '.';
+import { IElementConfig } from '.';
 
 export const KeyboardModes = ['ANDROID TV', 'KODI', 'FIRE TV'] as const;
 export type KeyboardMode = (typeof KeyboardModes)[number];
-
-export const RemoteElementTypes = ['button', 'slider', 'touchpad'] as const;
-export type RemoteElementType = (typeof RemoteElementTypes)[number];
-
-export interface IElementConfig
-	extends ISliderConfig,
-		ITouchpadConfig,
-		IActions {
-	type?: RemoteElementType;
-	template?: string;
-
-	icon?: string;
-	style?: StyleInfo;
-	styles?: string;
-
-	haptics?: boolean;
-}
-
-export interface ISliderConfig {
-	value_attribute?: string;
-	value_from_hass_delay?: boolean;
-	range?: [number, number];
-	step?: number;
-	vertical?: boolean;
-}
-
-export interface ITouchpadConfig {
-	up?: IBasicActions & IMultiActions;
-	down?: IBasicActions & IMultiActions;
-	left?: IBasicActions & IMultiActions;
-	right?: IBasicActions & IMultiActions;
-}
 
 export type Row = (string | Row[])[];
 
@@ -52,17 +20,17 @@ export interface IConfig {
 	custom_actions?: Record<string, IElementConfig>;
 	custom_icons?: Record<string, string>;
 
-	button_haptics?: boolean;
-	button_style?: StyleInfo;
+	button_haptics?: boolean; // TODO Make just haptics
+	button_style?: StyleInfo; // TODO REMOVE
 
-	touchpad_haptics?: boolean;
-	touchpad_style?: StyleInfo;
+	touchpad_haptics?: boolean; // TODO REMOVE
+	touchpad_style?: StyleInfo; // TODO REMOVE
 
 	hold_time?: number;
 	repeat_delay?: number;
 	double_tap_window?: number;
 
 	rows?: Row[];
-	row_styles?: Record<string, StyleInfo>;
+	row_styles?: Record<string, StyleInfo>; // TODO REMOVE
 	styles?: string;
 }
