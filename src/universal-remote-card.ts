@@ -630,9 +630,13 @@ class UniversalRemoteCard extends LitElement {
 
 	buildDialog() {
 		// https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dialog
-		return html`<dialog>
+		return html`<dialog @dialog-open=${this.onDialogOpen}}>
 			<input></input>
 		</dialog>`;
+	}
+
+	onDialogOpen(_e: CustomEvent) {
+		this.shadowRoot?.querySelector('dialog')?.showModal();
 	}
 
 	buildElements(
@@ -868,6 +872,8 @@ class UniversalRemoteCard extends LitElement {
 				height: -webkit-fill-available;
 				height: fill-available;
 				outline: none;
+				background: none;
+				border: none;
 			}
 			dialog::backdrop {
 				background: rgba(0, 0, 0, 0.9);
