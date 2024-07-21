@@ -199,9 +199,8 @@ export class RemoteButton extends BaseRemoteElement {
 				@touchend=${this.onTouchEnd}
 				@touchmove=${this.onTouchMove}
 				@contextmenu=${this.onContextMenu}
-			>
-				${this.buildIcon(this.actions.icon ?? '')}${inputTemplate}
-			</button>
+			></button>
+			${this.buildIcon(this.actions.icon ?? '')}${inputTemplate}
 		`;
 	}
 
