@@ -1,4 +1,4 @@
-import { version } from '../package.json';
+import packageInfo from '../package.json';
 
 import { LitElement, TemplateResult, html, css } from 'lit';
 import { property } from 'lit/decorators.js';
@@ -28,7 +28,7 @@ import './classes/remote-touchpad';
 import './classes/remote-slider';
 
 console.info(
-	`%c ANDROID-TV-CARD v${version}`,
+	`%c ANDROID-TV-CARD v${packageInfo.version}`,
 	'color: white; font-weight: bold; background: green',
 );
 

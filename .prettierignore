@@ -1,0 +1,5 @@
+.prettierignore
+*.sh
+**/githooks
+**/dist
+*.png

@@ -1,6 +1,6 @@
 {
 	"name": "android-tv-card",
-	"version": "3.8.2",
+	"version": "4.0.0",
 	"description": "Android TV Remote Card",
 	"main": "./dist/android-tv-card.js",
 	"scripts": {
@@ -8,9 +8,10 @@
 		"build": "npx webpack",
 		"prelint": "tsc --noemit",
 		"lint": "eslint ./src --fix --ext .ts --config ./.eslintrc.js",
-		"pretty-quick": "pretty-quick",
-		"postinstall": "husky install",
 		"build-css": "tcm src"
+	},
+	"lint-staged": {
+		"*": "prettier -w"
 	},
 	"repository": {
 		"type": "git",
@@ -32,27 +33,24 @@
 		"url": "https://github.com/Nerwyn/android-tv-card/issues"
 	},
 	"homepage": "https://github.com/Nerwyn/android-tv-card#readme",
-	"husky": {
-		"hooks": {
-			"pre-commit": "pretty-quick --staged"
-		}
-	},
 	"dependencies": {
 		"@material/mwc-ripple": "latest",
-		"@types/js-yaml": "latest",
 		"custom-card-helpers": "latest",
 		"ha-nunjucks": "latest",
 		"js-yaml": "latest",
 		"lit": "latest"
 	},
 	"devDependencies": {
+		"@types/js-yaml": "latest",
 		"@typescript-eslint/eslint-plugin": "latest",
 		"@typescript-eslint/parser": "latest",
 		"eslint": "latest",
 		"eslint-config-prettier": "latest",
-		"husky": "latest",
+		"eslint-plugin-prettier": "latest",
+		"lint-staged": "latest",
+		"lit-css-loader": "latest",
+		"minify-html-literals-loader": "latest",
 		"prettier": "latest",
-		"pretty-quick": "latest",
 		"ts-loader": "latest",
 		"typescript": "latest",
 		"webpack": "latest",

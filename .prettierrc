@@ -3,6 +3,7 @@
 	"tabWidth": 4,
 	"useTabs": true,
 	"semi": true,
+	"endOfLine": "crlf",
 	"overrides": [
 		{
 			"files": "*.yaml",

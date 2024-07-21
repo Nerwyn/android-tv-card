@@ -1,0 +1,24 @@
+#!/bin/sh
+npx lint-staged
+if [ $? -ne 0 ]
+then
+  exit 1
+fi
+
+npm run lint
+if [ $? -ne 0 ]
+then
+  exit 1
+fi
+
+npm run build
+if [ $? -ne 0 ]
+then
+  exit 1
+fi
+
+git add dist/
+if [ $? -ne 0 ]
+then
+  exit 1
+fi

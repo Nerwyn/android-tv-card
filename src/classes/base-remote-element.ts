@@ -293,47 +293,14 @@ export class BaseRemoteElement extends LitElement {
 				this.fireHapticEvent('warning');
 
 				let text: string = '';
-				if (
-					confirmation != true &&
-					(confirmation as IConfirmation).text
-				) {
+				if (confirmation != true && confirmation?.text) {
 					text = this.renderTemplate(
 						confirmation?.text as string,
 					) as string;
 				} else {
-					switch (action.action) {
-						case 'navigate':
-							text = `Are you sure you want to navigate to '${this.renderTemplate(
-								action.navigation_path as string,
-							)}'`;
-							break;
-						case 'url':
-							text = `Are you sure you want to navigate to '${this.renderTemplate(
-								action.url_path as string,
-							)}'?`;
-							break;
-						case 'assist':
-							text = `Are you sure you want to call assist?`;
-							break;
-						case 'none':
-							return false;
-						case 'call-service':
-							text = `Are you sure you want to run action '${this.renderTemplate(
-								action.service as string,
-							)}'?`;
-							break;
-						case 'source':
-							text = `Are you sure you want to run action '${this.renderTemplate(
-								action.source as string,
-							)}'?`;
-							break;
-						case 'key':
-						default:
-							text = `Are you sure you want to run action '${this.renderTemplate(
-								action.key as string,
-							)}'?`;
-							break;
-					}
+					text = `Are you sure you want to run action '${
+						this.renderTemplate(action.action as string) as string
+					}'?`;
 				}
 				if (confirmation == true) {
 					if (!confirm(text)) {
@@ -671,7 +638,7 @@ export class BaseRemoteElement extends LitElement {
 					></ha-svg-icon>
 				`;
 			}
-			return html`<div class="icon">${iconElement}</div`;
+			return html`<div class="icon">${iconElement}</div>`;
 		}
 		return html``;
 	}
