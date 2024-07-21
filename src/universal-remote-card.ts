@@ -635,7 +635,9 @@ class UniversalRemoteCard extends LitElement {
 		</dialog>`;
 	}
 
-	onDialogOpen(_e: CustomEvent) {
+	onDialogOpen(e: CustomEvent) {
+		console.log('Is this even firing?');
+		console.log(e);
 		this.shadowRoot?.querySelector('dialog')?.showModal();
 	}
 
