@@ -628,6 +628,14 @@ class UniversalRemoteCard extends LitElement {
 		/>`;
 	}
 
+	buildDialog() {
+		// https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dialog
+		return html`<dialog>
+			<button autofocus>Close<button>
+			<p>This is a test dialog for future keyboard inputs!</p>
+		</dialog>`;
+	}
+
 	buildElements(
 		row: (string | string[])[],
 		isColumn: boolean = false,
@@ -798,7 +806,7 @@ class UniversalRemoteCard extends LitElement {
 				this.config.title as string,
 				context,
 			)}"
-			>${content}</ha-card
+			>${content}${this.buildDialog()}</ha-card
 		>`;
 	}
 
@@ -843,6 +851,13 @@ class UniversalRemoteCard extends LitElement {
 				grid-template-rows: repeat(3, var(--size, 48px));
 				grid-template-columns: repeat(3, var(--size, 48px));
 				grid-gap: 8px 16px;
+			}
+			dialog {
+				background: var(--ha-card-background);
+				border-radius: var(--ha-card-border-radius);
+			}
+			::backdrop {
+				background: rgb(0, 0, 0, 0.2);
 			}
 		`;
 	}
