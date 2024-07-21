@@ -72,6 +72,7 @@ export interface IAction {
 	pipeline_id?: string;
 	start_listening?: boolean;
 
+	eventType?: string;
 	browser_mod?: IBrowserMod;
 
 	double_tap_window?: number;

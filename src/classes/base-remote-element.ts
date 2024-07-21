@@ -408,7 +408,7 @@ export class BaseRemoteElement extends LitElement {
 	}
 
 	fireDomEvent(action: IAction) {
-		const event = new Event('ll-custom', {
+		const event = new Event(action.eventType ?? 'll-custom', {
 			composed: true,
 			bubbles: true,
 		});
