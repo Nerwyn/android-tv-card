@@ -863,14 +863,22 @@ class UniversalRemoteCard extends LitElement {
 				position: absolute;
 				z-index: 9;
 				top: 12px;
-				padding: 12px;
+				padding: 32px;
 				border: none;
 				background: var(--ha-card-background);
 				border-radius: var(--ha-card-border-radius);
+				opacity: 0;
+				transition: opacity 0.5s;
+			}
+			dialog[open] {
+				opacity: 1;
+				pointer-events: inherit;
 			}
 			dialog textarea {
-				width: 100%;
-				height: 100%;
+				position: relative;
+				width: 92%;
+				height: 92%;
+				left: 4%;
 				outline: none;
 				background: none;
 				border: none;
