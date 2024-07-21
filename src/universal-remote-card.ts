@@ -857,7 +857,8 @@ class UniversalRemoteCard extends LitElement {
 				grid-gap: 8px 16px;
 			}
 			dialog {
-				height: 64px;
+				display: block;
+				height: 128px;
 				max-width: 90vw;
 				min-width: 45vw;
 				position: absolute;
@@ -872,6 +873,7 @@ class UniversalRemoteCard extends LitElement {
 			}
 			dialog[open] {
 				opacity: 1;
+				transition: opacity 0.5s;
 				pointer-events: inherit;
 			}
 			dialog textarea {
