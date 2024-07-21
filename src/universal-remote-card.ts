@@ -630,7 +630,7 @@ class UniversalRemoteCard extends LitElement {
 
 	buildDialog() {
 		// https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dialog
-		return html`<dialog @dialog-open=${this.onDialogOpen}}>
+		return html`<dialog @dialog-open=${this.onDialogOpen}>
 			<input></input>
 		</dialog>`;
 	}
