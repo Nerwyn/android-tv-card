@@ -62,6 +62,7 @@ export interface IAction {
 export interface IActions {
 	icon?: string;
 	style?: StyleInfo;
+	styles?: string;
 	haptics?: boolean;
 	template?: string;
 

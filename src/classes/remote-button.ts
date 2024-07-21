@@ -57,6 +57,9 @@ export class RemoteButton extends BaseRemoteElement {
 	}
 
 	onStart(e: TouchEvent | MouseEvent) {
+		clearTimeout(this.renderRippleOff);
+		clearTimeout(this.renderRippleOn);
+		this.renderRipple = true;
 		this.swiping = false;
 		if ('targetTouches' in e) {
 			this.initialX = e.targetTouches[0].clientX;
@@ -140,6 +143,7 @@ export class RemoteButton extends BaseRemoteElement {
 				this.onClick(e);
 			}
 		}
+		this.toggleRipple();
 	}
 
 	onMove(e: TouchEvent | MouseEvent) {
@@ -167,6 +171,12 @@ export class RemoteButton extends BaseRemoteElement {
 	onMouseLeave(_e: MouseEvent) {
 		this.endAction();
 		this.swiping = true;
+		this.toggleRipple();
+	}
+
+	onTouchCancel(_e: TouchEvent) {
+		this.endAction();
+		this.toggleRipple();
 	}
 
 	endAction() {
@@ -185,8 +195,8 @@ export class RemoteButton extends BaseRemoteElement {
 
 	render(inputTemplate?: TemplateResult<1>) {
 		this.setValue();
-
 		const action = this.renderTemplate(this.actionKey);
+		const ripple = this.renderRipple ? html`<md-ripple></md-ripple>` : '';
 		return html`
 			<button
 				title="${action}"
@@ -198,9 +208,13 @@ export class RemoteButton extends BaseRemoteElement {
 				@touchstart=${this.onTouchStart}
 				@touchend=${this.onTouchEnd}
 				@touchmove=${this.onTouchMove}
+				@touchcancel=${this.onTouchCancel}
 				@contextmenu=${this.onContextMenu}
-			></button>
+			>
+				${ripple}
+			</button>
 			${this.buildIcon(this.actions.icon ?? '')}${inputTemplate}
+			${this.buildStyles()}
 		`;
 	}
 
@@ -208,9 +222,13 @@ export class RemoteButton extends BaseRemoteElement {
 		return [
 			super.styles as CSSResult,
 			css`
-				button {
+				:host {
 					height: var(--size, 48px);
 					width: var(--size, 48px);
+					border-radius: var(--size, 48px);
+				}
+
+				button {
 					cursor: pointer;
 					position: absolute;
 					opacity: 0;

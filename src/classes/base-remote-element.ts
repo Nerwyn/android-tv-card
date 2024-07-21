@@ -21,6 +21,10 @@ export class BaseRemoteElement extends LitElement {
 	@property({ attribute: false }) remoteId?: string;
 	@property({ attribute: false }) mediaPlayerId?: string;
 
+	@state() renderRipple = true;
+	renderRippleOff?: ReturnType<typeof setTimeout>;
+	renderRippleOn?: ReturnType<typeof setTimeout>;
+
 	@state() value?: string | number | boolean = 0;
 	entityId?: string;
 	getValueFromHass: boolean = true;
@@ -578,6 +582,21 @@ export class BaseRemoteElement extends LitElement {
 		return style;
 	}
 
+	buildStyles(actions: IActions = this.actions, context?: object) {
+		return actions.styles
+			? html`
+					<style>
+						${(
+							this.renderTemplate(
+								actions.styles,
+								context,
+							) as string
+						).replace(/;(?<! !important;)/g, ' !important;')}
+					</style>
+			  `
+			: '';
+	}
+
 	// Skeletons for overridden event handlers
 	onStart(_e: MouseEvent | TouchEvent) {}
 	onEnd(_e: MouseEvent | TouchEvent) {}
@@ -643,9 +662,37 @@ export class BaseRemoteElement extends LitElement {
 		return html``;
 	}
 
+	toggleRipple() {
+		clearTimeout(this.renderRippleOff);
+		clearTimeout(this.renderRippleOn);
+		this.renderRippleOff = setTimeout(
+			() => (this.renderRipple = false),
+			2000,
+		);
+		this.renderRippleOn = setTimeout(
+			() => (this.renderRipple = true),
+			2500,
+		);
+	}
+
 	static get styles(): CSSResult | CSSResult[] {
 		return css`
 			:host {
+				display: flex;
+				flex-flow: column;
+				place-content: center space-evenly;
+				align-items: center;
+				position: relative;
+				border: none;
+				border-radius: 10px;
+				padding: 0px;
+				box-sizing: border-box;
+				outline: 0px;
+				overflow: hidden;
+				font-size: inherit;
+				color: inherit;
+				flex-basis: 100%;
+
 				--mdc-icon-size: var(--size, 48px);
 				--mdc-icon-button-size: var(--size, 48px);
 

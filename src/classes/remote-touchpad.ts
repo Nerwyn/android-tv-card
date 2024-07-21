@@ -1,5 +1,5 @@
 import { CSSResult, html, css } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { customElement, property } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
 import { IActions, ActionType, DirectionAction } from '../models';
@@ -12,10 +12,6 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		DirectionAction,
 		IActions
 	>;
-
-	@state() renderRipple = true;
-	renderRippleOff?: ReturnType<typeof setTimeout>;
-	renderRippleOn?: ReturnType<typeof setTimeout>;
 
 	clickTimer?: ReturnType<typeof setTimeout>;
 	clickCount: number = 0;
@@ -292,26 +288,9 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		}, holdTime);
 	}
 
-	toggleRipple() {
-		clearTimeout(this.renderRippleOff);
-		clearTimeout(this.renderRippleOn);
-		this.renderRippleOff = setTimeout(
-			() => (this.renderRipple = false),
-			2000,
-		);
-		this.renderRippleOn = setTimeout(
-			() => (this.renderRipple = true),
-			2500,
-		);
-	}
-
 	render() {
 		this.setValue();
-
-		const ripple = this.renderRipple
-			? html`<md-ripple></md-ripple>`
-			: html``;
-
+		const ripple = this.renderRipple ? html`<md-ripple></md-ripple>` : '';
 		return html`
 			<toucharea
 				style=${styleMap(this.buildStyle(this.actions.style ?? {}))}
