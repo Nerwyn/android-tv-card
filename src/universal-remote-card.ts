@@ -630,14 +630,12 @@ class UniversalRemoteCard extends LitElement {
 
 	buildDialog() {
 		// https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dialog
-		return html`<dialog @dialog-open=${this.onDialogOpen}>
+		return html`<dialog>
 			<input></input>
 		</dialog>`;
 	}
 
-	onDialogOpen(e: CustomEvent) {
-		console.log('Is this even firing?');
-		console.log(e);
+	onDialogOpen(_e: CustomEvent) {
 		this.shadowRoot?.querySelector('dialog')?.showModal();
 	}
 
@@ -806,6 +804,7 @@ class UniversalRemoteCard extends LitElement {
 		}
 
 		return html`<ha-card
+			@dialog-open=${this.onDialogOpen}
 			.header="${renderTemplate(
 				this.hass,
 				this.config.title as string,
