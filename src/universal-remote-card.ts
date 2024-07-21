@@ -761,7 +761,7 @@ class UniversalRemoteCard extends LitElement {
 	}
 
 	buildDialog() {
-		// https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dialog
+		// this.getRootNode().host.getRootNode().querySelector('textarea').value
 		return html`<dialog onmousedown="event.target==this && this.close()">
 			<textarea></textarea>
 		</dialog>`;
@@ -857,10 +857,9 @@ class UniversalRemoteCard extends LitElement {
 				grid-gap: 8px 16px;
 			}
 			dialog {
+				height: 0;
+				width: 0;
 				display: block;
-				height: 128px;
-				max-width: 90vw;
-				min-width: 45vw;
 				position: absolute;
 				z-index: 9;
 				top: 12px;
@@ -868,13 +867,17 @@ class UniversalRemoteCard extends LitElement {
 				border: none;
 				background: var(--ha-card-background);
 				border-radius: var(--ha-card-border-radius);
+				pointer-events: none;
 				opacity: 0;
-				transition: opacity 0.5s;
+				transition: all 0.5s;
 			}
 			dialog[open] {
+				height: 128px;
+				max-width: 90vw;
+				min-width: 45vw;
 				opacity: 1;
-				transition: opacity 0.5s;
-				pointer-events: inherit;
+				pointer-events: all;
+				transition: all 0.5s;
 			}
 			dialog textarea {
 				position: relative;
@@ -884,6 +887,7 @@ class UniversalRemoteCard extends LitElement {
 				outline: none;
 				background: none;
 				border: none;
+				overflow: hidden;
 				resize: none;
 				font-family: inherit;
 				font-weight: inherit;

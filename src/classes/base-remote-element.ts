@@ -312,6 +312,21 @@ export class BaseRemoteElement extends LitElement {
 		this.dispatchEvent(event);
 	}
 
+	keyboard(action: IAction) {
+		const event = new Event('dialog-open', {
+			composed: true,
+			bubbles: true,
+		});
+		this.dispatchEvent(event);
+		const text = (
+			(
+				this.getRootNode() as ShadowRoot
+			)?.host?.getRootNode() as ShadowRoot
+		)?.querySelector('textarea')?.value;
+		console.log(action);
+		console.log(text);
+	}
+
 	textBox(action: IAction) {
 		const entityId = (action.target?.entity_id ??
 			action.data?.entity_id) as string;
