@@ -1,9 +1,6 @@
 import { CSSResult, html, css } from 'lit';
-import { customElement, property, queryAsync } from 'lit/decorators.js';
+import { customElement, property, state } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
-
-import { Ripple } from '@material/mwc-ripple';
-import { RippleHandlers } from '@material/mwc-ripple/ripple-handlers';
 
 import { IActions, ActionType, DirectionAction } from '../models';
 
@@ -11,16 +8,14 @@ import { BaseRemoteElement } from './base-remote-element';
 
 @customElement('remote-touchpad')
 export class RemoteTouchpad extends BaseRemoteElement {
-	// https://github.com/home-assistant/frontend/blob/80edeebab9e6dfcd13751b5ed8ff005452826118/src/components/ha-control-button.ts#L31-L77
-	@queryAsync('mwc-ripple') private _ripple!: Promise<Ripple | null>;
-	private _rippleHandlers: RippleHandlers = new RippleHandlers(() => {
-		return this._ripple;
-	});
-
 	@property({ attribute: false }) directionActions!: Record<
 		DirectionAction,
 		IActions
 	>;
+
+	@state() renderRipple = true;
+	renderRippleOff?: ReturnType<typeof setTimeout>;
+	renderRippleOn?: ReturnType<typeof setTimeout>;
 
 	clickTimer?: ReturnType<typeof setTimeout>;
 	clickCount: number = 0;
@@ -82,7 +77,9 @@ export class RemoteTouchpad extends BaseRemoteElement {
 	}
 
 	onStart(e: TouchEvent | MouseEvent) {
-		this._rippleHandlers.startPress(e as unknown as Event);
+		clearTimeout(this.renderRippleOff);
+		clearTimeout(this.renderRippleOn);
+		this.renderRipple = true;
 		this.holdStart = true;
 
 		if (
@@ -123,8 +120,6 @@ export class RemoteTouchpad extends BaseRemoteElement {
 	}
 
 	onEnd(e: TouchEvent | MouseEvent) {
-		this._rippleHandlers.endPress();
-
 		if (
 			!this.holdAction &&
 			this.renderTemplate(
@@ -152,6 +147,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		} else if (!('targetTouches' in e) || !e.targetTouches.length) {
 			this.onClick(e);
 		}
+		this.toggleRipple();
 	}
 
 	onMove(e: TouchEvent | MouseEvent) {
@@ -205,13 +201,13 @@ export class RemoteTouchpad extends BaseRemoteElement {
 	}
 
 	onMouseLeave(_e: MouseEvent) {
-		this._rippleHandlers.endHover();
 		this.endAction();
+		this.toggleRipple();
 	}
 
 	onTouchCancel(_e: TouchEvent) {
-		this._rippleHandlers.endPress();
 		this.endAction();
+		this.toggleRipple();
 	}
 
 	endAction() {
@@ -296,8 +292,25 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		}, holdTime);
 	}
 
+	toggleRipple() {
+		clearTimeout(this.renderRippleOff);
+		clearTimeout(this.renderRippleOn);
+		this.renderRippleOff = setTimeout(
+			() => (this.renderRipple = false),
+			2000,
+		);
+		this.renderRippleOn = setTimeout(
+			() => (this.renderRipple = true),
+			2500,
+		);
+	}
+
 	render() {
 		this.setValue();
+
+		const ripple = this.renderRipple
+			? html`<md-ripple></md-ripple>`
+			: html``;
 
 		return html`
 			<toucharea
@@ -305,17 +318,14 @@ export class RemoteTouchpad extends BaseRemoteElement {
 				@mousedown=${this.onMouseDown}
 				@mouseup=${this.onMouseUp}
 				@mousemove=${this.onMouseMove}
-				@mouseenter=${this._rippleHandlers.startHover}
 				@mouseleave=${this.onMouseLeave}
 				@touchstart=${this.onTouchStart}
 				@touchend=${this.onTouchEnd}
 				@touchmove=${this.onTouchMove}
 				@touchcancel=${this.onTouchCancel}
-				@focus=${this._rippleHandlers.startFocus}
-				@blur=${this._rippleHandlers.endFocus}
 				@contextmenu=${this.onContextMenu}
 			>
-				<mwc-ripple></mwc-ripple>
+				${ripple}
 			</toucharea>
 		`;
 	}

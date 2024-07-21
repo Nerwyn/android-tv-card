@@ -34,7 +34,6 @@
 	},
 	"homepage": "https://github.com/Nerwyn/android-tv-card#readme",
 	"dependencies": {
-		"@material/mwc-ripple": "latest",
 		"custom-card-helpers": "latest",
 		"ha-nunjucks": "latest",
 		"js-yaml": "latest",
