@@ -688,10 +688,9 @@ export class BaseRemoteElement extends LitElement {
 				padding: 0px;
 				box-sizing: border-box;
 				outline: 0px;
-				overflow: hidden;
+				overflow: visible;
 				font-size: inherit;
 				color: inherit;
-				flex-basis: 100%;
 
 				--mdc-icon-size: var(--size, 48px);
 				--mdc-icon-button-size: var(--size, 48px);

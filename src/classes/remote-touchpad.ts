@@ -315,23 +315,6 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			css`
 				:host {
 					display: contents;
-					--md-ripple-hover-opacity: var(
-						--ha-ripple-hover-opacity,
-						0.08
-					);
-					--md-ripple-pressed-opacity: var(
-						--ha-ripple-pressed-opacity,
-						0.12
-					);
-					--ha-ripple-color: var(--secondary-text-color);
-					--mdc-ripple-hover-color: var(
-						--ha-ripple-hover-color,
-						var(--ha-ripple-color, var(--secondary-text-color))
-					);
-					--md-ripple-pressed-color: var(
-						--ha-ripple-pressed-color,
-						var(--ha-ripple-color, var(--secondary-text-color))
-					);
 				}
 				toucharea {
 					border-radius: 32px;
