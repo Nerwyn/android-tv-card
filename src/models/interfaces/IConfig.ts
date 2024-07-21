@@ -2,7 +2,7 @@ import { StyleInfo } from 'lit/directives/style-map.js'; // TODO REMOVE
 
 import { IElementConfig } from '.';
 
-export const KeyboardModes = ['ANDROID TV', 'KODI', 'FIRE TV'] as const;
+export const KeyboardModes = ['ANDROID TV', 'KODI', 'FIRE TV', 'ROKU'] as const;
 export type KeyboardMode = (typeof KeyboardModes)[number];
 
 export type Row = (string | Row[])[];

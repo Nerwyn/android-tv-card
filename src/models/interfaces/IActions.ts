@@ -1,14 +1,19 @@
-export type Action =
-	| 'key'
-	| 'source'
-	| 'repeat'
-	| 'call-service'
-	| 'navigate'
-	| 'url'
-	| 'assist'
-	| 'more-info'
-	| 'fire-dom-event'
-	| 'none';
+export const Actions = [
+	'call-service',
+	'navigate',
+	'url',
+	'assist',
+	'more-info',
+	'key',
+	'source',
+	'keyboard',
+	'textbox',
+	'search',
+	'repeat',
+	'fire-dom-event',
+	'none',
+] as const;
+export type Action = (typeof Actions)[number];
 
 export type ActionType =
 	| 'tap_action'

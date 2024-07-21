@@ -16,6 +16,7 @@ import {
 	IElementConfig,
 	IAction,
 	ActionType,
+	KeyboardMode,
 } from '../models';
 
 @customElement('base-remote-element')
@@ -23,9 +24,15 @@ export class BaseRemoteElement extends LitElement {
 	@property({ attribute: false }) hass!: HomeAssistant;
 	@property({ attribute: false }) config!: IElementConfig;
 	@property({ attribute: false }) icons!: Record<string, string>;
+
 	@property({ attribute: false }) autofillEntityId: boolean = false;
 	@property({ attribute: false }) remoteId?: string;
 	@property({ attribute: false }) mediaPlayerId?: string;
+	// TODO keyboard ID and mode should be set at action level
+	@property({ attribute: false }) keyboardId!: string;
+	@property({ attribute: false }) keyboardMode!: KeyboardMode;
+	_keyboardMode: string = '';
+	_keyboardId: string = '';
 
 	@state() renderRipple = true;
 	renderRippleOff?: ReturnType<typeof setTimeout>;
@@ -133,8 +140,10 @@ export class BaseRemoteElement extends LitElement {
 				case 'fire-dom-event':
 					this.fireDomEvent(action);
 					break;
+				case 'textbox': // TODO
+				case 'search': // TODO
+				case 'keyboard': // TODO
 				case 'repeat':
-				case 'none':
 				default:
 					break;
 			}
@@ -577,6 +586,24 @@ export class BaseRemoteElement extends LitElement {
 		return str;
 	}
 
+	buildIcon(icon?: string, context?: object): TemplateResult<1> {
+		icon = this.renderTemplate(icon ?? '', context) as string;
+		if (icon) {
+			let iconElement = html``;
+			if (icon.includes(':')) {
+				iconElement = html` <ha-icon .icon="${icon}"></ha-icon> `;
+			} else {
+				iconElement = html`
+					<ha-svg-icon
+						.path=${this.icons[icon] ?? icon}
+					></ha-svg-icon>
+				`;
+			}
+			return html`<div class="icon">${iconElement}</div>`;
+		}
+		return html``;
+	}
+
 	buildStyle(_style: StyleInfo = {}, context?: object) {
 		const style = structuredClone(_style);
 		for (const key in style) {
@@ -650,22 +677,21 @@ export class BaseRemoteElement extends LitElement {
 		}
 	}
 
-	buildIcon(icon?: string, context?: object): TemplateResult<1> {
-		icon = this.renderTemplate(icon ?? '', context) as string;
-		if (icon) {
-			let iconElement = html``;
-			if (icon.includes(':')) {
-				iconElement = html` <ha-icon .icon="${icon}"></ha-icon> `;
-			} else {
-				iconElement = html`
-					<ha-svg-icon
-						.path=${this.icons[icon] ?? icon}
-					></ha-svg-icon>
-				`;
+	getRokuId(domain: 'remote' | 'media_player' = 'remote') {
+		if (this._keyboardId.split('.')[0] != domain) {
+			switch (domain) {
+				case 'media_player':
+					return this.renderTemplate(
+						this.mediaPlayerId as string,
+					) as string;
+					break;
+				case 'remote':
+				default:
+					return this.renderTemplate(
+						this.remoteId as string,
+					) as string;
 			}
-			return html`<div class="icon">${iconElement}</div>`;
 		}
-		return html``;
 	}
 
 	toggleRipple() {

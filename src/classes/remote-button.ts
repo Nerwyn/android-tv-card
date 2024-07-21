@@ -1,13 +1,11 @@
 import { CSSResult, TemplateResult, html, css } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { customElement } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
 import { BaseRemoteElement } from './base-remote-element';
 
 @customElement('remote-button')
 export class RemoteButton extends BaseRemoteElement {
-	@property({ attribute: false }) actionKey!: string;
-
 	clickTimer?: ReturnType<typeof setTimeout>;
 	clickCount: number = 0;
 
@@ -194,11 +192,9 @@ export class RemoteButton extends BaseRemoteElement {
 
 	render(inputTemplate?: TemplateResult<1>) {
 		this.setValue();
-		const action = this.renderTemplate(this.actionKey);
 		const ripple = this.renderRipple ? html`<md-ripple></md-ripple>` : '';
 		return html`
 			<button
-				title="${action}"
 				style=${styleMap(this.buildStyle(this.config.style ?? {}))}
 				@mousedown=${this.onMouseDown}
 				@mouseup=${this.onMouseUp}

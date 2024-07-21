@@ -6,39 +6,37 @@ import { RemoteButton } from './remote-button';
 
 @customElement('base-keyboard-element')
 export class BaseKeyboardElement extends RemoteButton {
-	@property({ attribute: false }) _keyboardId!: string;
-	@property({ attribute: false }) _keyboardMode!: KeyboardMode;
-	keyboardMode: string = '';
-	keyboardId: string = '';
+	@property({ attribute: false }) keyboardId!: string;
+	@property({ attribute: false }) keyboardMode!: KeyboardMode;
+	_keyboardMode: string = '';
+	_keyboardId: string = '';
 
 	onStart(_e: MouseEvent | TouchEvent) {
 		this.swiping = false;
 	}
 
 	getRokuId(domain: 'remote' | 'media_player' = 'remote') {
-		let keyboardId = this.keyboardId;
-		if (keyboardId.split('.')[0] != domain) {
+		if (this._keyboardId.split('.')[0] != domain) {
 			switch (domain) {
 				case 'media_player':
-					keyboardId = this.renderTemplate(
+					return this.renderTemplate(
 						this.mediaPlayerId as string,
 					) as string;
 					break;
 				case 'remote':
 				default:
-					keyboardId = this.renderTemplate(
+					return this.renderTemplate(
 						this.remoteId as string,
 					) as string;
 			}
 		}
-		return keyboardId;
 	}
 
 	render(inputTemplate?: TemplateResult<1>) {
-		this.keyboardMode = (
-			this.renderTemplate(this._keyboardMode) as string
+		this._keyboardMode = (
+			this.renderTemplate(this.keyboardMode) as string
 		).toUpperCase();
-		this.keyboardId = this.renderTemplate(this._keyboardId) as string;
+		this._keyboardId = this.renderTemplate(this.keyboardId) as string;
 
 		return super.render(inputTemplate);
 	}

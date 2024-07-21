@@ -27,7 +27,7 @@ export class RemoteKeyboard extends BaseKeyboardElement {
 				inputElement.focus();
 			}
 
-			switch (this.keyboardMode) {
+			switch (this._keyboardMode) {
 				case 'KODI':
 					break;
 				case 'ROKU':
@@ -46,9 +46,6 @@ export class RemoteKeyboard extends BaseKeyboardElement {
 						});
 					}
 					break;
-				case 'FIRE':
-				case 'FIRETV':
-				case 'FIRE_TV':
 				case 'FIRE TV':
 					keyToKey = {
 						Backspace: '67',
@@ -61,14 +58,11 @@ export class RemoteKeyboard extends BaseKeyboardElement {
 
 					if (outKey) {
 						this.hass.callService('androidtv', 'adb_command', {
-							entity_id: this.keyboardId,
+							entity_id: this._keyboardId,
 							command: `input keyevent ${outKey}`,
 						});
 					}
 					break;
-				case 'ANDROID':
-				case 'ANDROIDTV':
-				case 'ANDROID_TV':
 				case 'ANDROID TV':
 				default:
 					keyToKey = {
@@ -93,10 +87,10 @@ export class RemoteKeyboard extends BaseKeyboardElement {
 
 		const text = e.data;
 		if (text) {
-			switch (this.keyboardMode) {
+			switch (this._keyboardMode) {
 				case 'KODI':
 					this.hass.callService('kodi', 'call_method', {
-						entity_id: this.keyboardId,
+						entity_id: this._keyboardId,
 						method: 'Input.SendText',
 						text: text,
 						done: false,
@@ -118,7 +112,7 @@ export class RemoteKeyboard extends BaseKeyboardElement {
 				case 'ANDROID TV':
 				default:
 					this.hass.callService('androidtv', 'adb_command', {
-						entity_id: this.keyboardId,
+						entity_id: this._keyboardId,
 						command: `input text "${text}"`,
 					});
 					break;
@@ -132,10 +126,10 @@ export class RemoteKeyboard extends BaseKeyboardElement {
 
 		const text = e.clipboardData?.getData('Text');
 		if (text) {
-			switch (this.keyboardMode) {
+			switch (this._keyboardMode) {
 				case 'KODI':
 					this.hass.callService('kodi', 'call_method', {
-						entity_id: this.keyboardId,
+						entity_id: this._keyboardId,
 						method: 'Input.SendText',
 						text: text,
 						done: false,
@@ -157,7 +151,7 @@ export class RemoteKeyboard extends BaseKeyboardElement {
 				case 'ANDROID TV':
 				default:
 					this.hass.callService('androidtv', 'adb_command', {
-						entity_id: this.keyboardId,
+						entity_id: this._keyboardId,
 						command: `input text "${text}"`,
 					});
 					break;

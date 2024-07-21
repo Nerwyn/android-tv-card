@@ -497,12 +497,12 @@ class UniversalRemoteCard extends LitElement {
 		}
 
 		return html`<remote-button
+			title="${elementName}"
 			.hass=${this.hass}
 			.autofillEntityId=${this.config.autofill_entity_id}
 			.remoteId=${this.config.remote_id}
 			.mediaPlayerId=${this.config.media_player_id}
 			.config=${actions}
-			.actionKey="${elementName}"
 			.icons=${this.icons}
 		/>`;
 	}
@@ -624,8 +624,8 @@ class UniversalRemoteCard extends LitElement {
 			.mediaPlayerId=${this.config.media_player_id}
 			.config=${actions}
 			.actionKey="keyboard"
-			._keyboardId=${this.config.keyboard_id}
-			._keyboardMode=${this.config.keyboard_mode ?? 'ANDROID TV'}
+			.keyboardId=${this.config.keyboard_id}
+			.keyboardMode=${this.config.keyboard_mode ?? 'ANDROID TV'}
 			.icons=${this.icons}
 		/>`;
 	}
@@ -646,8 +646,8 @@ class UniversalRemoteCard extends LitElement {
 			.mediaPlayerId=${this.config.media_player_id}
 			.config=${actions}
 			.actionKey="textbox"
-			._keyboardId=${this.config.keyboard_id}
-			._keyboardMode=${this.config.keyboard_mode ?? 'ANDROID TV'}
+			.keyboardId=${this.config.keyboard_id}
+			.keyboardMode=${this.config.keyboard_mode ?? 'ANDROID TV'}
 			.icons=${this.icons}
 		/>`;
 	}
@@ -668,8 +668,8 @@ class UniversalRemoteCard extends LitElement {
 			.mediaPlayerId=${this.config.media_player_id}
 			.config=${actions}
 			.actionKey="search"
-			._keyboardId=${this.config.keyboard_id}
-			._keyboardMode=${this.config.keyboard_mode ?? 'ANDROID TV'}
+			.keyboardId=${this.config.keyboard_id}
+			.keyboardMode=${this.config.keyboard_mode ?? 'ANDROID TV'}
 			.icons=${this.icons}
 		/>`;
 	}

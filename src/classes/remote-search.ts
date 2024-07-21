@@ -10,24 +10,18 @@ export class RemoteSearch extends BaseKeyboardElement {
 			this.fireHapticEvent('light');
 
 			let promptText: string;
-			switch (this.keyboardMode) {
+			switch (this._keyboardMode) {
 				case 'KODI':
 					this.hass.callService('kodi', 'call_method', {
-						entity_id: this.keyboardId,
+						entity_id: this._keyboardId,
 						method: 'Addons.ExecuteAddon',
 						addonid: 'script.globalsearch',
 					});
 				// fall through
 				case 'ROKU':
-				case 'FIRE':
-				case 'FIRETV':
-				case 'FIRE_TV':
 				case 'FIRE TV':
 					promptText = 'Global Search: ';
 					break;
-				case 'ANDROID':
-				case 'ANDROIDTV':
-				case 'ANDROID_TV':
 				case 'ANDROID TV':
 				default:
 					promptText = 'Google Assistant Search: ';
@@ -36,10 +30,10 @@ export class RemoteSearch extends BaseKeyboardElement {
 
 			const text = prompt(promptText);
 			if (text) {
-				switch (this.keyboardMode) {
+				switch (this._keyboardMode) {
 					case 'KODI':
 						this.hass.callService('kodi', 'call_method', {
-							entity_id: this.keyboardId,
+							entity_id: this._keyboardId,
 							method: 'Input.SendText',
 							text: text,
 							done: true,
@@ -51,17 +45,11 @@ export class RemoteSearch extends BaseKeyboardElement {
 							keyword: text,
 						});
 						break;
-					case 'FIRE':
-					case 'FIRETV':
-					case 'FIRE_TV':
 					case 'FIRE TV':
-					case 'ANDROID':
-					case 'ANDROIDTV':
-					case 'ANDROID_TV':
 					case 'ANDROID TV':
 					default:
 						this.hass.callService('androidtv', 'adb_command', {
-							entity_id: this.keyboardId,
+							entity_id: this._keyboardId,
 							command: `am start -a "android.search.action.GLOBAL_SEARCH" --es query "${text}"`,
 						});
 						break;

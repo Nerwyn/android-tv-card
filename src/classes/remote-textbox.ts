@@ -12,12 +12,12 @@ export class RemoteTextbox extends BaseKeyboardElement {
 			if (text) {
 				switch (
 					(
-						this.renderTemplate(this.keyboardMode) as string
+						this.renderTemplate(this._keyboardMode) as string
 					).toUpperCase()
 				) {
 					case 'KODI':
 						this.hass.callService('kodi', 'call_method', {
-							entity_id: this.keyboardId,
+							entity_id: this._keyboardId,
 							method: 'Input.SendText',
 							text: text,
 							done: false,
@@ -29,17 +29,11 @@ export class RemoteTextbox extends BaseKeyboardElement {
 							command: `Lit_${text}`,
 						});
 						break;
-					case 'FIRE':
-					case 'FIRETV':
-					case 'FIRE_TV':
 					case 'FIRE TV':
-					case 'ANDROID':
-					case 'ANDROIDTV':
-					case 'ANDROID_TV':
 					case 'ANDROID TV':
 					default:
 						this.hass.callService('androidtv', 'adb_command', {
-							entity_id: this.keyboardId,
+							entity_id: this._keyboardId,
 							command: `input text "${text}"`,
 						});
 						break;
