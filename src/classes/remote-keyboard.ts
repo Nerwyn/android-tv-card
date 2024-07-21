@@ -1,10 +1,20 @@
 import { CSSResult, html, css } from 'lit';
-import { customElement } from 'lit/decorators.js';
+import { customElement, property } from 'lit/decorators.js';
 
-import { BaseKeyboardElement } from './base-keyboard-element';
+import { RemoteButton } from './remote-button';
+import { Platform } from '../models';
 
 @customElement('remote-keyboard')
-export class RemoteKeyboard extends BaseKeyboardElement {
+export class RemoteKeyboard extends RemoteButton {
+	@property({ attribute: false }) keyboardId!: string;
+	@property({ attribute: false }) keyboardMode!: Platform;
+	_keyboardMode: string = '';
+	_keyboardId: string = '';
+
+	onStart(_e: MouseEvent | TouchEvent) {
+		this.swiping = false;
+	}
+
 	onEnd(e: TouchEvent | MouseEvent) {
 		if (!this.swiping) {
 			e.stopImmediatePropagation();
@@ -41,7 +51,10 @@ export class RemoteKeyboard extends BaseKeyboardElement {
 
 					if (outKey) {
 						this.hass.callService('remote', 'send_command', {
-							entity_id: this.getRokuId(),
+							entity_id: this.getRokuId(
+								this._keyboardId,
+								'remote',
+							),
 							command: outKey,
 						});
 					}
@@ -98,7 +111,7 @@ export class RemoteKeyboard extends BaseKeyboardElement {
 					break;
 				case 'ROKU':
 					this.hass.callService('remote', 'send_command', {
-						entity_id: this.getRokuId(),
+						entity_id: this.getRokuId(this._keyboardId, 'remote'),
 						command: `Lit_${text}`,
 					});
 					break;
@@ -137,7 +150,7 @@ export class RemoteKeyboard extends BaseKeyboardElement {
 					break;
 				case 'ROKU':
 					this.hass.callService('remote', 'send_command', {
-						entity_id: this.getRokuId(),
+						entity_id: this.getRokuId(this._keyboardId, 'remote'),
 						command: `Lit_${text}`,
 					});
 					break;
@@ -187,6 +200,11 @@ export class RemoteKeyboard extends BaseKeyboardElement {
 	}
 
 	render() {
+		this._keyboardMode = (
+			this.renderTemplate(this.keyboardMode) as string
+		).toUpperCase();
+		this._keyboardId = this.renderTemplate(this.keyboardId) as string;
+
 		const inputTemplate = html`
 			<input
 				spellcheck="false"

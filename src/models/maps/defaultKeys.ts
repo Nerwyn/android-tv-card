@@ -211,6 +211,7 @@ export const defaultKeys: Record<string, IElementConfig> = {
 		icon: 'mdi:keyboard',
 	},
 	search: {
+		// TODO include some old config upgrade logic for these
 		tap_action: { action: 'search' },
 		icon: 'mdi:google-assistant',
 	},

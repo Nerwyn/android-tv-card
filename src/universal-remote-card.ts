@@ -23,8 +23,6 @@ import {
 
 import './classes/remote-button';
 import './classes/remote-keyboard';
-import './classes/remote-textbox';
-import './classes/remote-search';
 import './classes/remote-touchpad';
 import './classes/remote-slider';
 
@@ -630,50 +628,6 @@ class UniversalRemoteCard extends LitElement {
 		/>`;
 	}
 
-	// buildTextbox(): TemplateResult {
-	// 	const actions = this.getElementConfig('textbox');
-	// 	actions.style = {
-	// 		...this.config.button_style,
-	// 		...actions.style,
-	// 	};
-	// 	if (!('haptics' in actions)) {
-	// 		actions.haptics = this.config.button_haptics;
-	// 	}
-
-	// 	return html`<remote-textbox
-	// 		.hass=${this.hass}
-	// 		.remoteId=${this.config.remote_id}
-	// 		.mediaPlayerId=${this.config.media_player_id}
-	// 		.config=${actions}
-	// 		.actionKey="textbox"
-	// 		.keyboardId=${this.config.keyboard_id}
-	// 		.keyboardMode=${this.config.keyboard_mode ?? 'ANDROID TV'}
-	// 		.icons=${this.icons}
-	// 	/>`;
-	// }
-
-	// buildSearch(): TemplateResult {
-	// 	const actions = this.getElementConfig('search');
-	// 	actions.style = {
-	// 		...this.config.button_style,
-	// 		...actions.style,
-	// 	};
-	// 	if (!('haptics' in actions)) {
-	// 		actions.haptics = this.config.button_haptics;
-	// 	}
-
-	// 	return html`<remote-search
-	// 		.hass=${this.hass}
-	// 		.remoteId=${this.config.remote_id}
-	// 		.mediaPlayerId=${this.config.media_player_id}
-	// 		.config=${actions}
-	// 		.actionKey="search"
-	// 		.keyboardId=${this.config.keyboard_id}
-	// 		.keyboardMode=${this.config.keyboard_mode ?? 'ANDROID TV'}
-	// 		.icons=${this.icons}
-	// 	/>`;
-	// }
-
 	buildElements(
 		row: (string | string[])[],
 		isColumn: boolean = false,
@@ -793,16 +747,6 @@ class UniversalRemoteCard extends LitElement {
 						rowContent.push(this.buildKeyboard());
 						break;
 					}
-
-					// case 'textbox': {
-					// 	rowContent.push(this.buildTextbox());
-					// 	break;
-					// }
-
-					// case 'search': {
-					// 	rowContent.push(this.buildSearch());
-					// 	break;
-					// }
 
 					default: {
 						rowContent.push(this.buildButton(elementName, context));
