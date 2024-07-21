@@ -905,11 +905,10 @@ class UniversalRemoteCard extends LitElement {
 }
 
 customElements.define('android-tv-card', UniversalRemoteCard); // To not break old configs
-customElements.define('universal-remote-card', UniversalRemoteCard);
 
 window.customCards = window.customCards || [];
 window.customCards.push({
-	type: 'universal-remote-card',
+	type: 'android-tv-card',
 	name: 'Universal Remote',
 	description: 'Super customizable universal remote card',
 });
