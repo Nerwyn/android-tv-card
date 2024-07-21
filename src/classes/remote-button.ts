@@ -188,7 +188,7 @@ export class RemoteButton extends BaseRemoteElement {
 
 		const action = this.renderTemplate(this.actionKey);
 		return html`
-			<ha-icon-button
+			<button
 				title="${action}"
 				style=${styleMap(this.buildStyle(this.actions.style ?? {}))}
 				@mousedown=${this.onMouseDown}
@@ -199,10 +199,9 @@ export class RemoteButton extends BaseRemoteElement {
 				@touchend=${this.onTouchEnd}
 				@touchmove=${this.onTouchMove}
 				@contextmenu=${this.onContextMenu}
-				.action=${action}
 			>
 				${this.buildIcon(this.actions.icon ?? '')}${inputTemplate}
-			</ha-icon-button>
+			</button>
 		`;
 	}
 
@@ -210,20 +209,15 @@ export class RemoteButton extends BaseRemoteElement {
 		return [
 			super.styles as CSSResult,
 			css`
-				ha-icon-button {
-					display: inline-flex;
-					flex-direction: column;
-					justify-content: center;
-					text-align: center;
-					align-items: center;
+				button {
 					height: var(--size, 48px);
 					width: var(--size, 48px);
 					cursor: pointer;
-					position: relative;
+					position: absolute;
+					opacity: 0;
+					background: rgb(0, 0, 0, 0);
+					border: none;
 					z-index: 1;
-					-webkit-tap-highlight-color: transparent;
-					--mdc-icon-size: var(--size, 48px);
-					--mdc-icon-button-size: var(--size, 48px);
 				}
 			`,
 		];

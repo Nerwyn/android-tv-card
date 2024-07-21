@@ -372,12 +372,6 @@ export class RemoteTouchpad extends BaseRemoteElement {
 					overflow: hidden;
 					--mdc-ripple-press-opacity: 0.04;
 				}
-				mwc-ripple {
-					top: unset;
-					left: unset;
-					height: inherit;
-					width: inherit;
-				}
 			`,
 		];
 	}
