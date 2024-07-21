@@ -876,7 +876,8 @@ class UniversalRemoteCard extends LitElement {
 				border: none;
 			}
 			dialog::backdrop {
-				background: rgba(0, 0, 0, 0.9);
+				background: rgb(0, 0, 0);
+				opacity: 0.8;
 			}
 		`;
 	}

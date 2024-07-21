@@ -309,7 +309,7 @@ export class BaseRemoteElement extends LitElement {
 			composed: true,
 		});
 		event.detail = { entityId };
-		this.dispatchEvent(event);
+		window.dispatchEvent(event);
 	}
 
 	textBox(action: IAction) {
@@ -413,7 +413,7 @@ export class BaseRemoteElement extends LitElement {
 			bubbles: true,
 		});
 		event.detail = action;
-		this.dispatchEvent(event);
+		window.dispatchEvent(event);
 	}
 
 	handleConfirmation(action: IAction): boolean {
