@@ -631,7 +631,7 @@ class UniversalRemoteCard extends LitElement {
 	buildDialog() {
 		// https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dialog
 		return html`<dialog>
-			This is a test dialog for future keyboard inputs!
+			<input></input>
 		</dialog>`;
 	}
 
@@ -854,13 +854,23 @@ class UniversalRemoteCard extends LitElement {
 			dialog {
 				position: absolute;
 				z-index: 9;
-				top: 0px;
+				top: 12px;
+				padding: 48px;
 				border: none;
 				background: var(--ha-card-background);
 				border-radius: var(--ha-card-border-radius);
 			}
+			dialog input {
+				width: -moz-available;
+				width: -webkit-fill-available;
+				width: fill-available;
+				height: -moz-available;
+				height: -webkit-fill-available;
+				height: fill-available;
+				outline: none;
+			}
 			dialog::backdrop {
-				background: rgb(0, 0, 0, 0.2);
+				background: rgba(0, 0, 0, 0.9);
 			}
 		`;
 	}
