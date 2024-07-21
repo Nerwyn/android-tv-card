@@ -318,31 +318,33 @@ export class BaseRemoteElement extends LitElement {
 			this.renderTemplate(action.platform ?? '') as string
 		).toUpperCase();
 
-		const text = prompt('Text Input: ');
-		if (text && entityId) {
-			switch (platform) {
-				case 'KODI':
-					this.hass.callService('kodi', 'call_method', {
-						entity_id: entityId,
-						method: 'Input.SendText',
-						text: text,
-						done: false,
-					});
-					break;
-				case 'ROKU':
-					this.hass.callService('remote', 'send_command', {
-						entity_id: this.getRokuId(entityId, 'remote'),
-						command: `Lit_${text}`,
-					});
-					break;
-				case 'FIRE TV':
-				case 'ANDROID TV':
-				default:
-					this.hass.callService('androidtv', 'adb_command', {
-						entity_id: entityId,
-						command: `input text "${text}"`,
-					});
-					break;
+		if (entityId) {
+			const text = prompt('Text Input: ');
+			if (text) {
+				switch (platform) {
+					case 'KODI':
+						this.hass.callService('kodi', 'call_method', {
+							entity_id: entityId,
+							method: 'Input.SendText',
+							text: text,
+							done: false,
+						});
+						break;
+					case 'ROKU':
+						this.hass.callService('remote', 'send_command', {
+							entity_id: this.getRokuId(entityId, 'remote'),
+							command: `Lit_${text}`,
+						});
+						break;
+					case 'FIRE TV':
+					case 'ANDROID TV':
+					default:
+						this.hass.callService('androidtv', 'adb_command', {
+							entity_id: entityId,
+							command: `input text "${text}"`,
+						});
+						break;
+				}
 			}
 		}
 	}
