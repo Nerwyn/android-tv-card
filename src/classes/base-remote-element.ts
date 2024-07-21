@@ -324,11 +324,9 @@ export class BaseRemoteElement extends LitElement {
 		this.dispatchEvent(event);
 		let i = 0;
 		const interval = setInterval(() => {
-			const text = (
-				(
-					this.getRootNode() as ShadowRoot
-				)?.host?.getRootNode() as ShadowRoot
-			)?.querySelector('textarea')?.value;
+			const text = (this.getRootNode() as ShadowRoot)?.querySelector(
+				'textarea',
+			)?.value;
 			console.log(text);
 			i += 1;
 			if (i > 10) {
