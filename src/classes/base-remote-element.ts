@@ -334,7 +334,7 @@ export class BaseRemoteElement extends LitElement {
 			if (i > 10) {
 				clearInterval(interval);
 			}
-		});
+		}, 1000);
 	}
 
 	textBox(action: IAction) {
