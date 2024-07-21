@@ -53,7 +53,7 @@ class UniversalRemoteCard extends LitElement {
 
 	static getStubConfig() {
 		return {
-			type: 'custom:universal-remote-card',
+			type: 'custom:android-tv-card',
 			rows: [],
 		};
 	}

@@ -9,11 +9,7 @@ export class RemoteKeyboard extends BaseKeyboardElement {
 		if (!this.swiping) {
 			e.stopImmediatePropagation();
 			this.fireHapticEvent('light');
-			for (const element of (e.currentTarget as HTMLElement).children) {
-				if (element.nodeName.toLowerCase() == 'input') {
-					(element as HTMLInputElement).focus();
-				}
-			}
+			this.shadowRoot?.querySelector('input')?.focus();
 		}
 	}
 
@@ -24,10 +20,11 @@ export class RemoteKeyboard extends BaseKeyboardElement {
 		let outKey: string;
 		let keyToKey: Record<string, string>;
 		if (inKey) {
-			if ((e.currentTarget as HTMLInputElement).value != '') {
-				(e.currentTarget as HTMLInputElement).blur();
-				(e.currentTarget as HTMLInputElement).value = '';
-				(e.currentTarget as HTMLInputElement).focus();
+			const inputElement = e.currentTarget as HTMLInputElement;
+			if (inputElement.value != '') {
+				inputElement.blur();
+				inputElement.value = '';
+				inputElement.focus();
 			}
 
 			switch (this.keyboardMode) {
@@ -167,31 +164,32 @@ export class RemoteKeyboard extends BaseKeyboardElement {
 			}
 		}
 
-		(e.currentTarget as HTMLInputElement).blur();
-		(e.currentTarget as HTMLInputElement).value = '';
-		(e.currentTarget as HTMLInputElement).focus();
+		const inputElement = e.currentTarget as HTMLInputElement;
+		inputElement.blur();
+		inputElement.value = '';
+		inputElement.focus();
 	}
 
 	onFocus(e: InputEvent) {
-		(e.currentTarget as HTMLInputElement).value = '';
-		(
-			(e.currentTarget as HTMLInputElement)
-				.previousElementSibling as HTMLElement
-		).style.setProperty('color', 'var(--state-active-color)');
-		(e.currentTarget as HTMLInputElement).style.setProperty(
-			'z-index',
-			'9',
-			'important',
-		);
+		const inputElement = e.currentTarget as HTMLInputElement;
+		inputElement.value = '';
+		inputElement.style.setProperty('z-index', '9', 'important');
+
+		const iconElement = this.shadowRoot?.querySelector(
+			'.icon',
+		) as HTMLElement;
+		iconElement?.style?.setProperty('color', 'var(--state-active-color)');
 	}
 
 	onFocusOut(e: InputEvent) {
-		(e.currentTarget as HTMLInputElement).value = '';
-		(
-			(e.currentTarget as HTMLInputElement)
-				.previousElementSibling as HTMLElement
-		).style.removeProperty('color');
-		(e.currentTarget as HTMLInputElement).style.removeProperty('z-index');
+		const inputElement = e.currentTarget as HTMLInputElement;
+		inputElement.value = '';
+		inputElement.style.removeProperty('z-index');
+
+		const iconElement = this.shadowRoot?.querySelector(
+			'.icon',
+		) as HTMLElement;
+		iconElement?.style?.removeProperty('color');
 	}
 
 	render() {
