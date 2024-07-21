@@ -628,17 +628,6 @@ class UniversalRemoteCard extends LitElement {
 		/>`;
 	}
 
-	buildDialog() {
-		// https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dialog
-		return html`<dialog>
-			<input></input>
-		</dialog>`;
-	}
-
-	onDialogOpen(_e: CustomEvent) {
-		this.shadowRoot?.querySelector('dialog')?.showModal();
-	}
-
 	buildElements(
 		row: (string | string[])[],
 		isColumn: boolean = false,
@@ -771,6 +760,17 @@ class UniversalRemoteCard extends LitElement {
 			: this.buildRow(rowContent, context);
 	}
 
+	buildDialog() {
+		// https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dialog
+		return html`<dialog onmousedown="event.target==this && this.close()">
+			<textarea></textarea>
+		</dialog>`;
+	}
+
+	onDialogOpen(_e: CustomEvent) {
+		this.shadowRoot?.querySelector('dialog')?.showModal();
+	}
+
 	render() {
 		if (!this.config || !this.hass) {
 			return html``;
@@ -857,28 +857,31 @@ class UniversalRemoteCard extends LitElement {
 				grid-gap: 8px 16px;
 			}
 			dialog {
+				height: 64px;
+				max-width: 90vw;
+				min-width: 45vw;
 				position: absolute;
 				z-index: 9;
 				top: 12px;
-				padding: 48px;
+				padding: 12px;
 				border: none;
 				background: var(--ha-card-background);
 				border-radius: var(--ha-card-border-radius);
 			}
-			dialog input {
-				width: -moz-available;
-				width: -webkit-fill-available;
-				width: fill-available;
-				height: -moz-available;
-				height: -webkit-fill-available;
-				height: fill-available;
+			dialog textarea {
+				width: 100%;
+				height: 100%;
 				outline: none;
 				background: none;
 				border: none;
+				resize: none;
+				font-family: inherit;
+				font-weight: inherit;
+				font-size: 24px;
 			}
 			dialog::backdrop {
 				background: rgb(0, 0, 0);
-				opacity: 0.8;
+				opacity: 0.7;
 			}
 		`;
 	}
