@@ -1,4 +1,4 @@
-import { LitElement, CSSResult, TemplateResult, html, css } from 'lit';
+import { LitElement, CSSResult, html, css } from 'lit';
 import {
 	customElement,
 	eventOptions,
@@ -300,8 +300,9 @@ export class BaseRemoteElement extends LitElement {
 	}
 
 	moreInfo(action: IAction) {
-		const entityId = this.renderTemplate(action.data?.entity_id as string);
-
+		const entityId = this.renderTemplate(
+			(action.target?.entity_id ?? action.data?.entity_id) as string,
+		);
 		const event = new Event('hass-more-info', {
 			bubbles: true,
 			cancelable: true,
@@ -701,7 +702,7 @@ export class BaseRemoteElement extends LitElement {
 		return str;
 	}
 
-	buildIcon(icon?: string, context?: object): TemplateResult<1> {
+	buildIcon(icon?: string, context?: object) {
 		icon = this.renderTemplate(icon ?? '', context) as string;
 		if (icon) {
 			let iconElement = html``;
@@ -716,10 +717,24 @@ export class BaseRemoteElement extends LitElement {
 			}
 			return html`<div class="icon">${iconElement}</div>`;
 		}
-		return html``;
+		return '';
+	}
+
+	buildLabel(label?: string, context?: object) {
+		if (label) {
+			const text: string = this.renderTemplate(
+				label as string,
+				context,
+			) as string;
+			if (text) {
+				return html`<pre class="label">${text}</pre>`;
+			}
+		}
+		return '';
 	}
 
 	buildStyle(_style: StyleInfo = {}, context?: object) {
+		// TODO REMOVE
 		const style = structuredClone(_style);
 		for (const key in style) {
 			style[key] = this.renderTemplate(
@@ -873,8 +888,33 @@ export class BaseRemoteElement extends LitElement {
 
 			.icon {
 				pointer-events: none;
-				display: var(--icon-display, flex);
+				position: relative;
+				flex-flow: column;
+				place-content: center;
+				z-index: 2;
+				display: var(--icon-display, inline-flex);
 				transform: var(--icon-transform);
+				color: var(--icon-color, inherit);
+				filter: var(--icon-filter, inherit);
+			}
+
+			.label {
+				position: relative;
+				pointer-events: none;
+				justify-content: center;
+				align-items: center;
+				height: 15px;
+				line-height: 15px;
+				width: inherit;
+				margin: 0;
+				font-family: inherit;
+				font-size: 12px;
+				font-weight: bold;
+				z-index: 2;
+				display: var(--label-display, inline-flex);
+				transform: var(--label-transform);
+				color: var(--label-color, inherit);
+				filter: var(--label-filter, none);
 			}
 		`;
 	}

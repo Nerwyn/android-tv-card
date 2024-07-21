@@ -25,6 +25,7 @@ interface IBaseElementConfig {
 	value_attribute?: string;
 
 	icon?: string;
+	label?: string;
 	style?: StyleInfo; // TODO REMOVE
 	styles?: string;
 
