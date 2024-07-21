@@ -631,8 +631,7 @@ class UniversalRemoteCard extends LitElement {
 	buildDialog() {
 		// https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dialog
 		return html`<dialog>
-			<button autofocus>Close<button>
-			<p>This is a test dialog for future keyboard inputs!</p>
+			This is a test dialog for future keyboard inputs!
 		</dialog>`;
 	}
 
@@ -853,10 +852,14 @@ class UniversalRemoteCard extends LitElement {
 				grid-gap: 8px 16px;
 			}
 			dialog {
+				position: absolute;
+				z-index: 9;
+				top: 0px;
+				border: none;
 				background: var(--ha-card-background);
 				border-radius: var(--ha-card-border-radius);
 			}
-			::backdrop {
+			dialog::backdrop {
 				background: rgb(0, 0, 0, 0.2);
 			}
 		`;
