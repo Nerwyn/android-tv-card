@@ -13,7 +13,7 @@ import { renderTemplate } from 'ha-nunjucks';
 import {
 	IConfirmation,
 	IData,
-	IRemoteElement,
+	IElementConfig,
 	IAction,
 	ActionType,
 } from '../models';
@@ -21,7 +21,7 @@ import {
 @customElement('base-remote-element')
 export class BaseRemoteElement extends LitElement {
 	@property({ attribute: false }) hass!: HomeAssistant;
-	@property({ attribute: false }) config!: IRemoteElement;
+	@property({ attribute: false }) config!: IElementConfig;
 	@property({ attribute: false }) icons!: Record<string, string>;
 	@property({ attribute: false }) autofillEntityId: boolean = false;
 	@property({ attribute: false }) remoteId?: string;
@@ -65,7 +65,7 @@ export class BaseRemoteElement extends LitElement {
 		this.initialY = undefined;
 	}
 
-	sendAction(actionType: ActionType, config: IRemoteElement = this.config) {
+	sendAction(actionType: ActionType, config: IElementConfig = this.config) {
 		let action;
 		switch (actionType) {
 			case 'momentary_start_action':
@@ -588,7 +588,7 @@ export class BaseRemoteElement extends LitElement {
 		return style;
 	}
 
-	buildStyles(actions: IRemoteElement = this.config, context?: object) {
+	buildStyles(actions: IElementConfig = this.config, context?: object) {
 		return actions.styles
 			? html`
 					<style>

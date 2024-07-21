@@ -1,11 +1,11 @@
-import { IRemoteElement } from '..';
+import { IElementConfig } from '..';
 
 /**
  * This is the list of most common commands from the Android TV Remote integration page.
  * Not all are ensured to work, and if they do not it is likely an issue with the underlying package used by the Android TV Remote integration or the Android TV Remote Protocol V2 itself.
  * https://www.home-assistant.io/integrations/androidtv_remote/#remote
  */
-export const defaultKeys: Record<string, IRemoteElement> = {
+export const defaultKeys: Record<string, IElementConfig> = {
 	power: { tap_action: { action: 'key', key: 'POWER' }, icon: 'mdi:power' },
 	volume_up: {
 		tap_action: { action: 'key', key: 'VOLUME_UP' },

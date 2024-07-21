@@ -10,7 +10,7 @@ import { load } from 'js-yaml';
 
 import {
 	IConfig,
-	IRemoteElement,
+	IElementConfig,
 	IActions,
 	IAction,
 	IData,
@@ -37,8 +37,8 @@ class AndroidTVCard extends LitElement {
 	@property({ attribute: false }) hass!: HomeAssistant;
 	@property({ attribute: false }) config!: IConfig;
 
-	defaultActions: Record<string, IRemoteElement> = {};
-	customActions: Record<string, IRemoteElement> = {};
+	defaultActions: Record<string, IElementConfig> = {};
+	customActions: Record<string, IElementConfig> = {};
 	icons: Record<string, string> = {};
 
 	nRows: number = 0;
@@ -189,7 +189,7 @@ class AndroidTVCard extends LitElement {
 					(tapAction as unknown as Record<string, string>)[
 						actionKey
 					] = customAction[
-						actionKey as keyof IRemoteElement
+						actionKey as keyof IElementConfig
 					] as string;
 				}
 			}
@@ -301,7 +301,7 @@ class AndroidTVCard extends LitElement {
 		return config;
 	}
 
-	getRemoteElement(action: string): IRemoteElement {
+	getElementConfig(action: string): IElementConfig {
 		const defaultActions = this.defaultActions[action] || {};
 		let actions = structuredClone(
 			this.customActions[action] || defaultActions,
@@ -471,7 +471,7 @@ class AndroidTVCard extends LitElement {
 	}
 
 	buildButton(elementName: string, context: object): TemplateResult {
-		const actions = this.getRemoteElement(elementName);
+		const actions = this.getElementConfig(elementName);
 
 		const style = {
 			...this.config.button_style,
@@ -501,7 +501,7 @@ class AndroidTVCard extends LitElement {
 			.autofillEntityId=${this.config.autofill_entity_id}
 			.remoteId=${this.config.remote_id}
 			.mediaPlayerId=${this.config.media_player_id}
-			.actions=${actions}
+			.config=${actions}
 			.actionKey="${elementName}"
 			.icons=${this.icons}
 		/>`;
@@ -518,7 +518,7 @@ class AndroidTVCard extends LitElement {
 	buildSlider(): TemplateResult {
 		return html`<remote-slider
 			.hass=${this.hass}
-			.actions=${this.getRemoteElement('slider')}
+			.config=${this.getElementConfig('slider')}
 		/>`;
 	}
 
@@ -550,7 +550,7 @@ class AndroidTVCard extends LitElement {
 
 	buildTouchpad(context: object): TemplateResult {
 		// If still using old double tap toggle and key, map to center double tap action
-		const centerActions = this.getRemoteElement('center');
+		const centerActions = this.getElementConfig('center');
 		if (
 			renderTemplate(
 				this.hass,
@@ -566,7 +566,7 @@ class AndroidTVCard extends LitElement {
 						.double_click_keycode,
 					context,
 				) as string) ?? 'back';
-			const doubleTapAction = this.getRemoteElement(doubleTapKeycode);
+			const doubleTapAction = this.getElementConfig(doubleTapKeycode);
 			centerActions.double_tap_action = doubleTapAction.tap_action;
 		}
 		centerActions.haptics = this.config.touchpad_haptics;
@@ -587,15 +587,15 @@ class AndroidTVCard extends LitElement {
 					(this.config as Record<string, string>).long_click_keycode,
 					context,
 				) as string) ?? 'center';
-			const holdAction = this.getRemoteElement(holdActionKeycode);
+			const holdAction = this.getElementConfig(holdActionKeycode);
 			centerActions.hold_action = holdAction.tap_action;
 		}
 
 		const directionActions: Record<DirectionAction, IActions> = {
-			up: this.getRemoteElement('up'),
-			down: this.getRemoteElement('down'),
-			left: this.getRemoteElement('left'),
-			right: this.getRemoteElement('right'),
+			up: this.getElementConfig('up'),
+			down: this.getElementConfig('down'),
+			left: this.getElementConfig('left'),
+			right: this.getElementConfig('right'),
 		};
 
 		return html`<remote-touchpad
@@ -603,13 +603,13 @@ class AndroidTVCard extends LitElement {
 			.autofillEntityId=${this.config.autofill_entity_id}
 			.remoteId=${this.config.remote_id}
 			.mediaPlayerId=${this.config.media_player_id}
-			.actions=${centerActions}
+			.config=${centerActions}
 			.directionActions=${directionActions}
 		/>`;
 	}
 
 	buildKeyboard(): TemplateResult {
-		const actions = this.getRemoteElement('keyboard');
+		const actions = this.getElementConfig('keyboard');
 		actions.style = {
 			...this.config.button_style,
 			...actions.style,
@@ -622,7 +622,7 @@ class AndroidTVCard extends LitElement {
 			.hass=${this.hass}
 			.remoteId=${this.config.remote_id}
 			.mediaPlayerId=${this.config.media_player_id}
-			.actions=${actions}
+			.config=${actions}
 			.actionKey="keyboard"
 			._keyboardId=${this.config.keyboard_id}
 			._keyboardMode=${this.config.keyboard_mode ?? 'ANDROID TV'}
@@ -631,7 +631,7 @@ class AndroidTVCard extends LitElement {
 	}
 
 	buildTextbox(): TemplateResult {
-		const actions = this.getRemoteElement('textbox');
+		const actions = this.getElementConfig('textbox');
 		actions.style = {
 			...this.config.button_style,
 			...actions.style,
@@ -644,7 +644,7 @@ class AndroidTVCard extends LitElement {
 			.hass=${this.hass}
 			.remoteId=${this.config.remote_id}
 			.mediaPlayerId=${this.config.media_player_id}
-			.actions=${actions}
+			.config=${actions}
 			.actionKey="textbox"
 			._keyboardId=${this.config.keyboard_id}
 			._keyboardMode=${this.config.keyboard_mode ?? 'ANDROID TV'}
@@ -653,7 +653,7 @@ class AndroidTVCard extends LitElement {
 	}
 
 	buildSearch(): TemplateResult {
-		const actions = this.getRemoteElement('search');
+		const actions = this.getElementConfig('search');
 		actions.style = {
 			...this.config.button_style,
 			...actions.style,
@@ -666,7 +666,7 @@ class AndroidTVCard extends LitElement {
 			.hass=${this.hass}
 			.remoteId=${this.config.remote_id}
 			.mediaPlayerId=${this.config.media_player_id}
-			.actions=${actions}
+			.config=${actions}
 			.actionKey="search"
 			._keyboardId=${this.config.keyboard_id}
 			._keyboardMode=${this.config.keyboard_mode ?? 'ANDROID TV'}

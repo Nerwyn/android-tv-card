@@ -8,9 +8,9 @@ export type KeyboardMode = (typeof KeyboardModes)[number];
 export const RemoteElementTypes = ['button', 'slider', 'touchpad'] as const;
 export type RemoteElementType = (typeof RemoteElementTypes)[number];
 
-export interface IRemoteElement
-	extends ISliderElement,
-		ITouchpadElement,
+export interface IElementConfig
+	extends ISliderConfig,
+		ITouchpadConfig,
 		IActions {
 	type?: RemoteElementType;
 	template?: string;
@@ -22,7 +22,7 @@ export interface IRemoteElement
 	haptics?: boolean;
 }
 
-export interface ISliderElement {
+export interface ISliderConfig {
 	value_attribute?: string;
 	value_from_hass_delay?: boolean;
 	range?: [number, number];
@@ -30,7 +30,7 @@ export interface ISliderElement {
 	vertical?: boolean;
 }
 
-export interface ITouchpadElement {
+export interface ITouchpadConfig {
 	up?: IBasicActions & IMultiActions;
 	down?: IBasicActions & IMultiActions;
 	left?: IBasicActions & IMultiActions;
@@ -49,7 +49,7 @@ export interface IConfig {
 	media_player_id?: string;
 	autofill_entity_id?: boolean;
 
-	custom_actions?: Record<string, IRemoteElement>;
+	custom_actions?: Record<string, IElementConfig>;
 	custom_icons?: Record<string, string>;
 
 	button_haptics?: boolean;
