@@ -141,7 +141,9 @@ export class BaseRemoteElement extends LitElement {
 				case 'search':
 					this.search(action);
 					break;
-				case 'keyboard': // TODO
+				case 'keyboard':
+					this.keyboard(action);
+					break;
 				case 'repeat':
 				default:
 					break;
@@ -313,18 +315,26 @@ export class BaseRemoteElement extends LitElement {
 	}
 
 	keyboard(action: IAction) {
+		// TODO - figure this out
 		const event = new Event('dialog-open', {
 			composed: true,
 			bubbles: true,
 		});
+		event.detail = action;
 		this.dispatchEvent(event);
-		const text = (
-			(
-				this.getRootNode() as ShadowRoot
-			)?.host?.getRootNode() as ShadowRoot
-		)?.querySelector('textarea')?.value;
-		console.log(action);
-		console.log(text);
+		let i = 0;
+		const interval = setInterval(() => {
+			const text = (
+				(
+					this.getRootNode() as ShadowRoot
+				)?.host?.getRootNode() as ShadowRoot
+			)?.querySelector('textarea')?.value;
+			console.log(text);
+			i += 1;
+			if (i > 10) {
+				clearInterval(interval);
+			}
+		});
 	}
 
 	textBox(action: IAction) {
