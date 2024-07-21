@@ -29,11 +29,11 @@ import './classes/remote-touchpad';
 import './classes/remote-slider';
 
 console.info(
-	`%c ANDROID-TV-CARD v${packageInfo.version}`,
+	`%c UNIVERSAL-REMOTE-CARD v${packageInfo.version}`,
 	'color: white; font-weight: bold; background: green',
 );
 
-class AndroidTVCard extends LitElement {
+class UniversalRemoteCard extends LitElement {
 	@property({ attribute: false }) hass!: HomeAssistant;
 	@property({ attribute: false }) config!: IConfig;
 
@@ -53,7 +53,7 @@ class AndroidTVCard extends LitElement {
 
 	static getStubConfig() {
 		return {
-			type: 'custom:android-tv-card',
+			type: 'custom:universal-remote-card',
 			rows: [],
 		};
 	}
@@ -904,13 +904,14 @@ class AndroidTVCard extends LitElement {
 	}
 }
 
-customElements.define('android-tv-card', AndroidTVCard);
+customElements.define('android-tv-card', UniversalRemoteCard); // To not break old configs
+customElements.define('universal-remote-card', UniversalRemoteCard);
 
 window.customCards = window.customCards || [];
 window.customCards.push({
-	type: 'android-tv-card',
-	name: 'Android TV Card',
-	description: 'Remote for Android TV',
+	type: 'universal-remote-card',
+	name: 'Universal Remote',
+	description: 'Super customizable universal remote card',
 });
 
 if (!window.structuredClone) {
