@@ -10,12 +10,18 @@ import { StyleInfo } from 'lit/directives/style-map.js';
 import { HomeAssistant, HapticType, forwardHaptic } from 'custom-card-helpers';
 import { renderTemplate } from 'ha-nunjucks';
 
-import { IConfirmation, IData, IActions, IAction, ActionType } from '../models';
+import {
+	IConfirmation,
+	IData,
+	IRemoteElement,
+	IAction,
+	ActionType,
+} from '../models';
 
 @customElement('base-remote-element')
 export class BaseRemoteElement extends LitElement {
 	@property({ attribute: false }) hass!: HomeAssistant;
-	@property({ attribute: false }) actions!: IActions;
+	@property({ attribute: false }) config!: IRemoteElement;
 	@property({ attribute: false }) icons!: Record<string, string>;
 	@property({ attribute: false }) autofillEntityId: boolean = false;
 	@property({ attribute: false }) remoteId?: string;
@@ -43,7 +49,7 @@ export class BaseRemoteElement extends LitElement {
 
 	fireHapticEvent(haptic: HapticType) {
 		if (
-			this.renderTemplate(this.actions.haptics as unknown as string) ??
+			this.renderTemplate(this.config.haptics as unknown as string) ??
 			true
 		) {
 			forwardHaptic(haptic);
@@ -59,41 +65,41 @@ export class BaseRemoteElement extends LitElement {
 		this.initialY = undefined;
 	}
 
-	sendAction(actionType: ActionType, actions: IActions = this.actions) {
+	sendAction(actionType: ActionType, config: IRemoteElement = this.config) {
 		let action;
 		switch (actionType) {
 			case 'momentary_start_action':
-				action = actions.momentary_start_action;
+				action = config.momentary_start_action;
 				break;
 			case 'momentary_end_action':
-				action = actions.momentary_end_action;
+				action = config.momentary_end_action;
 				break;
 			case 'multi_hold_action':
 				action =
-					actions.multi_hold_action ??
-					actions.hold_action ??
-					actions.multi_tap_action ??
-					actions.tap_action;
+					config.multi_hold_action ??
+					config.hold_action ??
+					config.multi_tap_action ??
+					config.tap_action;
 				break;
 			case 'multi_double_tap_action':
 				action =
-					actions.multi_double_tap_action ??
-					actions.double_tap_action ??
-					actions.multi_tap_action ??
-					actions.tap_action;
+					config.multi_double_tap_action ??
+					config.double_tap_action ??
+					config.multi_tap_action ??
+					config.tap_action;
 				break;
 			case 'multi_tap_action':
-				action = actions.multi_tap_action ?? actions.tap_action;
+				action = config.multi_tap_action ?? config.tap_action;
 				break;
 			case 'hold_action':
-				action = actions.hold_action ?? actions.tap_action;
+				action = config.hold_action ?? config.tap_action;
 				break;
 			case 'double_tap_action':
-				action = actions.double_tap_action ?? actions.tap_action;
+				action = config.double_tap_action ?? config.tap_action;
 				break;
 			case 'tap_action':
 			default:
-				action = actions.tap_action;
+				action = config.tap_action;
 				break;
 		}
 
@@ -143,7 +149,7 @@ export class BaseRemoteElement extends LitElement {
 			entity_id: this.renderTemplate(this.remoteId as string),
 			command: this.renderTemplate(key),
 		};
-		if (actionType == 'hold_action' && !this.actions.hold_action) {
+		if (actionType == 'hold_action' && !this.config.hold_action) {
 			data.hold_secs = 0.5;
 		}
 		this.hass.callService('remote', 'send_command', data);
@@ -334,7 +340,7 @@ export class BaseRemoteElement extends LitElement {
 
 	setValue() {
 		this.entityId = this.renderTemplate(
-			(this.actions.tap_action?.data?.entity_id as string) ?? '',
+			(this.config.tap_action?.data?.entity_id as string) ?? '',
 		) as string;
 
 		if (this.getValueFromHass && this.entityId) {
@@ -343,7 +349,7 @@ export class BaseRemoteElement extends LitElement {
 
 			let valueAttribute = (
 				(this.renderTemplate(
-					this.actions.value_attribute as string,
+					this.config.value_attribute as string,
 				) as string) ?? 'state'
 			).toLowerCase();
 			if (!this.hass.states[this.entityId]) {
@@ -525,7 +531,7 @@ export class BaseRemoteElement extends LitElement {
 			value: this.value as string,
 			hold_secs: holdSecs ?? 0,
 			config: {
-				...this.actions,
+				...this.config,
 				entity: this.entityId,
 			},
 			...context,
@@ -582,7 +588,7 @@ export class BaseRemoteElement extends LitElement {
 		return style;
 	}
 
-	buildStyles(actions: IActions = this.actions, context?: object) {
+	buildStyles(actions: IRemoteElement = this.config, context?: object) {
 		return actions.styles
 			? html`
 					<style>
@@ -692,6 +698,7 @@ export class BaseRemoteElement extends LitElement {
 				font-size: inherit;
 				color: inherit;
 
+				-webkit-tap-highlight-color: transparent;
 				--mdc-icon-size: var(--size, 48px);
 				--mdc-icon-button-size: var(--size, 48px);
 

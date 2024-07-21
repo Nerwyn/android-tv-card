@@ -1,5 +1,3 @@
-import { StyleInfo } from 'lit/directives/style-map.js';
-
 export type Action =
 	| 'key'
 	| 'source'
@@ -12,6 +10,18 @@ export type Action =
 	| 'fire-dom-event'
 	| 'none';
 
+export type ActionType =
+	| 'tap_action'
+	| 'hold_action'
+	| 'double_tap_action'
+	| 'multi_tap_action'
+	| 'multi_hold_action'
+	| 'multi_double_tap_action'
+	| 'momentary_start_action'
+	| 'momentary_end_action';
+
+export type DirectionAction = 'up' | 'down' | 'left' | 'right';
+
 export interface IData {
 	[key: string]: string | string[] | number | number[] | boolean;
 }
@@ -20,6 +30,7 @@ export interface ITarget {
 	entity_id?: string | string[];
 	device_id?: string | string[];
 	area_id?: string | string[];
+	label_id?: string | string[];
 }
 
 export interface IConfirmation {
@@ -59,39 +70,24 @@ export interface IAction {
 	double_tap_window?: number;
 }
 
-export interface IActions {
-	icon?: string;
-	style?: StyleInfo;
-	styles?: string;
-	haptics?: boolean;
-	template?: string;
+export interface IActions
+	extends IBasicActions,
+		IMomentaryActions,
+		IMultiActions {}
 
-	value_attribute?: string;
-	value_from_hass_delay?: boolean;
-	range?: [number, number];
-	step?: number;
-	vertical?: boolean;
-
+export interface IBasicActions {
 	tap_action?: IAction;
 	hold_action?: IAction;
 	double_tap_action?: IAction;
+}
 
+export interface IMultiActions {
 	multi_tap_action?: IAction;
 	multi_hold_action?: IAction;
 	multi_double_tap_action?: IAction;
+}
 
+export interface IMomentaryActions {
 	momentary_start_action?: IAction;
 	momentary_end_action?: IAction;
 }
-
-export type ActionType =
-	| 'tap_action'
-	| 'hold_action'
-	| 'double_tap_action'
-	| 'multi_tap_action'
-	| 'multi_hold_action'
-	| 'multi_double_tap_action'
-	| 'momentary_start_action'
-	| 'momentary_end_action';
-
-export type DirectionAction = 'up' | 'down' | 'left' | 'right';

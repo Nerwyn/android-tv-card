@@ -11,8 +11,6 @@ declare global {
 		description: string;
 	}
 
-	interface Themes {}
-
 	interface EventTarget {
 		action: string;
 	}

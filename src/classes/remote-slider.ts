@@ -217,7 +217,7 @@ export class RemoteSlider extends BaseRemoteElement {
 
 	resetGetValueFromHass() {
 		const valueFromHassDelay = this.renderTemplate(
-			this.actions.value_from_hass_delay ?? 1000,
+			this.config.value_from_hass_delay ?? 1000,
 		) as number;
 		this.getValueFromHassTimer = setTimeout(
 			() => (this.getValueFromHass = true),
@@ -237,7 +237,7 @@ export class RemoteSlider extends BaseRemoteElement {
 		if (this.vertical) {
 			style['transform'] = 'rotateZ(270deg)';
 			style['width'] =
-				this.actions.style?.height ?? `${this.sliderWidth}px`;
+				this.config.style?.height ?? `${this.sliderWidth}px`;
 		}
 		return html`<div
 			class="background"
@@ -249,23 +249,23 @@ export class RemoteSlider extends BaseRemoteElement {
 		const style: StyleInfo = this.buildStyle(
 			{
 				'--tooltip-label': `"${
-					this.actions?.style?.['--tooltip-label'] ?? '{{ value }}'
+					this.config?.style?.['--tooltip-label'] ?? '{{ value }}'
 				}"`,
 				'--tooltip-transform':
-					this.actions?.style?.['--tooltip-transform'] ??
+					this.config?.style?.['--tooltip-transform'] ??
 					(this.vertical
 						? 'translate(-50px, calc(-1 * var(--thumb-offset)))'
 						: 'translate(var(--thumb-offset), -40px)'),
 				'--tooltip-display':
-					this.actions?.style?.['--tooltip-display'] ?? 'initial',
+					this.config?.style?.['--tooltip-display'] ?? 'initial',
 			},
 			context,
 		);
 
 		// Deprecated tooltip hide/show field
-		if ('tooltip' in this.actions) {
+		if ('tooltip' in this.config) {
 			style['--tooltip-display'] = this.renderTemplate(
-				this.actions.tooltip as unknown as string,
+				this.config.tooltip as unknown as string,
 				context,
 			)
 				? 'initial'
@@ -288,7 +288,7 @@ export class RemoteSlider extends BaseRemoteElement {
 		const style: StyleInfo = {};
 		if (
 			this.renderTemplate(
-				this.actions.tap_action?.action as string,
+				this.config.tap_action?.action as string,
 				context,
 			) == 'none'
 		) {
@@ -297,7 +297,7 @@ export class RemoteSlider extends BaseRemoteElement {
 		if (this.vertical) {
 			style['transform'] = 'rotateZ(270deg)';
 			style['width'] =
-				this.actions.style?.height ?? `${this.sliderWidth}px`;
+				this.config.style?.height ?? `${this.sliderWidth}px`;
 		}
 
 		return html`
@@ -332,16 +332,16 @@ export class RemoteSlider extends BaseRemoteElement {
 			value: this.getValueFromHass ? this.value : this.currentValue,
 		};
 
-		if (this.actions.range) {
+		if (this.config.range) {
 			this.range[0] = parseFloat(
 				this.renderTemplate(
-					this.actions.range[0] as unknown as string,
+					this.config.range[0] as unknown as string,
 					context,
 				) as string,
 			);
 			this.range[1] = parseFloat(
 				this.renderTemplate(
-					this.actions.range[1] as unknown as string,
+					this.config.range[1] as unknown as string,
 					context,
 				) as string,
 			);
@@ -349,8 +349,8 @@ export class RemoteSlider extends BaseRemoteElement {
 
 		this.speed = (this.range[1] - this.range[0]) / 50;
 
-		if (this.actions.step) {
-			this.step = Number(this.renderTemplate(this.actions.step, context));
+		if (this.config.step) {
+			this.step = Number(this.renderTemplate(this.config.step, context));
 		} else {
 			this.step = (this.range[1] - this.range[0]) / 100;
 		}
@@ -362,13 +362,12 @@ export class RemoteSlider extends BaseRemoteElement {
 		}
 
 		this.vertical =
-			this.renderTemplate(this.actions.vertical ?? false, context) ==
-			true;
+			this.renderTemplate(this.config.vertical ?? false, context) == true;
 		this.resizeObserver.observe(
 			this.shadowRoot?.querySelector('.container') ?? this,
 		);
 
-		const style = this.buildStyle(this.actions.style ?? {}, context);
+		const style = this.buildStyle(this.config.style ?? {}, context);
 		this.thumbWidth = parseInt(
 			((style['--thumb-width'] as string) ?? '50').replace('px', ''),
 		);
@@ -399,7 +398,7 @@ export class RemoteSlider extends BaseRemoteElement {
 			${this.buildTooltip(context)}
 			<div class="container" style=${styleMap(style)}>
 				${this.buildBackground(context)}${this.buildSlider(context)}
-				${this.buildIcon(this.actions.icon ?? '', context)}
+				${this.buildIcon(this.config.icon ?? '', context)}
 			</div>
 		`;
 	}

@@ -32,10 +32,10 @@ export class RemoteTouchpad extends BaseRemoteElement {
 
 		if (
 			this.renderTemplate(
-				this.actions.double_tap_action?.action ?? 'none',
+				this.config.double_tap_action?.action ?? 'none',
 			) != 'none' ||
 			this.renderTemplate(
-				this.actions.multi_double_tap_action?.action ?? 'none',
+				this.config.multi_double_tap_action?.action ?? 'none',
 			) != 'none'
 		) {
 			// Double tap action is defined
@@ -51,9 +51,9 @@ export class RemoteTouchpad extends BaseRemoteElement {
 				if (!this.clickTimer) {
 					const doubleTapWindow: number =
 						'double_tap_window' in
-						(this.actions[doubleTapAction] ?? {})
+						(this.config[doubleTapAction] ?? {})
 							? (this.renderTemplate(
-									this.actions[doubleTapAction]
+									this.config[doubleTapAction]
 										?.double_tap_window as unknown as string,
 							  ) as number)
 							: 200;
@@ -81,7 +81,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		if (
 			!this.holdAction &&
 			this.renderTemplate(
-				this.actions.momentary_start_action?.action ?? 'none',
+				this.config.momentary_start_action?.action ?? 'none',
 			) != 'none'
 		) {
 			this.fireHapticEvent('light');
@@ -90,7 +90,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		} else if (
 			!this.holdAction &&
 			this.renderTemplate(
-				this.actions.momentary_end_action?.action ?? 'none',
+				this.config.momentary_end_action?.action ?? 'none',
 			) != 'none'
 		) {
 			this.fireHapticEvent('light');
@@ -119,7 +119,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		if (
 			!this.holdAction &&
 			this.renderTemplate(
-				this.actions.momentary_end_action?.action ?? 'none',
+				this.config.momentary_end_action?.action ?? 'none',
 			) != 'none'
 		) {
 			this.buttonPressEnd = performance.now();
@@ -129,7 +129,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		} else if (
 			!this.holdAction &&
 			this.renderTemplate(
-				this.actions.momentary_start_action?.action ?? 'none',
+				this.config.momentary_start_action?.action ?? 'none',
 			) != 'none'
 		) {
 			this.endAction();
@@ -231,7 +231,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 	getActions(): IActions {
 		return this.holdAction
 			? this.directionActions[this.holdAction]
-			: this.actions;
+			: this.config;
 	}
 
 	getMultiPrefix(): 'multi_' | '' {
@@ -293,7 +293,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		const ripple = this.renderRipple ? html`<md-ripple></md-ripple>` : '';
 		return html`
 			<toucharea
-				style=${styleMap(this.buildStyle(this.actions.style ?? {}))}
+				style=${styleMap(this.buildStyle(this.config.style ?? {}))}
 				@mousedown=${this.onMouseDown}
 				@mouseup=${this.onMouseUp}
 				@mousemove=${this.onMouseMove}

@@ -1,11 +1,11 @@
-import { IActions } from '..';
+import { IRemoteElement } from '..';
 
 /**
  * This is the list of most common commands from the Android TV Remote integration page.
  * Not all are ensured to work, and if they do not it is likely an issue with the underlying package used by the Android TV Remote integration or the Android TV Remote Protocol V2 itself.
  * https://www.home-assistant.io/integrations/androidtv_remote/#remote
  */
-export const defaultKeys: Record<string, IActions> = {
+export const defaultKeys: Record<string, IRemoteElement> = {
 	power: { tap_action: { action: 'key', key: 'POWER' }, icon: 'mdi:power' },
 	volume_up: {
 		tap_action: { action: 'key', key: 'VOLUME_UP' },
@@ -219,13 +219,14 @@ export const defaultKeys: Record<string, IActions> = {
 		icon: 'mdi:text-box',
 	},
 	slider: {
+		type: 'slider',
 		range: [0, 1],
 		value_attribute: 'volume_level',
 		tap_action: {
 			action: 'call-service',
 			service: 'media_player.volume_set',
 			data: {
-				volume_level: '{{ value }}',
+				volume_level: '{{ value | float }}',
 			},
 		},
 	},

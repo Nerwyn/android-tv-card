@@ -10,6 +10,7 @@ import { load } from 'js-yaml';
 
 import {
 	IConfig,
+	IRemoteElement,
 	IActions,
 	IAction,
 	IData,
@@ -36,8 +37,8 @@ class AndroidTVCard extends LitElement {
 	@property({ attribute: false }) hass!: HomeAssistant;
 	@property({ attribute: false }) config!: IConfig;
 
-	defaultActions: Record<string, IActions> = {};
-	customActions: Record<string, IActions> = {};
+	defaultActions: Record<string, IRemoteElement> = {};
+	customActions: Record<string, IRemoteElement> = {};
 	icons: Record<string, string> = {};
 
 	nRows: number = 0;
@@ -70,8 +71,6 @@ class AndroidTVCard extends LitElement {
 			throw new Error('Invalid configuration');
 		}
 		config = structuredClone(config);
-		config = { theme: 'default', ...config };
-
 		config = this.setToggles(config);
 		config = this.updateDeprecatedKeys(config);
 
@@ -152,14 +151,8 @@ class AndroidTVCard extends LitElement {
 		// Combine custom actions, custom keys, and custom sources fields
 		config.custom_actions = {
 			...config.custom_actions,
-			...(config['custom_keys' as keyof IConfig] as unknown as Record<
-				string,
-				IActions
-			>[]),
-			...(config['custom_sources' as keyof IConfig] as unknown as Record<
-				string,
-				IActions
-			>[]),
+			...config['custom_keys' as 'custom_actions'],
+			...config['custom_sources' as 'custom_actions'],
 		} as Record<string, IActions>;
 
 		const customActions = config.custom_actions;
@@ -195,7 +188,9 @@ class AndroidTVCard extends LitElement {
 					updateTapAction = true;
 					(tapAction as unknown as Record<string, string>)[
 						actionKey
-					] = customAction[actionKey as keyof IActions] as string;
+					] = customAction[
+						actionKey as keyof IRemoteElement
+					] as string;
 				}
 			}
 			if (updateTapAction) {
@@ -306,7 +301,7 @@ class AndroidTVCard extends LitElement {
 		return config;
 	}
 
-	getActions(action: string): IActions {
+	getRemoteElement(action: string): IRemoteElement {
 		const defaultActions = this.defaultActions[action] || {};
 		let actions = structuredClone(
 			this.customActions[action] || defaultActions,
@@ -476,7 +471,7 @@ class AndroidTVCard extends LitElement {
 	}
 
 	buildButton(elementName: string, context: object): TemplateResult {
-		const actions = this.getActions(elementName);
+		const actions = this.getRemoteElement(elementName);
 
 		const style = {
 			...this.config.button_style,
@@ -523,7 +518,7 @@ class AndroidTVCard extends LitElement {
 	buildSlider(): TemplateResult {
 		return html`<remote-slider
 			.hass=${this.hass}
-			.actions=${this.getActions('slider')}
+			.actions=${this.getRemoteElement('slider')}
 		/>`;
 	}
 
@@ -555,7 +550,7 @@ class AndroidTVCard extends LitElement {
 
 	buildTouchpad(context: object): TemplateResult {
 		// If still using old double tap toggle and key, map to center double tap action
-		const centerActions = this.getActions('center');
+		const centerActions = this.getRemoteElement('center');
 		if (
 			renderTemplate(
 				this.hass,
@@ -571,7 +566,7 @@ class AndroidTVCard extends LitElement {
 						.double_click_keycode,
 					context,
 				) as string) ?? 'back';
-			const doubleTapAction = this.getActions(doubleTapKeycode);
+			const doubleTapAction = this.getRemoteElement(doubleTapKeycode);
 			centerActions.double_tap_action = doubleTapAction.tap_action;
 		}
 		centerActions.haptics = this.config.touchpad_haptics;
@@ -592,15 +587,15 @@ class AndroidTVCard extends LitElement {
 					(this.config as Record<string, string>).long_click_keycode,
 					context,
 				) as string) ?? 'center';
-			const holdAction = this.getActions(holdActionKeycode);
+			const holdAction = this.getRemoteElement(holdActionKeycode);
 			centerActions.hold_action = holdAction.tap_action;
 		}
 
 		const directionActions: Record<DirectionAction, IActions> = {
-			up: this.getActions('up'),
-			down: this.getActions('down'),
-			left: this.getActions('left'),
-			right: this.getActions('right'),
+			up: this.getRemoteElement('up'),
+			down: this.getRemoteElement('down'),
+			left: this.getRemoteElement('left'),
+			right: this.getRemoteElement('right'),
 		};
 
 		return html`<remote-touchpad
@@ -614,7 +609,7 @@ class AndroidTVCard extends LitElement {
 	}
 
 	buildKeyboard(): TemplateResult {
-		const actions = this.getActions('keyboard');
+		const actions = this.getRemoteElement('keyboard');
 		actions.style = {
 			...this.config.button_style,
 			...actions.style,
@@ -636,7 +631,7 @@ class AndroidTVCard extends LitElement {
 	}
 
 	buildTextbox(): TemplateResult {
-		const actions = this.getActions('textbox');
+		const actions = this.getRemoteElement('textbox');
 		actions.style = {
 			...this.config.button_style,
 			...actions.style,
@@ -658,7 +653,7 @@ class AndroidTVCard extends LitElement {
 	}
 
 	buildSearch(): TemplateResult {
-		const actions = this.getActions('search');
+		const actions = this.getRemoteElement('search');
 		actions.style = {
 			...this.config.button_style,
 			...actions.style,

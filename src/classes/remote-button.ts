@@ -21,7 +21,7 @@ export class RemoteButton extends BaseRemoteElement {
 
 		if (
 			this.renderTemplate(
-				this.actions.double_tap_action?.action ?? 'none',
+				this.config.double_tap_action?.action ?? 'none',
 			) != 'none'
 		) {
 			// Double tap action is defined
@@ -33,10 +33,9 @@ export class RemoteButton extends BaseRemoteElement {
 			} else {
 				// Single tap action is triggered if double tap is not within 200ms
 				const doubleTapWindow: number =
-					'double_tap_window' in
-					(this.actions.double_tap_action ?? {})
+					'double_tap_window' in (this.config.double_tap_action ?? {})
 						? (this.renderTemplate(
-								this.actions.double_tap_action
+								this.config.double_tap_action
 									?.double_tap_window as unknown as string,
 						  ) as number)
 						: 200;
@@ -71,7 +70,7 @@ export class RemoteButton extends BaseRemoteElement {
 
 		if (
 			this.renderTemplate(
-				this.actions.momentary_start_action?.action ?? 'none',
+				this.config.momentary_start_action?.action ?? 'none',
 			) != 'none'
 		) {
 			this.fireHapticEvent('light');
@@ -79,14 +78,14 @@ export class RemoteButton extends BaseRemoteElement {
 			this.sendAction('momentary_start_action');
 		} else if (
 			this.renderTemplate(
-				this.actions.momentary_end_action?.action ?? 'none',
+				this.config.momentary_end_action?.action ?? 'none',
 			) != 'none'
 		) {
 			this.fireHapticEvent('light');
 			this.buttonPressStart = performance.now();
 		} else if (!this.holdTimer) {
 			const holdTime = this.renderTemplate(
-				this.actions.hold_action?.hold_time ?? 500,
+				this.config.hold_action?.hold_time ?? 500,
 			) as number;
 
 			this.holdTimer = setTimeout(() => {
@@ -95,11 +94,11 @@ export class RemoteButton extends BaseRemoteElement {
 
 					if (
 						this.renderTemplate(
-							this.actions.hold_action?.action as string,
+							this.config.hold_action?.action as string,
 						) == 'repeat'
 					) {
 						const repeat_delay = this.renderTemplate(
-							this.actions.hold_action?.repeat_delay ?? 100,
+							this.config.hold_action?.repeat_delay ?? 100,
 						) as number;
 						if (!this.holdInterval) {
 							this.holdInterval = setInterval(() => {
@@ -120,7 +119,7 @@ export class RemoteButton extends BaseRemoteElement {
 		if (!this.swiping) {
 			if (
 				this.renderTemplate(
-					this.actions.momentary_end_action?.action ?? 'none',
+					this.config.momentary_end_action?.action ?? 'none',
 				) != 'none'
 			) {
 				this.fireHapticEvent('selection');
@@ -129,7 +128,7 @@ export class RemoteButton extends BaseRemoteElement {
 				this.endAction();
 			} else if (
 				this.renderTemplate(
-					this.actions.momentary_start_action?.action ?? 'none',
+					this.config.momentary_start_action?.action ?? 'none',
 				) != 'none'
 			) {
 				this.endAction();
@@ -200,7 +199,7 @@ export class RemoteButton extends BaseRemoteElement {
 		return html`
 			<button
 				title="${action}"
-				style=${styleMap(this.buildStyle(this.actions.style ?? {}))}
+				style=${styleMap(this.buildStyle(this.config.style ?? {}))}
 				@mousedown=${this.onMouseDown}
 				@mouseup=${this.onMouseUp}
 				@mousemove=${this.onMouseMove}
@@ -213,7 +212,7 @@ export class RemoteButton extends BaseRemoteElement {
 			>
 				${ripple}
 			</button>
-			${this.buildIcon(this.actions.icon ?? '')}${inputTemplate}
+			${this.buildIcon(this.config.icon ?? '')}${inputTemplate}
 			${this.buildStyles()}
 		`;
 	}
