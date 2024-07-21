@@ -41,7 +41,10 @@ export class RemoteSearch extends BaseKeyboardElement {
 						break;
 					case 'ROKU':
 						this.hass.callService('roku', 'search', {
-							entity_id: this.getRokuId('media_player'),
+							entity_id: this.getRokuId(
+								this._keyboardId,
+								'media_player',
+							),
 							keyword: text,
 						});
 						break;

@@ -207,15 +207,15 @@ export const defaultKeys: Record<string, IElementConfig> = {
 	},
 	enter: { tap_action: { action: 'key', key: 'ENTER' }, icon: 'mdi:magnify' },
 	keyboard: {
-		tap_action: { action: 'none', key: 'KEYBOARD' },
+		tap_action: { action: 'keyboard' },
 		icon: 'mdi:keyboard',
 	},
 	search: {
-		tap_action: { action: 'none', key: 'SEARCH' },
+		tap_action: { action: 'search' },
 		icon: 'mdi:google-assistant',
 	},
 	textbox: {
-		tap_action: { action: 'none', key: 'TEXTBOX' },
+		tap_action: { action: 'textbox' },
 		icon: 'mdi:text-box',
 	},
 	slider: {

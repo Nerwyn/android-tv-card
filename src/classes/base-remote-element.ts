@@ -13,10 +13,10 @@ import { renderTemplate } from 'ha-nunjucks';
 import {
 	IConfirmation,
 	IData,
+	ITarget,
 	IElementConfig,
 	IAction,
 	ActionType,
-	KeyboardMode,
 } from '../models';
 
 @customElement('base-remote-element')
@@ -28,11 +28,6 @@ export class BaseRemoteElement extends LitElement {
 	@property({ attribute: false }) autofillEntityId: boolean = false;
 	@property({ attribute: false }) remoteId?: string;
 	@property({ attribute: false }) mediaPlayerId?: string;
-	// TODO keyboard ID and mode should be set at action level
-	@property({ attribute: false }) keyboardId!: string;
-	@property({ attribute: false }) keyboardMode!: KeyboardMode;
-	_keyboardMode: string = '';
-	_keyboardId: string = '';
 
 	@state() renderRipple = true;
 	renderRippleOff?: ReturnType<typeof setTimeout>;
@@ -140,8 +135,12 @@ export class BaseRemoteElement extends LitElement {
 				case 'fire-dom-event':
 					this.fireDomEvent(action);
 					break;
-				case 'textbox': // TODO
-				case 'search': // TODO
+				case 'textbox':
+					this.textBox(action);
+					break;
+				case 'search':
+					this.search(action);
+					break;
 				case 'keyboard': // TODO
 				case 'repeat':
 				default:
@@ -177,7 +176,7 @@ export class BaseRemoteElement extends LitElement {
 		) as string;
 
 		const [domain, service] = domainService.split('.');
-		let data = structuredClone(action.data);
+		const data = structuredClone(action.data);
 		for (const key in data) {
 			if (Array.isArray(data[key])) {
 				for (const i in data[key] as string[]) {
@@ -187,6 +186,22 @@ export class BaseRemoteElement extends LitElement {
 				}
 			} else {
 				data[key] = this.renderTemplate(data[key] as string);
+			}
+		}
+
+		let target = structuredClone(action.target);
+		for (const key in target) {
+			if (Array.isArray(target[key as keyof ITarget])) {
+				for (const i in target[key as keyof ITarget] as string[]) {
+					(target[key as keyof ITarget] as string[])[i] =
+						this.renderTemplate(
+							(target[key as keyof ITarget] as string[])[i],
+						) as string;
+				}
+			} else {
+				target[key as keyof ITarget] = this.renderTemplate(
+					target[key as keyof ITarget] as string,
+				) as string;
 			}
 		}
 
@@ -208,16 +223,21 @@ export class BaseRemoteElement extends LitElement {
 				entityId &&
 				!data?.entity_id &&
 				!data?.device_id &&
-				!data?.area_id
+				!data?.area_id &&
+				!data?.label_id &&
+				!target?.entity_id &&
+				!target?.device_id &&
+				!target?.area_id &&
+				!target?.label_id
 			) {
-				data = {
-					...data,
+				target = {
+					...target,
 					entity_id: entityId,
 				};
 			}
 		}
 
-		this.hass.callService(domain, service, data);
+		this.hass.callService(domain, service, data, target);
 	}
 
 	navigate(action: IAction) {
@@ -289,6 +309,99 @@ export class BaseRemoteElement extends LitElement {
 		});
 		event.detail = { entityId };
 		this.dispatchEvent(event);
+	}
+
+	textBox(action: IAction) {
+		const entityId = (action.target?.entity_id ??
+			action.data?.entity_id) as string;
+		const platform = (
+			this.renderTemplate(action.platform ?? '') as string
+		).toUpperCase();
+
+		const text = prompt('Text Input: ');
+		if (text && entityId) {
+			switch (platform) {
+				case 'KODI':
+					this.hass.callService('kodi', 'call_method', {
+						entity_id: entityId,
+						method: 'Input.SendText',
+						text: text,
+						done: false,
+					});
+					break;
+				case 'ROKU':
+					this.hass.callService('remote', 'send_command', {
+						entity_id: this.getRokuId(entityId, 'remote'),
+						command: `Lit_${text}`,
+					});
+					break;
+				case 'FIRE TV':
+				case 'ANDROID TV':
+				default:
+					this.hass.callService('androidtv', 'adb_command', {
+						entity_id: entityId,
+						command: `input text "${text}"`,
+					});
+					break;
+			}
+		}
+	}
+
+	search(action: IAction) {
+		const entityId = (action.target?.entity_id ??
+			action.data?.entity_id) as string;
+		const platform = (
+			this.renderTemplate(action.platform ?? '') as string
+		).toUpperCase();
+
+		if (entityId) {
+			let promptText: string;
+			switch (platform) {
+				case 'KODI':
+					this.hass.callService('kodi', 'call_method', {
+						entity_id: entityId,
+						method: 'Addons.ExecuteAddon',
+						addonid: 'script.globalsearch',
+					});
+				// fall through
+				case 'ROKU':
+				case 'FIRE TV':
+					promptText = 'Global Search: ';
+					break;
+				case 'ANDROID TV':
+				default:
+					promptText = 'Google Assistant Search: ';
+					break;
+			}
+
+			const text = prompt(promptText);
+			if (text) {
+				switch (platform) {
+					case 'KODI':
+						this.hass.callService('kodi', 'call_method', {
+							entity_id: entityId,
+							method: 'Input.SendText',
+							text: text,
+							done: true,
+						});
+						break;
+					case 'ROKU':
+						this.hass.callService('roku', 'search', {
+							entity_id: this.getRokuId(entityId, 'media_player'),
+							keyword: text,
+						});
+						break;
+					case 'FIRE TV':
+					case 'ANDROID TV':
+					default:
+						this.hass.callService('androidtv', 'adb_command', {
+							entity_id: entityId,
+							command: `am start -a "android.search.action.GLOBAL_SEARCH" --es query "${text}"`,
+						});
+						break;
+				}
+			}
+		}
 	}
 
 	fireDomEvent(action: IAction) {
@@ -677,14 +790,13 @@ export class BaseRemoteElement extends LitElement {
 		}
 	}
 
-	getRokuId(domain: 'remote' | 'media_player' = 'remote') {
-		if (this._keyboardId.split('.')[0] != domain) {
+	getRokuId(entityId: string, domain: 'remote' | 'media_player') {
+		if (entityId.split('.')[0] != domain) {
 			switch (domain) {
 				case 'media_player':
 					return this.renderTemplate(
 						this.mediaPlayerId as string,
 					) as string;
-					break;
 				case 'remote':
 				default:
 					return this.renderTemplate(

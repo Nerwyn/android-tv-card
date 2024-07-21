@@ -1,9 +1,6 @@
 import { StyleInfo } from 'lit/directives/style-map.js'; // TODO REMOVE
 
-import { IElementConfig } from '.';
-
-export const KeyboardModes = ['ANDROID TV', 'KODI', 'FIRE TV', 'ROKU'] as const;
-export type KeyboardMode = (typeof KeyboardModes)[number];
+import { IElementConfig, Platform } from '.';
 
 export type Row = (string | Row[])[];
 
@@ -12,7 +9,7 @@ export interface IConfig {
 
 	remote_id?: string;
 	keyboard_id?: string;
-	keyboard_mode?: KeyboardMode;
+	keyboard_mode?: Platform;
 	slider_id?: string;
 	media_player_id?: string;
 	autofill_entity_id?: boolean;

@@ -25,6 +25,9 @@ export type ActionType =
 	| 'momentary_start_action'
 	| 'momentary_end_action';
 
+export const Platforms = ['ANDROID TV', 'KODI', 'FIRE TV', 'ROKU'] as const;
+export type Platform = (typeof Platforms)[number];
+
 export type DirectionAction = 'up' | 'down' | 'left' | 'right';
 
 export interface IData {
@@ -54,6 +57,7 @@ export interface IAction {
 
 	key?: string;
 	source?: string;
+	platform?: Platform;
 
 	service?: string;
 	data?: IData;
