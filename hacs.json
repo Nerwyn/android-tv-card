@@ -1,5 +1,5 @@
 {
-	"name": "Universal Remote Card - super configurable buttons, touchpad, sliders, keyboard, and more!)",
+	"name": "Universal Remote Card - buttons, touchpad, sliders, keyboard, and more!",
 	"content_in_root": false,
 	"homeassistant": "2023.5.0",
 	"filename": "universal-remote-card.min.js",

@@ -860,9 +860,8 @@ class UniversalRemoteCard extends LitElement {
 				height: 24vh;
 				width: 85vw;
 				display: block;
-				position: absolute;
+				position: fixed;
 				z-index: 9;
-				top: 12px;
 				padding: 32px;
 				border: none;
 				background: var(--ha-card-background);
