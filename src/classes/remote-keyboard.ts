@@ -8,8 +8,9 @@ import { Platform } from '../models';
 export class RemoteKeyboard extends RemoteButton {
 	@property({ attribute: false }) keyboardId!: string;
 	@property({ attribute: false }) keyboardMode!: Platform;
-	_keyboardMode: string = '';
+	_keyboardMode: Platform = 'ANDROID TV';
 	_keyboardId: string = '';
+	domain: string = 'media_player';
 
 	onStart(_e: MouseEvent | TouchEvent) {
 		this.swiping = false;
@@ -70,10 +71,29 @@ export class RemoteKeyboard extends RemoteButton {
 					outKey = keyToKey[inKey ?? ''];
 
 					if (outKey) {
-						this.hass.callService('androidtv', 'adb_command', {
-							entity_id: this._keyboardId,
-							command: `input keyevent ${outKey}`,
-						});
+						switch (this.domain) {
+							case 'remote':
+								this.hass.callService(
+									'remote',
+									'send_command',
+									{
+										entity_id: this._keyboardId,
+										command: `input keyevent ${outKey}`,
+									},
+								);
+								break;
+							case 'media_player':
+							default:
+								this.hass.callService(
+									'androidtv',
+									'adb_command',
+									{
+										entity_id: this._keyboardId,
+										command: `input keyevent ${outKey}`,
+									},
+								);
+								break;
+						}
 					}
 					break;
 				case 'ANDROID TV':
@@ -115,20 +135,24 @@ export class RemoteKeyboard extends RemoteButton {
 						command: `Lit_${text}`,
 					});
 					break;
-				case 'FIRE':
-				case 'FIRETV':
-				case 'FIRE_TV':
 				case 'FIRE TV':
-				case 'ANDROID':
-				case 'ANDROIDTV':
-				case 'ANDROID_TV':
 				case 'ANDROID TV':
 				default:
-					this.hass.callService('androidtv', 'adb_command', {
-						entity_id: this._keyboardId,
-						command: `input text "${text}"`,
-					});
-					break;
+					switch (this.domain) {
+						case 'remote':
+							this.hass.callService('remote', 'send_command', {
+								entity_id: this._keyboardId,
+								command: `input text "${text}"`,
+							});
+							break;
+						case 'media_player':
+						default:
+							this.hass.callService('androidtv', 'adb_command', {
+								entity_id: this._keyboardId,
+								command: `input text "${text}"`,
+							});
+							break;
+					}
 			}
 		}
 	}
@@ -154,19 +178,24 @@ export class RemoteKeyboard extends RemoteButton {
 						command: `Lit_${text}`,
 					});
 					break;
-				case 'FIRE':
-				case 'FIRETV':
-				case 'FIRE_TV':
 				case 'FIRE TV':
-				case 'ANDROID':
-				case 'ANDROIDTV':
-				case 'ANDROID_TV':
 				case 'ANDROID TV':
 				default:
-					this.hass.callService('androidtv', 'adb_command', {
-						entity_id: this._keyboardId,
-						command: `input text "${text}"`,
-					});
+					switch (this.domain) {
+						case 'remote':
+							this.hass.callService('remote', 'send_command', {
+								entity_id: this._keyboardId,
+								command: `input text "${text}"`,
+							});
+							break;
+						case 'media_player':
+						default:
+							this.hass.callService('androidtv', 'adb_command', {
+								entity_id: this._keyboardId,
+								command: `input text "${text}"`,
+							});
+							break;
+					}
 					break;
 			}
 		}
@@ -202,8 +231,10 @@ export class RemoteKeyboard extends RemoteButton {
 	render() {
 		this._keyboardMode = (
 			this.renderTemplate(this.keyboardMode) as string
-		).toUpperCase();
+		).toUpperCase() as Platform;
 		this._keyboardId = this.renderTemplate(this.keyboardId) as string;
+		const [domain, _entity] = this._keyboardId.split('.');
+		this.domain = domain;
 
 		const inputTemplate = html`
 			<input
