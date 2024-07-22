@@ -362,12 +362,26 @@ export class BaseRemoteElement extends LitElement {
 						break;
 					case 'FIRE TV':
 					case 'ANDROID TV':
-					default:
-						this.hass.callService('androidtv', 'adb_command', {
+					default: {
+						let domain: string;
+						let service: string;
+						switch (entityId.split('.')[0]) {
+							case 'remote':
+								domain = 'remote';
+								service = 'send_command';
+								break;
+							case 'media_player':
+							default:
+								domain = 'androidtv';
+								service = 'adb_command';
+								break;
+						}
+						this.hass.callService(domain, service, {
 							entity_id: entityId,
 							command: `input text "${text}"`,
 						});
 						break;
+					}
 				}
 			}
 		}
@@ -419,12 +433,26 @@ export class BaseRemoteElement extends LitElement {
 						break;
 					case 'FIRE TV':
 					case 'ANDROID TV':
-					default:
-						this.hass.callService('androidtv', 'adb_command', {
+					default: {
+						let domain: string;
+						let service: string;
+						switch (entityId.split('.')[0]) {
+							case 'remote':
+								domain = 'remote';
+								service = 'send_command';
+								break;
+							case 'media_player':
+							default:
+								domain = 'androidtv';
+								service = 'adb_command';
+								break;
+						}
+						this.hass.callService(domain, service, {
 							entity_id: entityId,
 							command: `am start -a "android.search.action.GLOBAL_SEARCH" --es query "${text}"`,
 						});
 						break;
+					}
 				}
 			}
 		}

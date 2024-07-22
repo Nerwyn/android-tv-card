@@ -71,29 +71,23 @@ export class RemoteKeyboard extends RemoteButton {
 					outKey = keyToKey[inKey ?? ''];
 
 					if (outKey) {
+						let domain: string;
+						let service: string;
 						switch (this.domain) {
 							case 'remote':
-								this.hass.callService(
-									'remote',
-									'send_command',
-									{
-										entity_id: this._keyboardId,
-										command: `input keyevent ${outKey}`,
-									},
-								);
+								domain = 'remote';
+								service = 'send_command';
 								break;
 							case 'media_player':
 							default:
-								this.hass.callService(
-									'androidtv',
-									'adb_command',
-									{
-										entity_id: this._keyboardId,
-										command: `input keyevent ${outKey}`,
-									},
-								);
+								domain = 'androidtv';
+								service = 'adb_command';
 								break;
 						}
+						this.hass.callService(domain, service, {
+							entity_id: this._keyboardId,
+							command: `input keyevent ${outKey}`,
+						});
 					}
 					break;
 				case 'ANDROID TV':
@@ -138,21 +132,24 @@ export class RemoteKeyboard extends RemoteButton {
 				case 'FIRE TV':
 				case 'ANDROID TV':
 				default:
+					let domain: string;
+					let service: string;
 					switch (this.domain) {
 						case 'remote':
-							this.hass.callService('remote', 'send_command', {
-								entity_id: this._keyboardId,
-								command: `input text "${text}"`,
-							});
+							domain = 'remote';
+							service = 'send_command';
 							break;
 						case 'media_player':
 						default:
-							this.hass.callService('androidtv', 'adb_command', {
-								entity_id: this._keyboardId,
-								command: `input text "${text}"`,
-							});
+							domain = 'androidtv';
+							service = 'adb_command';
 							break;
 					}
+					this.hass.callService(domain, service, {
+						entity_id: this._keyboardId,
+						command: `input text "${text}"`,
+					});
+					break;
 			}
 		}
 	}
@@ -181,21 +178,23 @@ export class RemoteKeyboard extends RemoteButton {
 				case 'FIRE TV':
 				case 'ANDROID TV':
 				default:
+					let domain: string;
+					let service: string;
 					switch (this.domain) {
 						case 'remote':
-							this.hass.callService('remote', 'send_command', {
-								entity_id: this._keyboardId,
-								command: `input text "${text}"`,
-							});
+							domain = 'remote';
+							service = 'send_command';
 							break;
 						case 'media_player':
 						default:
-							this.hass.callService('androidtv', 'adb_command', {
-								entity_id: this._keyboardId,
-								command: `input text "${text}"`,
-							});
+							domain = 'androidtv';
+							service = 'adb_command';
 							break;
 					}
+					this.hass.callService(domain, service, {
+						entity_id: this._keyboardId,
+						command: `input text "${text}"`,
+					});
 					break;
 			}
 		}
