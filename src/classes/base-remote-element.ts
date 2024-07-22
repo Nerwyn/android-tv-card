@@ -376,6 +376,9 @@ export class BaseRemoteElement extends LitElement {
 								service = 'adb_command';
 								break;
 						}
+						console.log(entityId);
+						console.log(domain);
+						console.log(service);
 						this.hass.callService(domain, service, {
 							entity_id: entityId,
 							command: `input text "${text}"`,
