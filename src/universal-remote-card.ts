@@ -763,7 +763,9 @@ class UniversalRemoteCard extends LitElement {
 	dialogOpen = false;
 	buildDialog() {
 		// this.getRootNode().host.getRootNode().querySelector('textarea').value
-		setTimeout(() => (this.dialogOpen = true), 500);
+		setTimeout(() => {
+			this.dialogOpen = true;
+		}, 500);
 		return html`<dialog @mousedown=${this.closeDialog}>
 			<textarea
 				spellcheck="false"
