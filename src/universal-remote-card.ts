@@ -762,11 +762,8 @@ class UniversalRemoteCard extends LitElement {
 
 	buildDialog() {
 		// this.getRootNode().host.getRootNode().querySelector('textarea').value
-		return html`<dialog
-			onmousedown="event.target==this && this.close()"
-			placeholder="Keyboard input"
-		>
-			<textarea></textarea>
+		return html`<dialog onmousedown="event.target==this && this.close()">
+			<textarea placeholder="Keyboard input"></textarea>
 		</dialog>`;
 	}
 
