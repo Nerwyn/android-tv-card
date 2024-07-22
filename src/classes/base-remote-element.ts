@@ -336,8 +336,10 @@ export class BaseRemoteElement extends LitElement {
 	}
 
 	textBox(action: IAction) {
-		const entityId = (action.target?.entity_id ??
-			action.data?.entity_id) as string;
+		const entityId = this.renderTemplate(
+			((action.target?.entity_id ?? action.data?.entity_id) as string) ??
+				'',
+		) as string;
 		const platform = (
 			this.renderTemplate(action.platform ?? '') as string
 		).toUpperCase();
@@ -391,8 +393,10 @@ export class BaseRemoteElement extends LitElement {
 	}
 
 	search(action: IAction) {
-		const entityId = (action.target?.entity_id ??
-			action.data?.entity_id) as string;
+		const entityId = this.renderTemplate(
+			((action.target?.entity_id ?? action.data?.entity_id) as string) ??
+				'',
+		) as string;
 		const platform = (
 			this.renderTemplate(action.platform ?? '') as string
 		).toUpperCase();
