@@ -791,10 +791,7 @@ class UniversalRemoteCard extends LitElement {
 				rect.left <= e.clientX &&
 				e.clientX <= rect.left + rect.width;
 			if (!isInDialog) {
-				(
-					target.parentElement as HTMLElement &
-						Record<'close', () => void>
-				).close();
+				(target as HTMLElement & Record<'close', () => void>).close();
 				this.dialogOpen = false;
 			}
 		}
