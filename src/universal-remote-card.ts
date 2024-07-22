@@ -760,15 +760,34 @@ class UniversalRemoteCard extends LitElement {
 			: this.buildRow(rowContent, context);
 	}
 
+	dialogOpen = false;
 	buildDialog() {
 		// this.getRootNode().host.getRootNode().querySelector('textarea').value
-		return html`<dialog onmousedown="event.target==this && this.close()">
-			<textarea placeholder="Keyboard input"></textarea>
+		setTimeout(() => (this.dialogOpen = true), 500);
+		return html`<dialog @mousedown=${this.closeDialog}>
+			<textarea
+				spellcheck="false"
+				autocorrect="off"
+				autocomplete="off"
+				autocapitalize="off"
+				placeholder="Keyboard input"
+			></textarea>
 		</dialog>`;
 	}
 
 	onDialogOpen(_e: CustomEvent) {
 		this.shadowRoot?.querySelector('dialog')?.showModal();
+	}
+
+	closeDialog(e: MouseEvent) {
+		const target = e.target as HTMLElement;
+		if (target.tagName == '::backdrop' && this.dialogOpen) {
+			(
+				target.parentElement as HTMLElement &
+					Record<'close', () => void>
+			).close();
+			this.dialogOpen = false;
+		}
 	}
 
 	render() {
