@@ -782,9 +782,8 @@ class UniversalRemoteCard extends LitElement {
 	}
 
 	closeDialog(e: MouseEvent) {
-		const target = e.currentTarget as HTMLElement;
-		console.log(target);
-		console.log(this.dialogOpen);
+		const target = e.target as HTMLElement;
+		console.log(e);
 		if (target.tagName == '::backdrop' && this.dialogOpen) {
 			(
 				target.parentElement as HTMLElement &
@@ -880,12 +879,11 @@ class UniversalRemoteCard extends LitElement {
 				grid-gap: 8px 16px;
 			}
 			dialog {
-				height: 25%;
-				width: 75%;
+				height: 25vh;
+				width: 85vw;
 				display: block;
 				position: fixed;
 				z-index: 9;
-				padding: 32px;
 				border: none;
 				background: var(--ha-card-background);
 				border-radius: var(--ha-card-border-radius);
@@ -900,8 +898,9 @@ class UniversalRemoteCard extends LitElement {
 			}
 			dialog textarea {
 				position: relative;
-				width: 90%;
 				height: 90%;
+				width: 90%;
+				top: 5%;
 				left: 5%;
 				outline: none;
 				background: none;
