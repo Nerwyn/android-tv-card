@@ -883,8 +883,8 @@ class UniversalRemoteCard extends LitElement {
 				grid-gap: 8px 16px;
 			}
 			dialog {
-				height: 25vh;
-				width: 85vw;
+				height: 40%;
+				width: 85%;
 				display: block;
 				position: fixed;
 				z-index: 9;
@@ -909,7 +909,6 @@ class UniversalRemoteCard extends LitElement {
 				outline: none;
 				background: none;
 				border: none;
-				overflow: hidden;
 				resize: none;
 				font-family: inherit;
 				font-weight: 500;
