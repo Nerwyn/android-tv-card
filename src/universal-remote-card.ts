@@ -782,7 +782,7 @@ class UniversalRemoteCard extends LitElement {
 	}
 
 	closeDialog(e: MouseEvent) {
-		const target = e.target as HTMLElement;
+		const target = e.currentTarget as HTMLElement;
 		console.log(target);
 		console.log(this.dialogOpen);
 		if (target.tagName == '::backdrop' && this.dialogOpen) {
