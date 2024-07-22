@@ -763,33 +763,41 @@ class UniversalRemoteCard extends LitElement {
 	dialogOpen = false;
 	buildDialog() {
 		// this.getRootNode().host.getRootNode().querySelector('textarea').value
-		setTimeout(() => {
-			this.dialogOpen = true;
-		}, 500);
 		return html`<dialog @mousedown=${this.closeDialog}>
 			<textarea
 				spellcheck="false"
 				autocorrect="off"
 				autocomplete="off"
 				autocapitalize="off"
-				placeholder="Keyboard input"
+				placeholder="Type something..."
 			></textarea>
 		</dialog>`;
 	}
 
 	onDialogOpen(_e: CustomEvent) {
+		setTimeout(() => {
+			this.dialogOpen = true;
+		}, 500);
 		this.shadowRoot?.querySelector('dialog')?.showModal();
 	}
 
 	closeDialog(e: MouseEvent) {
 		const target = e.target as HTMLElement;
-		console.log(e);
-		if (target.tagName == '::backdrop' && this.dialogOpen) {
-			(
-				target.parentElement as HTMLElement &
-					Record<'close', () => void>
-			).close();
-			this.dialogOpen = false;
+		if (this.dialogOpen) {
+			const rect = target.getBoundingClientRect();
+			const isInDialog =
+				rect.top <= e.clientY &&
+				e.clientY <= rect.top + rect.height &&
+				rect.left <= e.clientX &&
+				e.clientX <= rect.left + rect.width;
+			console.log(isInDialog);
+			if (isInDialog) {
+				(
+					target.parentElement as HTMLElement &
+						Record<'close', () => void>
+				).close();
+				this.dialogOpen = false;
+			}
 		}
 	}
 
@@ -826,7 +834,7 @@ class UniversalRemoteCard extends LitElement {
 		}
 
 		return html`<ha-card
-			@dialog-open=${this.onDialogOpen}
+			@keyboard-dialog-open=${this.onDialogOpen}
 			.header="${renderTemplate(
 				this.hass,
 				this.config.title as string,

@@ -316,7 +316,7 @@ export class BaseRemoteElement extends LitElement {
 
 	keyboard(action: IAction) {
 		// TODO - figure this out
-		const event = new Event('dialog-open', {
+		const event = new Event('keyboard-dialog-open', {
 			composed: true,
 			bubbles: true,
 		});
