@@ -131,7 +131,7 @@ export class RemoteKeyboard extends RemoteButton {
 					break;
 				case 'FIRE TV':
 				case 'ANDROID TV':
-				default:
+				default: {
 					let domain: string;
 					let service: string;
 					switch (this.domain) {
@@ -150,6 +150,7 @@ export class RemoteKeyboard extends RemoteButton {
 						command: `input text "${text}"`,
 					});
 					break;
+				}
 			}
 		}
 	}
@@ -177,7 +178,7 @@ export class RemoteKeyboard extends RemoteButton {
 					break;
 				case 'FIRE TV':
 				case 'ANDROID TV':
-				default:
+				default: {
 					let domain: string;
 					let service: string;
 					switch (this.domain) {
@@ -196,6 +197,7 @@ export class RemoteKeyboard extends RemoteButton {
 						command: `input text "${text}"`,
 					});
 					break;
+				}
 			}
 		}
 
@@ -231,8 +233,7 @@ export class RemoteKeyboard extends RemoteButton {
 		this._keyboardMode = (
 			this.renderTemplate(this.keyboardMode) as string
 		).toUpperCase() as Platform;
-		this._keyboardId =
-			(this.renderTemplate(this.keyboardId) as string) ?? '';
+		this._keyboardId = this.renderTemplate(this.keyboardId ?? '') as string;
 		const [domain, _entity] = this._keyboardId.split('.');
 		this.domain = domain;
 
