@@ -27,12 +27,16 @@ export class KeyboardDialog extends LitElement {
 		return this.haAction?.keyboard_id;
 	}
 
+	keyboardOnSelectionChange(e: Event) {
+		e.stopImmediatePropagation();
+		this.textarea!.selectionStart = this.textarea!.value.length;
+		this.textarea!.selectionEnd = this.textarea!.value.length;
+	}
+
 	keyboardOnKeyDown(e: KeyboardEvent) {
 		e.stopImmediatePropagation();
-		console.log(e);
-
-		// this.textarea!.selectionStart = this.textarea!.value.length;
-		// this.textarea!.selectionEnd = this.textarea!.value.length;
+		this.textarea!.selectionStart = this.textarea!.value.length;
+		this.textarea!.selectionEnd = this.textarea!.value.length;
 
 		const inKey = e.key;
 		let outKey: string;
@@ -104,10 +108,8 @@ export class KeyboardDialog extends LitElement {
 
 	keyboardOnInput(e: InputEvent) {
 		e.stopImmediatePropagation();
-		console.log(e);
-
-		// this.textarea!.selectionStart = this.textarea!.value.length;
-		// this.textarea!.selectionEnd = this.textarea!.value.length;
+		this.textarea!.selectionStart = this.textarea!.value.length;
+		this.textarea!.selectionEnd = this.textarea!.value.length;
 
 		const inputType = e.inputType ?? '';
 		const text = e.data ?? '';
@@ -218,10 +220,8 @@ export class KeyboardDialog extends LitElement {
 
 	keyboardOnPaste(e: ClipboardEvent) {
 		e.stopImmediatePropagation();
-		e.preventDefault();
-
-		// this.textarea!.selectionStart = this.textarea!.value.length;
-		// this.textarea!.selectionEnd = this.textarea!.value.length;
+		this.textarea!.selectionStart = this.textarea!.value.length;
+		this.textarea!.selectionEnd = this.textarea!.value.length;
 
 		const text = e.clipboardData?.getData('Text');
 		if (text) {
@@ -426,6 +426,7 @@ export class KeyboardDialog extends LitElement {
 					@input=${this.keyboardOnInput}
 					@keydown=${this.keyboardOnKeyDown}
 					@paste=${this.keyboardOnPaste}
+					@selectionchange=${this.keyboardOnSelectionChange}
 				></textarea> `;
 				break;
 		}
