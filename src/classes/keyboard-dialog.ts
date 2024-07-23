@@ -24,6 +24,11 @@ export class KeyboardDialog extends LitElement {
 		return this.haAction?.keyboard_id;
 	}
 
+	keyboardOnKeyUp(e: KeyboardEvent) {
+		e.stopImmediatePropagation();
+		console.log(`Key up: ${e.key}`);
+	}
+
 	keyboardOnKeyDown(e: KeyboardEvent) {
 		e.stopImmediatePropagation();
 
@@ -140,7 +145,6 @@ export class KeyboardDialog extends LitElement {
 							service = 'adb_command';
 							break;
 					}
-					console.log(text);
 					this.hass.callService(domain, service, {
 						entity_id: this.haAction?.keyboard_id,
 						command: `input text "${text}"`,
@@ -353,6 +357,7 @@ export class KeyboardDialog extends LitElement {
 					placeholder="Type something..."
 					@input=${this.keyboardOnInput}
 					@keydown=${this.keyboardOnKeyDown}
+					@keyup=${this.keyboardOnKeyUp}
 					@paste=${this.keyboardOnPaste}
 				></textarea> `;
 				break;
