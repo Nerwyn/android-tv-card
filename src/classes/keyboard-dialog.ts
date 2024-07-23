@@ -24,11 +24,6 @@ export class KeyboardDialog extends LitElement {
 		return this.haAction?.keyboard_id;
 	}
 
-	keyboardOnKeyUp(e: KeyboardEvent) {
-		e.stopImmediatePropagation();
-		console.log(`Key up: ${e.key}`);
-	}
-
 	keyboardOnKeyDown(e: KeyboardEvent) {
 		e.stopImmediatePropagation();
 
@@ -356,8 +351,7 @@ export class KeyboardDialog extends LitElement {
 					autocapitalize="off"
 					placeholder="Type something..."
 					@input=${this.keyboardOnInput}
-					@keydown=${this.keyboardOnKeyDown}
-					@keyup=${this.keyboardOnKeyUp}
+					@keyup=${this.keyboardOnKeyDown}
 					@paste=${this.keyboardOnPaste}
 				></textarea> `;
 				break;
