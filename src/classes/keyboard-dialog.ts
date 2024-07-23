@@ -92,6 +92,8 @@ export class KeyboardDialog extends LitElement {
 					outKey = keyToKey[inKey ?? ''];
 
 					if (outKey) {
+						console.log(outKey);
+						console.log(this.haAction);
 						this.hass.callService('remote', 'send_command', {
 							entity_id: this.haAction?.remote_id,
 							command: outKey,
