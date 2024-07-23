@@ -308,17 +308,17 @@ export class BaseRemoteElement extends LitElement {
 
 	keyboard(action: IAction) {
 		const rAction = this.deepRenderTemplate(action) as IAction;
-		const entityId = (rAction.keyboardId ??
-			rAction.remoteId ??
-			rAction.mediaPlayerId ??
+		const entityId = (rAction.keyboard_id ??
+			rAction.remote_id ??
+			rAction.media_player_id ??
 			'') as string;
-		rAction.keyboardId = rAction.keyboardId ?? entityId;
-		rAction.remoteId =
-			rAction.remoteId ?? entityId.startsWith('remote.')
+		rAction.keyboard_id = rAction.keyboard_id ?? entityId;
+		rAction.remote_id =
+			rAction.remote_id ?? entityId.startsWith('remote.')
 				? entityId
 				: undefined;
-		rAction.mediaPlayerId =
-			rAction.mediaPlayerId ?? entityId.startsWith('media_player.')
+		rAction.media_player_id =
+			rAction.media_player_id ?? entityId.startsWith('media_player.')
 				? entityId
 				: undefined;
 		rAction.platform = (rAction.platform ?? '').toUpperCase() as Platform;

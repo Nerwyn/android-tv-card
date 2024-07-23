@@ -12,16 +12,16 @@ export class KeyboardDialog extends LitElement {
 	domain?: string;
 
 	getRokuId(domain: 'remote' | 'media_player') {
-		if ((this.haAction?.keyboardId ?? '').split('.')[0] != domain) {
+		if ((this.haAction?.keyboard_id ?? '').split('.')[0] != domain) {
 			switch (domain) {
 				case 'media_player':
-					return this.haAction?.mediaPlayerId;
+					return this.haAction?.media_player_id;
 				case 'remote':
 				default:
-					return this.haAction?.remoteId;
+					return this.haAction?.remote_id;
 			}
 		}
-		return this.haAction?.keyboardId;
+		return this.haAction?.keyboard_id;
 	}
 
 	keyboardOnKeyDown(e: KeyboardEvent) {
@@ -63,7 +63,7 @@ export class KeyboardDialog extends LitElement {
 					if (outKey) {
 						let domain: string;
 						let service: string;
-						switch (this.haAction?.keyboardId) {
+						switch (this.haAction?.keyboard_id) {
 							case 'remote':
 								domain = 'remote';
 								service = 'send_command';
@@ -75,7 +75,7 @@ export class KeyboardDialog extends LitElement {
 								break;
 						}
 						this.hass.callService(domain, service, {
-							entity_id: this.haAction?.keyboardId,
+							entity_id: this.haAction?.keyboard_id,
 							command: `input keyevent ${outKey}`,
 						});
 					}
@@ -93,7 +93,7 @@ export class KeyboardDialog extends LitElement {
 
 					if (outKey) {
 						this.hass.callService('remote', 'send_command', {
-							entity_id: this.haAction?.remoteId,
+							entity_id: this.haAction?.remote_id,
 							command: outKey,
 						});
 					}
@@ -110,7 +110,7 @@ export class KeyboardDialog extends LitElement {
 			switch (this.haAction?.platform) {
 				case 'KODI':
 					this.hass.callService('kodi', 'call_method', {
-						entity_id: this.haAction?.keyboardId,
+						entity_id: this.haAction?.keyboard_id,
 						method: 'Input.SendText',
 						text: text,
 						done: false,
@@ -118,7 +118,7 @@ export class KeyboardDialog extends LitElement {
 					break;
 				case 'ROKU':
 					this.hass.callService('remote', 'send_command', {
-						entity_id: this.haAction?.keyboardId,
+						entity_id: this.haAction?.keyboard_id,
 						command: `Lit_${text}`,
 					});
 					break;
@@ -139,7 +139,7 @@ export class KeyboardDialog extends LitElement {
 							break;
 					}
 					this.hass.callService(domain, service, {
-						entity_id: this.haAction?.keyboardId,
+						entity_id: this.haAction?.keyboard_id,
 						command: `input text "${text}"`,
 					});
 					break;
@@ -157,7 +157,7 @@ export class KeyboardDialog extends LitElement {
 			switch (this.haAction?.platform) {
 				case 'KODI':
 					this.hass.callService('kodi', 'call_method', {
-						entity_id: this.haAction?.keyboardId,
+						entity_id: this.haAction?.keyboard_id,
 						method: 'Input.SendText',
 						text: text,
 						done: false,
@@ -165,7 +165,7 @@ export class KeyboardDialog extends LitElement {
 					break;
 				case 'ROKU':
 					this.hass.callService('remote', 'send_command', {
-						entity_id: this.haAction?.keyboardId,
+						entity_id: this.haAction?.keyboard_id,
 						command: `Lit_${text}`,
 					});
 					break;
@@ -186,7 +186,7 @@ export class KeyboardDialog extends LitElement {
 							break;
 					}
 					this.hass.callService(domain, service, {
-						entity_id: this.haAction?.keyboardId,
+						entity_id: this.haAction?.keyboard_id,
 						command: `input text "${text}"`,
 					});
 					break;
@@ -200,7 +200,7 @@ export class KeyboardDialog extends LitElement {
 		switch (this.haAction?.platform) {
 			case 'KODI':
 				this.hass.callService('kodi', 'call_method', {
-					entity_id: this.haAction?.keyboardId,
+					entity_id: this.haAction?.keyboard_id,
 					method: 'Input.SendText',
 					text: text,
 					done: false,
@@ -229,7 +229,7 @@ export class KeyboardDialog extends LitElement {
 						break;
 				}
 				this.hass.callService(domain, service, {
-					entity_id: this.haAction?.keyboardId,
+					entity_id: this.haAction?.keyboard_id,
 					command: `input text "${text}"`,
 				});
 				break;
@@ -242,7 +242,7 @@ export class KeyboardDialog extends LitElement {
 		switch (this.haAction?.platform) {
 			case 'KODI':
 				this.hass.callService('kodi', 'call_method', {
-					entity_id: this.haAction?.keyboardId,
+					entity_id: this.haAction?.keyboard_id,
 					method: 'Addons.ExecuteAddon',
 					addonid: 'script.globalsearch',
 				});
@@ -262,7 +262,7 @@ export class KeyboardDialog extends LitElement {
 			switch (this.haAction?.platform) {
 				case 'KODI':
 					this.hass.callService('kodi', 'call_method', {
-						entity_id: this.haAction?.keyboardId,
+						entity_id: this.haAction?.keyboard_id,
 						method: 'Input.SendText',
 						text: text,
 						done: true,
@@ -291,7 +291,7 @@ export class KeyboardDialog extends LitElement {
 							break;
 					}
 					this.hass.callService(domain, service, {
-						entity_id: this.haAction?.keyboardId,
+						entity_id: this.haAction?.keyboard_id,
 						command: `am start -a "android.search.action.GLOBAL_SEARCH" --es query "${text}"`,
 					});
 					break;
@@ -302,7 +302,7 @@ export class KeyboardDialog extends LitElement {
 
 	showDialog(e: CustomEvent) {
 		this.haAction = e.detail;
-		this.domain = (this.haAction?.keyboardId ?? '').split('.')[0];
+		this.domain = (this.haAction?.keyboard_id ?? '').split('.')[0];
 		setTimeout(() => {
 			this.dialogOpen = true;
 		}, 500);
