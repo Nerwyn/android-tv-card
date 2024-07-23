@@ -10,6 +10,8 @@ export class KeyboardDialog extends LitElement {
 	dialogOpen = false;
 	haAction?: IAction;
 	domain?: string;
+	textBuffer?: string;
+	textarea?: HTMLTextAreaElement;
 
 	getRokuId(domain: 'remote' | 'media_player') {
 		if ((this.haAction?.keyboard_id ?? '').split('.')[0] != domain) {
@@ -28,9 +30,22 @@ export class KeyboardDialog extends LitElement {
 		e.stopImmediatePropagation();
 		console.log(e);
 
-		const inKey = e.code;
+		this.textarea!.selectionStart = this.textarea!.value.length;
+		this.textarea!.selectionEnd = this.textarea!.value.length;
+
+		let inKey = e.key;
 		let outKey: string;
 		let keyToKey: Record<string, string>;
+
+		if (!inKey) {
+			if (
+				this.textarea?.value?.length ==
+				(this.textBuffer?.length ?? 1) - 1
+			) {
+				inKey = 'Backspace';
+			}
+		}
+
 		if (inKey) {
 			switch (this.haAction?.platform) {
 				case 'KODI':
@@ -100,10 +115,14 @@ export class KeyboardDialog extends LitElement {
 					break;
 			}
 		}
+		this.textBuffer = this.textarea?.value ?? '';
 	}
 
 	keyboardOnInput(e: InputEvent) {
 		e.stopImmediatePropagation();
+
+		this.textarea!.selectionStart = this.textarea!.value.length;
+		this.textarea!.selectionEnd = this.textarea!.value.length;
 
 		const text = e.data;
 		if (text) {
@@ -146,11 +165,15 @@ export class KeyboardDialog extends LitElement {
 				}
 			}
 		}
+		this.textBuffer = this.textarea?.value ?? '';
 	}
 
 	keyboardOnPaste(e: ClipboardEvent) {
 		e.stopImmediatePropagation();
 		e.preventDefault();
+
+		this.textarea!.selectionStart = this.textarea!.value.length;
+		this.textarea!.selectionEnd = this.textarea!.value.length;
 
 		const text = e.clipboardData?.getData('Text');
 		if (text) {
@@ -303,6 +326,10 @@ export class KeyboardDialog extends LitElement {
 	showDialog(e: CustomEvent) {
 		this.haAction = e.detail;
 		this.domain = (this.haAction?.keyboard_id ?? '').split('.')[0];
+		this.textBuffer = '';
+		this.textarea = this.shadowRoot?.querySelector(
+			'textarea',
+		) as HTMLTextAreaElement;
 		setTimeout(() => {
 			this.dialogOpen = true;
 		}, 500);
@@ -323,6 +350,8 @@ export class KeyboardDialog extends LitElement {
 				target.close();
 				this.haAction = undefined;
 				this.domain = undefined;
+				this.textBuffer = undefined;
+				this.textarea = undefined;
 				this.dialogOpen = false;
 				const textarea = target.querySelector('textarea');
 				if (textarea) {
