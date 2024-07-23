@@ -7,7 +7,7 @@ import { IAction } from '../models';
 @customElement('keyboard-dialog')
 export class KeyboardDialog extends LitElement {
 	@property() hass!: HomeAssistant;
-	@state() haAction!: IAction;
+	@state() haAction?: IAction;
 	dialogOpen = false;
 
 	entityId: string = '';
@@ -21,7 +21,7 @@ export class KeyboardDialog extends LitElement {
 		// let outKey: string;
 		// let keyToKey: Record<string, string>;
 		// if (inKey) {
-		// 	switch (this.haAction.platform) {
+		// 	switch (this.haAction?.platform) {
 		// 		case 'KODI':
 		// 			break;
 		// 		case 'ROKU':
@@ -102,7 +102,7 @@ export class KeyboardDialog extends LitElement {
 		const text = e.data;
 		console.log(text);
 		// if (text) {
-		// 	switch (this.haAction.platform) {
+		// 	switch (this.haAction?.platform) {
 		// 		case 'KODI':
 		// 			this.hass.callService('kodi', 'call_method', {
 		// 				entity_id: this.entityId,
@@ -151,7 +151,7 @@ export class KeyboardDialog extends LitElement {
 		const text = e.clipboardData?.getData('Text');
 		console.log(text);
 		// if (text) {
-		// 	switch (this.haAction.platform) {
+		// 	switch (this.haAction?.platform) {
 		// 		case 'KODI':
 		// 			this.hass.callService('kodi', 'call_method', {
 		// 				entity_id: this.entityId,
@@ -217,13 +217,13 @@ export class KeyboardDialog extends LitElement {
 	}
 
 	render() {
-		const entityId = (this.haAction.target?.entity_id ??
-			this.haAction.data?.entity_id ??
+		const entityId = (this.haAction?.target?.entity_id ??
+			this.haAction?.data?.entity_id ??
 			'') as string;
 		this.domain = entityId[0];
 
 		let textarea = html``;
-		switch (this.haAction.action) {
+		switch (this.haAction?.action) {
 			case 'search':
 				break;
 			case 'textbox':
