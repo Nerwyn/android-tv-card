@@ -38,7 +38,7 @@ export class KeyboardDialog extends LitElement {
 		let outKey: string;
 		let keyToKey: Record<string, string>;
 
-		if (inKey && inKey != 'Unidentified') {
+		if (['Backspace', 'Enter'].includes(inKey)) {
 			this.onKeyDownFired = true;
 			switch (this.haAction?.platform) {
 				case 'KODI':
@@ -100,6 +100,11 @@ export class KeyboardDialog extends LitElement {
 					break;
 			}
 		}
+	}
+
+	keyboardOnKeyUp(e: InputEvent) {
+		e.stopImmediatePropagation();
+		this.onKeyDownFired = false;
 	}
 
 	keyboardOnInput(e: InputEvent) {
@@ -425,6 +430,7 @@ export class KeyboardDialog extends LitElement {
 					placeholder="Type something..."
 					@input=${this.keyboardOnInput}
 					@keydown=${this.keyboardOnKeyDown}
+					@keyup=${this.keyboardOnKeyUp}
 					@paste=${this.keyboardOnPaste}
 				></textarea> `;
 				break;
