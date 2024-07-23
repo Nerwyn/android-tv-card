@@ -36,7 +36,8 @@ export class KeyboardDialog extends LitElement {
 		let outKey: string;
 		let keyToKey: Record<string, string>;
 
-		if (inKey) {
+		if (inKey && inKey != 'Unidentified') {
+			e.stopPropagation();
 			switch (this.haAction?.platform) {
 				case 'KODI':
 					break;
@@ -44,8 +45,6 @@ export class KeyboardDialog extends LitElement {
 					keyToKey = {
 						Backspace: 'backspace',
 						Enter: 'enter',
-						ArrowLeft: 'left',
-						ArrowRight: 'right',
 					};
 					outKey = keyToKey[inKey ?? ''];
 
@@ -59,10 +58,7 @@ export class KeyboardDialog extends LitElement {
 				case 'FIRE TV':
 					keyToKey = {
 						Backspace: '67',
-						Delete: '112',
 						Enter: '66',
-						ArrowLeft: '21',
-						ArrowRight: '22',
 					};
 					outKey = keyToKey[inKey ?? ''];
 
@@ -90,10 +86,7 @@ export class KeyboardDialog extends LitElement {
 				default:
 					keyToKey = {
 						Backspace: 'DEL',
-						Delete: 'FOWARD_DEL',
 						Enter: 'ENTER',
-						ArrowLeft: 'DPAD_LEFT',
-						ArrowRight: 'DPAD_RIGHT',
 					};
 					outKey = keyToKey[inKey ?? ''];
 					if (outKey) {
