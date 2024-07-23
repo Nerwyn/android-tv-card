@@ -314,7 +314,16 @@ export class BaseRemoteElement extends LitElement {
 			composed: true,
 			bubbles: true,
 		});
-		event.detail = this.deepRenderTemplate(action);
+		const renderedAction = this.deepRenderTemplate(action) as IAction;
+		if (renderedAction.platform == 'ROKU') {
+			const entityId = this.renderTemplate(
+				((action.target?.entity_id ??
+					action.data?.entity_id) as string) ?? '',
+			) as string;
+			const target = { entity_id: this.getRokuId(entityId, 'remote') };
+			renderedAction.target = target;
+		}
+		event.detail = renderedAction;
 		(
 			(this.getRootNode() as ShadowRoot).querySelector(
 				'keyboard-dialog',

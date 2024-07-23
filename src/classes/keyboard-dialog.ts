@@ -33,12 +33,8 @@ export class KeyboardDialog extends LitElement {
 					outKey = keyToKey[inKey ?? ''];
 
 					if (outKey) {
-						// TODO
 						this.hass.callService('remote', 'send_command', {
-							// entity_id: this.getRokuId(
-							// 	this._keyboardId,
-							// 	'remote',
-							// ),
+							entity_id: this.entityId,
 							command: outKey,
 						});
 					}
@@ -85,11 +81,10 @@ export class KeyboardDialog extends LitElement {
 					outKey = keyToKey[inKey ?? ''];
 
 					if (outKey) {
-						// this.hass.callService('remote', 'send_command', {
-						// 	entity_id: this.entityId,
-						// 	command: outKey,
-						// });
-						console.log(outKey);
+						this.hass.callService('remote', 'send_command', {
+							entity_id: this.entityId,
+							command: outKey,
+						});
 					}
 					break;
 			}
@@ -111,33 +106,31 @@ export class KeyboardDialog extends LitElement {
 					});
 					break;
 				case 'ROKU':
-					// TODO
-					// this.hass.callService('remote', 'send_command', {
-					// 	entity_id: this.getRokuId(this._keyboardId, 'remote'),
-					// 	command: `Lit_${text}`,
-					// });
+					this.hass.callService('remote', 'send_command', {
+						entity_id: this.entityId,
+						command: `Lit_${text}`,
+					});
 					break;
 				case 'FIRE TV':
 				case 'ANDROID TV':
 				default: {
-					// let domain: string;
-					// let service: string;
-					// switch (this.domain) {
-					// 	case 'remote':
-					// 		domain = 'remote';
-					// 		service = 'send_command';
-					// 		break;
-					// 	case 'media_player':
-					// 	default:
-					// 		domain = 'androidtv';
-					// 		service = 'adb_command';
-					// 		break;
-					// }
-					// this.hass.callService(domain, service, {
-					// 	entity_id: this.entityId,
-					// 	command: `input text "${text}"`,
-					// });
-					console.log(text);
+					let domain: string;
+					let service: string;
+					switch (this.domain) {
+						case 'remote':
+							domain = 'remote';
+							service = 'send_command';
+							break;
+						case 'media_player':
+						default:
+							domain = 'androidtv';
+							service = 'adb_command';
+							break;
+					}
+					this.hass.callService(domain, service, {
+						entity_id: this.entityId,
+						command: `input text "${text}"`,
+					});
 					break;
 				}
 			}
@@ -160,33 +153,31 @@ export class KeyboardDialog extends LitElement {
 					});
 					break;
 				case 'ROKU':
-					// TODO
-					// this.hass.callService('remote', 'send_command', {
-					// 	entity_id: this.getRokuId(this._keyboardId, 'remote'),
-					// 	command: `Lit_${text}`,
-					// });
+					this.hass.callService('remote', 'send_command', {
+						entity_id: this.entityId,
+						command: `Lit_${text}`,
+					});
 					break;
 				case 'FIRE TV':
 				case 'ANDROID TV':
 				default: {
-					// let domain: string;
-					// let service: string;
-					// switch (this.domain) {
-					// 	case 'remote':
-					// 		domain = 'remote';
-					// 		service = 'send_command';
-					// 		break;
-					// 	case 'media_player':
-					// 	default:
-					// 		domain = 'androidtv';
-					// 		service = 'adb_command';
-					// 		break;
-					// }
-					// this.hass.callService(domain, service, {
-					// 	entity_id: this.entityId,
-					// 	command: `input text "${text}"`,
-					// });
-					console.log(text);
+					let domain: string;
+					let service: string;
+					switch (this.domain) {
+						case 'remote':
+							domain = 'remote';
+							service = 'send_command';
+							break;
+						case 'media_player':
+						default:
+							domain = 'androidtv';
+							service = 'adb_command';
+							break;
+					}
+					this.hass.callService(domain, service, {
+						entity_id: this.entityId,
+						command: `input text "${text}"`,
+					});
 					break;
 				}
 			}
