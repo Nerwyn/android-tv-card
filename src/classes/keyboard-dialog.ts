@@ -186,6 +186,7 @@ export class KeyboardDialog extends LitElement {
 
 	showDialog(e: CustomEvent) {
 		this.haAction = e.detail;
+		console.log(this.haAction);
 		setTimeout(() => {
 			this.dialogOpen = true;
 		}, 500);
