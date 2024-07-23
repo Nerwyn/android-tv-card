@@ -27,7 +27,7 @@ export class KeyboardDialog extends LitElement {
 	keyboardOnKeyDown(e: KeyboardEvent) {
 		e.stopImmediatePropagation();
 
-		const inKey = e.key;
+		const inKey = e.code;
 		let outKey: string;
 		let keyToKey: Record<string, string>;
 		if (inKey) {
@@ -90,9 +90,6 @@ export class KeyboardDialog extends LitElement {
 						ArrowRight: 'DPAD_RIGHT',
 					};
 					outKey = keyToKey[inKey ?? ''];
-					console.log(inKey);
-					console.log(outKey);
-
 					if (outKey) {
 						this.hass.callService('remote', 'send_command', {
 							entity_id: this.haAction?.remote_id,
@@ -351,7 +348,7 @@ export class KeyboardDialog extends LitElement {
 					autocapitalize="off"
 					placeholder="Type something..."
 					@input=${this.keyboardOnInput}
-					@keyup=${this.keyboardOnKeyDown}
+					@keydown=${this.keyboardOnKeyDown}
 					@paste=${this.keyboardOnPaste}
 				></textarea> `;
 				break;
