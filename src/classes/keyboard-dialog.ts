@@ -13,7 +13,7 @@ export class KeyboardDialog extends LitElement {
 	entityId: string = '';
 	domain: string = '';
 
-	onKeyDown(e: KeyboardEvent) {
+	keyboardOnKeyDown(e: KeyboardEvent) {
 		e.stopImmediatePropagation();
 
 		const inKey = e.key;
@@ -96,7 +96,7 @@ export class KeyboardDialog extends LitElement {
 		// }
 	}
 
-	onInput(e: InputEvent) {
+	keyboardOnInput(e: InputEvent) {
 		e.stopImmediatePropagation();
 
 		const text = e.data;
@@ -144,7 +144,7 @@ export class KeyboardDialog extends LitElement {
 		// }
 	}
 
-	onPaste(e: ClipboardEvent) {
+	keyboardOnPaste(e: ClipboardEvent) {
 		e.stopImmediatePropagation();
 		e.preventDefault();
 
@@ -212,6 +212,11 @@ export class KeyboardDialog extends LitElement {
 			if (!isInDialog) {
 				(target as HTMLElement & Record<'close', () => void>).close();
 				this.dialogOpen = false;
+				const textarea = this.querySelector('textarea');
+				if (textarea) {
+					textarea.value = '';
+					textarea.blur();
+				}
 			}
 		}
 	}
@@ -236,6 +241,9 @@ export class KeyboardDialog extends LitElement {
 					autocomplete="off"
 					autocapitalize="off"
 					placeholder="Type something..."
+					@input=${this.keyboardOnInput}
+					@paste=${this.keyboardOnPaste}
+					@keydown=${this.keyboardOnKeyDown}
 				></textarea> `;
 				break;
 		}
