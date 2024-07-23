@@ -453,6 +453,7 @@ export class KeyboardDialog extends LitElement {
 				width: 85%;
 				display: block;
 				position: fixed;
+				margin-top: 5%;
 				z-index: 9;
 				border: none;
 				background: var(--ha-card-background);
@@ -472,7 +473,6 @@ export class KeyboardDialog extends LitElement {
 				width: 90%;
 				top: 5%;
 				left: 5%;
-				margin-top: 5%;
 				outline: none;
 				background: none;
 				border: none;
