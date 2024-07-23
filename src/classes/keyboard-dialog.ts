@@ -90,10 +90,10 @@ export class KeyboardDialog extends LitElement {
 						ArrowRight: 'DPAD_RIGHT',
 					};
 					outKey = keyToKey[inKey ?? ''];
+					console.log(inKey);
+					console.log(outKey);
 
 					if (outKey) {
-						console.log(outKey);
-						console.log(this.haAction);
 						this.hass.callService('remote', 'send_command', {
 							entity_id: this.haAction?.remote_id,
 							command: outKey,
@@ -140,6 +140,7 @@ export class KeyboardDialog extends LitElement {
 							service = 'adb_command';
 							break;
 					}
+					console.log(text);
 					this.hass.callService(domain, service, {
 						entity_id: this.haAction?.keyboard_id,
 						command: `input text "${text}"`,
