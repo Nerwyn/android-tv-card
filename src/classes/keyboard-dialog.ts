@@ -1,5 +1,5 @@
 import { LitElement, html, css } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { customElement, property } from 'lit/decorators.js';
 import { HomeAssistant } from 'custom-card-helpers';
 
 import { IAction } from '../models';
@@ -7,11 +7,11 @@ import { IAction } from '../models';
 @customElement('keyboard-dialog')
 export class KeyboardDialog extends LitElement {
 	@property() hass!: HomeAssistant;
-	@state() haAction?: IAction;
 	dialogOpen = false;
 
-	entityId: string = '';
-	domain: string = '';
+	haAction?: IAction;
+	entityId?: string;
+	domain?: string;
 
 	keyboardOnKeyDown(e: KeyboardEvent) {
 		e.stopImmediatePropagation();
@@ -186,7 +186,11 @@ export class KeyboardDialog extends LitElement {
 
 	showDialog(e: CustomEvent) {
 		this.haAction = e.detail;
-		console.log(this.haAction);
+		this.entityId = (this.haAction?.target?.entity_id ??
+			this.haAction?.data?.entity_id ??
+			'') as string;
+		this.domain = this.entityId.split('.')[0];
+
 		setTimeout(() => {
 			this.dialogOpen = true;
 		}, 500);
@@ -194,7 +198,7 @@ export class KeyboardDialog extends LitElement {
 	}
 
 	closeDialog(e: MouseEvent) {
-		const target = e.target as HTMLElement;
+		const target = e.target as HTMLDialogElement;
 		if (this.dialogOpen) {
 			const rect = target.getBoundingClientRect();
 			const isInDialog =
@@ -202,8 +206,13 @@ export class KeyboardDialog extends LitElement {
 				e.clientY <= rect.top + rect.height &&
 				rect.left <= e.clientX &&
 				e.clientX <= rect.left + rect.width;
+
 			if (!isInDialog) {
-				(target as HTMLElement & Record<'close', () => void>).close();
+				this.haAction = undefined;
+				this.entityId = undefined;
+				this.domain = undefined;
+
+				target.close();
 				this.dialogOpen = false;
 				const textarea = target.querySelector('textarea');
 				if (textarea) {
@@ -215,11 +224,6 @@ export class KeyboardDialog extends LitElement {
 	}
 
 	render() {
-		const entityId = (this.haAction?.target?.entity_id ??
-			this.haAction?.data?.entity_id ??
-			'') as string;
-		this.domain = entityId[0];
-
 		let textarea = html``;
 		switch (this.haAction?.action) {
 			case 'search':
