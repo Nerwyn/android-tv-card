@@ -381,6 +381,7 @@ export class KeyboardDialog extends LitElement {
 			'selectionchange',
 			this.keyboardSelectionChange,
 		);
+		this.textarea.focus();
 		setTimeout(() => {
 			this.dialogOpen = true;
 		}, 500);
