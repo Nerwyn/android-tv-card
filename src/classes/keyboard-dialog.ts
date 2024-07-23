@@ -111,11 +111,7 @@ export class KeyboardDialog extends LitElement {
 
 		const inputType = e.inputType ?? '';
 		const text = e.data ?? '';
-		if (
-			text &&
-			inputType == 'insertText' &&
-			(!this.onKeyDownFired || (this.textarea?.value?.length ?? 0) <= 1)
-		) {
+		if (text && inputType == 'insertText') {
 			switch (this.haAction?.platform) {
 				case 'KODI':
 					this.hass.callService('kodi', 'call_method', {
@@ -154,7 +150,7 @@ export class KeyboardDialog extends LitElement {
 					break;
 				}
 			}
-		} else {
+		} else if (!this.onKeyDownFired) {
 			let inputTypeToKey: Record<string, string>;
 			let key: string;
 			switch (this.haAction?.platform) {
