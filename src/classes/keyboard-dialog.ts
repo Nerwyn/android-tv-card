@@ -26,6 +26,7 @@ export class KeyboardDialog extends LitElement {
 
 	keyboardOnKeyDown(e: KeyboardEvent) {
 		e.stopImmediatePropagation();
+		console.log(e);
 
 		const inKey = e.code;
 		let outKey: string;
