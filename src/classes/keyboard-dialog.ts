@@ -27,7 +27,7 @@ export class KeyboardDialog extends LitElement {
 		return this.haAction?.keyboard_id;
 	}
 
-	keyboardOnSelectionChange(e: Event) {
+	keyboardSelectionChange(e: Event) {
 		e.stopImmediatePropagation();
 		this.textarea!.selectionStart = this.textarea!.value.length;
 		this.textarea!.selectionEnd = this.textarea!.value.length;
@@ -377,6 +377,10 @@ export class KeyboardDialog extends LitElement {
 		this.textarea = this.shadowRoot?.querySelector(
 			'textarea',
 		) as HTMLTextAreaElement;
+		this.textarea.addEventListener(
+			'selectionchange',
+			this.keyboardSelectionChange,
+		);
 		setTimeout(() => {
 			this.dialogOpen = true;
 		}, 500);
@@ -395,6 +399,10 @@ export class KeyboardDialog extends LitElement {
 
 			if (!isInDialog) {
 				target.close();
+				this.textarea?.removeEventListener(
+					'selectionchange',
+					this.keyboardSelectionChange,
+				);
 				this.haAction = undefined;
 				this.domain = undefined;
 				this.textarea = undefined;
@@ -426,7 +434,6 @@ export class KeyboardDialog extends LitElement {
 					@input=${this.keyboardOnInput}
 					@keydown=${this.keyboardOnKeyDown}
 					@paste=${this.keyboardOnPaste}
-					@selectionchange=${this.keyboardOnSelectionChange}
 				></textarea> `;
 				break;
 		}
@@ -465,6 +472,7 @@ export class KeyboardDialog extends LitElement {
 				width: 90%;
 				top: 5%;
 				left: 5%;
+				margin-top: 5%;
 				outline: none;
 				background: none;
 				border: none;
