@@ -10,7 +10,6 @@ export class KeyboardDialog extends LitElement {
 	dialogOpen = false;
 	haAction?: IAction;
 	domain?: string;
-	textBuffer?: string;
 	textarea?: HTMLTextAreaElement;
 
 	getRokuId(domain: 'remote' | 'media_player') {
@@ -33,18 +32,9 @@ export class KeyboardDialog extends LitElement {
 		this.textarea!.selectionStart = this.textarea!.value.length;
 		this.textarea!.selectionEnd = this.textarea!.value.length;
 
-		let inKey = e.code;
+		let inKey = e.key;
 		let outKey: string;
 		let keyToKey: Record<string, string>;
-
-		if (!inKey) {
-			if (
-				this.textarea?.value?.length ==
-				(this.textBuffer?.length ?? 1) - 1
-			) {
-				inKey = 'Backspace';
-			}
-		}
 
 		if (inKey) {
 			switch (this.haAction?.platform) {
@@ -115,7 +105,6 @@ export class KeyboardDialog extends LitElement {
 					break;
 			}
 		}
-		this.textBuffer = this.textarea?.value ?? '';
 	}
 
 	keyboardOnInput(e: InputEvent) {
@@ -125,8 +114,9 @@ export class KeyboardDialog extends LitElement {
 		this.textarea!.selectionStart = this.textarea!.value.length;
 		this.textarea!.selectionEnd = this.textarea!.value.length;
 
-		const text = e.data;
-		if (text) {
+		const inputType = e.inputType ?? '';
+		const text = e.data ?? '';
+		if (text && inputType == 'insertText') {
 			switch (this.haAction?.platform) {
 				case 'KODI':
 					this.hass.callService('kodi', 'call_method', {
@@ -165,8 +155,69 @@ export class KeyboardDialog extends LitElement {
 					break;
 				}
 			}
+		} else {
+			let inputTypeToKey: Record<string, string>;
+			let key: string;
+			switch (this.haAction?.platform) {
+				case 'KODI':
+					break;
+				case 'ROKU':
+					inputTypeToKey = {
+						deleteContentBackward: 'backspace',
+						insertLineBreak: 'enter',
+					};
+					key = inputTypeToKey[inputType ?? ''];
+
+					if (key) {
+						this.hass.callService('remote', 'send_command', {
+							entity_id: this.getRokuId('remote'),
+							command: key,
+						});
+					}
+					break;
+				case 'FIRE TV':
+					inputTypeToKey = {
+						deleteContentBackward: '67',
+						insertLineBreak: '66',
+					};
+					key = inputTypeToKey[inputType ?? ''];
+
+					if (key) {
+						let domain: string;
+						let service: string;
+						switch (this.haAction?.keyboard_id) {
+							case 'remote':
+								domain = 'remote';
+								service = 'send_command';
+								break;
+							case 'media_player':
+							default:
+								domain = 'androidtv';
+								service = 'adb_command';
+								break;
+						}
+						this.hass.callService(domain, service, {
+							entity_id: this.haAction?.keyboard_id,
+							command: `input keyevent ${key}`,
+						});
+					}
+					break;
+				case 'ANDROID TV':
+				default:
+					inputTypeToKey = {
+						deleteContentBackward: 'DEL',
+						insertLineBreak: 'ENTER',
+					};
+					key = inputTypeToKey[inputType ?? ''];
+					if (key) {
+						this.hass.callService('remote', 'send_command', {
+							entity_id: this.haAction?.remote_id,
+							command: key,
+						});
+					}
+					break;
+			}
 		}
-		this.textBuffer = this.textarea?.value ?? '';
 	}
 
 	keyboardOnPaste(e: ClipboardEvent) {
@@ -327,7 +378,6 @@ export class KeyboardDialog extends LitElement {
 	showDialog(e: CustomEvent) {
 		this.haAction = e.detail;
 		this.domain = (this.haAction?.keyboard_id ?? '').split('.')[0];
-		this.textBuffer = '';
 		this.textarea = this.shadowRoot?.querySelector(
 			'textarea',
 		) as HTMLTextAreaElement;
@@ -351,7 +401,6 @@ export class KeyboardDialog extends LitElement {
 				target.close();
 				this.haAction = undefined;
 				this.domain = undefined;
-				this.textBuffer = undefined;
 				this.textarea = undefined;
 				this.dialogOpen = false;
 				const textarea = target.querySelector('textarea');
@@ -379,7 +428,6 @@ export class KeyboardDialog extends LitElement {
 					autocapitalize="off"
 					placeholder="Type something..."
 					@input=${this.keyboardOnInput}
-					@keydown=${this.keyboardOnKeyDown}
 					@paste=${this.keyboardOnPaste}
 				></textarea> `;
 				break;
