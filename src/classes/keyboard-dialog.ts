@@ -17,131 +17,131 @@ export class KeyboardDialog extends LitElement {
 		e.stopImmediatePropagation();
 
 		const inKey = e.key;
-		console.log(inKey);
-		// let outKey: string;
-		// let keyToKey: Record<string, string>;
-		// if (inKey) {
-		// 	switch (this.haAction?.platform) {
-		// 		case 'KODI':
-		// 			break;
-		// 		case 'ROKU':
-		// 			keyToKey = {
-		// 				Backspace: 'backspace',
-		// 				Enter: 'enter',
-		// 				ArrowLeft: 'left',
-		// 				ArrowRight: 'right',
-		// 			};
-		// 			outKey = keyToKey[inKey ?? ''];
+		let outKey: string;
+		let keyToKey: Record<string, string>;
+		if (inKey) {
+			switch (this.haAction?.platform) {
+				case 'KODI':
+					break;
+				case 'ROKU':
+					keyToKey = {
+						Backspace: 'backspace',
+						Enter: 'enter',
+						ArrowLeft: 'left',
+						ArrowRight: 'right',
+					};
+					outKey = keyToKey[inKey ?? ''];
 
-		// 			if (outKey) {
-		// 				// TODO
-		// 				this.hass.callService('remote', 'send_command', {
-		// 					// entity_id: this.getRokuId(
-		// 					// 	this._keyboardId,
-		// 					// 	'remote',
-		// 					// ),
-		// 					command: outKey,
-		// 				});
-		// 			}
-		// 			break;
-		// 		case 'FIRE TV':
-		// 			keyToKey = {
-		// 				Backspace: '67',
-		// 				Delete: '112',
-		// 				Enter: '66',
-		// 				ArrowLeft: '21',
-		// 				ArrowRight: '22',
-		// 			};
-		// 			outKey = keyToKey[inKey ?? ''];
+					if (outKey) {
+						// TODO
+						this.hass.callService('remote', 'send_command', {
+							// entity_id: this.getRokuId(
+							// 	this._keyboardId,
+							// 	'remote',
+							// ),
+							command: outKey,
+						});
+					}
+					break;
+				case 'FIRE TV':
+					keyToKey = {
+						Backspace: '67',
+						Delete: '112',
+						Enter: '66',
+						ArrowLeft: '21',
+						ArrowRight: '22',
+					};
+					outKey = keyToKey[inKey ?? ''];
 
-		// 			if (outKey) {
-		// 				let domain: string;
-		// 				let service: string;
-		// 				switch (this.entityId) {
-		// 					case 'remote':
-		// 						domain = 'remote';
-		// 						service = 'send_command';
-		// 						break;
-		// 					case 'media_player':
-		// 					default:
-		// 						domain = 'androidtv';
-		// 						service = 'adb_command';
-		// 						break;
-		// 				}
-		// 				this.hass.callService(domain, service, {
-		// 					entity_id: this.entityId,
-		// 					command: `input keyevent ${outKey}`,
-		// 				});
-		// 			}
-		// 			break;
-		// 		case 'ANDROID TV':
-		// 		default:
-		// 			keyToKey = {
-		// 				Backspace: 'DEL',
-		// 				Delete: 'FOWARD_DEL',
-		// 				Enter: 'ENTER',
-		// 				ArrowLeft: 'DPAD_LEFT',
-		// 				ArrowRight: 'DPAD_RIGHT',
-		// 			};
-		// 			outKey = keyToKey[inKey ?? ''];
+					if (outKey) {
+						let domain: string;
+						let service: string;
+						switch (this.entityId) {
+							case 'remote':
+								domain = 'remote';
+								service = 'send_command';
+								break;
+							case 'media_player':
+							default:
+								domain = 'androidtv';
+								service = 'adb_command';
+								break;
+						}
+						this.hass.callService(domain, service, {
+							entity_id: this.entityId,
+							command: `input keyevent ${outKey}`,
+						});
+					}
+					break;
+				case 'ANDROID TV':
+				default:
+					keyToKey = {
+						Backspace: 'DEL',
+						Delete: 'FOWARD_DEL',
+						Enter: 'ENTER',
+						ArrowLeft: 'DPAD_LEFT',
+						ArrowRight: 'DPAD_RIGHT',
+					};
+					outKey = keyToKey[inKey ?? ''];
 
-		// 			if (outKey) {
-		// 				this.hass.callService('remote', 'send_command', {
-		// 					entity_id: this.entityId,
-		// 					command: outKey,
-		// 				});
-		// 			}
-		// 			break;
-		// 	}
-		// }
+					if (outKey) {
+						// this.hass.callService('remote', 'send_command', {
+						// 	entity_id: this.entityId,
+						// 	command: outKey,
+						// });
+						console.log(outKey);
+					}
+					break;
+			}
+		}
 	}
 
 	keyboardOnInput(e: InputEvent) {
 		e.stopImmediatePropagation();
 
 		const text = e.data;
-		console.log(text);
-		// if (text) {
-		// 	switch (this.haAction?.platform) {
-		// 		case 'KODI':
-		// 			this.hass.callService('kodi', 'call_method', {
-		// 				entity_id: this.entityId,
-		// 				method: 'Input.SendText',
-		// 				text: text,
-		// 				done: false,
-		// 			});
-		// 			break;
-		// 		case 'ROKU':
-		// 			// TODO
-		// 			// this.hass.callService('remote', 'send_command', {
-		// 			// 	entity_id: this.getRokuId(this._keyboardId, 'remote'),
-		// 			// 	command: `Lit_${text}`,
-		// 			// });
-		// 			break;
-		// 		case 'FIRE TV':
-		// 		case 'ANDROID TV':
-		// 		default: {
-		// 			let domain: string;
-		// 			let service: string;
-		// 			switch (this.domain) {
-		// 				case 'remote':
-		// 					domain = 'remote';
-		// 					service = 'send_command';
-		// 					break;
-		// 				case 'media_player':
-		// 				default:
-		// 					domain = 'androidtv';
-		// 					service = 'adb_command';
-		// 					break;
-		// 			}
-		// 			this.hass.callService(domain, service, {
-		// 				entity_id: this.entityId,
-		// 				command: `input text "${text}"`,
-		// 			});
-		// 			break;
-		// 		}
-		// 	}
-		// }
+		if (text) {
+			switch (this.haAction?.platform) {
+				case 'KODI':
+					this.hass.callService('kodi', 'call_method', {
+						entity_id: this.entityId,
+						method: 'Input.SendText',
+						text: text,
+						done: false,
+					});
+					break;
+				case 'ROKU':
+					// TODO
+					// this.hass.callService('remote', 'send_command', {
+					// 	entity_id: this.getRokuId(this._keyboardId, 'remote'),
+					// 	command: `Lit_${text}`,
+					// });
+					break;
+				case 'FIRE TV':
+				case 'ANDROID TV':
+				default: {
+					// let domain: string;
+					// let service: string;
+					// switch (this.domain) {
+					// 	case 'remote':
+					// 		domain = 'remote';
+					// 		service = 'send_command';
+					// 		break;
+					// 	case 'media_player':
+					// 	default:
+					// 		domain = 'androidtv';
+					// 		service = 'adb_command';
+					// 		break;
+					// }
+					// this.hass.callService(domain, service, {
+					// 	entity_id: this.entityId,
+					// 	command: `input text "${text}"`,
+					// });
+					console.log(text);
+					break;
+				}
+			}
+		}
 	}
 
 	keyboardOnPaste(e: ClipboardEvent) {
@@ -149,48 +149,48 @@ export class KeyboardDialog extends LitElement {
 		e.preventDefault();
 
 		const text = e.clipboardData?.getData('Text');
-		console.log(text);
-		// if (text) {
-		// 	switch (this.haAction?.platform) {
-		// 		case 'KODI':
-		// 			this.hass.callService('kodi', 'call_method', {
-		// 				entity_id: this.entityId,
-		// 				method: 'Input.SendText',
-		// 				text: text,
-		// 				done: false,
-		// 			});
-		// 			break;
-		// 		case 'ROKU':
-		// 			// TODO
-		// 			// this.hass.callService('remote', 'send_command', {
-		// 			// 	entity_id: this.getRokuId(this._keyboardId, 'remote'),
-		// 			// 	command: `Lit_${text}`,
-		// 			// });
-		// 			break;
-		// 		case 'FIRE TV':
-		// 		case 'ANDROID TV':
-		// 		default: {
-		// 			let domain: string;
-		// 			let service: string;
-		// 			switch (this.domain) {
-		// 				case 'remote':
-		// 					domain = 'remote';
-		// 					service = 'send_command';
-		// 					break;
-		// 				case 'media_player':
-		// 				default:
-		// 					domain = 'androidtv';
-		// 					service = 'adb_command';
-		// 					break;
-		// 			}
-		// 			this.hass.callService(domain, service, {
-		// 				entity_id: this.entityId,
-		// 				command: `input text "${text}"`,
-		// 			});
-		// 			break;
-		// 		}
-		// 	}
-		// }
+		if (text) {
+			switch (this.haAction?.platform) {
+				case 'KODI':
+					this.hass.callService('kodi', 'call_method', {
+						entity_id: this.entityId,
+						method: 'Input.SendText',
+						text: text,
+						done: false,
+					});
+					break;
+				case 'ROKU':
+					// TODO
+					// this.hass.callService('remote', 'send_command', {
+					// 	entity_id: this.getRokuId(this._keyboardId, 'remote'),
+					// 	command: `Lit_${text}`,
+					// });
+					break;
+				case 'FIRE TV':
+				case 'ANDROID TV':
+				default: {
+					// let domain: string;
+					// let service: string;
+					// switch (this.domain) {
+					// 	case 'remote':
+					// 		domain = 'remote';
+					// 		service = 'send_command';
+					// 		break;
+					// 	case 'media_player':
+					// 	default:
+					// 		domain = 'androidtv';
+					// 		service = 'adb_command';
+					// 		break;
+					// }
+					// this.hass.callService(domain, service, {
+					// 	entity_id: this.entityId,
+					// 	command: `input text "${text}"`,
+					// });
+					console.log(text);
+					break;
+				}
+			}
+		}
 	}
 
 	showDialog(_e: CustomEvent) {
@@ -213,6 +213,7 @@ export class KeyboardDialog extends LitElement {
 				(target as HTMLElement & Record<'close', () => void>).close();
 				this.dialogOpen = false;
 				const textarea = this.querySelector('textarea');
+				console.log(textarea);
 				if (textarea) {
 					textarea.value = '';
 					textarea.blur();
@@ -241,9 +242,8 @@ export class KeyboardDialog extends LitElement {
 					autocomplete="off"
 					autocapitalize="off"
 					placeholder="Type something..."
-					@input=${this.keyboardOnInput}
-					@paste=${this.keyboardOnPaste}
 					@keydown=${this.keyboardOnKeyDown}
+					@paste=${this.keyboardOnPaste}
 				></textarea> `;
 				break;
 		}
