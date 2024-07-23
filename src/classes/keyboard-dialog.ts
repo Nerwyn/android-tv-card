@@ -102,11 +102,6 @@ export class KeyboardDialog extends LitElement {
 		}
 	}
 
-	keyboardOnKeyUp(e: InputEvent) {
-		e.stopImmediatePropagation();
-		this.onKeyDownFired = false;
-	}
-
 	keyboardOnInput(e: InputEvent) {
 		e.stopImmediatePropagation();
 		console.log(e);
@@ -116,7 +111,11 @@ export class KeyboardDialog extends LitElement {
 
 		const inputType = e.inputType ?? '';
 		const text = e.data ?? '';
-		if (text && inputType == 'insertText' && !this.onKeyDownFired) {
+		if (
+			text &&
+			inputType == 'insertText' &&
+			(!this.onKeyDownFired || (this.textarea?.value?.length ?? 0) <= 1)
+		) {
 			switch (this.haAction?.platform) {
 				case 'KODI':
 					this.hass.callService('kodi', 'call_method', {
@@ -430,7 +429,6 @@ export class KeyboardDialog extends LitElement {
 					placeholder="Type something..."
 					@input=${this.keyboardOnInput}
 					@keydown=${this.keyboardOnKeyDown}
-					@keyup=${this.keyboardOnKeyUp}
 					@paste=${this.keyboardOnPaste}
 				></textarea> `;
 				break;
