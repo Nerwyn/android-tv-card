@@ -7,10 +7,12 @@ import { IAction } from '../models';
 @customElement('keyboard-dialog')
 export class KeyboardDialog extends LitElement {
 	@property() hass!: HomeAssistant;
-	dialogOpen = false;
 	haAction?: IAction;
 	domain?: string;
+
+	dialogOpen = false;
 	textarea?: HTMLTextAreaElement;
+	onKeyDownFired: boolean = false;
 
 	getRokuId(domain: 'remote' | 'media_player') {
 		if ((this.haAction?.keyboard_id ?? '').split('.')[0] != domain) {
@@ -37,7 +39,7 @@ export class KeyboardDialog extends LitElement {
 		let keyToKey: Record<string, string>;
 
 		if (inKey && inKey != 'Unidentified') {
-			e.preventDefault();
+			this.onKeyDownFired = true;
 			switch (this.haAction?.platform) {
 				case 'KODI':
 					break;
@@ -109,7 +111,7 @@ export class KeyboardDialog extends LitElement {
 
 		const inputType = e.inputType ?? '';
 		const text = e.data ?? '';
-		if (text && inputType == 'insertText') {
+		if (text && inputType == 'insertText' && !this.onKeyDownFired) {
 			switch (this.haAction?.platform) {
 				case 'KODI':
 					this.hass.callService('kodi', 'call_method', {
@@ -211,6 +213,7 @@ export class KeyboardDialog extends LitElement {
 					break;
 			}
 		}
+		this.onKeyDownFired = false;
 	}
 
 	keyboardOnPaste(e: ClipboardEvent) {
