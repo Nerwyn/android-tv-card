@@ -12,6 +12,7 @@ import {
 	IElementConfig,
 	IAction,
 	ActionType,
+	Platform,
 } from '../models';
 import { getDeepKeys, deepGet, deepSet } from '../utils';
 
@@ -131,11 +132,7 @@ export class BaseRemoteElement extends LitElement {
 					this.fireDomEvent(action);
 					break;
 				case 'textbox':
-					this.textBox(action);
-					break;
 				case 'search':
-					this.search(action);
-					break;
 				case 'keyboard':
 					this.keyboard(action);
 					break;
@@ -310,19 +307,26 @@ export class BaseRemoteElement extends LitElement {
 	}
 
 	keyboard(action: IAction) {
+		const rAction = this.deepRenderTemplate(action) as IAction;
+		const entityId = (rAction.keyboardId ??
+			rAction.remoteId ??
+			rAction.mediaPlayerId ??
+			'') as string;
+		rAction.keyboardId = rAction.keyboardId ?? entityId;
+		rAction.remoteId =
+			rAction.remoteId ?? entityId.startsWith('remote.')
+				? entityId
+				: undefined;
+		rAction.mediaPlayerId =
+			rAction.mediaPlayerId ?? entityId.startsWith('media_player.')
+				? entityId
+				: undefined;
+		rAction.platform = (rAction.platform ?? '').toUpperCase() as Platform;
+
 		const event = new Event('keyboard-dialog-open', {
 			composed: true,
 			bubbles: true,
 		});
-		const rAction = this.deepRenderTemplate(action) as IAction;
-		if (rAction.platform == 'ROKU') {
-			const entityId = this.renderTemplate(
-				((rAction.target?.entity_id ??
-					rAction.data?.entity_id) as string) ?? '',
-			) as string;
-			const target = { entity_id: this.getRokuId(entityId, 'remote') };
-			rAction.target = target;
-		}
 		event.detail = rAction;
 		(
 			(this.getRootNode() as ShadowRoot).querySelector(
@@ -331,136 +335,6 @@ export class BaseRemoteElement extends LitElement {
 		).shadowRoot
 			?.querySelector('dialog')
 			?.dispatchEvent(event);
-	}
-
-	textBox(action: IAction) {
-		const entityId = this.renderTemplate(
-			((action.target?.entity_id ?? action.data?.entity_id) as string) ??
-				'',
-		) as string;
-		const platform = (
-			this.renderTemplate(action.platform ?? '') as string
-		).toUpperCase();
-
-		if (entityId) {
-			const text = prompt('Text Input: ');
-			if (text) {
-				switch (platform) {
-					case 'KODI':
-						this.hass.callService('kodi', 'call_method', {
-							entity_id: entityId,
-							method: 'Input.SendText',
-							text: text,
-							done: false,
-						});
-						break;
-					case 'ROKU':
-						this.hass.callService('remote', 'send_command', {
-							entity_id: this.getRokuId(entityId, 'remote'),
-							command: `Lit_${text}`,
-						});
-						break;
-					case 'FIRE TV':
-					case 'ANDROID TV':
-					default: {
-						let domain: string;
-						let service: string;
-						switch (entityId.split('.')[0]) {
-							case 'remote':
-								domain = 'remote';
-								service = 'send_command';
-								break;
-							case 'media_player':
-							default:
-								domain = 'androidtv';
-								service = 'adb_command';
-								break;
-						}
-						console.log(entityId);
-						console.log(domain);
-						console.log(service);
-						this.hass.callService(domain, service, {
-							entity_id: entityId,
-							command: `input text "${text}"`,
-						});
-						break;
-					}
-				}
-			}
-		}
-	}
-
-	search(action: IAction) {
-		const entityId = this.renderTemplate(
-			((action.target?.entity_id ?? action.data?.entity_id) as string) ??
-				'',
-		) as string;
-		const platform = (
-			this.renderTemplate(action.platform ?? '') as string
-		).toUpperCase();
-
-		if (entityId) {
-			let promptText: string;
-			switch (platform) {
-				case 'KODI':
-					this.hass.callService('kodi', 'call_method', {
-						entity_id: entityId,
-						method: 'Addons.ExecuteAddon',
-						addonid: 'script.globalsearch',
-					});
-				// fall through
-				case 'ROKU':
-				case 'FIRE TV':
-					promptText = 'Global Search: ';
-					break;
-				case 'ANDROID TV':
-				default:
-					promptText = 'Google Assistant Search: ';
-					break;
-			}
-
-			const text = prompt(promptText);
-			if (text) {
-				switch (platform) {
-					case 'KODI':
-						this.hass.callService('kodi', 'call_method', {
-							entity_id: entityId,
-							method: 'Input.SendText',
-							text: text,
-							done: true,
-						});
-						break;
-					case 'ROKU':
-						this.hass.callService('roku', 'search', {
-							entity_id: this.getRokuId(entityId, 'media_player'),
-							keyword: text,
-						});
-						break;
-					case 'FIRE TV':
-					case 'ANDROID TV':
-					default: {
-						let domain: string;
-						let service: string;
-						switch (entityId.split('.')[0]) {
-							case 'remote':
-								domain = 'remote';
-								service = 'send_command';
-								break;
-							case 'media_player':
-							default:
-								domain = 'androidtv';
-								service = 'adb_command';
-								break;
-						}
-						this.hass.callService(domain, service, {
-							entity_id: entityId,
-							command: `am start -a "android.search.action.GLOBAL_SEARCH" --es query "${text}"`,
-						});
-						break;
-					}
-				}
-			}
-		}
 	}
 
 	fireDomEvent(action: IAction) {
@@ -876,22 +750,6 @@ export class BaseRemoteElement extends LitElement {
 			e.preventDefault();
 			e.stopPropagation();
 			return false;
-		}
-	}
-
-	getRokuId(entityId: string, domain: 'remote' | 'media_player') {
-		if (entityId.split('.')[0] != domain) {
-			switch (domain) {
-				case 'media_player':
-					return this.renderTemplate(
-						this.mediaPlayerId as string,
-					) as string;
-				case 'remote':
-				default:
-					return this.renderTemplate(
-						this.remoteId as string,
-					) as string;
-			}
 		}
 	}
 

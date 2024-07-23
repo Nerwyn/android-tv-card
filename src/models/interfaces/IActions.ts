@@ -55,9 +55,12 @@ export interface IBrowserMod {
 export interface IAction {
 	action: Action;
 
+	platform?: Platform;
 	key?: string;
 	source?: string;
-	platform?: Platform;
+	keyboardId?: string;
+	remoteId?: string;
+	mediaPlayerId?: string;
 
 	service?: string;
 	data?: IData;

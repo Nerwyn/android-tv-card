@@ -8,10 +8,21 @@ import { IAction } from '../models';
 export class KeyboardDialog extends LitElement {
 	@property() hass!: HomeAssistant;
 	dialogOpen = false;
-
 	haAction?: IAction;
-	entityId?: string;
 	domain?: string;
+
+	getRokuId(domain: 'remote' | 'media_player') {
+		if ((this.haAction?.keyboardId ?? '').split('.')[0] != domain) {
+			switch (domain) {
+				case 'media_player':
+					return this.haAction?.mediaPlayerId;
+				case 'remote':
+				default:
+					return this.haAction?.remoteId;
+			}
+		}
+		return this.haAction?.keyboardId;
+	}
 
 	keyboardOnKeyDown(e: KeyboardEvent) {
 		e.stopImmediatePropagation();
@@ -34,7 +45,7 @@ export class KeyboardDialog extends LitElement {
 
 					if (outKey) {
 						this.hass.callService('remote', 'send_command', {
-							entity_id: this.entityId,
+							entity_id: this.getRokuId('remote'),
 							command: outKey,
 						});
 					}
@@ -52,7 +63,7 @@ export class KeyboardDialog extends LitElement {
 					if (outKey) {
 						let domain: string;
 						let service: string;
-						switch (this.entityId) {
+						switch (this.haAction?.keyboardId) {
 							case 'remote':
 								domain = 'remote';
 								service = 'send_command';
@@ -64,7 +75,7 @@ export class KeyboardDialog extends LitElement {
 								break;
 						}
 						this.hass.callService(domain, service, {
-							entity_id: this.entityId,
+							entity_id: this.haAction?.keyboardId,
 							command: `input keyevent ${outKey}`,
 						});
 					}
@@ -82,7 +93,7 @@ export class KeyboardDialog extends LitElement {
 
 					if (outKey) {
 						this.hass.callService('remote', 'send_command', {
-							entity_id: this.entityId,
+							entity_id: this.haAction?.remoteId,
 							command: outKey,
 						});
 					}
@@ -99,7 +110,7 @@ export class KeyboardDialog extends LitElement {
 			switch (this.haAction?.platform) {
 				case 'KODI':
 					this.hass.callService('kodi', 'call_method', {
-						entity_id: this.entityId,
+						entity_id: this.haAction?.keyboardId,
 						method: 'Input.SendText',
 						text: text,
 						done: false,
@@ -107,7 +118,7 @@ export class KeyboardDialog extends LitElement {
 					break;
 				case 'ROKU':
 					this.hass.callService('remote', 'send_command', {
-						entity_id: this.entityId,
+						entity_id: this.haAction?.keyboardId,
 						command: `Lit_${text}`,
 					});
 					break;
@@ -128,7 +139,7 @@ export class KeyboardDialog extends LitElement {
 							break;
 					}
 					this.hass.callService(domain, service, {
-						entity_id: this.entityId,
+						entity_id: this.haAction?.keyboardId,
 						command: `input text "${text}"`,
 					});
 					break;
@@ -146,7 +157,7 @@ export class KeyboardDialog extends LitElement {
 			switch (this.haAction?.platform) {
 				case 'KODI':
 					this.hass.callService('kodi', 'call_method', {
-						entity_id: this.entityId,
+						entity_id: this.haAction?.keyboardId,
 						method: 'Input.SendText',
 						text: text,
 						done: false,
@@ -154,7 +165,7 @@ export class KeyboardDialog extends LitElement {
 					break;
 				case 'ROKU':
 					this.hass.callService('remote', 'send_command', {
-						entity_id: this.entityId,
+						entity_id: this.haAction?.keyboardId,
 						command: `Lit_${text}`,
 					});
 					break;
@@ -175,8 +186,113 @@ export class KeyboardDialog extends LitElement {
 							break;
 					}
 					this.hass.callService(domain, service, {
-						entity_id: this.entityId,
+						entity_id: this.haAction?.keyboardId,
 						command: `input text "${text}"`,
+					});
+					break;
+				}
+			}
+		}
+	}
+
+	textBox(_e: InputEvent) {
+		const text = ''; // TODO
+		switch (this.haAction?.platform) {
+			case 'KODI':
+				this.hass.callService('kodi', 'call_method', {
+					entity_id: this.haAction?.keyboardId,
+					method: 'Input.SendText',
+					text: text,
+					done: false,
+				});
+				break;
+			case 'ROKU':
+				this.hass.callService('remote', 'send_command', {
+					entity_id: this.getRokuId('remote'),
+					command: `Lit_${text}`,
+				});
+				break;
+			case 'FIRE TV':
+			case 'ANDROID TV':
+			default: {
+				let domain: string;
+				let service: string;
+				switch (this.domain) {
+					case 'remote':
+						domain = 'remote';
+						service = 'send_command';
+						break;
+					case 'media_player':
+					default:
+						domain = 'androidtv';
+						service = 'adb_command';
+						break;
+				}
+				this.hass.callService(domain, service, {
+					entity_id: this.haAction?.keyboardId,
+					command: `input text "${text}"`,
+				});
+				break;
+			}
+		}
+	}
+
+	search(_e: InputEvent) {
+		let promptText: string;
+		switch (this.haAction?.platform) {
+			case 'KODI':
+				this.hass.callService('kodi', 'call_method', {
+					entity_id: this.haAction?.keyboardId,
+					method: 'Addons.ExecuteAddon',
+					addonid: 'script.globalsearch',
+				});
+			// fall through
+			case 'ROKU':
+			case 'FIRE TV':
+				promptText = 'Global Search: ';
+				break;
+			case 'ANDROID TV':
+			default:
+				promptText = 'Google Assistant Search: ';
+				break;
+		}
+
+		const text = prompt(promptText);
+		if (text) {
+			switch (this.haAction?.platform) {
+				case 'KODI':
+					this.hass.callService('kodi', 'call_method', {
+						entity_id: this.haAction?.keyboardId,
+						method: 'Input.SendText',
+						text: text,
+						done: true,
+					});
+					break;
+				case 'ROKU':
+					this.hass.callService('roku', 'search', {
+						entity_id: this.getRokuId('media_player'),
+						keyword: text,
+					});
+					break;
+				case 'FIRE TV':
+				case 'ANDROID TV':
+				default: {
+					let domain: string;
+					let service: string;
+					switch (this.domain) {
+						case 'remote':
+							domain = 'remote';
+							service = 'send_command';
+							break;
+						case 'media_player':
+						default:
+							domain = 'androidtv';
+							service = 'adb_command';
+							break;
+					}
+					this.hass.callService(domain, service, {
+						entity_id: this.haAction?.keyboardId,
+						command: `am start -a "android.search.action.GLOBAL_SEARCH" --es query "${text}"`,
 					});
 					break;
 				}
@@ -186,11 +302,7 @@ export class KeyboardDialog extends LitElement {
 
 	showDialog(e: CustomEvent) {
 		this.haAction = e.detail;
-		this.entityId = (this.haAction?.target?.entity_id ??
-			this.haAction?.data?.entity_id ??
-			'') as string;
-		this.domain = this.entityId.split('.')[0];
-
+		this.domain = (this.haAction?.keyboardId ?? '').split('.')[0];
 		setTimeout(() => {
 			this.dialogOpen = true;
 		}, 500);
@@ -208,11 +320,9 @@ export class KeyboardDialog extends LitElement {
 				e.clientX <= rect.left + rect.width;
 
 			if (!isInDialog) {
-				this.haAction = undefined;
-				this.entityId = undefined;
-				this.domain = undefined;
-
 				target.close();
+				this.haAction = undefined;
+				this.domain = undefined;
 				this.dialogOpen = false;
 				const textarea = target.querySelector('textarea');
 				if (textarea) {

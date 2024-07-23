@@ -22,7 +22,6 @@ import {
 } from './models';
 
 import './classes/remote-button';
-import './classes/remote-keyboard';
 import './classes/remote-touchpad';
 import './classes/remote-slider';
 import './classes/keyboard-dialog';
@@ -607,28 +606,6 @@ class UniversalRemoteCard extends LitElement {
 		/>`;
 	}
 
-	buildKeyboard(): TemplateResult {
-		const actions = this.getElementConfig('keyboard');
-		actions.style = {
-			...this.config.button_style,
-			...actions.style,
-		};
-		if (!('haptics' in actions)) {
-			actions.haptics = this.config.button_haptics;
-		}
-
-		return html`<remote-keyboard
-			.hass=${this.hass}
-			.remoteId=${this.config.remote_id}
-			.mediaPlayerId=${this.config.media_player_id}
-			.config=${actions}
-			.actionKey="keyboard"
-			.keyboardId=${this.config.keyboard_id}
-			.keyboardMode=${this.config.keyboard_mode ?? 'ANDROID TV'}
-			.icons=${this.icons}
-		/>`;
-	}
-
 	buildElements(
 		row: (string | string[])[],
 		isColumn: boolean = false,
@@ -741,11 +718,6 @@ class UniversalRemoteCard extends LitElement {
 					case 'nav_touchpad':
 					case 'navigation_touchpad': {
 						rowContent.push(this.buildTouchpad(context));
-						break;
-					}
-
-					case 'keyboard': {
-						rowContent.push(this.buildKeyboard());
 						break;
 					}
 
