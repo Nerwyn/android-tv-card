@@ -37,7 +37,7 @@ export class KeyboardDialog extends LitElement {
 		let keyToKey: Record<string, string>;
 
 		if (inKey && inKey != 'Unidentified') {
-			e.stopPropagation();
+			e.preventDefault();
 			switch (this.haAction?.platform) {
 				case 'KODI':
 					break;
