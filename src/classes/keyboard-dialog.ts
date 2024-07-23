@@ -33,7 +33,7 @@ export class KeyboardDialog extends LitElement {
 		this.textarea!.selectionStart = this.textarea!.value.length;
 		this.textarea!.selectionEnd = this.textarea!.value.length;
 
-		let inKey = e.key;
+		let inKey = e.code;
 		let outKey: string;
 		let keyToKey: Record<string, string>;
 
@@ -120,6 +120,7 @@ export class KeyboardDialog extends LitElement {
 
 	keyboardOnInput(e: InputEvent) {
 		e.stopImmediatePropagation();
+		console.log(e);
 
 		this.textarea!.selectionStart = this.textarea!.value.length;
 		this.textarea!.selectionEnd = this.textarea!.value.length;
