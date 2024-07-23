@@ -308,6 +308,7 @@ export class BaseRemoteElement extends LitElement {
 
 	keyboard(action: IAction) {
 		const rAction = this.deepRenderTemplate(action) as IAction;
+		console.log(rAction);
 		const entityId = (rAction.keyboard_id ??
 			rAction.remote_id ??
 			rAction.media_player_id ??
@@ -322,6 +323,7 @@ export class BaseRemoteElement extends LitElement {
 				? entityId
 				: undefined;
 		rAction.platform = (rAction.platform ?? '').toUpperCase() as Platform;
+		console.log(rAction);
 
 		const event = new Event('keyboard-dialog-open', {
 			composed: true,
