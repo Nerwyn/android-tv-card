@@ -242,6 +242,7 @@ export class KeyboardDialog extends LitElement {
 					autocomplete="off"
 					autocapitalize="off"
 					placeholder="Type something..."
+					@input=${this.keyboardOnInput}
 					@keydown=${this.keyboardOnKeyDown}
 					@paste=${this.keyboardOnPaste}
 				></textarea> `;
