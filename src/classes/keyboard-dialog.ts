@@ -29,8 +29,8 @@ export class KeyboardDialog extends LitElement {
 		e.stopImmediatePropagation();
 		console.log(e);
 
-		this.textarea!.selectionStart = this.textarea!.value.length;
-		this.textarea!.selectionEnd = this.textarea!.value.length;
+		// this.textarea!.selectionStart = this.textarea!.value.length;
+		// this.textarea!.selectionEnd = this.textarea!.value.length;
 
 		const inKey = e.key;
 		let outKey: string;
@@ -104,8 +104,8 @@ export class KeyboardDialog extends LitElement {
 		e.stopImmediatePropagation();
 		console.log(e);
 
-		this.textarea!.selectionStart = this.textarea!.value.length;
-		this.textarea!.selectionEnd = this.textarea!.value.length;
+		// this.textarea!.selectionStart = this.textarea!.value.length;
+		// this.textarea!.selectionEnd = this.textarea!.value.length;
 
 		const inputType = e.inputType ?? '';
 		const text = e.data ?? '';
@@ -217,8 +217,8 @@ export class KeyboardDialog extends LitElement {
 		e.stopImmediatePropagation();
 		e.preventDefault();
 
-		this.textarea!.selectionStart = this.textarea!.value.length;
-		this.textarea!.selectionEnd = this.textarea!.value.length;
+		// this.textarea!.selectionStart = this.textarea!.value.length;
+		// this.textarea!.selectionEnd = this.textarea!.value.length;
 
 		const text = e.clipboardData?.getData('Text');
 		if (text) {
