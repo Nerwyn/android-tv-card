@@ -25,6 +25,7 @@ import './classes/remote-button';
 import './classes/remote-keyboard';
 import './classes/remote-touchpad';
 import './classes/remote-slider';
+import './classes/keyboard-dialog';
 
 console.info(
 	`%c UNIVERSAL-REMOTE-CARD v${packageInfo.version}`,
@@ -32,8 +33,8 @@ console.info(
 );
 
 class UniversalRemoteCard extends LitElement {
-	@property({ attribute: false }) hass!: HomeAssistant;
-	@property({ attribute: false }) config!: IConfig;
+	@property() hass!: HomeAssistant;
+	@property() config!: IConfig;
 
 	defaultActions: Record<string, IElementConfig> = {};
 	customActions: Record<string, IElementConfig> = {};
@@ -760,42 +761,11 @@ class UniversalRemoteCard extends LitElement {
 			: this.buildRow(rowContent, context);
 	}
 
-	dialogOpen = false;
 	buildDialog() {
-		// this.getRootNode().host.getRootNode().querySelector('textarea').value
-		return html`<dialog @mousedown=${this.closeDialog}>
-			<textarea
-				spellcheck="false"
-				autocorrect="off"
-				autocomplete="off"
-				autocapitalize="off"
-				placeholder="Type something..."
-			></textarea>
-		</dialog>`;
+		return html`<keyboard-dialog .hass=${this.hass} />`;
 	}
 
-	onDialogOpen(_e: CustomEvent) {
-		setTimeout(() => {
-			this.dialogOpen = true;
-		}, 500);
-		this.shadowRoot?.querySelector('dialog')?.showModal();
-	}
-
-	closeDialog(e: MouseEvent) {
-		const target = e.target as HTMLElement;
-		if (this.dialogOpen) {
-			const rect = target.getBoundingClientRect();
-			const isInDialog =
-				rect.top <= e.clientY &&
-				e.clientY <= rect.top + rect.height &&
-				rect.left <= e.clientX &&
-				e.clientX <= rect.left + rect.width;
-			if (!isInDialog) {
-				(target as HTMLElement & Record<'close', () => void>).close();
-				this.dialogOpen = false;
-			}
-		}
-	}
+	openKeyboardDialog() {}
 
 	render() {
 		if (!this.config || !this.hass) {
@@ -830,7 +800,7 @@ class UniversalRemoteCard extends LitElement {
 		}
 
 		return html`<ha-card
-			@keyboard-dialog-open=${this.onDialogOpen}
+			@keyboard-dialog-open=${this.openKeyboardDialog}
 			.header="${renderTemplate(
 				this.hass,
 				this.config.title as string,
@@ -881,42 +851,6 @@ class UniversalRemoteCard extends LitElement {
 				grid-template-rows: repeat(3, var(--size, 48px));
 				grid-template-columns: repeat(3, var(--size, 48px));
 				grid-gap: 8px 16px;
-			}
-			dialog {
-				height: 40%;
-				width: 85%;
-				display: block;
-				position: fixed;
-				z-index: 9;
-				border: none;
-				background: var(--ha-card-background);
-				border-radius: var(--ha-card-border-radius);
-				pointer-events: none;
-				opacity: 0;
-				transition: all 0.2s;
-			}
-			dialog[open] {
-				opacity: 1;
-				pointer-events: all;
-				transition: all 0.2s;
-			}
-			dialog textarea {
-				position: relative;
-				height: 90%;
-				width: 90%;
-				top: 5%;
-				left: 5%;
-				outline: none;
-				background: none;
-				border: none;
-				resize: none;
-				font-family: inherit;
-				font-weight: 500;
-				font-size: 30px;
-			}
-			dialog::backdrop {
-				background: rgb(0, 0, 0);
-				opacity: 0.7;
 			}
 		`;
 	}

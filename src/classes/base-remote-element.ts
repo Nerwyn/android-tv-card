@@ -1,10 +1,5 @@
 import { LitElement, CSSResult, html, css } from 'lit';
-import {
-	customElement,
-	eventOptions,
-	property,
-	state,
-} from 'lit/decorators.js';
+import { eventOptions, property, state } from 'lit/decorators.js';
 import { StyleInfo } from 'lit/directives/style-map.js';
 
 import { HomeAssistant, HapticType, forwardHaptic } from 'custom-card-helpers';
@@ -18,8 +13,8 @@ import {
 	IAction,
 	ActionType,
 } from '../models';
+import { getDeepKeys, deepGet, deepSet } from '../utils';
 
-@customElement('base-remote-element')
 export class BaseRemoteElement extends LitElement {
 	@property({ attribute: false }) hass!: HomeAssistant;
 	@property({ attribute: false }) config!: IElementConfig;
@@ -315,24 +310,18 @@ export class BaseRemoteElement extends LitElement {
 	}
 
 	keyboard(action: IAction) {
-		// TODO - figure this out
 		const event = new Event('keyboard-dialog-open', {
 			composed: true,
 			bubbles: true,
 		});
-		event.detail = action;
-		this.dispatchEvent(event);
-		let i = 0;
-		const interval = setInterval(() => {
-			const text = (this.getRootNode() as ShadowRoot)?.querySelector(
-				'textarea',
-			)?.value;
-			console.log(text);
-			i += 1;
-			if (i > 10) {
-				clearInterval(interval);
-			}
-		}, 1000);
+		event.detail = this.deepRenderTemplate(action);
+		(
+			(this.getRootNode() as ShadowRoot).querySelector(
+				'keyboard-dialog',
+			) as HTMLElement
+		).shadowRoot
+			?.querySelector('dialog')
+			?.dispatchEvent(event);
 	}
 
 	textBox(action: IAction) {
@@ -758,6 +747,22 @@ export class BaseRemoteElement extends LitElement {
 		}
 
 		return str;
+	}
+
+	deepRenderTemplate(obj: object, context?: object) {
+		const res = structuredClone(obj);
+		const keys = getDeepKeys(res);
+		for (const key of keys) {
+			deepSet(
+				res,
+				key,
+				this.renderTemplate(
+					deepGet(res, key) as unknown as string,
+					context,
+				),
+			);
+		}
+		return res;
 	}
 
 	buildIcon(icon?: string, context?: object) {
