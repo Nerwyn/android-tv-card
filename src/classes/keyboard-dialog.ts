@@ -212,8 +212,7 @@ export class KeyboardDialog extends LitElement {
 			if (!isInDialog) {
 				(target as HTMLElement & Record<'close', () => void>).close();
 				this.dialogOpen = false;
-				const textarea = this.querySelector('textarea');
-				console.log(textarea);
+				const textarea = target.querySelector('textarea');
 				if (textarea) {
 					textarea.value = '';
 					textarea.blur();
