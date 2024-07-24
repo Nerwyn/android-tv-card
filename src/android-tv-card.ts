@@ -97,6 +97,10 @@ class AndroidTVCard extends LitElement {
 		this.config = config;
 		this.defaultActions = this.populateActionFields(this.defaultActions);
 		this.customActions = this.populateActionFields(this.customActions);
+		if (this.config.platform == 'KODI') {
+			console.log(this.config);
+			console.log(this.defaultActions);
+		}
 	}
 
 	updateDeprecatedKeys(config: IConfig) {
