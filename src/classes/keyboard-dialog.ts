@@ -360,11 +360,13 @@ export class KeyboardDialog extends LitElement {
 		if (text) {
 			switch (this.haAction?.platform) {
 				case 'KODI':
-					this.hass.callService('kodi', 'call_method', {
-						entity_id: this.haAction?.keyboard_id,
-						method: 'Addons.ExecuteAddon',
-						addonid: 'script.globalsearch',
-					});
+					Promise.resolve(
+						this.hass.callService('kodi', 'call_method', {
+							entity_id: this.haAction?.keyboard_id,
+							method: 'Addons.ExecuteAddon',
+							addonid: 'script.globalsearch',
+						}),
+					).catch();
 					setTimeout(() => {
 						this.hass.callService('kodi', 'call_method', {
 							entity_id: this.haAction?.keyboard_id,
@@ -373,6 +375,7 @@ export class KeyboardDialog extends LitElement {
 							done: true,
 						});
 					}, 1000);
+
 					break;
 				case 'ROKU':
 					this.hass.callService('roku', 'search', {
