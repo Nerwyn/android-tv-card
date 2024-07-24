@@ -285,42 +285,44 @@ export class KeyboardDialog extends LitElement {
 
 	textBox(_e: MouseEvent) {
 		const text = this.textarea?.value;
-		switch (this.haAction?.platform) {
-			case 'KODI':
-				this.hass.callService('kodi', 'call_method', {
-					entity_id: this.haAction?.keyboard_id,
-					method: 'Input.SendText',
-					text: text,
-					done: false,
-				});
-				break;
-			case 'ROKU':
-				this.hass.callService('remote', 'send_command', {
-					entity_id: this.getRokuId('remote'),
-					command: `Lit_${text}`,
-				});
-				break;
-			case 'FIRE TV':
-			case 'ANDROID TV':
-			default: {
-				let domain: string;
-				let service: string;
-				switch (this.domain) {
-					case 'remote':
-						domain = 'remote';
-						service = 'send_command';
-						break;
-					case 'media_player':
-					default:
-						domain = 'androidtv';
-						service = 'adb_command';
-						break;
+		if (text) {
+			switch (this.haAction?.platform) {
+				case 'KODI':
+					this.hass.callService('kodi', 'call_method', {
+						entity_id: this.haAction?.keyboard_id,
+						method: 'Input.SendText',
+						text: text,
+						done: false,
+					});
+					break;
+				case 'ROKU':
+					this.hass.callService('remote', 'send_command', {
+						entity_id: this.getRokuId('remote'),
+						command: `Lit_${text}`,
+					});
+					break;
+				case 'FIRE TV':
+				case 'ANDROID TV':
+				default: {
+					let domain: string;
+					let service: string;
+					switch (this.domain) {
+						case 'remote':
+							domain = 'remote';
+							service = 'send_command';
+							break;
+						case 'media_player':
+						default:
+							domain = 'androidtv';
+							service = 'adb_command';
+							break;
+					}
+					this.hass.callService(domain, service, {
+						entity_id: this.haAction?.keyboard_id,
+						command: `input text "${text}"`,
+					});
+					break;
 				}
-				this.hass.callService(domain, service, {
-					entity_id: this.haAction?.keyboard_id,
-					command: `input text "${text}"`,
-				});
-				break;
 			}
 		}
 	}
