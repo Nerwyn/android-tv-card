@@ -283,8 +283,8 @@ export class KeyboardDialog extends LitElement {
 		}
 	}
 
-	textBox(_e: InputEvent) {
-		const text = ''; // TODO
+	textBox(_e: MouseEvent) {
+		const text = this.textarea?.value;
 		switch (this.haAction?.platform) {
 			case 'KODI':
 				this.hass.callService('kodi', 'call_method', {
@@ -325,35 +325,24 @@ export class KeyboardDialog extends LitElement {
 		}
 	}
 
-	search(_e: InputEvent) {
-		let promptText: string;
-		switch (this.haAction?.platform) {
-			case 'KODI':
-				this.hass.callService('kodi', 'call_method', {
-					entity_id: this.haAction?.keyboard_id,
-					method: 'Addons.ExecuteAddon',
-					addonid: 'script.globalsearch',
-				});
-			// fall through
-			case 'ROKU':
-			case 'FIRE TV':
-				promptText = 'Global Search: ';
-				break;
-			case 'ANDROID TV':
-			default:
-				promptText = 'Google Assistant Search: ';
-				break;
-		}
-
-		const text = prompt(promptText);
+	search(_e: MouseEvent) {
+		const text = this.textarea?.value;
 		if (text) {
 			switch (this.haAction?.platform) {
 				case 'KODI':
-					this.hass.callService('kodi', 'call_method', {
-						entity_id: this.haAction?.keyboard_id,
-						method: 'Input.SendText',
-						text: text,
-						done: true,
+					Promise.resolve(
+						this.hass.callService('kodi', 'call_method', {
+							entity_id: this.haAction?.keyboard_id,
+							method: 'Addons.ExecuteAddon',
+							addonid: 'script.globalsearch',
+						}),
+					).then(() => {
+						this.hass.callService('kodi', 'call_method', {
+							entity_id: this.haAction?.keyboard_id,
+							method: 'Input.SendText',
+							text: text,
+							done: true,
+						});
 					});
 					break;
 				case 'ROKU':
@@ -425,14 +414,25 @@ export class KeyboardDialog extends LitElement {
 	}
 
 	render() {
-		let textarea = html``;
 		let buttons = html``;
+		let placeholder;
 		let inputHandler;
 		let keyDownHandler;
+		let pasteHandler;
 		switch (this.haAction?.action) {
 			case 'search':
+				placeholder = 'Search for something...';
+				buttons = html`${this.buildDialogButton(
+					'Search',
+					this.search,
+				)}${this.buildDialogButton('Close', this.closeDialog)}`;
 				break;
 			case 'textbox':
+				placeholder = 'Type something...';
+				buttons = html`${this.buildDialogButton(
+					'Send',
+					this.textBox,
+				)}${this.buildDialogButton('Close', this.closeDialog)}`;
 				break;
 			case 'keyboard':
 			default:
@@ -455,19 +455,21 @@ export class KeyboardDialog extends LitElement {
 						keyDownHandler = this.androidTvOnKeyDown;
 						break;
 				}
-				textarea = html`<textarea
-					spellcheck="false"
-					autocorrect="off"
-					autocomplete="off"
-					autocapitalize="off"
-					placeholder="Type something..."
-					@input=${inputHandler}
-					@keydown=${keyDownHandler}
-					@paste=${this.keyboardOnPaste}
-				></textarea>`;
+				placeholder = 'Type something...';
+				pasteHandler = this.keyboardOnPaste;
 				buttons = this.buildDialogButton('Close', this.closeDialog);
 				break;
 		}
+		const textarea = html`<textarea
+			spellcheck="false"
+			autocorrect="off"
+			autocomplete="off"
+			autocapitalize="off"
+			placeholder="${placeholder}"
+			@input=${inputHandler}
+			@keydown=${keyDownHandler}
+			@paste=${pasteHandler}
+		></textarea>`;
 
 		return html`<dialog @keyboard-dialog-open=${this.showDialog}>
 			${textarea}
