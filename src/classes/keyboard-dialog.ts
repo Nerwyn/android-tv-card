@@ -515,19 +515,24 @@ export class KeyboardDialog extends LitElement {
 				margin: 0 12px;
 			}
 			button {
-				height: inherit;
-				width: inherit;
-				cursor: pointer;
 				position: absolute;
+				background 0px 0px !important;
 				opacity: 1;
 				padding: 0;
-				background: rgb(0, 0, 0, 0);
+				cursor: pointer;
 				border: none;
-				z-index: 1;
+				overflow: hidden;
 				font-family: inherit;
 				font-size: var(--paper-font-body1_-_font-size);
 				font-weight: 600;
 				color: var(--mdc-theme-primary, #6200ee);
+			}
+			button::before {
+				content: ''
+				top: 0px;
+				left: 0px;
+				height: 100%;
+				width: 100%;
 			}
 			dialog::backdrop {
 				background: rgb(0, 0, 0);
