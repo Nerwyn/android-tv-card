@@ -31,7 +31,7 @@ console.info(
 	'color: white; font-weight: bold; background: green',
 );
 
-class UniversalRemoteCard extends LitElement {
+class AndroidTVCard extends LitElement {
 	@property() hass!: HomeAssistant;
 	@property() config!: IConfig;
 
@@ -847,12 +847,12 @@ class UniversalRemoteCard extends LitElement {
 	}
 }
 
-customElements.define('android-tv-card', UniversalRemoteCard); // To not break old configs
+customElements.define('android-tv-card', AndroidTVCard); // To not break old configs
 
 window.customCards = window.customCards || [];
 window.customCards.push({
 	type: 'android-tv-card',
-	name: 'Universal Remote',
+	name: 'Android TV Card',
 	description: 'Super customizable universal remote card',
 });
 

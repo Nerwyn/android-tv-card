@@ -1,5 +1,5 @@
 {
-	"name": "universal-remote-card",
+	"name": "android-tv-card",
 	"version": "3.9.0",
 	"description": "Android TV Card",
 	"main": "./dist/android-tv-card.js",
