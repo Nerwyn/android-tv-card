@@ -360,13 +360,11 @@ export class KeyboardDialog extends LitElement {
 		if (text) {
 			switch (this.haAction?.platform) {
 				case 'KODI':
-					Promise.resolve(
-						this.hass.callService('kodi', 'call_method', {
-							entity_id: this.haAction?.keyboard_id,
-							method: 'Addons.ExecuteAddon',
-							addonid: 'script.globalsearch',
-						}),
-					);
+					this.hass.callService('kodi', 'call_method', {
+						entity_id: this.haAction?.keyboard_id,
+						method: 'Addons.ExecuteAddon',
+						addonid: 'script.globalsearch',
+					});
 					setTimeout(() => {
 						this.hass.callService('kodi', 'call_method', {
 							entity_id: this.haAction?.keyboard_id,
