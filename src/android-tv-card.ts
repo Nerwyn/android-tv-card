@@ -97,10 +97,6 @@ class AndroidTVCard extends LitElement {
 		this.config = config;
 		this.defaultActions = this.populateActionFields(this.defaultActions);
 		this.customActions = this.populateActionFields(this.customActions);
-		if (this.config.platform == 'KODI') {
-			console.log(this.config);
-			console.log(this.defaultActions);
-		}
 	}
 
 	updateDeprecatedKeys(config: IConfig) {
@@ -301,6 +297,12 @@ class AndroidTVCard extends LitElement {
 							action.platform =
 								action.platform ?? this.config.platform;
 							switch (action.platform?.toUpperCase()) {
+								case 'KODI':
+									action.platform = 'KODI';
+									break;
+								case 'ROKU':
+									action.platform = 'ROKU';
+									break;
 								case 'FIRE' as Platform:
 								case 'FIRETV' as Platform:
 								case 'FIRE_TV' as Platform:
