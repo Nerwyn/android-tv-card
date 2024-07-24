@@ -508,17 +508,18 @@ export class KeyboardDialog extends LitElement {
 				font-size: 30px;
 			}
 			.buttons {
-				height: 32px;
+				height: 36px;
 				display: inline-flex;
 				flex-direction: row-reverse;
 				justify-content: space-between;
 				margin: 0 12px;
 			}
 			button {
+				height: inherit
 				position: absolute;
-				background 0px 0px !important;
+				background: 0px 0px !important;
 				opacity: 1;
-				padding: 0;
+				padding: 0 8px;
 				cursor: pointer;
 				border: none;
 				overflow: hidden;
@@ -526,6 +527,7 @@ export class KeyboardDialog extends LitElement {
 				font-size: var(--paper-font-body1_-_font-size);
 				font-weight: 600;
 				color: var(--mdc-theme-primary, #6200ee);
+				border-radius: var(--mdc-shape-small, 4px);
 			}
 			button::before {
 				content: ''
@@ -533,6 +535,16 @@ export class KeyboardDialog extends LitElement {
 				left: 0px;
 				height: 100%;
 				width: 100%;
+			}
+			@media (hover: hover) {
+				button:hover {
+					background: var(--ha-ripple-color);
+					opacity: var(--ha-ripple-hover-opacity);
+				}
+			}
+			button:active {
+				background: var(--ha-ripple-color);
+				opacity: var(--ha-ripple-hover-opacity);
 			}
 			dialog::backdrop {
 				background: rgb(0, 0, 0);
