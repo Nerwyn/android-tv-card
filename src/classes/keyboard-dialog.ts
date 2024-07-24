@@ -515,7 +515,7 @@ export class KeyboardDialog extends LitElement {
 				margin: 0 12px;
 			}
 			button {
-				height: inherit
+				height: inherit;
 				position: absolute;
 				background: 0px 0px !important;
 				opacity: 1;
@@ -537,14 +537,14 @@ export class KeyboardDialog extends LitElement {
 				width: 100%;
 			}
 			@media (hover: hover) {
-				button:hover {
+				button::before:hover {
 					background: var(--ha-ripple-color);
-					opacity: var(--ha-ripple-hover-opacity);
+					opacity: var(--md-ripple-hover-opacity);
 				}
 			}
-			button:active {
+			button::before:active {
 				background: var(--ha-ripple-color);
-				opacity: var(--ha-ripple-hover-opacity);
+				opacity: var(--md-ripple-hover-opacity);
 			}
 			dialog::backdrop {
 				background: rgb(0, 0, 0);
