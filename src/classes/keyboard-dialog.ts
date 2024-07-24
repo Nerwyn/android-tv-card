@@ -401,10 +401,13 @@ export class KeyboardDialog extends LitElement {
 		this.shadowRoot?.querySelector('dialog')?.showModal();
 	}
 
-	closeDialog(e: MouseEvent) {
-		const target = e.target as HTMLDialogElement;
+	closeDialog(_e: MouseEvent) {
+		// const target = e.target as HTMLDialogElement;
+		const dialog = this.shadowRoot?.querySelector(
+			'dialog',
+		) as HTMLDialogElement;
 		if (this.dialogOpen) {
-			target.close();
+			dialog.close();
 			this.textarea!.value = '';
 			this.textarea!.blur();
 			this.haAction = undefined;
