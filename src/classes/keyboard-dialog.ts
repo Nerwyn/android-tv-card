@@ -257,7 +257,7 @@ export class KeyboardDialog extends LitElement {
 					this.hass.callService('kodi', 'call_method', {
 						entity_id: this.haAction?.keyboard_id,
 						method: 'Input.SendText',
-						text: text,
+						text: this.textarea?.value ?? '',
 						done: false,
 					});
 					break;
