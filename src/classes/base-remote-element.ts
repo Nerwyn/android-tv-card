@@ -222,7 +222,9 @@ export class BaseRemoteElement extends LitElement {
 			) {
 				target = {
 					...target,
-					entity_id: entityId,
+					entity_id: this.renderTemplate(entityId) as
+						| string
+						| string[],
 				};
 			}
 		}
