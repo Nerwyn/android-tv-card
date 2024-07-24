@@ -27,7 +27,7 @@ import './classes/remote-slider';
 import './classes/keyboard-dialog';
 
 console.info(
-	`%c UNIVERSAL-REMOTE-CARD v${packageInfo.version}`,
+	`%c ANDROID-TV-CARD v${packageInfo.version}`,
 	'color: white; font-weight: bold; background: green',
 );
 

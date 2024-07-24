@@ -1,8 +1,8 @@
 {
-	"name": "Universal Remote Card - buttons, touchpad, sliders, keyboard, and more!",
+	"name": "Android TV Card - buttons, touchpad, sliders, keyboard, and more!",
 	"content_in_root": false,
 	"homeassistant": "2023.5.0",
-	"filename": "universal-remote-card.min.js",
+	"filename": "android-tv-card.min.js",
 	"render_readme": true,
 	"hide_default_branch": true
 }

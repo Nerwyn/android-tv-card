@@ -1,8 +1,8 @@
 {
 	"name": "universal-remote-card",
 	"version": "3.9.0",
-	"description": "Universal Remote Card",
-	"main": "./dist/universal-remote-card.js",
+	"description": "Android TV Card",
+	"main": "./dist/android-tv-card.js",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"build": "npx webpack",
