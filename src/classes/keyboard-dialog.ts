@@ -537,14 +537,17 @@ export class KeyboardDialog extends LitElement {
 				overflow: hidden;
 				cursor: pointer;
 				padding: 0;
+				position: relative;
 			}
 			button::before {
 				content: '';
-				position: absolute;
+				display: block;
 				top: 0px;
 				left: 0px;
 				height: 100%;
 				width: 100%;
+				overflow: hidden;
+				position: relative;
 			}
 			@media (hover: hover) {
 				button:hover {
