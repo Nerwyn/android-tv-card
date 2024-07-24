@@ -417,6 +417,15 @@ export class KeyboardDialog extends LitElement {
 		}
 	}
 
+	buildDialogButton(text: string, handler: (e: MouseEvent) => void) {
+		return html`<div class="button">
+			<button @click=${handler}>
+				<md-ripple></md-ripple>
+			</button>
+			<span>${text}</span>
+		</div>`;
+	}
+
 	render() {
 		let textarea = html``;
 		let buttons = html``;
@@ -458,10 +467,7 @@ export class KeyboardDialog extends LitElement {
 					@keydown=${keyDownHandler}
 					@paste=${this.keyboardOnPaste}
 				></textarea>`;
-				buttons = html`<button @click=${this.closeDialog}>
-					CLOSE
-					<md-ripple></md-ripple>
-				</button>`;
+				buttons = this.buildDialogButton('Close', this.closeDialog);
 				break;
 		}
 
@@ -523,10 +529,6 @@ export class KeyboardDialog extends LitElement {
 				cursor: pointer;
 				border: none;
 				overflow: hidden;
-				font-family: inherit;
-				font-size: var(--paper-font-body1_-_font-size);
-				font-weight: 600;
-				color: var(--mdc-theme-primary, #6200ee);
 				border-radius: var(--mdc-shape-small, 4px);
 			}
 			button::before {
@@ -537,14 +539,25 @@ export class KeyboardDialog extends LitElement {
 				width: 100%;
 			}
 			@media (hover: hover) {
-				button::before:hover {
+				button:hover {
 					background: var(--ha-ripple-color);
 					opacity: var(--md-ripple-hover-opacity);
 				}
 			}
-			button::before:active {
+			button:active {
 				background: var(--ha-ripple-color);
 				opacity: var(--md-ripple-hover-opacity);
+			}
+			.button span {
+				height: 100%;
+				width: 100%;
+				font-family: inherit;
+				font-size: var(--paper-font-body1_-_font-size);
+				font-weight: 600;
+				color: var(--mdc-theme-primary, #6200ee);
+				user-select: none;
+				-webkit-user-select: none;
+				-moz-user-select: none;
 			}
 			dialog::backdrop {
 				background: rgb(0, 0, 0);
