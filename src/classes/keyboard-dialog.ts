@@ -40,11 +40,9 @@ export class KeyboardDialog extends LitElement {
 
 	kodiOnInput(e: InputEvent) {
 		e.stopImmediatePropagation();
-		this.forceCursorToEnd();
 
-		const inputType = e.inputType ?? '';
 		const text = this.textarea?.value ?? '';
-		if (text && inputType == 'insertText') {
+		if (text) {
 			this.hass.callService('kodi', 'call_method', {
 				entity_id: this.haAction?.keyboard_id,
 				method: 'Input.SendText',
@@ -351,7 +349,8 @@ export class KeyboardDialog extends LitElement {
 							method: 'Addons.ExecuteAddon',
 							addonid: 'script.globalsearch',
 						}),
-					).then(() => {
+					).then((res) => {
+						console.log(res);
 						this.hass.callService('kodi', 'call_method', {
 							entity_id: this.haAction?.keyboard_id,
 							method: 'Input.SendText',
