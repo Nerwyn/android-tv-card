@@ -118,14 +118,14 @@ export class KeyboardDialog extends LitElement {
 			let domain: string;
 			let service: string;
 			switch (this.haAction?.keyboard_id) {
-				case 'remote':
-					domain = 'remote';
-					service = 'send_command';
-					break;
 				case 'media_player':
-				default:
 					domain = 'androidtv';
 					service = 'adb_command';
+					break;
+				case 'remote':
+				default:
+					domain = 'remote';
+					service = 'send_command';
 					break;
 			}
 			this.hass.callService(domain, service, {

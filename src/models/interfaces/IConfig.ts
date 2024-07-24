@@ -7,11 +7,11 @@ export type Row = (string | Row[])[];
 export interface IConfig {
 	title?: string;
 
-	remote_id?: string;
+	platform?: Platform;
 	keyboard_id?: string;
-	keyboard_mode?: Platform;
-	slider_id?: string;
+	remote_id?: string;
 	media_player_id?: string;
+	slider_id?: string;
 	autofill_entity_id?: boolean;
 
 	custom_actions?: Record<string, IElementConfig>;

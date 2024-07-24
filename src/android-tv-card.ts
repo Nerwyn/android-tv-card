@@ -19,6 +19,7 @@ import {
 	defaultSources,
 	ActionType,
 	svg,
+	Platform,
 } from './models';
 
 import './classes/remote-button';
@@ -99,6 +100,10 @@ class AndroidTVCard extends LitElement {
 		// Convert old root level key names to new
 		if ('adb_id' in config) {
 			config.keyboard_id = (config as Record<string, string>).adb_id;
+		}
+		if ('keyboard_mode' in config) {
+			config.platform = (config as Record<string, string>)
+				.keyboard_mode as Platform;
 		}
 		if (config.media_player_id && !config.slider_id) {
 			config.slider_id = config.media_player_id;
@@ -254,6 +259,8 @@ class AndroidTVCard extends LitElement {
 							action.start_listening
 						) {
 							action.action = 'assist';
+						} else if (action.keyboard_id) {
+							action.action = 'keyboard';
 						} else {
 							action.action = 'none';
 						}
@@ -276,10 +283,45 @@ class AndroidTVCard extends LitElement {
 							...action.target,
 						};
 					}
+
+					// Populate keyboard, key, and source fields
+					switch (action.action) {
+						case 'keyboard':
+						case 'textbox':
+						case 'search':
+							action.platform =
+								action.platform ?? config.platform;
+							switch (action.platform?.toUpperCase()) {
+								case 'FIRE' as Platform:
+								case 'FIRETV' as Platform:
+								case 'FIRE_TV' as Platform:
+								case 'FIRE TV':
+									action.platform = 'FIRE TV';
+									break;
+								case 'ANDROID' as Platform:
+								case 'ANDROIDTV' as Platform:
+								case 'ANDROID_TV' as Platform:
+								case 'ANDROID TV':
+								default:
+									action.platform = 'ANDROID TV';
+							}
+							action.keyboard_id =
+								action.keyboard_id ?? config.keyboard_id;
+						// falls through
+						case 'source':
+							action.media_player_id =
+								action.media_player_id ??
+								config.media_player_id;
+						// falls through
+						case 'key':
+						default:
+							action.remote_id =
+								action.remote_id ?? config.remote_id;
+							break;
+					}
 				}
 			}
 		}
-
 		return config;
 	}
 
@@ -498,8 +540,6 @@ class AndroidTVCard extends LitElement {
 			title="${elementName}"
 			.hass=${this.hass}
 			.autofillEntityId=${this.config.autofill_entity_id}
-			.remoteId=${this.config.remote_id}
-			.mediaPlayerId=${this.config.media_player_id}
 			.config=${actions}
 			.icons=${this.icons}
 		/>`;
@@ -599,8 +639,6 @@ class AndroidTVCard extends LitElement {
 		return html`<remote-touchpad
 			.hass=${this.hass}
 			.autofillEntityId=${this.config.autofill_entity_id}
-			.remoteId=${this.config.remote_id}
-			.mediaPlayerId=${this.config.media_player_id}
 			.config=${centerActions}
 			.directionActions=${directionActions}
 		/>`;

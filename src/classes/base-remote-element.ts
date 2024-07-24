@@ -12,7 +12,6 @@ import {
 	IElementConfig,
 	IAction,
 	ActionType,
-	Platform,
 } from '../models';
 import { getDeepKeys, deepGet, deepSet } from '../utils';
 
@@ -20,10 +19,7 @@ export class BaseRemoteElement extends LitElement {
 	@property({ attribute: false }) hass!: HomeAssistant;
 	@property({ attribute: false }) config!: IElementConfig;
 	@property({ attribute: false }) icons!: Record<string, string>;
-
 	@property({ attribute: false }) autofillEntityId: boolean = false;
-	@property({ attribute: false }) remoteId?: string;
-	@property({ attribute: false }) mediaPlayerId?: string;
 
 	@state() renderRipple = true;
 	renderRippleOff?: ReturnType<typeof setTimeout>;
@@ -123,10 +119,10 @@ export class BaseRemoteElement extends LitElement {
 					this.callService(action);
 					break;
 				case 'source':
-					this.changeSource(action.source ?? '');
+					this.changeSource(action);
 					break;
 				case 'key':
-					this.sendCommand(action.key ?? '', actionType);
+					this.sendCommand(action, actionType);
 					break;
 				case 'fire-dom-event':
 					this.fireDomEvent(action);
@@ -146,10 +142,10 @@ export class BaseRemoteElement extends LitElement {
 		}
 	}
 
-	sendCommand(key: string, actionType: ActionType) {
+	sendCommand(action: IAction, actionType: ActionType) {
 		const data: IData = {
-			entity_id: this.renderTemplate(this.remoteId as string),
-			command: this.renderTemplate(key),
+			entity_id: this.renderTemplate(action.remote_id as string),
+			command: this.renderTemplate(action.key as string),
 		};
 		if (actionType == 'hold_action' && !this.config.hold_action) {
 			data.hold_secs = 0.5;
@@ -157,10 +153,10 @@ export class BaseRemoteElement extends LitElement {
 		this.hass.callService('remote', 'send_command', data);
 	}
 
-	changeSource(source: string) {
+	changeSource(action: IAction) {
 		this.hass.callService('remote', 'turn_on', {
-			entity_id: this.renderTemplate(this.remoteId as string),
-			activity: this.renderTemplate(source),
+			entity_id: this.renderTemplate(action.remote_id as string),
+			activity: this.renderTemplate(action.source as string),
 		});
 	}
 
@@ -203,12 +199,12 @@ export class BaseRemoteElement extends LitElement {
 			let entityId: string | undefined;
 			switch (domain) {
 				case 'remote':
-					entityId = this.remoteId;
+					entityId = action.remote_id;
 					break;
 				case 'media_player':
 				case 'kodi':
 				case 'denonavr':
-					entityId = this.mediaPlayerId;
+					entityId = action.media_player_id;
 					break;
 				default:
 					break;
@@ -307,29 +303,15 @@ export class BaseRemoteElement extends LitElement {
 	}
 
 	keyboard(action: IAction) {
-		const rAction = this.deepRenderTemplate(action) as IAction;
-		const entityId = (rAction.keyboard_id ??
-			rAction.remote_id ??
-			rAction.media_player_id ??
-			'') as string;
-		rAction.keyboard_id = rAction.keyboard_id ?? entityId;
-		rAction.remote_id =
-			rAction.remote_id ??
-			(entityId.startsWith('remote.') ? entityId : undefined);
-		rAction.media_player_id =
-			rAction.media_player_id ??
-			(entityId.startsWith('media_player.') ? entityId : undefined);
-		rAction.platform = (rAction.platform ?? '').toUpperCase() as Platform;
-
 		const event = new Event('keyboard-dialog-open', {
 			composed: true,
 			bubbles: true,
 		});
-		event.detail = rAction;
+		event.detail = this.deepRenderTemplate(action);
 		(
 			(this.getRootNode() as ShadowRoot).querySelector(
 				'keyboard-dialog',
-			) as HTMLElement
+			) as LitElement
 		).shadowRoot
 			?.querySelector('dialog')
 			?.dispatchEvent(event);
