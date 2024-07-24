@@ -1,5 +1,5 @@
 import { LitElement, html, css } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { customElement, property, state } from 'lit/decorators.js';
 import { HomeAssistant } from 'custom-card-helpers';
 
 import { IAction } from '../models';
@@ -7,7 +7,7 @@ import { IAction } from '../models';
 @customElement('keyboard-dialog')
 export class KeyboardDialog extends LitElement {
 	@property() hass!: HomeAssistant;
-	haAction?: IAction;
+	@state() haAction?: IAction;
 	domain?: string;
 
 	dialogOpen = false;
@@ -27,201 +27,218 @@ export class KeyboardDialog extends LitElement {
 		return this.haAction?.keyboard_id;
 	}
 
-	keyboardSelectionChange(e: Event) {
-		e.stopImmediatePropagation();
+	forceCursorToEnd() {
+		// TODO prevent cursor from moving on arrow key or space
 		this.textarea!.selectionStart = this.textarea!.value.length;
 		this.textarea!.selectionEnd = this.textarea!.value.length;
 	}
 
-	keyboardOnKeyDown(e: KeyboardEvent) {
+	keyboardOnClick(e: MouseEvent) {
 		e.stopImmediatePropagation();
-		this.textarea!.selectionStart = this.textarea!.value.length;
-		this.textarea!.selectionEnd = this.textarea!.value.length;
-
-		const inKey = e.key;
-		let outKey: string;
-		let keyToKey: Record<string, string>;
-
-		if (['Backspace', 'Enter'].includes(inKey)) {
-			this.onKeyDownFired = true;
-			switch (this.haAction?.platform) {
-				case 'KODI':
-					break;
-				case 'ROKU':
-					keyToKey = {
-						Backspace: 'backspace',
-						Enter: 'enter',
-					};
-					outKey = keyToKey[inKey ?? ''];
-
-					if (outKey) {
-						this.hass.callService('remote', 'send_command', {
-							entity_id: this.getRokuId('remote'),
-							command: outKey,
-						});
-					}
-					break;
-				case 'FIRE TV':
-					keyToKey = {
-						Backspace: '67',
-						Enter: '66',
-					};
-					outKey = keyToKey[inKey ?? ''];
-
-					if (outKey) {
-						let domain: string;
-						let service: string;
-						switch (this.haAction?.keyboard_id) {
-							case 'remote':
-								domain = 'remote';
-								service = 'send_command';
-								break;
-							case 'media_player':
-							default:
-								domain = 'androidtv';
-								service = 'adb_command';
-								break;
-						}
-						this.hass.callService(domain, service, {
-							entity_id: this.haAction?.keyboard_id,
-							command: `input keyevent ${outKey}`,
-						});
-					}
-					break;
-				case 'ANDROID TV':
-				default:
-					keyToKey = {
-						Backspace: 'DEL',
-						Enter: 'ENTER',
-					};
-					outKey = keyToKey[inKey ?? ''];
-					if (outKey) {
-						this.hass.callService('remote', 'send_command', {
-							entity_id: this.haAction?.remote_id,
-							command: outKey,
-						});
-					}
-					break;
-			}
-		}
+		this.forceCursorToEnd();
 	}
 
-	keyboardOnInput(e: InputEvent) {
+	kodiOnInput(e: InputEvent) {
 		e.stopImmediatePropagation();
-		this.textarea!.selectionStart = this.textarea!.value.length;
-		this.textarea!.selectionEnd = this.textarea!.value.length;
+		this.forceCursorToEnd();
 
 		const inputType = e.inputType ?? '';
 		const text = e.data ?? '';
 		if (text && inputType == 'insertText') {
-			switch (this.haAction?.platform) {
-				case 'KODI':
-					this.hass.callService('kodi', 'call_method', {
-						entity_id: this.haAction?.keyboard_id,
-						method: 'Input.SendText',
-						text: text,
-						done: false,
-					});
-					break;
-				case 'ROKU':
-					this.hass.callService('remote', 'send_command', {
-						entity_id: this.haAction?.keyboard_id,
-						command: `Lit_${text}`,
-					});
-					break;
-				case 'FIRE TV':
-				case 'ANDROID TV':
-				default: {
-					let domain: string;
-					let service: string;
-					switch (this.domain) {
-						case 'remote':
-							domain = 'remote';
-							service = 'send_command';
-							break;
-						case 'media_player':
-						default:
-							domain = 'androidtv';
-							service = 'adb_command';
-							break;
-					}
-					this.hass.callService(domain, service, {
-						entity_id: this.haAction?.keyboard_id,
-						command: `input text "${text}"`,
-					});
-					break;
-				}
-			}
+			this.hass.callService('kodi', 'call_method', {
+				entity_id: this.haAction?.keyboard_id,
+				method: 'Input.SendText',
+				text: text,
+				done: false,
+			});
+		}
+		this.onKeyDownFired = false;
+	}
+
+	rokuOnKeyDown(e: KeyboardEvent) {
+		e.stopImmediatePropagation();
+		this.forceCursorToEnd();
+
+		const inKey = e.key;
+		const keyToKey: Record<string, string> = {
+			Backspace: 'backspace',
+			Enter: 'enter',
+		};
+		const outKey = keyToKey[inKey ?? ''];
+		if (outKey) {
+			this.onKeyDownFired = true;
+			this.hass.callService('remote', 'send_command', {
+				entity_id: this.getRokuId('remote'),
+				command: outKey,
+			});
+		}
+	}
+
+	rokuOnInput(e: InputEvent) {
+		e.stopImmediatePropagation();
+		this.forceCursorToEnd();
+
+		const inputType = e.inputType ?? '';
+		const text = e.data ?? '';
+		if (text && inputType == 'insertText') {
+			this.hass.callService('remote', 'send_command', {
+				entity_id: this.haAction?.keyboard_id,
+				command: `Lit_${text}`,
+			});
 		} else if (!this.onKeyDownFired) {
-			let inputTypeToKey: Record<string, string>;
-			let key: string;
-			switch (this.haAction?.platform) {
-				case 'KODI':
-					break;
-				case 'ROKU':
-					inputTypeToKey = {
-						deleteContentBackward: 'backspace',
-						insertLineBreak: 'enter',
-					};
-					key = inputTypeToKey[inputType ?? ''];
+			const inputTypeToKey: Record<string, string> = {
+				deleteContentBackward: 'backspace',
+				insertLineBreak: 'enter',
+			};
+			const key = inputTypeToKey[inputType ?? ''];
 
-					if (key) {
-						this.hass.callService('remote', 'send_command', {
-							entity_id: this.getRokuId('remote'),
-							command: key,
-						});
-					}
-					break;
-				case 'FIRE TV':
-					inputTypeToKey = {
-						deleteContentBackward: '67',
-						insertLineBreak: '66',
-					};
-					key = inputTypeToKey[inputType ?? ''];
-
-					if (key) {
-						let domain: string;
-						let service: string;
-						switch (this.haAction?.keyboard_id) {
-							case 'remote':
-								domain = 'remote';
-								service = 'send_command';
-								break;
-							case 'media_player':
-							default:
-								domain = 'androidtv';
-								service = 'adb_command';
-								break;
-						}
-						this.hass.callService(domain, service, {
-							entity_id: this.haAction?.keyboard_id,
-							command: `input keyevent ${key}`,
-						});
-					}
-					break;
-				case 'ANDROID TV':
-				default:
-					inputTypeToKey = {
-						deleteContentBackward: 'DEL',
-						insertLineBreak: 'ENTER',
-					};
-					key = inputTypeToKey[inputType ?? ''];
-					if (key) {
-						this.hass.callService('remote', 'send_command', {
-							entity_id: this.haAction?.remote_id,
-							command: key,
-						});
-					}
-					break;
+			if (key) {
+				this.hass.callService('remote', 'send_command', {
+					entity_id: this.getRokuId('remote'),
+					command: key,
+				});
 			}
 		}
 		this.onKeyDownFired = false;
 	}
 
+	fireTvOnKeyDown(e: KeyboardEvent) {
+		e.stopImmediatePropagation();
+		this.forceCursorToEnd();
+
+		const inKey = e.key;
+		const keyToKey: Record<string, string> = {
+			Backspace: '67',
+			Enter: '66',
+		};
+		const outKey = keyToKey[inKey ?? ''];
+
+		if (outKey) {
+			this.onKeyDownFired = true;
+			let domain: string;
+			let service: string;
+			switch (this.haAction?.keyboard_id) {
+				case 'remote':
+					domain = 'remote';
+					service = 'send_command';
+					break;
+				case 'media_player':
+				default:
+					domain = 'androidtv';
+					service = 'adb_command';
+					break;
+			}
+			this.hass.callService(domain, service, {
+				entity_id: this.haAction?.keyboard_id,
+				command: `input keyevent ${outKey}`,
+			});
+		}
+	}
+
+	fireTvOnInput(e: InputEvent) {
+		e.stopImmediatePropagation();
+		this.forceCursorToEnd();
+
+		const inputType = e.inputType ?? '';
+		const text = e.data ?? '';
+		if (text && inputType == 'insertText') {
+			this.androidTvSendText(text);
+		} else if (!this.onKeyDownFired) {
+			const inputTypeToKey: Record<string, string> = {
+				deleteContentBackward: '67',
+				insertLineBreak: '66',
+			};
+			const key = inputTypeToKey[inputType ?? ''];
+
+			if (key) {
+				let domain: string;
+				let service: string;
+				switch (this.haAction?.keyboard_id) {
+					case 'media_player':
+						domain = 'androidtv';
+						service = 'adb_command';
+						break;
+					case 'remote':
+					default:
+						domain = 'remote';
+						service = 'send_command';
+						break;
+				}
+				this.hass.callService(domain, service, {
+					entity_id: this.haAction?.keyboard_id,
+					command: `input keyevent ${key}`,
+				});
+			}
+		}
+		this.onKeyDownFired = false;
+	}
+
+	androidTvOnKeyDown(e: KeyboardEvent) {
+		e.stopImmediatePropagation();
+		this.forceCursorToEnd();
+
+		const inKey = e.key;
+		const keyToKey: Record<string, string> = {
+			Backspace: 'DEL',
+			Enter: 'ENTER',
+		};
+		const outKey = keyToKey[inKey ?? ''];
+		if (outKey) {
+			this.onKeyDownFired = true;
+			this.hass.callService('remote', 'send_command', {
+				entity_id: this.haAction?.remote_id,
+				command: outKey,
+			});
+		}
+	}
+
+	androidTvOnInput(e: InputEvent) {
+		e.stopImmediatePropagation();
+		this.forceCursorToEnd();
+
+		const inputType = e.inputType ?? '';
+		const text = e.data ?? '';
+		if (text && inputType == 'insertText') {
+			this.androidTvSendText(text);
+		} else if (!this.onKeyDownFired) {
+			const inputTypeToKey: Record<string, string> = {
+				deleteContentBackward: 'DEL',
+				insertLineBreak: 'ENTER',
+			};
+			const key = inputTypeToKey[inputType ?? ''];
+			if (key) {
+				this.hass.callService('remote', 'send_command', {
+					entity_id: this.haAction?.remote_id,
+					command: key,
+				});
+			}
+		}
+		this.onKeyDownFired = false;
+	}
+
+	androidTvSendText(text: string) {
+		let domain: string;
+		let service: string;
+		switch (this.domain) {
+			case 'media_player':
+				domain = 'androidtv';
+				service = 'adb_command';
+				break;
+			case 'remote':
+			default:
+				domain = 'remote';
+				service = 'send_command';
+				break;
+		}
+		this.hass.callService(domain, service, {
+			entity_id: this.haAction?.keyboard_id,
+			command: `input text "${text}"`,
+		});
+	}
+
 	keyboardOnPaste(e: ClipboardEvent) {
 		e.stopImmediatePropagation();
-		this.textarea!.selectionStart = this.textarea!.value.length;
-		this.textarea!.selectionEnd = this.textarea!.value.length;
+		this.forceCursorToEnd();
 
 		const text = e.clipboardData?.getData('Text');
 		if (text) {
@@ -377,10 +394,6 @@ export class KeyboardDialog extends LitElement {
 		this.textarea = this.shadowRoot?.querySelector(
 			'textarea',
 		) as HTMLTextAreaElement;
-		this.textarea.addEventListener(
-			'selectionchange',
-			this.keyboardSelectionChange,
-		);
 		this.textarea.focus();
 		setTimeout(() => {
 			this.dialogOpen = true;
@@ -400,10 +413,6 @@ export class KeyboardDialog extends LitElement {
 
 			if (!isInDialog) {
 				target.close();
-				this.textarea?.removeEventListener(
-					'selectionchange',
-					this.keyboardSelectionChange,
-				);
 				this.haAction = undefined;
 				this.domain = undefined;
 				this.textarea = undefined;
@@ -419,6 +428,8 @@ export class KeyboardDialog extends LitElement {
 
 	render() {
 		let textarea = html``;
+		let inputHandler;
+		let keyDownHandler;
 		switch (this.haAction?.action) {
 			case 'search':
 				break;
@@ -426,16 +437,35 @@ export class KeyboardDialog extends LitElement {
 				break;
 			case 'keyboard':
 			default:
+				switch (this.haAction?.platform) {
+					case 'KODI':
+						inputHandler = this.kodiOnInput;
+						keyDownHandler = this.forceCursorToEnd;
+						break;
+					case 'ROKU':
+						inputHandler = this.rokuOnInput;
+						keyDownHandler = this.rokuOnKeyDown;
+						break;
+					case 'FIRE TV':
+						inputHandler = this.fireTvOnInput;
+						keyDownHandler = this.fireTvOnKeyDown;
+						break;
+					case 'ANDROID TV':
+					default:
+						inputHandler = this.androidTvOnInput;
+						keyDownHandler = this.androidTvOnKeyDown;
+						break;
+				}
 				textarea = html`<textarea
 					spellcheck="false"
 					autocorrect="off"
 					autocomplete="off"
 					autocapitalize="off"
 					placeholder="Type something..."
-					@input=${this.keyboardOnInput}
-					@keydown=${this.keyboardOnKeyDown}
+					@input=${inputHandler}
+					@keydown=${keyDownHandler}
 					@paste=${this.keyboardOnPaste}
-				></textarea> `;
+				></textarea>`;
 				break;
 		}
 
@@ -450,11 +480,12 @@ export class KeyboardDialog extends LitElement {
 	static get styles() {
 		return css`
 			dialog {
-				height: 40%;
+				height: fit-content;
 				width: 85%;
-				display: block;
+				display: inline-flex;
+				flex-direction: column;
 				position: fixed;
-				margin-top: 5%;
+				margin-top: var(--header-height);
 				z-index: 9;
 				border: none;
 				background: var(--ha-card-background);
@@ -470,10 +501,8 @@ export class KeyboardDialog extends LitElement {
 			}
 			dialog textarea {
 				position: relative;
-				height: 90%;
-				width: 90%;
-				top: 5%;
-				left: 5%;
+				height: 180px;
+				padding: 8px;
 				outline: none;
 				background: none;
 				border: none;
