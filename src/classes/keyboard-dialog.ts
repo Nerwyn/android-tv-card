@@ -420,6 +420,7 @@ export class KeyboardDialog extends LitElement {
 	buildDialogButton(text: string, handler: (e: MouseEvent) => void) {
 		return html`<div class="button">
 			<button @click=${handler}>
+				<slot name="label"></slot>
 				<md-ripple></md-ripple>
 			</button>
 			<span>${text}</span>
@@ -520,19 +521,26 @@ export class KeyboardDialog extends LitElement {
 				justify-content: space-between;
 				margin: 0 12px;
 			}
-			button {
-				height: inherit;
-				position: absolute;
-				background: 0px 0px !important;
-				opacity: 1;
-				padding: 0 8px;
+			.button {
+				height: 100%;
+				width: fit-content;
+				align-content: center;
 				cursor: pointer;
-				border: none;
-				overflow: hidden;
 				border-radius: var(--mdc-shape-small, 4px);
+				overflow: hidden;
+			}
+			button {
+				height: 100%;
+				width: 100%;
+				background: 0px 0px;
+				opacity: 1;
+				border: none;
+				z-index: 2;
+				overflow: hidden;
 			}
 			button::before {
-				content: ''
+				content: '';
+				position: absolute;
 				top: 0px;
 				left: 0px;
 				height: 100%;
@@ -549,15 +557,17 @@ export class KeyboardDialog extends LitElement {
 				opacity: var(--md-ripple-hover-opacity);
 			}
 			.button span {
-				height: 100%;
-				width: 100%;
 				font-family: inherit;
 				font-size: var(--paper-font-body1_-_font-size);
 				font-weight: 600;
+				text-transform: uppercase;
 				color: var(--mdc-theme-primary, #6200ee);
 				user-select: none;
 				-webkit-user-select: none;
 				-moz-user-select: none;
+				position: relative;
+				top: -32px;
+				padding: 0 8px;
 			}
 			dialog::backdrop {
 				background: rgb(0, 0, 0);
