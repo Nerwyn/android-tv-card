@@ -367,7 +367,7 @@ export class KeyboardDialog extends LitElement {
 							method: 'Addons.ExecuteAddon',
 							addonid: 'script.globalsearch',
 						}),
-					).catch();
+					);
 					setTimeout(() => {
 						this.hass.callService('kodi', 'call_method', {
 							entity_id: entityId,
