@@ -43,7 +43,7 @@ export class KeyboardDialog extends LitElement {
 		this.forceCursorToEnd();
 
 		const inputType = e.inputType ?? '';
-		const text = e.data ?? '';
+		const text = this.textarea?.value ?? '';
 		if (text && inputType == 'insertText') {
 			this.hass.callService('kodi', 'call_method', {
 				entity_id: this.haAction?.keyboard_id,

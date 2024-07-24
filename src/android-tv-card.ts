@@ -309,6 +309,7 @@ class AndroidTVCard extends LitElement {
 								case 'ANDROID TV':
 								default:
 									action.platform = 'ANDROID TV';
+									break;
 							}
 							action.keyboard_id =
 								action.keyboard_id ?? this.config.keyboard_id;
