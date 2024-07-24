@@ -17,9 +17,10 @@ import {
 	DirectionAction,
 	defaultKeys,
 	defaultSources,
+	ActionTypes,
 	ActionType,
-	svg,
 	Platform,
+	svg,
 } from './models';
 
 import './classes/remote-button';
@@ -94,6 +95,8 @@ class AndroidTVCard extends LitElement {
 		};
 
 		this.config = config;
+		this.defaultActions = this.populateActionFields(this.defaultActions);
+		this.customActions = this.populateActionFields(this.customActions);
 	}
 
 	updateDeprecatedKeys(config: IConfig) {
@@ -226,17 +229,7 @@ class AndroidTVCard extends LitElement {
 			}
 
 			// For each type of action
-			const actionTypes: ActionType[] = [
-				'tap_action',
-				'hold_action',
-				'double_tap_action',
-				'multi_tap_action',
-				'multi_hold_action',
-				'multi_double_tap_action',
-				'momentary_start_action',
-				'momentary_end_action',
-			];
-			for (const actionType of actionTypes) {
+			for (const actionType of ActionTypes) {
 				if (customAction[actionType]) {
 					const action = customAction[actionType] as IAction;
 
@@ -283,6 +276,18 @@ class AndroidTVCard extends LitElement {
 							...action.target,
 						};
 					}
+				}
+			}
+		}
+		return config;
+	}
+
+	populateActionFields(actionsConfig: Record<string, IElementConfig>) {
+		for (const actionsName in actionsConfig) {
+			const actions = actionsConfig[actionsName];
+			for (const actionType of ActionTypes) {
+				if (actions[actionType]) {
+					const action = actions[actionType] ?? ({} as IAction);
 
 					// Populate keyboard, key, and source fields
 					switch (action.action) {
@@ -290,7 +295,7 @@ class AndroidTVCard extends LitElement {
 						case 'textbox':
 						case 'search':
 							action.platform =
-								action.platform ?? config.platform;
+								action.platform ?? this.config.platform;
 							switch (action.platform?.toUpperCase()) {
 								case 'FIRE' as Platform:
 								case 'FIRETV' as Platform:
@@ -306,23 +311,26 @@ class AndroidTVCard extends LitElement {
 									action.platform = 'ANDROID TV';
 							}
 							action.keyboard_id =
-								action.keyboard_id ?? config.keyboard_id;
+								action.keyboard_id ?? this.config.keyboard_id;
 						// falls through
 						case 'source':
 							action.media_player_id =
 								action.media_player_id ??
-								config.media_player_id;
+								this.config.media_player_id;
 						// falls through
 						case 'key':
 						default:
 							action.remote_id =
-								action.remote_id ?? config.remote_id;
+								action.remote_id ?? this.config.remote_id;
 							break;
 					}
+
+					actions[actionType] = action;
 				}
 			}
+			actionsConfig[actionsName] = actions;
 		}
-		return config;
+		return actionsConfig;
 	}
 
 	setToggles(config: IConfig): IConfig {

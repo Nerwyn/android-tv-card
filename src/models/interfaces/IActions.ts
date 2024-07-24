@@ -15,15 +15,17 @@ export const Actions = [
 ] as const;
 export type Action = (typeof Actions)[number];
 
-export type ActionType =
-	| 'tap_action'
-	| 'hold_action'
-	| 'double_tap_action'
-	| 'multi_tap_action'
-	| 'multi_hold_action'
-	| 'multi_double_tap_action'
-	| 'momentary_start_action'
-	| 'momentary_end_action';
+export const ActionTypes = [
+	'tap_action',
+	'hold_action',
+	'double_tap_action',
+	'multi_tap_action',
+	'multi_hold_action',
+	'multi_double_tap_action',
+	'momentary_start_action',
+	'momentary_end_action',
+] as const;
+export type ActionType = (typeof ActionTypes)[number];
 
 export const Platforms = ['ANDROID TV', 'KODI', 'FIRE TV', 'ROKU'] as const;
 export type Platform = (typeof Platforms)[number];
