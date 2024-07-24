@@ -325,6 +325,7 @@ export class KeyboardDialog extends LitElement {
 				}
 			}
 		}
+		this.closeDialog();
 	}
 
 	search(_e: MouseEvent) {
@@ -377,6 +378,7 @@ export class KeyboardDialog extends LitElement {
 				}
 			}
 		}
+		this.closeDialog();
 	}
 
 	showDialog(e: CustomEvent) {
@@ -392,7 +394,7 @@ export class KeyboardDialog extends LitElement {
 		this.shadowRoot?.querySelector('dialog')?.showModal();
 	}
 
-	closeDialog(_e: MouseEvent) {
+	closeDialog(_e?: MouseEvent) {
 		// const target = e.target as HTMLDialogElement;
 		const dialog = this.shadowRoot?.querySelector(
 			'dialog',
