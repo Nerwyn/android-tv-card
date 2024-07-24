@@ -38,11 +38,26 @@ export class KeyboardDialog extends LitElement {
 		this.forceCursorToEnd();
 	}
 
+	kodiOnKeyDown(e: KeyboardEvent) {
+		e.stopImmediatePropagation();
+
+		if (['Backspace', 'Enter'].includes(e.key)) {
+			this.onKeyDownFired = true;
+			const text = this.textarea?.value ?? '';
+			this.hass.callService('kodi', 'call_method', {
+				entity_id: this.haAction?.keyboard_id,
+				method: 'Input.SendText',
+				text: text,
+				done: false,
+			});
+		}
+	}
+
 	kodiOnInput(e: InputEvent) {
 		e.stopImmediatePropagation();
 
-		const text = this.textarea?.value ?? '';
-		if (text) {
+		if (!this.onKeyDownFired) {
+			const text = this.textarea?.value ?? '';
 			this.hass.callService('kodi', 'call_method', {
 				entity_id: this.haAction?.keyboard_id,
 				method: 'Input.SendText',
@@ -248,7 +263,9 @@ export class KeyboardDialog extends LitElement {
 
 	keyboardOnPaste(e: ClipboardEvent) {
 		e.stopImmediatePropagation();
-		this.forceCursorToEnd();
+		if (this.haAction?.platform != 'KODI') {
+			this.forceCursorToEnd();
+		}
 
 		const text = e.clipboardData?.getData('Text');
 		if (text) {
@@ -349,14 +366,15 @@ export class KeyboardDialog extends LitElement {
 							method: 'Addons.ExecuteAddon',
 							addonid: 'script.globalsearch',
 						}),
-					).then((res) => {
-						console.log(res);
-						this.hass.callService('kodi', 'call_method', {
-							entity_id: this.haAction?.keyboard_id,
-							method: 'Input.SendText',
-							text: text,
-							done: true,
-						});
+					).then(() => {
+						setTimeout(() => {
+							this.hass.callService('kodi', 'call_method', {
+								entity_id: this.haAction?.keyboard_id,
+								method: 'Input.SendText',
+								text: text,
+								done: true,
+							});
+						}, 1000);
 					});
 					break;
 				case 'ROKU':
@@ -454,7 +472,7 @@ export class KeyboardDialog extends LitElement {
 				switch (this.haAction?.platform) {
 					case 'KODI':
 						inputHandler = this.kodiOnInput;
-						keyDownHandler = this.forceCursorToEnd;
+						keyDownHandler = this.kodiOnKeyDown;
 						break;
 					case 'ROKU':
 						inputHandler = this.rokuOnInput;
