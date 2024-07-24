@@ -50,6 +50,7 @@
 		"lit-css-loader": "latest",
 		"minify-html-literals-loader": "latest",
 		"prettier": "latest",
+		"prettier-plugin-organize-imports": "^4.0.0",
 		"ts-loader": "latest",
 		"typescript": "latest",
 		"webpack": "latest",

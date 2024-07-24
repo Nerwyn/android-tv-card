@@ -4,6 +4,7 @@
 	"useTabs": true,
 	"semi": true,
 	"endOfLine": "crlf",
+	"plugins": ["prettier-plugin-organize-imports"],
 	"overrides": [
 		{
 			"files": "*.yaml",

@@ -1,6 +1,6 @@
 import packageInfo from '../package.json';
 
-import { LitElement, TemplateResult, html, css } from 'lit';
+import { LitElement, TemplateResult, css, html } from 'lit';
 import { property } from 'lit/decorators.js';
 import { StyleInfo, styleMap } from 'lit/directives/style-map.js';
 
@@ -9,23 +9,23 @@ import { renderTemplate } from 'ha-nunjucks';
 import { load } from 'js-yaml';
 
 import {
-	IConfig,
-	IElementConfig,
-	IActions,
-	IAction,
-	IData,
+	ActionTypes,
 	DirectionAction,
+	IAction,
+	IActions,
+	IConfig,
+	IData,
+	IElementConfig,
+	Platform,
 	defaultKeys,
 	defaultSources,
-	ActionTypes,
-	Platform,
 	svg,
 } from './models';
 
-import './classes/remote-button';
-import './classes/remote-touchpad';
-import './classes/remote-slider';
 import './classes/keyboard-dialog';
+import './classes/remote-button';
+import './classes/remote-slider';
+import './classes/remote-touchpad';
 
 console.info(
 	`%c ANDROID-TV-CARD v${packageInfo.version}`,
