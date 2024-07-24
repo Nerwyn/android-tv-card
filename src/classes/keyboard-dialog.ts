@@ -359,24 +359,25 @@ export class KeyboardDialog extends LitElement {
 		const text = this.textarea?.value;
 		if (text) {
 			switch (this.haAction?.platform) {
-				case 'KODI':
+				case 'KODI': {
+					const entityId = this.haAction?.keyboard_id;
 					Promise.resolve(
 						this.hass.callService('kodi', 'call_method', {
-							entity_id: this.haAction?.keyboard_id,
+							entity_id: entityId,
 							method: 'Addons.ExecuteAddon',
 							addonid: 'script.globalsearch',
 						}),
 					).catch();
 					setTimeout(() => {
 						this.hass.callService('kodi', 'call_method', {
-							entity_id: this.haAction?.keyboard_id,
+							entity_id: entityId,
 							method: 'Input.SendText',
 							text: text,
 							done: true,
 						});
 					}, 1000);
-
 					break;
+				}
 				case 'ROKU':
 					this.hass.callService('roku', 'search', {
 						entity_id: this.getRokuId('media_player'),
