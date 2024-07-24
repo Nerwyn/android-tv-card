@@ -18,7 +18,6 @@ import {
 	defaultKeys,
 	defaultSources,
 	ActionTypes,
-	ActionType,
 	Platform,
 	svg,
 } from './models';
@@ -290,47 +289,32 @@ class AndroidTVCard extends LitElement {
 					const action = actions[actionType] ?? ({} as IAction);
 
 					// Populate keyboard, key, and source fields
-					switch (action.action) {
-						case 'keyboard':
-						case 'textbox':
-						case 'search':
-							action.platform =
-								action.platform ?? this.config.platform;
-							switch (action.platform?.toUpperCase()) {
-								case 'KODI':
-									action.platform = 'KODI';
-									break;
-								case 'ROKU':
-									action.platform = 'ROKU';
-									break;
-								case 'FIRE' as Platform:
-								case 'FIRETV' as Platform:
-								case 'FIRE_TV' as Platform:
-								case 'FIRE TV':
-									action.platform = 'FIRE TV';
-									break;
-								case 'ANDROID' as Platform:
-								case 'ANDROIDTV' as Platform:
-								case 'ANDROID_TV' as Platform:
-								case 'ANDROID TV':
-								default:
-									action.platform = 'ANDROID TV';
-									break;
-							}
-							action.keyboard_id =
-								action.keyboard_id ?? this.config.keyboard_id;
-						// falls through
-						case 'source':
-							action.media_player_id =
-								action.media_player_id ??
-								this.config.media_player_id;
-						// falls through
-						case 'key':
+					action.platform = action.platform ?? this.config.platform;
+					switch (action.platform?.toUpperCase()) {
+						case 'KODI':
+						case 'ROKU':
+							break;
+						case 'FIRE' as Platform:
+						case 'FIRETV' as Platform:
+						case 'FIRE_TV' as Platform:
+						case 'FIRE TV':
+							action.platform = 'FIRE TV';
+							break;
+						case 'ANDROID' as Platform:
+						case 'ANDROIDTV' as Platform:
+						case 'ANDROID_TV' as Platform:
+						case 'ANDROID TV':
 						default:
-							action.remote_id =
-								action.remote_id ?? this.config.remote_id;
+							action.platform = 'ANDROID TV';
 							break;
 					}
+					action.keyboard_id =
+						action.keyboard_id ?? this.config.keyboard_id;
+					action.media_player_id =
+						action.media_player_id ?? this.config.media_player_id;
+					action.remote_id =
+						action.remote_id ?? this.config.remote_id;
+					break;
 
 					actions[actionType] = action;
 				}
@@ -380,17 +364,7 @@ class AndroidTVCard extends LitElement {
 		}
 
 		// Get original actions if not defined.
-		const actionTypes: ActionType[] = [
-			'tap_action',
-			'hold_action',
-			'double_tap_action',
-			'multi_tap_action',
-			'multi_hold_action',
-			'multi_double_tap_action',
-			'momentary_start_action',
-			'momentary_end_action',
-		];
-		for (const actionType of actionTypes) {
+		for (const actionType of ActionTypes) {
 			if (!actions[actionType] && defaultActions[actionType]) {
 				actions[actionType] = defaultActions[actionType];
 			}
