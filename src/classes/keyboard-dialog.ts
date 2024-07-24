@@ -71,6 +71,9 @@ export class KeyboardDialog extends LitElement {
 				entity_id: this.getRokuId('remote'),
 				command: outKey,
 			});
+			if (inKey == 'Enter') {
+				this.closeDialog();
+			}
 		}
 	}
 
@@ -132,6 +135,9 @@ export class KeyboardDialog extends LitElement {
 				entity_id: this.haAction?.keyboard_id,
 				command: `input keyevent ${outKey}`,
 			});
+			if (inKey == 'Enter') {
+				this.closeDialog();
+			}
 		}
 	}
 
@@ -189,6 +195,9 @@ export class KeyboardDialog extends LitElement {
 				entity_id: this.haAction?.remote_id,
 				command: outKey,
 			});
+			if (inKey == 'Enter') {
+				this.closeDialog();
+			}
 		}
 	}
 
@@ -211,6 +220,9 @@ export class KeyboardDialog extends LitElement {
 					entity_id: this.haAction?.remote_id,
 					command: key,
 				});
+				if (inputType == 'insertLineBreak') {
+					this.closeDialog();
+				}
 			}
 		}
 		this.onKeyDownFired = false;
