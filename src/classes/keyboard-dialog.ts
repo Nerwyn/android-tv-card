@@ -366,15 +366,12 @@ export class KeyboardDialog extends LitElement {
 							method: 'Addons.ExecuteAddon',
 							addonid: 'script.globalsearch',
 						}),
-					).then(() => {
-						setTimeout(() => {
-							this.hass.callService('kodi', 'call_method', {
-								entity_id: this.haAction?.keyboard_id,
-								method: 'Input.SendText',
-								text: text,
-								done: true,
-							});
-						}, 1000);
+					);
+					this.hass.callService('kodi', 'call_method', {
+						entity_id: this.haAction?.keyboard_id,
+						method: 'Input.SendText',
+						text: text,
+						done: true,
 					});
 					break;
 				case 'ROKU':
