@@ -534,8 +534,6 @@ export class KeyboardDialog extends LitElement {
 				background: 0px 0px;
 				opacity: 1;
 				border: none;
-				position: relative;
-				z-index: 1;
 				overflow: hidden;
 				cursor: pointer;
 				padding: 0;
@@ -570,7 +568,7 @@ export class KeyboardDialog extends LitElement {
 				position: relative;
 				top: -32px;
 				padding: 0 8px;
-				z-index: 0;
+				pointer-events: none;
 			}
 			dialog::backdrop {
 				background: rgb(0, 0, 0);
