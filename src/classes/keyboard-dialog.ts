@@ -404,30 +404,19 @@ export class KeyboardDialog extends LitElement {
 	closeDialog(e: MouseEvent) {
 		const target = e.target as HTMLDialogElement;
 		if (this.dialogOpen) {
-			const rect = target.getBoundingClientRect();
-			const isInDialog =
-				rect.top <= e.clientY &&
-				e.clientY <= rect.top + rect.height &&
-				rect.left <= e.clientX &&
-				e.clientX <= rect.left + rect.width;
-
-			if (!isInDialog) {
-				target.close();
-				this.haAction = undefined;
-				this.domain = undefined;
-				this.textarea = undefined;
-				this.dialogOpen = false;
-				const textarea = target.querySelector('textarea');
-				if (textarea) {
-					textarea.value = '';
-					textarea.blur();
-				}
-			}
+			target.close();
+			this.textarea!.value = '';
+			this.textarea!.blur();
+			this.haAction = undefined;
+			this.domain = undefined;
+			this.textarea = undefined;
+			this.dialogOpen = false;
 		}
 	}
 
 	render() {
 		let textarea = html``;
+		let buttons = html``;
 		let inputHandler;
 		let keyDownHandler;
 		switch (this.haAction?.action) {
@@ -466,22 +455,24 @@ export class KeyboardDialog extends LitElement {
 					@keydown=${keyDownHandler}
 					@paste=${this.keyboardOnPaste}
 				></textarea>`;
+				buttons = html`<button @click=${this.closeDialog}>
+					CLOSE
+					<md-ripple></md-ripple>
+				</button>`;
 				break;
 		}
 
-		return html`<dialog
-			@keyboard-dialog-open=${this.showDialog}
-			@mousedown=${this.closeDialog}
-		>
+		return html`<dialog @keyboard-dialog-open=${this.showDialog}>
 			${textarea}
+			<div class="buttons">${buttons}</div>
 		</dialog>`;
 	}
 
 	static get styles() {
 		return css`
 			dialog {
-				height: fit-content;
-				width: 85%;
+				height: 0px;
+				width: 0px;
 				display: inline-flex;
 				flex-direction: column;
 				position: fixed;
@@ -490,16 +481,18 @@ export class KeyboardDialog extends LitElement {
 				border: none;
 				background: var(--ha-card-background);
 				border-radius: var(--ha-card-border-radius);
-				pointer-events: none;
 				opacity: 0;
-				transition: all 0.2s;
+				transition: all 0.1s ease-in-out;
+				pointer-events: none;
 			}
 			dialog[open] {
+				height: fit-content;
+				width: 85%;
 				opacity: 1;
+				transition: all 0.1s ease-in-out;
 				pointer-events: all;
-				transition: all 0.2s;
 			}
-			dialog textarea {
+			textarea {
 				position: relative;
 				height: 180px;
 				padding: 8px;
@@ -510,6 +503,28 @@ export class KeyboardDialog extends LitElement {
 				font-family: inherit;
 				font-weight: 500;
 				font-size: 30px;
+			}
+			.buttons {
+				height: 32px;
+				display: inline-flex;
+				flex-direction: row-reverse;
+				justify-content: space-between;
+				margin: 0 12px;
+			}
+			button {
+				height: inherit;
+				width: inherit;
+				cursor: pointer;
+				position: absolute;
+				opacity: 1;
+				padding: 0;
+				background: rgb(0, 0, 0, 0);
+				border: none;
+				z-index: 1;
+				font-family: inherit;
+				font-size: var(--paper-font-body1_-_font-size);
+				font-weight: 600;
+				color: var(--mdc-theme-primary, #6200ee);
 			}
 			dialog::backdrop {
 				background: rgb(0, 0, 0);
