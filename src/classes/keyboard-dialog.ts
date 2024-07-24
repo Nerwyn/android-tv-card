@@ -419,9 +419,7 @@ export class KeyboardDialog extends LitElement {
 
 	buildDialogButton(text: string, handler: (e: MouseEvent) => void) {
 		return html`<div class="button">
-			<button @click=${handler}>
-				<md-ripple></md-ripple>
-			</button>
+			<button @click=${handler}></button>
 			<span>${text}</span>
 		</div>`;
 	}
@@ -537,17 +535,6 @@ export class KeyboardDialog extends LitElement {
 				overflow: hidden;
 				cursor: pointer;
 				padding: 0;
-				position: relative;
-			}
-			button::before {
-				content: '';
-				display: block;
-				top: 0px;
-				left: 0px;
-				height: 100%;
-				width: 100%;
-				overflow: hidden;
-				position: relative;
 			}
 			@media (hover: hover) {
 				button:hover {
@@ -557,7 +544,7 @@ export class KeyboardDialog extends LitElement {
 			}
 			button:active {
 				background: var(--ha-ripple-color);
-				opacity: var(--md-ripple-hover-opacity);
+				opacity: var(--md-ripple-pressed-opacity);
 			}
 			.button span {
 				font-family: inherit;
