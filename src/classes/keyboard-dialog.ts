@@ -420,7 +420,6 @@ export class KeyboardDialog extends LitElement {
 	buildDialogButton(text: string, handler: (e: MouseEvent) => void) {
 		return html`<div class="button">
 			<button @click=${handler}>
-				<slot name="label"></slot>
 				<md-ripple></md-ripple>
 			</button>
 			<span>${text}</span>
@@ -538,6 +537,8 @@ export class KeyboardDialog extends LitElement {
 				position: relative;
 				z-index: 1;
 				overflow: hidden;
+				cursor: pointer;
+				padding: 0;
 			}
 			button::before {
 				content: '';
