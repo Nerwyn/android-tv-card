@@ -42,7 +42,6 @@ export class KeyboardDialog extends LitElement {
 		e.stopImmediatePropagation();
 
 		if (['Backspace', 'Enter'].includes(e.key)) {
-			this.onKeyDownFired = true;
 			const text = this.textarea?.value ?? '';
 			this.hass.callService('kodi', 'call_method', {
 				entity_id: this.haAction?.keyboard_id,
@@ -56,16 +55,13 @@ export class KeyboardDialog extends LitElement {
 	kodiOnInput(e: InputEvent) {
 		e.stopImmediatePropagation();
 
-		if (!this.onKeyDownFired) {
-			const text = this.textarea?.value ?? '';
-			this.hass.callService('kodi', 'call_method', {
-				entity_id: this.haAction?.keyboard_id,
-				method: 'Input.SendText',
-				text: text,
-				done: false,
-			});
-		}
-		this.onKeyDownFired = false;
+		const text = this.textarea?.value ?? '';
+		this.hass.callService('kodi', 'call_method', {
+			entity_id: this.haAction?.keyboard_id,
+			method: 'Input.SendText',
+			text: text,
+			done: false,
+		});
 	}
 
 	rokuOnKeyDown(e: KeyboardEvent) {
