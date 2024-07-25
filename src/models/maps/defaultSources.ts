@@ -33,6 +33,10 @@ export const defaultSources: Record<string, IElementConfig> = {
 		tap_action: { action: 'source', source: 'hulu://' }, // BROKEN
 		icon: 'mdi:hulu',
 	},
+	jellyfin: {
+		tap_action: { action: 'source', source: 'org.jellyfin.androidtv' },
+		icon: svg.jellyfin,
+	},
 	max: {
 		tap_action: {
 			action: 'source',
