@@ -1,4 +1,4 @@
-import { CSSResult, TemplateResult, html, css } from 'lit';
+import { CSSResult, TemplateResult, css, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
@@ -194,23 +194,25 @@ export class RemoteButton extends BaseRemoteElement {
 		this.setValue();
 		const ripple = this.renderRipple ? html`<md-ripple></md-ripple>` : '';
 		return html`
-			<button
+			<div
+				class="container"
 				style=${styleMap(this.buildStyle(this.config.style ?? {}))}
-				@mousedown=${this.onMouseDown}
-				@mouseup=${this.onMouseUp}
-				@mousemove=${this.onMouseMove}
-				@mouseleave=${this.onMouseLeave}
-				@touchstart=${this.onTouchStart}
-				@touchend=${this.onTouchEnd}
-				@touchmove=${this.onTouchMove}
-				@touchcancel=${this.onTouchCancel}
-				@contextmenu=${this.onContextMenu}
 			>
-				${ripple}
-			</button>
-			${this.buildIcon(this.config.icon)}
-			${this.buildLabel(this.config.label)}${inputTemplate}
-			${this.buildStyles()}
+				<button
+					@mousedown=${this.onMouseDown}
+					@mouseup=${this.onMouseUp}
+					@mousemove=${this.onMouseMove}
+					@mouseleave=${this.onMouseLeave}
+					@touchstart=${this.onTouchStart}
+					@touchend=${this.onTouchEnd}
+					@touchmove=${this.onTouchMove}
+					@touchcancel=${this.onTouchCancel}
+					@contextmenu=${this.onContextMenu}
+				>
+					${ripple}
+				</button>
+				${this.buildIcon(this.config.icon)}${inputTemplate}
+			</div>
 		`;
 	}
 
