@@ -1,19 +1,19 @@
-import { LitElement, CSSResult, html, css } from 'lit';
+import { CSSResult, LitElement, css, html } from 'lit';
 import { eventOptions, property, state } from 'lit/decorators.js';
 import { StyleInfo } from 'lit/directives/style-map.js';
 
-import { HomeAssistant, HapticType, forwardHaptic } from 'custom-card-helpers';
+import { HapticType, HomeAssistant, forwardHaptic } from 'custom-card-helpers';
 import { renderTemplate } from 'ha-nunjucks';
 
 import {
+	ActionType,
+	IAction,
 	IConfirmation,
 	IData,
-	ITarget,
 	IElementConfig,
-	IAction,
-	ActionType,
+	ITarget,
 } from '../models';
-import { getDeepKeys, deepGet, deepSet } from '../utils';
+import { deepGet, deepSet, getDeepKeys } from '../utils';
 
 export class BaseRemoteElement extends LitElement {
 	@property({ attribute: false }) hass!: HomeAssistant;
@@ -740,12 +740,9 @@ export class BaseRemoteElement extends LitElement {
 		clearTimeout(this.renderRippleOn);
 		this.renderRippleOff = setTimeout(
 			() => (this.renderRipple = false),
-			2000,
+			400,
 		);
-		this.renderRippleOn = setTimeout(
-			() => (this.renderRipple = true),
-			2500,
-		);
+		this.renderRippleOn = setTimeout(() => (this.renderRipple = true), 500);
 	}
 
 	static get styles(): CSSResult | CSSResult[] {
