@@ -530,8 +530,11 @@ export class KeyboardDialog extends LitElement {
 				position: fixed;
 				z-index: 9;
 				border: none;
-				background: var(--ha-card-background);
-				border-radius: var(--ha-card-border-radius);
+				background: var(
+					--ha-card-background,
+					var(--card-background-color, #fff)
+				);
+				border-radius: var(--ha-card-border-radius, 12px);
 				opacity: 0;
 				transition: all 0.1s ease-in-out;
 				pointer-events: none;
