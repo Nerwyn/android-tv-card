@@ -233,7 +233,7 @@ export class RemoteButton extends BaseRemoteElement {
 					border-radius: inherit;
 					cursor: pointer;
 					pointer-events: all;
-					position: absolute;
+					position: relative;
 					opacity: 1;
 					padding: 0;
 					background: rgb(0, 0, 0, 0);
