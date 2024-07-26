@@ -25,6 +25,13 @@ export const defaultSources: Record<string, IElementConfig> = {
 		}, // UNTESTED
 		icon: 'mdi:emby',
 	},
+	filmplus: {
+		tap_action: {
+			action: 'source',
+			source: 'com.guideplus.co',
+		},
+		icon: svg.filmplus,
+	},
 	foxsports: {
 		tap_action: { action: 'source', source: 'foxsports://live' }, // UNTESTED
 		icon: svg.foxsports,
@@ -36,6 +43,13 @@ export const defaultSources: Record<string, IElementConfig> = {
 	jellyfin: {
 		tap_action: { action: 'source', source: 'org.jellyfin.androidtv' },
 		icon: svg.jellyfin,
+	},
+	kijk: {
+		tap_action: {
+			action: 'source',
+			source: 'com.talpa.kijk',
+		},
+		icon: svg.kijk,
 	},
 	max: {
 		tap_action: {
@@ -55,6 +69,13 @@ export const defaultSources: Record<string, IElementConfig> = {
 	netflix: {
 		tap_action: { action: 'source', source: 'netflix://' },
 		icon: 'mdi:netflix',
+	},
+	npo_start: {
+		tap_action: {
+			action: 'source',
+			source: 'nl.uitzendinggemist',
+		},
+		icon: svg.npo,
 	},
 	paramount: {
 		tap_action: { action: 'source', source: 'com.cbs.ott' },
