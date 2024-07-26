@@ -192,7 +192,6 @@ export class RemoteButton extends BaseRemoteElement {
 
 	render() {
 		this.setValue();
-		const ripple = this.renderRipple ? html`<md-ripple></md-ripple>` : '';
 		return html`
 			<button
 				@mousedown=${this.onMouseDown}
@@ -206,7 +205,7 @@ export class RemoteButton extends BaseRemoteElement {
 				@contextmenu=${this.onContextMenu}
 				style=${styleMap(this.buildStyle(this.config.style ?? {}))}
 			>
-				${this.buildIcon(this.config.icon)}${ripple}
+				${this.buildIcon(this.config.icon)}${this.buildRipple()}
 			</button>
 		`;
 	}

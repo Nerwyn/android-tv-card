@@ -1,8 +1,8 @@
-import { CSSResult, html, css } from 'lit';
+import { CSSResult, css, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
-import { IActions, ActionType, DirectionAction } from '../models';
+import { ActionType, DirectionAction, IActions } from '../models';
 
 import { BaseRemoteElement } from './base-remote-element';
 
@@ -290,7 +290,6 @@ export class RemoteTouchpad extends BaseRemoteElement {
 
 	render() {
 		this.setValue();
-		const ripple = this.renderRipple ? html`<md-ripple></md-ripple>` : '';
 		return html`
 			<toucharea
 				style=${styleMap(this.buildStyle(this.config.style ?? {}))}
@@ -304,7 +303,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 				@touchcancel=${this.onTouchCancel}
 				@contextmenu=${this.onContextMenu}
 			>
-				${ripple}
+				${this.buildRipple()}
 			</toucharea>
 		`;
 	}
