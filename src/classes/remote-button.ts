@@ -54,9 +54,7 @@ export class RemoteButton extends BaseRemoteElement {
 	}
 
 	onStart(e: TouchEvent | MouseEvent) {
-		clearTimeout(this.renderRippleOff);
-		clearTimeout(this.renderRippleOn);
-		this.renderRipple = true;
+		this.cancelRippleToggle();
 		this.swiping = false;
 		if ('targetTouches' in e) {
 			this.initialX = e.targetTouches[0].clientX;

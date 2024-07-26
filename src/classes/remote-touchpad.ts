@@ -73,9 +73,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 	}
 
 	onStart(e: TouchEvent | MouseEvent) {
-		clearTimeout(this.renderRippleOff);
-		clearTimeout(this.renderRippleOn);
-		this.renderRipple = true;
+		this.cancelRippleToggle();
 		this.holdStart = true;
 
 		if (
