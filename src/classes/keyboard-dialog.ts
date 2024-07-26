@@ -32,6 +32,11 @@ export class KeyboardDialog extends LitElement {
 		this.textarea!.selectionEnd = this.textarea!.value.length;
 	}
 
+	forceCursorToEndEvent(e: Event) {
+		e.preventDefault();
+		this.forceCursorToEnd();
+	}
+
 	kodiOnKeyDown(e: KeyboardEvent) {
 		e.stopImmediatePropagation();
 
@@ -452,7 +457,8 @@ export class KeyboardDialog extends LitElement {
 		let inputHandler;
 		let keyDownHandler;
 		let pasteHandler;
-		let clickHandler: (() => void) | undefined = this.forceCursorToEnd;
+		let antiCursorMoveHandler: ((e: Event) => void) | undefined =
+			this.forceCursorToEndEvent;
 		switch (this.haAction?.action) {
 			case 'search':
 				placeholder = 'Search for something...';
@@ -474,7 +480,7 @@ export class KeyboardDialog extends LitElement {
 					case 'KODI':
 						inputHandler = this.kodiOnInput;
 						keyDownHandler = this.kodiOnKeyDown;
-						clickHandler = undefined;
+						antiCursorMoveHandler = undefined;
 						break;
 					case 'ROKU':
 						inputHandler = this.rokuOnInput;
@@ -504,8 +510,8 @@ export class KeyboardDialog extends LitElement {
 			@input=${inputHandler}
 			@keyup=${keyDownHandler}
 			@paste=${pasteHandler}
-			@click=${clickHandler}
-			@select=${clickHandler}
+			@click=${antiCursorMoveHandler}
+			@select=${antiCursorMoveHandler}
 		></textarea>`;
 
 		return html`<dialog @keyboard-dialog-open=${this.showDialog}>
