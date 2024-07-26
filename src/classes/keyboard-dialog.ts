@@ -27,7 +27,6 @@ export class KeyboardDialog extends LitElement {
 	}
 
 	forceCursorToEnd() {
-		// TODO prevent cursor from moving on arrow key or space
 		this.textarea!.selectionStart = this.textarea!.value.length;
 		this.textarea!.selectionEnd = this.textarea!.value.length;
 	}
@@ -508,7 +507,7 @@ export class KeyboardDialog extends LitElement {
 			autocapitalize="off"
 			placeholder="${placeholder}"
 			@input=${inputHandler}
-			@keyup=${keyDownHandler}
+			@keydown=${keyDownHandler}
 			@paste=${pasteHandler}
 			@click=${antiCursorMoveHandler}
 			@select=${antiCursorMoveHandler}
