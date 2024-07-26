@@ -220,7 +220,7 @@ export class RemoteButton extends BaseRemoteElement {
 		return [
 			super.styles as CSSResult,
 			css`
-				:host {
+				.container {
 					height: var(--size, 48px);
 					width: var(--size, 48px);
 					border-radius: var(--size, 48px);
