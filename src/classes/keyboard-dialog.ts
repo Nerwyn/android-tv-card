@@ -445,6 +445,8 @@ export class KeyboardDialog extends LitElement {
 		let inputHandler;
 		let keyDownHandler;
 		let pasteHandler;
+		let clickHandler: ((e: MouseEvent) => void) | undefined =
+			this.keyboardOnClick;
 		switch (this.haAction?.action) {
 			case 'search':
 				placeholder = 'Search for something...';
@@ -466,6 +468,7 @@ export class KeyboardDialog extends LitElement {
 					case 'KODI':
 						inputHandler = this.kodiOnInput;
 						keyDownHandler = this.kodiOnKeyDown;
+						clickHandler = undefined;
 						break;
 					case 'ROKU':
 						inputHandler = this.rokuOnInput;
@@ -495,6 +498,7 @@ export class KeyboardDialog extends LitElement {
 			@input=${inputHandler}
 			@keyup=${keyDownHandler}
 			@paste=${pasteHandler}
+			@click=${clickHandler}
 		></textarea>`;
 
 		return html`<dialog @keyboard-dialog-open=${this.showDialog}>
