@@ -24,6 +24,8 @@ export class BaseRemoteElement extends LitElement {
 	@state() renderRipple = true;
 	@state() renderRippleOff?: ReturnType<typeof setTimeout>;
 	@state() renderRippleOn?: ReturnType<typeof setTimeout>;
+	@state() renderRippleTransition?: ReturnType<typeof setTimeout>;
+	@state() rippleTransition?: boolean;
 
 	@state() value?: string | number | boolean = 0;
 	entityId?: string;
@@ -662,7 +664,13 @@ export class BaseRemoteElement extends LitElement {
 	}
 
 	buildRipple() {
-		return this.renderRipple ? html`<md-ripple></md-ripple>` : '';
+		return this.renderRipple
+			? html`<md-ripple
+					class="${this.renderRippleTransition
+						? `transition-${this.rippleTransition ? 'on' : 'off'}`
+						: ''}"
+			  ></md-ripple>`
+			: '';
 	}
 
 	buildStyle(_style: StyleInfo = {}, context?: object) {
@@ -741,18 +749,25 @@ export class BaseRemoteElement extends LitElement {
 
 	toggleRipple() {
 		this.cancelRippleToggle();
+		this.renderRippleTransition = setTimeout(
+			() => (this.rippleTransition = false),
+			400,
+		);
 		this.renderRippleOff = setTimeout(
 			() => (this.renderRipple = false),
-			750,
+			800,
 		);
-		this.renderRippleOn = setTimeout(() => this.cancelRippleToggle(), 800);
+		this.renderRippleOn = setTimeout(() => this.cancelRippleToggle(), 850);
 	}
 
 	cancelRippleToggle() {
 		clearTimeout(this.renderRippleOff);
 		clearTimeout(this.renderRippleOn);
+		clearTimeout(this.renderRippleTransition);
 		this.renderRippleOff = undefined;
 		this.renderRippleOn = undefined;
+		this.renderRippleTransition = undefined;
+		this.rippleTransition = true;
 		this.renderRipple = true;
 	}
 
@@ -785,6 +800,15 @@ export class BaseRemoteElement extends LitElement {
 				width: var(--size, 48px);
 				z-index: 2;
 				pointer-events: none;
+			}
+
+			md-ripple.transition-on {
+				opacity: 1
+				transition: opacity 375ms linear;
+			}
+			md-ripple.transition-off {
+				opacity: 0;
+				transition: opacity 375ms linear;
 			}
 
 			.icon {
