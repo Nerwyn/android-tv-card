@@ -1,4 +1,4 @@
-import { CSSResult, TemplateResult, css, html } from 'lit';
+import { CSSResult, css, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
@@ -190,7 +190,7 @@ export class RemoteButton extends BaseRemoteElement {
 		super.endAction();
 	}
 
-	render(inputTemplate?: TemplateResult<1>) {
+	render() {
 		this.setValue();
 		const ripple = this.renderRipple ? html`<md-ripple></md-ripple>` : '';
 		return html`
@@ -209,9 +209,8 @@ export class RemoteButton extends BaseRemoteElement {
 					@touchcancel=${this.onTouchCancel}
 					@contextmenu=${this.onContextMenu}
 				>
-					${ripple}
+					${this.buildIcon(this.config.icon)}${ripple}
 				</button>
-				${this.buildIcon(this.config.icon)}${inputTemplate}
 			</div>
 		`;
 	}
@@ -224,6 +223,8 @@ export class RemoteButton extends BaseRemoteElement {
 					height: var(--size, 48px);
 					width: var(--size, 48px);
 					border-radius: var(--size, 48px);
+					align-content: center;
+					text-align: center;
 				}
 
 				button {
@@ -231,12 +232,15 @@ export class RemoteButton extends BaseRemoteElement {
 					width: inherit;
 					border-radius: inherit;
 					cursor: pointer;
+					pointer-events: all;
 					position: absolute;
 					opacity: 1;
 					padding: 0;
 					background: rgb(0, 0, 0, 0);
 					border: none;
 					z-index: 1;
+					align-content: center;
+					text-align: center;
 				}
 			`,
 		];
