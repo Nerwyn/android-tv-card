@@ -10,7 +10,6 @@ export class KeyboardDialog extends LitElement {
 	@state() haAction?: IAction;
 	domain?: string;
 
-	dialogOpen = false;
 	textarea?: HTMLTextAreaElement;
 	onKeyDownFired: boolean = false;
 
@@ -410,14 +409,11 @@ export class KeyboardDialog extends LitElement {
 	showDialog(e: CustomEvent) {
 		this.haAction = e.detail;
 		this.domain = (this.haAction?.keyboard_id ?? '').split('.')[0];
+		this.shadowRoot?.querySelector('dialog')?.showModal();
 		this.textarea = this.shadowRoot?.querySelector(
 			'textarea',
 		) as HTMLTextAreaElement;
 		this.textarea.focus();
-		setTimeout(() => {
-			this.dialogOpen = true;
-		}, 500);
-		this.shadowRoot?.querySelector('dialog')?.showModal();
 	}
 
 	closeDialog(_e?: MouseEvent) {
@@ -425,15 +421,12 @@ export class KeyboardDialog extends LitElement {
 		const dialog = this.shadowRoot?.querySelector(
 			'dialog',
 		) as HTMLDialogElement;
-		if (this.dialogOpen) {
-			dialog.close();
-			this.textarea!.value = '';
-			this.textarea!.blur();
-			this.haAction = undefined;
-			this.domain = undefined;
-			this.textarea = undefined;
-			this.dialogOpen = false;
-		}
+		dialog.close();
+		this.textarea!.value = '';
+		this.textarea!.blur();
+		this.haAction = undefined;
+		this.domain = undefined;
+		this.textarea = undefined;
 	}
 
 	buildDialogButton(text: string, handler: (e: MouseEvent) => void) {
@@ -552,7 +545,7 @@ export class KeyboardDialog extends LitElement {
 			}
 			.button {
 				height: 100%;
-				width: fit-content;
+				width: min-content;
 				align-content: center;
 				cursor: pointer;
 				border-radius: var(--mdc-shape-small, 4px);
