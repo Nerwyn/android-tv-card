@@ -500,6 +500,8 @@ export class KeyboardDialog extends LitElement {
 				buttons = this.buildDialogButton('Close', this.closeDialog);
 				break;
 		}
+		placeholder = this.haAction?.keyboard_prompt ?? placeholder;
+
 		const textarea = html`<textarea
 			spellcheck="false"
 			autocorrect="off"

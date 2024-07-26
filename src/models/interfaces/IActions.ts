@@ -61,6 +61,7 @@ export interface IAction {
 	key?: string;
 	source?: string;
 	keyboard_id?: string;
+	keyboard_prompt?: string;
 	remote_id?: string;
 	media_player_id?: string;
 
