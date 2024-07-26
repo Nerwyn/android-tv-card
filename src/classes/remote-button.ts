@@ -224,7 +224,8 @@ export class RemoteButton extends BaseRemoteElement {
 					display: flex;
 					height: inherit;
 					width: inherit;
-					border-radius: inherit;
+					border-radius: var(--size, 48px);
+					overflow: visible;
 					cursor: pointer;
 					pointer-events: all;
 					position: relative;
