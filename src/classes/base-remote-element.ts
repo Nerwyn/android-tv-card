@@ -22,9 +22,9 @@ export class BaseRemoteElement extends LitElement {
 	@property({ attribute: false }) autofillEntityId: boolean = false;
 
 	@state() renderRipple = true;
-	renderRippleOff?: ReturnType<typeof setTimeout>;
-	renderRippleOn?: ReturnType<typeof setTimeout>;
-	renderRippleTransition?: ReturnType<typeof setTimeout>;
+	@state() renderRippleTransition?: ReturnType<typeof setTimeout>;
+	@state() renderRippleOff?: ReturnType<typeof setTimeout>;
+	@state() renderRippleOn?: ReturnType<typeof setTimeout>;
 
 	@state() value?: string | number | boolean = 0;
 	entityId?: string;
