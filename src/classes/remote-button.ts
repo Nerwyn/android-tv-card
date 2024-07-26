@@ -216,14 +216,12 @@ export class RemoteButton extends BaseRemoteElement {
 			super.styles as CSSResult,
 			css`
 				:host {
-					height: var(--size, 48px);
-					width: var(--size, 48px);
-					border-radius: var(--size, 48px);
 					align-content: center;
 					text-align: center;
 				}
 
 				button {
+					display: flex;
 					height: inherit;
 					width: inherit;
 					border-radius: inherit;
@@ -237,9 +235,10 @@ export class RemoteButton extends BaseRemoteElement {
 					z-index: 1;
 					align-content: center;
 					text-align: center;
+					justify-content: center;
+					align-items: center;
 
 					--mdc-icon-size: var(--size, 48px);
-					--mdc-icon-button-size: var(--size, 48px);
 				}
 			`,
 		];
