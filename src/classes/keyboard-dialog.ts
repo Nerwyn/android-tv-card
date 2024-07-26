@@ -413,7 +413,10 @@ export class KeyboardDialog extends LitElement {
 		this.textarea = this.shadowRoot?.querySelector(
 			'textarea',
 		) as HTMLTextAreaElement;
-		this.textarea.focus();
+		const textarea = this.textarea;
+		setTimeout(() => {
+			textarea.focus();
+		}, 0.4);
 	}
 
 	closeDialog(_e?: MouseEvent) {
