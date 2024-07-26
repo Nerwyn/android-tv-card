@@ -409,7 +409,15 @@ export class KeyboardDialog extends LitElement {
 	showDialog(e: CustomEvent) {
 		this.haAction = e.detail;
 		this.domain = (this.haAction?.keyboard_id ?? '').split('.')[0];
-		this.shadowRoot?.querySelector('dialog')?.showModal();
+		const dialog = this.shadowRoot?.querySelector('dialog');
+		if (dialog) {
+			try {
+				dialog.showModal();
+			} catch {
+				dialog.close();
+				dialog.showModal();
+			}
+		}
 		this.textarea = this.shadowRoot?.querySelector(
 			'textarea',
 		) as HTMLTextAreaElement;
@@ -420,11 +428,15 @@ export class KeyboardDialog extends LitElement {
 	}
 
 	closeDialog(_e?: MouseEvent) {
-		// const target = e.target as HTMLDialogElement;
-		const dialog = this.shadowRoot?.querySelector(
-			'dialog',
-		) as HTMLDialogElement;
-		dialog.close();
+		const dialog = this.shadowRoot?.querySelector('dialog');
+		if (dialog) {
+			try {
+				dialog.close();
+			} catch {
+				dialog.showModal();
+				dialog.close();
+			}
+		}
 		this.textarea!.value = '';
 		this.textarea!.blur();
 		this.haAction = undefined;
