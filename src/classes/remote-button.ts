@@ -194,24 +194,20 @@ export class RemoteButton extends BaseRemoteElement {
 		this.setValue();
 		const ripple = this.renderRipple ? html`<md-ripple></md-ripple>` : '';
 		return html`
-			<div
-				class="container"
+			<button
+				@mousedown=${this.onMouseDown}
+				@mouseup=${this.onMouseUp}
+				@mousemove=${this.onMouseMove}
+				@mouseleave=${this.onMouseLeave}
+				@touchstart=${this.onTouchStart}
+				@touchend=${this.onTouchEnd}
+				@touchmove=${this.onTouchMove}
+				@touchcancel=${this.onTouchCancel}
+				@contextmenu=${this.onContextMenu}
 				style=${styleMap(this.buildStyle(this.config.style ?? {}))}
 			>
-				<button
-					@mousedown=${this.onMouseDown}
-					@mouseup=${this.onMouseUp}
-					@mousemove=${this.onMouseMove}
-					@mouseleave=${this.onMouseLeave}
-					@touchstart=${this.onTouchStart}
-					@touchend=${this.onTouchEnd}
-					@touchmove=${this.onTouchMove}
-					@touchcancel=${this.onTouchCancel}
-					@contextmenu=${this.onContextMenu}
-				>
-					${this.buildIcon(this.config.icon)}${ripple}
-				</button>
-			</div>
+				${this.buildIcon(this.config.icon)}${ripple}
+			</button>
 		`;
 	}
 
@@ -219,7 +215,7 @@ export class RemoteButton extends BaseRemoteElement {
 		return [
 			super.styles as CSSResult,
 			css`
-				.container {
+				:host {
 					height: var(--size, 48px);
 					width: var(--size, 48px);
 					border-radius: var(--size, 48px);
