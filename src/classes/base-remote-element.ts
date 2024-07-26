@@ -799,10 +799,10 @@ export class BaseRemoteElement extends LitElement {
 			}
 			md-ripple {
 				opacity: 1;
+				transition: opacity 375ms linear;
 			}
 			md-ripple.transition-off {
 				opacity: 0;
-				transition: opacity 375ms linear;
 			}
 
 			.icon {
