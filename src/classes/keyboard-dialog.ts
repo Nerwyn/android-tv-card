@@ -32,11 +32,6 @@ export class KeyboardDialog extends LitElement {
 		this.textarea!.selectionEnd = this.textarea!.value.length;
 	}
 
-	keyboardOnClick(e: MouseEvent) {
-		e.stopImmediatePropagation();
-		this.forceCursorToEnd();
-	}
-
 	kodiOnKeyDown(e: KeyboardEvent) {
 		e.stopImmediatePropagation();
 
@@ -457,8 +452,7 @@ export class KeyboardDialog extends LitElement {
 		let inputHandler;
 		let keyDownHandler;
 		let pasteHandler;
-		let clickHandler: ((e: MouseEvent) => void) | undefined =
-			this.keyboardOnClick;
+		let clickHandler: (() => void) | undefined = this.forceCursorToEnd;
 		switch (this.haAction?.action) {
 			case 'search':
 				placeholder = 'Search for something...';
@@ -511,6 +505,7 @@ export class KeyboardDialog extends LitElement {
 			@keyup=${keyDownHandler}
 			@paste=${pasteHandler}
 			@click=${clickHandler}
+			@select=${clickHandler}
 		></textarea>`;
 
 		return html`<dialog @keyboard-dialog-open=${this.showDialog}>
@@ -527,7 +522,6 @@ export class KeyboardDialog extends LitElement {
 				display: inline-flex;
 				flex-direction: column;
 				position: fixed;
-				margin-top: var(--header-height);
 				z-index: 9;
 				border: none;
 				background: var(--ha-card-background);
