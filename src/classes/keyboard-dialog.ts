@@ -509,6 +509,7 @@ export class KeyboardDialog extends LitElement {
 			@input=${inputHandler}
 			@keydown=${keyDownHandler}
 			@paste=${pasteHandler}
+			@keyup=${antiCursorMoveHandler}
 			@click=${antiCursorMoveHandler}
 			@select=${antiCursorMoveHandler}
 		></textarea>`;
