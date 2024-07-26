@@ -237,6 +237,9 @@ export class RemoteButton extends BaseRemoteElement {
 					z-index: 1;
 					align-content: center;
 					text-align: center;
+
+					--mdc-icon-size: var(--size, 48px);
+					--mdc-icon-button-size: var(--size, 48px);
 				}
 			`,
 		];

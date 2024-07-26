@@ -1,4 +1,4 @@
-import { CSSResult, html, css } from 'lit';
+import { CSSResult, css, html } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import { StyleInfo, styleMap } from 'lit/directives/style-map.js';
 
@@ -440,6 +440,7 @@ export class RemoteSlider extends BaseRemoteElement {
 					height: 50px;
 					align-self: center;
 					color: var(--background, var(--primary-background-color));
+
 					--color: var(--primary-text-color);
 					--mdc-icon-size: var(--size, 32px);
 				}
