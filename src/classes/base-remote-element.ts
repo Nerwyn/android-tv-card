@@ -740,9 +740,12 @@ export class BaseRemoteElement extends LitElement {
 		clearTimeout(this.renderRippleOn);
 		this.renderRippleOff = setTimeout(
 			() => (this.renderRipple = false),
-			400,
+			800,
 		);
-		this.renderRippleOn = setTimeout(() => (this.renderRipple = true), 500);
+		this.renderRippleOn = setTimeout(
+			() => (this.renderRipple = true),
+			1000,
+		);
 	}
 
 	static get styles(): CSSResult | CSSResult[] {
