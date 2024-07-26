@@ -749,12 +749,12 @@ export class BaseRemoteElement extends LitElement {
 	toggleRipple() {
 		this.cancelRippleToggle();
 
-		this.renderRippleTransition = setTimeout(() => {}, 400);
+		this.renderRippleTransition = setTimeout(() => {}, 800);
 		this.renderRippleOff = setTimeout(
 			() => (this.renderRipple = false),
-			800,
+			1200,
 		);
-		this.renderRippleOn = setTimeout(() => this.cancelRippleToggle(), 850);
+		this.renderRippleOn = setTimeout(() => this.cancelRippleToggle(), 1250);
 	}
 
 	cancelRippleToggle() {
