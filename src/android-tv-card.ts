@@ -304,6 +304,7 @@ class AndroidTVCard extends LitElement {
 		let actions = structuredClone(
 			this.customActions[action] || defaultActions,
 		);
+		console.log(actions);
 
 		// Apply template if defined
 		if (actions.template) {
