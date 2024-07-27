@@ -456,7 +456,6 @@ export class KeyboardDialog extends LitElement {
 	}
 
 	render() {
-		console.log(this.haAction);
 		let buttons = html``;
 		let placeholder: string;
 		let inputHandler: ((e: InputEvent) => void) | undefined;
