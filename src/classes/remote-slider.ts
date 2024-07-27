@@ -10,6 +10,7 @@ export class RemoteSlider extends BaseRemoteElement {
 	@state() thumbOffset: number = 0;
 	@state() sliderOn: boolean = true;
 	@state() currentValue = this.value;
+	@state() sliderWidth: number = 0;
 
 	oldValue?: number;
 	newValue?: number;
@@ -20,7 +21,6 @@ export class RemoteSlider extends BaseRemoteElement {
 
 	vertical: boolean = false;
 	thumbWidth: number = 50;
-	sliderWidth: number = 0;
 	resizeObserver = new ResizeObserver((entries) => {
 		for (const entry of entries) {
 			this.sliderWidth = this.vertical
