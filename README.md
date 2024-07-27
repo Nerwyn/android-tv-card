@@ -13,7 +13,7 @@
 
 <img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/screenshot.png" alt="ex" width="300"/>
 
-This repo is started as a fork of usernein's [tv-card](https://github.com/usernein/tv-card), which was a fork of marrobHD's [tv-card](https://github.com/marrobHD/tv-card) merged with featrues from two other projects. Credit goes to the authors of previous iterations of tv card for giving me a strong foundation to work on.
+This repo is started as a fork of usernein's [tv-card](https://github.com/usernein/tv-card), which was a fork of marrobHD's [tv-card](https://github.com/marrobHD/tv-card) merged with features from two other projects. Credit goes to the authors of previous iterations of tv card for giving me a strong foundation to work on.
 
 [**Super customizable touchpad**](#touchpad)
 
