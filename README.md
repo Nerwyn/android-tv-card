@@ -13,95 +13,62 @@
 
 <img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/screenshot.png" alt="ex" width="300"/>
 
-📦 This repo is a fork of [tv-card](https://github.com/usernein/tv-card), which is a fork of another [tv-card](https://github.com/marrobHD/tv-card) merged with two other projects, and includes the same features and improvements usernein made along with a many other new features and improvements:
-
-**Ported to TypeScript**
-
-- Refactored to use proper types (no anys!) and separated large objects like the default keys and sources into their own files.
-- Proper use of packages such as `lit-element` and `custom-card-helpers`.
-- Separates out buttons, touchpad, and slider into separate lit elements for better stability and maintainability.
-- Provides a clean base on which to add future features.
-
-**Redesigned for the [Android TV Remote integration](https://www.home-assistant.io/integrations/androidtv_remote/) (but can be used for anything)**
-
-- Uses `remote.send_command` to send commands to an Android TV for all default keys and sources using Android TV Remote entity ID `remote_id`.
-- Navigation speed increased to be closer to (but not as crazy fast) as the Google TV remote.
+This repo is started as a fork of usernein's [tv-card](https://github.com/usernein/tv-card), which was a fork of marrobHD's [tv-card](https://github.com/marrobHD/tv-card) merged with featrues from two other projects. Credit goes to the authors of previous iterations of tv card for giving me a strong foundation to work on.
 
 [**Super customizable touchpad**](#touchpad)
 
-- [Touchpad actions are now remappable](#custom-touchpad-commands) by creating custom actions for `up`, `down`, `left`, `right`, and `center`.
-- Alter touchpad CSS using [`touchpad_style`](#touchpad-style).
-- [Touchpad style](#touchpad-style) now follows theme.
-- Touchpad haptics can now be toggled.
-- Supports multi touch gestures for all swipe directions and the center tap, meaning you can program the touchpad with up to twenty-two different actions.
+- [Remap all touchpad actions](#custom-touchpad-commands).
+- [User definable CSS](#touchpad-style) but follows theme colors by default.
+- Toggleable haptics.
+- Multi touch gesture support
+- Supports up to twenty-two different user definable actions via taps, double taps, hold taps, swipes, held swipes, momentary actions, and multi finger taps and swipes.
 
 **Tap, double tap, hold tap, momentary, and multi-touch actions support for buttons and touchpad on all platforms**
 
-- All buttons and the touchpad `center` command support tap, double tap, and long tap [custom actions](#custom-actions).
+- All buttons and the touchpad `center` command support tap, double tap, hold tap, and momentary [custom actions](#custom-actions).
   - Using the [Home Assistant actions](https://www.home-assistant.io/dashboards/actions/) syntax.
-- Supports the [actions](#action-types) `call-service`, `navigate`, `url`, `assist`, `more-info`, and `none`, card specific actions `key` and `source`, and browser-mod popup card `fire-dom-event`.
-- Double tap actions are not configured by default but can be set on any button or the touchpad.
-  - If configured then there will be a default 200ms window before the single tap action is triggered.
-  - The [double tap action window](#double-tap-window) can be changed by setting `double_tap_window` globally in the root of the config or for a specific custom action.
-- Hold actions can be set to either their own action or to [repeat](#repeat) the tap action ten times a second by setting action to `repeat`.
-  - Time to trigger a hold action can be changed by setting [`hold_time`](#hold-time) globally in the root of the config or for a specific custom action.
-  - Hold actions for default keys `up`, `down`, `left`, `right`, `volume_up`, `volume_down`, `delete`, and `forward_delete` are set to `repeat`by default but can be changed using custom actions.
-  - Time between repeats can be changed by setting [`repeat_delay`](#repeat-and-repeat-delay) globally in the root of the config or for a specific custom action.
-- Configure the touchpad to perform alternate actions by using [multiple fingers](#custom-touchpad-commands).
-- Use buttons and the touchpad in an [alternate momentary mode](#momentary-button-mode) where different actions are fired on the initial press and release.
+- Any [action](#action-types) can be used for any remote element with little to no restrictions.
 
-**Better row handling and columns**
+**Super customizable layout using stylable rows and columns**
 
 - Rows exist in a `rows` array with no limit on the number of rows you can add.
-- Sliders and touchpads can now be placed in rows alongside other buttons.
-  - For [special volume and navigation features](#special-elements) use `vol_buttons`, `slider`, `touchpad`, and `nav_buttons`, `dpad`, `numpad`, `xpad`, or `npad` as element names within a row.
-- Empty buttons are no longer clickable.
-- Create columns by creating an array within a row array (see examples). Create an array within that array to create another row. Experiment with nesting rows and columns to make weird remote layouts.
+- Nest columns within rows, and then rows within those columns infinitely repeating for wild remote layouts.
+- Sliders and touchpads can be placed in rows and columns alongside other elements.
+- [Special button arrays and grids](#special-elements) for volume, navigation, and more.
 
 **Better button and icon handling**
 
-- Many more default [keys](https://github.com/Nerwyn/android-tv-card/blob/main/src/models/maps/defaultKeys.ts) and [sources](https://github.com/Nerwyn/android-tv-card/blob/main/src/models/maps/defaultSources.ts) with SVG icons for sources with no material design icon present in Home Assistant's default material design icon list.
-  - _Not all default keys and sources are working or tested at this time, please let me know if you find the correct source/activity names for the ones that are incorrect._
-  - _Also let me know if you find a key or source that is not listed here and you want to add to the default lists!_
-- Custom actions that replace default ones will now inherit the default icons and tap actions if no new ones are given.
-- Default svg icons provided in this card can be used for custom actions by referencing them by name.
-- Alter CSS of all buttons using [`button_style`](#button-style).
-- Alter CSS of an individual button by including a `style` object in a custom action.
-- Button haptics can now be toggled globally or on the individual custom action level.
+- Many default [keys](https://github.com/Nerwyn/android-tv-card/blob/main/src/models/maps/defaultKeys.ts) and [sources](https://github.com/Nerwyn/android-tv-card/blob/main/src/models/maps/defaultSources.ts)
+- SVG icons provided for sources with no material design icon present in Home Assistant.
+  - Can also be referenced [by name](https://github.com/Nerwyn/android-tv-card/blob/main/src/models/enums/svg.ts) in custom actions.
+- Custom actions inherit default action information like icon and non-overwritten actions.
+- User definable [global](#button-style) and individual custom action CSS.
+- Toggle haptics globally and individually.
 
 [**Fully native slider**](#slider)
 
-- [Slider](#slider) has been replaced with a native solution rather than an embedding an external card.
-  - Greatly improves the stability of the slider as it now renders consistently with the rest of the card.
-- Slider is now animated like Home Assistant tile and Mushroom sliders.
-- Slider purpose can be changed by creating a custom action for `slider`.
-- Alter CSS of slider by using the [`style`](#slider-style) field in the `slider` custom action.
-- Change slider range, step size, and value attribute to work with different entities and services.
-  - Range defaults to [0,1] but can be changed for media players that use different volume ranges.
-  - Step defaults to one hundredth of slider range.
-  - Value attribute defaults to state but can instead be used to track any numeric attribute of an entity.
-- Slider style now follows theme.
-- Slider has a tooltip which shows up when the slider is held down on which displays it's current value.
-- Slider can be given an optional icon which follows the thumb.
+- Animated on state change.
+- Remappable to a different custom action.
+- [User definable CSS](#slider-style) but follows theme colors by default.
+- Customizable range, step size, entity, and attribute.
+- Tooltip shows current value when held down.
+- Optional icon which tracks thumb.
 
 [**Keyboard support**](#keyboard)
 
-- Send text to text input fields on your Android TV using `androidtv.adb_command` by setting the media player entity ID created by the [Android Debug Bridge integration](https://www.home-assistant.io/integrations/androidtv/) to `keyboard_id`.
+- Send text to Android TV, Fire TV, Roku, and Kodi.
+  - Android and Fire TV's require the [Android Debug Bridge](https://www.home-assistant.io/integrations/androidtv/) integration.
 - Includes three different methods:
-  - [**Seamless text entry**](#seamless-text-entry) - Create and press the button `keyboard` to pull up the on screen keyboard (on mobile, otherwise use your physical keyboard) and send keystrokes seamlessly to your Android TV.
-    - Also works with backspace, delete, enter, and left and right keys.
-  - [**Bulk text entry**](#bulk-text-entry) - Create and press the button `textbox` to pull up a browser prompt in which you can type in text to send to your Android TV all at once.
+  - [**Seamless text entry**](#seamless-text-entry) - Use the action or default button `keyboard` to send text to your media platform every time you enter a key.
+    - Also works with backspace and enter.
+  - [**Bulk text entry**](#bulk-text-entry) - Use the action or default button `textbox` to type up text and send it all at once.
     - Highly recommended that you also create buttons for `delete` and `enter` so you can remove and send your input text.
-  - [**Google Assistant search**](#google-assistant-search) - Create and press the button `search` to pull up a browser prompt in which you can type in text to send to your Android TV to process as a Google Assistant search.
-    - Works well if you are experiencing [this issue](https://github.com/home-assistant/core/issues/94063).
-- Can also be used for Fire TV, Kodi, and Roku ([see below](#alternate-media-platform-support))
+  - [**Google Assistant search**](#google-assistant-search) - Use the action or default button `search` to perform a global search.
 
 [**Template support**](#templating)
 
 - Supports Home Assistant jinja2 style templating using nunjucks.
 - Uses the same syntax as normal Home Assistant templating with a subset of functions.
-
-Many thanks to the original authors. Getting this to work with Android TV was straightforward and all of the frontend heavy lifting they did has provided an excellent base on which to build my personal ultimate Android TV remote.
 
 # Demo
 
@@ -109,7 +76,7 @@ Many thanks to the original authors. Getting this to work with Android TV was st
 type: custom:android-tv-card
 remote_id: remote.google_chromecast
 slider_id: media_player.google_chromecast
-keyboard_id: media_player.google_chromecast_adb
+keyboard_id: remote.google_chromecast_adb
 title: Example
 custom_actions:
   slider:
@@ -172,11 +139,11 @@ rows:
 | ------------------ | ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | type               | string                    | Must be `custom:android-tv-card`                                                                                                                                                                                  |
 | title              | string                    | Title to display in the card header.                                                                                                                                                                              |
-| remote_id          | string                    | The `remote` entity id to control, required for default `key` and `source` actions. Also autofills into service call data when `autofill_entity_id` is set to true.                                               |
-| media_player_id    | string                    | A `media_player` entity ID to autofill into service call data when `autofill_entity_id` is set to true. Also populates `slider_id` if it is not present and autofills for the `kodi` and `denonavr` domains.      |
+| remote_id          | string                    | Global `remote` entity id for default and custom key and source actions, along with some Android TV keyboard functions. Also autofills into service call data when `autofill_entity_id` is set to true.           |
+| media_player_id    | string                    | Gloabl `media_player` entity ID to autofill into service call data when `autofill_entity_id` is set to true. Also populates `slider_id` if it is not present and autofills for the `kodi` and `denonavr` domains. |
 | autofill_entity_id | boolean                   | Enable autofilling of the entity ID of `remote` and `media_player` service calls if no target IDs are provided, defaults to `false`.                                                                              |
 | rows               | string[]                  | Defines the elements used in the card. Each row within rows defines a row of elements. Sub-arrays within these rows will display as columns, and sub-arrays within those will alternate between rows and columns. |
-| row_styles         | Record<string, StyleInfo> | CSS styles for rows and columns. Can be applied globally using keys `rows` and `columns`, or by row or column IDs such as `row-1` or `column-2`.                                                                  |
+| row_styles         | Record<string, StyleInfo> | CSS for rows and columns. Can be applied globally using keys `rows` and `columns`, or by row or column IDs such as `row-1` or `column-2`.                                                                         |
 
 All fields are technically optional except for `type`, but the card will not function unless you customize it using the above options.
 Using only these options you will get an empty card (or almost empty, if you set a title).
@@ -227,16 +194,16 @@ button_style:
 
 This card also supports the following special button shortcuts and elements which can be added to any row or column. `slider` and `touchpad` will be further explained below.
 
-| Name                                                     | Type     | Description                                                                                                 |
-| -------------------------------------------------------- | -------- | ----------------------------------------------------------------------------------------------------------- |
-| [touchpad](#touchpad), nav_touchpad, navigation_touchpad | touchpad | A touchpad that functions the same as navigation buttons but uses swipe actions instead.                    |
-| [slider](#slider), volume_slider                         | slider   | A slider that controls the entity defined by `slider_id`.                                                   |
-| vol_buttons, volume_buttons                              | buttons  | Shorthand to generate a set of volume down, volume mute, and volume up buttons in a row or column.          |
-| nav_buttons, navigation_buttons                          | buttons  | Shorthand to generate a set of up, down, left, right, and center buttons across three rows within a column. |
-| dpad, d_pad, direction_pad,                              | buttons  | Shorthand to generate a set of up, down, left, right, and center buttons arranged in a square grid.         |
-| numpad, num_pad, number_pad                              | buttons  | Shorthand to generate a set of 1-9 buttons arranged in a square grid. Does not include `n0`.                |
-| xpad, x_pad, gamepad, xgamepad, x_gamepad                | buttons  | Shorthand to generate a set of A, B, X, and Y buttons arranged in a square grid.                            |
-| npad, n_pad, ngamepad, n_gamepad                         | buttons  | Shorthand to generate a set of A, B, X, and Y buttons arranged in a square grid.                            |
+| Name                  | Type          | Description                                                                                                 |
+| --------------------- | ------------- | ----------------------------------------------------------------------------------------------------------- |
+| [touchpad](#touchpad) | touchpad      | A touchpad that functions the same as navigation buttons but uses swipe actions instead.                    |
+| [slider](#slider)     | slider        | A slider that controls the entity defined by `slider_id`.                                                   |
+| volume_buttons        | buttons array | Shorthand to generate a set of volume down, volume mute, and volume up buttons in a row or column.          |
+| nav_buttons           | buttons array | Shorthand to generate a set of up, down, left, right, and center buttons across three rows within a column. |
+| dpad                  | buttons grid  | Shorthand to generate a set of up, down, left, right, and center buttons arranged in a square grid.         |
+| numpad                | buttons grid  | Shorthand to generate a set of 1-9 buttons arranged in a square grid. Does not include `n0`.                |
+| xpad                  | buttons grid  | Shorthand to generate a set of A, B, X, and Y buttons arranged in a square grid.                            |
+| npad                  | buttons grid  | Shorthand to generate a set of A, B, X, and Y buttons arranged in a square grid.                            |
 
 ## Custom Actions
 
@@ -436,28 +403,32 @@ custom_actions:
 
 ### Action Types
 
-Actions follow the [Home Assistant actions](https://www.home-assistant.io/dashboards/actions/) syntax. It supports a subset of Home Assistant actions along with `key` and `source`, which are shorthands for remote service calls.
+Actions follow the [Home Assistant actions](https://www.home-assistant.io/dashboards/actions/) syntax. It supports almost all Home Assistant actions along with some card specific ones.
 
 | Action                            | Description                                                                                                                                             |
 | --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [key](#key)                       | Send a key to send to the TV via the service call `remote.send_command`.                                                                                |
-| [source](#source)                 | Switch to a source via the service call `remote.turn_on`.                                                                                               |
 | [call-service](#call-service)     | Call any Home Assistant service.                                                                                                                        |
 | [navigate](#navigate)             | Navigate to another Home Assistant page.                                                                                                                |
 | [url](#url)                       | Navigate to an external URL.                                                                                                                            |
 | [assist](#assist)                 | Open the assist dialog. Uses the mobile dialog if available, like in the Home Assistant app.                                                            |
 | [more-info](#more-info)           | Open the more info dialog.                                                                                                                              |
+| [none](#none)                     | Explicilty set a command to do nothing.                                                                                                                 |
 | [fire-dom-event](#fire-dom-event) | Fire a browser dom event using whatever information is in the Action object. Useful for opening browser-mod popup cards.                                |
 | [repeat](#repeat)                 | Repeat the `tap_action` ten times a second while held. Only applicable to `hold_action`, acts as `none` if used in `tap_action` or `double_tap_action`. |
-| [none](#none)                     | Explicilty set a command to do nothing.                                                                                                                 |
+| [key](#key)                       | Send a key to send to the TV via the service call `remote.send_command`.                                                                                |
+| [source](#source)                 | Switch to a source via the service call `remote.turn_on`.                                                                                               |
+| [keyboard](#keyboard)             | Open a dialog for sending seamless keyboard input.                                                                                                      |
+| [textbox](#textbox)               | Open a dialog for sending bulk keyboard input.                                                                                                          |
+| [search](#search)                 | Open a dialog for sending a global search query.                                                                                                        |
 
 Most actions have a set of possible options associated with them. If `action` is not provided the card will guess which type of action it is by the options used.
 
 #### key
 
-| Name | Description                                                                                                                                                                                                   |
-| ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| key  | Android TV key. While most Android TV remote keys are already defined as default keys, you can find a list of supported commands [here](https://www.home-assistant.io/integrations/androidtv_remote/#remote). |
+| Name      | Description                                                                                                                                                                                                        |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| key       | Key command to send. While most Android TV remote keys are already defined as default keys, you can find a list of supported commands [here](https://www.home-assistant.io/integrations/androidtv_remote/#remote). |
+| remote_id | The remote entity ID to use to send this key. Overrides the global remote ID.                                                                                                                                      |
 
 ```yaml
 custom_actions:
@@ -475,9 +446,10 @@ By default, hold actions on default keys adds `hold_secs: 0.5` to the data sent 
 
 #### source
 
-| Name   | Description                                                                                                                                                       |
-| ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| source | Android TV app. See [here](https://community.home-assistant.io/t/android-tv-remote-app-links-deep-linking-guide/567921) for a guide on Android TV app deep links. |
+| Name      | Description                                                                                                                                                        |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| source    | Source activity. See [here](https://community.home-assistant.io/t/android-tv-remote-app-links-deep-linking-guide/567921) for a guide on Android TV app deep links. |
+| remote_id | The remote entity ID to use to open this source. Overrides the global remote ID.                                                                                   |
 
 ```yaml
 custom_actions:
@@ -573,6 +545,20 @@ _The following options are only available in the mobile assist dialog._
 | -------------- | ----------------------------------------------- |
 | data.entity_id | The entity ID to open the more info dialog for. |
 
+#### none
+
+None. This action does nothing.
+
+```yaml
+custom_actions:
+  volume_up:
+    hold_action:
+      action: none # volume up will no longer repeat while held
+  back:
+    tap_action:
+      action: none # you can no longer go back
+```
+
 #### fire-dom-event
 
 | Name        | Description                                                                                                                                                       |
@@ -621,19 +607,17 @@ custom_actions:
     repeat_delay: 1000
 ```
 
-#### none
+#### keyboard, textbox, and search
 
-None. This action does nothing.
+| Name            | Description                                                                 |
+| --------------- | --------------------------------------------------------------------------- |
+| platform        | The media platform to use for this keyboard.                                |
+| keyboard_id     | The entity ID of the the keyboard used to send text.                        |
+| remote_id       | An additional entity ID used by some platforms to send additional commands. |
+| media_player_id | An additional entity ID used by some platforms to send additional commands. |
+| keyboard_prompt | The default text to display in the keyboard dialog.                         |
 
-```yaml
-custom_actions:
-  volume_up:
-    hold_action:
-      action: none # volume up will no longer repeat while held
-  back:
-    tap_action:
-      action: none # you can no longer go back
-```
+See the [keyboards](#Keyboards) section for more information.
 
 ### Momentary Button Mode
 
@@ -928,27 +912,38 @@ custom_actions:
         method: Input.Info
 ```
 
-## Keyboard
+## Keyboards
 
-| Name          | Type   | Description                                                                                                                                                                                                                         |
-| ------------- | ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| keyboard_id   | string | The entity id to use to send keyboard events. Requires the [Android Debug Bridge integration](https://www.home-assistant.io/integrations/androidtv/) for Android TV, and other media platform integration for other supported ones. |
-| keyboard_mode | string | The media platform type for sending keyboard commands. Defaults to `ANDROID TV`. Also supports `FIRE TV`, `KODI`, and `ROKU`.                                                                                                       |
+All fields except `keyboard_prompt` can be set globally or at the custom action level.
+
+| Name            | Description                                                                                                                                                                                                                         |
+| --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| platform        | The media platform type for sending keyboard commands. Defaults to `ANDROID TV`. Also supports `FIRE TV`, `KODI`, and `ROKU`.                                                                                                       |
+| keyboard_id     | The entity id to use to send keyboard events. Requires the [Android Debug Bridge integration](https://www.home-assistant.io/integrations/androidtv/) for Android TV, and other media platform integration for other supported ones. |
+| remote_id       | An additional entity ID used by some platforms to send additional commands.                                                                                                                                                         |
+| media_player_id | An additional entity ID used by some platforms to send additional commands.                                                                                                                                                         |
+| keyboard_prompt | The default text to display in the keyboard dialog.                                                                                                                                                                                 |
 
 You can use the [Android Debug Bridge integration](https://www.home-assistant.io/integrations/androidtv/) with this card to send text to your Android TV (by default, see below for alternate media platforms). This card includes three different methods for sending text to Android TV.
 
 ### Methods
 
-To use the keyboard, create one of three buttons based on the keyboard method you want to use.
+To use the keyboard, use one of three actions based on the keyboard method you want to use. Each one will open a dialog that can be typed into.
+
+<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/keyboard_dialog.png" alt="keyboard example" width="300"/>
 
 #### Seamless Text Entry
 
-Send text to Android TV in seamlessly by creating a button named `keyboard`. Clicking on it will activate several listeners which will send any text you type to the Android TV, along with backspace, delete, enter, left, and right commands (note that the latter two may not behave as expected depending on where the cursor is on the Android TV). You can also paste by holding clicking `CTRL + V` while the keyboard is active or holding down and selecting paste on the keyboard button itself. You may experience some delay as keys are being sent to Android TV as they are being sent one at a time by ADB. Tip: Put the keyboard button at the top of your card so that your screen does not shift to keep it in focus when the on screen keyboard opens.
+Send text to your supported media platform seamlessly using the action or default button `keyboard`. The dialog has several listeners which will send anything you type to your media platform immediately. You can also paste by holding or typing `CTRL + V` into the dialog.
+
+Because we do not have a way to retrieve the currently on screen text of most media platforms, the dialog and platform text may become out of sync if a message gets dropped due to a network issue, you attempt to erase more than one character at a time, you try to modify the middle of the entered text, or if you prematurely close the dialog window. The keyboard dialog will attempt to prevent you from doing things that would cause this, but please remember that if you make a mistake you have to backspace all the way to the incorrect character from the end of your input text one character at at a time. In my testing the dialog always kept in sync with the platform text unless I attempted to delete more than one character.
+
+ADB is a bit slow and you may notice some delay in what you type and what appears on your Android or Fire TV device. Make sure to use the newer ADB integration `remote` entity for a faster typing experience.
 
 ```yaml
 type: custom:android-tv-card
 remote_id: remote.google_chromecast
-keyboard_id: media_player.google_chromecast_adb
+keyboard_id: remote.google_chromecast_adb
 rows:
   - - back
     - home
@@ -958,16 +953,14 @@ rows:
   - - touchpad
 ```
 
-<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/live_keyboard.png" alt="keyboard example" width="300"/>
-
 #### Bulk Text Entry
 
-Send text to Android TV in bulk by creating a button named `textbox`. Clicking on it will create a text prompt in which you can enter the text which you wish to send. It is highly recommended that you also create keys for `delete` and `enter` so you can easily delete the text you send and quickly search using it.
+Send text to your supported media platform in bulk using the action or default button `textbox`. The dialog will not send any information until you tap the send button. It is highly recommended that you also create buttons for `delete` and `enter` so you can easily delete the text you send and quickly search using it.
 
 ```yaml
 type: custom:android-tv-card
 remote_id: remote.google_chromecast
-keyboard_id: media_player.google_chromecast_adb
+keyboard_id: remote.google_chromecast_adb
 rows:
   - - back
     - home
@@ -979,22 +972,20 @@ rows:
     - enter
 ```
 
-<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/bulk_keyboard.png" alt="keyboard example" width="300"/>
+#### Global Search
 
-#### Google Assistant Search
+Send a global search query to your media platform using the action or default button `search`. Like the bulk entry method, the dialog will not send any information until you tap the search button. This method cannot be used to enter text into currently visible text fields.
 
-Send text to Android TV to be processed as a Google Assistant global search by creating a button named `search`. Clicking on it will create a text prompt in which you can enter text you wish to search for using Google Assistant on Android TV. This method cannot be used to enter text into text fields on Android TV, but does work if you are experiencing [this issue](https://github.com/home-assistant/core/issues/94063) which prevents the on screen keyboard from appearing, and therefore search from being triggered.
+### Supported Media Platforms
 
-### Alternate Media Platform Support
+You can also use the keyboard to send text on the following supported platforms by setting `platform` to one of the listed values and using it's corresponding `keyboard_id`. You may also have to set `remote_id` or `media_player_id` globally or for a custom action depending on the platform.
 
-You can also use the keyboard to send text on the following alternate platforms by setting `keyboard_id` to the entity ID of the platform and `keyboard_mode` to one of the following:
-
-| Media Platform | Info                                                                                                                                                                                                                                                                                                      |
-| -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `ANDROID TV`   | Default, not required if using Android TV                                                                                                                                                                                                                                                                 |
-| `FIRE TV`      | Mostly the same as Android TV, but uses ADB to send backspace, delete, enter, and left/right arrow commands.                                                                                                                                                                                              |
-| `KODI`         | Does not support backspace, delete, enter, left, and right but these can be used with the on screen keyboard. Seamless mode does not work as the Kodi `Input.SendText` method clears the textbox before sending text.                                                                                     |
-| `ROKU`         | Uses the Roku remote entity ID for seamless and bulk modes, and the Roku media player ID for global search. Either one can be provided as the keyboard ID, but the other must be provided as the remote or media player ID in order to support all three keyboard modes. Does not support the delete key. |
+| Media Platform | Info                                                                                                                                                                                                                                                                     |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `ANDROID TV`   | Default, not required if using Android TV                                                                                                                                                                                                                                |
+| `FIRE TV`      | Mostly the same as Android TV, but uses ADB to send backspace and enter commands.                                                                                                                                                                                        |
+| `KODI`         | Does not support the enter key. Because of how Kodi's input text method works, you can freely move your cursor around the dialog and modify it at will.                                                                                                                  |
+| `ROKU`         | Uses the Roku remote entity ID for seamless and bulk modes, and the Roku media player ID for global search. Either one can be provided as the keyboard ID, but the other must be provided as the remote or media player ID in order to support all three keyboard modes. |
 
 More may be added as requested if there is a way to do so through their Home Assistant (or possibly community made) integrations.
 
