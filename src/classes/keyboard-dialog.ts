@@ -452,22 +452,21 @@ export class KeyboardDialog extends LitElement {
 
 	render() {
 		let buttons = html``;
-		let placeholder: string;
-		let inputHandler: ((e: InputEvent) => void) | undefined;
-		let keyDownHandler: ((e: KeyboardEvent) => void) | undefined;
-		let pasteHandler: ((e: ClipboardEvent) => void) | undefined;
-		let antiCursorMoveHandler: ((e: Event) => void) | undefined =
-			this.forceCursorToEndEvent;
+		let placeholder = this.haAction?.keyboard_prompt;
+		let inputHandler;
+		let keyDownHandler;
+		let pasteHandler;
+		let antiCursorMoveHandler;
 		switch (this.haAction?.action) {
 			case 'search':
-				placeholder = 'Search for something...';
+				placeholder = placeholder ?? 'Search for something...';
 				buttons = html`${this.buildDialogButton(
 					'Search',
 					this.search,
 				)}${this.buildDialogButton('Close', this.closeDialog)}`;
 				break;
 			case 'textbox':
-				placeholder = 'Type something...';
+				placeholder = placeholder ?? 'Type something...';
 				buttons = html`${this.buildDialogButton(
 					'Send',
 					this.textBox,
@@ -479,28 +478,29 @@ export class KeyboardDialog extends LitElement {
 					case 'KODI':
 						inputHandler = this.kodiOnInput;
 						keyDownHandler = this.kodiOnKeyDown;
-						antiCursorMoveHandler = undefined;
 						break;
 					case 'ROKU':
 						inputHandler = this.rokuOnInput;
 						keyDownHandler = this.rokuOnKeyDown;
+						antiCursorMoveHandler = this.forceCursorToEndEvent;
 						break;
 					case 'FIRE TV':
 						inputHandler = this.fireTvOnInput;
 						keyDownHandler = this.fireTvOnKeyDown;
+						antiCursorMoveHandler = this.forceCursorToEndEvent;
 						break;
 					case 'ANDROID TV':
 					default:
 						inputHandler = this.androidTvOnInput;
 						keyDownHandler = this.androidTvOnKeyDown;
+						antiCursorMoveHandler = this.forceCursorToEndEvent;
 						break;
 				}
-				placeholder = 'Type something...';
+				placeholder = placeholder ?? 'Type something...';
 				pasteHandler = this.keyboardOnPaste;
 				buttons = this.buildDialogButton('Close', this.closeDialog);
 				break;
 		}
-		placeholder = this.haAction?.keyboard_prompt ?? placeholder;
 
 		const textarea = html`<textarea
 			spellcheck="false"
