@@ -416,7 +416,7 @@ export class KeyboardDialog extends LitElement {
 				dialog.close();
 				dialog.showModal();
 			}
-			window.addEventListener('navigate', () => this.closeDialog());
+			window.addEventListener('popstate', () => this.closeDialog());
 		}
 		this.textarea = this.shadowRoot?.querySelector(
 			'textarea',
@@ -441,7 +441,7 @@ export class KeyboardDialog extends LitElement {
 				dialog.showModal();
 				dialog.close();
 			}
-			window.removeEventListener('navigate', () => this.closeDialog());
+			window.removeEventListener('popstate', () => this.closeDialog());
 		}
 		this.textarea!.value = '';
 		this.textarea!.blur();
