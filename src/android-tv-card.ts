@@ -94,8 +94,6 @@ class AndroidTVCard extends LitElement {
 		};
 
 		this.config = config;
-		this.defaultActions = this.populateActionFields(this.defaultActions);
-		this.customActions = this.populateActionFields(this.customActions);
 	}
 
 	updateDeprecatedKeys(config: IConfig) {
@@ -281,47 +279,6 @@ class AndroidTVCard extends LitElement {
 		return config;
 	}
 
-	populateActionFields(actionsConfig: Record<string, IElementConfig>) {
-		for (const actionsName in actionsConfig) {
-			const actions = actionsConfig[actionsName];
-			for (const actionType of ActionTypes) {
-				if (actions[actionType]) {
-					const action = actions[actionType] ?? ({} as IAction);
-
-					// Populate keyboard, key, and source fields
-					action.platform = action.platform ?? this.config.platform;
-					switch (action.platform?.toUpperCase()) {
-						case 'KODI':
-						case 'ROKU':
-							break;
-						case 'FIRE' as Platform:
-						case 'FIRETV' as Platform:
-						case 'FIRE_TV' as Platform:
-						case 'FIRE TV':
-							action.platform = 'FIRE TV';
-							break;
-						case 'ANDROID' as Platform:
-						case 'ANDROIDTV' as Platform:
-						case 'ANDROID_TV' as Platform:
-						case 'ANDROID TV':
-						default:
-							action.platform = 'ANDROID TV';
-							break;
-					}
-					action.keyboard_id =
-						action.keyboard_id ?? this.config.keyboard_id;
-					action.media_player_id =
-						action.media_player_id ?? this.config.media_player_id;
-					action.remote_id =
-						action.remote_id ?? this.config.remote_id;
-					actions[actionType] = action;
-				}
-			}
-			actionsConfig[actionsName] = actions;
-		}
-		return actionsConfig;
-	}
-
 	setToggles(config: IConfig): IConfig {
 		// Set toggles to default values if not provided
 		const toggles: Record<string, boolean> = {
@@ -369,6 +326,36 @@ class AndroidTVCard extends LitElement {
 		for (const actionType of ActionTypes) {
 			if (!actions[actionType] && defaultActions[actionType]) {
 				actions[actionType] = defaultActions[actionType];
+			}
+			if (actions[actionType]) {
+				const action = actions[actionType] ?? ({} as IAction);
+
+				action.platform = action.platform ?? this.config.platform;
+				switch (action.platform?.toUpperCase()) {
+					case 'KODI':
+					case 'ROKU':
+						break;
+					case 'FIRE' as Platform:
+					case 'FIRETV' as Platform:
+					case 'FIRE_TV' as Platform:
+					case 'FIRE TV':
+						action.platform = 'FIRE TV';
+						break;
+					case 'ANDROID' as Platform:
+					case 'ANDROIDTV' as Platform:
+					case 'ANDROID_TV' as Platform:
+					case 'ANDROID TV':
+					default:
+						action.platform = 'ANDROID TV';
+						break;
+				}
+
+				action.keyboard_id =
+					action.keyboard_id ?? this.config.keyboard_id;
+				action.media_player_id =
+					action.media_player_id ?? this.config.media_player_id;
+				action.remote_id = action.remote_id ?? this.config.remote_id;
+				actions[actionType] = action;
 			}
 		}
 
