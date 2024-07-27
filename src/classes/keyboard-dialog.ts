@@ -452,10 +452,10 @@ export class KeyboardDialog extends LitElement {
 
 	render() {
 		let buttons = html``;
-		let placeholder;
-		let inputHandler;
-		let keyDownHandler;
-		let pasteHandler;
+		let placeholder: string;
+		let inputHandler: ((e: InputEvent) => void) | undefined;
+		let keyDownHandler: ((e: KeyboardEvent) => void) | undefined;
+		let pasteHandler: ((e: ClipboardEvent) => void) | undefined;
 		let antiCursorMoveHandler: ((e: Event) => void) | undefined =
 			this.forceCursorToEndEvent;
 		switch (this.haAction?.action) {

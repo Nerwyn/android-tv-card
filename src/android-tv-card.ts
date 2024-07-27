@@ -314,8 +314,6 @@ class AndroidTVCard extends LitElement {
 						action.media_player_id ?? this.config.media_player_id;
 					action.remote_id =
 						action.remote_id ?? this.config.remote_id;
-					break;
-
 					actions[actionType] = action;
 				}
 			}
@@ -327,6 +325,10 @@ class AndroidTVCard extends LitElement {
 	setToggles(config: IConfig): IConfig {
 		// Set toggles to default values if not provided
 		const toggles: Record<string, boolean> = {
+			button_haptics: true,
+			touchpad_haptics: true,
+
+			// Deprecated toggle names
 			enable_button_feedback: true,
 			enable_touchpad_feedback: true,
 			enable_double_click: false,
