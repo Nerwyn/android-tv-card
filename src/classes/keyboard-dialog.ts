@@ -426,6 +426,11 @@ export class KeyboardDialog extends LitElement {
 		}, 0.4);
 	}
 
+	cancelDialog(e: Event) {
+		e.preventDefault();
+		this.closeDialog();
+	}
+
 	closeDialog(_e?: MouseEvent) {
 		const dialog = this.shadowRoot?.querySelector('dialog');
 		if (dialog) {
@@ -451,22 +456,24 @@ export class KeyboardDialog extends LitElement {
 	}
 
 	render() {
+		console.log(this.haAction);
 		let buttons = html``;
-		let placeholder = this.haAction?.keyboard_prompt;
-		let inputHandler;
-		let keyDownHandler;
-		let pasteHandler;
-		let antiCursorMoveHandler;
+		let placeholder: string;
+		let inputHandler: ((e: InputEvent) => void) | undefined;
+		let keyDownHandler: ((e: KeyboardEvent) => void) | undefined;
+		let pasteHandler: ((e: ClipboardEvent) => void) | undefined;
+		let antiCursorMoveHandler: ((e: Event) => void) | undefined =
+			this.forceCursorToEndEvent;
 		switch (this.haAction?.action) {
 			case 'search':
-				placeholder = placeholder ?? 'Search for something...';
+				placeholder = 'Search for something...';
 				buttons = html`${this.buildDialogButton(
 					'Search',
 					this.search,
 				)}${this.buildDialogButton('Close', this.closeDialog)}`;
 				break;
 			case 'textbox':
-				placeholder = placeholder ?? 'Type something...';
+				placeholder = 'Type something...';
 				buttons = html`${this.buildDialogButton(
 					'Send',
 					this.textBox,
@@ -478,29 +485,28 @@ export class KeyboardDialog extends LitElement {
 					case 'KODI':
 						inputHandler = this.kodiOnInput;
 						keyDownHandler = this.kodiOnKeyDown;
+						antiCursorMoveHandler = undefined;
 						break;
 					case 'ROKU':
 						inputHandler = this.rokuOnInput;
 						keyDownHandler = this.rokuOnKeyDown;
-						antiCursorMoveHandler = this.forceCursorToEndEvent;
 						break;
 					case 'FIRE TV':
 						inputHandler = this.fireTvOnInput;
 						keyDownHandler = this.fireTvOnKeyDown;
-						antiCursorMoveHandler = this.forceCursorToEndEvent;
 						break;
 					case 'ANDROID TV':
 					default:
 						inputHandler = this.androidTvOnInput;
 						keyDownHandler = this.androidTvOnKeyDown;
-						antiCursorMoveHandler = this.forceCursorToEndEvent;
 						break;
 				}
-				placeholder = placeholder ?? 'Type something...';
+				placeholder = 'Type something...';
 				pasteHandler = this.keyboardOnPaste;
 				buttons = this.buildDialogButton('Close', this.closeDialog);
 				break;
 		}
+		placeholder = this.haAction?.keyboard_prompt ?? placeholder;
 
 		const textarea = html`<textarea
 			spellcheck="false"
@@ -514,6 +520,7 @@ export class KeyboardDialog extends LitElement {
 			@keyup=${antiCursorMoveHandler}
 			@click=${antiCursorMoveHandler}
 			@select=${antiCursorMoveHandler}
+			@cancel=${this.cancelDialog}
 		></textarea>`;
 
 		return html`<dialog @keyboard-dialog-open=${this.showDialog}>
