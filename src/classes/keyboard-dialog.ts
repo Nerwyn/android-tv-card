@@ -423,7 +423,9 @@ export class KeyboardDialog extends LitElement {
 		) as HTMLTextAreaElement;
 		const textarea = this.textarea;
 		setTimeout(() => {
-			textarea.focus();
+			if (textarea) {
+				textarea.focus();
+			}
 		}, 0.4);
 	}
 
@@ -443,8 +445,10 @@ export class KeyboardDialog extends LitElement {
 			}
 			window.removeEventListener('popstate', () => this.closeDialog());
 		}
-		this.textarea!.value = '';
-		this.textarea!.blur();
+		if (this.textarea) {
+			this.textarea.value = '';
+			this.textarea.blur();
+		}
 		this.haAction = undefined;
 		this.domain = undefined;
 		this.textarea = undefined;
