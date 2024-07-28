@@ -664,13 +664,14 @@ export class BaseRemoteElement extends LitElement {
 	}
 
 	buildRipple() {
-		return this.renderRipple
-			? html`<md-ripple
-					class="${this.renderRippleTransition
-						? `transition-${this.rippleTransition ? 'on' : 'off'}`
-						: ''}"
-			  ></md-ripple>`
-			: '';
+		// return this.renderRipple
+		// 	? html`<md-ripple
+		// 			class="${this.renderRippleTransition
+		// 				? `transition-${this.rippleTransition ? 'on' : 'off'}`
+		// 				: ''}"
+		// 	  ></md-ripple>`
+		// 	: '';
+		return html``;
 	}
 
 	buildStyle(_style: StyleInfo = {}, context?: object) {
