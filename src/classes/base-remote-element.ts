@@ -685,20 +685,20 @@ export class BaseRemoteElement extends LitElement {
 		return style;
 	}
 
-	buildStyles(actions: IElementConfig = this.config, context?: object) {
-		return actions.styles
-			? html`
-					<style>
-						${(
-							this.renderTemplate(
-								actions.styles,
-								context,
-							) as string
-						).replace(/;(?<! !important;)/g, ' !important;')}
-					</style>
-			  `
-			: '';
-	}
+	// buildStyles(actions: IElementConfig = this.config, context?: object) {
+	// 	return actions.styles
+	// 		? html`
+	// 				<style>
+	// 					${(
+	// 						this.renderTemplate(
+	// 							actions.styles,
+	// 							context,
+	// 						) as string
+	// 					).replace(/;(?<! !important;)/g, ' !important;')}
+	// 				</style>
+	// 		  `
+	// 		: '';
+	// }
 
 	// Skeletons for overridden event handlers
 	onStart(_e: MouseEvent | TouchEvent) {}
