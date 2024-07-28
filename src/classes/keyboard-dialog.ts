@@ -354,22 +354,12 @@ export class KeyboardDialog extends LitElement {
 		if (text) {
 			switch (this.haAction?.platform) {
 				case 'KODI': {
-					const entityId = this.haAction?.keyboard_id;
-					Promise.resolve(
-						this.hass.callService('kodi', 'call_method', {
-							entity_id: entityId,
-							method: 'Addons.ExecuteAddon',
-							addonid: 'script.globalsearch',
-						}),
-					);
-					setTimeout(() => {
-						this.hass.callService('kodi', 'call_method', {
-							entity_id: entityId,
-							method: 'Input.SendText',
-							text: text,
-							done: true,
-						});
-					}, 1000);
+					this.hass.callService('kodi', 'call_method', {
+						entity_id: this.haAction?.keyboard_id,
+						method: 'Input.SendText',
+						text: text,
+						done: true,
+					});
 					break;
 				}
 				case 'ROKU':
@@ -476,6 +466,15 @@ export class KeyboardDialog extends LitElement {
 					'Search',
 					this.search,
 				)}${this.buildDialogButton('Close', this.closeDialog)}`;
+				if (this.haAction.platform == 'KODI') {
+					Promise.resolve(
+						this.hass.callService('kodi', 'call_method', {
+							entity_id: this.haAction.keyboard_id,
+							method: 'Addons.ExecuteAddon',
+							addonid: 'script.globalsearch',
+						}),
+					);
+				}
 				break;
 			case 'textbox':
 				placeholder = 'Type something...';
