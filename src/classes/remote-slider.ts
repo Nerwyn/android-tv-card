@@ -174,6 +174,8 @@ export class RemoteSlider extends BaseRemoteElement {
 				this.showTooltip = false;
 				this.setSliderState(this.value as number);
 			}
+		} else {
+			e.preventDefault();
 		}
 	}
 
