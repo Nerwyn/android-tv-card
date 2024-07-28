@@ -1,4 +1,4 @@
-import packageInfo from '../package.json';
+// import packageInfo from '../package.json';
 
 import { LitElement, TemplateResult, css, html } from 'lit';
 import { property } from 'lit/decorators.js';
@@ -27,10 +27,10 @@ import './classes/remote-button';
 import './classes/remote-slider';
 import './classes/remote-touchpad';
 
-console.info(
-	`%c ANDROID-TV-CARD v${packageInfo.version}`,
-	'color: white; font-weight: bold; background: green',
-);
+// console.info(
+// 	`%c ANDROID-TV-CARD v${packageInfo.version}`,
+// 	'color: white; font-weight: bold; background: green',
+// );
 
 class AndroidTVCard extends LitElement {
 	@property() hass!: HomeAssistant;
