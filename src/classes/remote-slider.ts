@@ -10,7 +10,6 @@ export class RemoteSlider extends BaseRemoteElement {
 	@state() thumbOffset: number = 0;
 	@state() sliderOn: boolean = true;
 	@state() currentValue = this.value;
-	@state() sliderWidth: number = 0;
 
 	oldValue?: number;
 	newValue?: number;
@@ -19,6 +18,7 @@ export class RemoteSlider extends BaseRemoteElement {
 	step: number = 0.01;
 	intervalId?: ReturnType<typeof setTimeout>;
 
+	sliderWidth: number = 0;
 	vertical: boolean = false;
 	thumbWidth: number = 50;
 	resizeObserver = new ResizeObserver((entries) => {
@@ -536,6 +536,13 @@ export class RemoteSlider extends BaseRemoteElement {
 				}
 				.tooltip::after {
 					content: var(--tooltip-label);
+				}
+
+				.icon {
+					color: var(
+						--icon-color,
+						var(--background, var(--primary-background-color))
+					);
 				}
 			`,
 		];
