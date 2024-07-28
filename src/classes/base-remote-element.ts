@@ -696,7 +696,7 @@ export class BaseRemoteElement extends LitElement {
 							) as string
 						)
 							.replace(
-								/;(?<!mportant;)/g,
+								/;/g,
 								' !impor_HACKTOPREVENTTHISFROMBREAKINGOLDWEBVIEWS_tant;',
 							)
 							.replace(
