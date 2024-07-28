@@ -174,8 +174,6 @@ export class RemoteSlider extends BaseRemoteElement {
 				this.showTooltip = false;
 				this.setSliderState(this.value as number);
 			}
-		} else {
-			e.preventDefault();
 		}
 	}
 
@@ -300,6 +298,7 @@ export class RemoteSlider extends BaseRemoteElement {
 			style['transform'] = 'rotateZ(270deg)';
 			style['width'] =
 				this.config.style?.height ?? `${this.sliderWidth}px`;
+			style['touch-action'] = 'none';
 		}
 
 		return html`
