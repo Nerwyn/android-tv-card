@@ -789,6 +789,8 @@ export class BaseRemoteElement extends LitElement {
 				overflow: visible;
 				font-size: inherit;
 				color: inherit;
+				-webkit-tap-highlight-color: transparent;
+				-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 			}
 			ha-icon,
 			svg {

@@ -804,6 +804,7 @@ class AndroidTVCard extends LitElement {
 				padding: 12px;
 
 				-webkit-tap-highlight-color: transparent;
+				-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 				--md-ripple-hover-opacity: var(--ha-ripple-hover-opacity, 0.08);
 				--md-ripple-pressed-opacity: var(
 					--ha-ripple-pressed-opacity,
