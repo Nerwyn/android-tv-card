@@ -694,7 +694,9 @@ export class BaseRemoteElement extends LitElement {
 								actions.styles,
 								context,
 							) as string
-						).replace(/;/g, ' !important;')}
+						)
+							.replace(/ !important/g, '')
+							.replace(/;/g, ' !important;')}
 					</style>
 			  `
 			: '';
