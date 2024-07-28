@@ -235,6 +235,8 @@ export class RemoteButton extends BaseRemoteElement {
 					text-align: center;
 					justify-content: center;
 					align-items: center;
+					-webkit-tap-highlight-color: transparent;
+					-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 
 					--mdc-icon-size: var(--size, 48px);
 				}
