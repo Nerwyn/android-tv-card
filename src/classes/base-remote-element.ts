@@ -819,8 +819,8 @@ export class BaseRemoteElement extends LitElement {
 				z-index: 2;
 				display: var(--icon-display, inline-flex);
 				transform: var(--icon-transform);
-				color: var(--icon-color, inherit);
-				filter: var(--icon-filter, inherit);
+				color: var(--icon-color, var(--primary-text-color));
+				filter: var(--icon-filter, none);
 			}
 
 			.label {
