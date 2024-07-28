@@ -398,6 +398,7 @@ export class KeyboardDialog extends LitElement {
 	showDialog(e: CustomEvent) {
 		this.haAction = e.detail;
 		this.domain = (this.haAction?.keyboard_id ?? '').split('.')[0];
+
 		const dialog = this.shadowRoot?.querySelector('dialog');
 		if (dialog) {
 			try {
@@ -408,10 +409,23 @@ export class KeyboardDialog extends LitElement {
 			}
 			window.addEventListener('popstate', () => this.closeDialog());
 		}
+
 		this.textarea = this.shadowRoot?.querySelector(
 			'textarea',
 		) as HTMLTextAreaElement;
 		const textarea = this.textarea;
+
+		if (
+			this.haAction?.platform == 'KODI' &&
+			this.haAction?.action == 'search'
+		) {
+			this.hass.callService('kodi', 'call_method', {
+				entity_id: this.haAction.keyboard_id,
+				method: 'Addons.ExecuteAddon',
+				addonid: 'script.globalsearch',
+			});
+		}
+
 		setTimeout(() => {
 			if (textarea) {
 				textarea.focus();
@@ -466,15 +480,6 @@ export class KeyboardDialog extends LitElement {
 					'Search',
 					this.search,
 				)}${this.buildDialogButton('Close', this.closeDialog)}`;
-				if (this.haAction.platform == 'KODI') {
-					Promise.resolve(
-						this.hass.callService('kodi', 'call_method', {
-							entity_id: this.haAction.keyboard_id,
-							method: 'Addons.ExecuteAddon',
-							addonid: 'script.globalsearch',
-						}),
-					);
-				}
 				break;
 			case 'textbox':
 				placeholder = 'Type something...';
