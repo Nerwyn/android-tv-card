@@ -694,15 +694,7 @@ export class BaseRemoteElement extends LitElement {
 								actions.styles,
 								context,
 							) as string
-						)
-							.replace(
-								/;/g,
-								' !impor_HACKTOPREVENTTHISFROMBREAKINGOLDWEBVIEWS_tant;',
-							)
-							.replace(
-								/_HACKTOPREVENTTHISFROMBREAKINGOLDWEBVIEWS_/g,
-								'',
-							)}
+						).replace(/;/g, ' !important;')}
 					</style>
 			  `
 			: '';
