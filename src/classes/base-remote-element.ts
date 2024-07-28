@@ -689,15 +689,24 @@ export class BaseRemoteElement extends LitElement {
 		return actions.styles
 			? html`
 					<style>
-						${this.renderTemplate(
-							actions.styles,
-							context,
-						) as string}
+						${(
+							this.renderTemplate(
+								actions.styles,
+								context,
+							) as string
+						)
+							.replace(
+								/;(?<! !important;)/g,
+								' !impor_HACKTOPREVENTTHISFROMBREAKINGOLDWEBVIEWS_tant;',
+							)
+							.replace(
+								/_HACKTOPREVENTTHISFROMBREAKINGOLDWEBVIEWS_/g,
+								'',
+							)}
 					</style>
 			  `
 			: '';
 	}
-	// .replace(/;(?<! !important;)/g, ' !important;')
 
 	// Skeletons for overridden event handlers
 	onStart(_e: MouseEvent | TouchEvent) {}
