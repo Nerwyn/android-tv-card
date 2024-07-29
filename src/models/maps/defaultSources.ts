@@ -14,6 +14,14 @@ export const defaultSources: Record<string, IElementConfig> = {
 		tap_action: { action: 'source', source: 'crunchyroll://' }, // UNTESTED
 		icon: svg.crunchyroll,
 	},
+	dazn: {
+		tap_action: { action: 'source', source: 'https://open.dazn.com/' }, // UNTESTED
+		icon: svg.dazn,
+	},
+	discoveryplus: {
+		tap_action: { action: 'source', source: 'discoveryplus://' }, // UNTESTED
+		icon: svg.discovery,
+	},
 	disney: {
 		tap_action: { action: 'source', source: 'https://www.disneyplus.com' },
 		icon: svg.disney,
@@ -77,6 +85,14 @@ export const defaultSources: Record<string, IElementConfig> = {
 		},
 		icon: svg.npo,
 	},
+	nrktv: {
+		tap_action: {
+			// UNTESTED
+			action: 'source',
+			source: 'nrktv://',
+		},
+		icon: svg.nrktv,
+	},
 	paramount: {
 		tap_action: { action: 'source', source: 'com.cbs.ott' },
 		icon: svg.paramount,
@@ -126,6 +142,17 @@ export const defaultSources: Record<string, IElementConfig> = {
 			source: 'https://surfshark.com/locations-ul',
 		}, // UNTESTED
 		icon: svg.surfshark,
+	},
+	tv2play: {
+		tap_action: {
+			action: 'source',
+			source: 'dk.tv2.tv2playtv://*.tv2.dk/android/dk.tv2.tv2playtv/callback',
+		}, // UNTESTED
+		icon: svg.tv2play,
+	},
+	viaplay: {
+		tap_action: { action: 'source', source: 'viaplay://deeplink/film' }, // UNTESTED
+		icon: svg.viaplay,
 	},
 	videoland: {
 		tap_action: { action: 'source', source: 'videoland-v2://' },
