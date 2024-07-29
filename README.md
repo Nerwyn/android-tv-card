@@ -1614,34 +1614,33 @@ rows:
 custom_actions:
   a:
     style:
-      '--size': 48px
       padding: 0
       margin: 0
-      color: '#C1121C'
+      --icon-color: '#C1121C'
   b:
     style:
-      '--size': 48px
       padding: 0
       margin: 0
-      color: '#F7BA0B'
+      --size: 48px
+      --icon-color: '#F7BA0B'
   x:
     style:
-      '--size': 48px
       padding: 0
       margin: 0
-      color: '#00387b'
+      --size: 48px
+      --icon-color: '#00387b'
   y:
     style:
-      '--size': 48px
       padding: 0
       margin: 0
-      color: '#007243'
+      --size: 48px
+      --icon-color: '#007243'
 button_style:
-  '--size': 24px
   background: rgb(27,27,27)
   padding: 8px
   margin: 4px
   border-radius: 24px
+  --size: 24px
 row_styles:
   rows:
     justify-content: center
