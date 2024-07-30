@@ -788,22 +788,9 @@ export class BaseRemoteElement extends LitElement {
 				outline: 0px;
 				overflow: visible;
 				font-size: inherit;
-				color: inherit;
+				color: var(--icon-color, var(--primary-text-color));
 				-webkit-tap-highlight-color: transparent;
 				-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-			}
-			ha-icon,
-			svg {
-				display: inline-flex;
-				flex-direction: column;
-				justify-content: center;
-				text-align: center;
-				align-items: center;
-				vertical-align: middle;
-				height: var(--size, 48px);
-				width: var(--size, 48px);
-				z-index: 2;
-				pointer-events: none;
 			}
 
 			md-ripple.transition-on {
@@ -823,8 +810,21 @@ export class BaseRemoteElement extends LitElement {
 				z-index: 2;
 				display: var(--icon-display, inline-flex);
 				transform: var(--icon-transform);
-				color: var(--icon-color, var(--primary-text-color));
+				color: inherit;
 				filter: var(--icon-filter, none);
+			}
+			ha-icon,
+			svg {
+				display: inline-flex;
+				flex-direction: column;
+				justify-content: center;
+				text-align: center;
+				align-items: center;
+				vertical-align: middle;
+				height: var(--size, 48px);
+				width: var(--size, 48px);
+				z-index: 2;
+				pointer-events: none;
 			}
 
 			.label {
