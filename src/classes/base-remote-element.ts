@@ -788,7 +788,7 @@ export class BaseRemoteElement extends LitElement {
 				outline: 0px;
 				overflow: visible;
 				font-size: inherit;
-				color: var(--icon-color, var(--primary-text-color));
+				color: inherit;
 				-webkit-tap-highlight-color: transparent;
 				-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 			}
@@ -810,7 +810,7 @@ export class BaseRemoteElement extends LitElement {
 				z-index: 2;
 				display: var(--icon-display, inline-flex);
 				transform: var(--icon-transform);
-				color: inherit;
+				color: var(--icon-color, var(--primary-text-color));
 				filter: var(--icon-filter, none);
 			}
 			ha-icon,

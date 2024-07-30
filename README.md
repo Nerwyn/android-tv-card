@@ -179,7 +179,7 @@ You can declare a global button style using the `button_style` option, like so.
 ```yaml
 button_style:
   '--size': 32px
-  color: var(--secondary-text-color)
+  --icon-color: var(--secondary-text-color)
 ```
 
 #### Example options:
@@ -1412,7 +1412,7 @@ custom_actions:
     icon: mdi:kodi
     tap_action:
     style:
-      color: rgb(9, 179, 232)
+      --icon-color: rgb(9, 179, 232)
       '--size': 64px
   volume_mute:
     template: kodi_command
@@ -1567,19 +1567,19 @@ rows:
 custom_actions:
   netflix:
     style:
-      color: rgb(229, 9, 20)
+      --icon-color: rgb(229, 9, 20)
   hulu:
     style:
-      color: rgb(28, 231, 131)
+      --icon-color: rgb(28, 231, 131)
   disney:
     style:
-      color: rgb(17, 60, 207)
+      --icon-color: rgb(17, 60, 207)
   max:
     style:
-      color: rgb(0, 35, 246)
+      --icon-color: rgb(0, 35, 246)
   primevideo:
     style:
-      color: rgb(0, 165, 222)
+      --icon-color: rgb(0, 165, 222)
   slider:
     range:
       - 0
@@ -1874,7 +1874,7 @@ custom_actions:
         command: red
     style:
       '--size': 42px
-      color: red
+      --icon-color: red
   '2':
     icon: mdi:circle
     tap_action:
@@ -1887,7 +1887,7 @@ custom_actions:
         command: green
     style:
       '--size': 42px
-      color: green;
+      --icon-color: green;
   '3':
     icon: mdi:circle
     tap_action:
@@ -1900,7 +1900,7 @@ custom_actions:
         command: dark_blue
     style:
       '--size': 42px
-      color: darkblue;
+      --icon-color: darkblue;
   '4':
     icon: mdi:circle
     tap_action:
@@ -1913,7 +1913,7 @@ custom_actions:
         command: yellow
     style:
       '--size': 42px
-      color: yellow;
+      --icon-color: yellow;
   '5':
     icon: mdi:circle
     tap_action:
@@ -1926,7 +1926,7 @@ custom_actions:
         command: yellow-orange
     style:
       '--size': 42px
-      color: goldenrod;
+      --icon-color: goldenrod;
   '6':
     icon: mdi:circle
     tap_action:
@@ -1939,7 +1939,7 @@ custom_actions:
         command: orange
     style:
       '--size': 42px
-      color: orange;
+      --icon-color: orange;
   '7':
     icon: mdi:circle
     tap_action:
@@ -1952,7 +1952,7 @@ custom_actions:
         command: orange-light
     style:
       '--size': 42px
-      color: lightsalmon;
+      --icon-color: lightsalmon;
   '8':
     icon: mdi:circle
     tap_action:
@@ -1965,7 +1965,7 @@ custom_actions:
         command: cyan
     style:
       '--size': 42px
-      color: cyan;
+      --icon-color: cyan;
   '9':
     icon: mdi:circle
     tap_action:
@@ -1978,7 +1978,7 @@ custom_actions:
         command: blue
     style:
       '--size': 42px
-      color: blue;
+      --icon-color: blue;
   '10':
     icon: mdi:circle
     tap_action:
@@ -1991,7 +1991,7 @@ custom_actions:
         command: pink
     style:
       '--size': 42px
-      color: magenta;
+      --icon-color: magenta;
   '11':
     icon: mdi:circle
     tap_action:
@@ -2004,7 +2004,7 @@ custom_actions:
         command: green_light
     style:
       '--size': 42px
-      color: mediumseagreen;
+      --icon-color: mediumseagreen;
   '12':
     icon: mdi:circle
     tap_action:
@@ -2017,7 +2017,7 @@ custom_actions:
         command: white
     style:
       '--size': 42px
-      color: white;
+      --icon-color: white;
   power:
     tap_action:
       action: call-service
@@ -2028,7 +2028,7 @@ custom_actions:
         device: Office TV Led
         command: 'on'
     style:
-      color: green
+      --icon-color: green
   poweroff:
     icon: mdi:power
     tap_action:
@@ -2040,7 +2040,7 @@ custom_actions:
         device: Office TV Led
         command: 'off'
     style:
-      color: red
+      --icon-color: red
   up:
     tap_action:
       action: call-service
@@ -2075,7 +2075,7 @@ rows:
 custom_actions:
   center:
     style:
-      color: rgb(94, 94, 94)
+      --icon-color: rgb(94, 94, 94)
       '--size': 200px
       background: rgb(31, 31, 31)
       border-radius: 200px
@@ -2083,28 +2083,28 @@ custom_actions:
       padding: 70px
   up:
     style:
-      color: rgb(197, 199, 197)
+      --icon-color: rgb(197, 199, 197)
       z-index: 2
       top: 25px
       height: 90px
       width: 300px
   down:
     style:
-      color: rgb(197, 199, 197)
+      --icon-color: rgb(197, 199, 197)
       z-index: 2
       bottom: 25px
       height: 90px
       width: 300px
   left:
     style:
-      color: rgb(197, 199, 197)
+      --icon-color: rgb(197, 199, 197)
       z-index: 2
       left: 30px
       height: 170px
       width: 90px
   right:
     style:
-      color: rgb(197, 199, 197)
+      --icon-color: rgb(197, 199, 197)
       z-index: 2
       right: 30px
       height: 170px
