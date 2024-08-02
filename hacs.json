@@ -1,5 +1,5 @@
 {
-	"name": "Android TV Card - buttons, touchpad, sliders, keyboard, and more!",
+	"name": "Android TV Card",
 	"content_in_root": false,
 	"homeassistant": "2023.5.0",
 	"filename": "android-tv-card.min.js",
