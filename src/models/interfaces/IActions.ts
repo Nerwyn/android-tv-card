@@ -1,16 +1,17 @@
 export const Actions = [
-	'call-service',
+	'more-info',
+	'toggle',
 	'navigate',
 	'url',
+	'call-service',
 	'assist',
-	'more-info',
 	'key',
 	'source',
 	'keyboard',
 	'textbox',
 	'search',
-	'repeat',
 	'fire-dom-event',
+	'repeat',
 	'none',
 ] as const;
 export type Action = (typeof Actions)[number];

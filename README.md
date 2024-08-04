@@ -405,93 +405,36 @@ custom_actions:
 
 Actions follow the [Home Assistant actions](https://www.home-assistant.io/dashboards/actions/) syntax. It supports almost all Home Assistant actions along with some card specific ones.
 
-| Action                            | Description                                                                                                                                             |
-| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [call-service](#call-service)     | Call any Home Assistant service.                                                                                                                        |
-| [navigate](#navigate)             | Navigate to another Home Assistant page.                                                                                                                |
-| [url](#url)                       | Navigate to an external URL.                                                                                                                            |
-| [assist](#assist)                 | Open the assist dialog. Uses the mobile dialog if available, like in the Home Assistant app.                                                            |
-| [more-info](#more-info)           | Open the more info dialog.                                                                                                                              |
-| [none](#none)                     | Explicilty set a command to do nothing.                                                                                                                 |
-| [fire-dom-event](#fire-dom-event) | Fire a browser dom event using whatever information is in the Action object. Useful for opening browser-mod popup cards.                                |
-| [repeat](#repeat)                 | Repeat the `tap_action` ten times a second while held. Only applicable to `hold_action`, acts as `none` if used in `tap_action` or `double_tap_action`. |
-| [key](#key)                       | Send a key to send to the TV via the service call `remote.send_command`.                                                                                |
-| [source](#source)                 | Switch to a source via the service call `remote.turn_on`.                                                                                               |
-| [keyboard](#keyboard)             | Open a dialog for sending seamless keyboard input.                                                                                                      |
-| [textbox](#textbox)               | Open a dialog for sending bulk keyboard input.                                                                                                          |
-| [search](#search)                 | Open a dialog for sending a global search query.                                                                                                        |
+| Action                                   | Description                                                                                                                                             |
+| ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [more-info](#more-info)                  | Open the more info dialog.                                                                                                                              |
+| [toggle](#toggle)                        | Toggle between the target's on and off (or similar) states.                                                                                             |
+| [navigate](#navigate)                    | Navigate to another Home Assistant page.                                                                                                                |
+| [url](#url)                              | Navigate to an external URL.                                                                                                                            |
+| [call-service](#call-service)            | Call any Home Assistant service.                                                                                                                        |
+| [assist](#assist)                        | Open the assist dialog. Uses the mobile dialog if available, like in the Home Assistant app.                                                            |
+| [key](#key)                              | Send a key to send to the TV via the service call `remote.send_command`.                                                                                |
+| [source](#source)                        | Switch to a source via the service call `remote.turn_on`.                                                                                               |
+| [keyboard](#keyboard-textbox-and-search) | Open a dialog for sending seamless keyboard input.                                                                                                      |
+| [textbox](#keyboard-textbox-and-search)  | Open a dialog for sending bulk keyboard input.                                                                                                          |
+| [search](#keyboard-textbox-and-search)   | Open a dialog for sending a global search query.                                                                                                        |
+| [fire-dom-event](#fire-dom-event)        | Fire a browser dom event using whatever information is in the Action object. Useful for opening browser-mod popup cards.                                |
+| [repeat](#repeat)                        | Repeat the `tap_action` ten times a second while held. Only applicable to `hold_action`, acts as `none` if used in `tap_action` or `double_tap_action`. |
+| [none](#none)                            | Explicilty set a command to do nothing.                                                                                                                 |
 
 Most actions have a set of possible options associated with them. If `action` is not provided the card will guess which type of action it is by the options used.
 
-#### key
+#### more-info
 
-| Name      | Description                                                                                                                                                                                                        |
-| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| key       | Key command to send. While most Android TV remote keys are already defined as default keys, you can find a list of supported commands [here](https://www.home-assistant.io/integrations/androidtv_remote/#remote). |
-| remote_id | The remote entity ID to use to send this key. Overrides the global remote ID.                                                                                                                                      |
+| Name             | Description                                     |
+| ---------------- | ----------------------------------------------- |
+| target.entity_id | The entity ID to open the more info dialog for. |
 
-```yaml
-custom_actions:
-  menu:
-    icon: mdi:menu
-    tap_action:
-      action: key
-      key: MENU
-    hold_action:
-      action: key
-      key: HOME
-```
+#### toggle
 
-By default, hold actions on default keys adds `hold_secs: 0.5` to the data sent with the `remote.send_command` service call. Creating a `hold_action` on a key action overwrites this.
-
-#### source
-
-| Name      | Description                                                                                                                                                        |
-| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| source    | Source activity. See [here](https://community.home-assistant.io/t/android-tv-remote-app-links-deep-linking-guide/567921) for a guide on Android TV app deep links. |
-| remote_id | The remote entity ID to use to open this source. Overrides the global remote ID.                                                                                   |
-
-```yaml
-custom_actions:
-  netflix:
-    icon: mdi:netflix
-    tap_action:
-      action: source
-      source: netflix://
-```
-
-#### call-service
-
-| Name    | Description                                                                                                                                                      |
-| ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| service | The service to call. Use the format `domain.service`, e.g. `"light.turn_on"`.                                                                                    |
-| data    | Additional data to pass to the service call. See the Home Assistant documentation or go to Developer Tools > Services to see available options for each service. |
-| target  | The entity IDs, device IDs, or area IDs to call the service on.                                                                                                  |
-
-`data` and `target` get internally merged into one object and can be used together or interchangeably. You can safely put all information into one object with any of these names. This was done so that you can easily design service calls using Home Assistant's service developer tool and copy the YAML to custom button configurations in this card.
-
-```yaml
-custom_actions:
-  toggle_light:
-    icon: mdi:lightbulb
-    tap_action:
-      action: call-service
-      service: light.toggle
-      target:
-        entity_id: light.theater
-    double_tap_action:
-      action: call-service
-      service: light.turn_on
-      target:
-        entity_id: light.theater
-      data:
-        brightness_pct: 10
-    hold_action:
-      action: call-service
-      service: light.turn_off
-      target:
-        entity_id: light.theater
-```
+| Name   | Description                                       |
+| ------ | ------------------------------------------------- |
+| target | The entity, device, areas, or label IDs to toggle |
 
 #### navigate
 
@@ -530,6 +473,39 @@ custom_actions:
       url_path: https://www.google.com
 ```
 
+#### call-service
+
+| Name    | Description                                                                                                                                                      |
+| ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| service | The service to call. Use the format `domain.service`, e.g. `"light.turn_on"`.                                                                                    |
+| data    | Additional data to pass to the service call. See the Home Assistant documentation or go to Developer Tools > Services to see available options for each service. |
+| target  | The entity IDs, device IDs, or area IDs to call the service on.                                                                                                  |
+
+`data` and `target` get internally merged into one object and can be used together or interchangeably. You can safely put all information into one object with any of these names. This was done so that you can easily design service calls using Home Assistant's service developer tool and copy the YAML to custom button configurations in this card.
+
+```yaml
+custom_actions:
+  toggle_light:
+    icon: mdi:lightbulb
+    tap_action:
+      action: call-service
+      service: light.toggle
+      target:
+        entity_id: light.theater
+    double_tap_action:
+      action: call-service
+      service: light.turn_on
+      target:
+        entity_id: light.theater
+      data:
+        brightness_pct: 10
+    hold_action:
+      action: call-service
+      service: light.turn_off
+      target:
+        entity_id: light.theater
+```
+
 #### assist
 
 _The following options are only available in the mobile assist dialog._
@@ -539,25 +515,52 @@ _The following options are only available in the mobile assist dialog._
 | pipeline_id     | Assist pipeline id to use.                                              |
 | start_listening | If supported, listen for voice commands when opening the assist dialog. |
 
-#### more-info
+#### key
 
-| Name           | Description                                     |
-| -------------- | ----------------------------------------------- |
-| data.entity_id | The entity ID to open the more info dialog for. |
-
-#### none
-
-None. This action does nothing.
+| Name      | Description                                                                                                                                                                                                        |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| key       | Key command to send. While most Android TV remote keys are already defined as default keys, you can find a list of supported commands [here](https://www.home-assistant.io/integrations/androidtv_remote/#remote). |
+| remote_id | The remote entity ID to use to send this key. Overrides the global remote ID.                                                                                                                                      |
 
 ```yaml
 custom_actions:
-  volume_up:
-    hold_action:
-      action: none # volume up will no longer repeat while held
-  back:
+  menu:
+    icon: mdi:menu
     tap_action:
-      action: none # you can no longer go back
+      action: key
+      key: MENU
+    hold_action:
+      action: key
+      key: HOME
 ```
+
+By default, hold actions on default keys adds `hold_secs: 0.5` to the data sent with the `remote.send_command` service call. Creating a `hold_action` on a key action overwrites this.
+
+#### source
+
+| Name      | Description                                                                                                                                                        |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| source    | Source activity. See [here](https://community.home-assistant.io/t/android-tv-remote-app-links-deep-linking-guide/567921) for a guide on Android TV app deep links. |
+| remote_id | The remote entity ID to use to open this source. Overrides the global remote ID.                                                                                   |
+
+```yaml
+custom_actions:
+  netflix:
+    icon: mdi:netflix
+    tap_action:
+      action: source
+      source: netflix://
+```
+
+#### keyboard, textbox, and search
+
+| Name            | Description                                                                 |
+| --------------- | --------------------------------------------------------------------------- |
+| platform        | The media platform to use for this keyboard.                                |
+| keyboard_id     | The entity ID of the the keyboard used to send text.                        |
+| remote_id       | An additional entity ID used by some platforms to send additional commands. |
+| media_player_id | An additional entity ID used by some platforms to send additional commands. |
+| keyboard_prompt | The default text to display in the keyboard dialog.                         |
 
 #### fire-dom-event
 
@@ -589,6 +592,20 @@ custom_actions:
 
 The `tap_action` must be defined, whether by the default key or as a custom action.
 
+#### none
+
+None. This action does nothing.
+
+```yaml
+custom_actions:
+  volume_up:
+    hold_action:
+      action: none # volume up will no longer repeat while held
+  back:
+    tap_action:
+      action: none # you can no longer go back
+```
+
 ```yaml
 repeat_delay: 200 # defaults to 100, applies to all actions (custom or not) unless redefined within custom action
 custom_actions:
@@ -606,16 +623,6 @@ custom_actions:
       action: repeat # light will be toggled repeatedly while held
     repeat_delay: 1000
 ```
-
-#### keyboard, textbox, and search
-
-| Name            | Description                                                                 |
-| --------------- | --------------------------------------------------------------------------- |
-| platform        | The media platform to use for this keyboard.                                |
-| keyboard_id     | The entity ID of the the keyboard used to send text.                        |
-| remote_id       | An additional entity ID used by some platforms to send additional commands. |
-| media_player_id | An additional entity ID used by some platforms to send additional commands. |
-| keyboard_prompt | The default text to display in the keyboard dialog.                         |
 
 See the [keyboards](#Keyboards) section for more information.
 

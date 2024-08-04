@@ -117,6 +117,9 @@ export class BaseRemoteElement extends LitElement {
 				case 'more-info':
 					this.moreInfo(action);
 					break;
+				case 'toggle':
+					this.toggle(action);
+					break;
 				case 'call-service':
 					this.callService(action);
 					break;
@@ -304,6 +307,56 @@ export class BaseRemoteElement extends LitElement {
 		});
 		event.detail = { entityId };
 		this.dispatchEvent(event);
+	}
+
+	toggle(action: IAction) {
+		const target = {
+			...action.data,
+			...action.target,
+		};
+
+		if (Array.isArray(target.entity_id)) {
+			for (const entityId of target.entity_id) {
+				this.toggleSingle(entityId);
+			}
+		} else if (target.entity_id) {
+			this.toggleSingle(target.entity_id);
+		} else {
+			this.hass.callService('homeassistant', 'toggle', target);
+		}
+	}
+
+	toggleSingle(entityId: string) {
+		const turnOn = ['closed', 'locked', 'off'].includes(
+			this.hass.states[entityId].state,
+		);
+		let domain = entityId.split('.')[0];
+		let service: string;
+		switch (domain) {
+			case 'lock':
+				service = turnOn ? 'unlock' : 'lock';
+				break;
+			case 'cover':
+				service = turnOn ? 'open_cover' : 'close_cover';
+				break;
+			case 'button':
+				service = 'press';
+				break;
+			case 'input_button':
+				service = 'press';
+				break;
+			case 'scene':
+				service = 'turn_on';
+				break;
+			case 'valve':
+				service = turnOn ? 'open_valve' : 'close_valve';
+				break;
+			default:
+				domain = 'homeassistant';
+				service = turnOn ? 'turn_on' : 'turn_off';
+				break;
+		}
+		this.hass.callService(domain, service, { entity_id: entityId });
 	}
 
 	keyboard(action: IAction) {
