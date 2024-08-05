@@ -551,7 +551,6 @@ export class KeyboardDialog extends LitElement {
 				display: inline-flex;
 				flex-direction: column;
 				position: fixed;
-				z-index: 9;
 				border: none;
 				background: var(
 					--ha-card-background,

@@ -246,6 +246,13 @@ export class RemoteSlider extends BaseRemoteElement {
 	}
 
 	buildTooltip(context: object) {
+		let height, width;
+		const containerElement = this.shadowRoot?.querySelector('.container');
+		if (containerElement) {
+			const style = getComputedStyle(containerElement);
+			height = style.getPropertyValue('height');
+			width = style.getPropertyValue('width');
+		}
 		const style: StyleInfo = this.buildStyle(
 			{
 				'--tooltip-label': `"${
@@ -254,8 +261,12 @@ export class RemoteSlider extends BaseRemoteElement {
 				'--tooltip-transform':
 					this.config?.style?.['--tooltip-transform'] ??
 					(this.vertical
-						? 'translate(-50px, calc(-1 * var(--thumb-offset)))'
-						: 'translate(var(--thumb-offset), -40px)'),
+						? `translate(calc(-0.7 * ${
+								width ?? '50px'
+						  } - 0.4em - 10px), calc(-1 * var(--thumb-offset)))`
+						: `translate(var(--thumb-offset), calc(-0.5 * ${
+								height ?? '50px'
+						  } - 0.4em - 10px))`),
 				'--tooltip-display':
 					this.config?.style?.['--tooltip-display'] ?? 'initial',
 			},
@@ -396,11 +407,11 @@ export class RemoteSlider extends BaseRemoteElement {
 		}
 
 		return html`
-			${this.buildTooltip(context)}
 			<div class="container" style=${styleMap(style)}>
 				${this.buildBackground(context)}${this.buildSlider(context)}
 				${this.buildIcon(this.config.icon ?? '', context)}
 			</div>
+			${this.buildTooltip(context)}
 		`;
 	}
 
@@ -438,12 +449,13 @@ export class RemoteSlider extends BaseRemoteElement {
 				.container {
 					all: inherit;
 					overflow: hidden;
-					height: 50px;
+					height: var(--height);
 					align-self: center;
 					color: var(--background, var(--primary-background-color));
 
 					--color: var(--primary-text-color);
 					--mdc-icon-size: var(--size, 32px);
+					--height: 50px;
 				}
 
 				.background {
@@ -477,7 +489,6 @@ export class RemoteSlider extends BaseRemoteElement {
 					cursor: pointer;
 					background: var(--color);
 					border-color: rgb(0, 0, 0, 0);
-					z-index: 1;
 					box-shadow: var(
 						--thumb-box-shadow,
 						calc(-100vw - (var(--thumb-width, 50px) / 2)) 0 0 100vw
@@ -493,7 +504,6 @@ export class RemoteSlider extends BaseRemoteElement {
 					cursor: pointer;
 					background: var(--color);
 					border-color: rgb(0, 0, 0, 0);
-					z-index: 1;
 					box-shadow: var(
 						--thumb-box-shadow,
 						calc(-100vw - (var(--thumb-width, 50px) / 2)) 0 0 100vw
@@ -510,7 +520,6 @@ export class RemoteSlider extends BaseRemoteElement {
 				}
 
 				.tooltip {
-					z-index: 3;
 					background: var(--clear-background-color);
 					color: var(--primary-text-color);
 					position: absolute;

@@ -860,7 +860,6 @@ export class BaseRemoteElement extends LitElement {
 				position: relative;
 				flex-flow: column;
 				place-content: center;
-				z-index: 2;
 				display: var(--icon-display, inline-flex);
 				transform: var(--icon-transform);
 				color: var(--icon-color, var(--primary-text-color));
@@ -876,7 +875,6 @@ export class BaseRemoteElement extends LitElement {
 				vertical-align: middle;
 				height: var(--size, 48px);
 				width: var(--size, 48px);
-				z-index: 2;
 				pointer-events: none;
 			}
 
@@ -892,7 +890,6 @@ export class BaseRemoteElement extends LitElement {
 				font-family: inherit;
 				font-size: 12px;
 				font-weight: bold;
-				z-index: 2;
 				display: var(--label-display, inline-flex);
 				transform: var(--label-transform);
 				color: var(--label-color, inherit);

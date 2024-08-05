@@ -327,7 +327,6 @@ export class RemoteTouchpad extends BaseRemoteElement {
 					touch-action: none;
 					text-align: center;
 					position: relative;
-					z-index: 0;
 					overflow: hidden;
 					--mdc-ripple-press-opacity: 0.04;
 				}
