@@ -403,7 +403,7 @@ custom_actions:
 
 ### Action Types
 
-Actions follow the [Home Assistant actions](https://www.home-assistant.io/dashboards/actions/) syntax. It supports almost all Home Assistant actions along with some card specific ones.
+Actions follow the [Home Assistant actions](https://www.home-assistant.io/dashboards/actions/) syntax. All Home Assistant actions are supported along with some additional ones.
 
 | Action                                   | Description                                                                                                                                             |
 | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
