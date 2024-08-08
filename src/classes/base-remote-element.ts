@@ -120,7 +120,8 @@ export class BaseRemoteElement extends LitElement {
 				case 'toggle':
 					this.toggle(action);
 					break;
-				case 'call-service':
+				case 'call-service' as 'perform-action': // deprecated in 2024.8
+				case 'perform-action':
 					this.callService(action);
 					break;
 				case 'source':
@@ -167,7 +168,8 @@ export class BaseRemoteElement extends LitElement {
 
 	callService(action: IAction) {
 		const domainService = this.renderTemplate(
-			action.service as string,
+			(action.perform_action ??
+				action['service' as 'perform_action']) as string, // deprecated in 2024.8
 		) as string;
 
 		const [domain, service] = domainService.split('.');

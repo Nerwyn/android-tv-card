@@ -224,8 +224,8 @@ export const defaultKeys: Record<string, IElementConfig> = {
 		range: [0, 1],
 		value_attribute: 'volume_level',
 		tap_action: {
-			action: 'call-service',
-			service: 'media_player.volume_set',
+			action: 'perform-action',
+			perform_action: 'media_player.volume_set',
 			data: {
 				volume_level: '{{ value | float }}',
 			},

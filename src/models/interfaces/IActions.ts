@@ -3,7 +3,7 @@ export const Actions = [
 	'toggle',
 	'navigate',
 	'url',
-	'call-service',
+	'perform-action',
 	'assist',
 	'key',
 	'source',
@@ -50,7 +50,7 @@ export interface IConfirmation {
 }
 
 export interface IBrowserMod {
-	service?: string;
+	perform_action?: string;
 	data?: IData;
 	target?: ITarget;
 }
@@ -66,7 +66,7 @@ export interface IAction {
 	remote_id?: string;
 	media_player_id?: string;
 
-	service?: string;
+	perform_action?: string;
 	data?: IData;
 	target?: ITarget;
 

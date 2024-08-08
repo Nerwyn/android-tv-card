@@ -262,10 +262,10 @@ export class RemoteSlider extends BaseRemoteElement {
 					this.config?.style?.['--tooltip-transform'] ??
 					(this.vertical
 						? `translate(calc(-0.7 * ${
-								width ?? '50px'
+								width ?? '48px'
 						  } - 0.4em - 10px), calc(-1 * var(--thumb-offset)))`
 						: `translate(var(--thumb-offset), calc(-0.5 * ${
-								height ?? '50px'
+								height ?? '48px'
 						  } - 0.4em - 10px))`),
 				'--tooltip-display':
 					this.config?.style?.['--tooltip-display'] ?? 'initial',
@@ -390,7 +390,7 @@ export class RemoteSlider extends BaseRemoteElement {
 			if (style.width) {
 				this.style.setProperty('width', style.width as string);
 			} else {
-				this.style.width = '50px';
+				this.style.width = '48px';
 			}
 			if (!style.height) {
 				style.height = `${this.sliderWidth}px`;
@@ -455,7 +455,7 @@ export class RemoteSlider extends BaseRemoteElement {
 
 					--color: var(--primary-text-color);
 					--mdc-icon-size: var(--size, 32px);
-					--height: 50px;
+					--height: 48px;
 				}
 
 				.background {
@@ -484,32 +484,32 @@ export class RemoteSlider extends BaseRemoteElement {
 				.slider::-webkit-slider-thumb {
 					appearance: none;
 					-webkit-appearance: none;
-					height: 50px;
-					width: var(--thumb-width, 50px);
+					height: var(--height);
+					width: var(--thumb-width, var(--height));
 					cursor: pointer;
 					background: var(--color);
 					border-color: rgb(0, 0, 0, 0);
 					box-shadow: var(
 						--thumb-box-shadow,
-						calc(-100vw - (var(--thumb-width, 50px) / 2)) 0 0 100vw
-							var(--color)
+						calc(-100vw - (var(--thumb-width, var(--height)) / 2)) 0
+							0 100vw var(--color)
 					);
-					border-radius: var(--thumb-border-radius, 50px);
+					border-radius: var(--thumb-border-radius, var(--height));
 				}
 				.slider::-moz-range-thumb {
 					appearance: none;
 					-webkit-appearance: none;
-					height: 50px;
-					width: var(--thumb-width, 50px);
+					height: var(--height);
+					width: var(--thumb-width, var(--height));
 					cursor: pointer;
 					background: var(--color);
 					border-color: rgb(0, 0, 0, 0);
 					box-shadow: var(
 						--thumb-box-shadow,
-						calc(-100vw - (var(--thumb-width, 50px) / 2)) 0 0 100vw
-							var(--color)
+						calc(-100vw - (var(--thumb-width, var(--height)) / 2)) 0
+							0 100vw var(--color)
 					);
-					border-radius: var(--thumb-border-radius, 50px);
+					border-radius: var(--thumb-border-radius, var(--height));
 				}
 
 				.off::-webkit-slider-thumb {

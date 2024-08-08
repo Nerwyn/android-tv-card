@@ -139,9 +139,9 @@ rows:
 | ------------------ | ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | type               | string                    | Must be `custom:android-tv-card`                                                                                                                                                                                  |
 | title              | string                    | Title to display in the card header.                                                                                                                                                                              |
-| remote_id          | string                    | Global `remote` entity id for default and custom key and source actions, along with some Android TV keyboard functions. Also autofills into service call data when `autofill_entity_id` is set to true.           |
-| media_player_id    | string                    | Gloabl `media_player` entity ID to autofill into service call data when `autofill_entity_id` is set to true. Also populates `slider_id` if it is not present and autofills for the `kodi` and `denonavr` domains. |
-| autofill_entity_id | boolean                   | Enable autofilling of the entity ID of `remote` and `media_player` service calls if no target IDs are provided, defaults to `false`.                                                                              |
+| remote_id          | string                    | Global `remote` entity id for default and custom key and source actions, along with some Android TV keyboard functions. Also autofills into action data when `autofill_entity_id` is set to true.                 |
+| media_player_id    | string                    | Gloabl `media_player` entity ID to autofill into action data when `autofill_entity_id` is set to true. Also populates `slider_id` if it is not present and autofills for the `kodi` and `denonavr` domains.       |
+| autofill_entity_id | boolean                   | Enable autofilling of the entity ID of `remote` and `media_player` actions if no target IDs are provided, defaults to `false`.                                                                                    |
 | rows               | string[]                  | Defines the elements used in the card. Each row within rows defines a row of elements. Sub-arrays within these rows will display as columns, and sub-arrays within those will alternate between rows and columns. |
 | row_styles         | Record<string, StyleInfo> | CSS for rows and columns. Can be applied globally using keys `rows` and `columns`, or by row or column IDs such as `row-1` or `column-2`.                                                                         |
 
@@ -240,8 +240,8 @@ custom_actions:
   toggle_light:
     icon: mdi:lightbulb
     tap_action:
-      action: call-service
-      service: light.toggle
+      action: perform-action
+      perform_action: light.toggle
       target:
         entity_id: light.bedroom
   to_hass_home:
@@ -257,8 +257,8 @@ custom_actions:
       navigation_path: /lovelace/2
   volume_up:
     hold_action:
-      action: call-service
-      service: media_player.volume_set
+      action: perform-action
+      perform_action: media_player.volume_set
       data:
         entity_id: media_player.google_tv
         volume_level: 1
@@ -286,8 +286,8 @@ custom_actions:
   power:
     icon: mdi:power-cycle
     tap_action:
-      action: call-service
-      service: media_player.toggle
+      action: perform-action
+      perform_action: media_player.toggle
       target:
         entity_id: media_player.tv
 ```
@@ -299,8 +299,8 @@ custom_actions:
   discovery:
     icon: discovery
     tap_action:
-      action: call-service
-      service: media_player.select_source
+      action: perform-action
+      perform_action: media_player.select_source
       data:
         source: discovery+
       target:
@@ -313,8 +313,8 @@ Any default or custom action can be used as a template (not to be confused with 
 custom_actions:
  webostv:
     tap_action:
-      action: call-service
-      service: webostv.button
+      action: perform-action
+      perform_action: webostv.button
       target:
         entity_id: media_player.lg_smart_tv
   left:
@@ -364,16 +364,16 @@ custom_actions:
   toggle_light:
     icon: mdi:lightbulb
     tap_action:
-      action: call-service
-      service: light.toggle
+      action: perform-action
+      perform_action: light.toggle
       target:
         entity_id: light.bedroom
     hold_action:
       action: repeat
   volume_up:
     hold_action:
-      action: call-service
-      service: media_player.volume_set
+      action: perform-action
+      perform_action: media_player.volume_set
       data:
         entity_id: media_player.google_tv
         volume_level: 1
@@ -411,10 +411,10 @@ Actions follow the [Home Assistant actions](https://www.home-assistant.io/dashbo
 | [toggle](#toggle)                        | Toggle between the target's on and off (or similar) states.                                                                                             |
 | [navigate](#navigate)                    | Navigate to another Home Assistant page.                                                                                                                |
 | [url](#url)                              | Navigate to an external URL.                                                                                                                            |
-| [call-service](#call-service)            | Call any Home Assistant service.                                                                                                                        |
+| [perform-action](#perform-action)        | Call any Home Assistant action service.                                                                                                                 |
 | [assist](#assist)                        | Open the assist dialog. Uses the mobile dialog if available, like in the Home Assistant app.                                                            |
-| [key](#key)                              | Send a key to send to the TV via the service call `remote.send_command`.                                                                                |
-| [source](#source)                        | Switch to a source via the service call `remote.turn_on`.                                                                                               |
+| [key](#key)                              | Send a key to send to the TV via the action `remote.send_command`.                                                                                      |
+| [source](#source)                        | Switch to a source via the action `remote.turn_on`.                                                                                                     |
 | [keyboard](#keyboard-textbox-and-search) | Open a dialog for sending seamless keyboard input.                                                                                                      |
 | [textbox](#keyboard-textbox-and-search)  | Open a dialog for sending bulk keyboard input.                                                                                                          |
 | [search](#keyboard-textbox-and-search)   | Open a dialog for sending a global search query.                                                                                                        |
@@ -473,35 +473,35 @@ custom_actions:
       url_path: https://www.google.com
 ```
 
-#### call-service
+#### perform-action
 
-| Name    | Description                                                                                                                                                      |
-| ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| service | The service to call. Use the format `domain.service`, e.g. `"light.turn_on"`.                                                                                    |
-| data    | Additional data to pass to the service call. See the Home Assistant documentation or go to Developer Tools > Services to see available options for each service. |
-| target  | The entity IDs, device IDs, or area IDs to call the service on.                                                                                                  |
+| Name           | Description                                                                                                                                              |
+| -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| perform_action | The action to call. Use the format `domain.service`, e.g. `"light.turn_on"`.                                                                             |
+| data           | Additional data to pass to the action. See the Home Assistant documentation or go to Developer Tools > Actions to see available options for each action. |
+| target         | The entity IDs, device IDs, or area IDs to call the action on.                                                                                           |
 
-`data` and `target` get internally merged into one object and can be used together or interchangeably. You can safely put all information into one object with any of these names. This was done so that you can easily design service calls using Home Assistant's service developer tool and copy the YAML to custom button configurations in this card.
+`data` and `target` get internally merged into one object and can be used together or interchangeably. You can safely put all information into one object with any of these names. This was done so that you can easily design actions using Home Assistant's actions developer tool and copy the YAML to custom button configurations in this card.
 
 ```yaml
 custom_actions:
   toggle_light:
     icon: mdi:lightbulb
     tap_action:
-      action: call-service
-      service: light.toggle
+      action: perform-action
+      perform_action: light.toggle
       target:
         entity_id: light.theater
     double_tap_action:
-      action: call-service
-      service: light.turn_on
+      action: perform-action
+      perform_action: light.turn_on
       target:
         entity_id: light.theater
       data:
         brightness_pct: 10
     hold_action:
-      action: call-service
-      service: light.turn_off
+      action: perform-action
+      perform_action: light.turn_off
       target:
         entity_id: light.theater
 ```
@@ -534,7 +534,7 @@ custom_actions:
       key: HOME
 ```
 
-By default, hold actions on default keys adds `hold_secs: 0.5` to the data sent with the `remote.send_command` service call. Creating a `hold_action` on a key action overwrites this.
+By default, hold actions on default keys adds `hold_secs: 0.5` to the data sent with the `remote.send_command` action. Creating a `hold_action` on a key action overwrites this.
 
 #### source
 
@@ -575,7 +575,7 @@ custom_actions:
     tap_action:
       action: fire-dom-event
       browser_mod:
-        service: browser_mod.more_info
+        perform_action: browser_mod.more_info
         data:
           large: true
           entity: zone.home
@@ -615,8 +615,8 @@ custom_actions:
   toggle_light:
     icon: mdi:lightbulb
     tap_action:
-      action: call-service
-      service: light.toggle
+      action: perform-action
+      perform_action: light.toggle
       target:
         entity_id: light.theater
     hold_action:
@@ -637,13 +637,13 @@ custom_actions:
   momentary_light:
     icon: mdi:ceiling-light
     momentary_start_action:
-      action: call-service
-      service: light.turn_on
+      action: perform-action
+      perform_action: light.turn_on
       data:
         entity_id: light.sunroom_ceiling
     momentary_end_action:
-      action: call-service
-      service: light.turn_off
+      action: perform-action
+      perform_action: light.turn_off
       data:
         entity_id: light.sunroom_ceiling
 ```
@@ -654,8 +654,8 @@ Using buttons (and touchpad center) in momentary mode also allows you to send th
 custom_actions:
   fast_forward:
     momentary_end_action:
-      action: call-service
-      service: remote.send_command
+      action: perform-action
+      perform_action: remote.send_command
       data:
         entity_id: remote.google_tv
         command: MEDIA_FAST_FORWARD
@@ -710,7 +710,7 @@ You can also paste the entire SVG path onto one line.
 
 The svg path was copied from [SimpleIcon](https://simpleicons.org/?q=hbo). Although you can use [this integration](https://github.com/vigonotion/hass-simpleicons) for using icons from SimpleIcons (there's also one for [fontawesome](https://github.com/thomasloven/hass-fontawesome)).
 
-I highly recommend using a service like [iLoveIMG Resize SVG](https://www.iloveimg.com/resize-image/resize-svg) to resize any icons you find to 24x24 pixels so that they render correctly, and [this SVG path editor](https://yqnn.github.io/svg-path-editor/) to modify the icons to properly fit within the 24x24 pixel window.
+I highly recommend using a website like [iLoveIMG Resize SVG](https://www.iloveimg.com/resize-image/resize-svg) to resize any icons you find to 24x24 pixels so that they render correctly, and [this SVG path editor](https://yqnn.github.io/svg-path-editor/) to modify the icons to properly fit within the 24x24 pixel window.
 
 Having defined the custom icon, you can use it on any custom button:
 
@@ -755,7 +755,7 @@ custom_actions:
 | range                 | [number, number] | The range of the slider, defaults to [0,1].                                                                                                                                                                                             |
 | step                  | number           | The step size of the slider, defaults to one hundredth of the range.                                                                                                                                                                    |
 
-By default the slider calls the `media_player.volume_set` service, with `entity_id` set to `slider_id` and `volume_level` set to the slider value.
+By default the slider calls the `media_player.volume_set` action, with `entity_id` set to `slider_id` and `volume_level` set to the slider value.
 
 You can change this by creating a custom action for `slider`. Set the value which you wish to set using the slider to `'{{ value }}'`.
 
@@ -763,7 +763,7 @@ You can change this by creating a custom action for `slider`. Set the value whic
 custom_actions:
   slider:
     tap_action:
-      service: light.turn_on
+      perform_action: light.turn_on
       data:
         entity_id: light.sunroom_ceiling
         brightness: '{{ value }}'
@@ -860,61 +860,61 @@ autofill_entity_id: true
 custom_actions:
   up:
     tap_action:
-      service: kodi.call_method
+      perform_action: kodi.call_method
       data:
         method: Input.Up
     multi_tap_action:
-      service: kodi.call_method
+      perform_action: kodi.call_method
       data:
         method: Application.SetVolume
         volume: increment
   down:
     tap_action:
-      service: kodi.call_method
+      perform_action: kodi.call_method
       data:
         method: Input.Down
     multi_tap_action:
-      service: kodi.call_method
+      perform_action: kodi.call_method
       data:
         method: Application.SetVolume
         volume: decrement
   left:
     tap_action:
-      service: kodi.call_method
+      perform_action: kodi.call_method
       data:
         method: Input.Left
   right:
     tap_action:
-      service: kodi.call_method
+      perform_action: kodi.call_method
       data:
         method: Input.Right
   center:
     tap_action:
-      service: kodi.call_method
+      perform_action: kodi.call_method
       data:
         method: Input.Select
     double_tap_action:
-      service: kodi.call_method
+      perform_action: kodi.call_method
       data:
         method: Input.Back
     hold_action:
-      service: kodi.call_method
+      perform_action: kodi.call_method
       data:
         method: Input.ContextMenu
     multi_tap_action:
-      action: call-service
-      service: kodi.call_method
+      action: perform-action
+      perform_action: kodi.call_method
       data:
         method: Player.PlayPause
         playerid: 1
     multi_hold_action:
-      action: call-service
-      service: kodi.call_method
+      action: perform-action
+      perform_action: kodi.call_method
       data:
         method: Input.Home
     multi_double_tap_action:
-      action: call-service
-      service: kodi.call_method
+      action: perform-action
+      perform_action: kodi.call_method
       data:
         method: Input.Info
 ```
@@ -1199,8 +1199,8 @@ touchpad_style:
 custom_actions:
   select_source:
     tap_action:
-      action: call-service
-      service: media_player.select_source
+      action: perform-action
+      perform_action: media_player.select_source
   power:
     icon: mdi:power
     tap_action:
@@ -1372,8 +1372,8 @@ touchpad_style:
 custom_actions:
   kodi_command:
     tap_action:
-      action: call-service
-      service: kodi.call_method
+      action: perform-action
+      perform_action: kodi.call_method
   up:
     template: kodi_command
     tap_action:
@@ -1400,13 +1400,13 @@ custom_actions:
       data:
         method: Input.Select
     double_tap_action:
-      action: call-service
-      service: kodi.call_method
+      action: perform-action
+      perform_action: kodi.call_method
       data:
         method: Input.Back
     hold_action:
-      action: call-service
-      service: kodi.call_method
+      action: perform-action
+      perform_action: kodi.call_method
       data:
         method: Input.ContextMenu
   back:
@@ -1516,8 +1516,8 @@ touchpad_style:
 custom_actions:
   denonavr_command:
     tap_action:
-      action: call-service
-      service: denonavr.get_command
+      action: perform-action
+      perform_action: denonavr.get_command
   down:
     template: denonavr_command
     tap_action:
@@ -1544,8 +1544,8 @@ custom_actions:
       data:
         command: /goform/formiPhoneAppDirect.xml?MNENT
     double_tap_action:
-      action: call-service
-      service: denonavr.get_command
+      action: perform-action
+      perform_action: denonavr.get_command
       data:
         command: /goform/formiPhoneAppDirect.xml?MNRTN
 ```
@@ -1733,8 +1733,8 @@ custom_actions:
   power:
     icon: mdi:power
     tap_action:
-      action: call-service
-      service: media_player.toggle
+      action: perform-action
+      perform_action: media_player.toggle
   home:
     tap_action:
       action: key
@@ -1759,27 +1759,27 @@ custom_actions:
       key: KEY_CHDOWN
   netflix:
     tap_action:
-      action: call-service
-      service: media_player.select_source
+      action: perform-action
+      perform_action: media_player.select_source
       data:
         source: Netflix
   youtube:
     tap_action:
-      action: call-service
-      service: media_player.select_source
+      action: perform-action
+      perform_action: media_player.select_source
       data:
         source: YouTube
   primevideo:
     tap_action:
-      action: call-service
-      service: media_player.select_source
+      action: perform-action
+      perform_action: media_player.select_source
       data:
         source: Prime Video
   DAZN:
     icon: dazn
     tap_action:
-      action: call-service
-      service: media_player.select_source
+      action: perform-action
+      perform_action: media_player.select_source
       data:
         source: DAZN
 rows:
@@ -1832,7 +1832,7 @@ rows:
 custom_keys:
   next_thing:
     icon: mdi:skip-next-circle
-    service: input_select.select_next
+    perform_action: input_select.select_next
     data:
       cycle: true
     target:
@@ -1872,8 +1872,8 @@ custom_actions:
   '1':
     icon: mdi:circle
     tap_action:
-      action: call-service
-      service: remote.send_command
+      action: perform-action
+      perform_action: remote.send_command
       target:
         entity_id: remote.rm4_pro
       data:
@@ -1885,8 +1885,8 @@ custom_actions:
   '2':
     icon: mdi:circle
     tap_action:
-      action: call-service
-      service: remote.send_command
+      action: perform-action
+      perform_action: remote.send_command
       target:
         entity_id: remote.rm4_pro
       data:
@@ -1898,8 +1898,8 @@ custom_actions:
   '3':
     icon: mdi:circle
     tap_action:
-      action: call-service
-      service: remote.send_command
+      action: perform-action
+      perform_action: remote.send_command
       target:
         entity_id: remote.rm4_pro
       data:
@@ -1911,8 +1911,8 @@ custom_actions:
   '4':
     icon: mdi:circle
     tap_action:
-      action: call-service
-      service: remote.send_command
+      action: perform-action
+      perform_action: remote.send_command
       target:
         entity_id: remote.rm4_pro
       data:
@@ -1924,8 +1924,8 @@ custom_actions:
   '5':
     icon: mdi:circle
     tap_action:
-      action: call-service
-      service: remote.send_command
+      action: perform-action
+      perform_action: remote.send_command
       target:
         entity_id: remote.rm4_pro
       data:
@@ -1937,8 +1937,8 @@ custom_actions:
   '6':
     icon: mdi:circle
     tap_action:
-      action: call-service
-      service: remote.send_command
+      action: perform-action
+      perform_action: remote.send_command
       target:
         entity_id: remote.rm4_pro
       data:
@@ -1950,8 +1950,8 @@ custom_actions:
   '7':
     icon: mdi:circle
     tap_action:
-      action: call-service
-      service: remote.send_command
+      action: perform-action
+      perform_action: remote.send_command
       target:
         entity_id: remote.rm4_pro
       data:
@@ -1963,8 +1963,8 @@ custom_actions:
   '8':
     icon: mdi:circle
     tap_action:
-      action: call-service
-      service: remote.send_command
+      action: perform-action
+      perform_action: remote.send_command
       target:
         entity_id: remote.rm4_pro
       data:
@@ -1976,8 +1976,8 @@ custom_actions:
   '9':
     icon: mdi:circle
     tap_action:
-      action: call-service
-      service: remote.send_command
+      action: perform-action
+      perform_action: remote.send_command
       target:
         entity_id: remote.rm4_pro
       data:
@@ -1989,8 +1989,8 @@ custom_actions:
   '10':
     icon: mdi:circle
     tap_action:
-      action: call-service
-      service: remote.send_command
+      action: perform-action
+      perform_action: remote.send_command
       target:
         entity_id: remote.rm4_pro
       data:
@@ -2002,8 +2002,8 @@ custom_actions:
   '11':
     icon: mdi:circle
     tap_action:
-      action: call-service
-      service: remote.send_command
+      action: perform-action
+      perform_action: remote.send_command
       target:
         entity_id: remote.rm4_pro
       data:
@@ -2015,8 +2015,8 @@ custom_actions:
   '12':
     icon: mdi:circle
     tap_action:
-      action: call-service
-      service: remote.send_command
+      action: perform-action
+      perform_action: remote.send_command
       target:
         entity_id: remote.rm4_pro
       data:
@@ -2027,8 +2027,8 @@ custom_actions:
       --icon-color: white;
   power:
     tap_action:
-      action: call-service
-      service: remote.send_command
+      action: perform-action
+      perform_action: remote.send_command
       target:
         entity_id: remote.rm4_pro
       data:
@@ -2039,8 +2039,8 @@ custom_actions:
   poweroff:
     icon: mdi:power
     tap_action:
-      action: call-service
-      service: remote.send_command
+      action: perform-action
+      perform_action: remote.send_command
       target:
         entity_id: remote.rm4_pro
       data:
@@ -2050,8 +2050,8 @@ custom_actions:
       --icon-color: red
   up:
     tap_action:
-      action: call-service
-      service: remote.send_command
+      action: perform-action
+      perform_action: remote.send_command
       target:
         entity_id: remote.rm4_pro
       data:
@@ -2059,8 +2059,8 @@ custom_actions:
         command: brightness+
   down:
     tap_action:
-      action: call-service
-      service: remote.send_command
+      action: perform-action
+      perform_action: remote.send_command
       target:
         entity_id: remote.rm4_pro
       data:

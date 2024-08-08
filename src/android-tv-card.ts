@@ -14,7 +14,6 @@ import {
 	IAction,
 	IActions,
 	IConfig,
-	IData,
 	IElementConfig,
 	Platform,
 	defaultKeys,
@@ -236,8 +235,11 @@ class AndroidTVCard extends LitElement {
 							action.action = 'key';
 						} else if (action.source) {
 							action.action = 'source';
-						} else if (action.service) {
-							action.action = 'call-service';
+						} else if (
+							action.perform_action ||
+							action['service' as 'perform_action']
+						) {
+							action.action = 'perform-action';
 						} else if (action.navigation_path) {
 							action.action = 'navigate';
 						} else if (action.url_path) {
@@ -254,22 +256,24 @@ class AndroidTVCard extends LitElement {
 						} else {
 							action.action = 'none';
 						}
+					} else if (
+						action.action == ('call-service' as 'perform-action')
+					) {
+						action.action = 'perform-action';
+						action.perform_action =
+							action['service' as 'perform_action'] ?? '';
+						delete action['service' as 'perform_action'];
 					}
 
 					// Merge service_data, target, and data fields
 					if (
 						['data', 'target', 'service_data'].some(
-							(key) => action[key as keyof IAction],
+							(key) => action[key as 'data'],
 						)
 					) {
 						action.data = {
 							...action.data,
-							...(
-								action as unknown as Record<
-									string,
-									IData | undefined
-								>
-							).service_data,
+							...action['service_data' as 'data'],
 							...action.target,
 						};
 					}
