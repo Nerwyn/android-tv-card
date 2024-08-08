@@ -235,11 +235,14 @@ class AndroidTVCard extends LitElement {
 							action.action = 'key';
 						} else if (action.source) {
 							action.action = 'source';
-						} else if (
-							action.perform_action ||
-							action['service' as 'perform_action']
-						) {
+						} else if (action.perform_action) {
 							action.action = 'perform-action';
+						} else if (action['service' as 'perform_action']) {
+							// Deprecated in 2024.8
+							action.action = 'perform-action';
+							action.perform_action =
+								action['service' as 'perform_action'];
+							delete action['service' as 'perform_action'];
 						} else if (action.navigation_path) {
 							action.action = 'navigate';
 						} else if (action.url_path) {

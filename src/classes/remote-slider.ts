@@ -263,7 +263,7 @@ export class RemoteSlider extends BaseRemoteElement {
 					(this.vertical
 						? `translate(calc(-0.7 * ${
 								width ?? '48px'
-						  } - 0.4em - 10px), calc(-1 * var(--thumb-offset)))`
+						  } - 0.8em - 18px), calc(-1 * var(--thumb-offset)))`
 						: `translate(var(--thumb-offset), calc(-0.5 * ${
 								height ?? '48px'
 						  } - 0.4em - 10px))`),
