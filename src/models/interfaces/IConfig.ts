@@ -15,6 +15,7 @@ export interface IConfig {
 	custom_icons?: Record<string, string>;
 
 	haptics?: boolean;
+	styles?: string;
 	button_styles?: string;
 
 	hold_time?: number;
@@ -22,5 +23,4 @@ export interface IConfig {
 	double_tap_window?: number;
 
 	rows?: Row[];
-	styles?: string;
 }
