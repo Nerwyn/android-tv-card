@@ -391,12 +391,6 @@ export class RemoteSlider extends BaseRemoteElement {
 			}
 
 			if (this.vertical) {
-				const width = style.getPropertyValue('width');
-				if (width) {
-					this.style.setProperty('width', width as string);
-				} else {
-					this.style.setProperty('width', '48px');
-				}
 				containerStyle['height'] = `${this.sliderWidth}px`;
 			}
 		}
