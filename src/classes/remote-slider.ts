@@ -239,6 +239,7 @@ export class RemoteSlider extends BaseRemoteElement {
 		const style: StyleInfo = {};
 		if (this.vertical) {
 			style['transform'] = 'rotateZ(270deg)';
+			style['width'] = `${this.sliderWidth}px`;
 		}
 		return html`<div class="background" style=${styleMap(style)}></div>`;
 	}
@@ -377,6 +378,7 @@ export class RemoteSlider extends BaseRemoteElement {
 		);
 
 		// Thumb width, height, and vertical slider style adjustments
+		const containerStyle: StyleInfo = {};
 		const sliderElement = this.shadowRoot?.querySelector('input');
 		if (sliderElement) {
 			const style = getComputedStyle(sliderElement);
@@ -398,10 +400,7 @@ export class RemoteSlider extends BaseRemoteElement {
 					this.style.setProperty('width', '48px');
 				}
 				if (!height) {
-					sliderElement.style.setProperty(
-						'height',
-						`${this.sliderWidth}px`,
-					);
+					containerStyle['height'] = `${this.sliderWidth}px`;
 				}
 			}
 		}
@@ -409,7 +408,7 @@ export class RemoteSlider extends BaseRemoteElement {
 		this.style.setProperty('--thumb-offset', `${this.thumbOffset}px`);
 
 		return html`
-			<div class="container">
+			<div class="container" style=${styleMap(containerStyle)}>
 				${this.buildBackground()}${this.buildSlider(undefined, context)}
 				${this.buildIcon(this.config.icon ?? '', context)}
 				${this.buildLabel(this.config.label ?? '', context)}
