@@ -377,9 +377,9 @@ export class UniversalTVCardEditor extends LitElement {
 						'label_id',
 					]) {
 						if (data[targetId]) {
-							target[targetId as keyof ITarget] = data[
-								targetId
-							] as string | string[];
+							target[targetId as keyof ITarget] = structuredClone(
+								data[targetId],
+							) as string | string[];
 							delete data[targetId];
 						}
 					}
