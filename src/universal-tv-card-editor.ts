@@ -773,7 +773,7 @@ export class UniversalTVCardEditor extends LitElement {
 				styles += `\n  ${field}: ${style[field]};`;
 			}
 			styles += `\n}`;
-			updatedConfig.styles = styles + (updatedConfig.styles ?? '');
+			updatedConfig.button_styles = styles + (updatedConfig.styles ?? '');
 			delete updatedConfig['button_style' as keyof IConfig];
 		}
 		if (updatedConfig['row_styles' as keyof IConfig]) {
