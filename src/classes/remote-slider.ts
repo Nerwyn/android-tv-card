@@ -259,10 +259,18 @@ export class RemoteSlider extends BaseRemoteElement {
 			height = style.getPropertyValue('height');
 			width = style.getPropertyValue('width');
 		}
-		let iconTransform: string | undefined = undefined;
+
+		let tooltipTransform: string;
+		let iconTransform: string;
 		if (this.vertical) {
+			tooltipTransform = `translate(calc(-0.7 * ${
+				width ?? '48px'
+			} - 0.8em - 18px), calc(-1 * var(--thumb-offset)))`;
 			iconTransform = 'translateY(calc(-1 * var(--thumb-offset)))';
 		} else {
+			tooltipTransform = `translate(var(--thumb-offset), calc(-0.5 * ${
+				height ?? '48px'
+			} - 0.4em - 10px))`;
 			iconTransform = 'translateX(var(--thumb-offset))';
 		}
 
@@ -272,13 +280,7 @@ export class RemoteSlider extends BaseRemoteElement {
 					'{{ value }}{{ unit }}',
 					context,
 				)}';
-				--tooltip-transform: ${this.vertical
-					? `translate(calc(-0.7 * ${
-							width ?? '48px'
-					  } - 0.8em - 18px), calc(-1 * var(--thumb-offset)))`
-					: `translate(var(--thumb-offset), calc(-0.5 * ${
-							height ?? '48px'
-					  } - 0.4em - 10px))`};
+				--tooltip-transform: ${tooltipTransform};
 				--icon-transform: ${iconTransform};
 			}
 		</style>`;
