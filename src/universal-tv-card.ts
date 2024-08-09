@@ -24,6 +24,7 @@ import './classes/keyboard-dialog';
 import './classes/remote-button';
 import './classes/remote-slider';
 import './classes/remote-touchpad';
+import { UniversalTVCardEditor } from './universal-tv-card-editor';
 
 console.info(
 	`%c UNIVERSAL-TV-CARD v${packageInfo.version}`,
@@ -568,6 +569,7 @@ class UniversalTVCard extends LitElement {
 	}
 }
 
+customElements.define('universal-tv-card-editor', UniversalTVCardEditor);
 customElements.define('android-tv-card', UniversalTVCard); // Keep old name to not break old configs
 
 window.customCards = window.customCards || [];
