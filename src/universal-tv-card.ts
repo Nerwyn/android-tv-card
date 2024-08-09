@@ -107,12 +107,10 @@ class UniversalTVCard extends LitElement {
 		return config;
 	}
 
-	getElementConfig(action: string): IElementConfig {
-		const defaultActions = this.defaultActions[action] || {};
-		let actions = structuredClone(
-			this.config.custom_actions?.[action] || defaultActions,
-		);
-
+	updateElementConfig(
+		actions: IElementConfig,
+		defaultActions: IElementConfig,
+	) {
 		// Apply template if defined
 		if (actions.template) {
 			const defaultTemplateActions =
@@ -221,6 +219,27 @@ class UniversalTVCard extends LitElement {
 		return actions;
 	}
 
+	getElementConfig(action: string): IElementConfig {
+		const defaultActions = this.defaultActions[action] || {};
+		let actions = structuredClone(
+			this.config.custom_actions?.[action] || defaultActions,
+		);
+
+		actions = this.updateElementConfig(actions, defaultActions);
+
+		// Also update touchpad directions
+		if (actions.type == 'touchpad') {
+			for (const direction of DirectionActions) {
+				actions[direction] = this.updateElementConfig(
+					actions[direction] as IElementConfig,
+					this.defaultActions.touchpad[direction] as IElementConfig,
+				);
+			}
+		}
+
+		return actions;
+	}
+
 	buildStyle(_style: StyleInfo = {}, context?: object) {
 		const style = structuredClone(_style);
 		for (const key in style) {
@@ -276,18 +295,6 @@ class UniversalTVCard extends LitElement {
 		elementName: string,
 		actions: IElementConfig,
 	): TemplateResult {
-		if (!actions.tap_action) {
-			actions.tap_action = this.defaultActions.center.tap_action;
-		}
-		for (const direction of DirectionActions) {
-			if (!actions[direction] && this.defaultActions[direction]) {
-				actions[direction] = {
-					tap_action: this.defaultActions[direction].tap_action,
-					hold_action: this.defaultActions[direction].hold_action,
-				};
-			}
-		}
-
 		return html`<remote-touchpad
 			title="${elementName}"
 			.hass=${this.hass}
