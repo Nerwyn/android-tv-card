@@ -64,6 +64,7 @@ export class BaseRemoteElement extends LitElement {
 	}
 
 	sendAction(actionType: ActionType, config: IActions = this.config) {
+		console.log(config);
 		let action;
 		switch (actionType) {
 			case 'momentary_start_action':
