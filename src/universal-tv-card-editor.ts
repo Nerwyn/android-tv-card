@@ -642,7 +642,7 @@ export class UniversalTVCardEditor extends LitElement {
 				(config.slider_id as string) ??
 				config.media_player_id ??
 				'';
-			let tapAction = slider.tap_action;
+			let tapAction = slider.tap_action ?? defaultKeys.slider.tap_action;
 			if (tapAction) {
 				const data = tapAction.data ?? {};
 				const target = tapAction.target ?? {};
@@ -654,12 +654,6 @@ export class UniversalTVCardEditor extends LitElement {
 				}
 				tapAction.data = data;
 				tapAction.target = target;
-			} else {
-				tapAction = {
-					target: {
-						entity_id: config.slider_id as string,
-					},
-				} as IAction;
 			}
 			slider.tap_action = tapAction;
 		}

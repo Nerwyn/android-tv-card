@@ -442,6 +442,7 @@ export class RemoteSlider extends BaseRemoteElement {
 					--color: var(--primary-text-color);
 					--mdc-icon-size: var(--size, 32px);
 					--height: 48px;
+					--tooltip-label: 0;
 				}
 
 				.container {
