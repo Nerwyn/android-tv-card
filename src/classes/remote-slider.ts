@@ -391,6 +391,7 @@ export class RemoteSlider extends BaseRemoteElement {
 			}
 
 			if (this.vertical) {
+				this.style.width = 'fit-content';
 				containerStyle['height'] = `${this.sliderWidth}px`;
 			}
 		}
@@ -426,7 +427,7 @@ export class RemoteSlider extends BaseRemoteElement {
 					align-self: stretch;
 					position: relative;
 					height: unset;
-					width: fit-content;
+					width: 100%;
 					border: none;
 					border-radius: 25px;
 					padding: 0px;
