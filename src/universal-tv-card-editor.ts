@@ -9,6 +9,7 @@ import {
 	ActionType,
 	ActionTypes,
 	DirectionAction,
+	DirectionActions,
 	IAction,
 	IConfig,
 	IData,
@@ -720,22 +721,13 @@ export class UniversalTVCardEditor extends LitElement {
 					'DPAD_CENTER') as string,
 			};
 		}
-		if (!touchpad.tap_action) {
-			touchpad.tap_action =
-				customActions.center.tap_action ??
-				defaultKeys.center.tap_action;
+		if (!touchpad.tap_action && customActions.center.tap_action) {
+			touchpad.tap_action = customActions.center.tap_action;
 		}
-		if (!touchpad.up && customActions.up) {
-			touchpad.up = customActions.up;
-		}
-		if (!touchpad.down && customActions.down) {
-			touchpad.down = customActions.down;
-		}
-		if (!touchpad.left && customActions.left) {
-			touchpad.left = customActions.left;
-		}
-		if (!touchpad.right && customActions.right) {
-			touchpad.right = customActions.right;
+		for (const direction of DirectionActions) {
+			if (!touchpad[direction] && customActions[direction]) {
+				touchpad[direction] = customActions[direction];
+			}
 		}
 		if (Object.keys(touchpad).length > 1) {
 			customActions.touchpad = touchpad;

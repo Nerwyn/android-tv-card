@@ -44,7 +44,8 @@ export interface ISliderConfig extends IBaseElementConfig {
 	tap_action?: IAction;
 }
 
-export type DirectionAction = 'up' | 'down' | 'left' | 'right';
+export const DirectionActions = ['up', 'down', 'left', 'right'] as const;
+export type DirectionAction = (typeof DirectionActions)[number];
 
 export interface ITouchpadConfig extends IBaseElementConfig, IActions {
 	up?: IBasicActions & IMultiActions;

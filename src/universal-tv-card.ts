@@ -10,6 +10,7 @@ import { load } from 'js-yaml';
 
 import {
 	ActionTypes,
+	DirectionActions,
 	IAction,
 	IConfig,
 	IElementConfig,
@@ -275,6 +276,18 @@ class UniversalTVCard extends LitElement {
 		elementName: string,
 		actions: IElementConfig,
 	): TemplateResult {
+		if (!actions.tap_action) {
+			actions.tap_action = this.defaultActions.center.tap_action;
+		}
+		for (const direction of DirectionActions) {
+			if (!actions[direction] && this.defaultActions[direction]) {
+				actions[direction] = {
+					tap_action: this.defaultActions[direction].tap_action,
+					hold_action: this.defaultActions[direction].hold_action,
+				};
+			}
+		}
+
 		return html`<remote-touchpad
 			title="${elementName}"
 			.hass=${this.hass}
