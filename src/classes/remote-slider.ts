@@ -389,17 +389,8 @@ export class RemoteSlider extends BaseRemoteElement {
 			} else {
 				this.thumbWidth = 48;
 			}
-
 			if (this.vertical) {
-				const width = style.getPropertyValue('width');
-				if (width) {
-					this.style.setProperty('width', width as string);
-				} else {
-					this.style.setProperty('width', '48px');
-				}
-				if (!height) {
-					containerStyle['height'] = `${this.sliderWidth}px`;
-				}
+				containerStyle['height'] = `${this.sliderWidth}px`;
 			}
 		}
 		this.setThumbOffset();
