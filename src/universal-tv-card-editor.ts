@@ -8,7 +8,6 @@ import { dump, load } from 'js-yaml';
 import {
 	ActionType,
 	ActionTypes,
-	DirectionAction,
 	DirectionActions,
 	IAction,
 	IConfig,
@@ -736,13 +735,7 @@ export class UniversalTVCardEditor extends LitElement {
 		for (const elementName in customActions) {
 			let element = customActions[elementName];
 			element = this.updatedDeprecatedActionFields(element);
-			const directions: DirectionAction[] = [
-				'up',
-				'down',
-				'left',
-				'right',
-			];
-			for (const direction of directions) {
+			for (const direction of DirectionActions) {
 				if (element[direction]) {
 					element[direction] = this.updatedDeprecatedActionFields(
 						element[direction] as IElementConfig,
