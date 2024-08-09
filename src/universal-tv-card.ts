@@ -231,7 +231,7 @@ class UniversalTVCard extends LitElement {
 		if (actions.type == 'touchpad') {
 			for (const direction of DirectionActions) {
 				actions[direction] = this.updateElementConfig(
-					actions[direction] as IElementConfig,
+					(actions[direction] ?? {}) as IElementConfig,
 					this.defaultActions.touchpad[direction] as IElementConfig,
 				);
 			}
