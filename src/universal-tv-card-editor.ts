@@ -765,10 +765,9 @@ export class UniversalTVCardEditor extends LitElement {
 		if (updatedConfig['button_style' as keyof IConfig]) {
 			let styles = updatedConfig.button_styles ?? '';
 			styles += '\n:host {';
-			const style = updatedConfig.button_styles as unknown as Record<
-				string,
-				string
-			>;
+			const style = updatedConfig[
+				'button_style' as keyof IConfig
+			] as unknown as Record<string, string>;
 			for (const field in style) {
 				styles += `\n  ${field}: ${style[field]};`;
 			}
