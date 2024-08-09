@@ -1,11 +1,14 @@
 import { CSSResult, css, html } from 'lit';
-import { customElement, state } from 'lit/decorators.js';
+import { customElement, property, state } from 'lit/decorators.js';
 import { StyleInfo, styleMap } from 'lit/directives/style-map.js';
 
+import { ISliderConfig } from '../models';
 import { BaseRemoteElement } from './base-remote-element';
 
 @customElement('remote-slider')
 export class RemoteSlider extends BaseRemoteElement {
+	@property() config!: ISliderConfig;
+
 	@state() showTooltip: boolean = false;
 	@state() thumbOffset: number = 0;
 	@state() sliderOn: boolean = true;
@@ -232,20 +235,23 @@ export class RemoteSlider extends BaseRemoteElement {
 		super.endAction();
 	}
 
-	buildBackground(context: object) {
+	buildBackground() {
 		const style: StyleInfo = {};
 		if (this.vertical) {
 			style['transform'] = 'rotateZ(270deg)';
-			style['width'] =
-				this.config.style?.height ?? `${this.sliderWidth}px`;
 		}
-		return html`<div
-			class="background"
-			style=${styleMap(this.buildStyle(style, context))}
-		></div>`;
+		return html`<div class="background" style=${styleMap(style)}></div>`;
 	}
 
-	buildTooltip(context: object) {
+	buildTooltip() {
+		return html`
+			<div
+				class="tooltip ${this.showTooltip ? 'faded-in' : 'faded-out'}"
+			></div>
+		`;
+	}
+
+	buildTooltipStyle(context: object) {
 		let height, width;
 		const containerElement = this.shadowRoot?.querySelector('.container');
 		if (containerElement) {
@@ -253,62 +259,45 @@ export class RemoteSlider extends BaseRemoteElement {
 			height = style.getPropertyValue('height');
 			width = style.getPropertyValue('width');
 		}
-		const style: StyleInfo = this.buildStyle(
-			{
-				'--tooltip-label': `"${
-					this.config?.style?.['--tooltip-label'] ?? '{{ value }}'
-				}"`,
-				'--tooltip-transform':
-					this.config?.style?.['--tooltip-transform'] ??
-					(this.vertical
-						? `translate(calc(-0.7 * ${
-								width ?? '48px'
-						  } - 0.8em - 18px), calc(-1 * var(--thumb-offset)))`
-						: `translate(var(--thumb-offset), calc(-0.5 * ${
-								height ?? '48px'
-						  } - 0.4em - 10px))`),
-				'--tooltip-display':
-					this.config?.style?.['--tooltip-display'] ?? 'initial',
-			},
-			context,
-		);
-
-		// Deprecated tooltip hide/show field
-		if ('tooltip' in this.config) {
-			style['--tooltip-display'] = this.renderTemplate(
-				this.config.tooltip as unknown as string,
-				context,
-			)
-				? 'initial'
-				: 'none';
+		let iconTransform: string | undefined = undefined;
+		if (this.vertical) {
+			iconTransform = 'translateY(calc(-1 * var(--thumb-offset)))';
+		} else {
+			iconTransform = 'translateX(var(--thumb-offset))';
 		}
 
-		// prettier-ignore
-		return html`
-			<div
-				class="tooltip ${this.showTooltip ? 'faded-in' : 'faded-out'}"
-				style=${styleMap(style)}
-			></div>
-		`;
+		return html`<style>
+			:host {
+				--tooltip-label: '${this.renderTemplate(
+					'{{ value }}{{ unit }}',
+					context,
+				)}';
+				--tooltip-transform: ${this.vertical
+					? `translate(calc(-0.7 * ${
+							width ?? '48px'
+					  } - 0.8em - 18px), calc(-1 * var(--thumb-offset)))`
+					: `translate(var(--thumb-offset), calc(-0.5 * ${
+							height ?? '48px'
+					  } - 0.4em - 10px))`};
+				--icon-transform: ${iconTransform};
+			}
+		</style>`;
 	}
 
-	buildSlider(context: object) {
+	buildSlider(config: ISliderConfig = this.config, context: object) {
 		const value = context['value' as keyof typeof context] as number;
 		this.setSliderState(value);
 
 		const style: StyleInfo = {};
 		if (
-			this.renderTemplate(
-				this.config.tap_action?.action as string,
-				context,
-			) == 'none'
+			this.renderTemplate(config.tap_action?.action as string, context) ==
+			'none'
 		) {
 			style['pointer-events'] = 'none';
 		}
 		if (this.vertical) {
 			style['transform'] = 'rotateZ(270deg)';
-			style['width'] =
-				this.config.style?.height ?? `${this.sliderWidth}px`;
+			style['width'] = `${this.sliderWidth}px`;
 			style['touch-action'] = 'none';
 		}
 
@@ -316,7 +305,6 @@ export class RemoteSlider extends BaseRemoteElement {
 			<input
 				type="range"
 				class="${this.sliderOn ? 'slider' : 'slider off'}"
-				style=${styleMap(this.buildStyle(style, context))}
 				min="${this.range[0]}"
 				max="${this.range[1]}"
 				step=${this.step}
@@ -379,39 +367,46 @@ export class RemoteSlider extends BaseRemoteElement {
 			this.shadowRoot?.querySelector('.container') ?? this,
 		);
 
-		const style = this.buildStyle(this.config.style ?? {}, context);
-		this.thumbWidth = parseInt(
-			((style['--thumb-width'] as string) ?? '50').replace('px', ''),
-		);
+		// Thumb width, height, and vertical slider style adjustments
+		const sliderElement = this.shadowRoot?.querySelector('input');
+		if (sliderElement) {
+			const style = getComputedStyle(sliderElement);
+			const height = style.getPropertyValue('height');
+			const thumbWidth = style.getPropertyValue('--thumb-width');
+			if (thumbWidth) {
+				this.thumbWidth = parseInt(thumbWidth.replace(/[^0-9]+/g, ''));
+			} else if (height) {
+				this.thumbWidth = parseInt(height.replace(/[^0-9]+/g, ''));
+			} else {
+				this.thumbWidth = 48;
+			}
+
+			if (this.vertical) {
+				const width = style.getPropertyValue('width');
+				if (width) {
+					this.style.setProperty('width', width as string);
+				} else {
+					this.style.setProperty('width', '48px');
+				}
+				if (!height) {
+					sliderElement.style.setProperty(
+						'height',
+						`${this.sliderWidth}px`,
+					);
+				}
+			}
+		}
 		this.setThumbOffset();
 		this.style.setProperty('--thumb-offset', `${this.thumbOffset}px`);
 
-		if (this.vertical) {
-			if (style.width) {
-				this.style.setProperty('width', style.width as string);
-			} else {
-				this.style.width = '48px';
-			}
-			if (!style.height) {
-				style.height = `${this.sliderWidth}px`;
-			}
-		}
-
-		if (!style['--icon-transform']) {
-			if (this.vertical) {
-				style['--icon-transform'] =
-					'translateY(calc(-1 * var(--thumb-offset)))';
-			} else {
-				style['--icon-transform'] = 'translateX(var(--thumb-offset))';
-			}
-		}
-
 		return html`
-			<div class="container" style=${styleMap(style)}>
-				${this.buildBackground(context)}${this.buildSlider(context)}
+			<div class="container">
+				${this.buildBackground()}${this.buildSlider(undefined, context)}
 				${this.buildIcon(this.config.icon ?? '', context)}
+				${this.buildLabel(this.config.label ?? '', context)}
 			</div>
-			${this.buildTooltip(context)}
+			${this.buildTooltip()}${this.buildTooltipStyle(context)}
+			${this.buildStyles(undefined, context)}
 		`;
 	}
 

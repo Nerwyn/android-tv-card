@@ -1,17 +1,18 @@
 import { CSSResult, css, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { styleMap } from 'lit/directives/style-map.js';
 
-import { ActionType, DirectionAction, IActions } from '../models';
+import {
+	ActionType,
+	DirectionAction,
+	IActions,
+	ITouchpadConfig,
+} from '../models';
 
 import { BaseRemoteElement } from './base-remote-element';
 
 @customElement('remote-touchpad')
 export class RemoteTouchpad extends BaseRemoteElement {
-	@property({ attribute: false }) directionActions!: Record<
-		DirectionAction,
-		IActions
-	>;
+	@property() config!: ITouchpadConfig;
 
 	clickTimer?: ReturnType<typeof setTimeout>;
 	clickCount: number = 0;
@@ -227,9 +228,9 @@ export class RemoteTouchpad extends BaseRemoteElement {
 	}
 
 	getActions(): IActions {
-		return this.holdAction
-			? this.directionActions[this.holdAction]
-			: this.config;
+		return (
+			this.holdAction ? this.config[this.holdAction] : this.config
+		) as IActions;
 	}
 
 	getMultiPrefix(): 'multi_' | '' {
@@ -290,7 +291,6 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		this.setValue();
 		return html`
 			<toucharea
-				style=${styleMap(this.buildStyle(this.config.style ?? {}))}
 				@mousedown=${this.onMouseDown}
 				@mouseup=${this.onMouseUp}
 				@mousemove=${this.onMouseMove}
@@ -303,6 +303,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			>
 				${this.buildRipple()}
 			</toucharea>
+			${this.buildStyles()}
 		`;
 	}
 

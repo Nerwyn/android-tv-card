@@ -1,8 +1,8 @@
 {
-	"name": "android-tv-card",
-	"version": "3.9.4",
-	"description": "Android TV Card",
-	"main": "./dist/android-tv-card.js",
+	"name": "universal-tv-card",
+	"version": "4.0.0",
+	"description": "Universal TV Card",
+	"main": "./dist/universal-tv-card.min.js",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"build": "npx webpack",

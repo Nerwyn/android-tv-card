@@ -1,6 +1,5 @@
 import { CSSResult, LitElement, css, html } from 'lit';
 import { eventOptions, property, state } from 'lit/decorators.js';
-import { StyleInfo } from 'lit/directives/style-map.js';
 
 import { HapticType, HomeAssistant, forwardHaptic } from 'custom-card-helpers';
 import { renderTemplate } from 'ha-nunjucks';
@@ -8,6 +7,7 @@ import { renderTemplate } from 'ha-nunjucks';
 import {
 	ActionType,
 	IAction,
+	IActions,
 	IConfirmation,
 	IData,
 	IElementConfig,
@@ -16,10 +16,10 @@ import {
 import { deepGet, deepSet, getDeepKeys } from '../utils';
 
 export class BaseRemoteElement extends LitElement {
-	@property({ attribute: false }) hass!: HomeAssistant;
-	@property({ attribute: false }) config!: IElementConfig;
-	@property({ attribute: false }) icons!: Record<string, string>;
-	@property({ attribute: false }) autofillEntityId: boolean = false;
+	@property() hass!: HomeAssistant;
+	@property() config!: IElementConfig;
+	@property() icons!: Record<string, string>;
+	@property() autofillEntityId: boolean = false;
 
 	@state() renderRipple = true;
 	@state() renderRippleOff?: ReturnType<typeof setTimeout>;
@@ -61,7 +61,7 @@ export class BaseRemoteElement extends LitElement {
 		this.initialY = undefined;
 	}
 
-	sendAction(actionType: ActionType, config: IElementConfig = this.config) {
+	sendAction(actionType: ActionType, config: IActions = this.config) {
 		let action;
 		switch (actionType) {
 			case 'momentary_start_action':
@@ -726,18 +726,6 @@ export class BaseRemoteElement extends LitElement {
 						: ''}"
 			  ></md-ripple>`
 			: '';
-	}
-
-	buildStyle(_style: StyleInfo = {}, context?: object) {
-		// TODO REMOVE
-		const style = structuredClone(_style);
-		for (const key in style) {
-			style[key] = this.renderTemplate(
-				style[key] as string,
-				context,
-			) as string;
-		}
-		return style;
 	}
 
 	buildStyles(actions: IElementConfig = this.config, context?: object) {

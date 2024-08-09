@@ -1,11 +1,13 @@
 import { CSSResult, css, html } from 'lit';
-import { customElement } from 'lit/decorators.js';
-import { styleMap } from 'lit/directives/style-map.js';
+import { customElement, property } from 'lit/decorators.js';
 
+import { IButtonConfig } from '../models';
 import { BaseRemoteElement } from './base-remote-element';
 
 @customElement('remote-button')
 export class RemoteButton extends BaseRemoteElement {
+	@property() config!: IButtonConfig;
+
 	clickTimer?: ReturnType<typeof setTimeout>;
 	clickCount: number = 0;
 
@@ -201,10 +203,10 @@ export class RemoteButton extends BaseRemoteElement {
 				@touchmove=${this.onTouchMove}
 				@touchcancel=${this.onTouchCancel}
 				@contextmenu=${this.onContextMenu}
-				style=${styleMap(this.buildStyle(this.config.style ?? {}))}
 			>
 				${this.buildIcon(this.config.icon)}${this.buildRipple()}
 			</button>
+			${this.buildStyles()}
 		`;
 	}
 

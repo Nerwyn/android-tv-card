@@ -1,5 +1,3 @@
-import { StyleInfo } from 'lit/directives/style-map.js'; // TODO REMOVE
-
 import {
 	IAction,
 	IActions,
@@ -19,14 +17,15 @@ export interface IElementConfig
 		IActions {}
 
 interface IBaseElementConfig {
-	type?: RemoteElementType;
+	type: RemoteElementType;
 	template?: string;
 	entity_id?: string;
+	autofill_entity_id?: boolean;
 	value_attribute?: string;
 
 	icon?: string;
 	label?: string;
-	style?: StyleInfo; // TODO REMOVE
+	unit_of_measurement?: string;
 	styles?: string;
 
 	haptics?: boolean;
@@ -44,6 +43,8 @@ export interface ISliderConfig extends IBaseElementConfig {
 	vertical?: boolean;
 	tap_action?: IAction;
 }
+
+export type DirectionAction = 'up' | 'down' | 'left' | 'right';
 
 export interface ITouchpadConfig extends IBaseElementConfig, IActions {
 	up?: IBasicActions & IMultiActions;

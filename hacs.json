@@ -1,8 +1,8 @@
 {
-	"name": "Android TV Card",
+	"name": "Universal TV Card",
 	"content_in_root": false,
 	"homeassistant": "2023.5.0",
-	"filename": "android-tv-card.min.js",
+	"filename": "universal-tv-card.min.js",
 	"render_readme": true,
 	"hide_default_branch": true
 }

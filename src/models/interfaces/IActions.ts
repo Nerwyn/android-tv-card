@@ -31,8 +31,6 @@ export type ActionType = (typeof ActionTypes)[number];
 export const Platforms = ['ANDROID TV', 'KODI', 'FIRE TV', 'ROKU'] as const;
 export type Platform = (typeof Platforms)[number];
 
-export type DirectionAction = 'up' | 'down' | 'left' | 'right';
-
 export interface IData {
 	[key: string]: string | string[] | number | number[] | boolean;
 }
