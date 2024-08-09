@@ -432,9 +432,10 @@ export class UniversalTVCardEditor extends LitElement {
 					element,
 					updatedConfig.remote_id ??
 						updatedConfig.media_player_id ??
+						updatedConfig.keyboard_id ??
 						'',
 				);
-				const entryEntityId = this.renderTemplate(
+				const entityId = this.renderTemplate(
 					element.entity_id as string,
 					this.getElementContext(element),
 				) as string;
@@ -446,21 +447,19 @@ export class UniversalTVCardEditor extends LitElement {
 					)
 				) {
 					case 'slider': {
-						const [domain, _service] = (entryEntityId ?? '').split(
-							'.',
-						);
+						const [domain, _service] = (entityId ?? '').split('.');
 
 						let rangeMin = element.range?.[0];
 						let rangeMax = element.range?.[1];
 						if (rangeMin == undefined) {
 							rangeMin =
-								this.hass.states[entryEntityId]?.attributes
-									?.min ?? 0;
+								this.hass.states[entityId]?.attributes?.min ??
+								0;
 						}
 						if (rangeMax == undefined) {
 							rangeMax =
-								this.hass.states[entryEntityId]?.attributes
-									?.max ?? 1;
+								this.hass.states[entityId]?.attributes?.max ??
+								1;
 						}
 						element.range = [
 							rangeMin as number,
@@ -494,7 +493,7 @@ export class UniversalTVCardEditor extends LitElement {
 
 							const target = tap_action.target ?? {};
 							if (!target.entity_id) {
-								target.entity_id = entryEntityId as string;
+								target.entity_id = entityId as string;
 								tap_action.target = target;
 							}
 							element.tap_action = tap_action;
@@ -502,8 +501,8 @@ export class UniversalTVCardEditor extends LitElement {
 
 						if (!element.step) {
 							const defaultStep =
-								this.hass.states[entryEntityId as string]
-									?.attributes?.step;
+								this.hass.states[entityId as string]?.attributes
+									?.step;
 							if (defaultStep) {
 								element.step = defaultStep;
 							} else {
