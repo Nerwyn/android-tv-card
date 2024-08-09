@@ -318,6 +318,7 @@ export class RemoteSlider extends BaseRemoteElement {
 				step=${this.step}
 				value="${value}"
 				.value="${value}"
+				style=${styleMap(style)}
 				@input=${this.onInput}
 				@mousedown=${this.onMouseDown}
 				@mouseup=${this.onMouseUp}
