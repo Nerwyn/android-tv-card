@@ -313,6 +313,8 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			css`
 				:host {
 					display: contents;
+
+					--mdc-ripple-press-opacity: 0.04;
 				}
 				toucharea {
 					border-radius: 32px;
@@ -329,7 +331,6 @@ export class RemoteTouchpad extends BaseRemoteElement {
 					text-align: center;
 					position: relative;
 					overflow: hidden;
-					--mdc-ripple-press-opacity: 0.04;
 				}
 			`,
 		];

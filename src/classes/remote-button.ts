@@ -217,6 +217,8 @@ export class RemoteButton extends BaseRemoteElement {
 				:host {
 					align-content: center;
 					text-align: center;
+
+					--mdc-icon-size: var(--size, 48px);
 				}
 
 				button {
@@ -238,8 +240,6 @@ export class RemoteButton extends BaseRemoteElement {
 					align-items: center;
 					-webkit-tap-highlight-color: transparent;
 					-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-
-					--mdc-icon-size: var(--size, 48px);
 				}
 			`,
 		];

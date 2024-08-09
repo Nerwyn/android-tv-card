@@ -437,6 +437,10 @@ export class RemoteSlider extends BaseRemoteElement {
 					font-size: inherit;
 					color: inherit;
 					pointer-events: none;
+
+					--color: var(--primary-text-color);
+					--mdc-icon-size: var(--size, 32px);
+					--height: 48px;
 				}
 
 				.container {
@@ -445,10 +449,6 @@ export class RemoteSlider extends BaseRemoteElement {
 					height: var(--height);
 					align-self: center;
 					color: var(--background, var(--primary-background-color));
-
-					--color: var(--primary-text-color);
-					--mdc-icon-size: var(--size, 32px);
-					--height: 48px;
 				}
 
 				.background {
