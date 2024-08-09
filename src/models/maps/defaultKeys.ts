@@ -376,7 +376,7 @@ export const defaultKeys: Record<string, IElementConfig> = {
 		type: 'touchpad',
 		tap_action: {
 			action: 'key',
-			key: 'CENTER',
+			key: 'DPAD_CENTER',
 		},
 		up: {
 			tap_action: { action: 'key', key: 'DPAD_UP' },

@@ -716,20 +716,26 @@ export class UniversalTVCardEditor extends LitElement {
 		if ('long_click_keycode' in updatedConfig) {
 			touchpad.hold_action = {
 				action: 'key',
-				key: (updatedConfig.long_click_keycode ?? 'CENTER') as string,
+				key: (updatedConfig.long_click_keycode ??
+					'DPAD_CENTER') as string,
 			};
 		}
-		if (!touchpad.up) {
-			touchpad.up = customActions.up ?? defaultKeys.up;
+		if (!touchpad.tap_action) {
+			touchpad.tap_action =
+				customActions.center.tap_action ??
+				defaultKeys.center.tap_action;
 		}
-		if (!touchpad.down) {
-			touchpad.down = customActions.down ?? defaultKeys.down;
+		if (!touchpad.up && customActions.up) {
+			touchpad.up = customActions.up;
 		}
-		if (!touchpad.left) {
-			touchpad.left = customActions.left ?? defaultKeys.left;
+		if (!touchpad.down && customActions.down) {
+			touchpad.down = customActions.down;
 		}
-		if (!touchpad.right) {
-			touchpad.right = customActions.right ?? defaultKeys.right;
+		if (!touchpad.left && customActions.left) {
+			touchpad.left = customActions.left;
+		}
+		if (!touchpad.right && customActions.right) {
+			touchpad.right = customActions.right;
 		}
 		if (Object.keys(touchpad).length > 1) {
 			customActions.touchpad = touchpad;
