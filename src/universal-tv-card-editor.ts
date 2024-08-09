@@ -721,7 +721,7 @@ export class UniversalTVCardEditor extends LitElement {
 					'DPAD_CENTER') as string,
 			};
 		}
-		if (!touchpad.tap_action && customActions.center.tap_action) {
+		if (!touchpad.tap_action && customActions.center?.tap_action) {
 			touchpad.tap_action = customActions.center.tap_action;
 		}
 		for (const direction of DirectionActions) {
