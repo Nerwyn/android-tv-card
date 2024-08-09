@@ -1,5 +1,5 @@
 import { renderTemplate } from 'ha-nunjucks';
-import { LitElement, html } from 'lit';
+import { LitElement, TemplateResult, css, html } from 'lit';
 import { property, state } from 'lit/decorators';
 
 import { HomeAssistant } from 'custom-card-helpers';
@@ -149,9 +149,17 @@ export class UniversalTVCardEditor extends LitElement {
 	}
 
 	buildRemoteEditor() {
-		const editor = this.buildCodeEditor('yaml');
+		let editor: TemplateResult<1>;
+		if (this.guiMode) {
+			editor = html``;
+		} else {
+			editor = this.buildCodeEditor('yaml');
+		}
+		const tempToggle = html`<button @click=${this.toggleGuiMode}>
+			Temporary Toggle!
+		</button>`;
 
-		return html` <div class="wrapper">${editor}</div> `;
+		return html`<div class="wrapper">${tempToggle}${editor}</div> `;
 	}
 
 	buildErrorPanel() {
@@ -945,5 +953,171 @@ export class UniversalTVCardEditor extends LitElement {
 			}
 		}
 		return customAction;
+	}
+
+	static get styles() {
+		return css`
+			:host {
+				display: flex;
+				flex-direction: column;
+				-webkit-tap-highlight-color: transparent;
+				-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+			}
+			.content {
+				padding: 12px;
+				display: inline-flex;
+				flex-direction: column;
+				gap: 24px;
+				box-sizing: border-box;
+				width: 100%;
+			}
+			.action-options {
+				display: inline-flex;
+				flex-direction: column;
+				gap: 8px;
+				box-sizing: border-box;
+				width: 100%;
+			}
+
+			ha-expansion-panel {
+				display: block;
+				border-radius: 6px;
+				border: solid 1px var(--outline-color);
+				--ha-card-border-radius: 6px;
+				--expansion-panel-content-padding: 0;
+			}
+			ha-icon {
+				display: flex;
+				color: var(--secondary-text-color);
+			}
+			ha-button-menu {
+				margin: 0 18px 12px;
+			}
+			ha-button {
+				width: fit-content;
+				--mdc-icon-size: 100%;
+			}
+			ha-list-item {
+				text-transform: capitalize;
+			}
+
+			.feature-list-item {
+				display: flex;
+				align-items: center;
+				pointer-events: none;
+			}
+
+			.handle {
+				display: flex;
+				align-items: center;
+				cursor: move;
+				cursor: grab;
+				padding-right: 8px;
+				padding-inline-end: 8px;
+				padding-inline-start: initial;
+				direction: var(--direction);
+				pointer-events: all;
+			}
+
+			.feature-list-item-content {
+				height: 60px;
+				font-size: 16px;
+				display: flex;
+				align-items: center;
+				justify-content: flex-start;
+				flex-grow: 1;
+				gap: 8px;
+			}
+			.primary:first-letter {
+				text-transform: capitalize;
+			}
+			.feature-list-item-label {
+				display: flex;
+				flex-direction: column;
+			}
+			.secondary {
+				font-size: 12px;
+				color: var(--secondary-text-color);
+			}
+
+			.edit-icon,
+			.remove-icon {
+				color: var(--secondary-text-color);
+				pointer-events: all;
+				--mdc-icon-button-size: 36px;
+			}
+
+			.header {
+				display: inline-flex;
+				justify-content: space-between;
+				align-items: center;
+			}
+			.header-icon {
+				color: var(--mdc-dialog-content-ink-color, rgba(0, 0, 0, 0.6));
+			}
+			.back-title {
+				display: flex;
+				align-items: center;
+				font-size: 18px;
+			}
+
+			.wrapper {
+				width: 100%;
+			}
+			.gui-editor {
+				display: inline-flex;
+				flex-direction: column;
+				gap: 24px;
+				padding: 8px 0px;
+				width: 100%;
+			}
+			.yaml-editor {
+				display: inline-flex;
+				flex-direction: column;
+				padding: 8px 0px;
+				width: 100%;
+			}
+			ha-code-editor {
+				--code-mirror-max-height: calc(100vh - 245px);
+			}
+			.error,
+			.info {
+				word-break: break-word;
+				margin-top: 8px;
+			}
+			.error {
+				color: var(--error-color);
+			}
+			.error ul {
+				margin: 4px 0;
+			}
+			.warning li,
+			.error li {
+				white-space: pre-wrap;
+			}
+
+			.entry-list-header {
+				font-size: 20px;
+				font-weight: 500;
+			}
+			.panel-header {
+				display: inline-flex;
+				gap: 4px;
+			}
+			.style-header {
+				font-size: var(--mdc-typography-body1-font-size, 1rem);
+				font-weight: 500;
+				padding: 8px;
+			}
+
+			.form {
+				display: grid;
+				grid-template-columns: repeat(
+					var(--form-grid-column-count, auto-fit),
+					minmax(var(--form-grid-min-width, 200px), 1fr)
+				);
+				gap: 24px 8px;
+			}
+		`;
 	}
 }

@@ -278,6 +278,7 @@ export class RemoteSlider extends BaseRemoteElement {
 			iconTransform = 'translateX(var(--thumb-offset))';
 		}
 
+		// Moved out of html literal to prevent it from being broken by the minifier
 		const styles = `
 		:host {
 			--tooltip-label: ${tooltipLabel};
