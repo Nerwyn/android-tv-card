@@ -630,6 +630,11 @@ export class UniversalTVCardEditor extends LitElement {
 			delete updatedConfig['slider_haptics' as keyof IConfig];
 		}
 		if ('slider_id' in config) {
+			slider.entity_id =
+				slider.entity_id ??
+				(config.slider_id as string) ??
+				config.media_player_id ??
+				'';
 			let tapAction = slider.tap_action;
 			if (tapAction) {
 				const data = tapAction.data ?? {};

@@ -29,10 +29,12 @@ export class BaseRemoteElement extends LitElement {
 
 	@state() value?: string | number | boolean = 0;
 	entityId?: string;
+	valueAttribute?: string;
 	getValueFromHass: boolean = true;
 	getValueFromHassTimer?: ReturnType<typeof setTimeout>;
 	valueUpdateInterval?: ReturnType<typeof setInterval>;
 
+	unitOfMeasurement: string = '';
 	precision?: number;
 
 	buttonPressStart?: number;
@@ -434,21 +436,26 @@ export class BaseRemoteElement extends LitElement {
 
 	setValue() {
 		this.entityId = this.renderTemplate(
-			(this.config.tap_action?.data?.entity_id as string) ?? '',
+			this.config.entity_id as string,
 		) as string;
+
+		this.unitOfMeasurement =
+			(this.renderTemplate(
+				this.config.unit_of_measurement as string,
+			) as string) ?? '';
 
 		if (this.getValueFromHass && this.entityId) {
 			clearInterval(this.valueUpdateInterval);
 			this.valueUpdateInterval = undefined;
 
-			let valueAttribute = (
-				(this.renderTemplate(
-					this.config.value_attribute as string,
-				) as string) ?? 'state'
+			this.valueAttribute = (
+				this.renderTemplate(
+					(this.config.value_attribute as string) ?? 'state',
+				) as string
 			).toLowerCase();
 			if (!this.hass.states[this.entityId]) {
 				this.value = undefined;
-			} else if (valueAttribute == 'state') {
+			} else if (this.valueAttribute == 'state') {
 				this.value = this.hass.states[this.entityId].state;
 			} else {
 				let value:
@@ -458,29 +465,31 @@ export class BaseRemoteElement extends LitElement {
 					| string[]
 					| number[]
 					| undefined;
-				const indexMatch = valueAttribute.match(/\[\d+\]$/);
-
+				const indexMatch = this.valueAttribute.match(/\[\d+\]$/);
 				if (indexMatch) {
 					const index = parseInt(indexMatch[0].replace(/\[|\]/g, ''));
-					valueAttribute = valueAttribute.replace(indexMatch[0], '');
+					this.valueAttribute = this.valueAttribute.replace(
+						indexMatch[0],
+						'',
+					);
 					value =
 						this.hass.states[this.entityId].attributes[
-							valueAttribute
+							this.valueAttribute
 						];
 					if (value && Array.isArray(value) && value.length) {
 						value = value[index];
 					} else {
-						value == undefined;
+						value = undefined;
 					}
 				} else {
 					value =
 						this.hass.states[this.entityId].attributes[
-							valueAttribute
+							this.valueAttribute
 						];
 				}
 
-				if (value != undefined || valueAttribute == 'elapsed') {
-					switch (valueAttribute) {
+				if (value != undefined || this.valueAttribute == 'elapsed') {
+					switch (this.valueAttribute) {
 						case 'brightness':
 							this.value = Math.round(
 								(100 * parseInt((value as string) ?? 0)) / 255,
