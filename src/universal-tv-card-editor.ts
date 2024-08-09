@@ -18,7 +18,6 @@ import {
 	RemoteElementType,
 	defaultKeys,
 } from './models';
-import { mergeDeep } from './utils';
 
 export class UniversalTVCardEditor extends LitElement {
 	@property() hass!: HomeAssistant;
@@ -461,7 +460,7 @@ export class UniversalTVCardEditor extends LitElement {
 						if (rangeMax == undefined) {
 							rangeMax =
 								this.hass.states[entryEntityId]?.attributes
-									?.max ?? 100;
+									?.max ?? 1;
 						}
 						element.range = [
 							rangeMin as number,
@@ -647,9 +646,14 @@ export class UniversalTVCardEditor extends LitElement {
 			if (tapAction) {
 				const data = tapAction.data ?? {};
 				const target = tapAction.target ?? {};
-				if (!('entity_id' in data) && !('entity_id' in target)) {
-					target.entity_id = config.slider_id as string;
+				if (!('entity_id' in target)) {
+					target.entity_id =
+						(data.entity_id as string) ??
+						(config.slider_id as string);
+					delete data.entity_id;
 				}
+				tapAction.data = data;
+				tapAction.target = target;
 			} else {
 				tapAction = {
 					target: {
@@ -660,10 +664,10 @@ export class UniversalTVCardEditor extends LitElement {
 			slider.tap_action = tapAction;
 		}
 		if (Object.keys(slider).length > 1) {
-			customActions.slider = mergeDeep(
-				structuredClone(defaultKeys.slider),
-				slider,
-			) as IElementConfig;
+			customActions.slider = {
+				...structuredClone(defaultKeys.slider),
+				...slider,
+			};
 		}
 
 		// Copy touchpad fields
