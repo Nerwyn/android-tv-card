@@ -597,7 +597,7 @@ export class UniversalTVCardEditor extends LitElement {
 		const slider = customActions.slider ?? {
 			type: 'slider',
 		};
-		if ('slider_style' in config) {
+		if ('slider_style' in updatedConfig) {
 			let styles = slider.styles ?? '';
 			styles += '\n:host {';
 			const style = updatedConfig[
@@ -615,30 +615,30 @@ export class UniversalTVCardEditor extends LitElement {
 			styles += `\n.tooltip {\n  display: {{ "initial" if render(${slider.tooltip}) else "none" }};\n}`;
 			slider.styles = styles;
 		}
-		if ('slider_range' in config) {
-			slider.range = config.slider_range as [number, number];
-			delete updatedConfig['slider_range' as keyof IConfig];
+		if ('slider_range' in updatedConfig) {
+			slider.range = updatedConfig.slider_range as [number, number];
+			delete updatedConfig.slider_range;
 		}
-		if ('slider_step' in config) {
-			slider.step = config.slider_step as number;
-			delete updatedConfig['slider_step' as keyof IConfig];
+		if ('slider_step' in updatedConfig) {
+			slider.step = updatedConfig.slider_step as number;
+			delete updatedConfig.slider_step;
 		}
-		if ('slider_attribute' in config) {
-			slider.value_attribute = config.slider_attribute as string;
-			delete updatedConfig['slider_attribute' as keyof IConfig];
+		if ('slider_attribute' in updatedConfig) {
+			slider.value_attribute = updatedConfig.slider_attribute as string;
+			delete updatedConfig.slider_attribute;
 		}
-		if ('enable_slider_feedback' in config) {
-			slider.haptics = config.enable_slider_feedback as boolean;
-			delete updatedConfig['enable_slider_feedback' as keyof IConfig];
+		if ('enable_slider_feedback' in updatedConfig) {
+			slider.haptics = updatedConfig.enable_slider_feedback as boolean;
+			delete updatedConfig.enable_slider_feedback;
 		}
-		if ('slider_haptics' in config) {
-			slider.haptics = config.slider_haptics as boolean;
-			delete updatedConfig['slider_haptics' as keyof IConfig];
+		if ('slider_haptics' in updatedConfig) {
+			slider.haptics = updatedConfig.slider_haptics as boolean;
+			delete updatedConfig.slider_haptics;
 		}
-		if ('slider_id' in config) {
+		if ('slider_id' in updatedConfig) {
 			slider.entity_id =
 				slider.entity_id ??
-				(config.slider_id as string) ??
+				(updatedConfig.slider_id as string) ??
 				config.media_player_id ??
 				'';
 			const tapAction =
@@ -649,13 +649,14 @@ export class UniversalTVCardEditor extends LitElement {
 				if (!('entity_id' in target)) {
 					target.entity_id =
 						(data.entity_id as string) ??
-						(config.slider_id as string);
+						(updatedConfig.slider_id as string);
 					delete data.entity_id;
 				}
 				tapAction.data = data;
 				tapAction.target = target;
 			}
 			slider.tap_action = tapAction;
+			delete updatedConfig.slider_id;
 		}
 		if (Object.keys(slider).length > 1) {
 			customActions.slider = {
