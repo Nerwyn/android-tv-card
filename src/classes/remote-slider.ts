@@ -260,6 +260,10 @@ export class RemoteSlider extends BaseRemoteElement {
 			width = style.getPropertyValue('width');
 		}
 
+		const tooltipLabel = `'${this.renderTemplate(
+			'{{ value }}{{ unit }}',
+			context,
+		)}'`;
 		let tooltipTransform: string;
 		let iconTransform: string;
 		if (this.vertical) {
@@ -274,15 +278,16 @@ export class RemoteSlider extends BaseRemoteElement {
 			iconTransform = 'translateX(var(--thumb-offset))';
 		}
 
+		const styles = `
+		:host {
+			--tooltip-label: ${tooltipLabel};
+			--tooltip-transform: ${tooltipTransform};
+			--icon-transform: ${iconTransform};
+		}
+		`;
+
 		return html`<style>
-			:host {
-				--tooltip-label: '${this.renderTemplate(
-					'{{ value }}{{ unit }}',
-					context,
-				)}';
-				--tooltip-transform: ${tooltipTransform};
-				--icon-transform: ${iconTransform};
-			}
+			${styles}
 		</style>`;
 	}
 
