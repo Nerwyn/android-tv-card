@@ -749,6 +749,7 @@ export class UniversalTVCardEditor extends LitElement {
 					);
 				}
 			}
+			customActions[elementName] = element;
 		}
 
 		if (updatedConfig['style' as keyof IConfig]) {
@@ -772,7 +773,7 @@ export class UniversalTVCardEditor extends LitElement {
 			for (const style in rowStyles) {
 				styles += `\n#${style}: {`;
 				for (const field in rowStyles[style]) {
-					styles += `${field}: ${rowStyles[style][field]};`;
+					styles += `\n  ${field}: ${rowStyles[style][field]};`;
 				}
 				styles += '\n}';
 			}
