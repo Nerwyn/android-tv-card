@@ -262,8 +262,9 @@ export class UniversalTVCardEditor extends LitElement {
 			},
 			{},
 		);
+		updatedConfig.custom_actions = {};
+		this.configChanged(updatedConfig);
 		updatedConfig.custom_actions = updatedCustomActions;
-		console.log(Object.keys(updatedConfig.custom_actions));
 		this.configChanged(updatedConfig);
 	}
 
