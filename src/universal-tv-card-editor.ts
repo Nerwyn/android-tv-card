@@ -186,6 +186,7 @@ export class UniversalTVCardEditor extends LitElement {
 	}
 
 	handleTouchpadTabSelected(e: CustomEvent) {
+		this.yamlString = undefined;
 		const i = e.detail.index;
 		if (this.touchpadTabIndex == i) {
 			return;
@@ -298,7 +299,7 @@ export class UniversalTVCardEditor extends LitElement {
 		this.touchpadTabIndex = 2;
 	}
 
-	exiteditEntry(_e: CustomEvent) {
+	exitEditEntry(_e: CustomEvent) {
 		this.activeEntryName = '';
 		this.yamlString = undefined;
 	}
@@ -420,7 +421,7 @@ export class UniversalTVCardEditor extends LitElement {
 				<div class="back-title">
 					<ha-icon-button-prev
 						.label=${this.hass.localize('ui.common.back')}
-						@click=${this.exiteditEntry}
+						@click=${this.exitEditEntry}
 					></ha-icon-button-prev>
 					<span class="primary" slot="title"
 						>${this.activeEntryName}</span
