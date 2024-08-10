@@ -22,6 +22,7 @@ export class RemoteSlider extends BaseRemoteElement {
 	intervalId?: ReturnType<typeof setTimeout>;
 
 	sliderWidth: number = 0;
+	sliderHeight: number = 0;
 	vertical: boolean = false;
 	thumbWidth: number = 50;
 	resizeObserver = new ResizeObserver((entries) => {
@@ -29,6 +30,9 @@ export class RemoteSlider extends BaseRemoteElement {
 			this.sliderWidth = this.vertical
 				? entry.contentRect.height
 				: entry.contentRect.width;
+			this.sliderHeight = this.vertical
+				? entry.contentRect.width
+				: entry.contentRect.height;
 			this.setThumbOffset();
 		}
 	});
@@ -240,6 +244,7 @@ export class RemoteSlider extends BaseRemoteElement {
 		if (this.vertical) {
 			style['transform'] = 'rotateZ(270deg)';
 			style['width'] = `${this.sliderWidth}px`;
+			style['height'] = `${this.sliderHeight}px`;
 		}
 		return html`<div class="background" style=${styleMap(style)}></div>`;
 	}
@@ -306,6 +311,7 @@ export class RemoteSlider extends BaseRemoteElement {
 		}
 		if (this.vertical) {
 			style['transform'] = 'rotateZ(270deg)';
+			style['height'] = `${this.sliderHeight}px`;
 			style['width'] = `${this.sliderWidth}px`;
 			style['touch-action'] = 'none';
 		}
@@ -373,7 +379,9 @@ export class RemoteSlider extends BaseRemoteElement {
 
 		this.vertical =
 			this.renderTemplate(this.config.vertical ?? false, context) == true;
-		this.resizeObserver.observe(this);
+		this.resizeObserver.observe(
+			this.shadowRoot?.querySelector('.container') ?? this,
+		);
 
 		// Thumb width, height, and vertical slider style adjustments
 		const containerStyle: StyleInfo = {};
@@ -381,11 +389,8 @@ export class RemoteSlider extends BaseRemoteElement {
 		if (sliderElement) {
 			const style = getComputedStyle(sliderElement);
 			const thumbWidth = style.getPropertyValue('--thumb-width');
-			const height = style.getPropertyValue('height');
 			if (thumbWidth) {
 				this.thumbWidth = parseInt(thumbWidth.replace(/[^0-9]+/g, ''));
-			} else if (height) {
-				this.thumbWidth = parseInt(height.replace(/[^0-9]+/g, ''));
 			} else {
 				this.thumbWidth = 48;
 			}
