@@ -225,7 +225,9 @@ export class UniversalTVCardEditor extends LitElement {
 		const updatedConfig = structuredClone(this.config);
 		updatedConfig.custom_actions = updatedConfig.custom_actions ?? {};
 		updatedConfig.custom_actions[
-			`custom_${entryType}_${updatedConfig.custom_actions.length}`
+			`custom_${entryType}_${
+				Object.keys(updatedConfig.custom_actions).length
+			}`
 		] = entry;
 		this.autofillCooldown = false;
 		this.configChanged(updatedConfig);
@@ -244,7 +246,6 @@ export class UniversalTVCardEditor extends LitElement {
 	moveEntry(e: CustomEvent) {
 		// TODO why doesn't this work?
 		e.stopPropagation();
-		console.log(e.detail);
 		const { oldIndex, newIndex } = e.detail;
 		const updatedConfig = structuredClone(this.config);
 		const customActions = updatedConfig.custom_actions ?? {};
@@ -262,6 +263,7 @@ export class UniversalTVCardEditor extends LitElement {
 			{},
 		);
 		updatedConfig.custom_actions = updatedCustomActions;
+		console.log(Object.keys(updatedConfig.custom_actions));
 		this.configChanged(updatedConfig);
 	}
 
