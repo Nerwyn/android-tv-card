@@ -288,6 +288,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 	}
 
 	render() {
+		// TODO - icons and labels
 		this.setValue();
 		return html`
 			<toucharea

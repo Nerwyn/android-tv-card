@@ -410,8 +410,8 @@ export class RemoteSlider extends BaseRemoteElement {
 		return html`
 			<div class="container" style=${styleMap(containerStyle)}>
 				${this.buildBackground()}${this.buildSlider(undefined, context)}
-				${this.buildIcon(this.config.icon ?? '', context)}
-				${this.buildLabel(this.config.label ?? '', context)}
+				${this.buildIcon(this.config.icon, context)}
+				${this.buildLabel(this.config.label, context)}
 			</div>
 			${this.buildTooltip()}${this.buildTooltipStyle(context)}
 			${this.buildStyles(undefined, context)}

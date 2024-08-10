@@ -1770,12 +1770,16 @@ export class UniversalTVCardEditor extends LitElement {
 				text-transform: capitalize;
 			}
 
+			.features {
+				max-height: 480px;
+				overflow: auto;
+				overflow-y: scroll;
+			}
 			.feature-list-item {
 				display: flex;
 				align-items: center;
 				pointer-events: none;
 			}
-
 			.handle {
 				display: flex;
 				align-items: center;
@@ -1787,7 +1791,6 @@ export class UniversalTVCardEditor extends LitElement {
 				direction: var(--direction);
 				pointer-events: all;
 			}
-
 			.feature-list-item-content {
 				height: 60px;
 				font-size: 16px;

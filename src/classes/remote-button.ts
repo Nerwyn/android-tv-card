@@ -206,7 +206,7 @@ export class RemoteButton extends BaseRemoteElement {
 			>
 				${this.buildIcon(this.config.icon)}${this.buildRipple()}
 			</button>
-			${this.buildStyles()}
+			${this.buildLabel(this.config.label)}${this.buildStyles()}
 		`;
 	}
 
