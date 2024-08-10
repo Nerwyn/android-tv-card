@@ -380,8 +380,8 @@ export class RemoteSlider extends BaseRemoteElement {
 		const sliderElement = this.shadowRoot?.querySelector('input');
 		if (sliderElement) {
 			const style = getComputedStyle(sliderElement);
-			const height = style.getPropertyValue('height');
 			const thumbWidth = style.getPropertyValue('--thumb-width');
+			const height = style.getPropertyValue('height');
 			if (thumbWidth) {
 				this.thumbWidth = parseInt(thumbWidth.replace(/[^0-9]+/g, ''));
 			} else if (height) {

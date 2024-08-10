@@ -392,6 +392,8 @@ export class UniversalTVCardEditor extends LitElement {
 						action.target = target;
 						element[actionType as ActionType] = action;
 					}
+					action.data = data;
+					action.target = target;
 				}
 			}
 		}
@@ -427,13 +429,13 @@ export class UniversalTVCardEditor extends LitElement {
 				)
 			) {
 				// Feature entity ID
-				// element = this.populateMissingEntityId(
-				// 	element,
-				// 	updatedConfig.remote_id ??
-				// 		updatedConfig.media_player_id ??
-				// 		updatedConfig.keyboard_id ??
-				// 		'',
-				// );
+				element = this.populateMissingEntityId(
+					element,
+					updatedConfig.remote_id ??
+						updatedConfig.media_player_id ??
+						updatedConfig.keyboard_id ??
+						'',
+				);
 				const entityId = this.renderTemplate(
 					element.entity_id as string,
 					this.getElementContext(element),
