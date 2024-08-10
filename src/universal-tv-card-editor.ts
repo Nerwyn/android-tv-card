@@ -11,7 +11,6 @@ import {
 	DirectionActions,
 	IAction,
 	IConfig,
-	IData,
 	IElementConfig,
 	ITarget,
 	Platform,
@@ -368,8 +367,8 @@ export class UniversalTVCardEditor extends LitElement {
 				const action =
 					element[actionType as ActionType] ?? ({} as IAction);
 				if (['perform-action', 'more-info'].includes(action.action)) {
-					const data = action.data ?? ({} as IData);
-					const target = action.target ?? ({} as ITarget);
+					const data = action.data ?? {};
+					const target = action.target ?? {};
 					for (const targetId of [
 						'entity_id',
 						'device_id',
@@ -377,9 +376,9 @@ export class UniversalTVCardEditor extends LitElement {
 						'label_id',
 					]) {
 						if (data[targetId]) {
-							target[targetId as keyof ITarget] = structuredClone(
-								data[targetId],
-							) as string | string[];
+							target[targetId as keyof ITarget] = data[
+								targetId
+							] as string | string[];
 							delete data[targetId];
 						}
 					}
@@ -428,13 +427,13 @@ export class UniversalTVCardEditor extends LitElement {
 				)
 			) {
 				// Feature entity ID
-				element = this.populateMissingEntityId(
-					element,
-					updatedConfig.remote_id ??
-						updatedConfig.media_player_id ??
-						updatedConfig.keyboard_id ??
-						'',
-				);
+				// element = this.populateMissingEntityId(
+				// 	element,
+				// 	updatedConfig.remote_id ??
+				// 		updatedConfig.media_player_id ??
+				// 		updatedConfig.keyboard_id ??
+				// 		'',
+				// );
 				const entityId = this.renderTemplate(
 					element.entity_id as string,
 					this.getElementContext(element),
@@ -885,32 +884,6 @@ export class UniversalTVCardEditor extends LitElement {
 			customAction.type ?? 'button'
 		).toLowerCase() as RemoteElementType;
 
-		// Move style keys to style object
-		let deprecatedStyleKeyPresent = false;
-		const deprecatedStyleKeys: Record<string, string> = {
-			color: '--color',
-			opacity: '--opacity',
-			icon_color: '--icon-color',
-			label_color: '--label-color',
-			background_color: '--background',
-			background_opacity: '--background-opacity',
-			flex_basis: 'flex-basis',
-		};
-		let styles = ':host {';
-		for (const field in deprecatedStyleKeys) {
-			if (customAction[field as keyof IElementConfig]) {
-				deprecatedStyleKeyPresent = true;
-				styles += `\n${deprecatedStyleKeys[field]}: ${
-					customAction[field as keyof IElementConfig]
-				};`;
-				delete customAction[field as keyof IElementConfig];
-			}
-		}
-		styles += '\n';
-		if (deprecatedStyleKeyPresent) {
-			customAction.styles = styles + (customAction.styles ?? '');
-		}
-
 		if (customAction['style' as keyof IElementConfig]) {
 			let styles = ':host {';
 			const style = customAction[
@@ -924,38 +897,6 @@ export class UniversalTVCardEditor extends LitElement {
 			delete customAction['style' as keyof IElementConfig];
 		}
 
-		const deprecatedStyles: Record<string, string> = {
-			background_style: '.background',
-			icon_style: '.icon',
-			label_style: '.label',
-			slider_style: '.slider',
-			tooltip_style: '.tooltip',
-		};
-		for (const field in deprecatedStyles) {
-			if (customAction[field as keyof IElementConfig]) {
-				const style = customAction[
-					field as keyof IElementConfig
-				] as Record<string, string>;
-				let styles = `\n${deprecatedStyles[field]} {`;
-				for (const key in style) {
-					styles += `\n  ${key}: ${style[key]};`;
-				}
-				if (
-					field == 'tooltip_style' &&
-					customAction['tooltip' as keyof IElementConfig]
-				) {
-					styles += `  display: ${
-						customAction['tooltip' as keyof IElementConfig]
-							? 'initial'
-							: 'none'
-					};`;
-					delete customAction['tooltip' as keyof IElementConfig];
-				}
-				styles += '\n}';
-				customAction.styles = (customAction.styles ?? '') + styles;
-				delete customAction[field as keyof IElementConfig];
-			}
-		}
 		return customAction;
 	}
 
