@@ -517,13 +517,29 @@ class UniversalTVCard extends LitElement {
 			content.push(rowContent);
 		}
 
+		const styles = this.config.styles
+			? html`
+					<style>
+						${(
+							renderTemplate(
+								this.hass,
+								this.config.styles,
+								context,
+							) as string
+						)
+							.replace(/!important/g, '')
+							.replace(/;/g, ' !important;')}
+					</style>
+			  `
+			: '';
+
 		return html`<ha-card
 			.header="${renderTemplate(
 				this.hass,
 				this.config.title as string,
 				context,
 			)}"
-			>${content}${this.buildDialog()}</ha-card
+			>${content}${this.buildDialog()}${styles}</ha-card
 		>`;
 	}
 
