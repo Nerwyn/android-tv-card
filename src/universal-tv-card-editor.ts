@@ -48,7 +48,7 @@ export class UniversalTVCardEditor extends LitElement {
 		this.config = config;
 	}
 
-	configChanged(config: IConfig) {
+	configChanged(config: IConfig, update: boolean = true) {
 		const event = new Event('config-changed', {
 			bubbles: true,
 			composed: true,
@@ -57,7 +57,9 @@ export class UniversalTVCardEditor extends LitElement {
 			config: config,
 		};
 		this.dispatchEvent(event);
-		this.requestUpdate();
+		if (update) {
+			this.requestUpdate();
+		}
 	}
 
 	actionChanged(entry: IElementConfig) {
@@ -263,7 +265,7 @@ export class UniversalTVCardEditor extends LitElement {
 			{},
 		);
 		updatedConfig.custom_actions = {};
-		this.configChanged(updatedConfig);
+		this.configChanged(updatedConfig, false);
 		updatedConfig.custom_actions = updatedCustomActions;
 		this.configChanged(updatedConfig);
 	}
