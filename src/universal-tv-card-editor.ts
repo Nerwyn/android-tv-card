@@ -347,8 +347,8 @@ export class UniversalTVCardEditor extends LitElement {
 											: ''}
 										<div class="feature-list-item-label">
 											<span class="primary"
-												>${customActionName} ⸱
-												${entryType}
+												>${entryType} ⸱
+												${customActionName}
 												${label
 													? ` ⸱ ${label}`
 													: ''}</span
@@ -417,6 +417,10 @@ export class UniversalTVCardEditor extends LitElement {
 	}
 
 	buildEntryHeader() {
+		const entryType = this.renderTemplate(
+			this.activeEntry?.type as string,
+			this.getEntryContext(this.activeEntry ?? { type: 'button' }),
+		);
 		return html`
 			<div class="header">
 				<div class="back-title">
@@ -425,8 +429,7 @@ export class UniversalTVCardEditor extends LitElement {
 						@click=${this.exitEditEntry}
 					></ha-icon-button-prev>
 					<span class="primary" slot="title"
-						>${this.activeEntryName} ⸱
-						${this.activeEntry?.type}</span
+						>${entryType} ⸱ ${this.activeEntryName}</span
 					>
 				</div>
 				<ha-icon-button
