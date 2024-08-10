@@ -745,6 +745,7 @@ export class UniversalTVCardEditor extends LitElement {
 			customActions[elementName] = element;
 		}
 
+		// Convert style object to styles string
 		if (updatedConfig['style' as keyof IConfig]) {
 			let styles = updatedConfig.styles ?? '';
 			styles += '\n:host {';
@@ -758,6 +759,8 @@ export class UniversalTVCardEditor extends LitElement {
 			updatedConfig.styles = styles + (updatedConfig.styles ?? '');
 			delete updatedConfig['style' as keyof IConfig];
 		}
+
+		// Convert button style object to styles string
 		if (updatedConfig['button_style' as keyof IConfig]) {
 			let styles = updatedConfig.button_styles ?? '';
 			styles += '\n:host {';
@@ -771,6 +774,8 @@ export class UniversalTVCardEditor extends LitElement {
 			updatedConfig.button_styles = styles + (updatedConfig.styles ?? '');
 			delete updatedConfig['button_style' as keyof IConfig];
 		}
+
+		// Convert row styles object to styles string
 		if (updatedConfig['row_styles' as keyof IConfig]) {
 			let styles = updatedConfig.styles ?? '';
 			const rowStyles = updatedConfig[
@@ -886,6 +891,7 @@ export class UniversalTVCardEditor extends LitElement {
 			customAction.type ?? 'button'
 		).toLowerCase() as RemoteElementType;
 
+		// Convert style object to styles string
 		if (customAction['style' as keyof IElementConfig]) {
 			let styles = ':host {';
 			const style = customAction[

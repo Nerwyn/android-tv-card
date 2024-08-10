@@ -289,7 +289,7 @@ export class RemoteSlider extends BaseRemoteElement {
 		// Moved out of html literal to prevent it from being broken by the minifier
 		const styles = `
 		:host {
-			--tooltip-label: ${tooltipLabel};
+			--tooltip-label: '${tooltipLabel}';
 			--tooltip-transform: ${tooltipTransform};
 			--icon-transform: ${iconTransform};
 		}
@@ -449,7 +449,6 @@ export class RemoteSlider extends BaseRemoteElement {
 					--color: var(--primary-text-color);
 					--mdc-icon-size: var(--size, 32px);
 					--height: 48px;
-					--tooltip-label: 0;
 				}
 
 				.container {
@@ -546,7 +545,7 @@ export class RemoteSlider extends BaseRemoteElement {
 					transition: opacity 540ms ease-in-out 0s;
 				}
 				.tooltip::after {
-					content: var(--tooltip-label);
+					content: var(--tooltip-label, 0);
 				}
 
 				.icon {
