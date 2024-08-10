@@ -253,12 +253,14 @@ class UniversalTVCard extends LitElement {
 	}
 
 	buildRow(content: TemplateResult[]): TemplateResult {
+		// TODO add id as title if editor detected
 		this.nRows++;
 		const id = `row-${this.nRows}`;
 		return html` <div class="row" id="${id}">${content}</div> `;
 	}
 
 	buildColumn(content: TemplateResult[]): TemplateResult {
+		// TODO add id as title if editor detected
 		this.nColumns++;
 		const id = `column-${this.nColumns}`;
 		return html` <div class="column" id="${id}">${content}</div> `;

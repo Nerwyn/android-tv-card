@@ -1036,7 +1036,8 @@ export class UniversalTVCardEditor extends LitElement {
 				${this.buildCodeEditor('jinja2')}${this.buildErrorPanel()}
 			`;
 		}
-		// TODO Figure out how to put all of these into the remote config
+		// TODO Layout editor
+		// TODO custom icons
 
 		return editor;
 	}
