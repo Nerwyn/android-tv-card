@@ -275,7 +275,7 @@ export class RemoteSlider extends BaseRemoteElement {
 		let tooltipTransform: string;
 		let iconTransform: string;
 		if (this.vertical) {
-			tooltipTransform = `translate(calc(-0.7 * ${
+			tooltipTransform = `translate(calc(-0.3 * ${
 				width ?? 'var(--height)'
 			} - 0.8em - 18px), calc(-1 * var(--thumb-offset)))`;
 			iconTransform = 'translateY(calc(-1 * var(--thumb-offset)))';
