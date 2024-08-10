@@ -8,24 +8,34 @@ import { dump, load } from 'js-yaml';
 import {
 	ActionType,
 	ActionTypes,
+	Actions,
+	DirectionAction,
 	DirectionActions,
 	IAction,
 	IConfig,
+	IData,
 	IElementConfig,
 	ITarget,
 	Platform,
 	RemoteElementType,
+	RemoteElementTypes,
 	defaultKeys,
 } from './models';
+import { deepGet, deepSet } from './utils';
 
 export class UniversalTVCardEditor extends LitElement {
 	@property() hass!: HomeAssistant;
 	@property() config!: IConfig;
 
+	@state() activeEntryName: string = '';
+	@state() actionsTabIndex: number = 0;
+	@state() touchpadTabIndex: number = 2; // up, down, center, left, right
+
 	@state() guiMode: boolean = true;
 	@state() errors?: string[];
 
 	yamlString?: string;
+	activeEntryType: RemoteElementType = 'button';
 	autofillCooldown = false;
 	codeEditorDelay?: ReturnType<typeof setTimeout>;
 	people: Record<string, string>[] = [];
@@ -50,10 +60,46 @@ export class UniversalTVCardEditor extends LitElement {
 		this.requestUpdate();
 	}
 
+	actionChanged(entry: IElementConfig) {
+		const updatedConfig = structuredClone(this.config);
+		updatedConfig.custom_actions = updatedConfig.custom_actions ?? {};
+		updatedConfig.custom_actions[this.activeEntryName] = {
+			...structuredClone(
+				this.config.custom_actions?.[this.activeEntryName],
+			),
+			...entry,
+		};
+		this.configChanged(updatedConfig);
+	}
+
 	toggleGuiMode(_e: CustomEvent) {
 		this.yamlString = undefined;
 		this.autofillCooldown = false;
 		this.guiMode = !this.guiMode;
+	}
+
+	get activeEntry(): IElementConfig | undefined {
+		if (this.activeEntryName == '') {
+			return undefined;
+		}
+		const activeEntry = (this.config.custom_actions ?? {})[
+			this.activeEntryName
+		];
+		switch (this.activeEntryType) {
+			case 'touchpad':
+				if (this.touchpadTabIndex == 2) {
+					return activeEntry;
+				}
+				return activeEntry[
+					['up', 'down', 'center', 'left', 'right'][
+						this.touchpadTabIndex
+					] as DirectionAction
+				] as IElementConfig;
+			case 'slider':
+			case 'button':
+			default:
+				return activeEntry;
+		}
 	}
 
 	get yaml(): string {
@@ -89,12 +135,774 @@ export class UniversalTVCardEditor extends LitElement {
 	handleStyleCodeChanged(e: CustomEvent) {
 		e.stopPropagation();
 		const css = e.detail.value;
-		if (css != this.config.styles) {
-			this.configChanged({
-				...this.config,
-				styles: css,
+		if (this.activeEntryName != '' && this.activeEntry) {
+			if (css != this.activeEntry.styles) {
+				this.actionChanged({
+					type: this.activeEntry.type,
+					styles: css,
+				});
+			}
+		} else {
+			if (css != this.config.styles) {
+				this.configChanged({
+					...this.config,
+					styles: css,
+				});
+			}
+		}
+	}
+
+	handleActionCodeChanged(e: CustomEvent) {
+		const actionType = (e.target as HTMLElement).id as ActionType;
+		const actionYaml = e.detail.value;
+		e.stopPropagation();
+		clearTimeout(this.codeEditorDelay);
+		this.codeEditorDelay = undefined;
+		this.codeEditorDelay = setTimeout(() => {
+			if (this.activeEntry) {
+				try {
+					const actionObj = load(actionYaml) as IData;
+					if (JSON.stringify(actionObj ?? {}).includes('null')) {
+						return;
+					}
+					this.actionChanged({
+						type: this.activeEntry.type,
+						[actionType]: actionObj,
+					});
+					this.errors = undefined;
+				} catch (e) {
+					this.errors = [(e as Error).message];
+				}
+			}
+		}, 1000);
+	}
+
+	handleActionsTabSelected(e: CustomEvent) {
+		const i = e.detail.index;
+		if (this.actionsTabIndex == i) {
+			return;
+		}
+		this.actionsTabIndex = i;
+	}
+
+	handleTouchpadTabSelected(e: CustomEvent) {
+		const i = e.detail.index;
+		if (this.touchpadTabIndex == i) {
+			return;
+		}
+		this.touchpadTabIndex = i;
+	}
+
+	handleSelectorChange(e: CustomEvent) {
+		const key = (e.target as HTMLElement).id;
+		let value = e.detail.value;
+		if (key.endsWith('.confirmation.exemptions')) {
+			value = ((value as string[]) ?? []).map((v) => {
+				return {
+					user: v,
+				};
 			});
 		}
+		this.actionChanged(
+			deepSet(
+				structuredClone(this.activeEntry) as object,
+				key,
+				value,
+			) as IElementConfig,
+		);
+	}
+
+	addEntry(e: CustomEvent) {
+		const i = e.detail.index as number;
+		const entryType = RemoteElementTypes[i];
+		const entry: IElementConfig = {
+			type: RemoteElementTypes[i],
+			autofill_entity_id: true,
+		};
+
+		const updatedConfig = structuredClone(this.config);
+		updatedConfig.custom_actions = updatedConfig.custom_actions ?? {};
+		updatedConfig.custom_actions[`custom_${entryType}_${i}`] = entry;
+		this.autofillCooldown = false;
+		this.configChanged(updatedConfig);
+	}
+
+	removeEntry(e: CustomEvent) {
+		const i = (
+			e.currentTarget as unknown as CustomEvent & Record<'index', number>
+		).index;
+		const entry = Object.keys(this.config.custom_actions ?? {})[i];
+		const updatedConfig = structuredClone(this.config);
+		delete updatedConfig.custom_actions?.[entry];
+		this.configChanged(updatedConfig);
+	}
+
+	moveEntry(e: CustomEvent) {
+		e.stopPropagation();
+		const { oldIndex, newIndex } = e.detail;
+		const updatedConfig = structuredClone(this.config);
+		const customActions = updatedConfig.custom_actions ?? {};
+		const customActionKeys = Object.keys(customActions);
+		customActionKeys.splice(
+			newIndex,
+			0,
+			customActionKeys.splice(oldIndex, 1)[0],
+		);
+		const updatedCustomActions = customActionKeys.reduce(
+			(temp: Record<string, IElementConfig>, key: string) => {
+				temp[key] = customActions[key];
+				return temp;
+			},
+			{},
+		);
+		updatedConfig.custom_actions = updatedCustomActions;
+		this.configChanged(updatedConfig);
+	}
+
+	editEntry(e: CustomEvent) {
+		this.yamlString = undefined;
+		const i = (
+			e.currentTarget as unknown as CustomEvent & Record<'index', number>
+		).index;
+		this.activeEntryName = Object.keys(this.config.custom_actions ?? {})[i];
+		const context = this.getEntryContext(
+			this.activeEntry ?? { type: 'button' },
+		);
+		this.actionsTabIndex =
+			i > -1 &&
+			(this.renderTemplate(
+				this.activeEntry?.momentary_start_action?.action ?? 'none',
+				context,
+			) != 'none' ||
+				this.renderTemplate(
+					this.activeEntry?.momentary_end_action?.action ?? 'none',
+					context,
+				) != 'none')
+				? 1
+				: this.renderTemplate(
+						this.activeEntry?.multi_tap_action?.action ?? 'none',
+						context,
+				  ) != 'none' ||
+				  this.renderTemplate(
+						this.activeEntry?.multi_double_tap_action?.action ??
+							'none',
+						context,
+				  ) != 'none' ||
+				  this.renderTemplate(
+						this.activeEntry?.multi_hold_action?.action ?? 'none',
+						context,
+				  ) != 'none'
+				? 2
+				: 0;
+		this.touchpadTabIndex = 2;
+	}
+
+	exiteditEntry(_e: CustomEvent) {
+		this.activeEntryName = '';
+		this.yamlString = undefined;
+	}
+
+	buildEntryList() {
+		const customActions = this.config.custom_actions ?? {};
+		const customActionNames = Object.keys(customActions);
+		return html`
+			<div class="content">
+				<div class="entry-list-header">Custom Actions</div>
+				<ha-sortable
+					handle-selector=".handle"
+					@item-moved=${this.moveEntry}
+				>
+					<div class="features">
+						${customActionNames.map((customActionName, i) => {
+							const customAction =
+								customActions[customActionName];
+							const context = this.getEntryContext(customAction);
+							const icon = this.renderTemplate(
+								customAction.icon as string,
+								context,
+							);
+							const label = this.renderTemplate(
+								customAction.label as string,
+								context,
+							);
+							const entryType = this.renderTemplate(
+								customAction.type as string,
+								context,
+							);
+							return html`
+								<div class="feature-list-item">
+									<div class="handle">
+										<ha-icon
+											.icon="${'mdi:drag'}"
+										></ha-icon>
+									</div>
+									<div class="feature-list-item-content">
+										${icon
+											? html`<ha-icon
+													.icon="${icon}"
+											  ></ha-icon>`
+											: ''}
+										<div class="feature-list-item-label">
+											<span class="primary"
+												>${customActionName} ⸱
+												${entryType} ⸱
+												${label
+													? ` ⸱ ${label}`
+													: ''}</span
+											>
+											${context.config.entity
+												? html`<span class="secondary"
+														>${context.config
+															.entity_id}${context
+															.config.attribute
+															? ` ⸱ ${context.config.attribute}`
+															: ''}</span
+												  >`
+												: ''}
+										</div>
+									</div>
+									<ha-icon-button
+										class="edit-icon"
+										.index=${i}
+										@click=${this.editEntry}
+									>
+										<ha-icon
+											.icon="${'mdi:pencil'}"
+										></ha-icon>
+									</ha-icon-button>
+									<ha-icon-button
+										class="remove-icon"
+										.index=${i}
+										@click=${this.removeEntry}
+									>
+										<ha-icon
+											.icon="${'mdi:delete'}"
+										></ha-icon>
+									</ha-icon-button>
+								</div>
+							`;
+						})}
+					</div>
+				</ha-sortable>
+			</div>
+		`;
+	}
+
+	buildAddEntryButton() {
+		return html`
+			<ha-button-menu
+				fixed
+				@action=${this.addEntry}
+				@closed=${(e: CustomEvent) => e.stopPropagation()}
+			>
+				<ha-button
+					slot="trigger"
+					outlined
+					.label="${'ADD CUSTOM FEATURE'}"
+				>
+					<ha-icon .icon=${'mdi:plus'} slot="icon"></ha-icon>
+				</ha-button>
+				${RemoteElementTypes.map(
+					(entryType) => html`
+						<ha-list-item .value=${entryType}>
+							${entryType}
+						</ha-list-item>
+					`,
+				)}
+			</ha-button-menu>
+		`;
+	}
+
+	buildEntryHeader() {
+		return html`
+			<div class="header">
+				<div class="back-title">
+					<ha-icon-button-prev
+						.label=${this.hass.localize('ui.common.back')}
+						@click=${this.exiteditEntry}
+					></ha-icon-button-prev>
+					<span class="primary" slot="title"
+						>${this.activeEntryName}</span
+					>
+				</div>
+				<ha-icon-button
+					class="gui-mode-button"
+					@click=${this.toggleGuiMode}
+					.label=${this.hass.localize(
+						this.guiMode
+							? 'ui.panel.lovelace.editor.edit_card.show_code_editor'
+							: 'ui.panel.lovelace.editor.edit_card.show_visual_editor',
+					)}
+				>
+					<ha-icon
+						class="header-icon"
+						.icon="${this.guiMode
+							? 'mdi:code-braces'
+							: 'mdi:list-box-outline'}"
+					></ha-icon>
+				</ha-icon-button>
+			</div>
+		`;
+	}
+
+	buildSelector(
+		label: string,
+		key: string,
+		selector: object,
+		backupValue: string | number | boolean | object = '',
+	) {
+		const hass: HomeAssistant = {
+			...this.hass,
+			localize: (key, values) => {
+				const value = {
+					'ui.panel.lovelace.editor.action-editor.actions.repeat':
+						'Repeat',
+					'ui.panel.lovelace.editor.action-editor.actions.fire-dom-event':
+						'Fire DOM event',
+					'ui.panel.lovelace.editor.action-editor.actions.key': 'Key',
+					'ui.panel.lovelace.editor.action-editor.actions.source':
+						'Source',
+					'ui.panel.lovelace.editor.action-editor.actions.keyboard':
+						'Keyboard',
+					'ui.panel.lovelace.editor.action-editor.actions.textbox':
+						'Textbox',
+					'ui.panel.lovelace.editor.action-editor.actions.search':
+						'Search',
+				}[key];
+				return value ?? this.hass.localize(key, values);
+			},
+		};
+
+		let value = deepGet(this.activeEntry as object, key);
+		if (key.endsWith('.confirmation.exemptions')) {
+			value = ((value as Record<string, { user: string }>[]) ?? []).map(
+				(v) => v.user,
+			);
+		}
+
+		return html`<ha-selector
+			.hass=${hass}
+			.selector=${selector}
+			.value=${value ?? backupValue}
+			.label="${label}"
+			.name="${label}"
+			.required=${false}
+			id="${key}"
+			@value-changed=${this.handleSelectorChange}
+		></ha-selector>`;
+	}
+
+	buildMainFeatureOptions(
+		additionalOptions: TemplateResult<1> = html``,
+		additionalFormOptions: TemplateResult<1> = html``,
+	) {
+		// TODO add / figure out template custom actions
+		return html`
+			${this.buildSelector('Entity', 'entity_id', {
+				entity: {},
+			})}
+			${
+				this.activeEntry?.entity_id
+					? this.buildSelector('Attribute', 'value_attribute', {
+							attribute: {
+								entity_id: this.activeEntry.entity_id,
+							},
+					  })
+					: ''
+			}
+			${additionalOptions}
+			<div class="form">
+				${additionalFormOptions}
+				${this.buildSelector(
+					'Autofill entity',
+					'autofill_entity_id',
+					{
+						boolean: {},
+					},
+					true,
+				)}
+				${this.buildSelector(
+					'Haptics',
+					'haptics',
+					{
+						boolean: {},
+					},
+					false,
+				)}
+			</div>
+		</div> `;
+	}
+
+	buildAppearancePanel(appearanceOptions: TemplateResult<1> = html``) {
+		return html`
+			<ha-expansion-panel .header=${'Appearance'}>
+				<div
+					class="panel-header"
+					slot="header"
+					role="heading"
+					aria-level="3"
+				>
+					<ha-icon .icon=${'mdi:palette'}></ha-icon>
+					Appearance
+				</div>
+				<div class="content">
+					${this.buildAlertBox(
+						"Change the feature appearance based on its value using a template like '{{ value | float }}'.",
+					)}
+					${appearanceOptions}${this.buildCodeEditor('jinja2')}
+				</div>
+			</ha-expansion-panel>
+		`;
+	}
+
+	buildCommonAppearanceOptions() {
+		return html`${this.buildSelector('Label', 'label', {
+				text: { multiline: true },
+			})}
+			<div class="form">
+				${this.buildSelector('Icon', 'icon', {
+					icon: {},
+				})}${this.buildSelector('Units', 'unit_of_measurement', {
+					text: {},
+				})}
+			</div>`;
+	}
+
+	buildInteractionsPanel(actionSelectors: TemplateResult<1>) {
+		return html`
+			<ha-expansion-panel .header=${'Interactions'}>
+				<div
+					class="panel-header"
+					slot="header"
+					role="heading"
+					aria-level="3"
+				>
+					<ha-icon .icon=${'mdi:gesture-tap'}></ha-icon>
+					Interactions
+				</div>
+				<div class="content">${actionSelectors}</div>
+			</ha-expansion-panel>
+		`;
+	}
+
+	buildActionOption(
+		label: string,
+		actionType: ActionType,
+		selector: object,
+		buildCodeEditor: boolean = false,
+	) {
+		// TODO add IDs and keyboard fields
+		// ${this.buildSelector('Remote ID', 'remote_id', {
+		// 	entity: {
+		// 		filter: {
+		// 			domain: 'remote',
+		// 		},
+		// 	},
+		// })}
+		// ${this.buildSelector('Media Player ID', 'media_player_id', {
+		// 	entity: {
+		// 		filter: {
+		// 			domain: 'media_player',
+		// 		},
+		// 	},
+		// })}
+		const context = this.getEntryContext(
+			this.activeEntry ?? ({} as IElementConfig),
+		);
+		const action = this.renderTemplate(
+			this.activeEntry?.[actionType]?.action ?? 'none',
+			context,
+		);
+		return html`<div class="action-options">
+			${this.buildSelector(label, actionType, selector)}
+			${action != 'none' && actionType == 'double_tap_action'
+				? this.buildSelector(
+						'Double tap window',
+						'double_tap_action.double_tap_window',
+						{
+							number: {
+								min: 0,
+								step: 0,
+								mode: 'box',
+								unit_of_measurement: 'ms',
+							},
+						},
+						200,
+				  )
+				: action != 'none' && actionType == 'hold_action'
+				? html`<div class="form">
+						${this.buildSelector(
+							'Hold time',
+							'hold_action.hold_time',
+							{
+								number: {
+									min: 0,
+									step: 0,
+									mode: 'box',
+									unit_of_measurement: 'ms',
+								},
+							},
+							500,
+						)}
+						${this.renderTemplate(
+							this.activeEntry?.hold_action?.action as string,
+							context,
+						) == 'repeat'
+							? this.buildSelector(
+									'Repeat delay',
+									'hold_action.repeat_delay',
+									{
+										number: {
+											min: 0,
+											step: 0,
+											mode: 'box',
+											unit_of_measurement: 'ms',
+										},
+									},
+									100,
+							  )
+							: ''}
+				  </div>`
+				: ''}
+			${action == 'more-info'
+				? this.buildSelector(
+						'Entity',
+						`${actionType}.target.entity_id`,
+						{
+							entity: {},
+						},
+				  )
+				: ''}
+			${action == 'toggle'
+				? this.buildSelector('Target', `${actionType}.target`, {
+						target: {},
+				  })
+				: ''}
+			${buildCodeEditor || action == 'fire-dom-event'
+				? this.buildCodeEditor('action', actionType)
+				: ''}
+			${action != 'none'
+				? html`${this.buildSelector(
+						'Confirmation',
+						`${actionType}.confirmation`,
+						{
+							boolean: {},
+						},
+						false,
+				  )}
+				  ${this.activeEntry?.[actionType]?.confirmation
+						? html`${this.buildSelector(
+								'Text',
+								`${actionType}.confirmation.text`,
+								{
+									text: {},
+								},
+						  )}
+						  ${this.buildSelector(
+								'Exemptions',
+								`${actionType}.confirmation.exemptions`,
+								{
+									select: {
+										multiple: true,
+										mode: 'list',
+										options: this.people,
+										reorder: false,
+									},
+								},
+						  )}`
+						: ''}`
+				: ''}
+		</div>`;
+	}
+
+	buildButtonGuiEditor() {
+		const actionsTabBar = html`
+			<mwc-tab-bar
+				.activeIndex=${this.actionsTabIndex}
+				@MDCTabBar:activated=${this.handleActionsTabSelected}
+			>
+				<mwc-tab .label=${'default'}></mwc-tab>
+				<mwc-tab .label=${'momentary'}></mwc-tab>
+			</mwc-tab-bar>
+		`;
+		let actionSelectors: TemplateResult<1>;
+		const actionsNoRepeat = Actions.concat();
+		actionsNoRepeat.splice(Actions.indexOf('repeat'), 1);
+		const defaultUiActions = {
+			ui_action: {
+				actions: actionsNoRepeat,
+				default_action: 'none',
+			},
+		};
+		switch (this.actionsTabIndex) {
+			case 1: {
+				actionSelectors = html`
+					${actionsTabBar}
+					${this.buildActionOption(
+						'Start behavior (optional)',
+						'momentary_start_action',
+						defaultUiActions,
+					)}
+					${this.buildAlertBox(
+						"Set the action below, and then use the code editor to set a data field to the seconds the feature was held down using a template like '{{ hold_secs | float }}'.",
+					)}
+					${this.buildActionOption(
+						'End behavior (optional)',
+						'momentary_end_action',
+						defaultUiActions,
+						true,
+					)}
+				`;
+				break;
+			}
+			case 0:
+			default: {
+				actionSelectors = html`
+					${actionsTabBar}
+					${this.buildActionOption(
+						'Tap behavior (optional)',
+						'tap_action',
+						defaultUiActions,
+					)}
+					${this.buildActionOption(
+						'Double tap behavior (optional)',
+						'double_tap_action',
+						defaultUiActions,
+					)}
+					${this.buildActionOption(
+						'Hold behavior (optional)',
+						'hold_action',
+						{
+							ui_action: {
+								actions: Actions,
+								default_action: 'none',
+							},
+						},
+					)}
+				`;
+				break;
+			}
+		}
+
+		return html`
+			${this.buildMainFeatureOptions()}
+			${this.buildAppearancePanel(html`
+				${this.buildCommonAppearanceOptions()}
+			`)}
+			${this.buildInteractionsPanel(actionSelectors)}
+		`;
+	}
+
+	buildSliderGuiEditor() {
+		const actionsNoRepeat = Actions.concat();
+		actionsNoRepeat.splice(Actions.indexOf('repeat'), 1);
+
+		const context = this.getEntryContext(
+			this.activeEntry ?? ({} as IElementConfig),
+		);
+		const rangeMin = this.renderTemplate(
+			this.activeEntry?.range?.[0] as number,
+			context,
+		);
+		const rangeMax = this.renderTemplate(
+			this.activeEntry?.range?.[0] as number,
+			context,
+		);
+		const step =
+			this.renderTemplate(this.activeEntry?.step as number, context) ?? 1;
+		const unit = this.renderTemplate(
+			this.activeEntry?.unit_of_measurement as string,
+			context,
+		);
+
+		return html`
+			${this.buildMainFeatureOptions(
+				undefined,
+				html`
+					${this.buildSelector('Min', 'range.0', {
+						number: {
+							max: rangeMax ?? undefined,
+							step: step,
+							mode: 'box',
+							unit_of_measurement: unit,
+						},
+					})}
+					${this.buildSelector('Max', 'range.1', {
+						number: {
+							min: rangeMin ?? undefined,
+							step: step,
+							mode: 'box',
+							unit_of_measurement: unit,
+						},
+					})}
+					${this.buildSelector('Step', 'step', {
+						number: {
+							min: 0,
+							step:
+								step ??
+								Math.min(
+									1,
+									((this.activeEntry?.range?.[1] ?? 1) -
+										(this.activeEntry?.range?.[0] ?? 0)) /
+										100,
+								),
+							mode: 'box',
+							unit_of_measurement: unit,
+						},
+					})}
+					${this.buildSelector(
+						'Update after action delay',
+						'value_from_hass_delay',
+						{
+							number: {
+								min: 0,
+								step: 0,
+								mode: 'box',
+								unit_of_measurement: 'ms',
+							},
+						},
+						1000,
+					)}
+				`,
+			)}
+			${this.buildAppearancePanel(this.buildCommonAppearanceOptions())}
+			${this.buildInteractionsPanel(html`
+				${this.buildAlertBox()}
+				${this.buildActionOption(
+					'Behavior',
+					'tap_action',
+					{
+						ui_action: {
+							actions: actionsNoRepeat,
+							default_action: 'perform-action',
+						},
+					},
+					true,
+				)}
+			`)}
+		`;
+	}
+
+	buildTouchpadGuiEditor() {
+		// TODO
+		return html``;
+	}
+
+	buildEntryGuiEditor() {
+		let entryGuiEditor: TemplateResult<1>;
+		switch (this.activeEntry?.type) {
+			case 'touchpad':
+				entryGuiEditor = this.buildSliderGuiEditor();
+				break;
+			case 'slider':
+				entryGuiEditor = this.buildTouchpadGuiEditor();
+				break;
+			case 'button':
+			default:
+				entryGuiEditor = this.buildButtonGuiEditor();
+				break;
+		}
+		return html`<div class="gui-editor">${entryGuiEditor}</div>`;
 	}
 
 	buildCodeEditor(mode: string, id?: string) {
@@ -102,24 +910,24 @@ export class UniversalTVCardEditor extends LitElement {
 		let value: string;
 		let handler: (e: CustomEvent) => void;
 		switch (mode) {
-			// case 'jinja2':
-			// 	value =
-			// 		(this.entryIndex > -1
-			// 			? this.activeEntry?.styles
-			// 			: this.config.styles) ?? '';
-			// 	handler = this.handleStyleCodeChanged;
-			// 	title = 'CSS Styles';
-			// 	break;
-			// case 'action':
-			// 	mode = 'yaml';
-			// 	handler = this.handleActionCodeChanged;
-			// 	value = dump(
-			// 		(this.activeEntry?.[
-			// 			(id ?? 'tap_action') as ActionType
-			// 		] as IAction) ?? {},
-			// 	);
-			// 	value = value.trim() == '{}' ? '' : value;
-			// 	break;
+			case 'jinja2':
+				value =
+					(this.activeEntryName != ''
+						? this.activeEntry?.styles
+						: this.config.styles) ?? '';
+				handler = this.handleStyleCodeChanged;
+				title = 'CSS Styles';
+				break;
+			case 'action':
+				mode = 'yaml';
+				handler = this.handleActionCodeChanged;
+				value = dump(
+					(this.activeEntry?.[
+						(id ?? 'tap_action') as ActionType
+					] as IAction) ?? {},
+				);
+				value = value.trim() == '{}' ? '' : value;
+				break;
 			case 'yaml':
 			default:
 				value = this.yaml;
@@ -146,18 +954,15 @@ export class UniversalTVCardEditor extends LitElement {
 		`;
 	}
 
-	buildRemoteEditor() {
+	buildEntryEditor() {
 		let editor: TemplateResult<1>;
 		if (this.guiMode) {
-			editor = html``;
+			editor = this.buildEntryGuiEditor();
 		} else {
 			editor = this.buildCodeEditor('yaml');
 		}
-		const tempToggle = html`<button @click=${this.toggleGuiMode}>
-			Temporary Toggle!
-		</button>`;
 
-		return html`<div class="wrapper">${tempToggle}${editor}</div> `;
+		return html`<div class="wrapper">${editor}</div> `;
 	}
 
 	buildErrorPanel() {
@@ -219,7 +1024,17 @@ export class UniversalTVCardEditor extends LitElement {
 
 		this.buildPeopleList();
 
-		const editor = html`${this.buildRemoteEditor()}${this.buildErrorPanel()}`;
+		let editor: TemplateResult<1>;
+		if (this.activeEntryName != '' && this.activeEntry) {
+			editor = html`${this.buildEntryEditor()}${this.buildErrorPanel()}`;
+		} else {
+			editor = html`
+				${this.buildEntryList()}${this.buildAddEntryButton()}
+				${this.buildCodeEditor('jinja2')}${this.buildErrorPanel()}
+			`;
+		}
+		// TODO Figure out how to put all of these into the remote config
+
 		return editor;
 	}
 
@@ -251,7 +1066,7 @@ export class UniversalTVCardEditor extends LitElement {
 		return str;
 	}
 
-	getElementContext(element: IElementConfig) {
+	getEntryContext(entry: IElementConfig) {
 		const context = {
 			VALUE: 0,
 			HOLD_SECS: 0,
@@ -260,21 +1075,21 @@ export class UniversalTVCardEditor extends LitElement {
 			hold_secs: 0,
 			unit: '',
 			config: {
-				...element,
+				...entry,
 				entity: '',
 				attribute: '',
 			},
 		};
 		context.config.attribute = this.renderTemplate(
-			element.value_attribute ?? '',
+			entry.value_attribute ?? '',
 			context,
 		) as string;
 		context.config.entity = this.renderTemplate(
-			element.entity_id ?? '',
+			entry.entity_id ?? '',
 			context,
 		) as string;
 		const unit = this.renderTemplate(
-			element.unit_of_measurement as string,
+			entry.unit_of_measurement as string,
 			context,
 		) as string;
 		(context.UNIT = unit), (context.unit = unit);
@@ -361,11 +1176,11 @@ export class UniversalTVCardEditor extends LitElement {
 		}
 	}
 
-	populateMissingEntityId(element: IElementConfig, parentEntityId: string) {
+	populateMissingEntityId(entry: IElementConfig, parentEntityId: string) {
 		for (const actionType of ActionTypes) {
-			if (actionType in element) {
+			if (actionType in entry) {
 				const action =
-					element[actionType as ActionType] ?? ({} as IAction);
+					entry[actionType as ActionType] ?? ({} as IAction);
 				if (['perform-action', 'more-info'].includes(action.action)) {
 					const data = action.data ?? {};
 					const target = action.target ?? {};
@@ -388,9 +1203,9 @@ export class UniversalTVCardEditor extends LitElement {
 						!target.area_id &&
 						!target.label_id
 					) {
-						target.entity_id = element.entity_id ?? parentEntityId;
+						target.entity_id = entry.entity_id ?? parentEntityId;
 						action.target = target;
-						element[actionType as ActionType] = action;
+						entry[actionType as ActionType] = action;
 					}
 					action.data = data;
 					action.target = target;
@@ -398,60 +1213,60 @@ export class UniversalTVCardEditor extends LitElement {
 			}
 		}
 
-		if (!('entity_id' in element)) {
+		if (!('entity_id' in entry)) {
 			let entity_id =
-				element.tap_action?.target?.entity_id ??
-				element.tap_action?.data?.entity_id ??
+				entry.tap_action?.target?.entity_id ??
+				entry.tap_action?.data?.entity_id ??
 				parentEntityId;
 			if (Array.isArray(entity_id)) {
 				entity_id = entity_id[0];
 			}
-			element.entity_id = entity_id as string;
+			entry.entity_id = entity_id as string;
 		}
 
-		return element;
+		return entry;
 	}
 
 	autofillDefaultFields(config: IConfig) {
 		const updatedConfig = structuredClone(config);
-		const updatedElements: Record<string, IElementConfig> =
+		const updatedEntries: Record<string, IElementConfig> =
 			updatedConfig.custom_actions ?? {};
-		for (const elementName in updatedElements) {
-			let element = updatedElements[elementName];
-			if (!('autofill_entity_id' in element)) {
-				element.autofill_entity_id =
+		for (const entryName in updatedEntries) {
+			let entry = updatedEntries[entryName];
+			if (!('autofill_entity_id' in entry)) {
+				entry.autofill_entity_id =
 					updatedConfig.autofill_entity_id ?? true;
 			}
 			if (
 				this.renderTemplate(
-					(element.autofill_entity_id ?? true) as unknown as string,
-					this.getElementContext(element),
+					(entry.autofill_entity_id ?? true) as unknown as string,
+					this.getEntryContext(entry),
 				)
 			) {
 				// Feature entity ID
-				element = this.populateMissingEntityId(
-					element,
+				entry = this.populateMissingEntityId(
+					entry,
 					updatedConfig.remote_id ??
 						updatedConfig.media_player_id ??
 						updatedConfig.keyboard_id ??
 						'',
 				);
 				const entityId = this.renderTemplate(
-					element.entity_id as string,
-					this.getElementContext(element),
+					entry.entity_id as string,
+					this.getEntryContext(entry),
 				) as string;
 
 				switch (
 					this.renderTemplate(
-						element.type as string,
-						this.getElementContext(element),
+						entry.type as string,
+						this.getEntryContext(entry),
 					)
 				) {
 					case 'slider': {
 						const [domain, _service] = (entityId ?? '').split('.');
 
-						let rangeMin = element.range?.[0];
-						let rangeMax = element.range?.[1];
+						let rangeMin = entry.range?.[0];
+						let rangeMax = entry.range?.[1];
 						if (rangeMin == undefined) {
 							rangeMin =
 								this.hass.states[entityId]?.attributes?.min ??
@@ -462,12 +1277,9 @@ export class UniversalTVCardEditor extends LitElement {
 								this.hass.states[entityId]?.attributes?.max ??
 								1;
 						}
-						element.range = [
-							rangeMin as number,
-							rangeMax as number,
-						];
+						entry.range = [rangeMin as number, rangeMax as number];
 
-						if (!element.tap_action) {
+						if (!entry.tap_action) {
 							const tap_action = {} as IAction;
 							const data = tap_action.data ?? {};
 							tap_action.action = 'perform-action';
@@ -497,25 +1309,25 @@ export class UniversalTVCardEditor extends LitElement {
 								target.entity_id = entityId as string;
 								tap_action.target = target;
 							}
-							element.tap_action = tap_action;
+							entry.tap_action = tap_action;
 						}
 
-						if (!element.step) {
+						if (!entry.step) {
 							const defaultStep =
 								this.hass.states[entityId as string]?.attributes
 									?.step;
 							if (defaultStep) {
-								element.step = defaultStep;
+								entry.step = defaultStep;
 							} else {
 								const entryContext =
-									this.getElementContext(element);
-								element.step =
+									this.getEntryContext(entry);
+								entry.step =
 									((this.renderTemplate(
-										element.range[1],
+										entry.range[1],
 										entryContext,
 									) as unknown as number) -
 										(this.renderTemplate(
-											element.range[0],
+											entry.range[0],
 											entryContext,
 										) as unknown as number)) /
 									100;
@@ -529,9 +1341,9 @@ export class UniversalTVCardEditor extends LitElement {
 						break;
 				}
 			}
-			updatedElements[elementName] = element;
+			updatedEntries[entryName] = entry;
 		}
-		updatedConfig.custom_actions = updatedElements;
+		updatedConfig.custom_actions = updatedEntries;
 		return updatedConfig;
 	}
 
@@ -672,7 +1484,7 @@ export class UniversalTVCardEditor extends LitElement {
 		};
 		if ('touchpad_style' in updatedConfig) {
 			let styles = touchpad.styles ?? '';
-			styles += '\n:host {';
+			styles += '\ntoucharea {';
 			const style = updatedConfig[
 				'touchpad_style' as keyof IConfig
 			] as unknown as Record<string, string>;
@@ -732,17 +1544,17 @@ export class UniversalTVCardEditor extends LitElement {
 			customActions.touchpad = touchpad;
 		}
 
-		for (const elementName in customActions) {
-			let element = customActions[elementName];
-			element = this.updateDeprecatedActionFields(element);
+		for (const entryName in customActions) {
+			let entry = customActions[entryName];
+			entry = this.updateDeprecatedActionFields(entry);
 			for (const direction of DirectionActions) {
-				if (element[direction]) {
-					element[direction] = this.updateDeprecatedActionFields(
-						element[direction] as IElementConfig,
+				if (entry[direction]) {
+					entry[direction] = this.updateDeprecatedActionFields(
+						entry[direction] as IElementConfig,
 					);
 				}
 			}
-			customActions[elementName] = element;
+			customActions[entryName] = entry;
 		}
 
 		// Convert style object to styles string
@@ -796,8 +1608,8 @@ export class UniversalTVCardEditor extends LitElement {
 		return updatedConfig;
 	}
 
-	updateDeprecatedActionFields(element: IElementConfig) {
-		const customAction = structuredClone(element);
+	updateDeprecatedActionFields(entry: IElementConfig) {
+		const customAction = structuredClone(entry);
 
 		// Copy svg_path to icon
 		if ('svg_path' in customAction) {
