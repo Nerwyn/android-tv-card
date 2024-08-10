@@ -244,7 +244,9 @@ export class RemoteSlider extends BaseRemoteElement {
 		if (this.vertical) {
 			style['transform'] = 'rotateZ(270deg)';
 			style['width'] = `${this.sliderWidth}px`;
-			style['height'] = `${this.sliderHeight}px`;
+			style[
+				'height'
+			] = `var(--background-height, ${this.sliderHeight}px)`;
 		}
 		return html`<div class="background" style=${styleMap(style)}></div>`;
 	}
@@ -311,9 +313,7 @@ export class RemoteSlider extends BaseRemoteElement {
 		}
 		if (this.vertical) {
 			style['transform'] = 'rotateZ(270deg)';
-			style[
-				'height'
-			] = `var(--background-height, ${this.sliderHeight}px)`;
+			style['height'] = `${this.sliderHeight}px`;
 			style['width'] = `${this.sliderWidth}px`;
 			style['touch-action'] = 'none';
 		}
