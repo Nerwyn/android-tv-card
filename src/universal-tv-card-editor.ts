@@ -48,7 +48,7 @@ export class UniversalTVCardEditor extends LitElement {
 		this.config = config;
 	}
 
-	configChanged(config: IConfig, update: boolean = true) {
+	configChanged(config: IConfig) {
 		const event = new Event('config-changed', {
 			bubbles: true,
 			composed: true,
@@ -57,9 +57,7 @@ export class UniversalTVCardEditor extends LitElement {
 			config: config,
 		};
 		this.dispatchEvent(event);
-		if (update) {
-			this.requestUpdate();
-		}
+		this.requestUpdate();
 	}
 
 	actionChanged(entry: IElementConfig) {
@@ -248,6 +246,7 @@ export class UniversalTVCardEditor extends LitElement {
 	moveEntry(e: CustomEvent) {
 		// TODO why doesn't this work?
 		e.stopPropagation();
+		console.log(e.detail);
 		const { oldIndex, newIndex } = e.detail;
 		const updatedConfig = structuredClone(this.config);
 		const customActions = updatedConfig.custom_actions ?? {};
@@ -264,8 +263,17 @@ export class UniversalTVCardEditor extends LitElement {
 			},
 			{},
 		);
-		updatedConfig.custom_actions = {};
-		this.configChanged(updatedConfig, false);
+
+		// Convoluted update logic to try to force object key reorder
+		const diffKey = customActionKeys[newIndex];
+		const movedEntry = structuredClone(updatedCustomActions[diffKey]);
+		delete updatedCustomActions[diffKey];
+		updatedCustomActions['Moved__' + diffKey] = movedEntry;
+		updatedConfig.custom_actions = updatedCustomActions;
+		this.configChanged(updatedConfig);
+
+		delete updatedCustomActions['Moved__' + diffKey];
+		updatedCustomActions[diffKey] = movedEntry;
 		updatedConfig.custom_actions = updatedCustomActions;
 		this.configChanged(updatedConfig);
 	}
