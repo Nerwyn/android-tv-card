@@ -403,8 +403,13 @@ export class RemoteSlider extends BaseRemoteElement {
 				this.style.width = 'fit-content';
 				containerStyle['height'] = `${this.sliderWidth}px`;
 				const sliderHeight = style.getPropertyValue('height');
-				if (!sliderHeight || sliderHeight == '0px') {
-					containerStyle['width'] = `${this.DEFAULT_HEIGHT}px`;
+				const defaultSliderHeight = `${this.DEFAULT_HEIGHT}px`;
+				if (
+					!sliderHeight ||
+					sliderHeight == defaultSliderHeight ||
+					sliderHeight == '0px'
+				) {
+					containerStyle['width'] = defaultSliderHeight;
 				}
 			}
 		}
