@@ -734,10 +734,10 @@ export class UniversalTVCardEditor extends LitElement {
 
 		for (const elementName in customActions) {
 			let element = customActions[elementName];
-			element = this.updatedDeprecatedActionFields(element);
+			element = this.updateDeprecatedActionFields(element);
 			for (const direction of DirectionActions) {
 				if (element[direction]) {
-					element[direction] = this.updatedDeprecatedActionFields(
+					element[direction] = this.updateDeprecatedActionFields(
 						element[direction] as IElementConfig,
 					);
 				}
@@ -796,7 +796,7 @@ export class UniversalTVCardEditor extends LitElement {
 		return updatedConfig;
 	}
 
-	updatedDeprecatedActionFields(element: IElementConfig) {
+	updateDeprecatedActionFields(element: IElementConfig) {
 		const customAction = structuredClone(element);
 
 		// Copy svg_path to icon

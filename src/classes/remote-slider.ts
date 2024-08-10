@@ -37,6 +37,8 @@ export class RemoteSlider extends BaseRemoteElement {
 		}
 	});
 
+	DEFAULT_HEIGHT: number = 48;
+
 	onInput(e: InputEvent) {
 		const slider = e.currentTarget as HTMLInputElement;
 
@@ -276,12 +278,12 @@ export class RemoteSlider extends BaseRemoteElement {
 		let iconTransform: string;
 		if (this.vertical) {
 			tooltipTransform = `translate(calc(-0.7 * ${
-				width ?? '48px'
+				width ?? `${this.DEFAULT_HEIGHT}px`
 			} - 0.8em - 18px), calc(-1 * var(--thumb-offset)))`;
 			iconTransform = 'translateY(calc(-1 * var(--thumb-offset)))';
 		} else {
 			tooltipTransform = `translate(var(--thumb-offset), calc(-0.5 * ${
-				height ?? '48px'
+				height ?? `${this.DEFAULT_HEIGHT}px`
 			} - 0.4em - 10px))`;
 			iconTransform = 'translateX(var(--thumb-offset))';
 		}
@@ -394,12 +396,15 @@ export class RemoteSlider extends BaseRemoteElement {
 			if (thumbWidth) {
 				this.thumbWidth = parseInt(thumbWidth.replace(/[^0-9]+/g, ''));
 			} else {
-				this.thumbWidth = 48;
+				this.thumbWidth = this.DEFAULT_HEIGHT;
 			}
 
 			if (this.vertical) {
 				this.style.width = 'fit-content';
 				containerStyle['height'] = `${this.sliderWidth}px`;
+				containerStyle['width'] = `${
+					this.sliderHeight ?? this.DEFAULT_HEIGHT
+				}px`;
 			}
 		}
 		this.setThumbOffset();
