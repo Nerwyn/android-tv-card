@@ -311,7 +311,9 @@ export class RemoteSlider extends BaseRemoteElement {
 		}
 		if (this.vertical) {
 			style['transform'] = 'rotateZ(270deg)';
-			style['height'] = `${this.sliderHeight}px`;
+			style[
+				'height'
+			] = `var(--background-height, ${this.sliderHeight}px)`;
 			style['width'] = `${this.sliderWidth}px`;
 			style['touch-action'] = 'none';
 		}
@@ -543,7 +545,7 @@ export class RemoteSlider extends BaseRemoteElement {
 					transition: opacity 540ms ease-in-out 0s;
 				}
 				.tooltip::after {
-					content: var(--tooltip-label, '0');
+					content: var(--tooltip-label, '...');
 				}
 
 				.icon {
