@@ -240,6 +240,7 @@ export class UniversalTVCardEditor extends LitElement {
 	}
 
 	moveEntry(e: CustomEvent) {
+		// TODO why doesn't this work?
 		e.stopPropagation();
 		const { oldIndex, newIndex } = e.detail;
 		const updatedConfig = structuredClone(this.config);
@@ -347,7 +348,7 @@ export class UniversalTVCardEditor extends LitElement {
 										<div class="feature-list-item-label">
 											<span class="primary"
 												>${customActionName} ⸱
-												${entryType} ⸱
+												${entryType}
 												${label
 													? ` ⸱ ${label}`
 													: ''}</span
@@ -424,7 +425,8 @@ export class UniversalTVCardEditor extends LitElement {
 						@click=${this.exitEditEntry}
 					></ha-icon-button-prev>
 					<span class="primary" slot="title"
-						>${this.activeEntryName}</span
+						>${this.activeEntryName} ⸱
+						${this.activeEntry?.type}</span
 					>
 				</div>
 				<ha-icon-button
