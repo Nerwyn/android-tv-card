@@ -104,7 +104,7 @@ export class UniversalTVCardEditor extends LitElement {
 
 	get yaml(): string {
 		if (this.yamlString == undefined) {
-			const yaml = dump(this.config);
+			const yaml = dump(this.activeEntry);
 			this.yamlString = yaml.trim() == '{}' ? '' : yaml;
 		}
 		return this.yamlString || '';
