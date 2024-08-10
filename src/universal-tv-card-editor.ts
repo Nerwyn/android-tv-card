@@ -213,6 +213,7 @@ export class UniversalTVCardEditor extends LitElement {
 	}
 
 	addEntry(e: CustomEvent) {
+		// TODO copy default actions
 		const i = e.detail.index as number;
 		const entryType = RemoteElementTypes[i];
 		const entry: IElementConfig = {
@@ -891,10 +892,10 @@ export class UniversalTVCardEditor extends LitElement {
 	buildEntryGuiEditor() {
 		let entryGuiEditor: TemplateResult<1>;
 		switch (this.activeEntry?.type) {
-			case 'touchpad':
+			case 'slider':
 				entryGuiEditor = this.buildSliderGuiEditor();
 				break;
-			case 'slider':
+			case 'touchpad':
 				entryGuiEditor = this.buildTouchpadGuiEditor();
 				break;
 			case 'button':
@@ -962,7 +963,8 @@ export class UniversalTVCardEditor extends LitElement {
 			editor = this.buildCodeEditor('yaml');
 		}
 
-		return html`<div class="wrapper">${editor}</div> `;
+		return html`${this.buildEntryHeader()}
+			<div class="wrapper">${editor}</div> `;
 	}
 
 	buildErrorPanel() {
@@ -1609,6 +1611,7 @@ export class UniversalTVCardEditor extends LitElement {
 	}
 
 	updateDeprecatedActionFields(entry: IElementConfig) {
+		// TODO copy custom action onto default action in this function
 		const customAction = structuredClone(entry);
 
 		// Copy svg_path to icon
