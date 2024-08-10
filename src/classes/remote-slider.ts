@@ -402,9 +402,10 @@ export class RemoteSlider extends BaseRemoteElement {
 			if (this.vertical) {
 				this.style.width = 'fit-content';
 				containerStyle['height'] = `${this.sliderWidth}px`;
-				containerStyle['width'] = `${
-					this.sliderHeight ?? this.DEFAULT_HEIGHT
-				}px`;
+				const width = style.getPropertyValue('width');
+				if (!width || width == '0px') {
+					containerStyle['width'] = `${this.DEFAULT_HEIGHT}px`;
+				}
 			}
 		}
 		this.setThumbOffset();
