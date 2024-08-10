@@ -37,8 +37,6 @@ export class RemoteSlider extends BaseRemoteElement {
 		}
 	});
 
-	DEFAULT_HEIGHT: number = 48;
-
 	onInput(e: InputEvent) {
 		const slider = e.currentTarget as HTMLInputElement;
 
@@ -278,12 +276,12 @@ export class RemoteSlider extends BaseRemoteElement {
 		let iconTransform: string;
 		if (this.vertical) {
 			tooltipTransform = `translate(calc(-0.7 * ${
-				width ?? `${this.DEFAULT_HEIGHT}px`
+				width ?? 'var(--height)'
 			} - 0.8em - 18px), calc(-1 * var(--thumb-offset)))`;
 			iconTransform = 'translateY(calc(-1 * var(--thumb-offset)))';
 		} else {
 			tooltipTransform = `translate(var(--thumb-offset), calc(-0.5 * ${
-				height ?? `${this.DEFAULT_HEIGHT}px`
+				height ?? 'var(--height)'
 			} - 0.4em - 10px))`;
 			iconTransform = 'translateX(var(--thumb-offset))';
 		}
@@ -393,24 +391,17 @@ export class RemoteSlider extends BaseRemoteElement {
 		if (sliderElement) {
 			const style = getComputedStyle(sliderElement);
 			const thumbWidth = style.getPropertyValue('--thumb-width');
+			const height = style.getPropertyValue('--height');
 			if (thumbWidth) {
 				this.thumbWidth = parseInt(thumbWidth.replace(/[^0-9]+/g, ''));
 			} else {
-				this.thumbWidth = this.DEFAULT_HEIGHT;
+				this.thumbWidth = parseInt(height.replace(/[^0-9]+/g, ''));
 			}
 
 			if (this.vertical) {
 				this.style.width = 'fit-content';
 				containerStyle['height'] = `${this.sliderWidth}px`;
-				const sliderHeight = style.getPropertyValue('height');
-				const defaultSliderHeight = `${this.DEFAULT_HEIGHT}px`;
-				if (
-					!sliderHeight ||
-					sliderHeight == defaultSliderHeight ||
-					sliderHeight == '0px'
-				) {
-					containerStyle['width'] = defaultSliderHeight;
-				}
+				containerStyle['width'] = 'var(--height)';
 			}
 		}
 		this.setThumbOffset();
