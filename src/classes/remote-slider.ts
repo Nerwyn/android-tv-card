@@ -289,7 +289,7 @@ export class RemoteSlider extends BaseRemoteElement {
 		// Moved out of html literal to prevent it from being broken by the minifier
 		const styles = `
 		:host {
-			--tooltip-label: '${tooltipLabel}';
+			--tooltip-label: ${tooltipLabel};
 			--tooltip-transform: ${tooltipTransform};
 			--icon-transform: ${iconTransform};
 		}
