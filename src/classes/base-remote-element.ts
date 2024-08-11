@@ -705,7 +705,7 @@ export class BaseRemoteElement extends LitElement {
 			if (icon.includes(':')) {
 				iconElement = html` <ha-icon .icon="${icon}"></ha-icon> `;
 			} else {
-				const path =
+				const iconConfig =
 					(this.icons ?? []).filter(
 						(customIcon: IIconConfig) => customIcon.name == icon,
 					)[0] ??
@@ -713,7 +713,9 @@ export class BaseRemoteElement extends LitElement {
 						(defaultIcon: IIconConfig) => defaultIcon.name == icon,
 					)[0];
 				iconElement = html`
-					<ha-svg-icon .path=${path ?? icon}></ha-svg-icon>
+					<ha-svg-icon
+						.path=${iconConfig?.path ?? icon}
+					></ha-svg-icon>
 				`;
 			}
 			return html`<div class="icon">${iconElement}</div>`;
