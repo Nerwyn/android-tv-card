@@ -120,7 +120,7 @@ export class UniversalTVCardEditor extends LitElement {
 			return undefined;
 		}
 		const activeEntry = (this.config.custom_actions ?? [])[this.entryIndex];
-		switch (this.activeEntry?.type) {
+		switch (activeEntry?.type) {
 			case 'touchpad':
 				if (this.touchpadTabIndex == 2) {
 					return activeEntry;
