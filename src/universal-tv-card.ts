@@ -508,6 +508,9 @@ class UniversalTVCard extends LitElement {
 				justify-content: space-evenly;
 				align-items: center;
 			}
+			.edit-mode {
+				outline: none;
+			}
 			@media (hover: hover) {
 				.edit-mode {
 					outline: 1px dashed var(--red-color);
