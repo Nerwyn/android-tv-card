@@ -1047,13 +1047,13 @@ export class UniversalTVCardEditor extends LitElement {
 			return html``;
 		}
 
-		// if (!this.autofillCooldown) {
-		// 	this.autofillCooldown = true;
-		// 	let config = this.updateDeprecatedFields(this.config);
-		// 	config = this.autofillDefaultFields(config);
-		// 	this.configChanged(config);
-		// 	setTimeout(() => (this.autofillCooldown = false), 1000);
-		// }
+		if (!this.autofillCooldown) {
+			this.autofillCooldown = true;
+			const config = this.updateDeprecatedFields(this.config);
+			// config = this.autofillDefaultFields(config);
+			this.configChanged(config);
+			setTimeout(() => (this.autofillCooldown = false), 1000);
+		}
 
 		this.buildPeopleList();
 
