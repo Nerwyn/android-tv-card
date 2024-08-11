@@ -265,7 +265,10 @@ export class UniversalTVCardEditor extends LitElement {
 		this.entriesChanged(entries);
 		const entriesList = this.shadowRoot?.querySelector('.features');
 		if (entriesList) {
-			entriesList.scrollTop = entriesList.scrollHeight;
+			setTimeout(
+				() => (entriesList.scrollTop = entriesList.scrollHeight),
+				500,
+			);
 		}
 	}
 
