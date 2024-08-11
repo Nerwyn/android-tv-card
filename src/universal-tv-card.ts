@@ -286,7 +286,7 @@ class UniversalTVCard extends LitElement {
 			title="${elementName}"
 			.hass=${this.hass}
 			.config=${actions}
-			.icons=${this.config.custom_icons}
+			.icons=${this.config.custom_icons ?? []}
 		/>`;
 	}
 
@@ -295,7 +295,7 @@ class UniversalTVCard extends LitElement {
 			title="${elementName}"
 			.hass=${this.hass}
 			.config=${actions}
-			.icons=${this.config.custom_icons}
+			.icons=${this.config.custom_icons ?? []}
 		/>`;
 	}
 
@@ -307,7 +307,7 @@ class UniversalTVCard extends LitElement {
 			title="${elementName}"
 			.hass=${this.hass}
 			.config=${actions}
-			.icons=${this.config.custom_icons}
+			.icons=${this.config.custom_icons ?? []}
 		/>`;
 	}
 
