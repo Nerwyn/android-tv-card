@@ -1482,7 +1482,7 @@ export class UniversalTVCardEditor extends LitElement {
 			type: 'slider',
 			name: 'slider',
 		};
-		let numKeys0 = Object.keys(slider).length;
+		let updateSlider = false;
 		if ('slider_style' in updatedConfig) {
 			let styles = slider.styles ?? '';
 			styles += '\n:host {';
@@ -1495,31 +1495,38 @@ export class UniversalTVCardEditor extends LitElement {
 			styles += `\n}`;
 			slider.styles = styles + (slider.styles ?? '');
 			delete updatedConfig['slider_style' as keyof IConfig];
+			updateSlider = true;
 		}
 		if ('tooltip' in slider) {
 			let styles = slider.styles ?? '';
 			styles += `\n.tooltip {\n  display: {{ "initial" if render(${slider.tooltip}) else "none" }};\n}`;
 			slider.styles = styles;
+			updateSlider = true;
 		}
 		if ('slider_range' in updatedConfig) {
 			slider.range = updatedConfig.slider_range as [number, number];
 			delete updatedConfig.slider_range;
+			updateSlider = true;
 		}
 		if ('slider_step' in updatedConfig) {
 			slider.step = updatedConfig.slider_step as number;
 			delete updatedConfig.slider_step;
+			updateSlider = true;
 		}
 		if ('slider_attribute' in updatedConfig) {
 			slider.value_attribute = updatedConfig.slider_attribute as string;
 			delete updatedConfig.slider_attribute;
+			updateSlider = true;
 		}
 		if ('enable_slider_feedback' in updatedConfig) {
 			slider.haptics = updatedConfig.enable_slider_feedback as boolean;
 			delete updatedConfig.enable_slider_feedback;
+			updateSlider = true;
 		}
 		if ('slider_haptics' in updatedConfig) {
 			slider.haptics = updatedConfig.slider_haptics as boolean;
 			delete updatedConfig.slider_haptics;
+			updateSlider = true;
 		}
 		if ('slider_id' in updatedConfig) {
 			slider.entity_id =
@@ -1546,8 +1553,9 @@ export class UniversalTVCardEditor extends LitElement {
 			}
 			slider.tap_action = tapAction;
 			delete updatedConfig.slider_id;
+			updateSlider = true;
 		}
-		if (Object.keys(slider).length > numKeys0) {
+		if (updateSlider) {
 			const defaultSlider = defaultKeys.filter(
 				(defaultKey) => defaultKey.name == 'slider',
 			)[0];
@@ -1572,7 +1580,7 @@ export class UniversalTVCardEditor extends LitElement {
 			type: 'touchpad',
 			name: 'touchpad',
 		};
-		numKeys0 = Object.keys(touchpad).length;
+		let updateTouchpad = false;
 		if ('touchpad_style' in updatedConfig) {
 			let styles = touchpad.styles ?? '';
 			styles += '\ntoucharea {';
@@ -1585,6 +1593,7 @@ export class UniversalTVCardEditor extends LitElement {
 			styles += `\n}`;
 			touchpad.styles = styles + (touchpad.styles ?? '');
 			delete updatedConfig['touchpad_style' as keyof IConfig];
+			updateTouchpad = true;
 		}
 		if ('touchpad_height' in updatedConfig) {
 			let styles = touchpad.styles ?? '';
@@ -1593,6 +1602,7 @@ export class UniversalTVCardEditor extends LitElement {
 			};\n}`;
 			touchpad.styles = styles += touchpad.styles ?? '';
 			delete (updatedConfig as Record<string, string>)['touchpad_height'];
+			updateTouchpad = true;
 		}
 		if ('enable_touchpad_feedback' in updatedConfig) {
 			touchpad.haptics = (
@@ -1600,12 +1610,14 @@ export class UniversalTVCardEditor extends LitElement {
 			).enable_touchpad_feedback;
 			delete (updatedConfig as Record<string, boolean>)
 				.enable_touchpad_feedback;
+			updateTouchpad = true;
 		}
 		if ('touchpad_haptics' in updatedConfig) {
 			touchpad.haptics = (
 				updatedConfig as Record<string, boolean>
 			).touchpad_haptics;
 			delete (updatedConfig as Record<string, boolean>).touchpad_haptics;
+			updateTouchpad = true;
 		}
 		if ('enable_double_click' in updatedConfig) {
 			touchpad.double_tap_action = {
@@ -1615,6 +1627,7 @@ export class UniversalTVCardEditor extends LitElement {
 			};
 			delete updatedConfig.enable_double_click;
 			delete updatedConfig['double_click_keycode' as keyof IConfig];
+			updateTouchpad = true;
 		}
 		if ('long_click_keycode' in updatedConfig) {
 			touchpad.hold_action = {
@@ -1622,6 +1635,7 @@ export class UniversalTVCardEditor extends LitElement {
 				key: (updatedConfig.long_click_keycode ??
 					'DPAD_CENTER') as string,
 			};
+			updateTouchpad = true;
 		}
 		const centerCustomAction = customActions.filter(
 			(customAction) => customAction.name == 'center',
@@ -1639,6 +1653,7 @@ export class UniversalTVCardEditor extends LitElement {
 					}
 				}
 			}
+			updateTouchpad = true;
 		}
 		for (const direction of DirectionActions) {
 			if (!touchpad[direction]) {
@@ -1650,10 +1665,21 @@ export class UniversalTVCardEditor extends LitElement {
 				} else {
 					touchpad[direction] = defaultTouchpad[direction];
 				}
+				updateTouchpad = true;
 			}
 		}
-		if (Object.keys(touchpad).length > numKeys0) {
-			customActions.push(touchpad);
+		if (updateTouchpad) {
+			if (touchpadIndex > -1) {
+				customActions[touchpadIndex] = {
+					...structuredClone(defaultTouchpad),
+					...touchpad,
+				};
+			} else {
+				customActions.push({
+					...structuredClone(defaultTouchpad),
+					...touchpad,
+				});
+			}
 		}
 
 		for (const [i, entry] of customActions.entries()) {
