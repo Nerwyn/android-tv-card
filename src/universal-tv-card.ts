@@ -36,7 +36,7 @@ class UniversalTVCard extends LitElement {
 	@property() hass!: HomeAssistant;
 	@property() config!: IConfig;
 
-	defaultActions: Record<string, IElementConfig> = {};
+	defaultActions: IElementConfig[] = [];
 	icons: Record<string, string> = {};
 
 	nRows: number = 0;
@@ -75,10 +75,10 @@ class UniversalTVCard extends LitElement {
 		config = structuredClone(config);
 		config = this.setToggles(config);
 
-		this.defaultActions = {
+		this.defaultActions = [
 			...structuredClone(defaultSources),
 			...structuredClone(defaultKeys),
-		};
+		];
 		this.icons = {
 			...structuredClone(svg),
 			...config.custom_icons,
@@ -113,11 +113,13 @@ class UniversalTVCard extends LitElement {
 	) {
 		// Apply template if defined
 		if (actions.template) {
-			const defaultTemplateActions =
-				this.defaultActions[actions.template] || {};
+			const defaultTemplateActions = this.defaultActions.filter(
+				(defaultActions) => actions.template == defaultActions.name,
+			)[0];
 			const customTemplateActions =
-				this.config.custom_actions?.[actions.template] ||
-				defaultTemplateActions;
+				this.config.custom_actions?.filter(
+					(customActions) => actions.template == customActions.name,
+				)[0] || defaultTemplateActions;
 			actions = mergeDeep(
 				structuredClone(customTemplateActions),
 				actions,
@@ -220,9 +222,13 @@ class UniversalTVCard extends LitElement {
 	}
 
 	getElementConfig(action: string): IElementConfig {
-		const defaultActions = this.defaultActions[action] || {};
+		const defaultActions = this.defaultActions.filter(
+			(defaultActions) => defaultActions.name == action,
+		)[0];
 		let actions = structuredClone(
-			this.config.custom_actions?.[action] || defaultActions,
+			this.config.custom_actions?.filter(
+				(customActions) => customActions.name == action,
+			)[0] || defaultActions,
 		);
 
 		actions = this.updateElementConfig(actions, defaultActions);
@@ -232,7 +238,9 @@ class UniversalTVCard extends LitElement {
 			for (const direction of DirectionActions) {
 				actions[direction] = this.updateElementConfig(
 					(actions[direction] ?? {}) as IElementConfig,
-					this.defaultActions.touchpad[direction] as IElementConfig,
+					this.defaultActions.filter(
+						(defaultActions) => defaultActions.name == 'touchpad',
+					)[0][direction] as IElementConfig,
 				);
 			}
 		}

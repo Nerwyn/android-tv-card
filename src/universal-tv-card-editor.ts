@@ -27,7 +27,7 @@ export class UniversalTVCardEditor extends LitElement {
 	@property() hass!: HomeAssistant;
 	@property() config!: IConfig;
 
-	@state() activeEntryName: string = '';
+	@state() entryIndex: number = -1;
 	@state() actionsTabIndex: number = 0;
 	@state() touchpadTabIndex: number = 2; // up, down, center, left, right
 
@@ -39,6 +39,8 @@ export class UniversalTVCardEditor extends LitElement {
 	autofillCooldown = false;
 	codeEditorDelay?: ReturnType<typeof setTimeout>;
 	people: Record<string, string>[] = [];
+
+	TOUCHPAD_TABS = ['up', 'down', 'center', 'left', 'right'];
 
 	static get properties() {
 		return { hass: {}, config: {} };
@@ -60,16 +62,48 @@ export class UniversalTVCardEditor extends LitElement {
 		this.requestUpdate();
 	}
 
-	actionChanged(entry: IElementConfig) {
-		const updatedConfig = structuredClone(this.config);
-		updatedConfig.custom_actions = updatedConfig.custom_actions ?? {};
-		updatedConfig.custom_actions[this.activeEntryName] = {
-			...structuredClone(
-				this.config.custom_actions?.[this.activeEntryName],
-			),
-			...entry,
-		};
-		this.configChanged(updatedConfig);
+	entriesChanged(entries: IElementConfig[]) {
+		this.configChanged({
+			...this.config,
+			entries: entries,
+		} as IConfig);
+	}
+
+	entryChanged(entry: IElementConfig) {
+		const entries = structuredClone(this.config.custom_actions ?? []);
+		const oldEntry = entries[this.entryIndex];
+		let updatedEntry: IElementConfig;
+		switch (this.activeEntryType) {
+			case 'touchpad':
+				if (this.touchpadTabIndex == 2) {
+					updatedEntry = {
+						...oldEntry,
+						...entry,
+					};
+				} else {
+					updatedEntry = {
+						...oldEntry,
+						[this.TOUCHPAD_TABS[this.touchpadTabIndex]]: {
+							...oldEntry[
+								this.TOUCHPAD_TABS[
+									this.touchpadTabIndex
+								] as DirectionAction
+							],
+							...entry,
+						},
+					};
+				}
+				break;
+			case 'slider':
+			case 'button':
+			default:
+				updatedEntry = {
+					...oldEntry,
+					...entry,
+				};
+		}
+		entries[this.entryIndex] = updatedEntry;
+		this.entriesChanged(entries);
 	}
 
 	toggleGuiMode(_e: CustomEvent) {
@@ -79,12 +113,10 @@ export class UniversalTVCardEditor extends LitElement {
 	}
 
 	get activeEntry(): IElementConfig | undefined {
-		if (this.activeEntryName == '') {
+		if (this.entryIndex < 0) {
 			return undefined;
 		}
-		const activeEntry = (this.config.custom_actions ?? {})[
-			this.activeEntryName
-		];
+		const activeEntry = (this.config.custom_actions ?? [])[this.entryIndex];
 		switch (this.activeEntryType) {
 			case 'touchpad':
 				if (this.touchpadTabIndex == 2) {
@@ -135,10 +167,11 @@ export class UniversalTVCardEditor extends LitElement {
 	handleStyleCodeChanged(e: CustomEvent) {
 		e.stopPropagation();
 		const css = e.detail.value;
-		if (this.activeEntryName != '' && this.activeEntry) {
-			if (css != this.activeEntry.styles) {
-				this.actionChanged({
-					type: this.activeEntry.type,
+		if (this.entryIndex > -1 && this.activeEntry) {
+			if (css != this.activeEntry?.styles) {
+				this.entryChanged({
+					type: this.activeEntry?.type,
+					name: this.activeEntry?.name,
 					styles: css,
 				});
 			}
@@ -165,8 +198,9 @@ export class UniversalTVCardEditor extends LitElement {
 					if (JSON.stringify(actionObj ?? {}).includes('null')) {
 						return;
 					}
-					this.actionChanged({
+					this.entryChanged({
 						type: this.activeEntry.type,
+						name: this.activeEntry.name,
 						[actionType]: actionObj,
 					});
 					this.errors = undefined;
@@ -204,7 +238,7 @@ export class UniversalTVCardEditor extends LitElement {
 				};
 			});
 		}
-		this.actionChanged(
+		this.entryChanged(
 			deepSet(
 				structuredClone(this.activeEntry) as object,
 				key,
@@ -217,65 +251,33 @@ export class UniversalTVCardEditor extends LitElement {
 		// TODO copy default actions
 		const i = e.detail.index as number;
 		const entryType = RemoteElementTypes[i];
-		const entry: IElementConfig = {
-			type: RemoteElementTypes[i],
+		const entries = structuredClone(this.config.custom_actions ?? []);
+		entries.push({
+			type: entryType,
+			name: `custom_${entryType}_${
+				(this.config.custom_actions ?? []).length
+			}`,
 			autofill_entity_id: true,
-		};
-
-		const updatedConfig = structuredClone(this.config);
-		updatedConfig.custom_actions = updatedConfig.custom_actions ?? {};
-		updatedConfig.custom_actions[
-			`custom_${entryType}_${
-				Object.keys(updatedConfig.custom_actions).length
-			}`
-		] = entry;
+		});
 		this.autofillCooldown = false;
-		this.configChanged(updatedConfig);
+		this.entriesChanged(entries);
 	}
 
 	removeEntry(e: CustomEvent) {
 		const i = (
 			e.currentTarget as unknown as CustomEvent & Record<'index', number>
 		).index;
-		const entry = Object.keys(this.config.custom_actions ?? {})[i];
-		const updatedConfig = structuredClone(this.config);
-		delete updatedConfig.custom_actions?.[entry];
-		this.configChanged(updatedConfig);
+		const entries = structuredClone(this.config.custom_actions ?? []);
+		entries.splice(i, 1);
+		this.entriesChanged(entries);
 	}
 
 	moveEntry(e: CustomEvent) {
-		// TODO why doesn't this work?
 		e.stopPropagation();
-		console.log(e.detail);
 		const { oldIndex, newIndex } = e.detail;
-		const updatedConfig = structuredClone(this.config);
-		const customActions = updatedConfig.custom_actions ?? {};
-		const customActionKeys = Object.keys(customActions);
-		customActionKeys.splice(
-			newIndex,
-			0,
-			customActionKeys.splice(oldIndex, 1)[0],
-		);
-		const updatedCustomActions = customActionKeys.reduce(
-			(temp: Record<string, IElementConfig>, key: string) => {
-				temp[key] = customActions[key];
-				return temp;
-			},
-			{},
-		);
-
-		// Convoluted update logic to try to force object key reorder
-		const diffKey = customActionKeys[newIndex];
-		const movedEntry = structuredClone(updatedCustomActions[diffKey]);
-		delete updatedCustomActions[diffKey];
-		updatedCustomActions['Moved__' + diffKey] = movedEntry;
-		updatedConfig.custom_actions = updatedCustomActions;
-		this.configChanged(updatedConfig);
-
-		delete updatedCustomActions['Moved__' + diffKey];
-		updatedCustomActions[diffKey] = movedEntry;
-		updatedConfig.custom_actions = updatedCustomActions;
-		this.configChanged(updatedConfig);
+		const entries = structuredClone(this.config.custom_actions ?? []);
+		entries.splice(newIndex, 0, entries.splice(oldIndex, 1)[0]);
+		this.entriesChanged(entries);
 	}
 
 	editEntry(e: CustomEvent) {
@@ -283,9 +285,8 @@ export class UniversalTVCardEditor extends LitElement {
 		const i = (
 			e.currentTarget as unknown as CustomEvent & Record<'index', number>
 		).index;
-		this.activeEntryName = Object.keys(this.config.custom_actions ?? {})[i];
 		const context = this.getEntryContext(
-			this.activeEntry ?? { type: 'button' },
+			this.activeEntry ?? { type: 'button', name: '' },
 		);
 		this.actionsTabIndex =
 			i > -1 &&
@@ -314,16 +315,16 @@ export class UniversalTVCardEditor extends LitElement {
 				? 2
 				: 0;
 		this.touchpadTabIndex = 2;
+		this.entryIndex = i;
 	}
 
 	exitEditEntry(_e: CustomEvent) {
-		this.activeEntryName = '';
 		this.yamlString = undefined;
+		this.entryIndex = -1;
 	}
 
 	buildEntryList() {
-		const customActions = this.config.custom_actions ?? {};
-		const customActionNames = Object.keys(customActions);
+		const customActions = this.config.custom_actions ?? [];
 		return html`
 			<div class="content">
 				<div class="entry-list-header">Custom Actions</div>
@@ -332,9 +333,7 @@ export class UniversalTVCardEditor extends LitElement {
 					@item-moved=${this.moveEntry}
 				>
 					<div class="features">
-						${customActionNames.map((customActionName, i) => {
-							const customAction =
-								customActions[customActionName];
+						${customActions.map((customAction, i) => {
 							const context = this.getEntryContext(customAction);
 							const icon = this.renderTemplate(
 								customAction.icon as string,
@@ -346,6 +345,10 @@ export class UniversalTVCardEditor extends LitElement {
 							);
 							const entryType = this.renderTemplate(
 								customAction.type as string,
+								context,
+							);
+							const name = this.renderTemplate(
+								customAction.name as string,
 								context,
 							);
 							return html`
@@ -363,8 +366,7 @@ export class UniversalTVCardEditor extends LitElement {
 											: ''}
 										<div class="feature-list-item-label">
 											<span class="primary"
-												>${entryType} ⸱
-												${customActionName}
+												>${entryType} ⸱ ${name}
 												${label
 													? ` ⸱ ${label}`
 													: ''}</span
@@ -433,9 +435,16 @@ export class UniversalTVCardEditor extends LitElement {
 	}
 
 	buildEntryHeader() {
+		const context = this.getEntryContext(
+			this.activeEntry ?? { type: 'button', name: '' },
+		);
 		const entryType = this.renderTemplate(
 			this.activeEntry?.type as string,
-			this.getEntryContext(this.activeEntry ?? { type: 'button' }),
+			context,
+		);
+		const name = this.renderTemplate(
+			this.activeEntry?.name as string,
+			context,
 		);
 		return html`
 			<div class="header">
@@ -445,7 +454,7 @@ export class UniversalTVCardEditor extends LitElement {
 						@click=${this.exitEditEntry}
 					></ha-icon-button-prev>
 					<span class="primary" slot="title"
-						>${entryType} ⸱ ${this.activeEntryName}</span
+						>${entryType} ⸱ ${name}</span
 					>
 				</div>
 				<ha-icon-button
@@ -935,7 +944,7 @@ export class UniversalTVCardEditor extends LitElement {
 		switch (mode) {
 			case 'jinja2':
 				value =
-					(this.activeEntryName != ''
+					(this.entryIndex > -1
 						? this.activeEntry?.styles
 						: this.config.styles) ?? '';
 				handler = this.handleStyleCodeChanged;
@@ -1049,7 +1058,7 @@ export class UniversalTVCardEditor extends LitElement {
 		this.buildPeopleList();
 
 		let editor: TemplateResult<1>;
-		if (this.activeEntryName != '' && this.activeEntry) {
+		if (this.entryIndex > -1 && this.activeEntry) {
 			editor = html`${this.buildEntryEditor()}${this.buildErrorPanel()}`;
 		} else {
 			editor = html`
@@ -1254,10 +1263,9 @@ export class UniversalTVCardEditor extends LitElement {
 
 	autofillDefaultFields(config: IConfig) {
 		const updatedConfig = structuredClone(config);
-		const updatedEntries: Record<string, IElementConfig> =
-			updatedConfig.custom_actions ?? {};
-		for (const entryName in updatedEntries) {
-			let entry = updatedEntries[entryName];
+		const updatedEntries: IElementConfig[] =
+			updatedConfig.custom_actions ?? [];
+		for (let entry of updatedEntries) {
 			if (!('autofill_entity_id' in entry)) {
 				entry.autofill_entity_id =
 					updatedConfig.autofill_entity_id ?? true;
@@ -1366,7 +1374,7 @@ export class UniversalTVCardEditor extends LitElement {
 						break;
 				}
 			}
-			updatedEntries[entryName] = entry;
+			updatedEntries.push(entry);
 		}
 		updatedConfig.custom_actions = updatedEntries;
 		return updatedConfig;
@@ -1422,18 +1430,51 @@ export class UniversalTVCardEditor extends LitElement {
 			updatedConfig.rows = rows;
 		}
 
+		// Convert old custom actions object into an array
+		const customActions: IElementConfig[] = [];
+		if (!Array.isArray(updatedConfig.custom_actions)) {
+			for (const name in Object.keys(
+				updatedConfig.custom_actions as unknown as Record<
+					string,
+					IElementConfig
+				>,
+			)) {
+				customActions.push({
+					...(updatedConfig.custom_actions?.[
+						name
+					] as unknown as IElementConfig),
+					name: name,
+				});
+			}
+		}
+
 		// Combine custom actions, custom keys, and custom sources fields
-		const customActions = {
-			...updatedConfig.custom_actions,
-			...updatedConfig['custom_keys' as 'custom_actions'],
-			...updatedConfig['custom_sources' as 'custom_actions'],
-		} as Record<string, IElementConfig>;
-		delete updatedConfig['custom_keys' as 'custom_actions'];
-		delete updatedConfig['custom_sources' as 'custom_actions'];
+		for (const customKeys of ['custom_keys', 'custom_sources']) {
+			if (customKeys in updatedConfig) {
+				for (const name in Object.keys(
+					updatedConfig[
+						customKeys as keyof IConfig
+					] as unknown as Record<string, IElementConfig>,
+				)) {
+					customActions.push({
+						...((
+							updatedConfig[
+								customKeys as keyof IConfig
+							] as unknown as Record<string, IElementConfig>
+						)?.[name] as unknown as IElementConfig),
+						name: name,
+					});
+				}
+				delete updatedConfig[customKeys as keyof IConfig];
+			}
+		}
 
 		// Copy slider fields
-		const slider = customActions.slider ?? {
+		const slider = customActions.filter(
+			(customAction) => customAction.name == 'slider',
+		)[0] ?? {
 			type: 'slider',
+			name: 'slider',
 		};
 		if ('slider_style' in updatedConfig) {
 			let styles = slider.styles ?? '';
@@ -1480,7 +1521,10 @@ export class UniversalTVCardEditor extends LitElement {
 				config.media_player_id ??
 				'';
 			const tapAction =
-				slider.tap_action ?? defaultKeys.slider.tap_action;
+				slider.tap_action ??
+				defaultKeys.filter(
+					(defaultKey) => defaultKey.name == 'slider',
+				)[0].tap_action;
 			if (tapAction) {
 				const data = tapAction.data ?? {};
 				const target = tapAction.target ?? {};
@@ -1496,16 +1540,23 @@ export class UniversalTVCardEditor extends LitElement {
 			slider.tap_action = tapAction;
 			delete updatedConfig.slider_id;
 		}
-		if (Object.keys(slider).length > 1) {
-			customActions.slider = {
-				...structuredClone(defaultKeys.slider),
+		if (Object.keys(slider).length > 2) {
+			customActions.push({
+				...structuredClone(
+					defaultKeys.filter(
+						(defaultKey) => defaultKey.name == 'slider',
+					)[0],
+				),
 				...slider,
-			};
+			});
 		}
 
 		// Copy touchpad fields
-		const touchpad = customActions.touchpad ?? {
+		const touchpad = customActions.filter(
+			(customAction) => customAction.name == 'touchpad',
+		)[0] ?? {
 			type: 'touchpad',
+			name: 'touchpad',
 		};
 		if ('touchpad_style' in updatedConfig) {
 			let styles = touchpad.styles ?? '';
@@ -1557,29 +1608,38 @@ export class UniversalTVCardEditor extends LitElement {
 					'DPAD_CENTER') as string,
 			};
 		}
-		if (!touchpad.tap_action && customActions.center?.tap_action) {
-			touchpad.tap_action = customActions.center.tap_action;
-		}
-		for (const direction of DirectionActions) {
-			if (!touchpad[direction] && customActions[direction]) {
-				touchpad[direction] = customActions[direction];
+		const centerCustomAction = customActions.filter(
+			(customAction) => customAction.name == 'center',
+		)[0];
+		if (centerCustomAction) {
+			for (const actionType of ActionTypes) {
+				if (!touchpad[actionType] && centerCustomAction[actionType]) {
+					touchpad[actionType] = centerCustomAction[actionType];
+				}
 			}
 		}
-		if (Object.keys(touchpad).length > 1) {
-			customActions.touchpad = touchpad;
+		for (const direction of DirectionActions) {
+			const customAction = customActions.filter(
+				(customAction) => customAction.name == direction,
+			)[0];
+			if (!touchpad[direction] && customAction) {
+				touchpad[direction] = customAction;
+			}
+		}
+		if (Object.keys(touchpad).length > 2) {
+			customActions.push(touchpad);
 		}
 
-		for (const entryName in customActions) {
-			let entry = customActions[entryName];
-			entry = this.updateDeprecatedActionFields(entry);
+		for (const [i, entry] of customActions.entries()) {
+			let updatedEntry = this.updateDeprecatedActionFields(entry);
 			for (const direction of DirectionActions) {
-				if (entry[direction]) {
-					entry[direction] = this.updateDeprecatedActionFields(
-						entry[direction] as IElementConfig,
+				if (updatedEntry[direction]) {
+					updatedEntry[direction] = this.updateDeprecatedActionFields(
+						updatedEntry[direction] as IElementConfig,
 					);
 				}
 			}
-			customActions[entryName] = entry;
+			customActions[i] = updatedEntry;
 		}
 
 		// Convert style object to styles string

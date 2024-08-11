@@ -11,7 +11,7 @@ export interface IConfig {
 	media_player_id?: string;
 	autofill_entity_id?: boolean;
 
-	custom_actions?: Record<string, IElementConfig>;
+	custom_actions?: IElementConfig[];
 	custom_icons?: Record<string, string>;
 
 	haptics?: boolean;

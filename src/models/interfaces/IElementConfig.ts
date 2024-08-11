@@ -18,6 +18,7 @@ export interface IElementConfig
 
 interface IBaseElementConfig {
 	type: RemoteElementType;
+	name: string;
 	template?: string;
 	entity_id?: string;
 	autofill_entity_id?: boolean;
