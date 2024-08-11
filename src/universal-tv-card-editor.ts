@@ -267,7 +267,7 @@ export class UniversalTVCardEditor extends LitElement {
 		if (entriesList) {
 			setTimeout(
 				() => (entriesList.scrollTop = entriesList.scrollHeight),
-				500,
+				100,
 			);
 		}
 	}
