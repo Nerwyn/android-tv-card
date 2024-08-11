@@ -21,6 +21,7 @@ import {
 	Platform,
 	RemoteElementType,
 	RemoteElementTypes,
+	defaultIcons,
 	defaultKeys,
 	defaultSources,
 } from './models';
@@ -348,10 +349,23 @@ export class UniversalTVCardEditor extends LitElement {
 					<div class="features">
 						${customActions.map((customAction, i) => {
 							const context = this.getEntryContext(customAction);
-							const icon = this.renderTemplate(
+							let icon = this.renderTemplate(
 								customAction.icon as string,
 								context,
-							);
+							) as string;
+							if (!icon.includes(':')) {
+								const iconConfig =
+									(this.config.custom_icons ?? []).filter(
+										(customIcon: IIconConfig) =>
+											customIcon.name == icon,
+									)[0] ??
+									defaultIcons.filter(
+										(defaultIcon: IIconConfig) =>
+											defaultIcon.name == icon,
+									)[0];
+								icon = iconConfig?.path ?? icon;
+							}
+
 							const label = this.renderTemplate(
 								customAction.label as string,
 								context,
@@ -373,9 +387,13 @@ export class UniversalTVCardEditor extends LitElement {
 									</div>
 									<div class="feature-list-item-content">
 										${icon
-											? html`<ha-icon
-													.icon="${icon}"
-											  ></ha-icon>`
+											? icon.includes(':')
+												? html`<ha-icon
+														.icon="${icon}"
+												  ></ha-icon>`
+												: html`<ha-svg-icon
+														.path=${icon}
+												  ></ha-svg-icon>`
 											: ''}
 										<div class="feature-list-item-label">
 											<span class="primary"
@@ -498,6 +516,7 @@ export class UniversalTVCardEditor extends LitElement {
 		key: string,
 		selector: object,
 		backupValue: string | number | boolean | object = '',
+		internalHtml: TemplateResult<1> = html``,
 	) {
 		const hass: HomeAssistant = {
 			...this.hass,
@@ -537,7 +556,8 @@ export class UniversalTVCardEditor extends LitElement {
 			.required=${false}
 			id="${key}"
 			@value-changed=${this.handleSelectorChange}
-		></ha-selector>`;
+			>${internalHtml}</ha-selector
+		>`;
 	}
 
 	buildMainFeatureOptions(
@@ -607,13 +627,41 @@ export class UniversalTVCardEditor extends LitElement {
 	}
 
 	buildCommonAppearanceOptions() {
+		const context = this.getEntryContext(
+			this.activeEntry ?? { type: 'button', name: '' },
+		);
+		let icon = this.renderTemplate(
+			this.activeEntry?.icon ?? '',
+			context,
+		) as string;
+		let iconSlot;
+		if (!icon.includes(':')) {
+			const iconConfig =
+				(this.config.custom_icons ?? []).filter(
+					(customIcon: IIconConfig) => customIcon.name == icon,
+				)[0] ??
+				defaultIcons.filter(
+					(defaultIcon: IIconConfig) => defaultIcon.name == icon,
+				)[0];
+			icon = iconConfig?.path ?? icon;
+			iconSlot = html`<ha-svg-icon
+				.path=${icon}
+				slot="icon"
+			></ha-svg-icon>`;
+		}
 		return html`${this.buildSelector('Label', 'label', {
 				text: { multiline: true },
 			})}
 			<div class="form">
-				${this.buildSelector('Icon', 'icon', {
-					icon: {},
-				})}${this.buildSelector('Units', 'unit_of_measurement', {
+				${this.buildSelector(
+					'Icon',
+					'icon',
+					{
+						icon: {},
+					},
+					undefined,
+					iconSlot,
+				)}${this.buildSelector('Units', 'unit_of_measurement', {
 					text: {},
 				})}
 			</div>`;
