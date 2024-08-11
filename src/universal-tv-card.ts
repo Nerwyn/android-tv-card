@@ -2,7 +2,6 @@ import packageInfo from '../package.json';
 
 import { LitElement, TemplateResult, css, html } from 'lit';
 import { property } from 'lit/decorators.js';
-import { StyleInfo } from 'lit/directives/style-map.js';
 
 import { HomeAssistant } from 'custom-card-helpers';
 import { renderTemplate } from 'ha-nunjucks';
@@ -39,6 +38,7 @@ class UniversalTVCard extends LitElement {
 
 	nRows: number = 0;
 	nColumns: number = 0;
+	nPads: number = 0;
 	editMode: boolean = false;
 
 	static get properties() {
@@ -140,24 +140,12 @@ class UniversalTVCard extends LitElement {
 		return actions;
 	}
 
-	buildStyle(_style: StyleInfo = {}, context?: object) {
-		const style = structuredClone(_style);
-		for (const key in style) {
-			style[key] = renderTemplate(
-				this.hass,
-				style[key] as string,
-				context,
-			) as string;
-		}
-		return style;
-	}
-
 	buildRow(content: TemplateResult[]): TemplateResult {
 		this.nRows++;
 		const id = `row-${this.nRows}`;
 		return html`
 			<div
-				class="row"
+				class="row${this.editMode ? ' edit-mode' : ''}"
 				id="${id}"
 				title="${this.editMode ? `#${id}` : ''}"
 			>
@@ -171,11 +159,25 @@ class UniversalTVCard extends LitElement {
 		const id = `column-${this.nColumns}`;
 		return html`
 			<div
-				class="column"
+				class="column${this.editMode ? ' edit-mode' : ''}"
 				id="${id}"
 				title="${this.editMode ? `#${id}` : ''}"
 			>
 				${content}
+			</div>
+		`;
+	}
+
+	buildPad(buttons: string[]): TemplateResult {
+		this.nPads++;
+		const id = `pad-${this.nPads}`;
+		return html`
+			<div
+				class="button-pad${this.editMode ? ' edit-mode' : ''}"
+				id="${id}"
+				title="${this.editMode ? `#${id}` : ''}"
+			>
+				${buttons.map((b) => this.buildButton(b))}
 			</div>
 		`;
 	}
@@ -238,14 +240,6 @@ class UniversalTVCard extends LitElement {
 			]),
 			this.buildRow([this.buildButton('down')]),
 		]);
-	}
-
-	buildPad(buttons: string[]): TemplateResult {
-		return html`
-			<div class="button-pad">
-				${buttons.map((b) => this.buildButton(b))}
-			</div>
-		`;
 	}
 
 	buildElements(
@@ -514,6 +508,12 @@ class UniversalTVCard extends LitElement {
 				justify-content: space-evenly;
 				align-items: center;
 			}
+			@media (hover: hover) {
+				.edit-mode {
+					outline: 1px dashed var(--red-color);
+				}
+			}
+
 			.empty-button {
 				width: var(--size, 48px);
 				height: var(--size, 48px);

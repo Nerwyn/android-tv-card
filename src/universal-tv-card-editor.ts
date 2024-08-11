@@ -1780,7 +1780,7 @@ export class UniversalTVCardEditor extends LitElement {
 		}
 		if ('touchpad_height' in updatedConfig) {
 			let styles = touchpad.styles ?? '';
-			styles += `\n:host {\n  height: ${
+			styles += `\ntoucharea {\n  height: ${
 				(updatedConfig as Record<string, string>)['touchpad_height']
 			};\n}`;
 			touchpad.styles = styles += touchpad.styles ?? '';
