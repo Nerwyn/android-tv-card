@@ -39,7 +39,6 @@ export class UniversalTVCardEditor extends LitElement {
 	@state() errors?: string[];
 
 	yamlString?: string;
-	activeEntryType: RemoteElementType = 'button';
 	autofillCooldown = false;
 	codeEditorDelay?: ReturnType<typeof setTimeout>;
 	people: Record<string, string>[] = [];
@@ -77,7 +76,7 @@ export class UniversalTVCardEditor extends LitElement {
 		const entries = structuredClone(this.config.custom_actions ?? []);
 		const oldEntry = entries[this.entryIndex];
 		let updatedEntry: IElementConfig;
-		switch (this.activeEntryType) {
+		switch (this.activeEntry?.type) {
 			case 'touchpad':
 				if (this.touchpadTabIndex == 2) {
 					updatedEntry = {
@@ -121,7 +120,7 @@ export class UniversalTVCardEditor extends LitElement {
 			return undefined;
 		}
 		const activeEntry = (this.config.custom_actions ?? [])[this.entryIndex];
-		switch (this.activeEntryType) {
+		switch (this.activeEntry?.type) {
 			case 'touchpad':
 				if (this.touchpadTabIndex == 2) {
 					return activeEntry;
@@ -149,7 +148,7 @@ export class UniversalTVCardEditor extends LitElement {
 	set yaml(yaml: string | undefined) {
 		this.yamlString = yaml;
 		try {
-			this.configChanged(load(this.yaml) as IConfig);
+			this.entryChanged(load(this.yaml) as IElementConfig);
 			this.errors = undefined;
 		} catch (e) {
 			this.errors = [(e as Error).message];
