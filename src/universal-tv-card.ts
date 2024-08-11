@@ -512,7 +512,7 @@ class UniversalTVCard extends LitElement {
 				outline: none;
 			}
 			@media (hover: hover) {
-				.edit-mode {
+				.edit-mode:hover {
 					outline: 1px dashed var(--red-color);
 				}
 			}
