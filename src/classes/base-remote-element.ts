@@ -20,7 +20,7 @@ import { deepGet, deepSet, getDeepKeys } from '../utils';
 export class BaseRemoteElement extends LitElement {
 	@property() hass!: HomeAssistant;
 	@property() config!: IElementConfig;
-	@property() icons!: IIconConfig[];
+	@property() icons: IIconConfig[] = [];
 	@property() autofillEntityId: boolean = false;
 
 	@state() renderRipple = true;
