@@ -22,6 +22,7 @@ import {
 	RemoteElementType,
 	RemoteElementTypes,
 	defaultKeys,
+	defaultSources,
 } from './models';
 import { deepGet, deepSet } from './utils';
 
@@ -325,6 +326,21 @@ export class UniversalTVCardEditor extends LitElement {
 		this.entryIndex = -1;
 	}
 
+	copyEntry(e: CustomEvent) {
+		const i = (
+			e.currentTarget as unknown as CustomEvent & Record<'index', number>
+		).index;
+		const customActions = this.config.custom_actions ?? [];
+		const entry = structuredClone(customActions[i]);
+		entry.name = `${entry.name}_copy`;
+		const updatedActions = [
+			...customActions.splice(0, i),
+			entry,
+			...customActions.splice(i),
+		];
+		this.entriesChanged(updatedActions);
+	}
+
 	buildEntryList() {
 		const customActions = this.config.custom_actions ?? [];
 		return html`
@@ -385,6 +401,15 @@ export class UniversalTVCardEditor extends LitElement {
 										</div>
 									</div>
 									<ha-icon-button
+										class="copy-icon"
+										.index=${i}
+										@click=${this.copyEntry}
+									>
+										<ha-icon
+											.icon="${'mdi:content-copy'}"
+										></ha-icon>
+									</ha-icon-button>
+									<ha-icon-button
 										class="edit-icon"
 										.index=${i}
 										@click=${this.editEntry}
@@ -444,10 +469,6 @@ export class UniversalTVCardEditor extends LitElement {
 			this.activeEntry?.type as string,
 			context,
 		);
-		const name = this.renderTemplate(
-			this.activeEntry?.name as string,
-			context,
-		);
 		return html`
 			<div class="header">
 				<div class="back-title">
@@ -455,9 +476,7 @@ export class UniversalTVCardEditor extends LitElement {
 						.label=${this.hass.localize('ui.common.back')}
 						@click=${this.exitEditEntry}
 					></ha-icon-button-prev>
-					<span class="primary" slot="title"
-						>${entryType} ⸱ ${name}</span
-					>
+					<span class="primary" slot="title">${entryType}</span>
 				</div>
 				<ha-icon-button
 					class="gui-mode-button"
@@ -532,6 +551,9 @@ export class UniversalTVCardEditor extends LitElement {
 	) {
 		// TODO add / figure out template custom actions
 		return html`
+			${this.buildSelector('Name', 'name', {
+				text: {},
+			})}
 			${this.buildSelector('Entity', 'entity_id', {
 				entity: {},
 			})}
@@ -1374,6 +1396,20 @@ export class UniversalTVCardEditor extends LitElement {
 					case 'default':
 						break;
 				}
+
+				// Copy custom action onto default action
+				const defaultAction =
+					defaultKeys.filter(
+						(action) => action.name == entry.name,
+					)[0] ??
+					defaultSources.filter(
+						(action) => action.name == entry.name,
+					)[0] ??
+					{};
+				entry = {
+					...defaultAction,
+					...entry,
+				};
 			}
 			updatedEntries.push(entry);
 		}
@@ -1770,8 +1806,7 @@ export class UniversalTVCardEditor extends LitElement {
 	}
 
 	updateDeprecatedActionFields(entry: IElementConfig) {
-		// TODO copy custom action onto default action in this function
-		const customAction = structuredClone(entry);
+		let customAction = structuredClone(entry);
 
 		// Copy svg_path to icon
 		if ('svg_path' in customAction) {
