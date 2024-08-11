@@ -9,12 +9,9 @@ import { renderTemplate } from 'ha-nunjucks';
 import { load } from 'js-yaml';
 
 import {
-	ActionTypes,
 	DirectionActions,
-	IAction,
 	IConfig,
 	IElementConfig,
-	Platform,
 	defaultKeys,
 	defaultSources,
 } from './models';
@@ -84,12 +81,6 @@ class UniversalTVCard extends LitElement {
 		const toggles: Record<string, boolean> = {
 			button_haptics: true,
 			touchpad_haptics: true,
-
-			// Deprecated toggle names
-			enable_button_feedback: true,
-			enable_touchpad_feedback: true,
-			enable_double_click: false,
-			enable_slider_feedback: true,
 		};
 		for (const toggle in toggles) {
 			if (!(toggle in config)) {
@@ -99,10 +90,8 @@ class UniversalTVCard extends LitElement {
 		return config;
 	}
 
-	updateElementConfig(
-		actions: IElementConfig,
-		defaultActions: IElementConfig,
-	) {
+	updateElementConfig(actions: IElementConfig) {
+		// TODO obsolete this or move it to editor
 		// Apply template if defined
 		if (actions.template) {
 			const defaultTemplateActions = this.defaultActions.filter(
@@ -116,98 +105,6 @@ class UniversalTVCard extends LitElement {
 				structuredClone(customTemplateActions),
 				actions,
 			) as IElementConfig;
-		}
-
-		// Get default icon if not redefined
-		if (!actions.icon && defaultActions.icon) {
-			actions.icon = defaultActions.icon;
-		}
-
-		// Get original actions if not defined.
-		for (const actionType of ActionTypes) {
-			if (!actions[actionType] && defaultActions[actionType]) {
-				actions[actionType] = defaultActions[actionType];
-			}
-			if (actions[actionType]) {
-				const action = actions[actionType] ?? ({} as IAction);
-
-				action.platform = action.platform ?? this.config.platform;
-				switch (action.platform?.toUpperCase()) {
-					case 'KODI':
-					case 'ROKU':
-						break;
-					case 'FIRE' as Platform:
-					case 'FIRETV' as Platform:
-					case 'FIRE_TV' as Platform:
-					case 'FIRE TV':
-						action.platform = 'FIRE TV';
-						break;
-					case 'ANDROID' as Platform:
-					case 'ANDROIDTV' as Platform:
-					case 'ANDROID_TV' as Platform:
-					case 'ANDROID TV':
-					default:
-						action.platform = 'ANDROID TV';
-						break;
-				}
-
-				action.keyboard_id =
-					action.keyboard_id ?? this.config.keyboard_id;
-				action.media_player_id =
-					action.media_player_id ?? this.config.media_player_id;
-				action.remote_id = action.remote_id ?? this.config.remote_id;
-				actions[actionType] = action;
-			}
-		}
-
-		// Set hold time if defined globally
-		if (this.config.hold_time) {
-			if (actions.hold_action && !actions.hold_action?.hold_time) {
-				actions.hold_action.hold_time = this.config.hold_time;
-			}
-			if (
-				actions.multi_hold_action &&
-				!actions.multi_hold_action?.hold_time
-			) {
-				actions.multi_hold_action.hold_time = this.config.hold_time;
-			}
-		}
-
-		// Set repeat delay if defined globally
-		if (this.config.repeat_delay) {
-			if (
-				actions.hold_action &&
-				actions.hold_action?.action == 'repeat' &&
-				!actions.hold_action.repeat_delay
-			) {
-				actions.hold_action.repeat_delay = this.config.repeat_delay;
-			}
-			if (
-				actions.multi_hold_action &&
-				actions.multi_hold_action?.action == 'repeat' &&
-				!actions.multi_hold_action.repeat_delay
-			) {
-				actions.multi_hold_action.repeat_delay =
-					this.config.repeat_delay;
-			}
-		}
-
-		// Set double tap window if defined globally
-		if (this.config.double_tap_window) {
-			if (
-				actions.double_tap_action &&
-				!actions.double_tap_action.double_tap_window
-			) {
-				actions.double_tap_action.double_tap_window =
-					this.config.double_tap_window;
-			}
-			if (
-				actions.multi_double_tap_action &&
-				!actions.multi_double_tap_action.double_tap_window
-			) {
-				actions.multi_double_tap_action.double_tap_window =
-					this.config.double_tap_window;
-			}
 		}
 
 		return actions;
@@ -228,16 +125,13 @@ class UniversalTVCard extends LitElement {
 			)[0] ?? defaultActions,
 		);
 
-		actions = this.updateElementConfig(actions, defaultActions);
+		actions = this.updateElementConfig(actions);
 
 		// Also update touchpad directions
 		if (actions.type == 'touchpad') {
 			for (const direction of DirectionActions) {
 				actions[direction] = this.updateElementConfig(
 					(actions[direction] ?? {}) as IElementConfig,
-					this.defaultActions.filter(
-						(defaultActions) => defaultActions.name == 'touchpad',
-					)[0][direction] as IElementConfig,
 				);
 			}
 		}

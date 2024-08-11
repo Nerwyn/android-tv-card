@@ -251,7 +251,6 @@ export class UniversalTVCardEditor extends LitElement {
 	}
 
 	addEntry(e: CustomEvent) {
-		// TODO copy default actions
 		const i = e.detail.index as number;
 		const entryType = RemoteElementTypes[i];
 		const entries = structuredClone(this.config.custom_actions ?? []);
@@ -1299,6 +1298,94 @@ export class UniversalTVCardEditor extends LitElement {
 					this.getEntryContext(entry),
 				)
 			) {
+				for (const actionType of ActionTypes) {
+					if (entry[actionType]) {
+						const action = entry[actionType] ?? ({} as IAction);
+
+						action.platform =
+							action.platform ?? this.config.platform;
+						switch (action.platform?.toUpperCase()) {
+							case 'KODI':
+							case 'ROKU':
+								break;
+							case 'FIRE' as Platform:
+							case 'FIRETV' as Platform:
+							case 'FIRE_TV' as Platform:
+							case 'FIRE TV':
+								action.platform = 'FIRE TV';
+								break;
+							case 'ANDROID' as Platform:
+							case 'ANDROIDTV' as Platform:
+							case 'ANDROID_TV' as Platform:
+							case 'ANDROID TV':
+							default:
+								action.platform = 'ANDROID TV';
+								break;
+						}
+
+						action.keyboard_id =
+							action.keyboard_id ?? this.config.keyboard_id;
+						action.media_player_id =
+							action.media_player_id ??
+							this.config.media_player_id;
+						action.remote_id =
+							action.remote_id ?? this.config.remote_id;
+						entry[actionType] = action;
+					}
+				}
+
+				// Set hold time if defined globally
+				if (this.config.hold_time) {
+					if (entry.hold_action && !entry.hold_action?.hold_time) {
+						entry.hold_action.hold_time = this.config.hold_time;
+					}
+					if (
+						entry.multi_hold_action &&
+						!entry.multi_hold_action?.hold_time
+					) {
+						entry.multi_hold_action.hold_time =
+							this.config.hold_time;
+					}
+				}
+
+				// Set repeat delay if defined globally
+				if (this.config.repeat_delay) {
+					if (
+						entry.hold_action &&
+						entry.hold_action?.action == 'repeat' &&
+						!entry.hold_action.repeat_delay
+					) {
+						entry.hold_action.repeat_delay =
+							this.config.repeat_delay;
+					}
+					if (
+						entry.multi_hold_action &&
+						entry.multi_hold_action?.action == 'repeat' &&
+						!entry.multi_hold_action.repeat_delay
+					) {
+						entry.multi_hold_action.repeat_delay =
+							this.config.repeat_delay;
+					}
+				}
+
+				// Set double tap window if defined globally
+				if (this.config.double_tap_window) {
+					if (
+						entry.double_tap_action &&
+						!entry.double_tap_action.double_tap_window
+					) {
+						entry.double_tap_action.double_tap_window =
+							this.config.double_tap_window;
+					}
+					if (
+						entry.multi_double_tap_action &&
+						!entry.multi_double_tap_action.double_tap_window
+					) {
+						entry.multi_double_tap_action.double_tap_window =
+							this.config.double_tap_window;
+					}
+				}
+
 				// Feature entity ID
 				entry = this.populateMissingEntityId(
 					entry,
@@ -1433,7 +1520,7 @@ export class UniversalTVCardEditor extends LitElement {
 			delete (updatedConfig as Record<string, string>).keyboard_mode;
 		}
 
-		// Old haptic feedback toggle names
+		// Old haptic feedback toggle  names
 		if ('enable_button_feedback' in updatedConfig) {
 			updatedConfig.haptics = (
 				updatedConfig as Record<string, boolean>
@@ -1806,7 +1893,7 @@ export class UniversalTVCardEditor extends LitElement {
 	}
 
 	updateDeprecatedActionFields(entry: IElementConfig) {
-		let customAction = structuredClone(entry);
+		const customAction = structuredClone(entry);
 
 		// Copy svg_path to icon
 		if ('svg_path' in customAction) {
