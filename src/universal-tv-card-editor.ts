@@ -263,6 +263,10 @@ export class UniversalTVCardEditor extends LitElement {
 		});
 		this.autofillCooldown = false;
 		this.entriesChanged(entries);
+		const entriesList = this.shadowRoot?.querySelector('.features');
+		if (entriesList) {
+			entriesList.scrollTop = entriesList.scrollHeight;
+		}
 	}
 
 	removeEntry(e: CustomEvent) {
@@ -458,7 +462,7 @@ export class UniversalTVCardEditor extends LitElement {
 				<ha-button
 					slot="trigger"
 					outlined
-					.label="${'ADD CUSTOM ELEMENT'}"
+					.label="${'ADD REMOTE ELEMENT'}"
 				>
 					<ha-icon .icon=${'mdi:plus'} slot="icon"></ha-icon>
 				</ha-button>
