@@ -1631,7 +1631,7 @@ export class UniversalTVCardEditor extends LitElement {
 		}
 
 		for (const [i, entry] of customActions.entries()) {
-			let updatedEntry = this.updateDeprecatedActionFields(entry);
+			const updatedEntry = this.updateDeprecatedActionFields(entry);
 			for (const direction of DirectionActions) {
 				if (updatedEntry[direction]) {
 					updatedEntry[direction] = this.updateDeprecatedActionFields(
