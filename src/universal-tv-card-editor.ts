@@ -1136,8 +1136,19 @@ export class UniversalTVCardEditor extends LitElement {
 			`;
 		}
 		// TODO layout editor
-		// TODO custom icons
-		// TODO global options
+		// TODO custom icons editor
+		// TODO global options editor
+		// Tabs:
+		//   - General
+		//     - Platform, IDs, global timings, and autofill toggle
+		//     - Move overall styles here
+		//   - Remote Elements
+		//     - Maybe add a link to the default lists?
+		//   - Custom Icons
+		//     - Reuse entries list
+		//     - Should preview icon
+		//     - Warning message about icon size, dimensions, and tools to use
+		//   - Layout
 
 		return editor;
 	}
@@ -1763,6 +1774,7 @@ export class UniversalTVCardEditor extends LitElement {
 		}
 
 		// Copy touchpad fields
+		// TODO fix this it broke my actual remote :(
 		const touchpadIndex = customActions.findIndex(
 			(customAction) => customAction.name == 'touchpad',
 		);

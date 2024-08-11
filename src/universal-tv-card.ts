@@ -71,24 +71,7 @@ class UniversalTVCard extends LitElement {
 		if (!config) {
 			throw new Error('Invalid configuration');
 		}
-		config = structuredClone(config);
-		config = this.setToggles(config);
-
 		this.config = config;
-	}
-
-	setToggles(config: IConfig): IConfig {
-		// Set toggles to default values if not provided
-		const toggles: Record<string, boolean> = {
-			button_haptics: true,
-			touchpad_haptics: true,
-		};
-		for (const toggle in toggles) {
-			if (!(toggle in config)) {
-				(config as Record<string, boolean>)[toggle] = toggles[toggle];
-			}
-		}
-		return config;
 	}
 
 	updateElementConfig(actions: IElementConfig) {
@@ -135,6 +118,7 @@ class UniversalTVCard extends LitElement {
 					(actions[direction] ?? {}) as IElementConfig,
 				);
 			}
+			console.log(actions);
 		}
 
 		return actions;

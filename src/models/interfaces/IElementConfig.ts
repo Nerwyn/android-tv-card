@@ -23,6 +23,7 @@ interface IBaseElementConfig {
 	entity_id?: string;
 	autofill_entity_id?: boolean;
 	value_attribute?: string;
+	// TODO make platform and IDs also available at base element config level
 
 	icon?: string;
 	label?: string;
