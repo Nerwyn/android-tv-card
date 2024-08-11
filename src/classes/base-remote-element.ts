@@ -473,7 +473,7 @@ export class BaseRemoteElement extends LitElement {
 						'',
 					);
 					value =
-						this.hass.states[this.entityId].attributes[
+						this.hass.states[this.entityId]?.attributes?.[
 							this.valueAttribute
 						];
 					if (value && Array.isArray(value) && value.length) {
@@ -483,7 +483,7 @@ export class BaseRemoteElement extends LitElement {
 					}
 				} else {
 					value =
-						this.hass.states[this.entityId].attributes[
+						this.hass.states[this.entityId]?.attributes?.[
 							this.valueAttribute
 						];
 				}
@@ -512,14 +512,14 @@ export class BaseRemoteElement extends LitElement {
 																this
 																	.entityId as string
 															].attributes
-																.media_position_updated_at,
+																?.media_position_updated_at,
 														)) /
 														1000,
 											),
 											Math.floor(
 												this.hass.states[
 													this.entityId as string
-												].attributes.media_duration,
+												].attributes?.media_duration,
 											),
 										);
 									} else {
@@ -548,7 +548,7 @@ export class BaseRemoteElement extends LitElement {
 									const durationHMS =
 										this.hass.states[
 											this.entityId as string
-										].attributes.duration.split(':');
+										].attributes?.duration.split(':');
 									const durationSeconds =
 										parseInt(durationHMS[0]) * 3600 +
 										parseInt(durationHMS[1]) * 60 +
@@ -556,7 +556,7 @@ export class BaseRemoteElement extends LitElement {
 									const endSeconds = Date.parse(
 										this.hass.states[
 											this.entityId as string
-										].attributes.finishes_at,
+										].attributes?.finishes_at,
 									);
 									try {
 										const setIntervalValue = () => {
@@ -580,7 +580,7 @@ export class BaseRemoteElement extends LitElement {
 												const remainingHMS =
 													this.hass.states[
 														this.entityId as string
-													].attributes.remaining.split(
+													].attributes?.remaining.split(
 														':',
 													);
 												const remainingSeconds =

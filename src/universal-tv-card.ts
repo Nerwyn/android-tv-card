@@ -232,7 +232,9 @@ class UniversalTVCard extends LitElement {
 		let actions = structuredClone(
 			customActions.filter(
 				(customActions) => customActions.name == action,
-			)[0] || defaultActions,
+			)[0] ||
+				defaultActions ||
+				{},
 		);
 
 		actions = this.updateElementConfig(actions, defaultActions);

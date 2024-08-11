@@ -216,9 +216,9 @@ export class RemoteSlider extends BaseRemoteElement {
 		this.sliderOn =
 			!(
 				value == undefined ||
-				this.hass.states[this.entityId as string].state == 'off' ||
+				this.hass.states[this.entityId as string]?.state == 'off' ||
 				(this.entityId?.startsWith('timer.') &&
-					this.hass.states[this.entityId as string].state == 'idle')
+					this.hass.states[this.entityId as string]?.state == 'idle')
 			) || (Number(value) as number) > this.range[0];
 	}
 
