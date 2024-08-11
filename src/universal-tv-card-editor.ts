@@ -1049,8 +1049,8 @@ export class UniversalTVCardEditor extends LitElement {
 
 		if (!this.autofillCooldown) {
 			this.autofillCooldown = true;
-			const config = this.updateDeprecatedFields(this.config);
-			// config = this.autofillDefaultFields(config);
+			let config = this.updateDeprecatedFields(this.config);
+			config = this.autofillDefaultFields(config);
 			this.configChanged(config);
 			setTimeout(() => (this.autofillCooldown = false), 1000);
 		}
@@ -1263,9 +1263,8 @@ export class UniversalTVCardEditor extends LitElement {
 
 	autofillDefaultFields(config: IConfig) {
 		const updatedConfig = structuredClone(config);
-		const updatedEntries: IElementConfig[] =
-			updatedConfig.custom_actions ?? [];
-		for (let entry of updatedEntries) {
+		const updatedEntries: IElementConfig[] = [];
+		for (let entry of updatedConfig.custom_actions ?? []) {
 			if (!('autofill_entity_id' in entry)) {
 				entry.autofill_entity_id =
 					updatedConfig.autofill_entity_id ?? true;
