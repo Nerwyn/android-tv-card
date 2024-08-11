@@ -1052,7 +1052,7 @@ export class UniversalTVCardEditor extends LitElement {
 			let config = this.updateDeprecatedFields(this.config);
 			config = this.autofillDefaultFields(config);
 			this.configChanged(config);
-			setTimeout(() => (this.autofillCooldown = false), 5000);
+			setTimeout(() => (this.autofillCooldown = false), 1000);
 		}
 
 		this.buildPeopleList();
@@ -1431,13 +1431,13 @@ export class UniversalTVCardEditor extends LitElement {
 		}
 
 		// Convert old custom actions object into an array
-		const customActions: IElementConfig[] = [];
+		let customActions: IElementConfig[] = [];
 		if (
 			!Array.isArray(updatedConfig.custom_actions) &&
 			typeof updatedConfig.custom_actions == 'object' &&
 			updatedConfig.custom_actions != null
 		) {
-			for (const name in Object.keys(
+			for (const name of Object.keys(
 				updatedConfig.custom_actions as unknown as Record<
 					string,
 					IElementConfig
@@ -1450,12 +1450,14 @@ export class UniversalTVCardEditor extends LitElement {
 					name: name,
 				});
 			}
+		} else {
+			customActions = updatedConfig.custom_actions ?? [];
 		}
 
 		// Combine custom actions, custom keys, and custom sources fields
 		for (const customKeys of ['custom_keys', 'custom_sources']) {
 			if (customKeys in updatedConfig) {
-				for (const name in Object.keys(
+				for (const name of Object.keys(
 					updatedConfig[
 						customKeys as keyof IConfig
 					] as unknown as Record<string, IElementConfig>,
