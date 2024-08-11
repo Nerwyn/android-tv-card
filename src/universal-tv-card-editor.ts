@@ -1936,7 +1936,11 @@ export class UniversalTVCardEditor extends LitElement {
 				if (action) {
 					// Populate action field
 					if (!action.action) {
-						if (action.perform_action) {
+						if (action.key) {
+							action.action = 'key';
+						} else if (action.source) {
+							action.action = 'source';
+						} else if (action.perform_action) {
 							action.action = 'perform-action';
 						} else if (action['service' as 'perform_action']) {
 							// Deprecated in 2024.8
