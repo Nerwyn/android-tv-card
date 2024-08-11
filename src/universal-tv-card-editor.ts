@@ -686,7 +686,7 @@ export class UniversalTVCardEditor extends LitElement {
 		selector: object,
 		buildCodeEditor: boolean = false,
 	) {
-		// TODO add IDs and keyboard fields
+		// TODO add key, source, IDs and keyboard fields
 		// ${this.buildSelector('Remote ID', 'remote_id', {
 		// 	entity: {
 		// 		filter: {
@@ -1129,8 +1129,9 @@ export class UniversalTVCardEditor extends LitElement {
 				${this.buildCodeEditor('jinja2')}${this.buildErrorPanel()}
 			`;
 		}
-		// TODO Layout editor
+		// TODO layout editor
 		// TODO custom icons
+		// TODO global options
 
 		return editor;
 	}

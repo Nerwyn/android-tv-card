@@ -39,6 +39,7 @@ class UniversalTVCard extends LitElement {
 
 	nRows: number = 0;
 	nColumns: number = 0;
+	editMode: boolean = false;
 
 	static get properties() {
 		return {
@@ -152,17 +153,31 @@ class UniversalTVCard extends LitElement {
 	}
 
 	buildRow(content: TemplateResult[]): TemplateResult {
-		// TODO add id as title if editor detected
 		this.nRows++;
 		const id = `row-${this.nRows}`;
-		return html` <div class="row" id="${id}">${content}</div> `;
+		return html`
+			<div
+				class="row"
+				id="${id}"
+				title="${this.editMode ? `#${id}` : ''}"
+			>
+				${content}
+			</div>
+		`;
 	}
 
 	buildColumn(content: TemplateResult[]): TemplateResult {
-		// TODO add id as title if editor detected
 		this.nColumns++;
 		const id = `column-${this.nColumns}`;
-		return html` <div class="column" id="${id}">${content}</div> `;
+		return html`
+			<div
+				class="column"
+				id="${id}"
+				title="${this.editMode ? `#${id}` : ''}"
+			>
+				${content}
+			</div>
+		`;
 	}
 
 	buildButton(elementName: string, actions?: IElementConfig): TemplateResult {
@@ -391,6 +406,13 @@ class UniversalTVCard extends LitElement {
 		if (!this.config || !this.hass) {
 			return html``;
 		}
+
+		this.editMode = Boolean(
+			document
+				.querySelector('home-assistant')
+				?.shadowRoot?.querySelector('hui-dialog-edit-card')
+				?.shadowRoot?.querySelector('ha-dialog'),
+		);
 
 		const context = {
 			config: {
