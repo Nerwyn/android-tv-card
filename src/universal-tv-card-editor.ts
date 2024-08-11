@@ -1475,12 +1475,14 @@ export class UniversalTVCardEditor extends LitElement {
 		}
 
 		// Copy slider fields
-		const slider = customActions.filter(
+		const sliderIndex = customActions.findIndex(
 			(customAction) => customAction.name == 'slider',
-		)[0] ?? {
+		);
+		const slider = customActions[sliderIndex] ?? {
 			type: 'slider',
 			name: 'slider',
 		};
+		let numKeys0 = Object.keys(slider).length;
 		if ('slider_style' in updatedConfig) {
 			let styles = slider.styles ?? '';
 			styles += '\n:host {';
@@ -1545,24 +1547,32 @@ export class UniversalTVCardEditor extends LitElement {
 			slider.tap_action = tapAction;
 			delete updatedConfig.slider_id;
 		}
-		if (Object.keys(slider).length > 2) {
-			customActions.push({
-				...structuredClone(
-					defaultKeys.filter(
-						(defaultKey) => defaultKey.name == 'slider',
-					)[0],
-				),
-				...slider,
-			});
+		if (Object.keys(slider).length > numKeys0) {
+			const defaultSlider = defaultKeys.filter(
+				(defaultKey) => defaultKey.name == 'slider',
+			)[0];
+			if (sliderIndex > -1) {
+				customActions[sliderIndex] = {
+					...structuredClone(defaultSlider),
+					...slider,
+				};
+			} else {
+				customActions.push({
+					...structuredClone(defaultSlider),
+					...slider,
+				});
+			}
 		}
 
 		// Copy touchpad fields
-		const touchpad = customActions.filter(
+		const touchpadIndex = customActions.findIndex(
 			(customAction) => customAction.name == 'touchpad',
-		)[0] ?? {
+		);
+		const touchpad = customActions[touchpadIndex] ?? {
 			type: 'touchpad',
 			name: 'touchpad',
 		};
+		numKeys0 = Object.keys(touchpad).length;
 		if ('touchpad_style' in updatedConfig) {
 			let styles = touchpad.styles ?? '';
 			styles += '\ntoucharea {';
@@ -1616,22 +1626,33 @@ export class UniversalTVCardEditor extends LitElement {
 		const centerCustomAction = customActions.filter(
 			(customAction) => customAction.name == 'center',
 		)[0];
+		const defaultTouchpad = defaultKeys.filter(
+			(defaultKey) => defaultKey.name == 'touchpad',
+		)[0];
 		if (centerCustomAction) {
 			for (const actionType of ActionTypes) {
-				if (!touchpad[actionType] && centerCustomAction[actionType]) {
-					touchpad[actionType] = centerCustomAction[actionType];
+				if (!touchpad[actionType]) {
+					if (centerCustomAction[actionType]) {
+						touchpad[actionType] = centerCustomAction[actionType];
+					} else if (defaultTouchpad[actionType]) {
+						touchpad[actionType] = defaultTouchpad[actionType];
+					}
 				}
 			}
 		}
 		for (const direction of DirectionActions) {
-			const customAction = customActions.filter(
-				(customAction) => customAction.name == direction,
-			)[0];
-			if (!touchpad[direction] && customAction) {
-				touchpad[direction] = customAction;
+			if (!touchpad[direction]) {
+				const customAction = customActions.filter(
+					(customAction) => customAction.name == direction,
+				)[0];
+				if (customAction) {
+					touchpad[direction] = customAction;
+				} else {
+					touchpad[direction] = defaultTouchpad[direction];
+				}
 			}
 		}
-		if (Object.keys(touchpad).length > 2) {
+		if (Object.keys(touchpad).length > numKeys0) {
 			customActions.push(touchpad);
 		}
 
