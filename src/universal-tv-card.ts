@@ -75,7 +75,6 @@ class UniversalTVCard extends LitElement {
 	}
 
 	updateElementConfig(actions: IElementConfig) {
-		// TODO obsolete this or move it to editor
 		// Apply template if defined
 		if (actions.template) {
 			const defaultTemplateActions = this.defaultActions.filter(
@@ -90,6 +89,8 @@ class UniversalTVCard extends LitElement {
 				actions,
 			) as IElementConfig;
 		}
+
+		// TODO apply IDs if it is a default action
 
 		return actions;
 	}
