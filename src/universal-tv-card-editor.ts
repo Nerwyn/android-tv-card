@@ -353,7 +353,7 @@ export class UniversalTVCardEditor extends LitElement {
 								customAction.icon as string,
 								context,
 							) as string;
-							if (!icon.includes(':')) {
+							if (icon && !icon.includes(':')) {
 								const iconConfig =
 									(this.config.custom_icons ?? []).filter(
 										(customIcon: IIconConfig) =>
@@ -635,7 +635,7 @@ export class UniversalTVCardEditor extends LitElement {
 			context,
 		) as string;
 		let iconSlot;
-		if (!icon.includes(':')) {
+		if (icon && !icon.includes(':')) {
 			const iconConfig =
 				(this.config.custom_icons ?? []).filter(
 					(customIcon: IIconConfig) => customIcon.name == icon,
