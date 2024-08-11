@@ -1432,7 +1432,11 @@ export class UniversalTVCardEditor extends LitElement {
 
 		// Convert old custom actions object into an array
 		const customActions: IElementConfig[] = [];
-		if (!Array.isArray(updatedConfig.custom_actions)) {
+		if (
+			!Array.isArray(updatedConfig.custom_actions) &&
+			typeof updatedConfig.custom_actions == 'object' &&
+			updatedConfig.custom_actions != null
+		) {
 			for (const name in Object.keys(
 				updatedConfig.custom_actions as unknown as Record<
 					string,
