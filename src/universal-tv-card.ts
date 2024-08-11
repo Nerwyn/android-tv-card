@@ -128,7 +128,7 @@ class UniversalTVCard extends LitElement {
 
 		// Get default icon if not redefined
 		if (!actions.icon && defaultActions.icon) {
-			actions.icon = defaultActions?.icon;
+			actions.icon = defaultActions.icon;
 		}
 
 		// Get original actions if not defined.
@@ -222,9 +222,10 @@ class UniversalTVCard extends LitElement {
 	}
 
 	getElementConfig(action: string): IElementConfig {
-		const defaultActions = this.defaultActions.filter(
-			(defaultActions) => defaultActions.name == action,
-		)[0];
+		const defaultActions =
+			this.defaultActions.filter(
+				(defaultActions) => defaultActions.name == action,
+			)[0] ?? {};
 		let customActions = this.config.custom_actions;
 		if (!Array.isArray(customActions)) {
 			customActions = [];
@@ -232,9 +233,7 @@ class UniversalTVCard extends LitElement {
 		let actions = structuredClone(
 			customActions.filter(
 				(customActions) => customActions.name == action,
-			)[0] ||
-				defaultActions ||
-				{},
+			)[0] ?? defaultActions,
 		);
 
 		actions = this.updateElementConfig(actions, defaultActions);
