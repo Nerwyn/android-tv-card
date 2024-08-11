@@ -65,7 +65,7 @@ export class UniversalTVCardEditor extends LitElement {
 	entriesChanged(entries: IElementConfig[]) {
 		this.configChanged({
 			...this.config,
-			entries: entries,
+			custom_actions: entries,
 		} as IConfig);
 	}
 
@@ -419,7 +419,7 @@ export class UniversalTVCardEditor extends LitElement {
 				<ha-button
 					slot="trigger"
 					outlined
-					.label="${'ADD CUSTOM FEATURE'}"
+					.label="${'ADD CUSTOM ELEMENT'}"
 				>
 					<ha-icon .icon=${'mdi:plus'} slot="icon"></ha-icon>
 				</ha-button>
@@ -1052,7 +1052,7 @@ export class UniversalTVCardEditor extends LitElement {
 			let config = this.updateDeprecatedFields(this.config);
 			config = this.autofillDefaultFields(config);
 			this.configChanged(config);
-			setTimeout(() => (this.autofillCooldown = false), 1000);
+			setTimeout(() => (this.autofillCooldown = false), 5000);
 		}
 
 		this.buildPeopleList();
