@@ -282,6 +282,17 @@ export class UniversalTVCardEditor extends LitElement {
 		this.entriesChanged(entries);
 	}
 
+	copyEntry(e: CustomEvent) {
+		const i = (
+			e.currentTarget as unknown as CustomEvent & Record<'index', number>
+		).index;
+		const entries = structuredClone(this.config.custom_actions ?? []);
+		const entry = structuredClone(entries[i]);
+		entry.name = `${entry.name}_copy`;
+		entries.splice(i, 1, entries[i], entry);
+		this.entriesChanged(entries);
+	}
+
 	editEntry(e: CustomEvent) {
 		this.yamlString = undefined;
 		const i = (
@@ -323,21 +334,6 @@ export class UniversalTVCardEditor extends LitElement {
 	exitEditEntry(_e: CustomEvent) {
 		this.yamlString = undefined;
 		this.entryIndex = -1;
-	}
-
-	copyEntry(e: CustomEvent) {
-		const i = (
-			e.currentTarget as unknown as CustomEvent & Record<'index', number>
-		).index;
-		const customActions = this.config.custom_actions ?? [];
-		const entry = structuredClone(customActions[i]);
-		entry.name = `${entry.name}_copy`;
-		const updatedActions = [
-			...customActions.splice(0, i),
-			entry,
-			...customActions.splice(i),
-		];
-		this.entriesChanged(updatedActions);
 	}
 
 	buildEntryList() {
