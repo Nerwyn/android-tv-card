@@ -12,6 +12,7 @@ import {
 	DirectionAction,
 	DirectionActions,
 	IAction,
+	IBasicActions,
 	IConfig,
 	IData,
 	IElementConfig,
@@ -1656,19 +1657,23 @@ export class UniversalTVCardEditor extends LitElement {
 			updateTouchpad = true;
 		}
 		for (const direction of DirectionActions) {
-			if (!touchpad[direction]) {
-				const customAction = customActions.filter(
-					(customAction) => customAction.name == direction,
-				)[0];
-				if (customAction) {
-					touchpad[direction] = customAction;
-				} else {
-					touchpad[direction] = defaultTouchpad[direction];
-				}
+			const customAction = customActions.filter(
+				(customAction) => customAction.name == direction,
+			)[0];
+			if (!touchpad[direction] && customAction) {
+				touchpad[direction] = customAction;
 				updateTouchpad = true;
 			}
 		}
 		if (updateTouchpad) {
+			for (const direction of DirectionActions) {
+				if (!touchpad[direction]) {
+					touchpad[direction] = structuredClone(
+						defaultTouchpad[direction] ?? {},
+					);
+					delete touchpad[direction]?.['type' as keyof IBasicActions];
+				}
+			}
 			if (touchpadIndex > -1) {
 				customActions[touchpadIndex] = {
 					...structuredClone(defaultTouchpad),
