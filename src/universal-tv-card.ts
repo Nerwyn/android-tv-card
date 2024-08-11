@@ -105,7 +105,7 @@ class UniversalTVCard extends LitElement {
 		}
 		let actions = structuredClone(
 			customActions.filter(
-				(customActions) => customActions.name == action,
+				(customAction) => customAction.name == action,
 			)[0] ?? defaultActions,
 		);
 
