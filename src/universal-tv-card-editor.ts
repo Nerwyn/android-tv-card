@@ -2092,6 +2092,7 @@ export class UniversalTVCardEditor extends LitElement {
 				color: var(--secondary-text-color);
 			}
 
+			.copy-icon,
 			.edit-icon,
 			.remove-icon {
 				color: var(--secondary-text-color);
