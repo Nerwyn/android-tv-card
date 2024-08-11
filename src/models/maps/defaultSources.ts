@@ -1,4 +1,4 @@
-import { IElementConfig, svg } from '..';
+import { IElementConfig } from '..';
 
 /**
  * This is a list of common streaming apps, their icons, and the deep links to open them in Android TV, mostly collected from the following Home Assistant Community Forum guide.
@@ -10,31 +10,31 @@ export const defaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'appletv',
 		tap_action: { action: 'source', source: 'https://tv.apple.com' }, // UNTESTED
-		icon: svg.appletv,
+		icon: 'appletv',
 	},
 	{
 		type: 'button',
 		name: 'crunchyroll',
 		tap_action: { action: 'source', source: 'crunchyroll://' }, // UNTESTED
-		icon: svg.crunchyroll,
+		icon: 'crunchyroll',
 	},
 	{
 		type: 'button',
 		name: 'dazn',
 		tap_action: { action: 'source', source: 'https://open.dazn.com/' }, // UNTESTED
-		icon: svg.dazn,
+		icon: 'dazn',
 	},
 	{
 		type: 'button',
 		name: 'discoveryplus',
 		tap_action: { action: 'source', source: 'discoveryplus://' }, // UNTESTED
-		icon: svg.discovery,
+		icon: 'discovery',
 	},
 	{
 		type: 'button',
 		name: 'disney',
 		tap_action: { action: 'source', source: 'https://www.disneyplus.com' },
-		icon: svg.disney,
+		icon: 'disney',
 	},
 	{
 		type: 'button',
@@ -52,13 +52,13 @@ export const defaultSources: IElementConfig[] = [
 			action: 'source',
 			source: 'com.guideplus.co',
 		},
-		icon: svg.filmplus,
+		icon: 'filmplus',
 	},
 	{
 		type: 'button',
 		name: 'foxsports',
 		tap_action: { action: 'source', source: 'foxsports://live' }, // UNTESTED
-		icon: svg.foxsports,
+		icon: 'foxsports',
 	},
 	{
 		type: 'button',
@@ -70,7 +70,7 @@ export const defaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'jellyfin',
 		tap_action: { action: 'source', source: 'org.jellyfin.androidtv' },
-		icon: svg.jellyfin,
+		icon: 'jellyfin',
 	},
 	{
 		type: 'button',
@@ -79,7 +79,7 @@ export const defaultSources: IElementConfig[] = [
 			action: 'source',
 			source: 'com.talpa.kijk',
 		},
-		icon: svg.kijk,
+		icon: 'kijk',
 	},
 	{
 		type: 'button',
@@ -88,19 +88,19 @@ export const defaultSources: IElementConfig[] = [
 			action: 'source',
 			source: 'market://launch?id=com.wbd.stream',
 		}, // BROKEN
-		icon: svg.max,
+		icon: 'max',
 	},
 	{
 		type: 'button',
 		name: 'mlbtv',
 		tap_action: { action: 'source', source: 'mlbatbat://' }, // UNTESTED
-		icon: svg.mlbtv,
+		icon: 'mlbtv',
 	},
 	{
 		type: 'button',
 		name: 'nba',
 		tap_action: { action: 'source', source: 'gametime://' }, // UNTESTED
-		icon: svg.nba,
+		icon: 'nba',
 	},
 	{
 		type: 'button',
@@ -115,7 +115,7 @@ export const defaultSources: IElementConfig[] = [
 			action: 'source',
 			source: 'nl.uitzendinggemist',
 		},
-		icon: svg.npo,
+		icon: 'npo',
 	},
 	{
 		type: 'button',
@@ -125,13 +125,13 @@ export const defaultSources: IElementConfig[] = [
 			action: 'source',
 			source: 'nrktv://',
 		},
-		icon: svg.nrktv,
+		icon: 'nrktv',
 	},
 	{
 		type: 'button',
 		name: 'paramount',
 		tap_action: { action: 'source', source: 'com.cbs.ott' },
-		icon: svg.paramount,
+		icon: 'paramount',
 	},
 	{
 		type: 'button',
@@ -143,25 +143,25 @@ export const defaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'primevideo',
 		tap_action: { action: 'source', source: 'https://app.primevideo.com' },
-		icon: svg.primevideo,
+		icon: 'primevideo',
 	},
 	{
 		type: 'button',
 		name: 'pia',
 		tap_action: { action: 'source', source: 'piavpn://' }, // UNTESTED
-		icon: svg.pia,
+		icon: 'pia',
 	},
 	{
 		type: 'button',
 		name: 'rakutentv',
 		tap_action: { action: 'source', source: 'https://rakutentv.page.link' },
-		icon: svg.rakutentv,
+		icon: 'rakutentv',
 	},
 	{
 		type: 'button',
 		name: 'rakutenviki',
 		tap_action: { action: 'source', source: 'viki://home' }, // UNTESTED
-		icon: svg.rakutenviki,
+		icon: 'rakutenviki',
 	},
 	{
 		type: 'button',
@@ -170,7 +170,7 @@ export const defaultSources: IElementConfig[] = [
 			action: 'source',
 			source: 'https://www.skyshowtime.com/deeplink',
 		},
-		icon: svg.showtime,
+		icon: 'showtime',
 	},
 	{
 		type: 'button',
@@ -182,13 +182,13 @@ export const defaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'starplus',
 		tap_action: { action: 'source', source: 'https://www.starplus.com' },
-		icon: svg.starplus,
+		icon: 'starplus',
 	},
 	{
 		type: 'button',
 		name: 'stremio',
 		tap_action: { action: 'source', source: 'stremio://' },
-		icon: svg.stremio,
+		icon: 'stremio',
 	},
 	{
 		type: 'button',
@@ -197,7 +197,7 @@ export const defaultSources: IElementConfig[] = [
 			action: 'source',
 			source: 'https://surfshark.com/locations-ul',
 		}, // UNTESTED
-		icon: svg.surfshark,
+		icon: 'surfshark',
 	},
 	{
 		type: 'button',
@@ -206,25 +206,25 @@ export const defaultSources: IElementConfig[] = [
 			action: 'source',
 			source: 'dk.tv2.tv2playtv://*.tv2.dk/android/dk.tv2.tv2playtv/callback',
 		}, // UNTESTED
-		icon: svg.tv2play,
+		icon: 'tv2play',
 	},
 	{
 		type: 'button',
 		name: 'viaplay',
 		tap_action: { action: 'source', source: 'viaplay://deeplink/film' }, // UNTESTED
-		icon: svg.viaplay,
+		icon: 'viaplay',
 	},
 	{
 		type: 'button',
 		name: 'videoland',
 		tap_action: { action: 'source', source: 'videoland-v2://' },
-		icon: svg.videoland,
+		icon: 'videoland',
 	},
 	{
 		type: 'button',
 		name: 'vudu',
 		tap_action: { action: 'source', source: 'vuduapp://' },
-		icon: svg.vudu,
+		icon: 'vudu',
 	},
 	{
 		type: 'button',

@@ -17,7 +17,6 @@ import {
 	Platform,
 	defaultKeys,
 	defaultSources,
-	svg,
 } from './models';
 import { mergeDeep } from './utils';
 
@@ -36,8 +35,10 @@ class UniversalTVCard extends LitElement {
 	@property() hass!: HomeAssistant;
 	@property() config!: IConfig;
 
-	defaultActions: IElementConfig[] = [];
-	icons: Record<string, string> = {};
+	defaultActions = [
+		...structuredClone(defaultSources),
+		...structuredClone(defaultKeys),
+	];
 
 	nRows: number = 0;
 	nColumns: number = 0;
@@ -74,15 +75,6 @@ class UniversalTVCard extends LitElement {
 		}
 		config = structuredClone(config);
 		config = this.setToggles(config);
-
-		this.defaultActions = [
-			...structuredClone(defaultSources),
-			...structuredClone(defaultKeys),
-		];
-		this.icons = {
-			...structuredClone(svg),
-			...config.custom_icons,
-		};
 
 		this.config = config;
 	}
@@ -294,7 +286,7 @@ class UniversalTVCard extends LitElement {
 			title="${elementName}"
 			.hass=${this.hass}
 			.config=${actions}
-			.icons=${this.icons}
+			.icons=${this.config.custom_icons}
 		/>`;
 	}
 
@@ -303,7 +295,7 @@ class UniversalTVCard extends LitElement {
 			title="${elementName}"
 			.hass=${this.hass}
 			.config=${actions}
-			.icons=${this.icons}
+			.icons=${this.config.custom_icons}
 		/>`;
 	}
 
@@ -315,7 +307,7 @@ class UniversalTVCard extends LitElement {
 			title="${elementName}"
 			.hass=${this.hass}
 			.config=${actions}
-			.icons=${this.icons}
+			.icons=${this.config.custom_icons}
 		/>`;
 	}
 

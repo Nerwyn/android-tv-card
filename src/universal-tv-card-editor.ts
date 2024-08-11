@@ -16,6 +16,7 @@ import {
 	IConfig,
 	IData,
 	IElementConfig,
+	IIconConfig,
 	ITarget,
 	Platform,
 	RemoteElementType,
@@ -1428,6 +1429,24 @@ export class UniversalTVCardEditor extends LitElement {
 				delete (config as Record<string, string[]>)[name];
 			}
 			updatedConfig.rows = rows;
+		}
+
+		// Convert old custom icons object into an array
+		if (
+			!Array.isArray(updatedConfig.custom_icons) &&
+			typeof updatedConfig.custom_icons == 'object' &&
+			updatedConfig.custom_icons != null
+		) {
+			const customIcons: IIconConfig[] = [];
+			for (const name of Object.keys(
+				updatedConfig.custom_icons as unknown as Record<string, string>,
+			)) {
+				customIcons.push({
+					name: name,
+					path: updatedConfig?.custom_icons?.[name],
+				});
+			}
+			updatedConfig.custom_icons = customIcons;
 		}
 
 		// Convert old custom actions object into an array

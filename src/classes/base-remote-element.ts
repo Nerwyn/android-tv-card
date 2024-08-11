@@ -11,14 +11,16 @@ import {
 	IConfirmation,
 	IData,
 	IElementConfig,
+	IIconConfig,
 	ITarget,
+	defaultIcons,
 } from '../models';
 import { deepGet, deepSet, getDeepKeys } from '../utils';
 
 export class BaseRemoteElement extends LitElement {
 	@property() hass!: HomeAssistant;
 	@property() config!: IElementConfig;
-	@property() icons!: Record<string, string>;
+	@property() icons!: IIconConfig[];
 	@property() autofillEntityId: boolean = false;
 
 	@state() renderRipple = true;
@@ -703,10 +705,15 @@ export class BaseRemoteElement extends LitElement {
 			if (icon.includes(':')) {
 				iconElement = html` <ha-icon .icon="${icon}"></ha-icon> `;
 			} else {
+				const path =
+					this.icons.filter(
+						(customIcon: IIconConfig) => customIcon.name == icon,
+					)[0] ??
+					defaultIcons.filter(
+						(defaultIcon: IIconConfig) => defaultIcon.name == icon,
+					)[0];
 				iconElement = html`
-					<ha-svg-icon
-						.path=${this.icons[icon] ?? icon}
-					></ha-svg-icon>
+					<ha-svg-icon .path=${path ?? icon}></ha-svg-icon>
 				`;
 			}
 			return html`<div class="icon">${iconElement}</div>`;

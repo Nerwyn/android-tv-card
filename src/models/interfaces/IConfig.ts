@@ -2,6 +2,11 @@ import { IElementConfig, Platform } from '.';
 
 export type Row = (string | Row[])[];
 
+export interface IIconConfig {
+	name: string;
+	path: string;
+}
+
 export interface IConfig {
 	title?: string;
 
@@ -12,7 +17,7 @@ export interface IConfig {
 	autofill_entity_id?: boolean;
 
 	custom_actions?: IElementConfig[];
-	custom_icons?: Record<string, string>;
+	custom_icons?: IIconConfig[];
 
 	haptics?: boolean;
 	styles?: string;
