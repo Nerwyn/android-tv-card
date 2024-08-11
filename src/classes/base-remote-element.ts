@@ -20,7 +20,7 @@ import { deepGet, deepSet, getDeepKeys } from '../utils';
 export class BaseRemoteElement extends LitElement {
 	@property() hass!: HomeAssistant;
 	@property() config!: IElementConfig;
-	@property() icons!: IIconConfig[];
+	@property() icons: IIconConfig[] = [];
 	@property() autofillEntityId: boolean = false;
 
 	@state() renderRipple = true;
@@ -706,7 +706,7 @@ export class BaseRemoteElement extends LitElement {
 				iconElement = html` <ha-icon .icon="${icon}"></ha-icon> `;
 			} else {
 				const path =
-					this.icons.filter(
+					(this.icons ?? []).filter(
 						(customIcon: IIconConfig) => customIcon.name == icon,
 					)[0] ??
 					defaultIcons.filter(
