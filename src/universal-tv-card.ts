@@ -8,9 +8,12 @@ import { renderTemplate } from 'ha-nunjucks';
 import { load } from 'js-yaml';
 
 import {
+	ActionTypes,
 	DirectionActions,
+	IAction,
 	IConfig,
 	IElementConfig,
+	Platform,
 	defaultKeys,
 	defaultSources,
 } from './models';
@@ -90,7 +93,50 @@ class UniversalTVCard extends LitElement {
 			) as IElementConfig;
 		}
 
-		// TODO apply IDs if it is a default action
+		// TODO update this logic to work with card, element, and action level IDs
+		if (!('autofill_entity_id' in actions)) {
+			actions.autofill_entity_id = this.config.autofill_entity_id ?? true;
+		}
+		if (
+			renderTemplate(
+				this.hass,
+				(actions.autofill_entity_id ?? true) as unknown as string,
+			)
+		) {
+			for (const actionType of ActionTypes) {
+				if (actions[actionType]) {
+					const action = actions[actionType] ?? ({} as IAction);
+
+					action.platform = action.platform ?? this.config.platform;
+					switch (action.platform?.toUpperCase()) {
+						case 'KODI':
+						case 'ROKU':
+							break;
+						case 'FIRE' as Platform:
+						case 'FIRETV' as Platform:
+						case 'FIRE_TV' as Platform:
+						case 'FIRE TV':
+							action.platform = 'FIRE TV';
+							break;
+						case 'ANDROID' as Platform:
+						case 'ANDROIDTV' as Platform:
+						case 'ANDROID_TV' as Platform:
+						case 'ANDROID TV':
+						default:
+							action.platform = 'ANDROID TV';
+							break;
+					}
+
+					action.keyboard_id =
+						action.keyboard_id ?? this.config.keyboard_id;
+					action.media_player_id =
+						action.media_player_id ?? this.config.media_player_id;
+					action.remote_id =
+						action.remote_id ?? this.config.remote_id;
+					actions[actionType] = action;
+				}
+			}
+		}
 
 		return actions;
 	}
@@ -119,7 +165,6 @@ class UniversalTVCard extends LitElement {
 					(actions[direction] ?? {}) as IElementConfig,
 				);
 			}
-			console.log(actions);
 		}
 
 		return actions;
