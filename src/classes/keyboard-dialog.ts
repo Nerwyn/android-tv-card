@@ -477,16 +477,16 @@ export class KeyboardDialog extends LitElement {
 			case 'search':
 				placeholder = 'Search for something...';
 				buttons = html`${this.buildDialogButton(
-					'Search',
-					this.search,
-				)}${this.buildDialogButton('Close', this.closeDialog)}`;
+					'Close',
+					this.closeDialog,
+				)}${this.buildDialogButton('Search', this.search)}`;
 				break;
 			case 'textbox':
 				placeholder = 'Type something...';
 				buttons = html`${this.buildDialogButton(
-					'Send',
-					this.textBox,
-				)}${this.buildDialogButton('Close', this.closeDialog)}`;
+					'Close',
+					this.closeDialog,
+				)}${this.buildDialogButton('Send', this.textBox)}`;
 				break;
 			case 'keyboard':
 			default:
@@ -512,7 +512,10 @@ export class KeyboardDialog extends LitElement {
 				}
 				placeholder = 'Type something...';
 				pasteHandler = this.keyboardOnPaste;
-				buttons = this.buildDialogButton('Close', this.closeDialog);
+				buttons = html`${this.buildDialogButton(
+					'Close',
+					this.closeDialog,
+				)}${this.buildDialogButton('Enter', this.textBox)}`;
 				break;
 		}
 		placeholder = this.haAction?.keyboard_prompt ?? placeholder;
@@ -583,7 +586,7 @@ export class KeyboardDialog extends LitElement {
 			.buttons {
 				height: 36px;
 				display: inline-flex;
-				flex-direction: row-reverse;
+				flex-direction: row;
 				justify-content: space-between;
 				margin: 0 12px;
 			}
