@@ -202,6 +202,52 @@ class UniversalTVCard extends LitElement {
 					actions[actionType] = action;
 				}
 			}
+
+			// Set hold time if defined globally
+			if (this.config.hold_time) {
+				actions.hold_action = actions.hold_action ?? { action: 'none' };
+				actions.hold_action.hold_time =
+					actions.hold_action?.hold_time ?? this.config.hold_time;
+
+				if (actions.multi_hold_action) {
+					actions.multi_hold_action.hold_time =
+						actions.multi_hold_action?.hold_time ??
+						this.config.hold_time;
+				}
+			}
+
+			// Set repeat delay if defined globally
+			if (this.config.repeat_delay) {
+				actions.hold_action = actions.hold_action ?? { action: 'none' };
+				if (actions.hold_action?.action == 'repeat') {
+					actions.hold_action.repeat_delay =
+						actions.hold_action.repeat_delay ??
+						this.config.repeat_delay;
+				}
+				if (
+					actions.multi_hold_action &&
+					actions.multi_hold_action?.action == 'repeat'
+				) {
+					actions.multi_hold_action.repeat_delay =
+						actions.multi_hold_action.repeat_delay ??
+						this.config.repeat_delay;
+				}
+			}
+
+			// Set double tap window if defined globally
+			if (this.config.double_tap_window) {
+				actions.double_tap_action = actions.double_tap_action ?? {
+					action: 'none',
+				};
+				actions.double_tap_action.double_tap_window =
+					actions.double_tap_action.double_tap_window ??
+					this.config.double_tap_window;
+				if (actions.multi_double_tap_action) {
+					actions.multi_double_tap_action.double_tap_window =
+						actions.multi_double_tap_action.double_tap_window ??
+						this.config.double_tap_window;
+				}
+			}
 		}
 
 		// Also update touchpad directions

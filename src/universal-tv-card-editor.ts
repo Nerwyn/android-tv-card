@@ -1394,52 +1394,50 @@ export class UniversalTVCardEditor extends LitElement {
 
 				// Set hold time if defined globally
 				if (this.config.hold_time) {
-					if (entry.hold_action && !entry.hold_action?.hold_time) {
-						entry.hold_action.hold_time = this.config.hold_time;
-					}
-					if (
-						entry.multi_hold_action &&
-						!entry.multi_hold_action?.hold_time
-					) {
+					entry.hold_action = entry.hold_action ?? {
+						action: 'none',
+					};
+					entry.hold_action.hold_time =
+						entry.hold_action?.hold_time ?? this.config.hold_time;
+
+					if (entry.multi_hold_action) {
 						entry.multi_hold_action.hold_time =
+							entry.multi_hold_action?.hold_time ??
 							this.config.hold_time;
 					}
 				}
 
 				// Set repeat delay if defined globally
 				if (this.config.repeat_delay) {
-					if (
-						entry.hold_action &&
-						entry.hold_action?.action == 'repeat' &&
-						!entry.hold_action.repeat_delay
-					) {
+					entry.hold_action = entry.hold_action ?? {
+						action: 'none',
+					};
+					if (entry.hold_action?.action == 'repeat') {
 						entry.hold_action.repeat_delay =
+							entry.hold_action.repeat_delay ??
 							this.config.repeat_delay;
 					}
 					if (
 						entry.multi_hold_action &&
-						entry.multi_hold_action?.action == 'repeat' &&
-						!entry.multi_hold_action.repeat_delay
+						entry.multi_hold_action?.action == 'repeat'
 					) {
 						entry.multi_hold_action.repeat_delay =
+							entry.multi_hold_action.repeat_delay ??
 							this.config.repeat_delay;
 					}
 				}
 
 				// Set double tap window if defined globally
 				if (this.config.double_tap_window) {
-					if (
-						entry.double_tap_action &&
-						!entry.double_tap_action.double_tap_window
-					) {
-						entry.double_tap_action.double_tap_window =
-							this.config.double_tap_window;
-					}
-					if (
-						entry.multi_double_tap_action &&
-						!entry.multi_double_tap_action.double_tap_window
-					) {
+					entry.double_tap_action = entry.double_tap_action ?? {
+						action: 'none',
+					};
+					entry.double_tap_action.double_tap_window =
+						entry.double_tap_action.double_tap_window ??
+						this.config.double_tap_window;
+					if (entry.multi_double_tap_action) {
 						entry.multi_double_tap_action.double_tap_window =
+							entry.multi_double_tap_action.double_tap_window ??
 							this.config.double_tap_window;
 					}
 				}
