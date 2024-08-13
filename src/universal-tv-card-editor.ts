@@ -1932,7 +1932,7 @@ export class UniversalTVCardEditor extends LitElement {
 				'row_styles' as keyof IConfig
 			] as unknown as Record<string, Record<string, string>>;
 			for (const style in rowStyles) {
-				styles += `\n#${style}: {`;
+				styles += `\n#${style} {`;
 				for (const field in rowStyles[style]) {
 					styles += `\n  ${field}: ${rowStyles[style][field]};`;
 				}
