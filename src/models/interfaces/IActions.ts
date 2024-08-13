@@ -59,10 +59,10 @@ export interface IAction {
 	platform?: Platform;
 	key?: string;
 	source?: string;
-	keyboard_id?: string;
-	keyboard_prompt?: string;
 	remote_id?: string;
 	media_player_id?: string;
+	keyboard_id?: string;
+	keyboard_prompt?: string;
 
 	perform_action?: string;
 	data?: IData;

@@ -218,6 +218,7 @@ export class BaseRemoteElement extends LitElement {
 					entityId = action.media_player_id;
 					break;
 				default:
+					entityId = this.config.entity_id;
 					break;
 			}
 			if (

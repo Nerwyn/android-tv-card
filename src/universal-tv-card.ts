@@ -13,7 +13,6 @@ import {
 	IAction,
 	IConfig,
 	IElementConfig,
-	Platform,
 	defaultKeys,
 	defaultSources,
 } from './models';
@@ -93,7 +92,6 @@ class UniversalTVCard extends LitElement {
 			) as IElementConfig;
 		}
 
-		// TODO update this logic to work with card, element, and action level IDs
 		if (!('autofill_entity_id' in actions)) {
 			actions.autofill_entity_id = this.config.autofill_entity_id ?? true;
 		}
@@ -107,56 +105,37 @@ class UniversalTVCard extends LitElement {
 				if (actions[actionType]) {
 					const action = actions[actionType] ?? ({} as IAction);
 
-					action.platform = action.platform ?? this.config.platform;
-					switch (action.platform?.toUpperCase()) {
-						case 'KODI':
-						case 'ROKU':
-							break;
-						case 'FIRE' as Platform:
-						case 'FIRETV' as Platform:
-						case 'FIRE_TV' as Platform:
-						case 'FIRE TV':
-							action.platform = 'FIRE TV';
-							break;
-						case 'ANDROID' as Platform:
-						case 'ANDROIDTV' as Platform:
-						case 'ANDROID_TV' as Platform:
-						case 'ANDROID TV':
-						default:
-							action.platform = 'ANDROID TV';
-							break;
-					}
+					// Set platform using global value if not defined and normalize to enum
+					action.platform =
+						action.platform ??
+						actions.platform ??
+						this.config.platform ??
+						'ANDROID TV';
 
+					// Need to check config, element, and action level IDs
 					action.keyboard_id =
-						action.keyboard_id ?? this.config.keyboard_id;
+						action.keyboard_id ??
+						actions.keyboard_id ??
+						this.config.keyboard_id;
 					action.media_player_id =
-						action.media_player_id ?? this.config.media_player_id;
+						action.media_player_id ??
+						actions.media_player_id ??
+						this.config.media_player_id ??
+						(actions.entity_id?.startsWith('media_player.')
+							? actions.entity_id
+							: '');
 					action.remote_id =
-						action.remote_id ?? this.config.remote_id;
+						action.remote_id ??
+						actions.remote_id ??
+						this.config.remote_id ??
+						(actions.entity_id?.startsWith('remote.')
+							? actions.entity_id
+							: '');
+
 					actions[actionType] = action;
 				}
 			}
 		}
-
-		return actions;
-	}
-
-	getElementConfig(action: string): IElementConfig {
-		const defaultActions =
-			this.defaultActions.filter(
-				(defaultActions) => defaultActions.name == action,
-			)[0] ?? {};
-		let customActions = this.config.custom_actions;
-		if (!Array.isArray(customActions)) {
-			customActions = [];
-		}
-		let actions = structuredClone(
-			customActions.filter(
-				(customAction) => customAction.name == action,
-			)[0] ?? defaultActions,
-		);
-
-		actions = this.updateElementConfig(actions);
 
 		// Also update touchpad directions
 		if (actions.type == 'touchpad') {
@@ -166,6 +145,33 @@ class UniversalTVCard extends LitElement {
 				);
 			}
 		}
+
+		return actions;
+	}
+
+	getElementConfig(action: string): IElementConfig {
+		const defaultActions =
+			structuredClone(
+				this.defaultActions.filter(
+					(defaultActions) => defaultActions.name == action,
+				)[0],
+			) ?? {};
+		let customActionsList = this.config.custom_actions;
+		if (!Array.isArray(customActionsList)) {
+			customActionsList = [];
+		}
+		const customActions =
+			structuredClone(
+				customActionsList.filter(
+					(customActions) => customActions.name == action,
+				)[0],
+			) ?? {};
+		let actions = {
+			...defaultActions,
+			...customActions,
+		};
+
+		actions = this.updateElementConfig(actions);
 
 		return actions;
 	}
