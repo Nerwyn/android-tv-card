@@ -171,7 +171,9 @@ class UniversalTVCard extends LitElement {
 			...customActions,
 		};
 
-		actions = this.updateElementConfig(actions);
+		actions = Object.keys(actions).length
+			? this.updateElementConfig(actions)
+			: actions;
 
 		return actions;
 	}
