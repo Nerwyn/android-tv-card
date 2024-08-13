@@ -235,6 +235,14 @@ export class KeyboardDialog extends LitElement {
 		this.onKeyDownFired = false;
 	}
 
+	androidTvEnterAndClose() {
+		this.hass.callService('remote', 'send_command', {
+			entity_id: this.haAction?.remote_id,
+			command: 'ENTER',
+		});
+		this.closeDialog();
+	}
+
 	androidTvSendText(text: string) {
 		let domain: string;
 		let service: string;
@@ -515,7 +523,10 @@ export class KeyboardDialog extends LitElement {
 				buttons = html`${this.buildDialogButton(
 					'Close',
 					this.closeDialog,
-				)}${this.buildDialogButton('Enter', this.textBox)}`;
+				)}${this.buildDialogButton(
+					'Enter',
+					this.androidTvEnterAndClose,
+				)}`;
 				break;
 		}
 		placeholder = this.haAction?.keyboard_prompt ?? placeholder;
