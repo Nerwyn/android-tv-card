@@ -568,7 +568,6 @@ export class UniversalTVCardEditor extends LitElement {
 		additionalOptions: TemplateResult<1> = html``,
 		additionalFormOptions: TemplateResult<1> = html``,
 	) {
-		// TODO add / figure out template custom actions
 		return html`
 			${this.buildSelector('Name', 'name', {
 				text: {},
@@ -1771,8 +1770,6 @@ export class UniversalTVCardEditor extends LitElement {
 			}
 		}
 
-		// Copy touchpad fields
-		// TODO fix this it broke my actual remote :(
 		const touchpadIndex = customActions.findIndex(
 			(customAction) => customAction.name == 'touchpad',
 		);
