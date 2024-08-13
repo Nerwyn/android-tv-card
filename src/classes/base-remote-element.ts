@@ -319,7 +319,7 @@ export class BaseRemoteElement extends LitElement {
 
 	handleConfirmation(action: IAction): boolean {
 		if ('confirmation' in action) {
-			let confirmation = action.confirmation;
+			const confirmation = action.confirmation;
 			if (confirmation != false) {
 				this.fireHapticEvent('warning');
 
