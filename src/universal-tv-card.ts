@@ -77,60 +77,127 @@ class UniversalTVCard extends LitElement {
 	}
 
 	updateElementConfig(actions: IElementConfig) {
-		// Apply template if defined
+		const context = {
+			config: {
+				...actions,
+				entity: renderTemplate(
+					this.hass,
+					actions.remote_id ??
+						actions.media_player_id ??
+						actions.keyboard_id ??
+						'',
+				),
+				attribute: renderTemplate(
+					this.hass,
+					actions.value_attribute ?? '',
+				),
+			},
+		};
+
+		// [DEPRECATED] Apply template if defined
 		if (actions.template) {
-			const defaultTemplateActions = this.defaultActions.filter(
-				(defaultActions) => actions.template == defaultActions.name,
-			)[0];
-			const customTemplateActions =
+			const templateActions =
 				this.config.custom_actions?.filter(
 					(customActions) => actions.template == customActions.name,
-				)[0] || defaultTemplateActions;
+				)[0] ??
+				this.defaultActions.filter(
+					(defaultActions) => actions.template == defaultActions.name,
+				)[0] ??
+				{};
 			actions = mergeDeep(
-				structuredClone(customTemplateActions),
+				structuredClone(templateActions),
 				actions,
 			) as IElementConfig;
 		}
 
-		if (!('autofill_entity_id' in actions)) {
-			actions.autofill_entity_id = this.config.autofill_entity_id ?? true;
-		}
+		actions.autofill_entity_id =
+			actions.autofill_entity_id ??
+			this.config.autofill_entity_id ??
+			true;
 		if (
 			renderTemplate(
 				this.hass,
-				(actions.autofill_entity_id ?? true) as unknown as string,
+				actions.autofill_entity_id as unknown as string,
 			)
 		) {
+			actions.entity_id =
+				actions.entity_id ??
+				this.config.remote_id ??
+				this.config.media_player_id ??
+				this.config.keyboard_id;
+			actions.value_attribute = actions.value_attribute ?? 'state';
+			actions.haptics = actions.haptics ?? this.config.haptics ?? true;
+
+			actions.platform =
+				actions.platform ?? this.config.platform ?? 'ANDROID TV';
+			actions.keyboard_id =
+				actions.keyboard_id ?? this.config.keyboard_id;
+			actions.media_player_id =
+				actions.media_player_id ??
+				this.config.media_player_id ??
+				(actions.entity_id?.startsWith('media_player.')
+					? actions.entity_id
+					: '');
+			actions.remote_id =
+				actions.remote_id ??
+				this.config.remote_id ??
+				(actions.entity_id?.startsWith('remote.')
+					? actions.entity_id
+					: '');
+
 			for (const actionType of ActionTypes) {
 				if (actions[actionType]) {
 					const action = actions[actionType] ?? ({} as IAction);
 
-					// Set platform using global value if not defined and normalize to enum
-					action.platform =
-						action.platform ??
-						actions.platform ??
-						this.config.platform ??
-						'ANDROID TV';
-
-					// Need to check config, element, and action level IDs
+					action.platform = action.platform ?? actions.platform;
 					action.keyboard_id =
-						action.keyboard_id ??
-						actions.keyboard_id ??
-						this.config.keyboard_id;
+						action.keyboard_id ?? actions.keyboard_id;
 					action.media_player_id =
-						action.media_player_id ??
-						actions.media_player_id ??
-						this.config.media_player_id ??
-						(actions.entity_id?.startsWith('media_player.')
-							? actions.entity_id
-							: '');
-					action.remote_id =
-						action.remote_id ??
-						actions.remote_id ??
-						this.config.remote_id ??
-						(actions.entity_id?.startsWith('remote.')
-							? actions.entity_id
-							: '');
+						action.media_player_id ?? actions.media_player_id;
+					action.remote_id = action.remote_id ?? actions.remote_id;
+
+					let entityId: string | undefined;
+					const [domain, _service] = (
+						renderTemplate(
+							this.hass,
+							action.perform_action ??
+								(action[
+									'service' as 'perform_action'
+								] as string) ??
+								'',
+							context,
+						) as string
+					).split('.');
+					switch (domain) {
+						case 'remote':
+							entityId = action.remote_id;
+							break;
+						case 'media_player':
+						case 'kodi':
+						case 'denonavr':
+							entityId = action.media_player_id;
+							break;
+						default:
+							entityId = actions.entity_id;
+							break;
+					}
+
+					if (
+						entityId &&
+						!action.data?.entity_id &&
+						!action.data?.device_id &&
+						!action.data?.area_id &&
+						!action.data?.label_id &&
+						!action.target?.entity_id &&
+						!action.target?.device_id &&
+						!action.target?.area_id &&
+						!action.target?.label_id
+					) {
+						action.target = {
+							...action.target,
+							entity_id: entityId,
+						};
+					}
 
 					actions[actionType] = action;
 				}

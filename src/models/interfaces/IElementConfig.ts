@@ -35,7 +35,6 @@ interface IBaseElementConfig {
 	label?: string;
 	unit_of_measurement?: string;
 	styles?: string;
-
 	haptics?: boolean;
 }
 

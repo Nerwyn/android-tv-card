@@ -379,6 +379,7 @@ export class RemoteSlider extends BaseRemoteElement {
 			this.precision = 0;
 		}
 
+		// TODO find way to parse and apply vertical styles before render, or force re-render after first render
 		this.vertical =
 			this.renderTemplate(this.config.vertical ?? false, context) == true;
 		this.resizeObserver.observe(

@@ -12,7 +12,6 @@ import {
 	IData,
 	IElementConfig,
 	IIconConfig,
-	ITarget,
 	defaultIcons,
 } from '../models';
 import { deepGet, deepSet, getDeepKeys } from '../utils';
@@ -21,7 +20,6 @@ export class BaseRemoteElement extends LitElement {
 	@property() hass!: HomeAssistant;
 	@property() config!: IElementConfig;
 	@property() icons: IIconConfig[] = [];
-	@property() autofillEntityId: boolean = false;
 
 	@state() renderRipple = true;
 	@state() renderRippleOff?: ReturnType<typeof setTimeout>;
@@ -103,7 +101,11 @@ export class BaseRemoteElement extends LitElement {
 				break;
 		}
 
-		if (!action || !this.handleConfirmation(action)) {
+		if (!action) {
+			return;
+		}
+		action = this.deepRenderTemplate(action);
+		if (!this.handleConfirmation(action)) {
 			return;
 		}
 
@@ -113,7 +115,7 @@ export class BaseRemoteElement extends LitElement {
 					this.navigate(action);
 					break;
 				case 'url':
-					this.toUrl(action);
+					this.url(action);
 					break;
 				case 'assist':
 					this.assist(action);
@@ -129,10 +131,10 @@ export class BaseRemoteElement extends LitElement {
 					this.callService(action);
 					break;
 				case 'source':
-					this.changeSource(action);
+					this.source(action);
 					break;
 				case 'key':
-					this.sendCommand(action, actionType);
+					this.key(action, actionType);
 					break;
 				case 'fire-dom-event':
 					this.fireDomEvent(action);
@@ -152,10 +154,10 @@ export class BaseRemoteElement extends LitElement {
 		}
 	}
 
-	sendCommand(action: IAction, actionType: ActionType) {
+	key(action: IAction, actionType: ActionType) {
 		const data: IData = {
-			entity_id: this.renderTemplate(action.remote_id as string),
-			command: this.renderTemplate(action.key as string),
+			entity_id: action.remote_id ?? '',
+			command: action.key ?? '',
 		};
 		if (actionType == 'hold_action' && !this.config.hold_action) {
 			data.hold_secs = 0.5;
@@ -163,95 +165,24 @@ export class BaseRemoteElement extends LitElement {
 		this.hass.callService('remote', 'send_command', data);
 	}
 
-	changeSource(action: IAction) {
+	source(action: IAction) {
 		this.hass.callService('remote', 'turn_on', {
-			entity_id: this.renderTemplate(action.remote_id as string),
-			activity: this.renderTemplate(action.source as string),
+			entity_id: action.remote_id ?? '',
+			activity: action.source ?? '',
 		});
 	}
 
 	callService(action: IAction) {
-		const domainService = this.renderTemplate(
-			(action.perform_action ??
-				action['service' as 'perform_action']) as string, // deprecated in 2024.8
-		) as string;
-
-		const [domain, service] = domainService.split('.');
-		const data = structuredClone(action.data);
-		for (const key in data) {
-			if (Array.isArray(data[key])) {
-				for (const i in data[key] as string[]) {
-					(data[key] as string[])[i] = this.renderTemplate(
-						(data[key] as string[])[i],
-					) as string;
-				}
-			} else {
-				data[key] = this.renderTemplate(data[key] as string);
-			}
-		}
-
-		let target = structuredClone(action.target);
-		for (const key in target) {
-			if (Array.isArray(target[key as keyof ITarget])) {
-				for (const i in target[key as keyof ITarget] as string[]) {
-					(target[key as keyof ITarget] as string[])[i] =
-						this.renderTemplate(
-							(target[key as keyof ITarget] as string[])[i],
-						) as string;
-				}
-			} else {
-				target[key as keyof ITarget] = this.renderTemplate(
-					target[key as keyof ITarget] as string,
-				) as string;
-			}
-		}
-
-		if (this.renderTemplate(this.autofillEntityId)) {
-			let entityId: string | undefined;
-			switch (domain) {
-				case 'remote':
-					entityId = action.remote_id;
-					break;
-				case 'media_player':
-				case 'kodi':
-				case 'denonavr':
-					entityId = action.media_player_id;
-					break;
-				default:
-					entityId = this.config.entity_id;
-					break;
-			}
-			if (
-				entityId &&
-				!data?.entity_id &&
-				!data?.device_id &&
-				!data?.area_id &&
-				!data?.label_id &&
-				!target?.entity_id &&
-				!target?.device_id &&
-				!target?.area_id &&
-				!target?.label_id
-			) {
-				target = {
-					...target,
-					entity_id: this.renderTemplate(entityId) as
-						| string
-						| string[],
-				};
-			}
-		}
-
-		this.hass.callService(domain, service, data, target);
+		const [domain, service] = (
+			action.perform_action ??
+			(action['service' as 'perform_action'] as string)
+		).split('.');
+		this.hass.callService(domain, service, action.data, action.target);
 	}
 
 	navigate(action: IAction) {
-		const path =
-			(this.renderTemplate(action.navigation_path as string) as string) ??
-			'';
-		const replace =
-			(this.renderTemplate(
-				action.navigation_replace as unknown as string,
-			) as boolean) ?? false;
+		const path = (action.navigation_path as string) ?? '';
+		const replace = action.navigation_replace ?? false;
 		if (path.includes('//')) {
 			console.error(
 				'Protocol detected in navigation path. To navigate to another website use the action "url" with the key "url_path" instead.',
@@ -276,9 +207,8 @@ export class BaseRemoteElement extends LitElement {
 		window.dispatchEvent(event);
 	}
 
-	toUrl(action: IAction) {
-		let url =
-			(this.renderTemplate(action.url_path as string) as string) ?? '';
+	url(action: IAction) {
+		let url = action.url_path ?? '';
 		if (!url.includes('//')) {
 			url = `https://${url}`;
 		}
@@ -304,15 +234,12 @@ export class BaseRemoteElement extends LitElement {
 	}
 
 	moreInfo(action: IAction) {
-		const entityId = this.renderTemplate(
-			(action.target?.entity_id ?? action.data?.entity_id) as string,
-		);
 		const event = new Event('hass-more-info', {
 			bubbles: true,
 			cancelable: true,
 			composed: true,
 		});
-		event.detail = { entityId };
+		event.detail = { entityId: action.target?.entity_id };
 		this.dispatchEvent(event);
 	}
 
@@ -371,7 +298,7 @@ export class BaseRemoteElement extends LitElement {
 			composed: true,
 			bubbles: true,
 		});
-		event.detail = this.deepRenderTemplate(action);
+		event.detail = action;
 		(
 			(this.getRootNode() as ShadowRoot).querySelector(
 				'keyboard-dialog',
@@ -393,23 +320,14 @@ export class BaseRemoteElement extends LitElement {
 	handleConfirmation(action: IAction): boolean {
 		if ('confirmation' in action) {
 			let confirmation = action.confirmation;
-			if (typeof confirmation == 'string') {
-				confirmation = this.renderTemplate(
-					action.confirmation as string,
-				) as unknown as boolean;
-			}
 			if (confirmation != false) {
 				this.fireHapticEvent('warning');
 
 				let text: string = '';
 				if (confirmation != true && confirmation?.text) {
-					text = this.renderTemplate(
-						confirmation?.text as string,
-					) as string;
+					text = confirmation.text;
 				} else {
-					text = `Are you sure you want to run action '${
-						this.renderTemplate(action.action as string) as string
-					}'?`;
+					text = `Are you sure you want to run action '${action.action}'?`;
 				}
 				if (confirmation == true) {
 					if (!confirm(text)) {
@@ -419,9 +337,7 @@ export class BaseRemoteElement extends LitElement {
 					if (confirmation?.exemptions) {
 						if (
 							!(confirmation as IConfirmation).exemptions
-								?.map((exemption) =>
-									this.renderTemplate(exemption.user),
-								)
+								?.map((exemption) => exemption.user)
 								.includes(this.hass.user.id)
 						) {
 							if (!confirm(text)) {
@@ -683,7 +599,7 @@ export class BaseRemoteElement extends LitElement {
 		return str;
 	}
 
-	deepRenderTemplate(obj: object, context?: object) {
+	deepRenderTemplate<T extends object>(obj: T, context?: object): T {
 		const res = structuredClone(obj);
 		const keys = getDeepKeys(res);
 		for (const key of keys) {

@@ -1,4 +1,4 @@
-export function getDeepKeys(obj: object): string[] {
+export function getDeepKeys<T extends object>(obj: T): string[] {
 	let keys: string[] = [];
 	for (const key in obj) {
 		if (typeof obj[key as keyof object] === 'object') {
@@ -11,7 +11,7 @@ export function getDeepKeys(obj: object): string[] {
 	return keys;
 }
 
-export function deepGet(obj: object, key: string) {
+export function deepGet<T extends object>(obj: T, key: string) {
 	const keys = key.split('.');
 	if (obj == undefined) {
 		return undefined as unknown as object;
@@ -22,11 +22,11 @@ export function deepGet(obj: object, key: string) {
 	return deepGet(obj[keys[0] as keyof object], keys.splice(1).join('.'));
 }
 
-export function deepSet(
-	obj: object,
+export function deepSet<T extends object>(
+	obj: T,
 	key: string,
 	value: string | number | boolean | string[],
-): object {
+): T {
 	const keys = key.split('.');
 	if (keys.length == 1) {
 		obj[keys[0] as keyof object] = value as never;
@@ -48,7 +48,7 @@ export function deepSet(
 	return obj;
 }
 
-export function mergeDeep(target: object, ...sources: [object]): object {
+export function mergeDeep<T extends object>(target: T, ...sources: [T]): T {
 	function isObject(item: object) {
 		return item && typeof item === 'object' && !Array.isArray(item);
 	}

@@ -19,9 +19,9 @@ export interface IConfig {
 	custom_actions?: IElementConfig[];
 	custom_icons?: IIconConfig[];
 
-	haptics?: boolean;
 	styles?: string;
 	button_styles?: string;
+	haptics?: boolean;
 
 	hold_time?: number;
 	repeat_delay?: number;
