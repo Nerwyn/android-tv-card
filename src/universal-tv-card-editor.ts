@@ -242,6 +242,7 @@ export class UniversalTVCardEditor extends LitElement {
 				};
 			});
 		}
+		this.autofillCooldown = false;
 		this.entryChanged(
 			deepSet(
 				structuredClone(this.activeEntry) as object,
@@ -579,15 +580,11 @@ export class UniversalTVCardEditor extends LitElement {
 				${this.buildSelector('Entity', 'entity_id', {
 					entity: {},
 				})}
-				${
-					this.activeEntry?.entity_id
-						? this.buildSelector('Attribute', 'value_attribute', {
-								attribute: {
-									entity_id: this.activeEntry.entity_id,
-								},
-						  })
-						: ''
-				}
+				${this.buildSelector('Attribute', 'value_attribute', {
+					attribute: {
+						entity_id: this.activeEntry?.entity_id ?? '',
+					},
+				})}
 				${this.buildSelector('Remote ID', 'remote_id', {
 					entity: {
 						filter: {
@@ -780,16 +777,20 @@ export class UniversalTVCardEditor extends LitElement {
 				: ''}
 			${action == 'perform-action'
 				? html`<div class="form">
-						${this.buildSelector('Remote ID', 'remote_id', {
-							entity: {
-								filter: {
-									domain: 'remote',
+						${this.buildSelector(
+							'Remote ID',
+							`${actionType}.remote_id`,
+							{
+								entity: {
+									filter: {
+										domain: 'remote',
+									},
 								},
 							},
-						})}
+						)}
 						${this.buildSelector(
 							'Media Player ID',
-							'media_player_id',
+							`${actionType}.media_player_id`,
 							{
 								entity: {
 									filter: {
@@ -801,30 +802,65 @@ export class UniversalTVCardEditor extends LitElement {
 				  </div>`
 				: ''}
 			${action == 'key' || action == 'source'
-				? this.buildSelector('Remote ID', 'remote_id', {
-						entity: {
-							filter: {
-								domain: 'remote',
+				? html`<div class="form">
+						${this.buildSelector(
+							'Remote ID',
+							`${actionType}.remote_id`,
+							{
+								entity: {
+									filter: {
+										domain: 'remote',
+									},
+								},
 							},
-						},
-				  })
+						)}
+						${this.buildSelector('Key', `${actionType}.key`, {
+							text: {},
+						})}
+				  </div>`
+				: ''}
+			${action == 'key' || action == 'source'
+				? html`<div class="form">
+						${this.buildSelector(
+							'Remote ID',
+							`${actionType}.remote_id`,
+							{
+								entity: {
+									filter: {
+										domain: 'remote',
+									},
+								},
+							},
+						)}
+						${this.buildSelector('Source', `${actionType}.source`, {
+							text: {},
+						})}
+				  </div>`
 				: ''}
 			${['keyboard', 'textbox', 'search'].includes(action)
 				? html`<div class="form">
-						${this.buildSelector('Keyboard ID', 'keyboard_id', {
-							entity: {
-								filter: {
-									domain: ['remote', 'media_player'],
+						${this.buildSelector(
+							'Keyboard ID',
+							`${actionType}.keyboard_id`,
+							{
+								entity: {
+									filter: {
+										domain: ['remote', 'media_player'],
+									},
 								},
 							},
-						})}
-						${this.buildSelector('Platform', 'platform', {
-							select: {
-								mode: 'dropdown',
-								options: Platforms,
-								reorder: false,
+						)}
+						${this.buildSelector(
+							'Platform',
+							`${actionType}.platform`,
+							{
+								select: {
+									mode: 'dropdown',
+									options: Platforms,
+									reorder: false,
+								},
 							},
-						})}
+						)}
 				  </div>`
 				: ''}
 			${action == 'more-info'
