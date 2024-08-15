@@ -45,6 +45,10 @@ export class UniversalTVCardEditor extends LitElement {
 	people: Record<string, string>[] = [];
 
 	TOUCHPAD_TABS = ['up', 'down', 'center', 'left', 'right'];
+	DEFAULT_ACTIONS = [
+		...structuredClone(defaultSources),
+		...structuredClone(defaultKeys),
+	];
 
 	static get properties() {
 		return { hass: {}, config: {} };
@@ -805,7 +809,7 @@ export class UniversalTVCardEditor extends LitElement {
 						)}
 				  </div>`
 				: ''}
-			${action == 'key' || action == 'source'
+			${action == 'key'
 				? html`<div class="form">
 						${this.buildSelector(
 							'Remote ID',
@@ -823,7 +827,7 @@ export class UniversalTVCardEditor extends LitElement {
 						})}
 				  </div>`
 				: ''}
-			${action == 'key' || action == 'source'
+			${action == 'source'
 				? html`<div class="form">
 						${this.buildSelector(
 							'Remote ID',
@@ -1447,6 +1451,7 @@ export class UniversalTVCardEditor extends LitElement {
 	autofillDefaultFields(config: IConfig) {
 		const updatedConfig = structuredClone(config);
 		const updatedEntries: IElementConfig[] = [];
+
 		for (const entry of updatedConfig.custom_actions ?? []) {
 			updatedEntries.push(
 				this.autofillDefaultEntryFields(updatedConfig, entry),
@@ -1486,7 +1491,7 @@ export class UniversalTVCardEditor extends LitElement {
 				if (entry[actionType]) {
 					const action = entry[actionType] ?? ({} as IAction);
 
-					action.platform = action.platform ?? config.platform;
+					action.platform = action.platform ?? entry.platform;
 					switch (action.platform?.toUpperCase()) {
 						case 'KODI':
 						case 'ROKU':
@@ -1507,10 +1512,10 @@ export class UniversalTVCardEditor extends LitElement {
 					}
 
 					action.keyboard_id =
-						action.keyboard_id ?? config.keyboard_id;
+						action.keyboard_id ?? entry.keyboard_id;
 					action.media_player_id =
-						action.media_player_id ?? config.media_player_id;
-					action.remote_id = action.remote_id ?? config.remote_id;
+						action.media_player_id ?? entry.media_player_id;
+					action.remote_id = action.remote_id ?? entry.remote_id;
 					entry[actionType] = action;
 
 					let entityId: string | undefined;
@@ -1710,14 +1715,14 @@ export class UniversalTVCardEditor extends LitElement {
 			}
 
 			// Copy custom action onto default action
-			const defaultAction =
-				defaultKeys.filter((action) => action.name == entry.name)[0] ??
-				defaultSources.filter(
-					(action) => action.name == entry.name,
-				)[0] ??
-				{};
+			const defaultActions =
+				structuredClone(
+					this.DEFAULT_ACTIONS.filter(
+						(defaultActions) => defaultActions.name == entry.name,
+					)[0],
+				) ?? {};
 			entry = {
-				...defaultAction,
+				...defaultActions,
 				...entry,
 			};
 		}

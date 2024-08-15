@@ -33,7 +33,7 @@ class UniversalTVCard extends LitElement {
 	@property() hass!: HomeAssistant;
 	@property() config!: IConfig;
 
-	defaultActions = [
+	DEFAULT_ACTIONS = [
 		...structuredClone(defaultSources),
 		...structuredClone(defaultKeys),
 	];
@@ -101,7 +101,7 @@ class UniversalTVCard extends LitElement {
 				this.config.custom_actions?.filter(
 					(customActions) => actions.template == customActions.name,
 				)[0] ??
-				this.defaultActions.filter(
+				this.DEFAULT_ACTIONS.filter(
 					(defaultActions) => actions.template == defaultActions.name,
 				)[0] ??
 				{};
@@ -266,7 +266,7 @@ class UniversalTVCard extends LitElement {
 	getElementConfig(action: string): IElementConfig {
 		const defaultActions =
 			structuredClone(
-				this.defaultActions.filter(
+				this.DEFAULT_ACTIONS.filter(
 					(defaultActions) => defaultActions.name == action,
 				)[0],
 			) ?? {};
