@@ -574,17 +574,21 @@ export class UniversalTVCardEditor extends LitElement {
 			${this.buildSelector('Name', 'name', {
 				text: {},
 			})}
+			${this.buildSelector('Entity', 'entity_id', {
+				entity: {},
+			})}
+			${
+				this.activeEntry?.entity_id
+					? this.buildSelector('Attribute', 'value_attribute', {
+							attribute: {
+								entity_id: this.activeEntry.entity_id,
+							},
+					  })
+					: ''
+			}
 			${additionalOptions}
 			<div class="form">
 				${additionalFormOptions}
-				${this.buildSelector('Entity', 'entity_id', {
-					entity: {},
-				})}
-				${this.buildSelector('Attribute', 'value_attribute', {
-					attribute: {
-						entity_id: this.activeEntry?.entity_id ?? '',
-					},
-				})}
 				${this.buildSelector('Remote ID', 'remote_id', {
 					entity: {
 						filter: {
