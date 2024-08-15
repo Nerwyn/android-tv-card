@@ -7,10 +7,10 @@
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"build": "npx webpack",
 		"prelint": "tsc --noemit",
-		"lint": "eslint ./src --fix --ext .ts --config ./.eslintrc.js",
 		"build-css": "tcm src"
 	},
 	"lint-staged": {
+		"*.ts": "eslint ./src --fix --config ./.eslintrc.js",
 		"*": "prettier -w"
 	},
 	"repository": {

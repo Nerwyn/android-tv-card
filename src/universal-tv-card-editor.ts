@@ -1407,7 +1407,7 @@ export class UniversalTVCardEditor extends LitElement {
 	autofillDefaultFields(config: IConfig) {
 		const updatedConfig = structuredClone(config);
 		const updatedEntries: IElementConfig[] = [];
-		for (let entry of updatedConfig.custom_actions ?? []) {
+		for (const entry of updatedConfig.custom_actions ?? []) {
 			updatedEntries.push(
 				this.autofillDefaultEntryFields(updatedConfig, entry),
 			);
