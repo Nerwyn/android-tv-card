@@ -81,13 +81,7 @@ class UniversalTVCard extends LitElement {
 		const context = {
 			config: {
 				...actions,
-				entity: renderTemplate(
-					this.hass,
-					actions.remote_id ??
-						actions.media_player_id ??
-						actions.keyboard_id ??
-						'',
-				),
+				entity: renderTemplate(this.hass, actions.entity_id ?? ''),
 				attribute: renderTemplate(
 					this.hass,
 					actions.value_attribute ?? '',
@@ -129,33 +123,17 @@ class UniversalTVCard extends LitElement {
 			actions.value_attribute = actions.value_attribute ?? 'state';
 			actions.haptics = actions.haptics ?? this.config.haptics ?? true;
 
-			actions.platform =
-				actions.platform ?? this.config.platform ?? 'ANDROID TV';
-			actions.keyboard_id =
-				actions.keyboard_id ?? this.config.keyboard_id;
-			actions.media_player_id =
-				actions.media_player_id ??
-				this.config.media_player_id ??
-				(actions.entity_id?.startsWith('media_player.')
-					? actions.entity_id
-					: '');
-			actions.remote_id =
-				actions.remote_id ??
-				this.config.remote_id ??
-				(actions.entity_id?.startsWith('remote.')
-					? actions.entity_id
-					: '');
-
 			for (const actionType of ActionTypes) {
 				if (actions[actionType]) {
 					const action = actions[actionType] ?? ({} as IAction);
 
-					action.platform = action.platform ?? actions.platform;
+					action.platform = action.platform ?? this.config.platform;
 					action.keyboard_id =
-						action.keyboard_id ?? actions.keyboard_id;
+						action.keyboard_id ?? this.config.keyboard_id;
 					action.media_player_id =
-						action.media_player_id ?? actions.media_player_id;
-					action.remote_id = action.remote_id ?? actions.remote_id;
+						action.media_player_id ?? this.config.media_player_id;
+					action.remote_id =
+						action.remote_id ?? this.config.remote_id;
 
 					let entityId: string | undefined;
 					const [domain, _service] = (

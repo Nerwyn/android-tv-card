@@ -4,7 +4,6 @@ import {
 	IBasicActions,
 	IMomentaryActions,
 	IMultiActions,
-	Platform,
 } from '.';
 
 export const RemoteElementTypes = ['button', 'slider', 'touchpad'] as const;
@@ -25,11 +24,6 @@ interface IBaseElementConfig {
 	entity_id?: string;
 	autofill_entity_id?: boolean;
 	value_attribute?: string;
-
-	platform?: Platform;
-	remote_id?: string;
-	media_player_id?: string;
-	keyboard_id?: string;
 
 	icon?: string;
 	label?: string;

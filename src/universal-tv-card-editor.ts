@@ -593,34 +593,6 @@ export class UniversalTVCardEditor extends LitElement {
 			${additionalOptions}
 			<div class="form">
 				${additionalFormOptions}
-				${this.buildSelector('Remote ID', 'remote_id', {
-					entity: {
-						filter: {
-							domain: 'remote',
-						},
-					},
-				})}
-				${this.buildSelector('Media Player ID', 'media_player_id', {
-					entity: {
-						filter: {
-							domain: 'media_player',
-						},
-					},
-				})}
-				${this.buildSelector('Keyboard ID', 'keyboard_id', {
-					entity: {
-						filter: {
-							domain: ['remote', 'media_player'],
-						},
-					},
-				})}
-				${this.buildSelector('Platform', 'platform', {
-					select: {
-						mode: 'dropdown',
-						options: Platforms,
-						reorder: false,
-					},
-				})}
 				${this.buildSelector(
 					'Autofill entity',
 					'autofill_entity_id',
@@ -1474,24 +1446,11 @@ export class UniversalTVCardEditor extends LitElement {
 			entry.value_attribute = entry.value_attribute ?? 'state';
 			entry.haptics = entry.haptics ?? config.haptics ?? true;
 
-			entry.platform = entry.platform ?? config.platform ?? 'ANDROID TV';
-			entry.keyboard_id = entry.keyboard_id ?? config.keyboard_id;
-			entry.media_player_id =
-				entry.media_player_id ??
-				config.media_player_id ??
-				(entry.entity_id?.startsWith('media_player.')
-					? entry.entity_id
-					: '');
-			entry.remote_id =
-				entry.remote_id ??
-				config.remote_id ??
-				(entry.entity_id?.startsWith('remote.') ? entry.entity_id : '');
-
 			for (const actionType of ActionTypes) {
 				if (entry[actionType]) {
 					const action = entry[actionType] ?? ({} as IAction);
 
-					action.platform = action.platform ?? entry.platform;
+					action.platform = action.platform ?? config.platform;
 					switch (action.platform?.toUpperCase()) {
 						case 'KODI':
 						case 'ROKU':
@@ -1512,10 +1471,10 @@ export class UniversalTVCardEditor extends LitElement {
 					}
 
 					action.keyboard_id =
-						action.keyboard_id ?? entry.keyboard_id;
+						action.keyboard_id ?? config.keyboard_id;
 					action.media_player_id =
-						action.media_player_id ?? entry.media_player_id;
-					action.remote_id = action.remote_id ?? entry.remote_id;
+						action.media_player_id ?? config.media_player_id;
+					action.remote_id = action.remote_id ?? config.remote_id;
 					entry[actionType] = action;
 
 					let entityId: string | undefined;
