@@ -19,6 +19,7 @@ import {
 	IIconConfig,
 	ITarget,
 	Platform,
+	Platforms,
 	RemoteElementType,
 	RemoteElementTypes,
 	defaultIcons,
@@ -572,21 +573,49 @@ export class UniversalTVCardEditor extends LitElement {
 			${this.buildSelector('Name', 'name', {
 				text: {},
 			})}
-			${this.buildSelector('Entity', 'entity_id', {
-				entity: {},
-			})}
-			${
-				this.activeEntry?.entity_id
-					? this.buildSelector('Attribute', 'value_attribute', {
-							attribute: {
-								entity_id: this.activeEntry.entity_id,
-							},
-					  })
-					: ''
-			}
 			${additionalOptions}
 			<div class="form">
 				${additionalFormOptions}
+				${this.buildSelector('Entity', 'entity_id', {
+					entity: {},
+				})}
+				${
+					this.activeEntry?.entity_id
+						? this.buildSelector('Attribute', 'value_attribute', {
+								attribute: {
+									entity_id: this.activeEntry.entity_id,
+								},
+						  })
+						: ''
+				}
+				${this.buildSelector('Remote ID', 'remote_id', {
+					entity: {
+						filter: {
+							domain: 'remote',
+						},
+					},
+				})}
+				${this.buildSelector('Media Player ID', 'media_player_id', {
+					entity: {
+						filter: {
+							domain: 'media_player',
+						},
+					},
+				})}
+				${this.buildSelector('Keyboard ID', 'keyboard_id', {
+					entity: {
+						filter: {
+							domain: ['remote', 'media_player'],
+						},
+					},
+				})}
+				${this.buildSelector('Platform', 'platform', {
+					select: {
+						mode: 'dropdown',
+						options: Platforms,
+						reorder: false,
+					},
+				})}
 				${this.buildSelector(
 					'Autofill entity',
 					'autofill_entity_id',
@@ -691,28 +720,13 @@ export class UniversalTVCardEditor extends LitElement {
 		selector: object,
 		buildCodeEditor: boolean = false,
 	) {
-		// TODO add key, source, IDs and keyboard fields
-		// ${this.buildSelector('Remote ID', 'remote_id', {
-		// 	entity: {
-		// 		filter: {
-		// 			domain: 'remote',
-		// 		},
-		// 	},
-		// })}
-		// ${this.buildSelector('Media Player ID', 'media_player_id', {
-		// 	entity: {
-		// 		filter: {
-		// 			domain: 'media_player',
-		// 		},
-		// 	},
-		// })}
 		const context = this.getEntryContext(
 			this.activeEntry ?? ({} as IElementConfig),
 		);
 		const action = this.renderTemplate(
 			this.activeEntry?.[actionType]?.action ?? 'none',
 			context,
-		);
+		) as string;
 		return html`<div class="action-options">
 			${this.buildSelector(label, actionType, selector)}
 			${action != 'none' && actionType == 'double_tap_action'
@@ -762,6 +776,55 @@ export class UniversalTVCardEditor extends LitElement {
 									100,
 							  )
 							: ''}
+				  </div>`
+				: ''}
+			${action == 'perform-action'
+				? html`<div class="form">
+						${this.buildSelector('Remote ID', 'remote_id', {
+							entity: {
+								filter: {
+									domain: 'remote',
+								},
+							},
+						})}
+						${this.buildSelector(
+							'Media Player ID',
+							'media_player_id',
+							{
+								entity: {
+									filter: {
+										domain: 'media_player',
+									},
+								},
+							},
+						)}
+				  </div>`
+				: ''}
+			${action == 'key' || action == 'source'
+				? this.buildSelector('Remote ID', 'remote_id', {
+						entity: {
+							filter: {
+								domain: 'remote',
+							},
+						},
+				  })
+				: ''}
+			${['keyboard', 'textbox', 'search'].includes(action)
+				? html`<div class="form">
+						${this.buildSelector('Keyboard ID', 'keyboard_id', {
+							entity: {
+								filter: {
+									domain: ['remote', 'media_player'],
+								},
+							},
+						})}
+						${this.buildSelector('Platform', 'platform', {
+							select: {
+								mode: 'dropdown',
+								options: Platforms,
+								reorder: false,
+							},
+						})}
 				  </div>`
 				: ''}
 			${action == 'more-info'
@@ -1345,218 +1408,280 @@ export class UniversalTVCardEditor extends LitElement {
 		const updatedConfig = structuredClone(config);
 		const updatedEntries: IElementConfig[] = [];
 		for (let entry of updatedConfig.custom_actions ?? []) {
-			if (!('autofill_entity_id' in entry)) {
-				entry.autofill_entity_id =
-					updatedConfig.autofill_entity_id ?? true;
-			}
-			if (
-				this.renderTemplate(
-					(entry.autofill_entity_id ?? true) as unknown as string,
-					this.getEntryContext(entry),
-				)
-			) {
-				for (const actionType of ActionTypes) {
-					if (entry[actionType]) {
-						const action = entry[actionType] ?? ({} as IAction);
-
-						action.platform =
-							action.platform ?? this.config.platform;
-						switch (action.platform?.toUpperCase()) {
-							case 'KODI':
-							case 'ROKU':
-								break;
-							case 'FIRE' as Platform:
-							case 'FIRETV' as Platform:
-							case 'FIRE_TV' as Platform:
-							case 'FIRE TV':
-								action.platform = 'FIRE TV';
-								break;
-							case 'ANDROID' as Platform:
-							case 'ANDROIDTV' as Platform:
-							case 'ANDROID_TV' as Platform:
-							case 'ANDROID TV':
-							default:
-								action.platform = 'ANDROID TV';
-								break;
-						}
-
-						action.keyboard_id =
-							action.keyboard_id ?? this.config.keyboard_id;
-						action.media_player_id =
-							action.media_player_id ??
-							this.config.media_player_id;
-						action.remote_id =
-							action.remote_id ?? this.config.remote_id;
-						entry[actionType] = action;
-					}
-				}
-
-				// Set hold time if defined globally
-				if (this.config.hold_time) {
-					entry.hold_action = entry.hold_action ?? {
-						action: 'none',
-					};
-					entry.hold_action.hold_time =
-						entry.hold_action?.hold_time ?? this.config.hold_time;
-
-					if (entry.multi_hold_action) {
-						entry.multi_hold_action.hold_time =
-							entry.multi_hold_action?.hold_time ??
-							this.config.hold_time;
-					}
-				}
-
-				// Set repeat delay if defined globally
-				if (this.config.repeat_delay) {
-					entry.hold_action = entry.hold_action ?? {
-						action: 'none',
-					};
-					if (entry.hold_action?.action == 'repeat') {
-						entry.hold_action.repeat_delay =
-							entry.hold_action.repeat_delay ??
-							this.config.repeat_delay;
-					}
-					if (
-						entry.multi_hold_action &&
-						entry.multi_hold_action?.action == 'repeat'
-					) {
-						entry.multi_hold_action.repeat_delay =
-							entry.multi_hold_action.repeat_delay ??
-							this.config.repeat_delay;
-					}
-				}
-
-				// Set double tap window if defined globally
-				if (this.config.double_tap_window) {
-					entry.double_tap_action = entry.double_tap_action ?? {
-						action: 'none',
-					};
-					entry.double_tap_action.double_tap_window =
-						entry.double_tap_action.double_tap_window ??
-						this.config.double_tap_window;
-					if (entry.multi_double_tap_action) {
-						entry.multi_double_tap_action.double_tap_window =
-							entry.multi_double_tap_action.double_tap_window ??
-							this.config.double_tap_window;
-					}
-				}
-
-				// Feature entity ID
-				entry = this.populateMissingEntityId(
-					entry,
-					updatedConfig.remote_id ??
-						updatedConfig.media_player_id ??
-						updatedConfig.keyboard_id ??
-						'',
-				);
-				const entityId = this.renderTemplate(
-					entry.entity_id as string,
-					this.getEntryContext(entry),
-				) as string;
-
-				switch (
-					this.renderTemplate(
-						entry.type as string,
-						this.getEntryContext(entry),
-					)
-				) {
-					case 'slider': {
-						const [domain, _service] = (entityId ?? '').split('.');
-
-						let rangeMin = entry.range?.[0];
-						let rangeMax = entry.range?.[1];
-						if (rangeMin == undefined) {
-							rangeMin =
-								this.hass.states[entityId]?.attributes?.min ??
-								0;
-						}
-						if (rangeMax == undefined) {
-							rangeMax =
-								this.hass.states[entityId]?.attributes?.max ??
-								1;
-						}
-						entry.range = [rangeMin as number, rangeMax as number];
-
-						if (!entry.tap_action) {
-							const tap_action = {} as IAction;
-							const data = tap_action.data ?? {};
-							tap_action.action = 'perform-action';
-							switch (domain) {
-								case 'number':
-									tap_action.perform_action =
-										'number.set_value';
-									if (!data.value) {
-										data.value = '{{ value | float }}';
-										tap_action.data = data;
-									}
-									break;
-								case 'input_number':
-									tap_action.perform_action =
-										'input_number.set_value';
-									if (!data.value) {
-										data.value = '{{ value | float }}';
-										tap_action.data = data;
-									}
-									break;
-								default:
-									break;
-							}
-
-							const target = tap_action.target ?? {};
-							if (!target.entity_id) {
-								target.entity_id = entityId as string;
-								tap_action.target = target;
-							}
-							entry.tap_action = tap_action;
-						}
-
-						if (!entry.step) {
-							const defaultStep =
-								this.hass.states[entityId as string]?.attributes
-									?.step;
-							if (defaultStep) {
-								entry.step = defaultStep;
-							} else {
-								const entryContext =
-									this.getEntryContext(entry);
-								entry.step =
-									((this.renderTemplate(
-										entry.range[1],
-										entryContext,
-									) as unknown as number) -
-										(this.renderTemplate(
-											entry.range[0],
-											entryContext,
-										) as unknown as number)) /
-									100;
-							}
-						}
-						break;
-					}
-					case 'touchpad':
-					case 'button':
-					case 'default':
-						break;
-				}
-
-				// Copy custom action onto default action
-				const defaultAction =
-					defaultKeys.filter(
-						(action) => action.name == entry.name,
-					)[0] ??
-					defaultSources.filter(
-						(action) => action.name == entry.name,
-					)[0] ??
-					{};
-				entry = {
-					...defaultAction,
-					...entry,
-				};
-			}
-			updatedEntries.push(entry);
+			updatedEntries.push(
+				this.autofillDefaultEntryFields(updatedConfig, entry),
+			);
 		}
 		updatedConfig.custom_actions = updatedEntries;
 		return updatedConfig;
+	}
+
+	autofillDefaultEntryFields(config: IConfig, entry: IElementConfig) {
+		if (!('autofill_entity_id' in entry)) {
+			entry.autofill_entity_id = config.autofill_entity_id ?? true;
+		}
+		if (
+			this.renderTemplate(
+				(entry.autofill_entity_id ?? true) as unknown as string,
+				this.getEntryContext(entry),
+			)
+		) {
+			entry.value_attribute = entry.value_attribute ?? 'state';
+			entry.haptics = entry.haptics ?? config.haptics ?? true;
+
+			entry.platform = entry.platform ?? config.platform ?? 'ANDROID TV';
+			entry.keyboard_id = entry.keyboard_id ?? config.keyboard_id;
+			entry.media_player_id =
+				entry.media_player_id ??
+				config.media_player_id ??
+				(entry.entity_id?.startsWith('media_player.')
+					? entry.entity_id
+					: '');
+			entry.remote_id =
+				entry.remote_id ??
+				config.remote_id ??
+				(entry.entity_id?.startsWith('remote.') ? entry.entity_id : '');
+
+			for (const actionType of ActionTypes) {
+				if (entry[actionType]) {
+					const action = entry[actionType] ?? ({} as IAction);
+
+					action.platform = action.platform ?? config.platform;
+					switch (action.platform?.toUpperCase()) {
+						case 'KODI':
+						case 'ROKU':
+							break;
+						case 'FIRE' as Platform:
+						case 'FIRETV' as Platform:
+						case 'FIRE_TV' as Platform:
+						case 'FIRE TV':
+							action.platform = 'FIRE TV';
+							break;
+						case 'ANDROID' as Platform:
+						case 'ANDROIDTV' as Platform:
+						case 'ANDROID_TV' as Platform:
+						case 'ANDROID TV':
+						default:
+							action.platform = 'ANDROID TV';
+							break;
+					}
+
+					action.keyboard_id =
+						action.keyboard_id ?? config.keyboard_id;
+					action.media_player_id =
+						action.media_player_id ?? config.media_player_id;
+					action.remote_id = action.remote_id ?? config.remote_id;
+					entry[actionType] = action;
+
+					let entityId: string | undefined;
+					const [domain, _service] = (
+						renderTemplate(
+							this.hass,
+							action.perform_action ??
+								(action[
+									'service' as 'perform_action'
+								] as string) ??
+								'',
+							this.getEntryContext(entry),
+						) as string
+					).split('.');
+					switch (domain) {
+						case 'remote':
+							entityId = action.remote_id;
+							break;
+						case 'media_player':
+						case 'kodi':
+						case 'denonavr':
+							entityId = action.media_player_id;
+							break;
+						default:
+							entityId = entry.entity_id;
+							break;
+					}
+
+					if (
+						entityId &&
+						!action.data?.entity_id &&
+						!action.data?.device_id &&
+						!action.data?.area_id &&
+						!action.data?.label_id &&
+						!action.target?.entity_id &&
+						!action.target?.device_id &&
+						!action.target?.area_id &&
+						!action.target?.label_id
+					) {
+						action.target = {
+							...action.target,
+							entity_id: entityId,
+						};
+					}
+
+					entry[actionType] = action;
+				}
+			}
+
+			// Set hold time if defined globally
+			if (config.hold_time) {
+				entry.hold_action = entry.hold_action ?? {
+					action: 'none',
+				};
+				entry.hold_action.hold_time =
+					entry.hold_action?.hold_time ?? config.hold_time;
+
+				if (entry.multi_hold_action) {
+					entry.multi_hold_action.hold_time =
+						entry.multi_hold_action?.hold_time ?? config.hold_time;
+				}
+			}
+
+			// Set repeat delay if defined globally
+			if (config.repeat_delay) {
+				entry.hold_action = entry.hold_action ?? {
+					action: 'none',
+				};
+				if (entry.hold_action?.action == 'repeat') {
+					entry.hold_action.repeat_delay =
+						entry.hold_action.repeat_delay ?? config.repeat_delay;
+				}
+				if (
+					entry.multi_hold_action &&
+					entry.multi_hold_action?.action == 'repeat'
+				) {
+					entry.multi_hold_action.repeat_delay =
+						entry.multi_hold_action.repeat_delay ??
+						config.repeat_delay;
+				}
+			}
+
+			// Set double tap window if defined globally
+			if (config.double_tap_window) {
+				entry.double_tap_action = entry.double_tap_action ?? {
+					action: 'none',
+				};
+				entry.double_tap_action.double_tap_window =
+					entry.double_tap_action.double_tap_window ??
+					config.double_tap_window;
+				if (entry.multi_double_tap_action) {
+					entry.multi_double_tap_action.double_tap_window =
+						entry.multi_double_tap_action.double_tap_window ??
+						config.double_tap_window;
+				}
+			}
+
+			// Feature entity ID
+			entry = this.populateMissingEntityId(
+				entry,
+				config.remote_id ??
+					config.media_player_id ??
+					config.keyboard_id ??
+					'',
+			);
+			const entityId = this.renderTemplate(
+				entry.entity_id as string,
+				this.getEntryContext(entry),
+			) as string;
+
+			switch (
+				this.renderTemplate(
+					entry.type as string,
+					this.getEntryContext(entry),
+				)
+			) {
+				case 'slider': {
+					const [domain, _service] = (entityId ?? '').split('.');
+
+					let rangeMin = entry.range?.[0];
+					let rangeMax = entry.range?.[1];
+					if (rangeMin == undefined) {
+						rangeMin =
+							this.hass.states[entityId]?.attributes?.min ?? 0;
+					}
+					if (rangeMax == undefined) {
+						rangeMax =
+							this.hass.states[entityId]?.attributes?.max ?? 1;
+					}
+					entry.range = [rangeMin as number, rangeMax as number];
+
+					if (!entry.tap_action) {
+						const tap_action = {} as IAction;
+						const data = tap_action.data ?? {};
+						tap_action.action = 'perform-action';
+						switch (domain) {
+							case 'number':
+								tap_action.perform_action = 'number.set_value';
+								if (!data.value) {
+									data.value = '{{ value | float }}';
+									tap_action.data = data;
+								}
+								break;
+							case 'input_number':
+								tap_action.perform_action =
+									'input_number.set_value';
+								if (!data.value) {
+									data.value = '{{ value | float }}';
+									tap_action.data = data;
+								}
+								break;
+							default:
+								break;
+						}
+
+						const target = tap_action.target ?? {};
+						if (!target.entity_id) {
+							target.entity_id = entityId as string;
+							tap_action.target = target;
+						}
+						entry.tap_action = tap_action;
+					}
+
+					if (!entry.step) {
+						const defaultStep =
+							this.hass.states[entityId as string]?.attributes
+								?.step;
+						if (defaultStep) {
+							entry.step = defaultStep;
+						} else {
+							const entryContext = this.getEntryContext(entry);
+							entry.step =
+								((this.renderTemplate(
+									entry.range[1],
+									entryContext,
+								) as unknown as number) -
+									(this.renderTemplate(
+										entry.range[0],
+										entryContext,
+									) as unknown as number)) /
+								100;
+						}
+					}
+					break;
+				}
+				case 'touchpad':
+					for (const direction of DirectionActions) {
+						entry[direction] = this.autofillDefaultEntryFields(
+							config,
+							(entry[direction] ?? {}) as IElementConfig,
+						);
+					}
+					break;
+				case 'button':
+				case 'default':
+					break;
+			}
+
+			// Copy custom action onto default action
+			const defaultAction =
+				defaultKeys.filter((action) => action.name == entry.name)[0] ??
+				defaultSources.filter(
+					(action) => action.name == entry.name,
+				)[0] ??
+				{};
+			entry = {
+				...defaultAction,
+				...entry,
+			};
+		}
+		return entry;
 	}
 
 	updateDeprecatedFields(config: IConfig = this.config): IConfig {
@@ -1575,7 +1700,7 @@ export class UniversalTVCardEditor extends LitElement {
 			delete (updatedConfig as Record<string, string>).keyboard_mode;
 		}
 
-		// Old haptic feedback toggle  names
+		// Old haptic feedback toggle names
 		if ('enable_button_feedback' in updatedConfig) {
 			updatedConfig.haptics = (
 				updatedConfig as Record<string, boolean>

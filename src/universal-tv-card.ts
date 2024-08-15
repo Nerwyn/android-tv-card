@@ -77,6 +77,7 @@ class UniversalTVCard extends LitElement {
 	}
 
 	updateElementConfig(actions: IElementConfig) {
+		// TODO only run this for default actions?
 		const context = {
 			config: {
 				...actions,
