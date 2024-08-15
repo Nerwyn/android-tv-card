@@ -21,8 +21,8 @@ export class RemoteSlider extends BaseRemoteElement {
 	step: number = 0.01;
 	intervalId?: ReturnType<typeof setTimeout>;
 
-	sliderWidth: number = 0;
-	sliderHeight: number = 0;
+	@state() sliderWidth: number = 0;
+	@state() sliderHeight: number = 0;
 	vertical: boolean = false;
 	thumbWidth: number = 50;
 	resizeObserver = new ResizeObserver((entries) => {
@@ -380,7 +380,6 @@ export class RemoteSlider extends BaseRemoteElement {
 		}
 
 		// TODO find way to parse and apply vertical styles before render, or force re-render after first render
-		// Maybe on first updated or updated?
 		this.vertical =
 			this.renderTemplate(this.config.vertical ?? false, context) == true;
 		this.resizeObserver.observe(
@@ -423,10 +422,6 @@ export class RemoteSlider extends BaseRemoteElement {
 	disconnectedCallback(): void {
 		super.disconnectedCallback();
 		this.resizeObserver.disconnect();
-	}
-
-	firstUpdated() {
-		this.requestUpdate();
 	}
 
 	static get styles(): CSSResult | CSSResult[] {
