@@ -1820,14 +1820,14 @@ export class UniversalTVCardEditor extends LitElement {
 				styles += `\n  ${field}: ${style[field]};`;
 			}
 			styles += `\n}`;
-			slider.styles = styles + (slider.styles ?? '');
+			slider.styles = (styles + (slider.styles ?? '')).trim();
 			delete updatedConfig['slider_style' as keyof IConfig];
 			updateSlider = true;
 		}
 		if ('tooltip' in slider) {
 			let styles = slider.styles ?? '';
 			styles += `\n.tooltip {\n  display: {{ "initial" if render(${slider.tooltip}) else "none" }};\n}`;
-			slider.styles = styles;
+			slider.styles = (slider.styles ?? '' + styles).trim();
 			updateSlider = true;
 		}
 		if ('slider_range' in updatedConfig) {
@@ -1917,7 +1917,7 @@ export class UniversalTVCardEditor extends LitElement {
 				styles += `\n  ${field}: ${style[field]};`;
 			}
 			styles += `\n}`;
-			touchpad.styles = styles + (touchpad.styles ?? '');
+			touchpad.styles = (styles + (touchpad.styles ?? '')).trim();
 			delete updatedConfig['touchpad_style' as keyof IConfig];
 			updateTouchpad = true;
 		}
@@ -1926,7 +1926,7 @@ export class UniversalTVCardEditor extends LitElement {
 			styles += `\ntoucharea {\n  height: ${
 				(updatedConfig as Record<string, string>)['touchpad_height']
 			};\n}`;
-			touchpad.styles = styles += touchpad.styles ?? '';
+			touchpad.styles = (styles + (touchpad.styles ?? '')).trim();
 			delete (updatedConfig as Record<string, string>)['touchpad_height'];
 			updateTouchpad = true;
 		}
@@ -2035,7 +2035,9 @@ export class UniversalTVCardEditor extends LitElement {
 				styles += `\n  ${field}: ${style[field]};`;
 			}
 			styles += `\n}`;
-			updatedConfig.styles = styles + (updatedConfig.styles ?? '');
+			updatedConfig.styles = (
+				styles + (updatedConfig.styles ?? '')
+			).trim();
 			delete updatedConfig['style' as keyof IConfig];
 		}
 
@@ -2050,7 +2052,9 @@ export class UniversalTVCardEditor extends LitElement {
 				styles += `\n  ${field}: ${style[field]};`;
 			}
 			styles += `\n}`;
-			updatedConfig.button_styles = styles + (updatedConfig.styles ?? '');
+			updatedConfig.button_styles = (
+				styles + (updatedConfig.styles ?? '')
+			).trim();
 			delete updatedConfig['button_style' as keyof IConfig];
 		}
 
@@ -2067,7 +2071,7 @@ export class UniversalTVCardEditor extends LitElement {
 				}
 				styles += '\n}';
 			}
-			updatedConfig.styles = styles;
+			updatedConfig.styles = (updatedConfig.styles ?? '' + styles).trim();
 			delete updatedConfig['row_styles' as keyof IConfig];
 		}
 
@@ -2184,7 +2188,7 @@ export class UniversalTVCardEditor extends LitElement {
 				styles += `\n  ${field}: ${style[field]};`;
 			}
 			styles += '\n}';
-			customAction.styles = styles + (customAction.styles ?? '');
+			customAction.styles = (styles + (customAction.styles ?? '')).trim();
 			delete customAction['style' as keyof IElementConfig];
 		}
 
