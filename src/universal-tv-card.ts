@@ -76,7 +76,6 @@ class UniversalTVCard extends LitElement {
 	}
 
 	updateElementConfig(actions: IElementConfig) {
-		// TODO only run this for default actions?
 		actions.autofill_entity_id =
 			actions.autofill_entity_id ??
 			this.config.autofill_entity_id ??
@@ -121,10 +120,10 @@ class UniversalTVCard extends LitElement {
 
 			// Set hold time if defined globally
 			if (this.config.hold_time) {
-				actions.hold_action = actions.hold_action ?? { action: 'none' };
-				actions.hold_action.hold_time =
-					actions.hold_action?.hold_time ?? this.config.hold_time;
-
+				if (actions.hold_action) {
+					actions.hold_action.hold_time =
+						actions.hold_action?.hold_time ?? this.config.hold_time;
+				}
 				if (actions.multi_hold_action) {
 					actions.multi_hold_action.hold_time =
 						actions.multi_hold_action?.hold_time ??
@@ -134,7 +133,6 @@ class UniversalTVCard extends LitElement {
 
 			// Set repeat delay if defined globally
 			if (this.config.repeat_delay) {
-				actions.hold_action = actions.hold_action ?? { action: 'none' };
 				if (actions.hold_action?.action == 'repeat') {
 					actions.hold_action.repeat_delay =
 						actions.hold_action.repeat_delay ??
@@ -152,12 +150,11 @@ class UniversalTVCard extends LitElement {
 
 			// Set double tap window if defined globally
 			if (this.config.double_tap_window) {
-				actions.double_tap_action = actions.double_tap_action ?? {
-					action: 'none',
-				};
-				actions.double_tap_action.double_tap_window =
-					actions.double_tap_action.double_tap_window ??
-					this.config.double_tap_window;
+				if (actions.double_tap_action) {
+					actions.double_tap_action.double_tap_window =
+						actions.double_tap_action?.double_tap_window ??
+						this.config.double_tap_window;
+				}
 				if (actions.multi_double_tap_action) {
 					actions.multi_double_tap_action.double_tap_window =
 						actions.multi_double_tap_action.double_tap_window ??

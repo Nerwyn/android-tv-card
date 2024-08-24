@@ -1554,12 +1554,11 @@ export class UniversalTVCardEditor extends LitElement {
 
 			// Set double tap window if defined globally
 			if (config.double_tap_window) {
-				entry.double_tap_action = entry.double_tap_action ?? {
-					action: 'none',
-				};
-				entry.double_tap_action.double_tap_window =
-					entry.double_tap_action.double_tap_window ??
-					config.double_tap_window;
+				if (entry.double_tap_action) {
+					entry.double_tap_action.double_tap_window =
+						entry.double_tap_action.double_tap_window ??
+						config.double_tap_window;
+				}
 				if (entry.multi_double_tap_action) {
 					entry.multi_double_tap_action.double_tap_window =
 						entry.multi_double_tap_action.double_tap_window ??
