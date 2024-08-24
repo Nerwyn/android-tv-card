@@ -841,6 +841,13 @@ export class UniversalTVCardEditor extends LitElement {
 								},
 							},
 						)}
+						${this.buildSelector(
+							'Prompt',
+							`${actionType}.keyboard_prompt`,
+							{
+								text: { multiline: true },
+							},
+						)}
 				  </div>`
 				: ''}
 			${action == 'more-info'
