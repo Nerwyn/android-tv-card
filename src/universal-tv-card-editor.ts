@@ -1529,12 +1529,10 @@ export class UniversalTVCardEditor extends LitElement {
 
 			// Set hold time if defined globally
 			if (config.hold_time) {
-				entry.hold_action = entry.hold_action ?? {
-					action: 'none',
-				};
-				entry.hold_action.hold_time =
-					entry.hold_action?.hold_time ?? config.hold_time;
-
+				if (entry.hold_action) {
+					entry.hold_action.hold_time =
+						entry.hold_action?.hold_time ?? config.hold_time;
+				}
 				if (entry.multi_hold_action) {
 					entry.multi_hold_action.hold_time =
 						entry.multi_hold_action?.hold_time ?? config.hold_time;
@@ -1543,17 +1541,11 @@ export class UniversalTVCardEditor extends LitElement {
 
 			// Set repeat delay if defined globally
 			if (config.repeat_delay) {
-				entry.hold_action = entry.hold_action ?? {
-					action: 'none',
-				};
 				if (entry.hold_action?.action == 'repeat') {
 					entry.hold_action.repeat_delay =
 						entry.hold_action.repeat_delay ?? config.repeat_delay;
 				}
-				if (
-					entry.multi_hold_action &&
-					entry.multi_hold_action?.action == 'repeat'
-				) {
+				if (entry.multi_hold_action?.action == 'repeat') {
 					entry.multi_hold_action.repeat_delay =
 						entry.multi_hold_action.repeat_delay ??
 						config.repeat_delay;
