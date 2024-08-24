@@ -1963,31 +1963,41 @@ export class UniversalTVCardEditor extends LitElement {
 			};
 			updateTouchpad = true;
 		}
-		const centerCustomAction = customActions.filter(
-			(customAction) => customAction.name == 'center',
-		)[0];
 		const defaultTouchpad = defaultKeys.filter(
 			(defaultKey) => defaultKey.name == 'touchpad',
 		)[0];
-		if (centerCustomAction) {
-			for (const actionType of ActionTypes) {
-				if (!touchpad[actionType]) {
-					if (centerCustomAction[actionType]) {
-						touchpad[actionType] = centerCustomAction[actionType];
-					} else if (defaultTouchpad[actionType]) {
-						touchpad[actionType] = defaultTouchpad[actionType];
+		if (updatedConfig.rows.toString().includes('touchpad')) {
+			const centerCustomAction = customActions.filter(
+				(customAction) => customAction.name == 'center',
+			)[0];
+			if (
+				centerCustomAction &&
+				updatedConfig.rows.toString().includes('touchpad')
+			) {
+				for (const actionType of ActionTypes) {
+					if (!touchpad[actionType]) {
+						if (centerCustomAction[actionType]) {
+							touchpad[actionType] =
+								centerCustomAction[actionType];
+						} else if (defaultTouchpad[actionType]) {
+							touchpad[actionType] = defaultTouchpad[actionType];
+						}
 					}
 				}
-			}
-			updateTouchpad = true;
-		}
-		for (const direction of DirectionActions) {
-			const customAction = customActions.filter(
-				(customAction) => customAction.name == direction,
-			)[0];
-			if (!touchpad[direction] && customAction) {
-				touchpad[direction] = customAction;
 				updateTouchpad = true;
+			}
+			for (const direction of DirectionActions) {
+				const customAction = customActions.filter(
+					(customAction) => customAction.name == direction,
+				)[0];
+				if (
+					!touchpad[direction] &&
+					customAction &&
+					updatedConfig.rows.toString().includes('touchpad')
+				) {
+					touchpad[direction] = customAction;
+					updateTouchpad = true;
+				}
 			}
 		}
 		if (updateTouchpad) {
