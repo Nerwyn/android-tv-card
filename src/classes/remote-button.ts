@@ -217,8 +217,6 @@ export class RemoteButton extends BaseRemoteElement {
 				:host {
 					align-content: center;
 					text-align: center;
-
-					--mdc-icon-size: var(--size, 48px);
 				}
 
 				button {

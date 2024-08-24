@@ -303,17 +303,30 @@ export class RemoteTouchpad extends BaseRemoteElement {
 				@contextmenu=${this.onContextMenu}
 			>
 				<div class="toucharea-row">
-					${this.buildIcon(this.config.up?.icon)}
+					<div class="container">
+						${this.buildIcon(this.config.up?.icon)}
+						${this.buildLabel(this.config.up?.label)}
+					</div>
 				</div>
 				<div class="toucharea-row">
-					${this.buildIcon(this.config.left?.icon) ??
-					html`<div></div>`}
-					${this.buildIcon(this.config.icon)}
-					${this.buildIcon(this.config.right?.icon) ??
-					html`<div></div>`}
+					<div class="container">
+						${this.buildIcon(this.config.left?.icon)}
+						${this.buildLabel(this.config.left?.label)}
+					</div>
+					<div class="container">
+						${this.buildIcon(this.config.icon)}
+						${this.buildLabel(this.config.label)}
+					</div>
+					<div class="container">
+						${this.buildIcon(this.config.right?.icon)}
+						${this.buildLabel(this.config.right?.label)}
+					</div>
 				</div>
 				<div class="toucharea-row">
-					${this.buildIcon(this.config.down?.icon)}
+					<div class="container">
+						${this.buildIcon(this.config.down?.icon)}
+						${this.buildLabel(this.config.down?.label)}
+					</div>
 				</div>
 				${this.buildRipple()}
 			</toucharea>
@@ -358,9 +371,12 @@ export class RemoteTouchpad extends BaseRemoteElement {
 					width: -moz-available;
 					width: -webkit-fill-available;
 					width: fill-available;
-					flex: 1;
-					justify-content: space-between;
+					justify-content: space-around;
 					align-items: center;
+				}
+				.container {
+					display: flex;
+					flex-direction: column;
 				}
 			`,
 		];
