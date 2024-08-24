@@ -37,8 +37,8 @@ export class BaseRemoteElement extends LitElement {
 	unitOfMeasurement: string = '';
 	precision?: number;
 
-	buttonPressStart?: number;
-	buttonPressEnd?: number;
+	momentaryStart?: number;
+	momentaryEnd?: number;
 	fireMouseEvent?: boolean = true;
 
 	swiping?: boolean = false;
@@ -55,8 +55,8 @@ export class BaseRemoteElement extends LitElement {
 	}
 
 	endAction() {
-		this.buttonPressStart = undefined;
-		this.buttonPressEnd = undefined;
+		this.momentaryStart = undefined;
+		this.momentaryEnd = undefined;
 
 		this.swiping = false;
 		this.initialX = undefined;
@@ -544,8 +544,8 @@ export class BaseRemoteElement extends LitElement {
 		context?: object,
 	): string | number | boolean {
 		let holdSecs: number = 0;
-		if (this.buttonPressStart && this.buttonPressEnd) {
-			holdSecs = (this.buttonPressEnd - this.buttonPressStart) / 1000;
+		if (this.momentaryStart && this.momentaryEnd) {
+			holdSecs = (this.momentaryEnd - this.momentaryStart) / 1000;
 		}
 		context = {
 			VALUE: this.value as string,

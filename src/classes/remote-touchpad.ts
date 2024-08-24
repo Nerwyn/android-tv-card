@@ -22,7 +22,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 	hold: boolean = false;
 	holdStart: boolean = false;
 	holdMove: boolean = false;
-	holdAction?: DirectionAction;
+	direction?: DirectionAction;
 
 	targetTouches?: TouchList;
 
@@ -78,22 +78,22 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		this.holdStart = true;
 
 		if (
-			!this.holdAction &&
+			!this.direction &&
 			this.renderTemplate(
 				this.config.momentary_start_action?.action ?? 'none',
 			) != 'none'
 		) {
 			this.fireHapticEvent('light');
-			this.buttonPressStart = performance.now();
+			this.momentaryStart = performance.now();
 			this.sendAction('momentary_start_action');
 		} else if (
-			!this.holdAction &&
+			!this.direction &&
 			this.renderTemplate(
 				this.config.momentary_end_action?.action ?? 'none',
 			) != 'none'
 		) {
 			this.fireHapticEvent('light');
-			this.buttonPressStart = performance.now();
+			this.momentaryStart = performance.now();
 		} else if (!this.holdTimer) {
 			this.setHoldTimer();
 		}
@@ -116,17 +116,17 @@ export class RemoteTouchpad extends BaseRemoteElement {
 
 	onEnd(e: TouchEvent | MouseEvent) {
 		if (
-			!this.holdAction &&
+			!this.direction &&
 			this.renderTemplate(
 				this.config.momentary_end_action?.action ?? 'none',
 			) != 'none'
 		) {
-			this.buttonPressEnd = performance.now();
+			this.momentaryEnd = performance.now();
 			this.fireHapticEvent('selection');
 			this.sendAction('momentary_end_action');
 			this.endAction();
 		} else if (
-			!this.holdAction &&
+			!this.direction &&
 			this.renderTemplate(
 				this.config.momentary_start_action?.action ?? 'none',
 			) != 'none'
@@ -161,8 +161,8 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			currentX = currentX / this.targetTouches.length;
 			currentY = currentY / this.targetTouches.length;
 		} else {
-			currentX = e.clientX || 0;
-			currentY = e.clientY || 0;
+			currentX = e.clientX ?? 0;
+			currentY = e.clientY ?? 0;
 		}
 
 		const diffX = this.initialX - currentX;
@@ -173,10 +173,10 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		if (Math.abs(Math.abs(diffX) - Math.abs(diffY)) > sensitivity) {
 			if (Math.abs(diffX) > Math.abs(diffY)) {
 				// Sliding horizontally
-				this.holdAction = diffX > 0 ? 'left' : 'right';
+				this.direction = diffX > 0 ? 'left' : 'right';
 			} else {
 				// Sliding vertically
-				this.holdAction = diffY > 0 ? 'up' : 'down';
+				this.direction = diffY > 0 ? 'up' : 'down';
 			}
 			if (!this.holdMove) {
 				this.fireHapticEvent('light');
@@ -217,7 +217,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		this.hold = false;
 		this.holdStart = false;
 		this.holdMove = false;
-		this.holdAction = undefined;
+		this.direction = undefined;
 		this.clickCount = 0;
 
 		this.initialX = undefined;
@@ -229,7 +229,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 
 	getActions(): IActions {
 		return (
-			this.holdAction ? this.config[this.holdAction] : this.config
+			this.direction ? this.config[this.direction] : this.config
 		) as IActions;
 	}
 
@@ -288,8 +288,8 @@ export class RemoteTouchpad extends BaseRemoteElement {
 	}
 
 	render() {
-		// TODO - icons and labels
 		this.setValue();
+		// TODO make icon-label container a separate custom element for styling
 		return html`
 			<toucharea
 				@mousedown=${this.onMouseDown}

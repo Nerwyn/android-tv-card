@@ -235,6 +235,11 @@ export class UniversalTVCardEditor extends LitElement {
 		if (this.touchpadTabIndex == i) {
 			return;
 		}
+		// Have to reset the actions tab index
+		// especially since center has an additional tab
+		// that could make the actions tab index out of range
+		// when touchpad tab index is changed
+		this.setActionsTabIndexFromDefinedActions(this.entryIndex);
 		this.touchpadTabIndex = i;
 	}
 
@@ -313,35 +318,7 @@ export class UniversalTVCardEditor extends LitElement {
 		const i = (
 			e.currentTarget as unknown as CustomEvent & Record<'index', number>
 		).index;
-		const context = this.getEntryContext(
-			this.activeEntry ?? { type: 'button', name: '' },
-		);
-		this.actionsTabIndex =
-			i > -1 &&
-			(this.renderTemplate(
-				this.activeEntry?.momentary_start_action?.action ?? 'none',
-				context,
-			) != 'none' ||
-				this.renderTemplate(
-					this.activeEntry?.momentary_end_action?.action ?? 'none',
-					context,
-				) != 'none')
-				? 1
-				: this.renderTemplate(
-						this.activeEntry?.multi_tap_action?.action ?? 'none',
-						context,
-				  ) != 'none' ||
-				  this.renderTemplate(
-						this.activeEntry?.multi_double_tap_action?.action ??
-							'none',
-						context,
-				  ) != 'none' ||
-				  this.renderTemplate(
-						this.activeEntry?.multi_hold_action?.action ?? 'none',
-						context,
-				  ) != 'none'
-				? 2
-				: 0;
+		this.setActionsTabIndexFromDefinedActions(i);
 		this.touchpadTabIndex = 2;
 		this.entryIndex = i;
 	}
@@ -349,6 +326,42 @@ export class UniversalTVCardEditor extends LitElement {
 	exitEditEntry(_e: CustomEvent) {
 		this.yamlString = undefined;
 		this.entryIndex = -1;
+	}
+
+	setActionsTabIndexFromDefinedActions(i: number) {
+		const entry = this.config.custom_actions?.[i] ?? {
+			type: 'button',
+			name: '',
+		};
+		const context = this.getEntryContext(entry);
+		this.actionsTabIndex =
+			i != -1 &&
+			(this.renderTemplate(
+				entry?.momentary_start_action?.action ?? 'none',
+				context,
+			) != 'none' ||
+				this.renderTemplate(
+					entry?.momentary_end_action?.action ?? 'none',
+					context,
+				) != 'none')
+				? entry.type == 'touchpad' && this.touchpadTabIndex == 2
+					? 2
+					: 1
+				: entry.type == 'touchpad' &&
+				  (this.renderTemplate(
+						entry?.multi_tap_action?.action ?? 'none',
+						context,
+				  ) != 'none' ||
+						this.renderTemplate(
+							entry?.multi_double_tap_action?.action ?? 'none',
+							context,
+						) != 'none' ||
+						this.renderTemplate(
+							entry?.multi_hold_action?.action ?? 'none',
+							context,
+						) != 'none')
+				? 1
+				: 0;
 	}
 
 	buildEntryList() {
@@ -897,7 +910,7 @@ export class UniversalTVCardEditor extends LitElement {
 			},
 		};
 		switch (this.actionsTabIndex) {
-			case 1: {
+			case 1:
 				actionSelectors = html`
 					${actionsTabBar}
 					${this.buildActionOption(
@@ -916,9 +929,9 @@ export class UniversalTVCardEditor extends LitElement {
 					)}
 				`;
 				break;
-			}
+
 			case 0:
-			default: {
+			default:
 				actionSelectors = html`
 					${actionsTabBar}
 					${this.buildActionOption(
@@ -943,14 +956,11 @@ export class UniversalTVCardEditor extends LitElement {
 					)}
 				`;
 				break;
-			}
 		}
 
 		return html`
 			${this.buildMainFeatureOptions()}
-			${this.buildAppearancePanel(html`
-				${this.buildCommonAppearanceOptions()}
-			`)}
+			${this.buildAppearancePanel(this.buildCommonAppearanceOptions())}
 			${this.buildInteractionsPanel(actionSelectors)}
 		`;
 	}
@@ -1046,8 +1056,120 @@ export class UniversalTVCardEditor extends LitElement {
 	}
 
 	buildTouchpadGuiEditor() {
-		// TODO touchpad gui editor
-		return html``;
+		// TODO WIP touchpad gui editor
+		const actionsTabBar = html`
+			<mwc-tab-bar
+				.activeIndex=${this.actionsTabIndex}
+				@MDCTabBar:activated=${this.handleActionsTabSelected}
+			>
+				<mwc-tab .label=${'default'}></mwc-tab>
+				<mwc-tab .label=${'multi'}></mwc-tab>
+				${this.touchpadTabIndex == 2
+					? html`<mwc-tab .label=${'momentary'}></mwc-tab>`
+					: ''}
+			</mwc-tab-bar>
+		`;
+		let actionSelectors: TemplateResult<1>;
+		const actionsNoRepeat = Actions.concat();
+		actionsNoRepeat.splice(Actions.indexOf('repeat'), 1);
+		const defaultUiActions = {
+			ui_action: {
+				actions: actionsNoRepeat,
+				default_action: 'none',
+			},
+		};
+		switch (this.actionsTabIndex) {
+			case 2:
+				actionSelectors = html`
+					${actionsTabBar}
+					${this.buildActionOption(
+						'Start behavior (optional)',
+						'momentary_start_action',
+						defaultUiActions,
+					)}
+					${this.buildAlertBox(
+						"Set the action below, and then use the code editor to set a data field to the seconds the feature was held down using a template like '{{ hold_secs | float }}'.",
+					)}
+					${this.buildActionOption(
+						'End behavior (optional)',
+						'momentary_end_action',
+						defaultUiActions,
+						true,
+					)}
+				`;
+				break;
+			case 1:
+				actionSelectors = html`
+					${actionsTabBar}
+					${this.buildActionOption(
+						'Multi-touch tap behavior (optional)',
+						'multi_tap_action',
+						defaultUiActions,
+					)}
+					${this.buildActionOption(
+						'Multi-touch double tap behavior (optional)',
+						'multi_double_tap_action',
+						defaultUiActions,
+					)}
+					${this.buildActionOption(
+						'Multi-touch hold behavior (optional)',
+						'multi_hold_action',
+						{
+							ui_action: {
+								actions: Actions,
+								default_action: 'none',
+							},
+						},
+					)}
+				`;
+				break;
+			case 0:
+			default:
+				actionSelectors = html`
+					${actionsTabBar}
+					${this.buildActionOption(
+						'Tap behavior (optional)',
+						'tap_action',
+						defaultUiActions,
+					)}
+					${this.buildActionOption(
+						'Double tap behavior (optional)',
+						'double_tap_action',
+						defaultUiActions,
+					)}
+					${this.buildActionOption(
+						'Hold behavior (optional)',
+						'hold_action',
+						{
+							ui_action: {
+								actions: Actions,
+								default_action: 'none',
+							},
+						},
+					)}
+				`;
+				break;
+		}
+
+		const touchpadTabBar = html`
+			<mwc-tab-bar
+				.activeIndex=${this.touchpadTabIndex}
+				@MDCTabBar:activated=${this.handleTouchpadTabSelected}
+			>
+				<mwc-tab .label=${'up'}></mwc-tab>
+				<mwc-tab .label=${'down'}></mwc-tab>
+				<mwc-tab .label=${'center'}></mwc-tab>
+				<mwc-tab .label=${'left'}></mwc-tab>
+				<mwc-tab .label=${'right'}></mwc-tab>
+			</mwc-tab-bar>
+		`;
+
+		return html`
+			${touchpadTabBar}
+			${this.touchpadTabIndex == 2 ? this.buildMainFeatureOptions() : ''}
+			${this.buildAppearancePanel(this.buildCommonAppearanceOptions())}
+			${this.buildInteractionsPanel(actionSelectors)}
+		`;
 	}
 
 	buildEntryGuiEditor() {

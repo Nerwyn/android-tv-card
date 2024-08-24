@@ -50,8 +50,8 @@ export const DirectionActions = ['up', 'down', 'left', 'right'] as const;
 export type DirectionAction = (typeof DirectionActions)[number];
 
 export interface ITouchpadConfig extends IBaseElementConfig, IActions {
-	up?: IBasicActions & IMultiActions & IDisplayConfig;
-	down?: IBasicActions & IMultiActions & IDisplayConfig;
-	left?: IBasicActions & IMultiActions & IDisplayConfig;
-	right?: IBasicActions & IMultiActions & IDisplayConfig;
+	up?: IBasicActions & IMultiActions & IMomentaryActions & IDisplayConfig;
+	down?: IBasicActions & IMultiActions & IMomentaryActions & IDisplayConfig;
+	left?: IBasicActions & IMultiActions & IMomentaryActions & IDisplayConfig;
+	right?: IBasicActions & IMultiActions & IMomentaryActions & IDisplayConfig;
 }

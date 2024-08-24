@@ -72,7 +72,7 @@ export class RemoteButton extends BaseRemoteElement {
 			) != 'none'
 		) {
 			this.fireHapticEvent('light');
-			this.buttonPressStart = performance.now();
+			this.momentaryStart = performance.now();
 			this.sendAction('momentary_start_action');
 		} else if (
 			this.renderTemplate(
@@ -80,7 +80,7 @@ export class RemoteButton extends BaseRemoteElement {
 			) != 'none'
 		) {
 			this.fireHapticEvent('light');
-			this.buttonPressStart = performance.now();
+			this.momentaryStart = performance.now();
 		} else if (!this.holdTimer) {
 			const holdTime = this.renderTemplate(
 				this.config.hold_action?.hold_time ?? 500,
@@ -121,7 +121,7 @@ export class RemoteButton extends BaseRemoteElement {
 				) != 'none'
 			) {
 				this.fireHapticEvent('selection');
-				this.buttonPressEnd = performance.now();
+				this.momentaryEnd = performance.now();
 				this.sendAction('momentary_end_action');
 				this.endAction();
 			} else if (
