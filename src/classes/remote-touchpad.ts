@@ -303,30 +303,40 @@ export class RemoteTouchpad extends BaseRemoteElement {
 				@contextmenu=${this.onContextMenu}
 			>
 				<div class="toucharea-row">
-					<div class="container">
-						${this.buildIcon(this.config.up?.icon)}
-						${this.buildLabel(this.config.up?.label)}
-					</div>
+					<remote-icon-label
+						id="up"
+						.hass=${this.hass}
+						.config=${this.config.up}
+						.icons=${this.icons}
+					/>
 				</div>
 				<div class="toucharea-row">
-					<div class="container">
-						${this.buildIcon(this.config.left?.icon)}
-						${this.buildLabel(this.config.left?.label)}
-					</div>
-					<div class="container">
-						${this.buildIcon(this.config.icon)}
-						${this.buildLabel(this.config.label)}
-					</div>
-					<div class="container">
-						${this.buildIcon(this.config.right?.icon)}
-						${this.buildLabel(this.config.right?.label)}
-					</div>
+					<remote-icon-label
+						id="up"
+						.hass=${this.hass}
+						.config=${this.config.left}
+						.icons=${this.icons}
+					/>
+					<remote-icon-label
+						id="up"
+						.hass=${this.hass}
+						.config=${this.config}
+						.icons=${this.icons}
+					/>
+					<remote-icon-label
+						id="up"
+						.hass=${this.hass}
+						.config=${this.config.right}
+						.icons=${this.icons}
+					/>
 				</div>
 				<div class="toucharea-row">
-					<div class="container">
-						${this.buildIcon(this.config.down?.icon)}
-						${this.buildLabel(this.config.down?.label)}
-					</div>
+					<remote-icon-label
+						id="up"
+						.hass=${this.hass}
+						.config=${this.config.down}
+						.icons=${this.icons}
+					/>
 				</div>
 				${this.buildRipple()}
 			</toucharea>
@@ -374,13 +384,16 @@ export class RemoteTouchpad extends BaseRemoteElement {
 					justify-content: space-around;
 					align-items: center;
 				}
-				.container {
-					display: flex;
-					flex-direction: column;
-					align-items: center;
-					justify-content: center;
-				}
 			`,
 		];
+	}
+}
+
+@customElement('remote-icon-label')
+export class IconLabelContainer extends BaseRemoteElement {
+	render() {
+		return html`
+			${this.buildIcon()}${this.buildLabel()}${this.buildStyles()}
+		`;
 	}
 }

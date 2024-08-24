@@ -233,11 +233,11 @@ export class UniversalTVCardEditor extends LitElement {
 		if (this.touchpadTabIndex == i) {
 			return;
 		}
-		// Have to reset the actions tab index
+		// Have to change the actions tab index
 		// especially since center has an additional tab
 		// that could make the actions tab index out of range
 		// when touchpad tab index is changed
-		this.setActionsTabIndexFromDefinedActions(this.entryIndex);
+		this.setActionsTab(this.entryIndex);
 		this.touchpadTabIndex = i;
 	}
 
@@ -316,7 +316,7 @@ export class UniversalTVCardEditor extends LitElement {
 		const i = (
 			e.currentTarget as unknown as CustomEvent & Record<'index', number>
 		).index;
-		this.setActionsTabIndexFromDefinedActions(i);
+		this.setActionsTab(i);
 		this.touchpadTabIndex = 2;
 		this.entryIndex = i;
 	}
@@ -326,11 +326,16 @@ export class UniversalTVCardEditor extends LitElement {
 		this.entryIndex = -1;
 	}
 
-	setActionsTabIndexFromDefinedActions(i: number) {
-		const entry = this.config.custom_actions?.[i] ?? {
+	setActionsTab(i: number) {
+		let entry = this.config.custom_actions?.[i] ?? {
 			type: 'button',
 			name: '',
 		};
+		if (entry.type == 'touchpad' && this.touchpadTabIndex != 2) {
+			entry = entry[
+				this.TOUCHPAD_TABS[this.touchpadTabIndex] as DirectionAction
+			] as IElementConfig;
+		}
 		const context = this.getEntryContext(entry);
 		if (
 			this.renderTemplate(
@@ -1067,7 +1072,7 @@ export class UniversalTVCardEditor extends LitElement {
 				@MDCTabBar:activated=${this.handleActionsTabSelected}
 			>
 				<mwc-tab .label=${'default'}></mwc-tab>
-				<mwc-tab .label=${'multi'}></mwc-tab>
+				<mwc-tab .label=${'multi-touch'}></mwc-tab>
 				${this.touchpadTabIndex == 2
 					? html`<mwc-tab .label=${'momentary'}></mwc-tab>`
 					: ''}
