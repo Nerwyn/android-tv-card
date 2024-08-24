@@ -1432,7 +1432,6 @@ export class UniversalTVCardEditor extends LitElement {
 				if (entry[actionType]) {
 					const action = entry[actionType] ?? ({} as IAction);
 
-					// TODO remove field if not the correct action type
 					switch (action.action) {
 						case 'keyboard':
 						case 'textbox':
@@ -1514,9 +1513,13 @@ export class UniversalTVCardEditor extends LitElement {
 									};
 								}
 							}
-							break;
-						case 'none':
+						// falls through
 						default:
+							delete action.keyboard_id;
+							delete action.keyboard_prompt;
+							delete action.remote_id;
+							delete action.media_player_id;
+							delete action.platform;
 							break;
 					}
 
