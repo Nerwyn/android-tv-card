@@ -1,8 +1,8 @@
 {
-	"name": "Universal TV Card",
+	"name": "Universal Remote Card",
 	"content_in_root": false,
 	"homeassistant": "2023.5.0",
-	"filename": "universal-tv-card.min.js",
+	"filename": "universal-remote-card.min.js",
 	"render_readme": true,
 	"hide_default_branch": true
 }

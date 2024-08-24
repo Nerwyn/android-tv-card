@@ -28,7 +28,7 @@ import {
 } from './models';
 import { deepGet, deepSet, mergeDeep } from './utils';
 
-export class UniversalTVCardEditor extends LitElement {
+export class UniversalRemoteCardEditor extends LitElement {
 	@property() hass!: HomeAssistant;
 	@property() config!: IConfig;
 

@@ -10,11 +10,11 @@ env = 'production';
 module.exports = {
 	mode: env,
 	entry: {
-		main: './src/universal-tv-card.ts',
+		main: './src/universal-remote-card.ts',
 	},
 	output: {
 		path: path.resolve(__dirname, './dist'),
-		filename: 'universal-tv-card.min.js',
+		filename: 'universal-remote-card.min.js',
 	},
 	resolve: {
 		extensions: ['.ts', '.tsx', '.js'],

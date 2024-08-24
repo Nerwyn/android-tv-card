@@ -21,14 +21,14 @@ import './classes/keyboard-dialog';
 import './classes/remote-button';
 import './classes/remote-slider';
 import './classes/remote-touchpad';
-import { UniversalTVCardEditor } from './universal-tv-card-editor';
+import { UniversalRemoteCardEditor } from './universal-remote-card-editor';
 
 console.info(
-	`%c UNIVERSAL-TV-CARD v${packageInfo.version}`,
+	`%c UNIVERSAL-REMOTE-CARD v${packageInfo.version}`,
 	'color: white; font-weight: bold; background: green',
 );
 
-class UniversalTVCard extends LitElement {
+class UniversalRemoteCard extends LitElement {
 	@property() hass!: HomeAssistant;
 	@property() config!: IConfig;
 
@@ -50,7 +50,7 @@ class UniversalTVCard extends LitElement {
 	}
 
 	static getConfigElement() {
-		return document.createElement('universal-tv-card-editor');
+		return document.createElement('universal-remote-card-editor');
 	}
 
 	static getStubConfig() {
@@ -597,14 +597,17 @@ class UniversalTVCard extends LitElement {
 	}
 }
 
-customElements.define('universal-tv-card-editor', UniversalTVCardEditor);
-customElements.define('android-tv-card', UniversalTVCard); // Keep old name to not break old configs
+customElements.define(
+	'universal-remote-card-editor',
+	UniversalRemoteCardEditor,
+);
+customElements.define('android-tv-card', UniversalRemoteCard); // Keep old name to not break old configs
 
 window.customCards = window.customCards || [];
 window.customCards.push({
 	type: 'android-tv-card',
-	name: 'Universal TV Card',
-	description: 'Super customizable universal tv remote card',
+	name: 'Universal Remote Card',
+	description: 'Super customizable universal remote card',
 });
 
 if (!window.structuredClone) {
