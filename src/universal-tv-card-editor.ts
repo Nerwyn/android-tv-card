@@ -249,11 +249,11 @@ export class UniversalTVCardEditor extends LitElement {
 		if (this.touchpadTabIndex == i) {
 			return;
 		}
+		this.touchpadTabIndex = i;
 		// Have to change the actions tab index
 		// especially since center has an additional tab
 		// that could make the actions tab index out of range
 		// when touchpad tab index is changed
-		this.touchpadTabIndex = i;
 		this.setActionsTab(this.entryIndex);
 	}
 
@@ -347,7 +347,8 @@ export class UniversalTVCardEditor extends LitElement {
 			type: 'button',
 			name: '',
 		};
-		if (entry.type == 'touchpad' && this.touchpadTabIndex != 2) {
+		const entryType = entry.type;
+		if (entryType == 'touchpad' && this.touchpadTabIndex != 2) {
 			entry = entry[
 				this.TOUCHPAD_TABS[this.touchpadTabIndex] as DirectionAction
 			] as IElementConfig;
@@ -363,13 +364,13 @@ export class UniversalTVCardEditor extends LitElement {
 				context,
 			) != 'none'
 		) {
-			if (entry.type == 'touchpad' && this.touchpadTabIndex == 2) {
+			if (entryType == 'touchpad' && this.touchpadTabIndex == 2) {
 				this.actionsTabIndex = 2;
 			} else {
 				this.actionsTabIndex = 1;
 			}
 		} else if (
-			entry.type == 'touchpad' &&
+			entryType == 'touchpad' &&
 			(this.renderTemplate(
 				entry?.multi_tap_action?.action ?? 'none',
 				context,
