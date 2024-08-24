@@ -492,6 +492,7 @@ class UniversalTVCard extends LitElement {
 
 		this.nRows = 0;
 		this.nColumns = 0;
+		this.nPads = 0;
 		for (const row of this.config.rows ?? []) {
 			const rowContent = this.buildElements(
 				row as string[],
