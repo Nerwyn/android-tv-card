@@ -793,36 +793,36 @@ export class UniversalTVCardEditor extends LitElement {
 				: ''}
 			${['keyboard', 'textbox', 'search'].includes(action)
 				? html`<div class="form">
-						${this.buildSelector(
-							'Keyboard ID',
-							`${actionType}.keyboard_id`,
-							{
-								entity: {
-									filter: {
-										domain: ['remote', 'media_player'],
+							${this.buildSelector(
+								'Keyboard ID',
+								`${actionType}.keyboard_id`,
+								{
+									entity: {
+										filter: {
+											domain: ['remote', 'media_player'],
+										},
 									},
 								},
-							},
-						)}
-						${this.buildSelector(
-							'Platform',
-							`${actionType}.platform`,
-							{
-								select: {
-									mode: 'dropdown',
-									options: Platforms,
-									reorder: false,
+							)}
+							${this.buildSelector(
+								'Platform',
+								`${actionType}.platform`,
+								{
+									select: {
+										mode: 'dropdown',
+										options: Platforms,
+										reorder: false,
+									},
 								},
-							},
-						)}
+							)}
+						</div>
 						${this.buildSelector(
 							'Prompt',
 							`${actionType}.keyboard_prompt`,
 							{
-								text: { multiline: true },
+								text: {},
 							},
-						)}
-				  </div>`
+						)}`
 				: ''}
 			${action == 'more-info'
 				? this.buildSelector(
