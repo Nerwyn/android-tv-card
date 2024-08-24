@@ -760,6 +760,20 @@ export class UniversalTVCardEditor extends LitElement {
 						},
 						200,
 				  )
+				: action != 'none' && actionType == 'multi_double_tap_action'
+				? this.buildSelector(
+						'Double tap window',
+						'multi_double_tap_action.double_tap_window',
+						{
+							number: {
+								min: 0,
+								step: 0,
+								mode: 'box',
+								unit_of_measurement: 'ms',
+							},
+						},
+						200,
+				  )
 				: action != 'none' && actionType == 'hold_action'
 				? html`<div class="form">
 						${this.buildSelector(
@@ -782,6 +796,41 @@ export class UniversalTVCardEditor extends LitElement {
 							? this.buildSelector(
 									'Repeat delay',
 									'hold_action.repeat_delay',
+									{
+										number: {
+											min: 0,
+											step: 0,
+											mode: 'box',
+											unit_of_measurement: 'ms',
+										},
+									},
+									100,
+							  )
+							: ''}
+				  </div>`
+				: action != 'none' && actionType == 'multi_hold_action'
+				? html`<div class="form">
+						${this.buildSelector(
+							'Hold time',
+							'multi_hold_action.hold_time',
+							{
+								number: {
+									min: 0,
+									step: 0,
+									mode: 'box',
+									unit_of_measurement: 'ms',
+								},
+							},
+							500,
+						)}
+						${this.renderTemplate(
+							this.activeEntry?.multi_hold_action
+								?.action as string,
+							context,
+						) == 'repeat'
+							? this.buildSelector(
+									'Repeat delay',
+									'multi_hold_action.repeat_delay',
 									{
 										number: {
 											min: 0,
@@ -1326,6 +1375,7 @@ export class UniversalTVCardEditor extends LitElement {
 
 		if (!this.autofillCooldown) {
 			this.autofillCooldown = true;
+			// TODO instead of running automatically, make deprecated field update code a button
 			let config = this.updateDeprecatedFields(this.config);
 			config = this.autofillDefaultFields(config);
 			config = this.updateDeprecatedTemplateFields(config);
