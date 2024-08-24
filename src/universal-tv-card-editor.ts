@@ -26,7 +26,7 @@ import {
 	defaultKeys,
 	defaultSources,
 } from './models';
-import { deepGet, deepSet } from './utils';
+import { deepGet, deepSet, mergeDeep } from './utils';
 
 export class UniversalTVCardEditor extends LitElement {
 	@property() hass!: HomeAssistant;
@@ -1179,6 +1179,7 @@ export class UniversalTVCardEditor extends LitElement {
 			this.autofillCooldown = true;
 			let config = this.updateDeprecatedFields(this.config);
 			config = this.autofillDefaultFields(config);
+			config = this.updateDeprecatedTemplateFields(config);
 			this.configChanged(config);
 			setTimeout(() => (this.autofillCooldown = false), 1000);
 		}
@@ -2202,6 +2203,34 @@ export class UniversalTVCardEditor extends LitElement {
 		}
 
 		return customAction;
+	}
+
+	updateDeprecatedTemplateFields(config: IConfig) {
+		const customActions = config.custom_actions ?? [];
+		for (const [i, entry] of customActions.entries()) {
+			if ('template' in entry) {
+				const templateActions =
+					config.custom_actions?.filter(
+						(customActions) =>
+							entry['template' as keyof IElementConfig] ==
+							customActions.name,
+					)[0] ??
+					this.DEFAULT_ACTIONS.filter(
+						(defaultActions) =>
+							entry['template' as keyof IElementConfig] ==
+							defaultActions.name,
+					)[0] ??
+					{};
+				const updatedEntry = mergeDeep(
+					structuredClone(templateActions),
+					entry,
+				) as IElementConfig;
+				delete updatedEntry['template' as keyof IElementConfig];
+				customActions[i] = updatedEntry;
+			}
+		}
+		config.custom_actions = customActions;
+		return config;
 	}
 
 	static get styles() {

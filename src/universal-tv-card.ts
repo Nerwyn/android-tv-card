@@ -16,7 +16,6 @@ import {
 	defaultKeys,
 	defaultSources,
 } from './models';
-import { mergeDeep } from './utils';
 
 import './classes/keyboard-dialog';
 import './classes/remote-button';
@@ -78,23 +77,6 @@ class UniversalTVCard extends LitElement {
 
 	updateElementConfig(actions: IElementConfig) {
 		// TODO only run this for default actions?
-
-		// [DEPRECATED] Apply template if defined
-		if (actions.template) {
-			const templateActions =
-				this.config.custom_actions?.filter(
-					(customActions) => actions.template == customActions.name,
-				)[0] ??
-				this.DEFAULT_ACTIONS.filter(
-					(defaultActions) => actions.template == defaultActions.name,
-				)[0] ??
-				{};
-			actions = mergeDeep(
-				structuredClone(templateActions),
-				actions,
-			) as IElementConfig;
-		}
-
 		actions.autofill_entity_id =
 			actions.autofill_entity_id ??
 			this.config.autofill_entity_id ??
