@@ -302,6 +302,19 @@ export class RemoteTouchpad extends BaseRemoteElement {
 				@touchcancel=${this.onTouchCancel}
 				@contextmenu=${this.onContextMenu}
 			>
+				<div class="toucharea-row">
+					${this.buildIcon(this.config.up?.icon)}
+				</div>
+				<div class="toucharea-row">
+					${this.buildIcon(this.config.left?.icon) ??
+					html`<div></div>`}
+					${this.buildIcon(this.config.icon)}
+					${this.buildIcon(this.config.right?.icon) ??
+					html`<div></div>`}
+				</div>
+				<div class="toucharea-row">
+					${this.buildIcon(this.config.down?.icon)}
+				</div>
 				${this.buildRipple()}
 			</toucharea>
 			${this.buildStyles()}
@@ -332,6 +345,21 @@ export class RemoteTouchpad extends BaseRemoteElement {
 					text-align: center;
 					position: relative;
 					overflow: hidden;
+					display: flex;
+					flex-direction: column;
+					flex-wrap: nowrap;
+					justify-content: space-between;
+				}
+				toucharea-row {
+					display: flex;
+					flex-direction: row;
+					flex-wrap: nowrap;
+					width: -moz-available;
+					width: -webkit-fill-available;
+					width: fill-available;
+					flex: 1;
+					justify-content: space-between;
+					align-items: center;
 				}
 			`,
 		];

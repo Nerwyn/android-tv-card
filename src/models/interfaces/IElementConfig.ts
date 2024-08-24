@@ -16,19 +16,21 @@ export interface IElementConfig
 		ITouchpadConfig,
 		IActions {}
 
-interface IBaseElementConfig {
+interface IBaseElementConfig extends IDisplayConfig {
 	type: RemoteElementType;
 	name: string;
+	haptics?: boolean;
 
 	entity_id?: string;
 	autofill_entity_id?: boolean;
 	value_attribute?: string;
+}
 
+interface IDisplayConfig {
 	icon?: string;
 	label?: string;
 	unit_of_measurement?: string;
 	styles?: string;
-	haptics?: boolean;
 }
 
 export interface IButtonConfig
@@ -48,8 +50,8 @@ export const DirectionActions = ['up', 'down', 'left', 'right'] as const;
 export type DirectionAction = (typeof DirectionActions)[number];
 
 export interface ITouchpadConfig extends IBaseElementConfig, IActions {
-	up?: IBasicActions & IMultiActions;
-	down?: IBasicActions & IMultiActions;
-	left?: IBasicActions & IMultiActions;
-	right?: IBasicActions & IMultiActions;
+	up?: IBasicActions & IMultiActions & IDisplayConfig;
+	down?: IBasicActions & IMultiActions & IDisplayConfig;
+	left?: IBasicActions & IMultiActions & IDisplayConfig;
+	right?: IBasicActions & IMultiActions & IDisplayConfig;
 }
