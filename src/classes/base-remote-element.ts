@@ -663,16 +663,11 @@ export class BaseRemoteElement extends LitElement {
 			: '';
 	}
 
-	buildStyles(actions: IElementConfig = this.config, context?: object) {
-		return actions.styles
+	buildStyles(styles?: string, context?: object) {
+		return styles
 			? html`
 					<style>
-						${(
-							this.renderTemplate(
-								actions.styles,
-								context,
-							) as string
-						)
+						${(this.renderTemplate(styles, context) as string)
 							.replace(/ !important/g, '')
 							.replace(/;/g, ' !important;')}
 					</style>

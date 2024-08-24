@@ -414,7 +414,7 @@ export class RemoteSlider extends BaseRemoteElement {
 				${this.buildLabel(this.config.label, context)}
 			</div>
 			${this.buildTooltip()}${this.buildTooltipStyle(context)}
-			${this.buildStyles(undefined, context)}
+			${this.buildStyles(this.config.styles, context)}
 		`;
 	}
 

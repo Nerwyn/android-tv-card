@@ -178,10 +178,8 @@ export class UniversalTVCardEditor extends LitElement {
 		if (this.entryIndex > -1 && this.activeEntry) {
 			if (css != this.activeEntry?.styles) {
 				this.entryChanged({
-					type: this.activeEntry?.type,
-					name: this.activeEntry?.name,
 					styles: css,
-				});
+				} as unknown as IElementConfig);
 			}
 		} else {
 			if (css != this.config.styles) {
@@ -207,10 +205,8 @@ export class UniversalTVCardEditor extends LitElement {
 						return;
 					}
 					this.entryChanged({
-						type: this.activeEntry.type,
-						name: this.activeEntry.name,
 						[actionType]: actionObj,
-					});
+					} as unknown as IElementConfig);
 					this.errors = undefined;
 				} catch (e) {
 					this.errors = [(e as Error).message];
