@@ -332,34 +332,40 @@ export class UniversalTVCardEditor extends LitElement {
 			name: '',
 		};
 		const context = this.getEntryContext(entry);
-		this.actionsTabIndex =
-			i != -1 &&
-			(this.renderTemplate(
+		if (
+			this.renderTemplate(
 				entry?.momentary_start_action?.action ?? 'none',
 				context,
 			) != 'none' ||
+			this.renderTemplate(
+				entry?.momentary_end_action?.action ?? 'none',
+				context,
+			) != 'none'
+		) {
+			if (entry.type == 'touchpad' && this.touchpadTabIndex == 2) {
+				this.actionsTabIndex = 2;
+			} else {
+				this.actionsTabIndex = 1;
+			}
+		} else if (
+			entry.type == 'touchpad' &&
+			(this.renderTemplate(
+				entry?.multi_tap_action?.action ?? 'none',
+				context,
+			) != 'none' ||
 				this.renderTemplate(
-					entry?.momentary_end_action?.action ?? 'none',
+					entry?.multi_double_tap_action?.action ?? 'none',
+					context,
+				) != 'none' ||
+				this.renderTemplate(
+					entry?.multi_hold_action?.action ?? 'none',
 					context,
 				) != 'none')
-				? entry.type == 'touchpad' && this.touchpadTabIndex == 2
-					? 2
-					: 1
-				: entry.type == 'touchpad' &&
-				  (this.renderTemplate(
-						entry?.multi_tap_action?.action ?? 'none',
-						context,
-				  ) != 'none' ||
-						this.renderTemplate(
-							entry?.multi_double_tap_action?.action ?? 'none',
-							context,
-						) != 'none' ||
-						this.renderTemplate(
-							entry?.multi_hold_action?.action ?? 'none',
-							context,
-						) != 'none')
-				? 1
-				: 0;
+		) {
+			this.actionsTabIndex = 1;
+		} else {
+			this.actionsTabIndex = 0;
+		}
 	}
 
 	buildEntryList() {
@@ -504,7 +510,7 @@ export class UniversalTVCardEditor extends LitElement {
 			this.activeEntry ?? { type: 'button', name: '' },
 		);
 		const entryType = this.renderTemplate(
-			this.activeEntry?.type as string,
+			this.config.custom_actions?.[this.entryIndex]?.type ?? 'button',
 			context,
 		);
 		return html`
@@ -1172,7 +1178,7 @@ export class UniversalTVCardEditor extends LitElement {
 
 	buildEntryGuiEditor() {
 		let entryGuiEditor: TemplateResult<1>;
-		switch (this.activeEntry?.type) {
+		switch (this.config.custom_actions?.[this.entryIndex]?.type) {
 			case 'slider':
 				entryGuiEditor = this.buildSliderGuiEditor();
 				break;
