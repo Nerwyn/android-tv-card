@@ -1431,8 +1431,11 @@ export class UniversalTVCardEditor extends LitElement {
 				if (entry[actionType]) {
 					const action = entry[actionType] ?? ({} as IAction);
 
+					// TODO remove field if not the correct action type
 					switch (action.action) {
 						case 'keyboard':
+						case 'textbox':
+						case 'search':
 							action.keyboard_id =
 								action.keyboard_id ?? config.keyboard_id;
 							action.media_player_id =
