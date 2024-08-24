@@ -34,7 +34,7 @@ export class UniversalTVCardEditor extends LitElement {
 
 	@state() entryIndex: number = -1;
 	@state() actionsTabIndex: number = 0;
-	@state() touchpadTabIndex: number = 2; // up, down, center, left, right
+	@state() touchpadTabIndex: number = 2;
 
 	@state() guiMode: boolean = true;
 	@state() errors?: string[];
@@ -80,15 +80,11 @@ export class UniversalTVCardEditor extends LitElement {
 	entryChanged(entry: IElementConfig) {
 		const entries = structuredClone(this.config.custom_actions ?? []);
 		const oldEntry = entries[this.entryIndex];
+		const context = this.getEntryContext(oldEntry);
 		let updatedEntry: IElementConfig;
-		switch (this.activeEntry?.type) {
+		switch (this.renderTemplate(oldEntry?.type, context)) {
 			case 'touchpad':
-				if (this.touchpadTabIndex == 2) {
-					updatedEntry = {
-						...oldEntry,
-						...entry,
-					};
-				} else {
+				if (this.touchpadTabIndex != 2) {
 					updatedEntry = {
 						...oldEntry,
 						[this.TOUCHPAD_TABS[this.touchpadTabIndex]]: {
@@ -100,8 +96,9 @@ export class UniversalTVCardEditor extends LitElement {
 							...entry,
 						},
 					};
+					break;
 				}
-				break;
+			// falls through
 			case 'slider':
 			case 'button':
 			default:
@@ -124,21 +121,22 @@ export class UniversalTVCardEditor extends LitElement {
 		if (this.entryIndex < 0) {
 			return undefined;
 		}
-		const activeEntry = (this.config.custom_actions ?? [])[this.entryIndex];
-		switch (activeEntry?.type) {
+		const entry = (this.config.custom_actions ?? [])[this.entryIndex];
+		const context = this.getEntryContext(entry);
+		switch (this.renderTemplate(entry?.type, context)) {
 			case 'touchpad':
-				if (this.touchpadTabIndex == 2) {
-					return activeEntry;
+				if (this.touchpadTabIndex != 2) {
+					return entry[
+						this.TOUCHPAD_TABS[
+							this.touchpadTabIndex
+						] as DirectionAction
+					] as IElementConfig;
 				}
-				return activeEntry[
-					['up', 'down', 'center', 'left', 'right'][
-						this.touchpadTabIndex
-					] as DirectionAction
-				] as IElementConfig;
+			// falls through
 			case 'slider':
 			case 'button':
 			default:
-				return activeEntry;
+				return entry;
 		}
 	}
 
