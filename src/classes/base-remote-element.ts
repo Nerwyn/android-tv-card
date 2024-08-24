@@ -764,8 +764,6 @@ export class BaseRemoteElement extends LitElement {
 				color: inherit;
 				-webkit-tap-highlight-color: transparent;
 				-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-
-				--mdc-icon-size: var(--size, 48px);
 			}
 
 			md-ripple.transition-on {
@@ -786,6 +784,8 @@ export class BaseRemoteElement extends LitElement {
 				transform: var(--icon-transform);
 				color: var(--icon-color, var(--primary-text-color));
 				filter: var(--icon-filter, none);
+
+				--mdc-icon-size: var(--size, 48px);
 			}
 			ha-icon,
 			svg {

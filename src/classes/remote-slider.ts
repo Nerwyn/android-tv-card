@@ -449,7 +449,6 @@ export class RemoteSlider extends BaseRemoteElement {
 					pointer-events: none;
 
 					--color: var(--primary-text-color);
-					--mdc-icon-size: var(--size, 32px);
 					--height: 48px;
 				}
 
@@ -555,6 +554,8 @@ export class RemoteSlider extends BaseRemoteElement {
 						--icon-color,
 						var(--background, var(--primary-background-color))
 					);
+
+					--mdc-icon-size: var(--size, 32px);
 				}
 			`,
 		];
