@@ -755,32 +755,6 @@ export class UniversalTVCardEditor extends LitElement {
 							: ''}
 				  </div>`
 				: ''}
-			${action == 'perform-action'
-				? html`<div class="form">
-						${this.buildSelector(
-							'Remote ID',
-							`${actionType}.remote_id`,
-							{
-								entity: {
-									filter: {
-										domain: 'remote',
-									},
-								},
-							},
-						)}
-						${this.buildSelector(
-							'Media Player ID',
-							`${actionType}.media_player_id`,
-							{
-								entity: {
-									filter: {
-										domain: 'media_player',
-									},
-								},
-							},
-						)}
-				  </div>`
-				: ''}
 			${action == 'key'
 				? html`<div class="form">
 						${this.buildSelector(
@@ -1457,74 +1431,89 @@ export class UniversalTVCardEditor extends LitElement {
 				if (entry[actionType]) {
 					const action = entry[actionType] ?? ({} as IAction);
 
-					action.platform = action.platform ?? config.platform;
-					switch (action.platform?.toUpperCase()) {
-						case 'KODI':
-						case 'ROKU':
+					switch (action.action) {
+						case 'keyboard':
+							action.keyboard_id =
+								action.keyboard_id ?? config.keyboard_id;
+							action.media_player_id =
+								action.media_player_id ??
+								config.media_player_id;
+						// falls through
+						case 'key':
+						case 'source':
+							action.remote_id =
+								action.remote_id ?? config.remote_id;
+							action.platform =
+								action.platform ?? config.platform;
+							switch (action.platform?.toUpperCase()) {
+								case 'KODI':
+								case 'ROKU':
+									break;
+								case 'FIRE' as Platform:
+								case 'FIRETV' as Platform:
+								case 'FIRE_TV' as Platform:
+								case 'FIRE TV':
+									action.platform = 'FIRE TV';
+									break;
+								case 'ANDROID' as Platform:
+								case 'ANDROIDTV' as Platform:
+								case 'ANDROID_TV' as Platform:
+								case 'ANDROID TV':
+								default:
+									action.platform = 'ANDROID TV';
+									break;
+							}
 							break;
-						case 'FIRE' as Platform:
-						case 'FIRETV' as Platform:
-						case 'FIRE_TV' as Platform:
-						case 'FIRE TV':
-							action.platform = 'FIRE TV';
+						case 'toggle':
+						case 'more-info':
+						case 'service' as 'perform-action':
+						case 'perform-action':
+							if (
+								!action.data?.entity_id &&
+								!action.data?.device_id &&
+								!action.data?.area_id &&
+								!action.data?.label_id &&
+								!action.target?.entity_id &&
+								!action.target?.device_id &&
+								!action.target?.area_id &&
+								!action.target?.label_id
+							) {
+								let entityId: string | undefined;
+								const [domain, _service] = (
+									renderTemplate(
+										this.hass,
+										action.perform_action ??
+											(action[
+												'service' as 'perform_action'
+											] as string) ??
+											'',
+										this.getEntryContext(entry),
+									) as string
+								).split('.');
+								switch (domain) {
+									case 'remote':
+										entityId = config.remote_id;
+										break;
+									case 'media_player':
+									case 'kodi':
+									case 'denonavr':
+										entityId = config.media_player_id;
+										break;
+									default:
+										entityId = entry.entity_id;
+										break;
+								}
+								if (entityId) {
+									action.target = {
+										...action.target,
+										entity_id: entityId,
+									};
+								}
+							}
 							break;
-						case 'ANDROID' as Platform:
-						case 'ANDROIDTV' as Platform:
-						case 'ANDROID_TV' as Platform:
-						case 'ANDROID TV':
+						case 'none':
 						default:
-							action.platform = 'ANDROID TV';
 							break;
-					}
-
-					action.keyboard_id =
-						action.keyboard_id ?? config.keyboard_id;
-					action.media_player_id =
-						action.media_player_id ?? config.media_player_id;
-					action.remote_id = action.remote_id ?? config.remote_id;
-					entry[actionType] = action;
-
-					let entityId: string | undefined;
-					const [domain, _service] = (
-						renderTemplate(
-							this.hass,
-							action.perform_action ??
-								(action[
-									'service' as 'perform_action'
-								] as string) ??
-								'',
-							this.getEntryContext(entry),
-						) as string
-					).split('.');
-					switch (domain) {
-						case 'remote':
-							entityId = action.remote_id;
-							break;
-						case 'media_player':
-						case 'kodi':
-						case 'denonavr':
-							entityId = action.media_player_id;
-							break;
-						default:
-							entityId = entry.entity_id;
-							break;
-					}
-
-					if (
-						entityId &&
-						!action.data?.entity_id &&
-						!action.data?.device_id &&
-						!action.data?.area_id &&
-						!action.data?.label_id &&
-						!action.target?.entity_id &&
-						!action.target?.device_id &&
-						!action.target?.area_id &&
-						!action.target?.label_id
-					) {
-						action.target = {
-							...action.target,
-							entity_id: entityId,
-						};
 					}
 
 					entry[actionType] = action;

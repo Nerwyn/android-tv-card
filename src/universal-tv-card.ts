@@ -127,55 +127,122 @@ class UniversalTVCard extends LitElement {
 				if (actions[actionType]) {
 					const action = actions[actionType] ?? ({} as IAction);
 
-					action.platform = action.platform ?? this.config.platform;
-					action.keyboard_id =
-						action.keyboard_id ?? this.config.keyboard_id;
-					action.media_player_id =
-						action.media_player_id ?? this.config.media_player_id;
-					action.remote_id =
-						action.remote_id ?? this.config.remote_id;
+					// action.platform = action.platform ?? this.config.platform;
+					// action.keyboard_id =
+					// 	action.keyboard_id ?? this.config.keyboard_id;
+					// action.media_player_id =
+					// 	action.media_player_id ?? this.config.media_player_id;
+					// action.remote_id =
+					// 	action.remote_id ?? this.config.remote_id;
 
-					let entityId: string | undefined;
-					const [domain, _service] = (
-						renderTemplate(
-							this.hass,
-							action.perform_action ??
-								(action[
-									'service' as 'perform_action'
-								] as string) ??
-								'',
-							context,
-						) as string
-					).split('.');
-					switch (domain) {
-						case 'remote':
-							entityId = action.remote_id;
+					// let entityId: string | undefined;
+					// const [domain, _service] = (
+					// 	renderTemplate(
+					// 		this.hass,
+					// 		action.perform_action ??
+					// 			(action[
+					// 				'service' as 'perform_action'
+					// 			] as string) ??
+					// 			'',
+					// 		context,
+					// 	) as string
+					// ).split('.');
+					// switch (domain) {
+					// 	case 'remote':
+					// 		entityId = action.remote_id;
+					// 		break;
+					// 	case 'media_player':
+					// 	case 'kodi':
+					// 	case 'denonavr':
+					// 		entityId = action.media_player_id;
+					// 		break;
+					// 	default:
+					// 		entityId = actions.entity_id;
+					// 		break;
+					// }
+
+					// if (
+					// 	entityId &&
+					// 	!action.data?.entity_id &&
+					// 	!action.data?.device_id &&
+					// 	!action.data?.area_id &&
+					// 	!action.data?.label_id &&
+					// 	!action.target?.entity_id &&
+					// 	!action.target?.device_id &&
+					// 	!action.target?.area_id &&
+					// 	!action.target?.label_id
+					// ) {
+					// 	action.target = {
+					// 		...action.target,
+					// 		entity_id: entityId,
+					// 	};
+					// }
+
+					switch (action.action) {
+						case 'keyboard':
+							action.keyboard_id =
+								action.keyboard_id ?? this.config.keyboard_id;
+							action.media_player_id =
+								action.media_player_id ??
+								this.config.media_player_id;
+						// falls through
+						case 'key':
+						case 'source':
+							action.remote_id =
+								action.remote_id ?? this.config.remote_id;
+							action.platform =
+								action.platform ?? this.config.platform;
 							break;
-						case 'media_player':
-						case 'kodi':
-						case 'denonavr':
-							entityId = action.media_player_id;
+						case 'toggle':
+						case 'more-info':
+						case 'service' as 'perform-action':
+						case 'perform-action':
+							if (
+								!action.data?.entity_id &&
+								!action.data?.device_id &&
+								!action.data?.area_id &&
+								!action.data?.label_id &&
+								!action.target?.entity_id &&
+								!action.target?.device_id &&
+								!action.target?.area_id &&
+								!action.target?.label_id
+							) {
+								let entityId: string | undefined;
+								const [domain, _service] = (
+									renderTemplate(
+										this.hass,
+										action.perform_action ??
+											(action[
+												'service' as 'perform_action'
+											] as string) ??
+											'',
+										context,
+									) as string
+								).split('.');
+								switch (domain) {
+									case 'remote':
+										entityId = this.config.remote_id;
+										break;
+									case 'media_player':
+									case 'kodi':
+									case 'denonavr':
+										entityId = this.config.media_player_id;
+										break;
+									default:
+										entityId = actions.entity_id;
+										break;
+								}
+								if (entityId) {
+									action.target = {
+										...action.target,
+										entity_id: entityId,
+									};
+								}
+							}
 							break;
+						case 'none':
 						default:
-							entityId = actions.entity_id;
 							break;
-					}
-
-					if (
-						entityId &&
-						!action.data?.entity_id &&
-						!action.data?.device_id &&
-						!action.data?.area_id &&
-						!action.data?.label_id &&
-						!action.target?.entity_id &&
-						!action.target?.device_id &&
-						!action.target?.area_id &&
-						!action.target?.label_id
-					) {
-						action.target = {
-							...action.target,
-							entity_id: entityId,
-						};
 					}
 
 					actions[actionType] = action;
