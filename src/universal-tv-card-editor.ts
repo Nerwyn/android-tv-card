@@ -253,8 +253,8 @@ export class UniversalTVCardEditor extends LitElement {
 		// especially since center has an additional tab
 		// that could make the actions tab index out of range
 		// when touchpad tab index is changed
-		this.setActionsTab(this.entryIndex);
 		this.touchpadTabIndex = i;
+		this.setActionsTab(this.entryIndex);
 	}
 
 	handleSelectorChange(e: CustomEvent) {
@@ -1130,7 +1130,6 @@ export class UniversalTVCardEditor extends LitElement {
 	}
 
 	buildTouchpadGuiEditor() {
-		// TODO WIP touchpad gui editor
 		const actionsTabBar = html`
 			<mwc-tab-bar
 				.activeIndex=${this.actionsTabIndex}
