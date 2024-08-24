@@ -145,7 +145,7 @@ export class UniversalTVCardEditor extends LitElement {
 			const yaml = dump(this.activeEntry);
 			this.yamlString = yaml.trim() == '{}' ? '' : yaml;
 		}
-		return this.yamlString || '';
+		return this.yamlString ?? '';
 	}
 
 	set yaml(yaml: string | undefined) {
@@ -154,7 +154,9 @@ export class UniversalTVCardEditor extends LitElement {
 			const entries = structuredClone(this.config.custom_actions ?? []);
 			const updatedEntry = load(this.yaml) as IElementConfig;
 			const context = this.getEntryContext(updatedEntry);
-			switch (this.renderTemplate(updatedEntry.type, context)) {
+			switch (
+				this.renderTemplate(entries[this.entryIndex].type, context)
+			) {
 				case 'touchpad':
 					if (this.touchpadTabIndex != 2) {
 						entries[this.entryIndex] = {
