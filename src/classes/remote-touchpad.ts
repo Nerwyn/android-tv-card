@@ -289,7 +289,6 @@ export class RemoteTouchpad extends BaseRemoteElement {
 
 	render() {
 		this.setValue();
-		// TODO make icon-label container a separate custom element for styling
 		return html`
 			<toucharea
 				@mousedown=${this.onMouseDown}

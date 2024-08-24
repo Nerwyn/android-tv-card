@@ -965,16 +965,24 @@ export class UniversalTVCardEditor extends LitElement {
 		</div>`;
 	}
 
-	buildButtonGuiEditor() {
-		const actionsTabBar = html`
-			<mwc-tab-bar
-				.activeIndex=${this.actionsTabIndex}
-				@MDCTabBar:activated=${this.handleActionsTabSelected}
-			>
-				<mwc-tab .label=${'default'}></mwc-tab>
-				<mwc-tab .label=${'momentary'}></mwc-tab>
+	buildTabBar(
+		index: number,
+		handler: (e: CustomEvent) => void,
+		tabs: string[],
+	) {
+		return html`
+			<mwc-tab-bar .activeIndex=${index} @MDCTabBar:activated=${handler}>
+				${tabs.map((tab) => html`<mwc-tab .label=${tab}></mwc-tab>`)}
 			</mwc-tab-bar>
 		`;
+	}
+
+	buildButtonGuiEditor() {
+		const actionsTabBar = this.buildTabBar(
+			this.actionsTabIndex,
+			this.handleActionsTabSelected,
+			['default', 'momentary'],
+		);
 		let actionSelectors: TemplateResult<1>;
 		const actionsNoRepeat = Actions.concat();
 		actionsNoRepeat.splice(Actions.indexOf('repeat'), 1);
@@ -1131,18 +1139,15 @@ export class UniversalTVCardEditor extends LitElement {
 	}
 
 	buildTouchpadGuiEditor() {
-		const actionsTabBar = html`
-			<mwc-tab-bar
-				.activeIndex=${this.actionsTabIndex}
-				@MDCTabBar:activated=${this.handleActionsTabSelected}
-			>
-				<mwc-tab .label=${'default'}></mwc-tab>
-				<mwc-tab .label=${'multi-touch'}></mwc-tab>
-				${this.touchpadTabIndex == 2
-					? html`<mwc-tab .label=${'momentary'}></mwc-tab>`
-					: ''}
-			</mwc-tab-bar>
-		`;
+		const tabs = ['default', 'multi-touch'];
+		if (this.touchpadTabIndex == 2) {
+			tabs.push('momentary');
+		}
+		const actionsTabBar = this.buildTabBar(
+			this.actionsTabIndex,
+			this.handleActionsTabSelected,
+			tabs,
+		);
 		let actionSelectors: TemplateResult<1>;
 		const actionsNoRepeat = Actions.concat();
 		actionsNoRepeat.splice(Actions.indexOf('repeat'), 1);
@@ -1225,18 +1230,11 @@ export class UniversalTVCardEditor extends LitElement {
 				break;
 		}
 
-		const touchpadTabBar = html`
-			<mwc-tab-bar
-				.activeIndex=${this.touchpadTabIndex}
-				@MDCTabBar:activated=${this.handleTouchpadTabSelected}
-			>
-				<mwc-tab .label=${'up'}></mwc-tab>
-				<mwc-tab .label=${'down'}></mwc-tab>
-				<mwc-tab .label=${'center'}></mwc-tab>
-				<mwc-tab .label=${'left'}></mwc-tab>
-				<mwc-tab .label=${'right'}></mwc-tab>
-			</mwc-tab-bar>
-		`;
+		const touchpadTabBar = this.buildTabBar(
+			this.touchpadTabIndex,
+			this.handleTouchpadTabSelected,
+			['up', 'down', 'center', 'left', 'right'],
+		);
 
 		return html`
 			${touchpadTabBar}
