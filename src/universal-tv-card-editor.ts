@@ -153,7 +153,9 @@ export class UniversalTVCardEditor extends LitElement {
 	set yaml(yaml: string | undefined) {
 		this.yamlString = yaml;
 		try {
-			this.entryChanged(load(this.yaml) as IElementConfig);
+			const entries = structuredClone(this.config.custom_actions ?? []);
+			entries[this.entryIndex] = load(this.yaml) as IElementConfig;
+			this.entriesChanged(entries);
 			this.errors = undefined;
 		} catch (e) {
 			this.errors = [(e as Error).message];
