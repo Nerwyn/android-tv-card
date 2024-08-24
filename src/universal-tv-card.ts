@@ -262,7 +262,7 @@ class UniversalTVCard extends LitElement {
 			.hass=${this.hass}
 			.config=${actions}
 			.icons=${this.config.custom_icons}
-		/>`;
+		></remote-button>`;
 	}
 
 	buildSlider(elementName: string, actions: IElementConfig): TemplateResult {
@@ -271,7 +271,7 @@ class UniversalTVCard extends LitElement {
 			.hass=${this.hass}
 			.config=${actions}
 			.icons=${this.config.custom_icons}
-		/>`;
+		></remote-slider>`;
 	}
 
 	buildTouchpad(
@@ -283,7 +283,7 @@ class UniversalTVCard extends LitElement {
 			.hass=${this.hass}
 			.config=${actions}
 			.icons=${this.config.custom_icons}
-		/>`;
+		></remote-touchpad>`;
 	}
 
 	buildVolumeButtons(): TemplateResult[] {
@@ -457,7 +457,7 @@ class UniversalTVCard extends LitElement {
 	}
 
 	buildDialog() {
-		return html`<keyboard-dialog .hass=${this.hass} />`;
+		return html`<keyboard-dialog .hass=${this.hass}></keyboard-dialog>`;
 	}
 
 	render() {
