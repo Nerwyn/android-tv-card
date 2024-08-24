@@ -152,7 +152,25 @@ export class UniversalTVCardEditor extends LitElement {
 		this.yamlString = yaml;
 		try {
 			const entries = structuredClone(this.config.custom_actions ?? []);
-			entries[this.entryIndex] = load(this.yaml) as IElementConfig;
+			const updatedEntry = load(this.yaml) as IElementConfig;
+			const context = this.getEntryContext(updatedEntry);
+			switch (this.renderTemplate(updatedEntry.type, context)) {
+				case 'touchpad':
+					if (this.touchpadTabIndex != 2) {
+						entries[this.entryIndex] = {
+							...entries[this.entryIndex],
+							[this.TOUCHPAD_TABS[
+								this.touchpadTabIndex
+							] as DirectionAction]: updatedEntry,
+						};
+						break;
+					}
+				// falls through
+				case 'slider':
+				case 'button':
+				default:
+					entries[this.entryIndex] = updatedEntry;
+			}
 			this.entriesChanged(entries);
 			this.errors = undefined;
 		} catch (e) {
