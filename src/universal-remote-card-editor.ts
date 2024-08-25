@@ -45,7 +45,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 	codeEditorDelay?: ReturnType<typeof setTimeout>;
 	people: Record<string, string>[] = [];
 
-	BASE_TABS = ['general', 'layout', 'custom elements', 'custom icons'];
+	BASE_TABS = ['general', 'layout', 'actions', 'icons'];
 	TOUCHPAD_TABS = ['up', 'down', 'center', 'left', 'right'];
 	DEFAULT_ACTIONS = [
 		...structuredClone(defaultSources),
@@ -72,43 +72,74 @@ export class UniversalRemoteCardEditor extends LitElement {
 		this.requestUpdate();
 	}
 
-	entriesChanged(entries: IElementConfig[]) {
+	entriesChanged(entries: IElementConfig[] | IIconConfig[]) {
+		let key;
+		switch (this.baseTabIndex) {
+			case 3:
+				key = 'custom_icons';
+				break;
+			case 2:
+			default:
+				key = 'custom_actions';
+				break;
+		}
+
 		this.configChanged({
 			...this.config,
-			custom_actions: entries,
+			[key]: entries,
 		} as IConfig);
 	}
 
 	entryChanged(entry: IElementConfig) {
-		const entries = structuredClone(this.config.custom_actions ?? []);
-		const oldEntry = entries[this.entryIndex];
-		const context = this.getEntryContext(oldEntry);
-		let updatedEntry: IElementConfig;
-		switch (this.renderTemplate(oldEntry?.type, context)) {
-			case 'touchpad':
-				if (this.touchpadTabIndex != 2) {
-					updatedEntry = {
-						...oldEntry,
-						[this.TOUCHPAD_TABS[this.touchpadTabIndex]]: {
-							...oldEntry[
-								this.TOUCHPAD_TABS[
-									this.touchpadTabIndex
-								] as DirectionAction
-							],
-							...entry,
-						},
-					};
-					break;
-				}
-			// falls through
-			case 'slider':
-			case 'button':
-			default:
+		let entries: IElementConfig[] | IIconConfig[];
+		let oldEntry: IElementConfig | IIconConfig;
+		let updatedEntry: IElementConfig | IIconConfig;
+		switch (this.baseTabIndex) {
+			case 3:
+				entries = structuredClone(this.config.custom_icons ?? []);
+				oldEntry = entries[this.entryIndex] as IIconConfig;
 				updatedEntry = {
 					...oldEntry,
 					...entry,
 				};
+				break;
+			case 2:
+			default:
+				entries = structuredClone(this.config.custom_actions ?? []);
+				oldEntry = entries[this.entryIndex] as IElementConfig;
+				switch (
+					this.renderTemplate(
+						oldEntry?.type,
+						this.getEntryContext(oldEntry),
+					)
+				) {
+					case 'touchpad':
+						if (this.touchpadTabIndex != 2) {
+							updatedEntry = {
+								...oldEntry,
+								[this.TOUCHPAD_TABS[this.touchpadTabIndex]]: {
+									...oldEntry[
+										this.TOUCHPAD_TABS[
+											this.touchpadTabIndex
+										] as DirectionAction
+									],
+									...entry,
+								},
+							};
+							break;
+						}
+					// falls through
+					case 'slider':
+					case 'button':
+					default:
+						updatedEntry = {
+							...oldEntry,
+							...entry,
+						};
+				}
+				break;
 		}
+
 		entries[this.entryIndex] = updatedEntry;
 		this.entriesChanged(entries);
 	}
@@ -119,26 +150,37 @@ export class UniversalRemoteCardEditor extends LitElement {
 		this.guiMode = !this.guiMode;
 	}
 
-	get activeEntry(): IElementConfig | undefined {
+	get activeEntry(): IElementConfig | IIconConfig | undefined {
 		if (this.entryIndex < 0) {
 			return undefined;
 		}
-		const entry = (this.config.custom_actions ?? [])[this.entryIndex];
-		const context = this.getEntryContext(entry);
-		switch (this.renderTemplate(entry?.type, context)) {
-			case 'touchpad':
-				if (this.touchpadTabIndex != 2) {
-					return entry[
-						this.TOUCHPAD_TABS[
-							this.touchpadTabIndex
-						] as DirectionAction
-					] as IElementConfig;
-				}
-			// falls through
-			case 'slider':
-			case 'button':
+		let entry: IElementConfig | IIconConfig;
+		switch (this.baseTabIndex) {
+			case 3:
+				return (this.config.custom_icons ?? [])[this.entryIndex];
+			case 2:
 			default:
-				return entry;
+				entry = (this.config.custom_actions ?? [])[this.entryIndex];
+				switch (
+					this.renderTemplate(
+						entry?.type,
+						this.getEntryContext(entry),
+					)
+				) {
+					case 'touchpad':
+						if (this.touchpadTabIndex != 2) {
+							return entry[
+								this.TOUCHPAD_TABS[
+									this.touchpadTabIndex
+								] as DirectionAction
+							] as IElementConfig;
+						}
+					// falls through
+					case 'slider':
+					case 'button':
+					default:
+						return entry;
+				}
 		}
 	}
 
@@ -153,28 +195,43 @@ export class UniversalRemoteCardEditor extends LitElement {
 	set yaml(yaml: string | undefined) {
 		this.yamlString = yaml;
 		try {
-			const entries = structuredClone(this.config.custom_actions ?? []);
-			const updatedEntry = load(this.yaml) as IElementConfig;
-			const context = this.getEntryContext(updatedEntry);
-			switch (
-				this.renderTemplate(entries[this.entryIndex].type, context)
-			) {
-				case 'touchpad':
-					if (this.touchpadTabIndex != 2) {
-						entries[this.entryIndex] = {
-							...entries[this.entryIndex],
-							[this.TOUCHPAD_TABS[
-								this.touchpadTabIndex
-							] as DirectionAction]: updatedEntry,
-						};
-						break;
-					}
-				// falls through
-				case 'slider':
-				case 'button':
+			const updatedEntry = load(this.yaml);
+			let entries: IElementConfig[] | IIconConfig[];
+			switch (this.baseTabIndex) {
+				case 3:
+					entries = structuredClone(this.config.custom_icons ?? []);
+					entries[this.entryIndex] = updatedEntry as IIconConfig;
+					break;
+				case 2:
 				default:
-					entries[this.entryIndex] = updatedEntry;
+					entries = structuredClone(this.config.custom_actions ?? []);
+					switch (
+						this.renderTemplate(
+							entries[this.entryIndex].type,
+							this.getEntryContext(
+								updatedEntry as IElementConfig,
+							),
+						)
+					) {
+						case 'touchpad':
+							if (this.touchpadTabIndex != 2) {
+								entries[this.entryIndex] = {
+									...entries[this.entryIndex],
+									[this.TOUCHPAD_TABS[
+										this.touchpadTabIndex
+									] as DirectionAction]: updatedEntry,
+								};
+								break;
+							}
+						// falls through
+						case 'slider':
+						case 'button':
+						default:
+							entries[this.entryIndex] =
+								updatedEntry as IElementConfig;
+					}
 			}
+
 			this.entriesChanged(entries);
 			this.errors = undefined;
 		} catch (e) {
@@ -198,7 +255,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 		e.stopPropagation();
 		const css = e.detail.value;
 		if (this.entryIndex > -1 && this.activeEntry) {
-			if (css != this.activeEntry?.styles) {
+			if (css != (this.activeEntry as IElementConfig)?.styles) {
 				this.entryChanged({
 					styles: css,
 				} as unknown as IElementConfig);
@@ -274,26 +331,53 @@ export class UniversalRemoteCardEditor extends LitElement {
 			});
 		}
 		this.autofillCooldown = false;
-		this.entryChanged(
-			deepSet(
-				structuredClone(this.activeEntry) as object,
-				key,
-				value,
-			) as IElementConfig,
-		);
+		switch (this.baseTabIndex) {
+			case 3:
+			case 2:
+				this.entryChanged(
+					deepSet(
+						structuredClone(this.activeEntry) as object,
+						key,
+						value,
+					) as IElementConfig,
+				);
+				break;
+			default:
+				this.configChanged({
+					...this.config,
+					[key]: value,
+				});
+				break;
+		}
 	}
 
 	addEntry(e: CustomEvent) {
 		const i = e.detail.index as number;
-		const entryType = RemoteElementTypes[i];
-		const entries = structuredClone(this.config.custom_actions ?? []);
-		entries.push({
-			type: entryType,
-			name: `custom_${entryType}_${
-				(this.config.custom_actions ?? []).length
-			}`,
-			autofill_entity_id: true,
-		});
+		let entries: IElementConfig[] | IIconConfig[];
+		switch (this.baseTabIndex) {
+			case 3:
+				entries = structuredClone(this.config.custom_icons) ?? [];
+				entries.push({
+					name: `custom_icon_${
+						(this.config.custom_icons ?? []).length
+					}`,
+					path: '',
+				});
+				break;
+			case 2:
+			default: {
+				const entryType = RemoteElementTypes[i];
+				entries = structuredClone(this.config.custom_actions) ?? [];
+				entries.push({
+					type: RemoteElementTypes[i],
+					name: `custom_${entryType}_${
+						(this.config.custom_actions ?? []).length
+					}`,
+					autofill_entity_id: true,
+				});
+				break;
+			}
+		}
 		this.autofillCooldown = false;
 		this.entriesChanged(entries);
 		const entriesList = this.shadowRoot?.querySelector('.features');
@@ -309,27 +393,66 @@ export class UniversalRemoteCardEditor extends LitElement {
 		const i = (
 			e.currentTarget as unknown as CustomEvent & Record<'index', number>
 		).index;
-		const entries = structuredClone(this.config.custom_actions ?? []);
+		let entries: IElementConfig[] | IIconConfig[];
+		switch (this.baseTabIndex) {
+			case 3:
+				entries = this.config.custom_icons ?? [];
+				break;
+			case 2:
+			default:
+				entries = this.config.custom_actions ?? [];
+				break;
+		}
+		entries = structuredClone(entries);
 		entries.splice(i, 1);
 		this.entriesChanged(entries);
 	}
 
 	moveEntry(e: CustomEvent) {
 		e.stopPropagation();
+		let entries: IElementConfig[] | IIconConfig[];
+		switch (this.baseTabIndex) {
+			case 3:
+				entries = this.config.custom_icons ?? [];
+				break;
+			case 2:
+			default:
+				entries = this.config.custom_actions ?? [];
+				break;
+		}
+		entries = structuredClone(entries);
 		const { oldIndex, newIndex } = e.detail;
-		const entries = structuredClone(this.config.custom_actions ?? []);
-		entries.splice(newIndex, 0, entries.splice(oldIndex, 1)[0]);
+		(entries as IElementConfig[]).splice(
+			newIndex,
+			0,
+			(entries as IElementConfig[]).splice(oldIndex, 1)[0],
+		);
 		this.entriesChanged(entries);
 	}
 
 	copyEntry(e: CustomEvent) {
+		let entries: IElementConfig[] | IIconConfig[];
+		switch (this.baseTabIndex) {
+			case 3:
+				entries = this.config.custom_icons ?? [];
+				break;
+			case 2:
+			default:
+				entries = this.config.custom_actions ?? [];
+				break;
+		}
+		entries = structuredClone(entries);
 		const i = (
 			e.currentTarget as unknown as CustomEvent & Record<'index', number>
 		).index;
-		const entries = structuredClone(this.config.custom_actions ?? []);
 		const entry = structuredClone(entries[i]);
-		entry.name = `${entry.name}_copy`;
-		entries.splice(i, 1, entries[i], entry);
+		entry.name = `${entry['name' as keyof object]}_copy`;
+		(entries as IElementConfig[]).splice(
+			i,
+			1,
+			(entries as IElementConfig[])[i],
+			entry as IElementConfig,
+		);
 		this.entriesChanged(entries);
 	}
 
@@ -338,8 +461,15 @@ export class UniversalRemoteCardEditor extends LitElement {
 		const i = (
 			e.currentTarget as unknown as CustomEvent & Record<'index', number>
 		).index;
-		this.setActionsTab(i);
-		this.touchpadTabIndex = 2;
+		switch (this.baseTabIndex) {
+			case 3:
+				break;
+			case 2:
+			default:
+				this.setActionsTab(i);
+				this.touchpadTabIndex = 2;
+				break;
+		}
 		this.entryIndex = i;
 	}
 
@@ -397,44 +527,67 @@ export class UniversalRemoteCardEditor extends LitElement {
 	}
 
 	buildEntryList() {
-		const customActions = this.config.custom_actions ?? [];
+		let entries;
+		let header: string;
+		switch (this.baseTabIndex) {
+			case 3:
+				entries = this.config.custom_icons ?? [];
+				header = 'Custom Icons';
+				break;
+			case 2:
+			default:
+				entries = this.config.custom_actions ?? [];
+				header = 'Custom Actions';
+				break;
+		}
 		return html`
 			<div class="content">
-				<div class="entry-list-header">Custom Actions</div>
+				<div class="entry-list-header">${header}</div>
 				<ha-sortable
 					handle-selector=".handle"
 					@item-moved=${this.moveEntry}
 				>
 					<div class="features">
-						${customActions.map((customAction, i) => {
-							const context = this.getEntryContext(customAction);
-							let icon = this.renderTemplate(
-								customAction.icon as string,
-								context,
-							) as string;
-							if (icon && !icon.includes(':')) {
-								const iconConfig =
-									(this.config.custom_icons ?? []).filter(
-										(customIcon: IIconConfig) =>
-											customIcon.name == icon,
-									)[0] ??
-									defaultIcons.filter(
-										(defaultIcon: IIconConfig) =>
-											defaultIcon.name == icon,
-									)[0];
-								icon = iconConfig?.path ?? icon;
+						${entries.map((entry, i) => {
+							let context = {
+								config: { entity: '', attribute: '' },
+							};
+							let icon = '';
+							if ((entry as IElementConfig).icon) {
+								context = this.getEntryContext(
+									entry as IElementConfig,
+								);
+								icon = this.renderTemplate(
+									(entry as IElementConfig).icon ??
+										(entry as IIconConfig).path,
+									context,
+								) as string;
+								if (icon && !icon.includes(':')) {
+									const iconConfig =
+										(this.config.custom_icons ?? []).filter(
+											(customIcon: IIconConfig) =>
+												customIcon.name == icon,
+										)[0] ??
+										defaultIcons.filter(
+											(defaultIcon: IIconConfig) =>
+												defaultIcon.name == icon,
+										)[0];
+									icon = iconConfig?.path ?? icon;
+								}
+							} else if ((entry as IIconConfig).path) {
+								icon = (entry as IIconConfig).path;
 							}
 
 							const label = this.renderTemplate(
-								customAction.label as string,
+								(entry as IElementConfig).label as string,
 								context,
 							);
 							const entryType = this.renderTemplate(
-								customAction.type as string,
+								(entry as IElementConfig).type as string,
 								context,
 							);
 							const name = this.renderTemplate(
-								customAction.name as string,
+								entry.name as string,
 								context,
 							);
 							return html`
@@ -464,7 +617,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 											${context.config.entity
 												? html`<span class="secondary"
 														>${context.config
-															.entity_id}${context
+															.entity}${context
 															.config.attribute
 															? ` ⸱ ${context.config.attribute}`
 															: ''}</span
@@ -509,38 +662,65 @@ export class UniversalRemoteCardEditor extends LitElement {
 	}
 
 	buildAddEntryButton() {
-		return html`
-			<ha-button-menu
-				fixed
-				@action=${this.addEntry}
-				@closed=${(e: CustomEvent) => e.stopPropagation()}
-			>
-				<ha-button
-					slot="trigger"
-					outlined
-					.label="${'ADD REMOTE ELEMENT'}"
-				>
-					<ha-icon .icon=${'mdi:plus'} slot="icon"></ha-icon>
-				</ha-button>
-				${RemoteElementTypes.map(
-					(entryType) => html`
-						<ha-list-item .value=${entryType}>
-							${entryType}
-						</ha-list-item>
-					`,
-				)}
-			</ha-button-menu>
-		`;
+		switch (this.baseTabIndex) {
+			case 3:
+				return html`
+					<ha-button
+						@action=${this.addEntry}
+						outlined
+						.label="${'ADD SVG ICON'}"
+					>
+						<ha-icon .icon=${'mdi:plus'} slot="icon"></ha-icon>
+					</ha-button>
+				`;
+			case 2:
+			default:
+				return html`
+					<ha-button-menu
+						fixed
+						@action=${this.addEntry}
+						@closed=${(e: CustomEvent) => e.stopPropagation()}
+					>
+						<ha-button
+							slot="trigger"
+							outlined
+							.label="${'ADD REMOTE ELEMENT'}"
+						>
+							<ha-icon .icon=${'mdi:plus'} slot="icon"></ha-icon>
+						</ha-button>
+						${RemoteElementTypes.map(
+							(entryType) => html`
+								<ha-list-item .value=${entryType}>
+									${entryType}
+								</ha-list-item>
+							`,
+						)}
+					</ha-button-menu>
+				`;
+		}
 	}
 
 	buildEntryHeader() {
-		const context = this.getEntryContext(
-			this.activeEntry ?? { type: 'button', name: '' },
-		);
-		const entryType = this.renderTemplate(
-			this.config.custom_actions?.[this.entryIndex]?.type ?? 'button',
-			context,
-		);
+		let entryType: string;
+		switch (this.baseTabIndex) {
+			case 3:
+				entryType = 'SVG Icon';
+				break;
+			case 2:
+			default:
+				entryType = this.renderTemplate(
+					this.config.custom_actions?.[this.entryIndex]?.type ??
+						'button',
+					this.getEntryContext(
+						(this.activeEntry as IElementConfig) ?? {
+							type: 'button',
+							name: '',
+						},
+					),
+				) as string;
+				break;
+		}
+
 		return html`
 			<div class="header">
 				<div class="back-title">
@@ -629,10 +809,11 @@ export class UniversalRemoteCardEditor extends LitElement {
 				entity: {},
 			})}
 			${
-				this.activeEntry?.entity_id
+				(this.activeEntry as IElementConfig)?.entity_id
 					? this.buildSelector('Attribute', 'value_attribute', {
 							attribute: {
-								entity_id: this.activeEntry.entity_id,
+								entity_id: (this.activeEntry as IElementConfig)
+									.entity_id,
 							},
 					  })
 					: ''
@@ -684,10 +865,13 @@ export class UniversalRemoteCardEditor extends LitElement {
 
 	buildCommonAppearanceOptions() {
 		const context = this.getEntryContext(
-			this.activeEntry ?? { type: 'button', name: '' },
+			(this.activeEntry as IElementConfig) ?? {
+				type: 'button',
+				name: '',
+			},
 		);
 		let icon = this.renderTemplate(
-			this.activeEntry?.icon ?? '',
+			(this.activeEntry as IElementConfig)?.icon ?? '',
 			context,
 		) as string;
 		let customIcon;
@@ -745,10 +929,11 @@ export class UniversalRemoteCardEditor extends LitElement {
 		buildCodeEditor: boolean = false,
 	) {
 		const context = this.getEntryContext(
-			this.activeEntry ?? ({} as IElementConfig),
+			(this.activeEntry as IElementConfig) ?? ({} as IElementConfig),
 		);
 		const action = this.renderTemplate(
-			this.activeEntry?.[actionType]?.action ?? 'none',
+			(this.activeEntry as IElementConfig)?.[actionType]?.action ??
+				'none',
 			context,
 		) as string;
 		return html`<div class="action-options">
@@ -797,7 +982,8 @@ export class UniversalRemoteCardEditor extends LitElement {
 							500,
 						)}
 						${this.renderTemplate(
-							this.activeEntry?.hold_action?.action as string,
+							(this.activeEntry as IElementConfig)?.hold_action
+								?.action as string,
 							context,
 						) == 'repeat'
 							? this.buildSelector(
@@ -831,8 +1017,8 @@ export class UniversalRemoteCardEditor extends LitElement {
 							500,
 						)}
 						${this.renderTemplate(
-							this.activeEntry?.multi_hold_action
-								?.action as string,
+							(this.activeEntry as IElementConfig)
+								?.multi_hold_action?.action as string,
 							context,
 						) == 'repeat'
 							? this.buildSelector(
@@ -946,7 +1132,8 @@ export class UniversalRemoteCardEditor extends LitElement {
 						},
 						false,
 				  )}
-				  ${this.activeEntry?.[actionType]?.confirmation
+				  ${(this.activeEntry as IElementConfig)?.[actionType]
+						?.confirmation
 						? html`${this.buildSelector(
 								'Text',
 								`${actionType}.confirmation.text`,
@@ -1059,20 +1246,23 @@ export class UniversalRemoteCardEditor extends LitElement {
 		actionsNoRepeat.splice(Actions.indexOf('repeat'), 1);
 
 		const context = this.getEntryContext(
-			this.activeEntry ?? ({} as IElementConfig),
+			(this.activeEntry as IElementConfig) ?? ({} as IElementConfig),
 		);
 		const rangeMin = this.renderTemplate(
-			this.activeEntry?.range?.[0] as number,
+			(this.activeEntry as IElementConfig)?.range?.[0] as number,
 			context,
 		);
 		const rangeMax = this.renderTemplate(
-			this.activeEntry?.range?.[0] as number,
+			(this.activeEntry as IElementConfig)?.range?.[0] as number,
 			context,
 		);
 		const step =
-			this.renderTemplate(this.activeEntry?.step as number, context) ?? 1;
+			this.renderTemplate(
+				(this.activeEntry as IElementConfig)?.step as number,
+				context,
+			) ?? 1;
 		const unit = this.renderTemplate(
-			this.activeEntry?.unit_of_measurement as string,
+			(this.activeEntry as IElementConfig)?.unit_of_measurement as string,
 			context,
 		);
 
@@ -1103,8 +1293,10 @@ export class UniversalRemoteCardEditor extends LitElement {
 								step ??
 								Math.min(
 									1,
-									((this.activeEntry?.range?.[1] ?? 1) -
-										(this.activeEntry?.range?.[0] ?? 0)) /
+									(((this.activeEntry as IElementConfig)
+										?.range?.[1] ?? 1) -
+										((this.activeEntry as IElementConfig)
+											?.range?.[0] ?? 0)) /
 										100,
 								),
 							mode: 'box',
@@ -1250,20 +1442,41 @@ export class UniversalRemoteCardEditor extends LitElement {
 		`;
 	}
 
+	buildIconGuiEditor() {
+		// TODO icon preview
+		return html` <div class="content">
+			${this.buildSelector('Name', 'name', {
+				text: {},
+			})}
+			${this.buildSelector('SVG Path', 'path', {
+				text: { multiline: true },
+			})}
+		</div>`;
+	}
+
 	buildEntryGuiEditor() {
 		let entryGuiEditor: TemplateResult<1>;
-		switch (this.config.custom_actions?.[this.entryIndex]?.type) {
-			case 'slider':
-				entryGuiEditor = this.buildSliderGuiEditor();
+		switch (this.baseTabIndex) {
+			case 3:
+				entryGuiEditor = this.buildIconGuiEditor();
 				break;
-			case 'touchpad':
-				entryGuiEditor = this.buildTouchpadGuiEditor();
-				break;
-			case 'button':
+			case 2:
 			default:
-				entryGuiEditor = this.buildButtonGuiEditor();
+				switch (this.config.custom_actions?.[this.entryIndex]?.type) {
+					case 'slider':
+						entryGuiEditor = this.buildSliderGuiEditor();
+						break;
+					case 'touchpad':
+						entryGuiEditor = this.buildTouchpadGuiEditor();
+						break;
+					case 'button':
+					default:
+						entryGuiEditor = this.buildButtonGuiEditor();
+						break;
+				}
 				break;
 		}
+
 		return html`<div class="gui-editor">${entryGuiEditor}</div>`;
 	}
 
@@ -1275,7 +1488,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 			case 'jinja2':
 				value =
 					(this.entryIndex > -1
-						? this.activeEntry?.styles
+						? (this.activeEntry as IElementConfig)?.styles
 						: this.config.styles) ?? '';
 				handler = this.handleStyleCodeChanged;
 				title = 'CSS Styles';
@@ -1284,7 +1497,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 				mode = 'yaml';
 				handler = this.handleActionCodeChanged;
 				value = dump(
-					(this.activeEntry?.[
+					((this.activeEntry as IElementConfig)?.[
 						(id ?? 'tap_action') as ActionType
 					] as IAction) ?? {},
 				);
@@ -1398,7 +1611,13 @@ export class UniversalRemoteCardEditor extends LitElement {
 		let editor: TemplateResult<1>;
 		switch (this.baseTabIndex) {
 			case 3:
-				editor = html``;
+				if (this.entryIndex > -1 && this.activeEntry) {
+					editor = html`${this.buildEntryEditor()}${this.buildErrorPanel()}`;
+				} else {
+					editor = html`
+						${this.buildEntryList()}${this.buildAddEntryButton()}
+					`;
+				}
 				break;
 			case 2:
 				if (this.entryIndex > -1 && this.activeEntry) {
