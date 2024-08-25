@@ -32,6 +32,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 	@property() hass!: HomeAssistant;
 	@property() config!: IConfig;
 
+	@state() baseTabIndex: number = 0;
 	@state() entryIndex: number = -1;
 	@state() actionsTabIndex: number = 0;
 	@state() touchpadTabIndex: number = 2;
@@ -44,6 +45,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 	codeEditorDelay?: ReturnType<typeof setTimeout>;
 	people: Record<string, string>[] = [];
 
+	BASE_TABS = ['general', 'layout', 'custom elements', 'custom icons'];
 	TOUCHPAD_TABS = ['up', 'down', 'center', 'left', 'right'];
 	DEFAULT_ACTIONS = [
 		...structuredClone(defaultSources),
@@ -235,6 +237,14 @@ export class UniversalRemoteCardEditor extends LitElement {
 		}, 1000);
 	}
 
+	handleBaseTabSelected(e: CustomEvent) {
+		const i = e.detail.index;
+		if (this.baseTabIndex == i) {
+			return;
+		}
+		this.baseTabIndex = i;
+	}
+
 	handleActionsTabSelected(e: CustomEvent) {
 		const i = e.detail.index;
 		if (this.actionsTabIndex == i) {
@@ -250,10 +260,6 @@ export class UniversalRemoteCardEditor extends LitElement {
 			return;
 		}
 		this.touchpadTabIndex = i;
-		// Have to change the actions tab index
-		// especially since center has an additional tab
-		// that could make the actions tab index out of range
-		// when touchpad tab index is changed
 		this.setActionsTab(this.entryIndex);
 	}
 
@@ -1233,7 +1239,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 		const touchpadTabBar = this.buildTabBar(
 			this.touchpadTabIndex,
 			this.handleTouchpadTabSelected,
-			['up', 'down', 'center', 'left', 'right'],
+			this.TOUCHPAD_TABS,
 		);
 
 		return html`
@@ -1383,15 +1389,38 @@ export class UniversalRemoteCardEditor extends LitElement {
 
 		this.buildPeopleList();
 
+		const baseTabBar = this.buildTabBar(
+			this.baseTabIndex,
+			this.handleBaseTabSelected,
+			this.BASE_TABS,
+		);
+
 		let editor: TemplateResult<1>;
-		if (this.entryIndex > -1 && this.activeEntry) {
-			editor = html`${this.buildEntryEditor()}${this.buildErrorPanel()}`;
-		} else {
-			editor = html`
-				${this.buildEntryList()}${this.buildAddEntryButton()}
-				${this.buildCodeEditor('jinja2')}${this.buildErrorPanel()}
-			`;
+		switch (this.baseTabIndex) {
+			case 3:
+				editor = html``;
+				break;
+			case 2:
+				if (this.entryIndex > -1 && this.activeEntry) {
+					editor = html`${this.buildEntryEditor()}${this.buildErrorPanel()}`;
+				} else {
+					editor = html`
+						${this.buildEntryList()}${this.buildAddEntryButton()}
+						${this.buildCodeEditor(
+							'jinja2',
+						)}${this.buildErrorPanel()}
+					`;
+				}
+				break;
+			case 1:
+				editor = html``;
+				break;
+			case 0:
+			default:
+				editor = html``;
+				break;
 		}
+
 		// TODO layout editor
 		// TODO custom icons editor
 		// TODO global options editor
@@ -1407,7 +1436,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 		//     - Warning message about icon size, dimensions, and tools to use
 		//   - Layout
 
-		return editor;
+		return html`${baseTabBar}${editor} `;
 	}
 
 	renderTemplate(str: string | number | boolean, context: object) {
