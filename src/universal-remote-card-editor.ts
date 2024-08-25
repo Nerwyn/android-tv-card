@@ -171,11 +171,13 @@ export class UniversalRemoteCardEditor extends LitElement {
 				) {
 					case 'touchpad':
 						if (this.touchpadTabIndex != 2) {
-							return entry[
-								this.TOUCHPAD_TABS[
-									this.touchpadTabIndex
-								] as DirectionAction
-							] as IElementConfig;
+							return (
+								(entry[
+									this.TOUCHPAD_TABS[
+										this.touchpadTabIndex
+									] as DirectionAction
+								] as IElementConfig) ?? {}
+							);
 						}
 					// falls through
 					case 'slider':
@@ -516,9 +518,10 @@ export class UniversalRemoteCardEditor extends LitElement {
 		};
 		const entryType = entry.type;
 		if (entryType == 'touchpad' && this.touchpadTabIndex != 2) {
-			entry = entry[
-				this.TOUCHPAD_TABS[this.touchpadTabIndex] as DirectionAction
-			] as IElementConfig;
+			entry =
+				(entry[
+					this.TOUCHPAD_TABS[this.touchpadTabIndex] as DirectionAction
+				] as IElementConfig) ?? {};
 		}
 		const context = this.getEntryContext(entry);
 		if (
