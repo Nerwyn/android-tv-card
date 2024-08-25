@@ -272,6 +272,8 @@ export class UniversalRemoteCardEditor extends LitElement {
 	}
 
 	handleActionCodeChanged(e: CustomEvent) {
+		// TODO add some kind of caching to yaml so that it doesn't reload every time it's modified
+		// This may also remove the need for the timeout to update
 		e.stopPropagation();
 		const actionType = (e.target as HTMLElement).id as ActionType;
 		const actionYaml = e.detail.value;
@@ -315,12 +317,13 @@ export class UniversalRemoteCardEditor extends LitElement {
 	}
 
 	handleBaseTabSelected(e: CustomEvent) {
+		this.entryIndex = -1;
+		this.guiMode = true;
+		this.yamlString = undefined;
 		const i = e.detail.index;
 		if (this.baseTabIndex == i) {
 			return;
 		}
-		this.entryIndex = -1;
-		this.guiMode = false;
 		this.baseTabIndex = i;
 	}
 
@@ -1130,6 +1133,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 										reorder: false,
 									},
 								},
+								'ANDROID TV',
 							)}
 						</div>
 						${this.buildSelector(
@@ -1605,13 +1609,18 @@ export class UniversalRemoteCardEditor extends LitElement {
 						Media Platform and Entity IDs
 					</div>
 					<div class="form">
-						${this.buildSelector('Platform', 'platform', {
-							select: {
-								mode: 'dropdown',
-								options: Platforms,
-								reorder: false,
+						${this.buildSelector(
+							'Platform',
+							'platform',
+							{
+								select: {
+									mode: 'dropdown',
+									options: Platforms,
+									reorder: false,
+								},
 							},
-						})}
+							'ANDROID TV',
+						)}
 						${this.buildSelector('Remote ID', 'remote_id', {
 							entity: {
 								filter: {
@@ -1807,7 +1816,6 @@ export class UniversalRemoteCardEditor extends LitElement {
 		//   - Custom Icons
 		//     - Warning message about icon size, dimensions, and tools to use
 		//   - Layout
-		//     - Code editor
 		//     - I can barely comprehend how to approach this
 
 		return html`${baseTabBar}${editor}${this.buildErrorPanel()}`;
