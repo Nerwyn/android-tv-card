@@ -406,7 +406,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 				entries.push({
 					type: RemoteElementTypes[i],
 					name: name,
-					autofill_entity_id: true,
+					autofill_entity_id: this.config.autofill_entity_id ?? true,
 				});
 				break;
 			}
