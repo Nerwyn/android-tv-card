@@ -1667,6 +1667,13 @@ export class UniversalRemoteCardEditor extends LitElement {
 					${this.buildSelector('Title', 'title', {
 						text: {},
 					})}
+					<ha-button
+						@click=${this.handleUpdateDeprecatedConfig}
+						outlined
+						.label="${'UPDATE OLD CONFIG'}"
+					>
+						<ha-icon .icon=${'mdi:cog'} slot="icon"></ha-icon>
+					</ha-button>
 				</div>
 			</div>
 		`;
@@ -1723,9 +1730,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 
 		if (!this.autofillCooldown) {
 			this.autofillCooldown = true;
-			let config = this.updateDeprecatedFields(this.config);
-			config = this.autofillDefaultFields(config);
-			config = this.updateDeprecatedTemplateFields(config);
+			const config = this.autofillDefaultFields(this.config);
 			this.configChanged(config);
 			setTimeout(() => (this.autofillCooldown = false), 1000);
 		}
@@ -2243,6 +2248,11 @@ export class UniversalRemoteCardEditor extends LitElement {
 		return entry;
 	}
 
+	handleUpdateDeprecatedConfig() {
+		const config = this.updateDeprecatedFields(this.config);
+		this.configChanged(config);
+	}
+
 	updateDeprecatedFields(config: IConfig = this.config): IConfig {
 		const updatedConfig = structuredClone(config);
 
@@ -2589,6 +2599,29 @@ export class UniversalRemoteCardEditor extends LitElement {
 			customActions[i] = updatedEntry;
 		}
 
+		for (const [i, entry] of customActions.entries()) {
+			if ('template' in entry) {
+				const templateActions =
+					config.custom_actions?.filter(
+						(customActions) =>
+							entry['template' as keyof IElementConfig] ==
+							customActions.name,
+					)[0] ??
+					this.DEFAULT_ACTIONS.filter(
+						(defaultActions) =>
+							entry['template' as keyof IElementConfig] ==
+							defaultActions.name,
+					)[0] ??
+					{};
+				const updatedEntry = mergeDeep(
+					structuredClone(templateActions),
+					entry,
+				) as IElementConfig;
+				delete updatedEntry['template' as keyof IElementConfig];
+				customActions[i] = updatedEntry;
+			}
+		}
+
 		// Convert style object to styles string
 		if (updatedConfig['style' as keyof IConfig]) {
 			let styles = updatedConfig.styles ?? '';
@@ -2755,34 +2788,6 @@ export class UniversalRemoteCardEditor extends LitElement {
 		}
 
 		return customAction;
-	}
-
-	updateDeprecatedTemplateFields(config: IConfig) {
-		const customActions = config.custom_actions ?? [];
-		for (const [i, entry] of customActions.entries()) {
-			if ('template' in entry) {
-				const templateActions =
-					config.custom_actions?.filter(
-						(customActions) =>
-							entry['template' as keyof IElementConfig] ==
-							customActions.name,
-					)[0] ??
-					this.DEFAULT_ACTIONS.filter(
-						(defaultActions) =>
-							entry['template' as keyof IElementConfig] ==
-							defaultActions.name,
-					)[0] ??
-					{};
-				const updatedEntry = mergeDeep(
-					structuredClone(templateActions),
-					entry,
-				) as IElementConfig;
-				delete updatedEntry['template' as keyof IElementConfig];
-				customActions[i] = updatedEntry;
-			}
-		}
-		config.custom_actions = customActions;
-		return config;
 	}
 
 	static get styles() {
