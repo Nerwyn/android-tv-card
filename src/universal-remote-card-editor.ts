@@ -299,6 +299,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 		if (this.baseTabIndex == i) {
 			return;
 		}
+		this.entryIndex = -1;
 		this.baseTabIndex = i;
 	}
 
@@ -542,7 +543,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 		}
 		return html`
 			<div class="content">
-				<div class="entry-list-header">${header}</div>
+				<div class="title-header">${header}</div>
 				<ha-sortable
 					handle-selector=".handle"
 					@item-moved=${this.moveEntry}
@@ -778,7 +779,19 @@ export class UniversalRemoteCardEditor extends LitElement {
 			},
 		};
 
-		let value = deepGet(this.activeEntry as object, key);
+		let value;
+		switch (this.baseTabIndex) {
+			case 3:
+			case 2:
+				value = deepGet(this.activeEntry as object, key);
+				break;
+			case 1:
+				break;
+			case 0:
+			default:
+				value = this.config[key as keyof IConfig];
+				break;
+		}
 		if (key.endsWith('.confirmation.exemptions')) {
 			value = ((value as Record<string, { user: string }>[]) ?? []).map(
 				(v) => v.user,
@@ -1443,7 +1456,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 	}
 
 	buildIconGuiEditor() {
-		return html` <div class="content">
+		return html`<div class="content">
 			${this.buildSelector('Name', 'name', {
 				text: {},
 			})}
@@ -1544,6 +1557,122 @@ export class UniversalRemoteCardEditor extends LitElement {
 			<div class="wrapper">${editor}</div> `;
 	}
 
+	buildLayoutEditor() {
+		return html``;
+	}
+
+	buildGeneralEditor() {
+		// TODO global button styles
+		return html`
+			<div class="wrapper">
+				<div class="gui-editor">
+					<div class="title-header">
+						Media Platform and Entity IDs
+					</div>
+					<div class="form">
+						${this.buildSelector('Platform', 'platform', {
+							select: {
+								mode: 'dropdown',
+								options: Platforms,
+								reorder: false,
+							},
+						})}
+						${this.buildSelector('Remote ID', 'remote_id', {
+							entity: {
+								filter: {
+									domain: 'remote',
+								},
+							},
+						})}
+						${this.buildSelector('Keyboard ID', 'keyboard_id', {
+							entity: {
+								filter: {
+									domain: ['remote', 'media_player'],
+								},
+							},
+						})}
+						${this.buildSelector(
+							'Media Player ID',
+							'media_player_id',
+							{
+								entity: {
+									filter: {
+										domain: 'media_player',
+									},
+								},
+							},
+						)}
+					</div>
+					<div class="title-header">Action Timings</div>
+					<div class="form">
+						${this.buildSelector(
+							'Hold time',
+							'hold_time',
+							{
+								number: {
+									min: 0,
+									step: 0,
+									mode: 'box',
+									unit_of_measurement: 'ms',
+								},
+							},
+							500,
+						)}
+						${this.buildSelector(
+							'Repeat delay',
+							'repeat_delay',
+							{
+								number: {
+									min: 0,
+									step: 0,
+									mode: 'box',
+									unit_of_measurement: 'ms',
+								},
+							},
+							100,
+						)}
+						${this.buildSelector(
+							'Double tap window',
+							'double_tap_window',
+							{
+								number: {
+									min: 0,
+									step: 0,
+									mode: 'box',
+									unit_of_measurement: 'ms',
+								},
+							},
+							200,
+						)}
+					</div>
+					${this.buildCodeEditor('jinja2')}
+					<div class="title-header">Miscellaneous</div>
+					${this.buildSelector('Title', 'title', {
+						text: {},
+					})}
+					<div class="form">
+						${this.buildSelector(
+							'Autofill entity',
+							'autofill_entity_id',
+							{
+								boolean: {},
+							},
+							true,
+						)}
+						${this.buildSelector(
+							'Haptics',
+							'haptics',
+							{
+								boolean: {},
+							},
+							false,
+						)}
+					</div>
+				</div>
+			</div>
+		`;
+	}
+
 	buildErrorPanel() {
 		return html`
 			${this.errors && this.errors.length > 0
@@ -1595,7 +1724,6 @@ export class UniversalRemoteCardEditor extends LitElement {
 
 		if (!this.autofillCooldown) {
 			this.autofillCooldown = true;
-			// TODO instead of running automatically, make deprecated field update code a button
 			let config = this.updateDeprecatedFields(this.config);
 			config = this.autofillDefaultFields(config);
 			config = this.updateDeprecatedTemplateFields(config);
@@ -1614,42 +1742,31 @@ export class UniversalRemoteCardEditor extends LitElement {
 		let editor: TemplateResult<1>;
 		switch (this.baseTabIndex) {
 			case 3:
-				if (this.entryIndex > -1 && this.activeEntry) {
-					editor = html`${this.buildEntryEditor()}${this.buildErrorPanel()}`;
-				} else {
-					editor = html`
-						${this.buildEntryList()}${this.buildAddEntryButton()}
-					`;
-				}
-				break;
 			case 2:
 				if (this.entryIndex > -1 && this.activeEntry) {
-					editor = html`${this.buildEntryEditor()}${this.buildErrorPanel()}`;
+					editor = html`${this.buildEntryEditor()}`;
 				} else {
 					editor = html`
 						${this.buildEntryList()}${this.buildAddEntryButton()}
-						${this.buildCodeEditor(
-							'jinja2',
-						)}${this.buildErrorPanel()}
 					`;
 				}
 				break;
 			case 1:
-				editor = html``;
+				editor = this.buildLayoutEditor();
 				break;
 			case 0:
 			default:
-				editor = html``;
+				editor = this.buildGeneralEditor();
 				break;
 		}
 
-		// TODO layout editor
-		// TODO custom icons editor
-		// TODO global options editor
+		// TODOs
 		// Tabs:
 		//   - General
 		//     - Platform, IDs, global timings, and autofill toggle
+		//     - Update deprecated configs button
 		//     - Move overall styles here
+		//     - Shared button styles
 		//   - Remote Elements
 		//     - Maybe add a link to the default lists?
 		//   - Custom Icons
@@ -1657,8 +1774,10 @@ export class UniversalRemoteCardEditor extends LitElement {
 		//     - Should preview icon
 		//     - Warning message about icon size, dimensions, and tools to use
 		//   - Layout
+		//     - Code editor
+		//     - I can barely comprehend how to approach this
 
-		return html`${baseTabBar}${editor} `;
+		return html`${baseTabBar}${editor}${this.buildErrorPanel()}`;
 	}
 
 	renderTemplate(str: string | number | boolean, context: object) {
@@ -2820,7 +2939,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 				white-space: pre-wrap;
 			}
 
-			.entry-list-header {
+			.title-header {
 				font-size: 20px;
 				font-weight: 500;
 			}
