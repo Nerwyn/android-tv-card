@@ -1762,15 +1762,10 @@ export class UniversalRemoteCardEditor extends LitElement {
 		// TODOs
 		// Tabs:
 		//   - General
-		//     - Platform, IDs, global timings, and autofill toggle
 		//     - Update deprecated configs button
-		//     - Move overall styles here
-		//     - Shared button styles
 		//   - Remote Elements
 		//     - Maybe add a link to the default lists?
 		//   - Custom Icons
-		//     - Reuse entries list
-		//     - Should preview icon
 		//     - Warning message about icon size, dimensions, and tools to use
 		//   - Layout
 		//     - Code editor
@@ -2380,14 +2375,14 @@ export class UniversalRemoteCardEditor extends LitElement {
 				styles += `\n  ${field}: ${style[field]};`;
 			}
 			styles += `\n}`;
-			slider.styles = (styles + (slider.styles ?? '')).trim();
+			slider.styles = styles.trim();
 			delete updatedConfig['slider_style' as keyof IConfig];
 			updateSlider = true;
 		}
 		if ('tooltip' in slider) {
 			let styles = slider.styles ?? '';
 			styles += `\n.tooltip {\n  display: {{ "initial" if render(${slider.tooltip}) else "none" }};\n}`;
-			slider.styles = (slider.styles ?? '' + styles).trim();
+			slider.styles = styles.trim();
 			updateSlider = true;
 		}
 		if ('slider_range' in updatedConfig) {
@@ -2477,7 +2472,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 				styles += `\n  ${field}: ${style[field]};`;
 			}
 			styles += `\n}`;
-			touchpad.styles = (styles + (touchpad.styles ?? '')).trim();
+			touchpad.styles = styles.trim();
 			delete updatedConfig['touchpad_style' as keyof IConfig];
 			updateTouchpad = true;
 		}
@@ -2486,7 +2481,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 			styles += `\ntoucharea {\n  height: ${
 				(updatedConfig as Record<string, string>)['touchpad_height']
 			};\n}`;
-			touchpad.styles = (styles + (touchpad.styles ?? '')).trim();
+			touchpad.styles = styles.trim();
 			delete (updatedConfig as Record<string, string>)['touchpad_height'];
 			updateTouchpad = true;
 		}
@@ -2605,9 +2600,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 				styles += `\n  ${field}: ${style[field]};`;
 			}
 			styles += `\n}`;
-			updatedConfig.styles = (
-				styles + (updatedConfig.styles ?? '')
-			).trim();
+			updatedConfig.styles = styles.trim();
 			delete updatedConfig['style' as keyof IConfig];
 		}
 
@@ -2622,9 +2615,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 				styles += `\n  ${field}: ${style[field]};`;
 			}
 			styles += `\n}`;
-			updatedConfig.styles = (
-				styles + (updatedConfig.styles ?? '')
-			).trim();
+			updatedConfig.styles = styles.trim();
 			delete updatedConfig['button_style' as keyof IConfig];
 		}
 
@@ -2641,7 +2632,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 				}
 				styles += '\n}';
 			}
-			updatedConfig.styles = (updatedConfig.styles ?? '' + styles).trim();
+			updatedConfig.styles = styles.trim();
 			delete updatedConfig['row_styles' as keyof IConfig];
 		}
 
@@ -2750,7 +2741,8 @@ export class UniversalRemoteCardEditor extends LitElement {
 
 		// Convert style object to styles string
 		if (customAction['style' as keyof IElementConfig]) {
-			let styles = ':host {';
+			let styles = customAction.styles ?? '';
+			styles += '\n:host {';
 			const style = customAction[
 				'style' as keyof IElementConfig
 			] as Record<string, string>;
@@ -2758,7 +2750,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 				styles += `\n  ${field}: ${style[field]};`;
 			}
 			styles += '\n}';
-			customAction.styles = (styles + (customAction.styles ?? '')).trim();
+			customAction.styles = styles.trim();
 			delete customAction['style' as keyof IElementConfig];
 		}
 
