@@ -255,8 +255,6 @@ class UniversalRemoteCard extends LitElement {
 			return html`<div class="empty-button"></div>`;
 		}
 
-		actions.styles =
-			(this.config.button_styles ?? '') + '\n' + (actions.styles ?? '');
 		return html`<remote-button
 			title="${elementName}"
 			.hass=${this.hass}

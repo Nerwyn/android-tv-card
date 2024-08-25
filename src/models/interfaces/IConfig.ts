@@ -20,7 +20,6 @@ export interface IConfig {
 	custom_icons?: IIconConfig[];
 
 	styles?: string;
-	button_styles?: string;
 	haptics?: boolean;
 
 	hold_time?: number;

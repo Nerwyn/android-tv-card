@@ -1562,9 +1562,8 @@ export class UniversalRemoteCardEditor extends LitElement {
 	}
 
 	buildGeneralEditor() {
-		// TODO global button styles
 		return html`
-			<div class="wrapper">
+			<div class="content">
 				<div class="gui-editor">
 					<div class="title-header">
 						Media Platform and Entity IDs
@@ -1647,9 +1646,6 @@ export class UniversalRemoteCardEditor extends LitElement {
 					</div>
 					${this.buildCodeEditor('jinja2')}
 					<div class="title-header">Miscellaneous</div>
-					${this.buildSelector('Title', 'title', {
-						text: {},
-					})}
 					<div class="form">
 						${this.buildSelector(
 							'Autofill entity',
@@ -1668,6 +1664,9 @@ export class UniversalRemoteCardEditor extends LitElement {
 							false,
 						)}
 					</div>
+					${this.buildSelector('Title', 'title', {
+						text: {},
+					})}
 				</div>
 			</div>
 		`;
@@ -2614,8 +2613,8 @@ export class UniversalRemoteCardEditor extends LitElement {
 
 		// Convert button style object to styles string
 		if (updatedConfig['button_style' as keyof IConfig]) {
-			let styles = updatedConfig.button_styles ?? '';
-			styles += '\n:host {';
+			let styles = updatedConfig.styles ?? '';
+			styles += '\nremote-button {';
 			const style = updatedConfig[
 				'button_style' as keyof IConfig
 			] as unknown as Record<string, string>;
@@ -2623,7 +2622,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 				styles += `\n  ${field}: ${style[field]};`;
 			}
 			styles += `\n}`;
-			updatedConfig.button_styles = (
+			updatedConfig.styles = (
 				styles + (updatedConfig.styles ?? '')
 			).trim();
 			delete updatedConfig['button_style' as keyof IConfig];
