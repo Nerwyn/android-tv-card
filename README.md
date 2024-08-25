@@ -1623,6 +1623,7 @@ custom_actions:
     style:
       padding: 0
       margin: 0
+      --size: 48px
       --icon-color: '#C1121C'
   b:
     style:

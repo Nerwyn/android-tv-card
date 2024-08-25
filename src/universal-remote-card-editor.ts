@@ -241,10 +241,10 @@ export class UniversalRemoteCardEditor extends LitElement {
 
 	handleYamlCodeChanged(e: CustomEvent) {
 		e.stopPropagation();
+		const yaml = e.detail.value;
 		clearTimeout(this.codeEditorDelay);
 		this.codeEditorDelay = undefined;
 		this.codeEditorDelay = setTimeout(() => {
-			const yaml = e.detail.value;
 			if (yaml != this.yaml) {
 				this.yaml = yaml;
 			}
@@ -271,9 +271,9 @@ export class UniversalRemoteCardEditor extends LitElement {
 	}
 
 	handleActionCodeChanged(e: CustomEvent) {
+		e.stopPropagation();
 		const actionType = (e.target as HTMLElement).id as ActionType;
 		const actionYaml = e.detail.value;
-		e.stopPropagation();
 		clearTimeout(this.codeEditorDelay);
 		this.codeEditorDelay = undefined;
 		this.codeEditorDelay = setTimeout(() => {
@@ -290,6 +290,25 @@ export class UniversalRemoteCardEditor extends LitElement {
 				} catch (e) {
 					this.errors = [(e as Error).message];
 				}
+			}
+		}, 1000);
+	}
+
+	handleLayoutCodeChanged(e: CustomEvent) {
+		e.stopPropagation();
+		const layoutYaml = e.detail.value;
+		clearTimeout(this.codeEditorDelay);
+		this.codeEditorDelay = undefined;
+		this.codeEditorDelay = setTimeout(() => {
+			try {
+				const layoutObj = load(layoutYaml);
+				this.configChanged({
+					...this.config,
+					rows: layoutObj,
+				} as unknown as IElementConfig);
+				this.errors = undefined;
+			} catch (e) {
+				this.errors = [(e as Error).message];
 			}
 		}, 1000);
 	}
@@ -1519,6 +1538,12 @@ export class UniversalRemoteCardEditor extends LitElement {
 				);
 				value = value.trim() == '{}' ? '' : value;
 				break;
+			case 'layout':
+				mode = 'yaml';
+				handler = this.handleLayoutCodeChanged;
+				value = dump(this.config.rows ?? '');
+				value = value.trim() == '{}' ? '' : value;
+				break;
 			case 'yaml':
 			default:
 				value = this.yaml;
@@ -1558,7 +1583,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 	}
 
 	buildLayoutEditor() {
-		return html``;
+		return html`${this.buildCodeEditor('layout')}`;
 	}
 
 	buildGeneralEditor() {
@@ -1766,8 +1791,6 @@ export class UniversalRemoteCardEditor extends LitElement {
 
 		// TODOs
 		// Tabs:
-		//   - General
-		//     - Update deprecated configs button
 		//   - Remote Elements
 		//     - Maybe add a link to the default lists?
 		//   - Custom Icons
