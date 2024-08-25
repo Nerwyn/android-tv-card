@@ -255,13 +255,13 @@ export class UniversalRemoteCardEditor extends LitElement {
 	handleYamlCodeChanged(e: CustomEvent) {
 		e.stopPropagation();
 		const yaml = e.detail.value;
-		clearTimeout(this.codeEditorDelay);
-		this.codeEditorDelay = undefined;
-		this.codeEditorDelay = setTimeout(() => {
-			if (yaml != this.yaml) {
-				this.yaml = yaml;
-			}
-		}, this.CODE_EDITOR_DELAY);
+		// clearTimeout(this.codeEditorDelay);
+		// this.codeEditorDelay = undefined;
+		// this.codeEditorDelay = setTimeout(() => {
+		if (yaml != this.yaml) {
+			this.yaml = yaml;
+		}
+		// }, this.CODE_EDITOR_DELAY);
 	}
 
 	handleStyleCodeChanged(e: CustomEvent) {
