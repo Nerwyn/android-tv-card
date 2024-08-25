@@ -393,11 +393,17 @@ export class UniversalRemoteCardEditor extends LitElement {
 			default: {
 				const entryType = RemoteElementTypes[i];
 				entries = structuredClone(this.config.custom_actions) ?? [];
+				let name = entryType;
+				const entriesOfType = this.config.custom_actions?.filter(
+					(entry) => entry.type == entryType,
+				);
+				if (entriesOfType && entriesOfType.length) {
+					name += `_${(this.config.custom_actions ?? []).length}`;
+				}
+
 				entries.push({
 					type: RemoteElementTypes[i],
-					name: `custom_${entryType}_${
-						(this.config.custom_actions ?? []).length
-					}`,
+					name: name,
 					autofill_entity_id: true,
 				});
 				break;
@@ -859,7 +865,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 			<div class="form">
 				${additionalFormOptions}
 				${this.buildSelector(
-					'Autofill entity',
+					'Autofill',
 					'autofill_entity_id',
 					{
 						boolean: {},
@@ -1693,7 +1699,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 					<div class="title-header">Miscellaneous</div>
 					<div class="form">
 						${this.buildSelector(
-							'Autofill entity',
+							'Autofill',
 							'autofill_entity_id',
 							{
 								boolean: {},
