@@ -51,6 +51,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 		...structuredClone(defaultSources),
 		...structuredClone(defaultKeys),
 	];
+	CODE_EDITOR_DELAY = 500;
 
 	static get properties() {
 		return { hass: {}, config: {} };
@@ -248,7 +249,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 			if (yaml != this.yaml) {
 				this.yaml = yaml;
 			}
-		}, 1000);
+		}, this.CODE_EDITOR_DELAY);
 	}
 
 	handleStyleCodeChanged(e: CustomEvent) {
@@ -291,7 +292,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 					this.errors = [(e as Error).message];
 				}
 			}
-		}, 1000);
+		}, this.CODE_EDITOR_DELAY);
 	}
 
 	handleLayoutCodeChanged(e: CustomEvent) {
@@ -310,7 +311,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 			} catch (e) {
 				this.errors = [(e as Error).message];
 			}
-		}, 1000);
+		}, this.CODE_EDITOR_DELAY);
 	}
 
 	handleBaseTabSelected(e: CustomEvent) {
@@ -1549,7 +1550,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 				mode = 'yaml';
 				handler = this.handleLayoutCodeChanged;
 				value = dump(this.config.rows ?? '');
-				value = value.trim() == '{}' ? '' : value;
+				value = value.trim() == '[]' ? '' : value;
 				autocompleteEntities = false;
 				autocompleteIcons = false;
 				break;
@@ -1567,14 +1568,14 @@ export class UniversalRemoteCardEditor extends LitElement {
 				<ha-code-editor
 					mode="${mode}"
 					id="${id}"
+					dir="ltr"
 					?autocomplete-entities="${autocompleteEntities}"
 					?autocomplete-icons="${autocompleteIcons}"
 					.hass=${this.hass}
 					.value=${value}
 					.error=${Boolean(this.errors)}
 					@value-changed=${handler}
-					@keydown=${(e: CustomEvent) => e.stopPropagation()}
-					dir="ltr"
+					@keydown=${(e: KeyboardEvent) => e.stopPropagation()}
 				></ha-code-editor>
 			</div>
 		`;
