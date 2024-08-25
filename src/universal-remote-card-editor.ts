@@ -319,6 +319,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 			return;
 		}
 		this.entryIndex = -1;
+		this.guiMode = false;
 		this.baseTabIndex = i;
 	}
 
@@ -1519,6 +1520,8 @@ export class UniversalRemoteCardEditor extends LitElement {
 		let title: string | undefined;
 		let value: string;
 		let handler: (e: CustomEvent) => void;
+		let autocompleteEntities: boolean;
+		let autocompleteIcons: boolean;
 		switch (mode) {
 			case 'jinja2':
 				value =
@@ -1527,6 +1530,8 @@ export class UniversalRemoteCardEditor extends LitElement {
 						: this.config.styles) ?? '';
 				handler = this.handleStyleCodeChanged;
 				title = 'CSS Styles';
+				autocompleteEntities = true;
+				autocompleteIcons = false;
 				break;
 			case 'action':
 				mode = 'yaml';
@@ -1536,18 +1541,24 @@ export class UniversalRemoteCardEditor extends LitElement {
 						(id ?? 'tap_action') as ActionType
 					] as IAction) ?? {},
 				);
-				value = value.trim() == '{}' ? '' : value;
+				value = value == '{}' ? '' : value;
+				autocompleteEntities = true;
+				autocompleteIcons = false;
 				break;
 			case 'layout':
 				mode = 'yaml';
 				handler = this.handleLayoutCodeChanged;
 				value = dump(this.config.rows ?? '');
 				value = value.trim() == '{}' ? '' : value;
+				autocompleteEntities = false;
+				autocompleteIcons = false;
 				break;
 			case 'yaml':
 			default:
 				value = this.yaml;
 				handler = this.handleYamlCodeChanged;
+				autocompleteEntities = true;
+				autocompleteIcons = true;
 				break;
 		}
 		return html`
@@ -1556,9 +1567,8 @@ export class UniversalRemoteCardEditor extends LitElement {
 				<ha-code-editor
 					mode="${mode}"
 					id="${id}"
-					autofocus
-					autocomplete-entities
-					autocomplete-icons
+					?autocomplete-entities="${autocompleteEntities}"
+					?autocomplete-icons="${autocompleteIcons}"
 					.hass=${this.hass}
 					.value=${value}
 					.error=${Boolean(this.errors)}
