@@ -188,8 +188,19 @@ export class UniversalRemoteCardEditor extends LitElement {
 
 	get yaml(): string {
 		if (this.yamlString == undefined) {
-			const yaml = dump(this.activeEntry);
-			this.yamlString = yaml.trim() == '{}' ? '' : yaml;
+			let yaml = '';
+			switch (this.baseTabIndex) {
+				case 3:
+				case 2:
+					yaml = dump(this.activeEntry);
+					break;
+				case 1:
+					yaml = dump(this.config.rows);
+					break;
+				default:
+					break;
+			}
+			this.yamlString = ['{}', '[]'].includes(yaml.trim()) ? '' : yaml;
 		}
 		return this.yamlString ?? '';
 	}
@@ -329,9 +340,9 @@ export class UniversalRemoteCardEditor extends LitElement {
 	}
 
 	handleBaseTabSelected(e: CustomEvent) {
+		this.yamlString = undefined;
 		this.entryIndex = -1;
 		this.guiMode = true;
-		this.yamlString = undefined;
 		const i = e.detail.index;
 		if (this.baseTabIndex == i) {
 			return;
@@ -1564,8 +1575,8 @@ export class UniversalRemoteCardEditor extends LitElement {
 				break;
 			case 'layout':
 				mode = 'yaml';
+				value = this.yaml;
 				handler = this.handleYamlCodeChanged;
-				value = dump(this.config.rows ?? '');
 				value = value.trim() == '[]' ? '' : value;
 				autocompleteEntities = false;
 				autocompleteIcons = false;
