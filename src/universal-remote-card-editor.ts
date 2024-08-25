@@ -22,6 +22,7 @@ import {
 	Platforms,
 	RemoteElementType,
 	RemoteElementTypes,
+	Row,
 	defaultIcons,
 	defaultKeys,
 	defaultSources,
@@ -196,22 +197,24 @@ export class UniversalRemoteCardEditor extends LitElement {
 	set yaml(yaml: string | undefined) {
 		this.yamlString = yaml;
 		try {
-			const updatedEntry = load(this.yaml);
-			let entries: IElementConfig[] | IIconConfig[];
+			const yamlObj = load(this.yaml);
 			switch (this.baseTabIndex) {
-				case 3:
-					entries = structuredClone(this.config.custom_icons ?? []);
-					entries[this.entryIndex] = updatedEntry as IIconConfig;
+				case 3: {
+					const entries = structuredClone(
+						this.config.custom_icons ?? [],
+					);
+					entries[this.entryIndex] = yamlObj as IIconConfig;
+					this.entriesChanged(entries);
 					break;
-				case 2:
-				default:
-					entries = structuredClone(this.config.custom_actions ?? []);
+				}
+				case 2: {
+					const entries = structuredClone(
+						this.config.custom_actions ?? [],
+					);
 					switch (
 						this.renderTemplate(
 							entries[this.entryIndex].type,
-							this.getEntryContext(
-								updatedEntry as IElementConfig,
-							),
+							this.getEntryContext(yamlObj as IElementConfig),
 						)
 					) {
 						case 'touchpad':
@@ -220,7 +223,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 									...entries[this.entryIndex],
 									[this.TOUCHPAD_TABS[
 										this.touchpadTabIndex
-									] as DirectionAction]: updatedEntry,
+									] as DirectionAction]: yamlObj,
 								};
 								break;
 							}
@@ -229,11 +232,20 @@ export class UniversalRemoteCardEditor extends LitElement {
 						case 'button':
 						default:
 							entries[this.entryIndex] =
-								updatedEntry as IElementConfig;
+								yamlObj as IElementConfig;
 					}
+					this.entriesChanged(entries);
+					break;
+				}
+				case 1:
+					this.configChanged({
+						...this.config,
+						rows: yamlObj as Row[],
+					});
+					break;
+				default:
+					break;
 			}
-
-			this.entriesChanged(entries);
 			this.errors = undefined;
 		} catch (e) {
 			this.errors = [(e as Error).message];
@@ -1552,7 +1564,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 				break;
 			case 'layout':
 				mode = 'yaml';
-				handler = this.handleLayoutCodeChanged;
+				handler = this.handleYamlCodeChanged;
 				value = dump(this.config.rows ?? '');
 				value = value.trim() == '[]' ? '' : value;
 				autocompleteEntities = false;
