@@ -176,6 +176,9 @@ class UniversalRemoteCard extends LitElement {
 	}
 
 	getElementConfig(action: string): IElementConfig {
+		// TODO review and test if this is still needed
+		// Likely only needed for default actions
+		// Likely no longer need to merge custom actions on top of default ones
 		const defaultActions =
 			structuredClone(
 				this.DEFAULT_ACTIONS.filter(

@@ -873,7 +873,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 					{
 						boolean: {},
 					},
-					true,
+					this.config.autofill_entity_id ?? true,
 				)}
 				${this.buildSelector(
 					'Haptics',
@@ -1822,9 +1822,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 		// Tabs:
 		//   - Remote Elements
 		//     - Maybe add a link to the default lists?
-		//     - Fix slider and touchpad autofill - doesn't seem to work or partially works
-		//       - Possibly due to shallow merging
-		//     - Dialog to add name on creation rather than
+		//     - Restore media player ID as slider ID for default slider
 		//   - Custom Icons
 		//     - Warning message about icon size, dimensions, and tools to use
 		//   - Layout
