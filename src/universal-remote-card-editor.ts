@@ -266,13 +266,9 @@ export class UniversalRemoteCardEditor extends LitElement {
 	handleYamlCodeChanged(e: CustomEvent) {
 		e.stopPropagation();
 		const yaml = e.detail.value;
-		// clearTimeout(this.codeEditorDelay);
-		// this.codeEditorDelay = undefined;
-		// this.codeEditorDelay = setTimeout(() => {
 		if (yaml != this.yaml) {
 			this.yaml = yaml;
 		}
-		// }, this.CODE_EDITOR_DELAY);
 	}
 
 	handleStyleCodeChanged(e: CustomEvent) {
@@ -316,25 +312,6 @@ export class UniversalRemoteCardEditor extends LitElement {
 				} catch (e) {
 					this.errors = [(e as Error).message];
 				}
-			}
-		}, this.CODE_EDITOR_DELAY);
-	}
-
-	handleLayoutCodeChanged(e: CustomEvent) {
-		e.stopPropagation();
-		const layoutYaml = e.detail.value;
-		clearTimeout(this.codeEditorDelay);
-		this.codeEditorDelay = undefined;
-		this.codeEditorDelay = setTimeout(() => {
-			try {
-				const layoutObj = load(layoutYaml);
-				this.configChanged({
-					...this.config,
-					rows: layoutObj,
-				} as unknown as IElementConfig);
-				this.errors = undefined;
-			} catch (e) {
-				this.errors = [(e as Error).message];
 			}
 		}, this.CODE_EDITOR_DELAY);
 	}
@@ -1836,6 +1813,9 @@ export class UniversalRemoteCardEditor extends LitElement {
 		// Tabs:
 		//   - Remote Elements
 		//     - Maybe add a link to the default lists?
+		//     - Fix slider and touchpad autofill - doesn't seem to work or partially works
+		//       - Possibly due to shallow merging
+		//     - Dialog to add name on creation rather than
 		//   - Custom Icons
 		//     - Warning message about icon size, dimensions, and tools to use
 		//   - Layout
@@ -2056,6 +2036,18 @@ export class UniversalRemoteCardEditor extends LitElement {
 				this.getEntryContext(entry),
 			)
 		) {
+			// Copy custom action onto default action
+			const defaultActions =
+				structuredClone(
+					this.DEFAULT_ACTIONS.filter(
+						(defaultActions) => defaultActions.name == entry.name,
+					)[0],
+				) ?? {};
+			entry = {
+				...defaultActions,
+				...entry,
+			};
+
 			entry.value_attribute = entry.value_attribute ?? 'state';
 			entry.haptics = entry.haptics ?? config.haptics ?? true;
 
@@ -2287,28 +2279,18 @@ export class UniversalRemoteCardEditor extends LitElement {
 				}
 				case 'touchpad':
 					for (const direction of DirectionActions) {
-						entry[direction] = this.autofillDefaultEntryFields(
-							config,
-							(entry[direction] ?? {}) as IElementConfig,
-						);
+						if (entry[direction]) {
+							entry[direction] = this.autofillDefaultEntryFields(
+								config,
+								(entry[direction] ?? {}) as IElementConfig,
+							);
+						}
 					}
 					break;
 				case 'button':
 				case 'default':
 					break;
 			}
-
-			// Copy custom action onto default action
-			const defaultActions =
-				structuredClone(
-					this.DEFAULT_ACTIONS.filter(
-						(defaultActions) => defaultActions.name == entry.name,
-					)[0],
-				) ?? {};
-			entry = {
-				...defaultActions,
-				...entry,
-			};
 		}
 		return entry;
 	}
