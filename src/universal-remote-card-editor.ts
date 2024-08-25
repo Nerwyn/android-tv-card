@@ -666,7 +666,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 			case 3:
 				return html`
 					<ha-button
-						@action=${this.addEntry}
+						@click=${this.addEntry}
 						outlined
 						.label="${'ADD SVG ICON'}"
 					>
@@ -1445,6 +1445,9 @@ export class UniversalRemoteCardEditor extends LitElement {
 	buildIconGuiEditor() {
 		// TODO icon preview
 		return html` <div class="content">
+			<ha-svg-icon
+				.path=${(this.activeEntry as IIconConfig).path}
+			></ha-svg-icon>
 			${this.buildSelector('Name', 'name', {
 				text: {},
 			})}
