@@ -1443,17 +1443,17 @@ export class UniversalRemoteCardEditor extends LitElement {
 	}
 
 	buildIconGuiEditor() {
-		// TODO icon preview
 		return html` <div class="content">
-			<ha-svg-icon
-				.path=${(this.activeEntry as IIconConfig).path}
-			></ha-svg-icon>
 			${this.buildSelector('Name', 'name', {
 				text: {},
 			})}
 			${this.buildSelector('SVG Path', 'path', {
 				text: { multiline: true },
 			})}
+			<ha-svg-icon
+				.path=${(this.activeEntry as IIconConfig).path}
+				class="custom-icon-preview"
+			></ha-svg-icon>
 		</div>`;
 	}
 
@@ -2846,6 +2846,10 @@ export class UniversalRemoteCardEditor extends LitElement {
 				position: absolute;
 				padding: 16px;
 				pointer-events: none;
+			}
+			.custom-icon-preview {
+				align-self: center;
+				--mdc-icon-size: 50%;
 			}
 		`;
 	}
