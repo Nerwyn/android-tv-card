@@ -982,12 +982,6 @@ export class UniversalRemoteCardEditor extends LitElement {
 				'none',
 			context,
 		) as string;
-		const performAction = this.renderTemplate(
-			(this.activeEntry as IElementConfig)?.[actionType]
-				?.perform_action ?? '',
-			context,
-		) as string;
-		const [domain, _service] = performAction.split('.');
 		return html`<div class="action-options">
 			${this.buildSelector(label, actionType, selector)}
 			${action != 'none' && actionType == 'double_tap_action'
@@ -1173,10 +1167,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 						target: {},
 				  })
 				: ''}
-			${buildCodeEditor ||
-			action == 'fire-dom-event' ||
-			(action == 'perform-action' &&
-				['kodi', 'denonavr'].includes(domain))
+			${buildCodeEditor || action == 'fire-dom-event'
 				? this.buildCodeEditor('action', actionType)
 				: ''}
 			${action != 'none'
