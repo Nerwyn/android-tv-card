@@ -1858,7 +1858,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 		return str;
 	}
 
-	getEntryContext(entry: IElementConfig) {
+	getEntryContext(entry?: IElementConfig) {
 		const context = {
 			VALUE: 0,
 			HOLD_SECS: 0,
@@ -1873,15 +1873,15 @@ export class UniversalRemoteCardEditor extends LitElement {
 			},
 		};
 		context.config.attribute = this.renderTemplate(
-			entry.value_attribute ?? '',
+			entry?.value_attribute ?? '',
 			context,
 		) as string;
 		context.config.entity = this.renderTemplate(
-			entry.entity_id ?? '',
+			entry?.entity_id ?? '',
 			context,
 		) as string;
 		const unit = this.renderTemplate(
-			entry.unit_of_measurement as string,
+			entry?.unit_of_measurement as string,
 			context,
 		) as string;
 		(context.UNIT = unit), (context.unit = unit);
