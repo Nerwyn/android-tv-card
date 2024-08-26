@@ -1629,27 +1629,34 @@ export class UniversalRemoteCardEditor extends LitElement {
 			<div class="layout-editor">
 				${this.buildCodeEditor('layout')}
 				<div class="title-header">Custom Actions</div>
-				<ul class="custom-action-list">
-					${customActionNames.map((name) => html`<li>${name}</li>`)}
-				</ul>
+				<div class="custom-action-list-container">
+					<ul class="custom-action-list">
+						${customActionNames.map(
+							(name) => html`<li>${name}</li>`,
+						)}
+					</ul>
+				</div>
 				<div><hr /></div>
-				<div class="action-list-container">
+				<div class="default-action-lists-container">
 					<div class="wrapper">
 						<div class="title-header">Default Keys</div>
-						<ul class="action-list">
-							${defaultKeyNames.map(
-								(name) => html`<li>${name}</li>`,
-							)}
-						</ul>
+						<div class="default-action-list-container">
+							<ul class="action-list">
+								${defaultKeyNames.map(
+									(name) => html`<li>${name}</li>`,
+								)}
+							</ul>
+						</div>
 					</div>
-					<hr />
 					<div class="wrapper">
 						<div class="title-header">Default Sources</div>
-						<ul class="action-list">
-							${defaultSourceNames.map(
-								(name) => html`<li>${name}</li>`,
-							)}
-						</ul>
+						<div class="default-action-list-container">
+							<ul class="action-list">
+								${defaultSourceNames.map(
+									(name) => html`<li>${name}</li>`,
+								)}
+							</ul>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -3027,10 +3034,19 @@ export class UniversalRemoteCardEditor extends LitElement {
 			.layout-editor {
 				display: flex;
 				flex-direction: column;
+				font-weight: 500;
 			}
-			.action-list-container {
+			.default-action-lists-container {
 				display: flex;
 				flex-direction: row;
+			}
+			.default-action-list-container {
+				max-height: 240px;
+				overflow: scroll;
+			}
+			.custom-action-list-container {
+				max-height: 120px;
+				overflow: scroll;
 			}
 			.custom-action-list {
 				columns: 2;
