@@ -1491,6 +1491,10 @@ export class UniversalRemoteCardEditor extends LitElement {
 
 	buildIconGuiEditor() {
 		return html`<div class="content">
+			${this.buildAlertBox(
+				'Icons must be resized to 24x24px to display correctly. Use a tool like https://yqnn.github.io/svg-path-editor/ to edit your SVG paths. If correctly sized the icon will perfectly fit in the preview ouline below.',
+				'info',
+			)}
 			${this.buildSelector('Name', 'name', {
 				text: {},
 			})}
@@ -1822,7 +1826,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 		// Tabs:
 		//   - Remote Elements
 		//     - Maybe add a link to the default lists?
-		//     - Restore media player ID as slider ID for default slider
+		//     - Default keys and sources for other platforms.
 		//   - Custom Icons
 		//     - Warning message about icon size, dimensions, and tools to use
 		//   - Layout
@@ -3022,6 +3026,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 			}
 			.custom-icon-preview {
 				align-self: center;
+				outline: 1px dashed var(--primary-color);
 				--mdc-icon-size: 50%;
 			}
 		`;
