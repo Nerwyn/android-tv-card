@@ -183,6 +183,7 @@ class UniversalRemoteCard extends LitElement {
 			actions.name == 'slider' &&
 			this.config.media_player_id
 		) {
+			actions.entity_id = this.config.media_player_id;
 			const tapAction = actions.tap_action ?? ({} as IAction);
 			const target = tapAction.target ?? ({} as ITarget);
 			(target.entity_id = this.config.media_player_id),
