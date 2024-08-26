@@ -1533,27 +1533,6 @@ export class UniversalRemoteCardEditor extends LitElement {
 		return html`<div class="gui-editor">${entryGuiEditor}</div>`;
 	}
 
-	buildLayoutGuiEditor() {
-		return html`<div class="content">
-			${this.buildLayoutList(this.config.rows ?? [])}
-		</div>`;
-	}
-
-	buildLayoutList(rows: Row[]): TemplateResult<1> {
-		const rowElements = [];
-		for (const element of rows) {
-			if (Array.isArray(element)) {
-				rowElements.push(html`<hr />`);
-				rowElements.push(this.buildLayoutList(element as Row[]));
-			} else {
-				rowElements.push(html`<li>${element}</li>`);
-			}
-		}
-		return html`<ul class="editor-layout-list">
-			${rowElements}
-		</ul>`;
-	}
-
 	buildCodeEditor(mode: string, id?: string) {
 		let title: string | undefined;
 		let value: string;
@@ -1634,34 +1613,24 @@ export class UniversalRemoteCardEditor extends LitElement {
 	}
 
 	buildLayoutEditor() {
-		let editor: TemplateResult<1>;
-		if (this.guiMode) {
-			editor = this.buildLayoutGuiEditor();
-		} else {
-			editor = this.buildCodeEditor('layout');
-		}
-		return html`
-			<div class="header">
-				<div class="back-title"></div>
-				<ha-icon-button
-					class="gui-mode-button"
-					@click=${this.toggleGuiMode}
-					.label=${this.hass.localize(
-						this.guiMode
-							? 'ui.panel.lovelace.editor.edit_card.show_code_editor'
-							: 'ui.panel.lovelace.editor.edit_card.show_visual_editor',
-					)}
-				>
-					<ha-icon
-						class="header-icon"
-						.icon="${this.guiMode
-							? 'mdi:code-braces'
-							: 'mdi:list-box-outline'}"
-					></ha-icon>
-				</ha-icon-button>
+		const customActionNames =
+			this.config.custom_actions?.map(
+				(customAction) => customAction.name,
+			) ?? [];
+		const defaultActionNames = this.DEFAULT_ACTIONS.map(
+			(defaultAction) => defaultAction.name,
+		).filter((name) => !customActionNames?.includes(name));
+
+		return html`<div class="content">
+			<div class="layout-editor">
+				${this.buildCodeEditor('layout')}
+				<ul class="action-list">
+					${customActionNames.map((name) => html`<li>${name}</li>`)}
+					<hr />
+					${defaultActionNames.map((name) => html`<li>${name}</li>`)}
+				</ul>
 			</div>
-			${editor}
-		`;
+		</div> `;
 	}
 
 	buildGeneralEditor() {
@@ -3031,6 +3000,10 @@ export class UniversalRemoteCardEditor extends LitElement {
 			}
 			ha-code-editor {
 				--code-mirror-max-height: calc(100vh - 245px);
+			}
+			.layout-editor {
+				display: flex;
+				flex-direction: row;
 			}
 			.error,
 			.info {
