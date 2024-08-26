@@ -4,6 +4,7 @@ import { property, state } from 'lit/decorators.js';
 
 import { HomeAssistant } from 'custom-card-helpers';
 import { dump, load } from 'js-yaml';
+import Sortable from 'sortablejs';
 
 import {
 	ActionType,
@@ -42,7 +43,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 	@state() errors?: string[];
 
 	yamlString?: string;
-	actionYamlStrings: Record<string, string> = {};
+	yamlStringsCache: Record<string, string> = {};
 	autofillCooldown = false;
 	codeEditorDelay?: ReturnType<typeof setTimeout>;
 	people: Record<string, string>[] = [];
@@ -53,7 +54,6 @@ export class UniversalRemoteCardEditor extends LitElement {
 		...structuredClone(defaultSources),
 		...structuredClone(defaultKeys),
 	];
-	CODE_EDITOR_DELAY = 500;
 
 	static get properties() {
 		return { hass: {}, config: {} };
@@ -294,15 +294,10 @@ export class UniversalRemoteCardEditor extends LitElement {
 	}
 
 	handleActionCodeChanged(e: CustomEvent) {
-		// TODO add some kind of caching to yaml so that it doesn't reload every time it's modified
-		// This may also remove the need for the timeout to update
 		e.stopPropagation();
 		const actionType = (e.target as HTMLElement).id as ActionType;
 		const actionYaml = e.detail.value;
-		this.actionYamlStrings[actionType] = actionYaml;
-		// clearTimeout(this.codeEditorDelay);
-		// this.codeEditorDelay = undefined;
-		// this.codeEditorDelay = setTimeout(() => {
+		this.yamlStringsCache[actionType] = actionYaml;
 		if (this.activeEntry) {
 			try {
 				const actionObj = load(actionYaml) as IData;
@@ -317,13 +312,12 @@ export class UniversalRemoteCardEditor extends LitElement {
 				this.errors = [(e as Error).message];
 			}
 		}
-		// }, this.CODE_EDITOR_DELAY);
 	}
 
 	handleBaseTabSelected(e: CustomEvent) {
 		this.yamlString = undefined;
 		this.entryIndex = -1;
-		this.actionYamlStrings = {};
+		this.yamlStringsCache = {};
 		this.guiMode = true;
 		const i = e.detail.index;
 		if (this.baseTabIndex == i) {
@@ -334,7 +328,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 
 	handleActionsTabSelected(e: CustomEvent) {
 		const i = e.detail.index;
-		this.actionYamlStrings = {};
+		this.yamlStringsCache = {};
 		if (this.actionsTabIndex == i) {
 			return;
 		}
@@ -343,7 +337,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 
 	handleTouchpadTabSelected(e: CustomEvent) {
 		this.yamlString = undefined;
-		this.actionYamlStrings = {};
+		this.yamlStringsCache = {};
 		const i = e.detail.index;
 		if (this.touchpadTabIndex == i) {
 			return;
@@ -353,7 +347,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 	}
 
 	handleSelectorChange(e: CustomEvent) {
-		this.actionYamlStrings = {};
+		this.yamlStringsCache = {};
 		const key = (e.target as HTMLElement).id;
 		let value = e.detail.value;
 		if (key.endsWith('.confirmation.exemptions')) {
@@ -1540,6 +1534,35 @@ export class UniversalRemoteCardEditor extends LitElement {
 		return html`<div class="gui-editor">${entryGuiEditor}</div>`;
 	}
 
+	buildLayoutGuiEditor() {
+		const _sortable = new Sortable(
+			this.querySelector('.remote-layout') as HTMLElement,
+			{
+				sort: false,
+				fallbackOnBody: true,
+				invertSwap: true,
+				dragoverBubble: true,
+			},
+		);
+		return html`<div class="content">
+			${this.buildLayoutList(this.config.rows ?? [])}
+		</div>`;
+	}
+
+	buildLayoutList(rows: Row[]): TemplateResult<1> {
+		const rowElements = [];
+		for (const element of rows) {
+			if (Array.isArray(element)) {
+				rowElements.push(this.buildLayoutList(element as Row[]));
+			} else {
+				rowElements.push(html`<li>${element}</li>`);
+			}
+		}
+		return html`<ul class="remote-layout">
+			${rowElements}
+		</ul>`;
+	}
+
 	buildCodeEditor(mode: string, id?: string) {
 		let title: string | undefined;
 		let value: string;
@@ -1562,7 +1585,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 				handler = this.handleActionCodeChanged;
 				id = id ?? 'tap_action';
 				value =
-					this.actionYamlStrings[id] ??
+					this.yamlStringsCache[id] ??
 					dump(
 						((this.activeEntry as IElementConfig)?.[
 							id as ActionType
@@ -1620,7 +1643,34 @@ export class UniversalRemoteCardEditor extends LitElement {
 	}
 
 	buildLayoutEditor() {
-		return html`${this.buildCodeEditor('layout')}`;
+		let editor: TemplateResult<1>;
+		if (this.guiMode) {
+			editor = this.buildLayoutGuiEditor();
+		} else {
+			editor = this.buildCodeEditor('layout');
+		}
+		return html`
+			<div class="header">
+				<div class="back-title"></div>
+				<ha-icon-button
+					class="gui-mode-button"
+					@click=${this.toggleGuiMode}
+					.label=${this.hass.localize(
+						this.guiMode
+							? 'ui.panel.lovelace.editor.edit_card.show_code_editor'
+							: 'ui.panel.lovelace.editor.edit_card.show_visual_editor',
+					)}
+				>
+					<ha-icon
+						class="header-icon"
+						.icon="${this.guiMode
+							? 'mdi:code-braces'
+							: 'mdi:list-box-outline'}"
+					></ha-icon>
+				</ha-icon-button>
+			</div>
+			${editor}
+		`;
 	}
 
 	buildGeneralEditor() {
@@ -1837,7 +1887,8 @@ export class UniversalRemoteCardEditor extends LitElement {
 		//     - Maybe add a link to the default lists?
 		//     - Default keys and sources for other platforms.
 		//   - Layout
-		//     - I can barely comprehend how to approach this
+		//     - Nested sortable js?
+		//       -
 
 		return html`${baseTabBar}${editor}${this.buildErrorPanel()}`;
 	}

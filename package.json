@@ -37,10 +37,12 @@
 		"custom-card-helpers": "latest",
 		"ha-nunjucks": "latest",
 		"js-yaml": "latest",
-		"lit": "latest"
+		"lit": "latest",
+		"sortablejs": "latest"
 	},
 	"devDependencies": {
 		"@types/js-yaml": "latest",
+		"@types/sortablejs": "latest",
 		"@typescript-eslint/eslint-plugin": "latest",
 		"@typescript-eslint/parser": "latest",
 		"eslint": "latest",
