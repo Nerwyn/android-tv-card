@@ -1628,34 +1628,36 @@ export class UniversalRemoteCardEditor extends LitElement {
 		return html`<div class="content">
 			<div class="layout-editor">
 				${this.buildCodeEditor('layout')}
-				<div class="title-header">Custom Actions</div>
-				<div class="custom-action-list-container">
-					<ul class="custom-action-list">
-						${customActionNames.map(
-							(name) => html`<li>${name}</li>`,
-						)}
-					</ul>
-				</div>
-				<div><hr /></div>
-				<div class="default-action-lists-container">
-					<div class="wrapper">
-						<div class="title-header">Default Keys</div>
-						<div class="default-action-list-container">
-							<ul class="action-list">
-								${defaultKeyNames.map(
-									(name) => html`<li>${name}</li>`,
-								)}
-							</ul>
-						</div>
+				<div class="actions-list-container">
+					<div class="title-header">Custom Actions</div>
+					<div class="custom-action-list-container">
+						<ul class="custom-action-list">
+							${customActionNames.map(
+								(name) => html`<li>${name}</li>`,
+							)}
+						</ul>
 					</div>
-					<div class="wrapper">
-						<div class="title-header">Default Sources</div>
-						<div class="default-action-list-container">
-							<ul class="action-list">
-								${defaultSourceNames.map(
-									(name) => html`<li>${name}</li>`,
-								)}
-							</ul>
+					<div><hr /></div>
+					<div class="default-action-lists-container">
+						<div class="wrapper">
+							<div class="title-header">Default Keys</div>
+							<div class="default-action-list-container">
+								<ul class="action-list">
+									${defaultKeyNames.map(
+										(name) => html`<li>${name}</li>`,
+									)}
+								</ul>
+							</div>
+						</div>
+						<div class="wrapper">
+							<div class="title-header">Default Sources</div>
+							<div class="default-action-list-container">
+								<ul class="default-action-list">
+									${defaultSourceNames.map(
+										(name) => html`<li>${name}</li>`,
+									)}
+								</ul>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -3036,6 +3038,14 @@ export class UniversalRemoteCardEditor extends LitElement {
 				flex-direction: column;
 				font-weight: 500;
 			}
+			.actions-list-container {
+				background: var(
+					--code-editor-background-color,
+					var(--mdc-text-field-fill-color, whitesmoke)
+				);
+				padding: 4px;
+				border-radius: 4px;
+			}
 			.default-action-lists-container {
 				display: flex;
 				flex-direction: row;
@@ -3052,11 +3062,13 @@ export class UniversalRemoteCardEditor extends LitElement {
 				columns: 2;
 				-webkit-columns: 2;
 				-moz-columns: 2;
+				margin-top: 4px;
 			}
-			.action-list {
+			.default-action-list {
 				columns: 1;
 				-webkit-columns: 1;
 				-moz-columns: 1;
+				margin-top: 4px;
 			}
 			.error,
 			.info {
