@@ -1535,15 +1535,16 @@ export class UniversalRemoteCardEditor extends LitElement {
 	}
 
 	buildLayoutGuiEditor() {
-		const _sortable = new Sortable(
-			this.querySelector('.remote-layout') as HTMLElement,
-			{
+		const editorLayoutLists = this.querySelectorAll('.editor-layout-list');
+		for (const editorLayoutList of editorLayoutLists) {
+			new Sortable(editorLayoutList as HTMLElement, {
 				sort: false,
 				fallbackOnBody: true,
 				invertSwap: true,
 				dragoverBubble: true,
-			},
-		);
+			});
+		}
+
 		return html`<div class="content">
 			${this.buildLayoutList(this.config.rows ?? [])}
 		</div>`;
@@ -1558,7 +1559,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 				rowElements.push(html`<li>${element}</li>`);
 			}
 		}
-		return html`<ul class="remote-layout">
+		return html`<ul class="editor-layout-list">
 			${rowElements}
 		</ul>`;
 	}
