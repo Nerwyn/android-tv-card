@@ -223,7 +223,7 @@ class UniversalRemoteCard extends LitElement {
 		const id = `row-${this.nRows}`;
 		return html`
 			<div
-				class="row${this.editMode ? ' edit-mode' : ''}"
+				class="row"
 				id="${id}"
 				title="${this.editMode ? `#${id}` : ''}"
 			>
@@ -237,7 +237,7 @@ class UniversalRemoteCard extends LitElement {
 		const id = `column-${this.nColumns}`;
 		return html`
 			<div
-				class="column${this.editMode ? ' edit-mode' : ''}"
+				class="column"
 				id="${id}"
 				title="${this.editMode ? `#${id}` : ''}"
 			>
@@ -251,7 +251,7 @@ class UniversalRemoteCard extends LitElement {
 		const id = `pad-${this.nPads}`;
 		return html`
 			<div
-				class="button-pad${this.editMode ? ' edit-mode' : ''}"
+				class="button-pad"
 				id="${id}"
 				title="${this.editMode ? `#${id}` : ''}"
 			>
@@ -528,6 +528,7 @@ class UniversalRemoteCard extends LitElement {
 			: '';
 
 		return html`<ha-card
+			class="${this.editMode ? ' edit-mode' : ''}"
 			.header="${renderTemplate(
 				this.hass,
 				this.config.title as string,
@@ -589,7 +590,7 @@ class UniversalRemoteCard extends LitElement {
 				outline: none;
 			}
 			@media (hover: hover) {
-				.edit-mode:hover:not(:has(div:hover)) {
+				.edit-mode :hover:not(:has(div:hover)) {
 					outline: 1px dashed var(--red-color);
 				}
 			}
