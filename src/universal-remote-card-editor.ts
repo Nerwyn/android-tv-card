@@ -42,6 +42,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 	@state() errors?: string[];
 
 	yamlString?: string;
+	actionYamlStrings: Record<string, string> = {};
 	autofillCooldown = false;
 	codeEditorDelay?: ReturnType<typeof setTimeout>;
 	people: Record<string, string>[] = [];
@@ -298,29 +299,31 @@ export class UniversalRemoteCardEditor extends LitElement {
 		e.stopPropagation();
 		const actionType = (e.target as HTMLElement).id as ActionType;
 		const actionYaml = e.detail.value;
-		clearTimeout(this.codeEditorDelay);
-		this.codeEditorDelay = undefined;
-		this.codeEditorDelay = setTimeout(() => {
-			if (this.activeEntry) {
-				try {
-					const actionObj = load(actionYaml) as IData;
-					if (JSON.stringify(actionObj ?? {}).includes('null')) {
-						return;
-					}
-					this.entryChanged({
-						[actionType]: actionObj,
-					} as unknown as IElementConfig);
-					this.errors = undefined;
-				} catch (e) {
-					this.errors = [(e as Error).message];
+		this.actionYamlStrings[actionType] = actionYaml;
+		// clearTimeout(this.codeEditorDelay);
+		// this.codeEditorDelay = undefined;
+		// this.codeEditorDelay = setTimeout(() => {
+		if (this.activeEntry) {
+			try {
+				const actionObj = load(actionYaml) as IData;
+				if (JSON.stringify(actionObj ?? {}).includes('null')) {
+					return;
 				}
+				this.entryChanged({
+					[actionType]: actionObj,
+				} as unknown as IElementConfig);
+				this.errors = undefined;
+			} catch (e) {
+				this.errors = [(e as Error).message];
 			}
-		}, this.CODE_EDITOR_DELAY);
+		}
+		// }, this.CODE_EDITOR_DELAY);
 	}
 
 	handleBaseTabSelected(e: CustomEvent) {
 		this.yamlString = undefined;
 		this.entryIndex = -1;
+		this.actionYamlStrings = {};
 		this.guiMode = true;
 		const i = e.detail.index;
 		if (this.baseTabIndex == i) {
@@ -331,6 +334,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 
 	handleActionsTabSelected(e: CustomEvent) {
 		const i = e.detail.index;
+		this.actionYamlStrings = {};
 		if (this.actionsTabIndex == i) {
 			return;
 		}
@@ -339,6 +343,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 
 	handleTouchpadTabSelected(e: CustomEvent) {
 		this.yamlString = undefined;
+		this.actionYamlStrings = {};
 		const i = e.detail.index;
 		if (this.touchpadTabIndex == i) {
 			return;
@@ -348,6 +353,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 	}
 
 	handleSelectorChange(e: CustomEvent) {
+		this.actionYamlStrings = {};
 		const key = (e.target as HTMLElement).id;
 		let value = e.detail.value;
 		if (key.endsWith('.confirmation.exemptions')) {
@@ -1554,12 +1560,15 @@ export class UniversalRemoteCardEditor extends LitElement {
 			case 'action':
 				mode = 'yaml';
 				handler = this.handleActionCodeChanged;
-				value = dump(
-					((this.activeEntry as IElementConfig)?.[
-						(id ?? 'tap_action') as ActionType
-					] as IAction) ?? {},
-				);
-				value = value == '{}' ? '' : value;
+				id = id ?? 'tap_action';
+				value =
+					this.actionYamlStrings[id] ??
+					dump(
+						((this.activeEntry as IElementConfig)?.[
+							id as ActionType
+						] as IAction) ?? {},
+					);
+				value = value.trim() == '{}' ? '' : value;
 				autocompleteEntities = true;
 				autocompleteIcons = false;
 				break;
@@ -1827,8 +1836,6 @@ export class UniversalRemoteCardEditor extends LitElement {
 		//   - Remote Elements
 		//     - Maybe add a link to the default lists?
 		//     - Default keys and sources for other platforms.
-		//   - Custom Icons
-		//     - Warning message about icon size, dimensions, and tools to use
 		//   - Layout
 		//     - I can barely comprehend how to approach this
 
