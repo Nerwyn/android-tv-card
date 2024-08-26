@@ -4,7 +4,6 @@ import { property, state } from 'lit/decorators.js';
 
 import { HomeAssistant } from 'custom-card-helpers';
 import { dump, load } from 'js-yaml';
-import Sortable from 'sortablejs';
 
 import {
 	ActionType,
@@ -1535,16 +1534,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 	}
 
 	buildLayoutGuiEditor() {
-		const editorLayoutLists = this.querySelectorAll('.editor-layout-list');
-		for (const editorLayoutList of editorLayoutLists) {
-			new Sortable(editorLayoutList as HTMLElement, {
-				sort: false,
-				fallbackOnBody: true,
-				invertSwap: true,
-				dragoverBubble: true,
-			});
-		}
-
+		// TODO nested ha-sortables
 		return html`<div class="content">
 			${this.buildLayoutList(this.config.rows ?? [])}
 		</div>`;
@@ -1554,6 +1544,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 		const rowElements = [];
 		for (const element of rows) {
 			if (Array.isArray(element)) {
+				rowElements.push(html`<hr />`);
 				rowElements.push(this.buildLayoutList(element as Row[]));
 			} else {
 				rowElements.push(html`<li>${element}</li>`);
