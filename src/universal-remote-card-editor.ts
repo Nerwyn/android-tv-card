@@ -1534,7 +1534,6 @@ export class UniversalRemoteCardEditor extends LitElement {
 	}
 
 	buildLayoutGuiEditor() {
-		// TODO nested ha-sortables
 		return html`<div class="content">
 			${this.buildLayoutList(this.config.rows ?? [])}
 		</div>`;
@@ -1879,8 +1878,10 @@ export class UniversalRemoteCardEditor extends LitElement {
 		//     - Maybe add a link to the default lists?
 		//     - Default keys and sources for other platforms.
 		//   - Layout
-		//     - Nested sortable js?
-		//       -
+		//     - Get rid of separate list and gui editor.
+		//     - Code editor with list of available actions on side.
+		//       - Show custom actions first, then default with overwritten customs removed
+		//       - See if it's possible to drag from this list to code editor
 
 		return html`${baseTabBar}${editor}${this.buildErrorPanel()}`;
 	}

@@ -589,7 +589,7 @@ class UniversalRemoteCard extends LitElement {
 				outline: none;
 			}
 			@media (hover: hover) {
-				.edit-mode:hover {
+				.edit-mode:hover:not(:has(div:hover)) {
 					outline: 1px dashed var(--red-color);
 				}
 			}
