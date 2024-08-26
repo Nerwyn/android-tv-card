@@ -13,6 +13,7 @@ import {
 	IAction,
 	IConfig,
 	IElementConfig,
+	ITarget,
 	defaultKeys,
 	defaultSources,
 } from './models';
@@ -75,7 +76,7 @@ class UniversalRemoteCard extends LitElement {
 		this.config = config;
 	}
 
-	updateElementConfig(actions: IElementConfig) {
+	updateDefaultActions(actions: IElementConfig) {
 		if (!Object.keys(actions).length) {
 			return actions;
 		}
@@ -167,13 +168,26 @@ class UniversalRemoteCard extends LitElement {
 			}
 		}
 
-		// Also update touchpad directions
-		if (actions.type == 'touchpad') {
+		// Update touchpad directions
+		if (actions.type == 'touchpad' && actions.name == 'touchpad') {
 			for (const direction of DirectionActions) {
-				actions[direction] = this.updateElementConfig(
+				actions[direction] = this.updateDefaultActions(
 					(actions[direction] ?? {}) as IElementConfig,
 				);
 			}
+		}
+
+		// Set slider target to media player ID
+		if (
+			actions.type == 'slider' &&
+			actions.name == 'slider' &&
+			this.config.media_player_id
+		) {
+			const tapAction = actions.tap_action ?? ({} as IAction);
+			const target = tapAction.target ?? ({} as ITarget);
+			(target.entity_id = this.config.media_player_id),
+				(tapAction.target = target);
+			actions.tap_action = tapAction;
 		}
 
 		return actions;
@@ -196,7 +210,7 @@ class UniversalRemoteCard extends LitElement {
 			return customActions;
 		}
 
-		const defaultActions = this.updateElementConfig(
+		const defaultActions = this.updateDefaultActions(
 			structuredClone(
 				this.DEFAULT_ACTIONS.filter(
 					(defaultActions) => defaultActions.name == action,

@@ -2256,7 +2256,11 @@ export class UniversalRemoteCardEditor extends LitElement {
 
 						const target = tap_action.target ?? {};
 						if (!target.entity_id) {
-							target.entity_id = entityId as string;
+							if (entityId.startsWith('remote.')) {
+								target.entity_id = config.media_player_id;
+							} else {
+								target.entity_id = entityId as string;
+							}
 							tap_action.target = target;
 						}
 						entry.tap_action = tap_action;
