@@ -1617,18 +1617,35 @@ export class UniversalRemoteCardEditor extends LitElement {
 			this.config.custom_actions?.map(
 				(customAction) => customAction.name,
 			) ?? [];
-		const defaultActionNames = this.DEFAULT_ACTIONS.map(
-			(defaultAction) => defaultAction.name,
-		).filter((name) => !customActionNames?.includes(name));
+		// TODO change default key/source names depending on global platform
+		const defaultKeyNames = defaultKeys
+			.map((defaultAction) => defaultAction.name)
+			.filter((name) => !customActionNames?.includes(name));
+		const defaultSourceNames = defaultSources
+			.map((defaultAction) => defaultAction.name)
+			.filter((name) => !customActionNames?.includes(name));
 
 		return html`<div class="content">
 			<div class="layout-editor">
 				${this.buildCodeEditor('layout')}
-				<ul class="action-list">
+				<div class="title-header">Custom Actions</div>
+				<ul class="custom-action-list">
 					${customActionNames.map((name) => html`<li>${name}</li>`)}
-					<hr />
-					${defaultActionNames.map((name) => html`<li>${name}</li>`)}
 				</ul>
+				<hr />
+				<div class="action-list-container">
+					<div class="title-header">Default Keys</div>
+					<ul class="action-list">
+						${defaultKeyNames.map((name) => html`<li>${name}</li>`)}
+					</ul>
+					<hr />
+					<div class="title-header">Default Sources</div>
+					<ul class="action-list">
+						${defaultSourceNames.map(
+							(name) => html`<li>${name}</li>`,
+						)}
+					</ul>
+				</div>
 			</div>
 		</div> `;
 	}
@@ -3003,7 +3020,21 @@ export class UniversalRemoteCardEditor extends LitElement {
 			}
 			.layout-editor {
 				display: flex;
+				flex-direction: column;
+			}
+			.action-list-container {
+				display: flex;
 				flex-direction: row;
+			}
+			.custom-action-list {
+				columns: 2;
+				-webkit-columns: 2;
+				-moz-columns: 2;
+			}
+			.action-list {
+				columns: 1;
+				-webkit-columns: 1;
+				-moz-columns: 1;
 			}
 			.error,
 			.info {
