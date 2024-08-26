@@ -1632,19 +1632,25 @@ export class UniversalRemoteCardEditor extends LitElement {
 				<ul class="custom-action-list">
 					${customActionNames.map((name) => html`<li>${name}</li>`)}
 				</ul>
-				<hr />
+				<div><hr /></div>
 				<div class="action-list-container">
-					<div class="title-header">Default Keys</div>
-					<ul class="action-list">
-						${defaultKeyNames.map((name) => html`<li>${name}</li>`)}
-					</ul>
+					<div class="wrapper">
+						<div class="title-header">Default Keys</div>
+						<ul class="action-list">
+							${defaultKeyNames.map(
+								(name) => html`<li>${name}</li>`,
+							)}
+						</ul>
+					</div>
 					<hr />
-					<div class="title-header">Default Sources</div>
-					<ul class="action-list">
-						${defaultSourceNames.map(
-							(name) => html`<li>${name}</li>`,
-						)}
-					</ul>
+					<div class="wrapper">
+						<div class="title-header">Default Sources</div>
+						<ul class="action-list">
+							${defaultSourceNames.map(
+								(name) => html`<li>${name}</li>`,
+							)}
+						</ul>
+					</div>
 				</div>
 			</div>
 		</div> `;
