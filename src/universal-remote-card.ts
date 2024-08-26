@@ -76,6 +76,10 @@ class UniversalRemoteCard extends LitElement {
 	}
 
 	updateElementConfig(actions: IElementConfig) {
+		if (!Object.keys(actions).length) {
+			return actions;
+		}
+
 		actions.autofill_entity_id =
 			actions.autofill_entity_id ??
 			this.config.autofill_entity_id ??
@@ -179,32 +183,27 @@ class UniversalRemoteCard extends LitElement {
 		// TODO review and test if this is still needed
 		// Likely only needed for default actions
 		// Likely no longer need to merge custom actions on top of default ones
-		const defaultActions =
-			structuredClone(
-				this.DEFAULT_ACTIONS.filter(
-					(defaultActions) => defaultActions.name == action,
-				)[0],
-			) ?? {};
 		let customActionsList = this.config.custom_actions;
 		if (!Array.isArray(customActionsList)) {
 			customActionsList = [];
 		}
-		const customActions =
+		const customActions = structuredClone(
+			customActionsList.filter(
+				(customActions) => customActions.name == action,
+			)[0],
+		);
+		if (customActions) {
+			return customActions;
+		}
+
+		const defaultActions = this.updateElementConfig(
 			structuredClone(
-				customActionsList.filter(
-					(customActions) => customActions.name == action,
+				this.DEFAULT_ACTIONS.filter(
+					(defaultActions) => defaultActions.name == action,
 				)[0],
-			) ?? {};
-		let actions = {
-			...defaultActions,
-			...customActions,
-		};
-
-		actions = Object.keys(actions).length
-			? this.updateElementConfig(actions)
-			: actions;
-
-		return actions;
+			) ?? {},
+		);
+		return defaultActions;
 	}
 
 	buildRow(content: TemplateResult[]): TemplateResult {
