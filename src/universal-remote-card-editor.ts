@@ -1629,9 +1629,11 @@ export class UniversalRemoteCardEditor extends LitElement {
 			<div class="layout-editor">
 				${this.buildCodeEditor('layout')}
 				<div class="actions-list-container">
-					<div class="title-header">Custom Actions</div>
-					<div class="custom-action-list-container">
-						<ul class="custom-action-list">
+					<div
+						class="action-list-container custom-action-list-container"
+					>
+						<div class="title-header">Custom Actions</div>
+						<ul class="action-list custom-action-list">
 							${customActionNames.map(
 								(name) => html`<li>${name}</li>`,
 							)}
@@ -1641,8 +1643,8 @@ export class UniversalRemoteCardEditor extends LitElement {
 					<div class="default-action-lists-container">
 						<div class="wrapper">
 							<div class="title-header">Default Keys</div>
-							<div class="default-action-list-container">
-								<ul class="default-action-list">
+							<div class="action-list-container">
+								<ul class="action-list">
 									${defaultKeyNames.map(
 										(name) => html`<li>${name}</li>`,
 									)}
@@ -1651,8 +1653,8 @@ export class UniversalRemoteCardEditor extends LitElement {
 						</div>
 						<div class="wrapper">
 							<div class="title-header">Default Sources</div>
-							<div class="default-action-list-container">
-								<ul class="default-action-list">
+							<div class="action-list-container">
+								<ul class="action-list">
 									${defaultSourceNames.map(
 										(name) => html`<li>${name}</li>`,
 									)}
@@ -3050,25 +3052,28 @@ export class UniversalRemoteCardEditor extends LitElement {
 				display: flex;
 				flex-direction: row;
 			}
-			.default-action-list-container {
+			.action-list-container {
 				max-height: 235px;
 				overflow: scroll;
 			}
 			.custom-action-list-container {
 				max-height: 110px;
-				overflow: scroll;
+			}
+			.action-list {
+				columns: 1;
+				-webkit-columns: 1;
+				-moz-columns: 1;
+				margin-top: 4px;
+				padding-left: 30px;
+				font-family: monospace;
 			}
 			.custom-action-list {
 				columns: 2;
 				-webkit-columns: 2;
 				-moz-columns: 2;
-				margin-top: 4px;
 			}
-			.default-action-list {
-				columns: 1;
-				-webkit-columns: 1;
-				-moz-columns: 1;
-				margin-top: 4px;
+			li::marker {
+				content: '- ';
 			}
 			.error,
 			.info {
