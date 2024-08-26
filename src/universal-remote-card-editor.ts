@@ -1642,7 +1642,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 						<div class="wrapper">
 							<div class="title-header">Default Keys</div>
 							<div class="default-action-list-container">
-								<ul class="action-list">
+								<ul class="default-action-list">
 									${defaultKeyNames.map(
 										(name) => html`<li>${name}</li>`,
 									)}
@@ -3051,11 +3051,11 @@ export class UniversalRemoteCardEditor extends LitElement {
 				flex-direction: row;
 			}
 			.default-action-list-container {
-				max-height: 240px;
+				max-height: 235px;
 				overflow: scroll;
 			}
 			.custom-action-list-container {
-				max-height: 120px;
+				max-height: 110px;
 				overflow: scroll;
 			}
 			.custom-action-list {
