@@ -1671,120 +1671,126 @@ export class UniversalRemoteCardEditor extends LitElement {
 		return html`
 			<div class="content">
 				<div class="gui-editor">
-					<div class="title-header">
-						Media Platform and Entity IDs
-					</div>
-					<div class="form">
-						${this.buildSelector(
-							'Platform',
-							'platform',
-							{
-								select: {
-									mode: 'dropdown',
-									options: Platforms,
-									reorder: false,
-								},
-							},
-							'ANDROID TV',
-						)}
-						${this.buildSelector('Remote ID', 'remote_id', {
-							entity: {
-								filter: {
-									domain: 'remote',
-								},
-							},
-						})}
-						${this.buildSelector('Keyboard ID', 'keyboard_id', {
-							entity: {
-								filter: {
-									domain: ['remote', 'media_player'],
-								},
-							},
-						})}
-						${this.buildSelector(
-							'Media Player ID',
-							'media_player_id',
-							{
-								entity: {
-									filter: {
-										domain: 'media_player',
+					<div class="wrapper">
+						<div class="title-header">
+							Media Platform and Entity IDs
+						</div>
+						<div class="form">
+							${this.buildSelector(
+								'Platform',
+								'platform',
+								{
+									select: {
+										mode: 'dropdown',
+										options: Platforms,
+										reorder: false,
 									},
 								},
-							},
-						)}
-					</div>
-					<div class="title-header">Action Timings</div>
-					<div class="form">
-						${this.buildSelector(
-							'Hold time',
-							'hold_time',
-							{
-								number: {
-									min: 0,
-									step: 0,
-									mode: 'box',
-									unit_of_measurement: 'ms',
+								'ANDROID TV',
+							)}
+							${this.buildSelector('Remote ID', 'remote_id', {
+								entity: {
+									filter: {
+										domain: 'remote',
+									},
 								},
-							},
-							500,
-						)}
-						${this.buildSelector(
-							'Repeat delay',
-							'repeat_delay',
-							{
-								number: {
-									min: 0,
-									step: 0,
-									mode: 'box',
-									unit_of_measurement: 'ms',
+							})}
+							${this.buildSelector('Keyboard ID', 'keyboard_id', {
+								entity: {
+									filter: {
+										domain: ['remote', 'media_player'],
+									},
 								},
-							},
-							100,
-						)}
-						${this.buildSelector(
-							'Double tap window',
-							'double_tap_window',
-							{
-								number: {
-									min: 0,
-									step: 0,
-									mode: 'box',
-									unit_of_measurement: 'ms',
+							})}
+							${this.buildSelector(
+								'Media Player ID',
+								'media_player_id',
+								{
+									entity: {
+										filter: {
+											domain: 'media_player',
+										},
+									},
 								},
-							},
-							200,
-						)}
+							)}
+						</div>
 					</div>
-					${this.buildCodeEditor('jinja2')}
-					<div class="title-header">Miscellaneous</div>
-					<div class="form">
-						${this.buildSelector(
-							'Autofill',
-							'autofill_entity_id',
-							{
-								boolean: {},
-							},
-							true,
-						)}
-						${this.buildSelector(
-							'Haptics',
-							'haptics',
-							{
-								boolean: {},
-							},
-							false,
-						)}
+					<div class="wrapper">
+						<div class="title-header">Action Timings</div>
+						<div class="form">
+							${this.buildSelector(
+								'Hold time',
+								'hold_time',
+								{
+									number: {
+										min: 0,
+										step: 0,
+										mode: 'box',
+										unit_of_measurement: 'ms',
+									},
+								},
+								500,
+							)}
+							${this.buildSelector(
+								'Repeat delay',
+								'repeat_delay',
+								{
+									number: {
+										min: 0,
+										step: 0,
+										mode: 'box',
+										unit_of_measurement: 'ms',
+									},
+								},
+								100,
+							)}
+							${this.buildSelector(
+								'Double tap window',
+								'double_tap_window',
+								{
+									number: {
+										min: 0,
+										step: 0,
+										mode: 'box',
+										unit_of_measurement: 'ms',
+									},
+								},
+								200,
+							)}
+						</div>
 					</div>
-					${this.buildSelector('Title', 'title', {
-						text: {},
-					})}
-					<ha-button
-						@click=${this.handleUpdateDeprecatedConfig}
-						outlined
-						.label="${'UPDATE OLD CONFIG'}"
-					>
-						<ha-icon .icon=${'mdi:cog'} slot="icon"></ha-icon>
-					</ha-button>
+					<div class="wrapper">
+						<div class="title-header">Miscellaneous</div>
+						${this.buildCodeEditor('jinja2')}
+						<div class="form">
+							${this.buildSelector(
+								'Autofill',
+								'autofill_entity_id',
+								{
+									boolean: {},
+								},
+								true,
+							)}
+							${this.buildSelector(
+								'Haptics',
+								'haptics',
+								{
+									boolean: {},
+								},
+								false,
+							)}
+						</div>
+						${this.buildSelector('Title', 'title', {
+							text: {},
+						})}
+						<ha-button
+							@click=${this.handleUpdateDeprecatedConfig}
+							outlined
+							.label="${'UPDATE OLD CONFIG'}"
+						>
+							<ha-icon .icon=${'mdi:cog'} slot="icon"></ha-icon>
+						</ha-button>
+					</div>
 				</div>
 			</div>
 		`;
@@ -3094,6 +3100,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 			.title-header {
 				font-size: 20px;
 				font-weight: 500;
+				padding: 12px 4px;
 			}
 			.panel-header {
 				display: inline-flex;
