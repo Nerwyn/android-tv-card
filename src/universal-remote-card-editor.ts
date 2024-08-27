@@ -1364,7 +1364,16 @@ export class UniversalRemoteCardEditor extends LitElement {
 					)}
 				`,
 			)}
-			${this.buildAppearancePanel(this.buildCommonAppearanceOptions())}
+			${this.buildAppearancePanel(
+				html`${this.buildCommonAppearanceOptions()}${this.buildSelector(
+					'Vertical',
+					'vertical',
+					{
+						boolean: {},
+					},
+					false,
+				)}`,
+			)}
 			${this.buildInteractionsPanel(html`
 				${this.buildAlertBox()}
 				${this.buildActionOption(
