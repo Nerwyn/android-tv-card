@@ -23,16 +23,6 @@ export const appleTVDefaultKeys: IElementConfig[] = [
 		icon: 'mdi:power-off',
 	},
 	{
-		// Duplicate to be consistent with other platforms
-		type: 'button',
-		name: 'power',
-		tap_action: {
-			action: 'key',
-			key: 'suspend',
-		},
-		icon: 'mdi:power',
-	},
-	{
 		type: 'button',
 		name: 'home',
 		tap_action: {
@@ -40,6 +30,15 @@ export const appleTVDefaultKeys: IElementConfig[] = [
 			key: 'home',
 		},
 		icon: 'mdi:home',
+	},
+	{
+		type: 'button',
+		name: 'menu',
+		tap_action: {
+			action: 'key',
+			key: 'menu',
+		},
+		icon: 'mdi:menu',
 	},
 	{
 		type: 'button',
@@ -52,49 +51,35 @@ export const appleTVDefaultKeys: IElementConfig[] = [
 	},
 	{
 		type: 'button',
-		name: 'menu',
+		name: 'volume_up',
 		tap_action: {
 			action: 'key',
-			key: 'menu',
+			key: 'volume_up',
 		},
-		icon: 'mdi:menu',
-	},
-	{
-		// Duplicate to be consistent with other platforms
-		type: 'button',
-		name: 'center',
-		tap_action: {
-			action: 'key',
-			key: 'select',
-		},
-		icon: 'mdi:circle',
+		icon: 'mdi:volume-high',
 	},
 	{
 		type: 'button',
-		name: 'select',
+		name: 'volume_down',
 		tap_action: {
 			action: 'key',
-			key: 'select',
+			key: 'volume_down',
 		},
-		icon: 'mdi:circle',
+		icon: 'mdi:volume-medium',
 	},
 	{
-		type: 'button',
-		name: 'play',
+		type: 'slider',
+		name: 'slider',
+		range: [0, 1],
+		step: 0.01,
+		value_attribute: 'volume_level',
 		tap_action: {
-			action: 'key',
-			key: 'play',
+			action: 'perform-action',
+			perform_action: 'media_player.volume_set',
+			data: {
+				volume_level: '{{ value | float }}',
+			},
 		},
-		icon: 'mdi:play',
-	},
-	{
-		type: 'button',
-		name: 'pause',
-		tap_action: {
-			action: 'key',
-			key: 'pause',
-		},
-		icon: 'mdi:pause',
 	},
 	{
 		type: 'button',
@@ -134,71 +119,12 @@ export const appleTVDefaultKeys: IElementConfig[] = [
 	},
 	{
 		type: 'button',
-		name: 'volume_up',
+		name: 'center',
 		tap_action: {
 			action: 'key',
-			key: 'volume_up',
+			key: 'select',
 		},
-		icon: 'mdi:volume-high',
-	},
-	{
-		type: 'button',
-		name: 'volume_down',
-		tap_action: {
-			action: 'key',
-			key: 'volume_down',
-		},
-		icon: 'mdi:volume-medium',
-	},
-	{
-		type: 'button',
-		name: 'previous',
-		tap_action: {
-			action: 'key',
-			key: 'previous',
-		},
-		icon: 'mdi:skip-previous',
-	},
-	{
-		type: 'button',
-		name: 'next',
-		tap_action: {
-			action: 'key',
-			key: 'next',
-		},
-		icon: 'mdi:skip-next',
-	},
-	{
-		type: 'button',
-		name: 'skip_backward',
-		tap_action: {
-			action: 'key',
-			key: 'skip_backward',
-		},
-		icon: 'mdi:skip-backward',
-	},
-	{
-		type: 'button',
-		name: 'skip_forward',
-		tap_action: {
-			action: 'key',
-			key: 'skip_forward',
-		},
-		icon: 'mdi:skip-forward',
-	},
-	{
-		type: 'slider',
-		name: 'slider',
-		range: [0, 1],
-		step: 0.01,
-		value_attribute: 'volume_level',
-		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.volume_set',
-			data: {
-				volume_level: '{{ value | float }}',
-			},
-		},
+		icon: 'mdi:circle',
 	},
 	{
 		type: 'touchpad',
@@ -223,5 +149,59 @@ export const appleTVDefaultKeys: IElementConfig[] = [
 			tap_action: { action: 'key', key: 'right' },
 			hold_action: { action: 'repeat' },
 		},
+	},
+	{
+		type: 'button',
+		name: 'play',
+		tap_action: {
+			action: 'key',
+			key: 'play',
+		},
+		icon: 'mdi:play',
+	},
+	{
+		type: 'button',
+		name: 'pause',
+		tap_action: {
+			action: 'key',
+			key: 'pause',
+		},
+		icon: 'mdi:pause',
+	},
+	{
+		type: 'button',
+		name: 'skip_backward',
+		tap_action: {
+			action: 'key',
+			key: 'skip_backward',
+		},
+		icon: 'mdi:skip-backward',
+	},
+	{
+		type: 'button',
+		name: 'skip_forward',
+		tap_action: {
+			action: 'key',
+			key: 'skip_forward',
+		},
+		icon: 'mdi:skip-forward',
+	},
+	{
+		type: 'button',
+		name: 'previous',
+		tap_action: {
+			action: 'key',
+			key: 'previous',
+		},
+		icon: 'mdi:skip-previous',
+	},
+	{
+		type: 'button',
+		name: 'next',
+		tap_action: {
+			action: 'key',
+			key: 'next',
+		},
+		icon: 'mdi:skip-next',
 	},
 ];

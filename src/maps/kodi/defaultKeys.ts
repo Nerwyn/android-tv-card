@@ -7,76 +7,39 @@ import { IElementConfig } from '../../models';
 export const kodiDefaultKeys: IElementConfig[] = [
 	{
 		type: 'button',
-		name: 'up',
+		name: 'home',
 		tap_action: {
 			action: 'perform-action',
 			perform_action: 'kodi.call_method',
 			data: {
-				method: 'Input.Up',
+				method: 'Input.Home',
 			},
 		},
-		icon: 'mdi:chevron-up',
+		icon: 'mdi:home',
 	},
 	{
 		type: 'button',
-		name: 'down',
+		name: 'back',
 		tap_action: {
 			action: 'perform-action',
 			perform_action: 'kodi.call_method',
 			data: {
-				method: 'Input.Down',
+				method: 'Input.Back',
 			},
 		},
-		icon: 'mdi:chevron-down',
+		icon: 'mdi:keyboard-backspace',
 	},
 	{
 		type: 'button',
-		name: 'left',
+		name: 'menu',
 		tap_action: {
 			action: 'perform-action',
 			perform_action: 'kodi.call_method',
 			data: {
-				method: 'Input.Left',
+				method: 'Input.ContextMenu',
 			},
 		},
-		icon: 'mdi:chevron-left',
-	},
-	{
-		type: 'button',
-		name: 'right',
-		tap_action: {
-			action: 'perform-action',
-			perform_action: 'kodi.call_method',
-			data: {
-				method: 'Input.Right',
-			},
-		},
-		icon: 'mdi:chevron-right',
-	},
-	{
-		// Duplicate to be consistent with other platforms
-		type: 'button',
-		name: 'center',
-		tap_action: {
-			action: 'perform-action',
-			perform_action: 'kodi.call_method',
-			data: {
-				method: 'Input.Select',
-			},
-		},
-		icon: 'mdi:circle',
-	},
-	{
-		type: 'button',
-		name: 'select',
-		tap_action: {
-			action: 'perform-action',
-			perform_action: 'kodi.call_method',
-			data: {
-				method: 'Input.Select',
-			},
-		},
-		icon: 'mdi:circle',
+		icon: 'mdi:menu',
 	},
 	{
 		type: 'button',
@@ -131,120 +94,6 @@ export const kodiDefaultKeys: IElementConfig[] = [
 		icon: 'mdi:volume-variant-off',
 	},
 	{
-		type: 'button',
-		name: 'back',
-		tap_action: {
-			action: 'perform-action',
-			perform_action: 'kodi.call_method',
-			data: {
-				method: 'Input.Back',
-			},
-		},
-		icon: 'mdi:keyboard-backspace',
-	},
-	{
-		type: 'button',
-		name: 'menu',
-		tap_action: {
-			action: 'perform-action',
-			perform_action: 'kodi.call_method',
-			data: {
-				method: 'Input.ContextMenu',
-			},
-		},
-		icon: 'mdi:menu',
-	},
-	{
-		type: 'button',
-		name: 'play_pause',
-		tap_action: {
-			action: 'perform-action',
-			perform_action: 'kodi.call_method',
-			data: {
-				method: 'Player.PlayPause',
-			},
-		},
-		icon: 'mdi:play-pause',
-	},
-	{
-		type: 'button',
-		name: 'home',
-		tap_action: {
-			action: 'perform-action',
-			perform_action: 'kodi.call_method',
-			data: {
-				method: 'Input.Home',
-			},
-		},
-		icon: 'mdi:home',
-	},
-	{
-		type: 'button',
-		name: 'info',
-		tap_action: {
-			action: 'perform-action',
-			perform_action: 'kodi.call_method',
-			data: {
-				method: 'Input.Info',
-			},
-		},
-		icon: 'mdi:information',
-	},
-	{
-		type: 'button',
-		name: 'codec',
-		tap_action: {
-			action: 'perform-action',
-			perform_action: 'kodi.call_method',
-			data: {
-				method: 'Input.ShowCodec',
-			},
-		},
-		icon: 'mdi:information-box',
-	},
-	{
-		type: 'button',
-		name: 'osd',
-		tap_action: {
-			action: 'perform-action',
-			perform_action: 'kodi.call_method',
-			data: {
-				method: 'Input.ShowOSD',
-			},
-		},
-		icon: 'mdi:television-guide',
-	},
-	{
-		type: 'button',
-		name: 'process_info',
-		tap_action: {
-			action: 'perform-action',
-			perform_action: 'kodi.call_method',
-			data: {
-				method: 'Input.ShowPlayerProcessInfo',
-			},
-		},
-		icon: 'mdi:information-variant-circle',
-	},
-	{
-		type: 'button',
-		name: 'keyboard',
-		tap_action: { action: 'keyboard' },
-		icon: 'mdi:keyboard',
-	},
-	{
-		type: 'button',
-		name: 'textbox',
-		tap_action: { action: 'textbox' },
-		icon: 'mdi:text-box',
-	},
-	{
-		type: 'button',
-		name: 'search',
-		tap_action: { action: 'search' },
-		icon: 'mdi:kodi',
-	},
-	{
 		type: 'slider',
 		name: 'slider',
 		range: [0, 1],
@@ -257,6 +106,66 @@ export const kodiDefaultKeys: IElementConfig[] = [
 				volume_level: '{{ value | float }}',
 			},
 		},
+	},
+	{
+		type: 'button',
+		name: 'up',
+		tap_action: {
+			action: 'perform-action',
+			perform_action: 'kodi.call_method',
+			data: {
+				method: 'Input.Up',
+			},
+		},
+		icon: 'mdi:chevron-up',
+	},
+	{
+		type: 'button',
+		name: 'down',
+		tap_action: {
+			action: 'perform-action',
+			perform_action: 'kodi.call_method',
+			data: {
+				method: 'Input.Down',
+			},
+		},
+		icon: 'mdi:chevron-down',
+	},
+	{
+		type: 'button',
+		name: 'left',
+		tap_action: {
+			action: 'perform-action',
+			perform_action: 'kodi.call_method',
+			data: {
+				method: 'Input.Left',
+			},
+		},
+		icon: 'mdi:chevron-left',
+	},
+	{
+		type: 'button',
+		name: 'right',
+		tap_action: {
+			action: 'perform-action',
+			perform_action: 'kodi.call_method',
+			data: {
+				method: 'Input.Right',
+			},
+		},
+		icon: 'mdi:chevron-right',
+	},
+	{
+		type: 'button',
+		name: 'center',
+		tap_action: {
+			action: 'perform-action',
+			perform_action: 'kodi.call_method',
+			data: {
+				method: 'Input.Select',
+			},
+		},
+		icon: 'mdi:circle',
 	},
 	{
 		type: 'touchpad',
@@ -308,5 +217,83 @@ export const kodiDefaultKeys: IElementConfig[] = [
 			},
 			hold_action: { action: 'repeat' },
 		},
+	},
+	{
+		type: 'button',
+		name: 'play_pause',
+		tap_action: {
+			action: 'perform-action',
+			perform_action: 'kodi.call_method',
+			data: {
+				method: 'Player.PlayPause',
+			},
+		},
+		icon: 'mdi:play-pause',
+	},
+	{
+		type: 'button',
+		name: 'keyboard',
+		tap_action: { action: 'keyboard' },
+		icon: 'mdi:keyboard',
+	},
+	{
+		type: 'button',
+		name: 'textbox',
+		tap_action: { action: 'textbox' },
+		icon: 'mdi:text-box',
+	},
+	{
+		type: 'button',
+		name: 'search',
+		tap_action: { action: 'search' },
+		icon: 'mdi:kodi',
+	},
+	{
+		type: 'button',
+		name: 'info',
+		tap_action: {
+			action: 'perform-action',
+			perform_action: 'kodi.call_method',
+			data: {
+				method: 'Input.Info',
+			},
+		},
+		icon: 'mdi:information',
+	},
+	{
+		type: 'button',
+		name: 'codec',
+		tap_action: {
+			action: 'perform-action',
+			perform_action: 'kodi.call_method',
+			data: {
+				method: 'Input.ShowCodec',
+			},
+		},
+		icon: 'mdi:information-box',
+	},
+	{
+		type: 'button',
+		name: 'osd',
+		tap_action: {
+			action: 'perform-action',
+			perform_action: 'kodi.call_method',
+			data: {
+				method: 'Input.ShowOSD',
+			},
+		},
+		icon: 'mdi:television-guide',
+	},
+	{
+		type: 'button',
+		name: 'process_info',
+		tap_action: {
+			action: 'perform-action',
+			perform_action: 'kodi.call_method',
+			data: {
+				method: 'Input.ShowPlayerProcessInfo',
+			},
+		},
+		icon: 'mdi:information-variant-circle',
 	},
 ];

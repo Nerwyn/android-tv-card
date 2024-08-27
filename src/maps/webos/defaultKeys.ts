@@ -6,79 +6,6 @@ import { IElementConfig } from '../../models';
 export const webosDefaultKeys: IElementConfig[] = [
 	{
 		type: 'button',
-		name: 'up',
-		tap_action: {
-			action: 'perform-action',
-			perform_action: 'webos.button',
-			data: {
-				method: 'UP',
-			},
-		},
-		icon: 'mdi:chevron-up',
-	},
-	{
-		type: 'button',
-		name: 'down',
-		tap_action: {
-			action: 'perform-action',
-			perform_action: 'webos.button',
-			data: {
-				method: 'DOWN',
-			},
-		},
-		icon: 'mdi:chevron-down',
-	},
-	{
-		type: 'button',
-		name: 'left',
-		tap_action: {
-			action: 'perform-action',
-			perform_action: 'webos.button',
-			data: {
-				method: 'LEFT',
-			},
-		},
-		icon: 'mdi:chevron-left',
-	},
-	{
-		type: 'button',
-		name: 'right',
-		tap_action: {
-			action: 'perform-action',
-			perform_action: 'webos.button',
-			data: {
-				method: 'RIGHT',
-			},
-		},
-		icon: 'mdi:chevron-right',
-	},
-	{
-		type: 'button',
-		name: 'enter',
-		tap_action: {
-			action: 'perform-action',
-			perform_action: 'webos.button',
-			data: {
-				method: 'ENTER',
-			},
-		},
-		icon: 'mdi:circle',
-	},
-	{
-		// Duplicate to be consistent with other platforms
-		type: 'button',
-		name: 'center',
-		tap_action: {
-			action: 'perform-action',
-			perform_action: 'webos.button',
-			data: {
-				method: 'ENTER',
-			},
-		},
-		icon: 'mdi:circle',
-	},
-	{
-		type: 'button',
 		name: 'home',
 		tap_action: {
 			action: 'perform-action',
@@ -88,18 +15,6 @@ export const webosDefaultKeys: IElementConfig[] = [
 			},
 		},
 		icon: 'mdi:home',
-	},
-	{
-		type: 'button',
-		name: 'menu',
-		tap_action: {
-			action: 'perform-action',
-			perform_action: 'webos.button',
-			data: {
-				method: 'MENU',
-			},
-		},
-		icon: 'mdi:menu',
 	},
 	{
 		type: 'button',
@@ -115,6 +30,18 @@ export const webosDefaultKeys: IElementConfig[] = [
 	},
 	{
 		type: 'button',
+		name: 'menu',
+		tap_action: {
+			action: 'perform-action',
+			perform_action: 'webos.button',
+			data: {
+				method: 'MENU',
+			},
+		},
+		icon: 'mdi:menu',
+	},
+	{
+		type: 'button',
 		name: 'dash',
 		tap_action: {
 			action: 'perform-action',
@@ -124,42 +51,6 @@ export const webosDefaultKeys: IElementConfig[] = [
 			},
 		},
 		icon: 'mdi:view-dashboard-variant',
-	},
-	{
-		type: 'button',
-		name: 'info',
-		tap_action: {
-			action: 'perform-action',
-			perform_action: 'webos.button',
-			data: {
-				method: 'INFO',
-			},
-		},
-		icon: 'mdi:information',
-	},
-	{
-		type: 'button',
-		name: 'asterisk',
-		tap_action: {
-			action: 'perform-action',
-			perform_action: 'webos.button',
-			data: {
-				method: 'ASTERISK',
-			},
-		},
-		icon: 'mdi:asterisk',
-	},
-	{
-		type: 'button',
-		name: 'captions',
-		tap_action: {
-			action: 'perform-action',
-			perform_action: 'webos.button',
-			data: {
-				method: 'CC',
-			},
-		},
-		icon: 'mdi:closed-caption',
 	},
 	{
 		type: 'button',
@@ -210,76 +101,129 @@ export const webosDefaultKeys: IElementConfig[] = [
 		icon: 'mdi:volume-low',
 	},
 	{
-		type: 'button',
-		name: 'red',
+		type: 'slider',
+		name: 'slider',
+		range: [0, 1],
+		step: 0.01,
+		value_attribute: 'volume_level',
 		tap_action: {
 			action: 'perform-action',
-			perform_action: 'webos.button',
+			perform_action: 'media_player.volume_set',
 			data: {
-				method: 'RED',
+				volume_level: '{{ value | float }}',
 			},
 		},
-		icon: 'mdi:alpha-r-box',
 	},
 	{
 		type: 'button',
-		name: 'green',
+		name: 'up',
 		tap_action: {
 			action: 'perform-action',
 			perform_action: 'webos.button',
 			data: {
-				method: 'GREEN',
+				method: 'UP',
 			},
 		},
-		icon: 'mdi:alpha-g-box',
+		icon: 'mdi:chevron-up',
 	},
 	{
 		type: 'button',
-		name: 'blue',
+		name: 'down',
 		tap_action: {
 			action: 'perform-action',
 			perform_action: 'webos.button',
 			data: {
-				method: 'BLUE',
+				method: 'DOWN',
 			},
 		},
-		icon: 'mdi:alpha-b-box',
+		icon: 'mdi:chevron-down',
 	},
 	{
 		type: 'button',
-		name: 'yellow',
+		name: 'left',
 		tap_action: {
 			action: 'perform-action',
 			perform_action: 'webos.button',
 			data: {
-				method: 'YELLOW',
+				method: 'LEFT',
 			},
 		},
-		icon: 'mdi:alpha-y-box',
+		icon: 'mdi:chevron-left',
 	},
 	{
 		type: 'button',
-		name: 'channel_up',
+		name: 'right',
 		tap_action: {
 			action: 'perform-action',
 			perform_action: 'webos.button',
 			data: {
-				method: 'CHANNELUP',
+				method: 'RIGHT',
 			},
 		},
-		icon: 'mdi:arrow-up-circle',
+		icon: 'mdi:chevron-right',
 	},
 	{
 		type: 'button',
-		name: 'channel_down',
+		name: 'center',
 		tap_action: {
 			action: 'perform-action',
 			perform_action: 'webos.button',
 			data: {
-				method: 'CHANNELDOWN',
+				method: 'ENTER',
 			},
 		},
-		icon: 'mdi:arrow-down-circle',
+		icon: 'mdi:circle',
+	},
+	{
+		type: 'touchpad',
+		name: 'touchpad',
+		tap_action: {
+			action: 'perform-action',
+			perform_action: 'webos.button',
+			data: {
+				method: 'ENTER',
+			},
+		},
+		up: {
+			tap_action: {
+				action: 'perform-action',
+				perform_action: 'webos.button',
+				data: {
+					method: 'UP',
+				},
+			},
+			hold_action: { action: 'repeat' },
+		},
+		down: {
+			tap_action: {
+				action: 'perform-action',
+				perform_action: 'webos.button',
+				data: {
+					method: 'DOWN',
+				},
+			},
+			hold_action: { action: 'repeat' },
+		},
+		left: {
+			tap_action: {
+				action: 'perform-action',
+				perform_action: 'webos.button',
+				data: {
+					method: 'LEFT',
+				},
+			},
+			hold_action: { action: 'repeat' },
+		},
+		right: {
+			tap_action: {
+				action: 'perform-action',
+				perform_action: 'webos.button',
+				data: {
+					method: 'RIGHT',
+				},
+			},
+			hold_action: { action: 'repeat' },
+		},
 	},
 	{
 		type: 'button',
@@ -307,15 +251,75 @@ export const webosDefaultKeys: IElementConfig[] = [
 	},
 	{
 		type: 'button',
-		name: 'guide',
+		name: 'channel_up',
 		tap_action: {
 			action: 'perform-action',
 			perform_action: 'webos.button',
 			data: {
-				method: 'GUIDE',
+				method: 'CHANNELUP',
 			},
 		},
-		icon: 'mdi:television-box',
+		icon: 'mdi:arrow-up-circle',
+	},
+	{
+		type: 'button',
+		name: 'channel_down',
+		tap_action: {
+			action: 'perform-action',
+			perform_action: 'webos.button',
+			data: {
+				method: 'CHANNELDOWN',
+			},
+		},
+		icon: 'mdi:arrow-down-circle',
+	},
+	{
+		type: 'button',
+		name: 'red',
+		tap_action: {
+			action: 'perform-action',
+			perform_action: 'webos.button',
+			data: {
+				method: 'RED',
+			},
+		},
+		icon: 'mdi:alpha-r-box',
+	},
+	{
+		type: 'button',
+		name: 'green',
+		tap_action: {
+			action: 'perform-action',
+			perform_action: 'webos.button',
+			data: {
+				method: 'GREEN',
+			},
+		},
+		icon: 'mdi:alpha-g-box',
+	},
+	{
+		type: 'button',
+		name: 'yellow',
+		tap_action: {
+			action: 'perform-action',
+			perform_action: 'webos.button',
+			data: {
+				method: 'YELLOW',
+			},
+		},
+		icon: 'mdi:alpha-y-box',
+	},
+	{
+		type: 'button',
+		name: 'blue',
+		tap_action: {
+			action: 'perform-action',
+			perform_action: 'webos.button',
+			data: {
+				method: 'BLUE',
+			},
+		},
+		icon: 'mdi:alpha-b-box',
 	},
 	{
 		type: 'button',
@@ -436,5 +440,53 @@ export const webosDefaultKeys: IElementConfig[] = [
 			},
 		},
 		icon: 'mdi:numeric-9',
+	},
+	{
+		type: 'button',
+		name: 'asterisk',
+		tap_action: {
+			action: 'perform-action',
+			perform_action: 'webos.button',
+			data: {
+				method: 'ASTERISK',
+			},
+		},
+		icon: 'mdi:asterisk',
+	},
+	{
+		type: 'button',
+		name: 'info',
+		tap_action: {
+			action: 'perform-action',
+			perform_action: 'webos.button',
+			data: {
+				method: 'INFO',
+			},
+		},
+		icon: 'mdi:information',
+	},
+	{
+		type: 'button',
+		name: 'guide',
+		tap_action: {
+			action: 'perform-action',
+			perform_action: 'webos.button',
+			data: {
+				method: 'GUIDE',
+			},
+		},
+		icon: 'mdi:television-box',
+	},
+	{
+		type: 'button',
+		name: 'captions',
+		tap_action: {
+			action: 'perform-action',
+			perform_action: 'webos.button',
+			data: {
+				method: 'CC',
+			},
+		},
+		icon: 'mdi:closed-caption',
 	},
 ];

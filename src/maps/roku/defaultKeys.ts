@@ -6,27 +6,53 @@ import { IElementConfig } from '../../models';
 export const rokuDefaultKeys: IElementConfig[] = [
 	{
 		type: 'button',
+		name: 'power',
+		tap_action: { action: 'key', key: 'power' },
+		icon: 'mdi:power',
+	},
+	{
+		type: 'button',
+		name: 'home',
+		tap_action: { action: 'key', key: 'home' },
+		icon: 'mdi:home',
+	},
+	{
+		type: 'button',
 		name: 'back',
 		tap_action: { action: 'key', key: 'back' },
 		icon: 'mdi:keyboard-backspace',
 	},
 	{
 		type: 'button',
-		name: 'backspace',
-		tap_action: { action: 'key', key: 'backspace' },
-		icon: 'mdi:backspace',
+		name: 'volume_up',
+		tap_action: { action: 'key', key: 'volume_up' },
+		icon: 'mdi:volume-high',
 	},
 	{
 		type: 'button',
-		name: 'channel_down',
-		tap_action: { action: 'key', key: 'channel_down' },
-		icon: 'mdi:arrow-down-circle',
+		name: 'volume_down',
+		tap_action: { action: 'key', key: 'volume_down' },
+		icon: 'mdi:volume-medium',
 	},
 	{
 		type: 'button',
-		name: 'channel_up',
-		tap_action: { action: 'key', key: 'channel_up' },
-		icon: 'mdi:arrow-up-circle',
+		name: 'volume_mute',
+		tap_action: { action: 'key', key: 'volume_mute' },
+		icon: 'mdi:volume-low',
+	},
+	{
+		type: 'slider',
+		name: 'slider',
+		range: [0, 1],
+		step: 0.01,
+		value_attribute: 'volume_level',
+		tap_action: {
+			action: 'perform-action',
+			perform_action: 'media_player.volume_set',
+			data: {
+				volume_level: '{{ value | float }}',
+			},
+		},
 	},
 	{
 		type: 'button',
@@ -53,29 +79,40 @@ export const rokuDefaultKeys: IElementConfig[] = [
 		icon: 'chevron-right',
 	},
 	{
-		// Duplicate to be consistent with other platforms
 		type: 'button',
 		name: 'center',
 		tap_action: { action: 'key', key: 'select' },
 		icon: 'circle',
 	},
 	{
-		type: 'button',
-		name: 'select',
-		tap_action: { action: 'key', key: 'select' },
-		icon: 'circle',
+		type: 'touchpad',
+		name: 'touchpad',
+		tap_action: {
+			action: 'key',
+			key: 'select',
+		},
+		up: {
+			tap_action: { action: 'key', key: 'up' },
+			hold_action: { action: 'repeat' },
+		},
+		down: {
+			tap_action: { action: 'key', key: 'down' },
+			hold_action: { action: 'repeat' },
+		},
+		left: {
+			tap_action: { action: 'key', key: 'left' },
+			hold_action: { action: 'repeat' },
+		},
+		right: {
+			tap_action: { action: 'key', key: 'right' },
+			hold_action: { action: 'repeat' },
+		},
 	},
 	{
 		type: 'button',
-		name: 'enter',
-		tap_action: { action: 'key', key: 'enter' },
-		icon: 'mdi:magnify',
-	},
-	{
-		type: 'button',
-		name: 'find_remote',
-		tap_action: { action: 'key', key: 'find_remote' },
-		icon: 'mdi:remote-tv',
+		name: 'play',
+		tap_action: { action: 'key', key: 'play' },
+		icon: 'mdi:play',
 	},
 	{
 		type: 'button',
@@ -91,9 +128,57 @@ export const rokuDefaultKeys: IElementConfig[] = [
 	},
 	{
 		type: 'button',
-		name: 'home',
-		tap_action: { action: 'key', key: 'home' },
-		icon: 'mdi:home',
+		name: 'replay',
+		tap_action: { action: 'key', key: 'replay' },
+		icon: 'mdi:replay',
+	},
+	{
+		type: 'button',
+		name: 'keyboard',
+		tap_action: { action: 'keyboard' },
+		icon: 'mdi:keyboard',
+	},
+	{
+		type: 'button',
+		name: 'textbox',
+		tap_action: { action: 'textbox' },
+		icon: 'mdi:text-box',
+	},
+	{
+		type: 'button',
+		name: 'search',
+		tap_action: { action: 'search' },
+		icon: 'mdi:search-web',
+	},
+	{
+		type: 'button',
+		name: 'delete',
+		tap_action: { action: 'key', key: 'backspace' },
+		icon: 'mdi:backspace',
+	},
+	{
+		type: 'button',
+		name: 'enter',
+		tap_action: { action: 'key', key: 'enter' },
+		icon: 'mdi:magnify',
+	},
+	{
+		type: 'button',
+		name: 'channel_up',
+		tap_action: { action: 'key', key: 'channel_up' },
+		icon: 'mdi:arrow-up-circle',
+	},
+	{
+		type: 'button',
+		name: 'channel_down',
+		tap_action: { action: 'key', key: 'channel_down' },
+		icon: 'mdi:arrow-down-circle',
+	},
+	{
+		type: 'button',
+		name: 'find_remote',
+		tap_action: { action: 'key', key: 'find_remote' },
+		icon: 'mdi:remote-tv',
 	},
 	{
 		type: 'button',
@@ -142,109 +227,5 @@ export const rokuDefaultKeys: IElementConfig[] = [
 		name: 'literal',
 		tap_action: { action: 'key', key: 'literal' },
 		icon: 'mdi:alphabetical',
-	},
-	{
-		type: 'button',
-		name: 'play',
-		tap_action: { action: 'key', key: 'play' },
-		icon: 'mdi:play',
-	},
-	{
-		type: 'button',
-		name: 'power',
-		tap_action: { action: 'key', key: 'power' },
-		icon: 'mdi:power',
-	},
-	{
-		type: 'button',
-		name: 'replay',
-		tap_action: { action: 'key', key: 'replay' },
-		icon: 'mdi:replay',
-	},
-	{
-		type: 'button',
-		name: 'reverse',
-		tap_action: { action: 'key', key: 'reverse' },
-		icon: 'mdi:menu-left',
-	},
-	{
-		type: 'button',
-		name: 'reverse',
-		tap_action: { action: 'key', key: 'reverse' },
-		icon: 'mdi:menu-left',
-	},
-	{
-		type: 'button',
-		name: 'volume_up',
-		tap_action: { action: 'key', key: 'volume_up' },
-		icon: 'mdi:volume-high',
-	},
-	{
-		type: 'button',
-		name: 'volume_down',
-		tap_action: { action: 'key', key: 'volume_down' },
-		icon: 'mdi:volume-medium',
-	},
-	{
-		type: 'button',
-		name: 'volume_mute',
-		tap_action: { action: 'key', key: 'volume_mute' },
-		icon: 'mdi:volume-low',
-	},
-	{
-		type: 'button',
-		name: 'keyboard',
-		tap_action: { action: 'keyboard' },
-		icon: 'mdi:keyboard',
-	},
-	{
-		type: 'button',
-		name: 'textbox',
-		tap_action: { action: 'textbox' },
-		icon: 'mdi:text-box',
-	},
-	{
-		type: 'button',
-		name: 'search',
-		tap_action: { action: 'search' },
-		icon: 'mdi:search-web',
-	},
-	{
-		type: 'slider',
-		name: 'slider',
-		range: [0, 1],
-		step: 0.01,
-		value_attribute: 'volume_level',
-		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.volume_set',
-			data: {
-				volume_level: '{{ value | float }}',
-			},
-		},
-	},
-	{
-		type: 'touchpad',
-		name: 'touchpad',
-		tap_action: {
-			action: 'key',
-			key: 'select',
-		},
-		up: {
-			tap_action: { action: 'key', key: 'up' },
-			hold_action: { action: 'repeat' },
-		},
-		down: {
-			tap_action: { action: 'key', key: 'down' },
-			hold_action: { action: 'repeat' },
-		},
-		left: {
-			tap_action: { action: 'key', key: 'left' },
-			hold_action: { action: 'repeat' },
-		},
-		right: {
-			tap_action: { action: 'key', key: 'right' },
-			hold_action: { action: 'repeat' },
-		},
 	},
 ];
