@@ -228,18 +228,6 @@ export const kodiDefaultKeys: IElementConfig[] = [
 	},
 	{
 		type: 'button',
-		name: '',
-		tap_action: {
-			action: 'perform-action',
-			perform_action: 'kodi.call_method',
-			data: {
-				method: '',
-			},
-		},
-		icon: '',
-	},
-	{
-		type: 'button',
 		name: 'keyboard',
 		tap_action: { action: 'keyboard' },
 		icon: 'mdi:keyboard',
