@@ -4,6 +4,7 @@ import { eventOptions, property, state } from 'lit/decorators.js';
 import { HapticType, HomeAssistant, forwardHaptic } from 'custom-card-helpers';
 import { renderTemplate } from 'ha-nunjucks';
 
+import { defaultIcons } from '../maps';
 import {
 	ActionType,
 	IAction,
@@ -12,7 +13,6 @@ import {
 	IData,
 	IElementConfig,
 	IIconConfig,
-	defaultIcons,
 } from '../models';
 import { deepGet, deepSet, getDeepKeys } from '../utils';
 

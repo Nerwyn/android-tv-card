@@ -1,11 +1,13 @@
-import { IElementConfig } from '..';
+import { IElementConfig } from '../../models';
+
+// TODO reorder all lists to be similar for the config UI
 
 /**
  * This is the list of most common commands from the Android TV Remote integration page.
  * Not all are ensured to work, and if they do not it is likely an issue with the underlying package used by the Android TV Remote integration or the Android TV Remote Protocol V2 itself.
  * https://www.home-assistant.io/integrations/androidtv_remote/#remote
  */
-export const defaultKeys: IElementConfig[] = [
+export const androidTVDefaultKeys: IElementConfig[] = [
 	{
 		type: 'button',
 		name: 'power',
@@ -418,22 +420,22 @@ export const defaultKeys: IElementConfig[] = [
 	},
 	{
 		type: 'button',
-		name: 'search',
-		tap_action: { action: 'search' },
-		icon: 'mdi:google-assistant',
-	},
-	{
-		type: 'button',
 		name: 'textbox',
 		tap_action: { action: 'textbox' },
 		icon: 'mdi:text-box',
 	},
 	{
+		type: 'button',
+		name: 'search',
+		tap_action: { action: 'search' },
+		icon: 'mdi:google-assistant',
+	},
+	{
 		type: 'slider',
 		name: 'slider',
 		range: [0, 1],
+		step: 0.01,
 		value_attribute: 'volume_level',
-		autofill_entity_id: true,
 		tap_action: {
 			action: 'perform-action',
 			perform_action: 'media_player.volume_set',
@@ -453,16 +455,16 @@ export const defaultKeys: IElementConfig[] = [
 			tap_action: { action: 'key', key: 'DPAD_UP' },
 			hold_action: { action: 'repeat' },
 		},
+		down: {
+			tap_action: { action: 'key', key: 'DPAD_DOWN' },
+			hold_action: { action: 'repeat' },
+		},
 		left: {
 			tap_action: { action: 'key', key: 'DPAD_LEFT' },
 			hold_action: { action: 'repeat' },
 		},
 		right: {
 			tap_action: { action: 'key', key: 'DPAD_RIGHT' },
-			hold_action: { action: 'repeat' },
-		},
-		down: {
-			tap_action: { action: 'key', key: 'DPAD_DOWN' },
 			hold_action: { action: 'repeat' },
 		},
 	},

@@ -5,6 +5,7 @@ import { property, state } from 'lit/decorators.js';
 import { HomeAssistant } from 'custom-card-helpers';
 import { dump, load } from 'js-yaml';
 
+import { defaultIcons } from './maps';
 import {
 	ActionType,
 	ActionTypes,
@@ -18,16 +19,15 @@ import {
 	IElementConfig,
 	IIconConfig,
 	ITarget,
+	KeyboardPlatform,
+	KeyboardPlatforms,
 	Platform,
 	Platforms,
 	RemoteElementType,
 	RemoteElementTypes,
 	Row,
-	defaultIcons,
-	defaultKeys,
-	defaultSources,
 } from './models';
-import { deepGet, deepSet, mergeDeep } from './utils';
+import { deepGet, deepSet, getDefaultActions, mergeDeep } from './utils';
 
 export class UniversalRemoteCardEditor extends LitElement {
 	@property() hass!: HomeAssistant;
@@ -49,11 +49,9 @@ export class UniversalRemoteCardEditor extends LitElement {
 
 	BASE_TABS = ['general', 'layout', 'actions', 'icons'];
 	TOUCHPAD_TABS = ['up', 'down', 'center', 'left', 'right'];
-	// TODO - default keys/source reference
-	DEFAULT_ACTIONS = [
-		...structuredClone(defaultSources),
-		...structuredClone(defaultKeys),
-	];
+	DEFAULT_KEYS: IElementConfig[] = [];
+	DEFAULT_SOURCES: IElementConfig[] = [];
+	DEFAULT_ACTIONS: IElementConfig[] = [];
 
 	static get properties() {
 		return { hass: {}, config: {} };
@@ -1138,7 +1136,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 								{
 									select: {
 										mode: 'dropdown',
-										options: Platforms,
+										options: KeyboardPlatforms,
 										reorder: false,
 									},
 								},
@@ -1627,13 +1625,12 @@ export class UniversalRemoteCardEditor extends LitElement {
 			this.config.custom_actions?.map(
 				(customAction) => customAction.name,
 			) ?? [];
-		// TODO change default key/source names depending on global platform
-		const defaultKeyNames = defaultKeys
-			.map((defaultAction) => defaultAction.name)
-			.filter((name) => !customActionNames?.includes(name));
-		const defaultSourceNames = defaultSources
-			.map((defaultAction) => defaultAction.name)
-			.filter((name) => !customActionNames?.includes(name));
+		const defaultKeyNames = this.DEFAULT_KEYS.map(
+			(defaultAction) => defaultAction.name,
+		).filter((name) => !customActionNames?.includes(name));
+		const defaultSourceNames = this.DEFAULT_SOURCES.map(
+			(defaultAction) => defaultAction.name,
+		).filter((name) => !customActionNames?.includes(name));
 
 		return html`<div class="content">
 			<div class="layout-editor">
@@ -1655,26 +1652,34 @@ export class UniversalRemoteCardEditor extends LitElement {
 								<div><hr /></div>`
 						: ''}
 					<div class="default-action-lists-container">
-						<div class="wrapper">
-							<div class="title-header">Default Keys</div>
-							<div class="action-list-container">
-								<ul class="action-list">
-									${defaultKeyNames.map(
-										(name) => html`<li>${name}</li>`,
-									)}
-								</ul>
-							</div>
-						</div>
-						<div class="wrapper">
-							<div class="title-header">Default Sources</div>
-							<div class="action-list-container">
-								<ul class="action-list">
-									${defaultSourceNames.map(
-										(name) => html`<li>${name}</li>`,
-									)}
-								</ul>
-							</div>
-						</div>
+						${defaultKeyNames.length
+							? html`<div class="wrapper">
+									<div class="title-header">Default Keys</div>
+									<div class="action-list-container">
+										<ul class="action-list">
+											${defaultKeyNames.map(
+												(name) =>
+													html`<li>${name}</li>`,
+											)}
+										</ul>
+									</div>
+							  </div>`
+							: ''}
+						${defaultSourceNames.length
+							? html`<div class="wrapper">
+									<div class="title-header">
+										Default Sources
+									</div>
+									<div class="action-list-container">
+										<ul class="action-list">
+											${defaultSourceNames.map(
+												(name) =>
+													html`<li>${name}</li>`,
+											)}
+										</ul>
+									</div>
+							  </div>`
+							: ''}
 					</div>
 				</div>
 			</div>
@@ -1868,6 +1873,30 @@ export class UniversalRemoteCardEditor extends LitElement {
 
 		this.buildPeopleList();
 
+		const context = {
+			config: {
+				...this.config,
+				entity: renderTemplate(
+					this.hass,
+					this.config.remote_id ??
+						this.config.media_player_id ??
+						this.config.keyboard_id ??
+						'',
+				),
+			},
+		};
+
+		const platform = renderTemplate(
+			this.hass,
+			this.config.platform ?? 'ANDROID TV',
+			context,
+		) as Platform;
+
+		const [defaultKeys, defaultSources] = getDefaultActions(platform);
+		this.DEFAULT_KEYS = defaultKeys;
+		this.DEFAULT_SOURCES = defaultSources;
+		this.DEFAULT_ACTIONS = [...defaultKeys, ...defaultSources];
+
 		const baseTabBar = this.buildTabBar(
 			this.baseTabIndex,
 			this.handleBaseTabSelected,
@@ -1894,9 +1923,6 @@ export class UniversalRemoteCardEditor extends LitElement {
 				editor = this.buildGeneralEditor();
 				break;
 		}
-
-		// TODOs
-		//  - Default keys and sources for other platforms.
 
 		return html`${baseTabBar}${editor}${this.buildErrorPanel()}`;
 	}
@@ -2137,7 +2163,13 @@ export class UniversalRemoteCardEditor extends LitElement {
 						case 'textbox':
 						case 'search':
 							action.keyboard_id =
-								action.keyboard_id ?? config.keyboard_id;
+								action.keyboard_id ??
+								(config.keyboard_id &&
+								KeyboardPlatforms.includes(
+									config.keyboard_id as KeyboardPlatform,
+								)
+									? config.keyboard_id
+									: undefined);
 							action.media_player_id =
 								action.media_player_id ??
 								config.media_player_id;
@@ -2200,6 +2232,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 									case 'media_player':
 									case 'kodi':
 									case 'denonavr':
+									case 'webos':
 										entityId = config.media_player_id;
 										break;
 									default:
@@ -2554,10 +2587,9 @@ export class UniversalRemoteCardEditor extends LitElement {
 				(updatedConfig.slider_id as string) ??
 				config.media_player_id ??
 				'';
-			// TODO - default keys/source reference
 			const tapAction =
 				slider.tap_action ??
-				defaultKeys.filter(
+				this.DEFAULT_KEYS.filter(
 					(defaultKey) => defaultKey.name == 'slider',
 				)[0].tap_action;
 			if (tapAction) {
@@ -2577,8 +2609,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 			updateSlider = true;
 		}
 		if (updateSlider) {
-			// TODO - default keys/source reference
-			const defaultSlider = defaultKeys.filter(
+			const defaultSlider = this.DEFAULT_KEYS.filter(
 				(defaultKey) => defaultKey.name == 'slider',
 			)[0];
 			if (sliderIndex > -1) {
@@ -2658,8 +2689,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 			};
 			updateTouchpad = true;
 		}
-		// TODO - default keys/source reference
-		const defaultTouchpad = defaultKeys.filter(
+		const defaultTouchpad = this.DEFAULT_KEYS.filter(
 			(defaultKey) => defaultKey.name == 'touchpad',
 		)[0];
 		if (updatedConfig.rows.toString().includes('touchpad')) {

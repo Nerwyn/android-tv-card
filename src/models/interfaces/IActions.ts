@@ -28,7 +28,20 @@ export const ActionTypes = [
 ] as const;
 export type ActionType = (typeof ActionTypes)[number];
 
-export const Platforms = ['ANDROID TV', 'KODI', 'FIRE TV', 'ROKU'] as const;
+export const KeyboardPlatforms = [
+	'ANDROID TV',
+	'FIRE TV',
+	'ROKU',
+	'KODI',
+] as const;
+export type KeyboardPlatform = (typeof KeyboardPlatforms)[number];
+
+export const Platforms = [
+	...KeyboardPlatforms,
+	'APPLE TV',
+	'SAMSUNG TV',
+	'WEBOS',
+] as const;
 export type Platform = (typeof Platforms)[number];
 
 export interface IData {

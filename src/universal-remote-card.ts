@@ -14,15 +14,16 @@ import {
 	IConfig,
 	IElementConfig,
 	ITarget,
-	defaultKeys,
-	defaultSources,
+	Platform,
 } from './models';
+
+import { UniversalRemoteCardEditor } from './universal-remote-card-editor';
+import { getDefaultActions } from './utils';
 
 import './classes/keyboard-dialog';
 import './classes/remote-button';
 import './classes/remote-slider';
 import './classes/remote-touchpad';
-import { UniversalRemoteCardEditor } from './universal-remote-card-editor';
 
 console.info(
 	`%c UNIVERSAL-REMOTE-CARD v${packageInfo.version}`,
@@ -33,11 +34,7 @@ class UniversalRemoteCard extends LitElement {
 	@property() hass!: HomeAssistant;
 	@property() config!: IConfig;
 
-	// TODO - default keys/source reference
-	DEFAULT_ACTIONS = [
-		...structuredClone(defaultSources),
-		...structuredClone(defaultKeys),
-	];
+	DEFAULT_ACTIONS: IElementConfig[] = [];
 
 	nRows: number = 0;
 	nColumns: number = 0;
@@ -103,19 +100,38 @@ class UniversalRemoteCard extends LitElement {
 						case 'keyboard':
 						case 'textbox':
 						case 'search':
-							action.keyboard_id =
-								action.keyboard_id ?? this.config.keyboard_id;
+							action.keyboard_id = this.config.keyboard_id;
 							action.media_player_id =
-								action.media_player_id ??
 								this.config.media_player_id;
 						// falls through
 						case 'key':
 						case 'source':
-							action.remote_id =
-								action.remote_id ?? this.config.remote_id;
-							action.platform =
-								action.platform ?? this.config.platform;
+							action.remote_id = this.config.remote_id;
+							action.platform = this.config.platform;
 							break;
+						case 'perform-action': {
+							const [domain, _service] = (
+								action.perform_action ?? ''
+							).split('.');
+							switch (domain) {
+								case 'remote':
+									action.target = {
+										entity_id: this.config.remote_id,
+									};
+									break;
+								case 'media_player':
+								case 'kodi':
+								case 'denonavr':
+								case 'webos':
+									action.target = {
+										entity_id: this.config.media_player_id,
+									};
+									break;
+								default:
+									break;
+							}
+							break;
+						}
 						default:
 							break;
 					}
@@ -497,6 +513,15 @@ class UniversalRemoteCard extends LitElement {
 				),
 			},
 		};
+
+		const platform = renderTemplate(
+			this.hass,
+			this.config.platform ?? 'ANDROID TV',
+			context,
+		) as Platform;
+
+		const [defaultKeys, defaultSources] = getDefaultActions(platform);
+		this.DEFAULT_ACTIONS = [...defaultKeys, ...defaultSources];
 
 		const content: TemplateResult[] = [];
 
