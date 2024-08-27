@@ -33,6 +33,7 @@ class UniversalRemoteCard extends LitElement {
 	@property() hass!: HomeAssistant;
 	@property() config!: IConfig;
 
+	// TODO - default keys/source reference
 	DEFAULT_ACTIONS = [
 		...structuredClone(defaultSources),
 		...structuredClone(defaultKeys),

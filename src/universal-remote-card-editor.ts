@@ -49,6 +49,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 
 	BASE_TABS = ['general', 'layout', 'actions', 'icons'];
 	TOUCHPAD_TABS = ['up', 'down', 'center', 'left', 'right'];
+	// TODO - default keys/source reference
 	DEFAULT_ACTIONS = [
 		...structuredClone(defaultSources),
 		...structuredClone(defaultKeys),
@@ -1638,17 +1639,21 @@ export class UniversalRemoteCardEditor extends LitElement {
 			<div class="layout-editor">
 				${this.buildCodeEditor('layout')}
 				<div class="actions-list-container">
-					<div
-						class="action-list-container custom-action-list-container"
-					>
-						<div class="title-header">Custom Actions</div>
-						<ul class="action-list custom-action-list">
-							${customActionNames.map(
-								(name) => html`<li>${name}</li>`,
-							)}
-						</ul>
-					</div>
-					<div><hr /></div>
+					${customActionNames.length
+						? html`<div
+									class="action-list-container custom-action-list-container"
+								>
+									<div class="title-header">
+										Custom Actions
+									</div>
+									<ul class="action-list custom-action-list">
+										${customActionNames.map(
+											(name) => html`<li>${name}</li>`,
+										)}
+									</ul>
+								</div>
+								<div><hr /></div>`
+						: ''}
 					<div class="default-action-lists-container">
 						<div class="wrapper">
 							<div class="title-header">Default Keys</div>
@@ -2549,6 +2554,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 				(updatedConfig.slider_id as string) ??
 				config.media_player_id ??
 				'';
+			// TODO - default keys/source reference
 			const tapAction =
 				slider.tap_action ??
 				defaultKeys.filter(
@@ -2571,6 +2577,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 			updateSlider = true;
 		}
 		if (updateSlider) {
+			// TODO - default keys/source reference
 			const defaultSlider = defaultKeys.filter(
 				(defaultKey) => defaultKey.name == 'slider',
 			)[0];
@@ -2651,6 +2658,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 			};
 			updateTouchpad = true;
 		}
+		// TODO - default keys/source reference
 		const defaultTouchpad = defaultKeys.filter(
 			(defaultKey) => defaultKey.name == 'touchpad',
 		)[0];
