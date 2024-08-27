@@ -1632,6 +1632,11 @@ export class UniversalRemoteCardEditor extends LitElement {
 			(defaultAction) => defaultAction.name,
 		).filter((name) => !customActionNames?.includes(name));
 
+		/**
+		 * TODO add special options to these lists if available
+		 * May have to add to default keys list and make configurable
+		 */
+
 		return html`<div class="content">
 			<div class="layout-editor">
 				${this.buildCodeEditor('layout')}

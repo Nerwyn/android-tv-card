@@ -359,6 +359,7 @@ class UniversalRemoteCard extends LitElement {
 				);
 			} else {
 				// Special shortcuts
+				// TODO move this repetitive/deprecated name logic into updateDeprecatedFields in editor
 				switch (elementName) {
 					case 'vol_buttons':
 					case 'volume_buttons': {
