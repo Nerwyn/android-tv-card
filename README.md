@@ -1792,7 +1792,7 @@ rows:
     - ch_down
   - - netflix
     - youtube
-    - DAZN
+    - dazn
     - primevideo
     - spotify
   - - touchpad

@@ -1637,6 +1637,8 @@ export class UniversalRemoteCardEditor extends LitElement {
 		 * May have to add to default keys list and make configurable
 		 */
 
+		// TODO add icons to actions lists
+
 		return html`<div class="content">
 			<div class="layout-editor">
 				${this.buildCodeEditor('layout')}
