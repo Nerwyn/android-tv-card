@@ -42,7 +42,7 @@ export const fireTVDefaultKeys: IElementConfig[] = [
 	},
 	{
 		type: 'button',
-		name: 'volumemute',
+		name: 'volume_mute',
 		tap_action: { action: 'key', key: 'MUTE' },
 		icon: 'mdi:volume-low',
 	},

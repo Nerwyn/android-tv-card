@@ -1,7 +1,7 @@
 import { IElementConfig } from '../../models';
 
 /**
- *
+ * https://www.home-assistant.io/integrations/webostv/#action-webostvbutton
  */
 export const webosDefaultSources: IElementConfig[] = [
 	{

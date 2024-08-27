@@ -296,7 +296,7 @@ export const samsungTVDefaultKeys: IElementConfig[] = [
 	},
 	{
 		type: 'button',
-		name: 'caption',
+		name: 'captions',
 		tap_action: { action: 'key', key: 'KEY_CAPTION' },
 		icon: 'mdi:closed-caption',
 	},

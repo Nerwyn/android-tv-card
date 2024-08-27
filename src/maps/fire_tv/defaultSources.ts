@@ -6,15 +6,15 @@ import { IElementConfig } from '../../models';
 export const fireTVDefaultSources: IElementConfig[] = [
 	{
 		type: 'button',
-		name: 'youtube',
+		name: 'hulu',
 		tap_action: {
 			action: 'perform-action',
 			perform_action: 'media_player.select_source',
 			data: {
-				source: 'com.amazon.firetv.youtube',
+				source: 'com.hulu.plus',
 			},
 		},
-		icon: 'mdi:youtube',
+		icon: 'mdi:hulu',
 	},
 	{
 		type: 'button',
@@ -30,18 +30,6 @@ export const fireTVDefaultSources: IElementConfig[] = [
 	},
 	{
 		type: 'button',
-		name: 'hulu',
-		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'com.hulu.plus',
-			},
-		},
-		icon: 'mdi:hulu',
-	},
-	{
-		type: 'button',
 		name: 'primevideo',
 		tap_action: {
 			action: 'perform-action',
@@ -51,5 +39,17 @@ export const fireTVDefaultSources: IElementConfig[] = [
 			},
 		},
 		icon: 'primevideo',
+	},
+	{
+		type: 'button',
+		name: 'youtube',
+		tap_action: {
+			action: 'perform-action',
+			perform_action: 'media_player.select_source',
+			data: {
+				source: 'com.amazon.firetv.youtube',
+			},
+		},
+		icon: 'mdi:youtube',
 	},
 ];

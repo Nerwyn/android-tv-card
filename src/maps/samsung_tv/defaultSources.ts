@@ -3,6 +3,18 @@ import { IElementConfig } from '../../models';
 export const samsungTVDefaultSources: IElementConfig[] = [
 	{
 		type: 'button',
+		name: 'dazn',
+		tap_action: {
+			action: 'perform-action',
+			perform_action: 'media_player.select_source',
+			data: {
+				source: 'DAZN',
+			},
+		},
+		icon: 'dazn',
+	},
+	{
+		type: 'button',
 		name: 'netflix',
 		tap_action: {
 			action: 'perform-action',
@@ -12,18 +24,6 @@ export const samsungTVDefaultSources: IElementConfig[] = [
 			},
 		},
 		icon: 'mdi:netflix',
-	},
-	{
-		type: 'button',
-		name: 'youtube',
-		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'YouTube',
-			},
-		},
-		icon: 'mdi:youtube',
 	},
 	{
 		type: 'button',
@@ -39,14 +39,14 @@ export const samsungTVDefaultSources: IElementConfig[] = [
 	},
 	{
 		type: 'button',
-		name: 'dazn',
+		name: 'youtube',
 		tap_action: {
 			action: 'perform-action',
 			perform_action: 'media_player.select_source',
 			data: {
-				source: 'DAZN',
+				source: 'YouTube',
 			},
 		},
-		icon: 'dazn',
+		icon: 'mdi:youtube',
 	},
 ];
