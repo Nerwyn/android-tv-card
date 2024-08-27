@@ -1783,14 +1783,14 @@ export class UniversalRemoteCardEditor extends LitElement {
 						${this.buildSelector('Title', 'title', {
 							text: {},
 						})}
-						<ha-button
-							@click=${this.handleUpdateDeprecatedConfig}
-							outlined
-							.label="${'UPDATE OLD CONFIG'}"
-						>
-							<ha-icon .icon=${'mdi:cog'} slot="icon"></ha-icon>
-						</ha-button>
 					</div>
+					<ha-button
+						@click=${this.handleUpdateDeprecatedConfig}
+						outlined
+						.label="${'UPDATE OLD CONFIG'}"
+					>
+						<ha-icon .icon=${'mdi:cog'} slot="icon"></ha-icon>
+					</ha-button>
 				</div>
 			</div>
 		`;
@@ -1882,15 +1882,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 		}
 
 		// TODOs
-		// Tabs:
-		//   - Remote Elements
-		//     - Maybe add a link to the default lists?
-		//     - Default keys and sources for other platforms.
-		//   - Layout
-		//     - Get rid of separate list and gui editor.
-		//     - Code editor with list of available actions on side.
-		//       - Show custom actions first, then default with overwritten customs removed
-		//       - See if it's possible to drag from this list to code editor
+		//  - Default keys and sources for other platforms.
 
 		return html`${baseTabBar}${editor}${this.buildErrorPanel()}`;
 	}
