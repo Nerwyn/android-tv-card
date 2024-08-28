@@ -621,8 +621,8 @@ export class UniversalRemoteCardEditor extends LitElement {
 		}
 
 		iconElement = icon.includes(':')
-			? html`<ha-icon .icon="${icon}"></ha-icon>`
-			: html`<ha-svg-icon .path=${icon}></ha-svg-icon>`;
+			? html`<ha-icon class="text-icon" .icon="${icon}"></ha-icon>`
+			: html`<ha-svg-icon class="text-icon" .path=${icon}></ha-svg-icon>`;
 		return iconElement;
 	}
 
@@ -810,7 +810,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 					)}
 				>
 					<ha-icon
-						class="header-icon"
+						class="text-icon"
 						.icon="${this.guiMode
 							? 'mdi:code-braces'
 							: 'mdi:list-box-outline'}"
@@ -3173,7 +3173,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 				justify-content: space-between;
 				align-items: center;
 			}
-			.header-icon {
+			.text-icon {
 				color: var(--mdc-dialog-content-ink-color, rgba(0, 0, 0, 0.6));
 			}
 			.back-title {
