@@ -1676,10 +1676,10 @@ export class UniversalRemoteCardEditor extends LitElement {
 												>
 													${iconElement}
 													<input
-														readonly class="action-list-item-label"
-													>
-														${entry.name}
-													</input>
+														readonly
+														class="action-list-item-label"
+														value="${entry.name}"
+													/>
 												</li>`;
 											},
 										)}
@@ -1708,10 +1708,10 @@ export class UniversalRemoteCardEditor extends LitElement {
 												>
 													${iconElement}
 													<input
-														readonly class="action-list-item-label"
-													>
-														${entry.name}
-													</input>
+														readonly
+														class="action-list-item-label"
+														value="${entry.name}"
+													/>
 												</li>`;
 											})}
 										</ul>
@@ -1740,10 +1740,10 @@ export class UniversalRemoteCardEditor extends LitElement {
 												>
 													${iconElement}
 													<input
-														readonly class="action-list-item-label"
-													>
-														${entry.name}
-													</input>
+														readonly
+														class="action-list-item-label"
+														value="${entry.name}"
+													/>
 												</li>`;
 											})}
 										</ul>
