@@ -564,9 +564,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 			(entry as IElementConfig).icon ?? (entry as IIconConfig).path ?? '',
 			context,
 		) as string;
-		if (icon.includes(':')) {
-			iconElement = html`<ha-icon .icon="${icon}"></ha-icon>`;
-		} else {
+		if (!icon.includes(':')) {
 			const iconConfig =
 				(this.config.custom_icons ?? []).filter(
 					(customIcon: IIconConfig) => customIcon.name == icon,
@@ -575,8 +573,37 @@ export class UniversalRemoteCardEditor extends LitElement {
 					(defaultIcon: IIconConfig) => defaultIcon.name == icon,
 				)[0];
 			icon = iconConfig?.path ?? icon;
-			iconElement = html`<ha-svg-icon .path=${icon}></ha-svg-icon>`;
 		}
+
+		if (!icon.length) {
+			switch (
+				this.renderTemplate((entry as IElementConfig)?.type, context)
+			) {
+				case 'touchpad':
+					icon = 'mdi:gesture-tap-button';
+					break;
+				case 'slider':
+					if (
+						this.renderTemplate(
+							(entry as IElementConfig)?.vertical ?? false,
+							context,
+						)
+					) {
+						icon = 'mdi:tune-vertical-variant';
+					} else {
+						icon = 'mdi:tune-variant';
+					}
+					break;
+				case 'button':
+				default:
+					icon = 'mdi:circle-small';
+					break;
+			}
+		}
+
+		iconElement = icon.includes(':')
+			? html`<ha-icon .icon="${icon}"></ha-icon>`
+			: html`<ha-svg-icon .path=${icon}></ha-svg-icon>`;
 		return iconElement;
 	}
 
@@ -3127,11 +3154,11 @@ export class UniversalRemoteCardEditor extends LitElement {
 				flex-direction: row;
 			}
 			.action-list-container {
-				max-height: 270px;
+				max-height: 285px;
 				overflow: scroll;
 			}
 			.custom-action-list-container {
-				max-height: 180px;
+				max-height: 190px;
 			}
 			.action-list {
 				columns: 1;
