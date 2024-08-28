@@ -75,23 +75,10 @@ export const kodiDefaultKeys: IElementConfig[] = [
 			perform_action: 'kodi.call_method',
 			data: {
 				method: 'Application.SetMute',
-				mute: true,
+				mute: 'toggle',
 			},
 		},
 		icon: 'mdi:volume-low',
-	},
-	{
-		type: 'button',
-		name: 'volume_unmute',
-		tap_action: {
-			action: 'perform-action',
-			perform_action: 'kodi.call_method',
-			data: {
-				method: 'Application.SetMute',
-				mute: false,
-			},
-		},
-		icon: 'mdi:volume-variant-off',
 	},
 	{
 		type: 'button',

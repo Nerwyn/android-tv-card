@@ -30,6 +30,12 @@ export const fireTVDefaultKeys: IElementConfig[] = [
 	},
 	{
 		type: 'button',
+		name: 'menu',
+		tap_action: { action: 'key', key: 'MENU' },
+		icon: 'mdi:menu',
+	},
+	{
+		type: 'button',
 		name: 'volume_up',
 		tap_action: { action: 'key', key: 'VOLUME_UP' },
 		icon: 'mdi:volume-high',
