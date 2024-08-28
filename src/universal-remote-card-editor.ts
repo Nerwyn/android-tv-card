@@ -1674,7 +1674,12 @@ export class UniversalRemoteCardEditor extends LitElement {
 												return html`<li
 													class="action-list-item"
 												>
-													${iconElement}${entry.name}
+													${iconElement}
+													<input
+														readonly class="action-list-item-label"
+													>
+														${entry.name}
+													</input>
 												</li>`;
 											},
 										)}
@@ -1701,7 +1706,12 @@ export class UniversalRemoteCardEditor extends LitElement {
 												return html`<li
 													class="action-list-item"
 												>
-													${iconElement}${entry.name}
+													${iconElement}
+													<input
+														readonly class="action-list-item-label"
+													>
+														${entry.name}
+													</input>
 												</li>`;
 											})}
 										</ul>
@@ -1728,7 +1738,12 @@ export class UniversalRemoteCardEditor extends LitElement {
 												return html`<li
 													class="action-list-item"
 												>
-													${iconElement}${entry.name}
+													${iconElement}
+													<input
+														readonly class="action-list-item-label"
+													>
+														${entry.name}
+													</input>
 												</li>`;
 											})}
 										</ul>
@@ -3185,7 +3200,6 @@ export class UniversalRemoteCardEditor extends LitElement {
 				-moz-columns: 1;
 				margin-top: 4px;
 				padding-left: 4px;
-				font-family: monospace;
 			}
 			.custom-action-list {
 				columns: 2;
@@ -3201,6 +3215,14 @@ export class UniversalRemoteCardEditor extends LitElement {
 				align-items: center;
 				gap: 4px;
 				padding: 2px 0;
+			}
+			.action-list-item-label {
+				width: 100%;
+				background: none;
+				border: none;
+				outline: none;
+				font-family: monospace;
+				font-size: 14px;
 			}
 			.error,
 			.info {
