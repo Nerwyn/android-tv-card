@@ -3200,7 +3200,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 				flex-direction: row;
 				align-items: center;
 				gap: 4px;
-				margin: 4px 0;
+				padding: 2px 0;
 			}
 			.error,
 			.info {
