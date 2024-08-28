@@ -1,7 +1,5 @@
 import { IElementConfig } from '../../models';
 
-// TODO reorder all lists to be similar for the config UI
-
 /**
  * This is the list of most common commands from the Android TV Remote integration page.
  * Not all are ensured to work, and if they do not it is likely an issue with the underlying package used by the Android TV Remote integration or the Android TV Remote Protocol V2 itself.

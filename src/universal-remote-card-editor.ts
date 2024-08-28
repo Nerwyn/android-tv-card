@@ -558,6 +558,28 @@ export class UniversalRemoteCardEditor extends LitElement {
 		}
 	}
 
+	buildIconElement(entry: IElementConfig | IIconConfig, context: object) {
+		let iconElement = html``;
+		let icon = this.renderTemplate(
+			(entry as IElementConfig).icon ?? (entry as IIconConfig).path ?? '',
+			context,
+		) as string;
+		if (icon.includes(':')) {
+			iconElement = html`<ha-icon .icon="${icon}"></ha-icon>`;
+		} else {
+			const iconConfig =
+				(this.config.custom_icons ?? []).filter(
+					(customIcon: IIconConfig) => customIcon.name == icon,
+				)[0] ??
+				defaultIcons.filter(
+					(defaultIcon: IIconConfig) => defaultIcon.name == icon,
+				)[0];
+			icon = iconConfig?.path ?? icon;
+			iconElement = html`<ha-svg-icon .path=${icon}></ha-svg-icon>`;
+		}
+		return iconElement;
+	}
+
 	buildEntryList() {
 		let entries;
 		let header: string;
@@ -581,35 +603,13 @@ export class UniversalRemoteCardEditor extends LitElement {
 				>
 					<div class="features">
 						${entries.map((entry, i) => {
-							let context = {
-								config: { entity: '', attribute: '' },
-							};
-							let icon = '';
-							if ((entry as IElementConfig).icon) {
-								context = this.getEntryContext(
-									entry as IElementConfig,
-								);
-								icon = this.renderTemplate(
-									(entry as IElementConfig).icon ??
-										(entry as IIconConfig).path,
-									context,
-								) as string;
-								if (icon && !icon.includes(':')) {
-									const iconConfig =
-										(this.config.custom_icons ?? []).filter(
-											(customIcon: IIconConfig) =>
-												customIcon.name == icon,
-										)[0] ??
-										defaultIcons.filter(
-											(defaultIcon: IIconConfig) =>
-												defaultIcon.name == icon,
-										)[0];
-									icon = iconConfig?.path ?? icon;
-								}
-							} else if ((entry as IIconConfig).path) {
-								icon = (entry as IIconConfig).path;
-							}
-
+							const context = this.getEntryContext(
+								entry as IElementConfig,
+							);
+							const iconElement = this.buildIconElement(
+								entry,
+								context,
+							);
 							const label = this.renderTemplate(
 								(entry as IElementConfig).label as string,
 								context,
@@ -630,15 +630,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 										></ha-icon>
 									</div>
 									<div class="feature-list-item-content">
-										${icon
-											? icon.includes(':')
-												? html`<ha-icon
-														.icon="${icon}"
-												  ></ha-icon>`
-												: html`<ha-svg-icon
-														.path=${icon}
-												  ></ha-svg-icon>`
-											: ''}
+										${iconElement}
 										<div class="feature-list-item-label">
 											<span class="primary"
 												>${entryType} ⸱ ${name}
@@ -1621,17 +1613,6 @@ export class UniversalRemoteCardEditor extends LitElement {
 	}
 
 	buildLayoutEditor() {
-		const customActionNames =
-			this.config.custom_actions?.map(
-				(customAction) => customAction.name,
-			) ?? [];
-		const defaultKeyNames = this.DEFAULT_KEYS.map(
-			(defaultAction) => defaultAction.name,
-		).filter((name) => !customActionNames?.includes(name));
-		const defaultSourceNames = this.DEFAULT_SOURCES.map(
-			(defaultAction) => defaultAction.name,
-		).filter((name) => !customActionNames?.includes(name));
-
 		/**
 		 * TODO add special options to these lists if available
 		 * May have to add to default keys list and make configurable
@@ -1643,7 +1624,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 			<div class="layout-editor">
 				${this.buildCodeEditor('layout')}
 				<div class="actions-list-container">
-					${customActionNames.length
+					${this.config.custom_actions?.length
 						? html`<div
 									class="action-list-container custom-action-list-container"
 								>
@@ -1651,37 +1632,72 @@ export class UniversalRemoteCardEditor extends LitElement {
 										Custom Actions
 									</div>
 									<ul class="action-list custom-action-list">
-										${customActionNames.map(
-											(name) => html`<li>${name}</li>`,
+										${this.config.custom_actions.map(
+											(entry) => {
+												const context =
+													this.getEntryContext(
+														entry as IElementConfig,
+													);
+												const iconElement =
+													this.buildIconElement(
+														entry,
+														context,
+													);
+												return html`<li>
+													${iconElement}${entry.name}
+												</li>`;
+											},
 										)}
 									</ul>
 								</div>
 								<div><hr /></div>`
 						: ''}
 					<div class="default-action-lists-container">
-						${defaultKeyNames.length
+						${this.DEFAULT_KEYS.length
 							? html`<div class="wrapper">
 									<div class="title-header">Default Keys</div>
 									<div class="action-list-container">
 										<ul class="action-list">
-											${defaultKeyNames.map(
-												(name) =>
-													html`<li>${name}</li>`,
-											)}
+											${this.DEFAULT_KEYS.map((entry) => {
+												const context =
+													this.getEntryContext(
+														entry as IElementConfig,
+													);
+												const iconElement =
+													this.buildIconElement(
+														entry,
+														context,
+													);
+												return html`<li>
+													${iconElement}${entry.name}
+												</li>`;
+											})}
 										</ul>
 									</div>
 							  </div>`
 							: ''}
-						${defaultSourceNames.length
+						${this.DEFAULT_SOURCES.length
 							? html`<div class="wrapper">
 									<div class="title-header">
 										Default Sources
 									</div>
 									<div class="action-list-container">
 										<ul class="action-list">
-											${defaultSourceNames.map(
-												(name) =>
-													html`<li>${name}</li>`,
+											${this.DEFAULT_SOURCES.map(
+												(entry) => {
+													const context =
+														this.getEntryContext(
+															entry as IElementConfig,
+														);
+													const iconElement =
+														this.buildIconElement(
+															entry,
+															context,
+														);
+													return html`<li>
+														${iconElement}${entry.name}
+													</li>`;
+												},
 											)}
 										</ul>
 									</div>
@@ -3125,7 +3141,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 				-moz-columns: 2;
 			}
 			li::marker {
-				content: '- ';
+				content: '';
 			}
 			.error,
 			.info {
