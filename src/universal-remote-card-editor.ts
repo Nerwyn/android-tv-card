@@ -376,6 +376,15 @@ export class UniversalRemoteCardEditor extends LitElement {
 		}
 	}
 
+	handleLayoutActionListItemClick(e: MouseEvent) {
+		const target = e.currentTarget as HTMLInputElement;
+		const text = target.value;
+		target.setSelectionRange(0, text.length);
+		if (navigator.clipboard) {
+			navigator.clipboard.writeText(text);
+		}
+	}
+
 	addEntry(e: CustomEvent) {
 		const i = e.detail.index as number;
 		let entries: IElementConfig[] | IIconConfig[];
@@ -1679,6 +1688,8 @@ export class UniversalRemoteCardEditor extends LitElement {
 														readonly
 														class="action-list-item-label"
 														value="${entry.name}"
+														@click=${this
+															.handleLayoutActionListItemClick}
 													/>
 												</li>`;
 											},
@@ -1711,6 +1722,8 @@ export class UniversalRemoteCardEditor extends LitElement {
 														readonly
 														class="action-list-item-label"
 														value="${entry.name}"
+														@click=${this
+															.handleLayoutActionListItemClick}
 													/>
 												</li>`;
 											})}
@@ -1743,6 +1756,8 @@ export class UniversalRemoteCardEditor extends LitElement {
 														readonly
 														class="action-list-item-label"
 														value="${entry.name}"
+														@click=${this
+															.handleLayoutActionListItemClick}
 													/>
 												</li>`;
 											})}
