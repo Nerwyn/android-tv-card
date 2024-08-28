@@ -2520,23 +2520,23 @@ export class UniversalRemoteCardEditor extends LitElement {
 		}
 
 		// Convert deprecated special case names to single new one
-		const rowsString = JSON.stringify(updatedConfig.rows ?? []);
-		rowsString.replace(/vol_buttons/g, 'volume_buttons');
-		rowsString.replace(/nav_buttons/g, 'navigation_buttons');
-		rowsString.replace(/d_pad/g, 'dpad');
-		rowsString.replace(/direction_pad/g, 'dpad');
-		rowsString.replace(/num_pad/g, 'numpad');
-		rowsString.replace(/number_pad/g, 'numpad');
-		rowsString.replace(/x_pad/g, 'xpad');
-		rowsString.replace(/gamepad/g, 'xpad');
-		rowsString.replace(/xgamepad/g, 'xpad');
-		rowsString.replace(/x_gamepad/g, 'xpad');
-		rowsString.replace(/n_pad/g, 'npad');
-		rowsString.replace(/ngamepad/g, 'npad');
-		rowsString.replace(/n_gamepad/g, 'npad');
-		rowsString.replace(/volume_slider/g, 'slider');
-		rowsString.replace(/nav_touchpad/g, 'touchpad');
-		rowsString.replace(/navigation_touchpad/g, 'touchpad');
+		const rowsString = JSON.stringify(updatedConfig.rows ?? [])
+			.replace(/vol_buttons/g, 'volume_buttons')
+			.replace(/nav_buttons/g, 'navigation_buttons')
+			.replace(/d_pad/g, 'dpad')
+			.replace(/direction_pad/g, 'dpad')
+			.replace(/num_pad/g, 'numpad')
+			.replace(/number_pad/g, 'numpad')
+			.replace(/x_pad/g, 'xpad')
+			.replace(/gamepad/g, 'xpad')
+			.replace(/xgamepad/g, 'xpad')
+			.replace(/x_gamepad/g, 'xpad')
+			.replace(/n_pad/g, 'npad')
+			.replace(/ngamepad/g, 'npad')
+			.replace(/n_gamepad/g, 'npad')
+			.replace(/volume_slider/g, 'slider')
+			.replace(/nav_touchpad/g, 'touchpad')
+			.replace(/navigation_touchpad/g, 'touchpad');
 		updatedConfig.rows = JSON.parse(rowsString) as Row[];
 
 		// Convert old custom icons object into an array
