@@ -3127,18 +3127,18 @@ export class UniversalRemoteCardEditor extends LitElement {
 				flex-direction: row;
 			}
 			.action-list-container {
-				max-height: 235px;
+				max-height: 270px;
 				overflow: scroll;
 			}
 			.custom-action-list-container {
-				max-height: 110px;
+				max-height: 180px;
 			}
 			.action-list {
 				columns: 1;
 				-webkit-columns: 1;
 				-moz-columns: 1;
 				margin-top: 4px;
-				padding-left: 30px;
+				padding-left: 4px;
 				font-family: monospace;
 			}
 			.custom-action-list {
@@ -3152,7 +3152,8 @@ export class UniversalRemoteCardEditor extends LitElement {
 			.action-list-item {
 				display: flex;
 				flex-direction: row;
-				gap: 2px;
+				gap: 4px;
+				margin: 4px 0;
 			}
 			.error,
 			.info {
