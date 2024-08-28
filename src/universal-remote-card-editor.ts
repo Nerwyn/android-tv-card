@@ -1640,9 +1640,6 @@ export class UniversalRemoteCardEditor extends LitElement {
 	}
 
 	buildLayoutEditor() {
-		// TODO add special options to these lists if available
-		// May have to add to default keys list and make configurable
-
 		const customActionNames =
 			this.config.custom_actions?.map((entry) => entry.name) ?? [];
 		const defaultKeys = this.DEFAULT_KEYS.filter(
@@ -2522,6 +2519,26 @@ export class UniversalRemoteCardEditor extends LitElement {
 			updatedConfig.rows = rows;
 		}
 
+		// Convert deprecated special case names to single new one
+		const rowsString = JSON.stringify(updatedConfig.rows ?? []);
+		rowsString.replace(/vol_buttons/g, 'volume_buttons');
+		rowsString.replace(/nav_buttons/g, 'navigation_buttons');
+		rowsString.replace(/d_pad/g, 'dpad');
+		rowsString.replace(/direction_pad/g, 'dpad');
+		rowsString.replace(/num_pad/g, 'numpad');
+		rowsString.replace(/number_pad/g, 'numpad');
+		rowsString.replace(/x_pad/g, 'xpad');
+		rowsString.replace(/gamepad/g, 'xpad');
+		rowsString.replace(/xgamepad/g, 'xpad');
+		rowsString.replace(/x_gamepad/g, 'xpad');
+		rowsString.replace(/n_pad/g, 'npad');
+		rowsString.replace(/ngamepad/g, 'npad');
+		rowsString.replace(/n_gamepad/g, 'npad');
+		rowsString.replace(/volume_slider/g, 'slider');
+		rowsString.replace(/nav_touchpad/g, 'touchpad');
+		rowsString.replace(/navigation_touchpad/g, 'touchpad');
+		updatedConfig.rows = JSON.parse(rowsString) as Row[];
+
 		// Convert old custom icons object into an array
 		if (
 			!Array.isArray(updatedConfig.custom_icons) &&
@@ -3181,6 +3198,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 			.action-list-item {
 				display: flex;
 				flex-direction: row;
+				align-items: center;
 				gap: 4px;
 				margin: 4px 0;
 			}

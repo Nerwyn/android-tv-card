@@ -359,9 +359,7 @@ class UniversalRemoteCard extends LitElement {
 				);
 			} else {
 				// Special shortcuts
-				// TODO move this repetitive/deprecated name logic into updateDeprecatedFields in editor
 				switch (elementName) {
-					case 'vol_buttons':
 					case 'volume_buttons': {
 						const volumeButtons = this.buildVolumeButtons();
 						if (isColumn) {
@@ -370,14 +368,10 @@ class UniversalRemoteCard extends LitElement {
 						rowContent.push(...volumeButtons);
 						break;
 					}
-					case 'nav_buttons':
-					case 'navigation_buttons': {
+					case 'navigation_buttons':
 						rowContent.push(this.buildNavButtons());
 						break;
-					}
 					case 'dpad':
-					case 'd_pad':
-					case 'direction_pad': {
 						rowContent.push(
 							this.buildPad([
 								'',
@@ -392,10 +386,7 @@ class UniversalRemoteCard extends LitElement {
 							]),
 						);
 						break;
-					}
 					case 'numpad':
-					case 'num_pad':
-					case 'number_pad': {
 						rowContent.push(
 							this.buildPad([
 								'n7',
@@ -410,12 +401,7 @@ class UniversalRemoteCard extends LitElement {
 							]),
 						);
 						break;
-					}
 					case 'xpad':
-					case 'x_pad':
-					case 'gamepad':
-					case 'xgamepad':
-					case 'x_gamepad':
 						rowContent.push(
 							this.buildPad([
 								'',
@@ -431,9 +417,6 @@ class UniversalRemoteCard extends LitElement {
 						);
 						break;
 					case 'npad':
-					case 'n_pad':
-					case 'ngamepad':
-					case 'n_gamepad':
 						rowContent.push(
 							this.buildPad([
 								'',
@@ -448,14 +431,6 @@ class UniversalRemoteCard extends LitElement {
 							]),
 						);
 						break;
-					// Deprecated names for remote elements
-					case 'volume_slider':
-						elementName = 'slider';
-					// falls through
-					case 'nav_touchpad':
-					case 'navigation_touchpad':
-						elementName = 'touchpad';
-					// falls through
 					default: {
 						const actions = this.getElementConfig(elementName);
 						switch (actions.type) {

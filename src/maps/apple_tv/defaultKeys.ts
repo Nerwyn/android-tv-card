@@ -127,6 +127,16 @@ export const appleTVDefaultKeys: IElementConfig[] = [
 		icon: 'mdi:circle',
 	},
 	{
+		type: 'button',
+		name: 'navigation_buttons',
+		icon: 'mdi:gamepad',
+	},
+	{
+		type: 'button',
+		name: 'dpad',
+		icon: 'mdi:gamepad',
+	},
+	{
 		type: 'touchpad',
 		name: 'touchpad',
 		tap_action: {

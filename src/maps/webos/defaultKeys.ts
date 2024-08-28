@@ -101,6 +101,11 @@ export const webosDefaultKeys: IElementConfig[] = [
 		icon: 'mdi:volume-low',
 	},
 	{
+		type: 'button',
+		name: 'volume_buttons',
+		icon: 'mdi:volume-plus',
+	},
+	{
 		type: 'slider',
 		name: 'slider',
 		range: [0, 1],
@@ -173,6 +178,16 @@ export const webosDefaultKeys: IElementConfig[] = [
 			},
 		},
 		icon: 'mdi:circle',
+	},
+	{
+		type: 'button',
+		name: 'navigation_buttons',
+		icon: 'mdi:gamepad',
+	},
+	{
+		type: 'button',
+		name: 'dpad',
+		icon: 'mdi:gamepad',
 	},
 	{
 		type: 'touchpad',
@@ -440,6 +455,11 @@ export const webosDefaultKeys: IElementConfig[] = [
 			},
 		},
 		icon: 'mdi:numeric-9',
+	},
+	{
+		type: 'button',
+		name: 'numpad',
+		icon: 'mdi:dialpad',
 	},
 	{
 		type: 'button',

@@ -41,6 +41,11 @@ export const rokuDefaultKeys: IElementConfig[] = [
 		icon: 'mdi:volume-low',
 	},
 	{
+		type: 'button',
+		name: 'volume_buttons',
+		icon: 'mdi:volume-plus',
+	},
+	{
 		type: 'slider',
 		name: 'slider',
 		range: [0, 1],
@@ -83,6 +88,16 @@ export const rokuDefaultKeys: IElementConfig[] = [
 		name: 'center',
 		tap_action: { action: 'key', key: 'select' },
 		icon: 'circle',
+	},
+	{
+		type: 'button',
+		name: 'navigation_buttons',
+		icon: 'mdi:gamepad',
+	},
+	{
+		type: 'button',
+		name: 'dpad',
+		icon: 'mdi:gamepad',
 	},
 	{
 		type: 'touchpad',

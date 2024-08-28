@@ -94,6 +94,11 @@ export const kodiDefaultKeys: IElementConfig[] = [
 		icon: 'mdi:volume-variant-off',
 	},
 	{
+		type: 'button',
+		name: 'volume_buttons',
+		icon: 'mdi:volume-plus',
+	},
+	{
 		type: 'slider',
 		name: 'slider',
 		range: [0, 1],
@@ -166,6 +171,16 @@ export const kodiDefaultKeys: IElementConfig[] = [
 			},
 		},
 		icon: 'mdi:circle',
+	},
+	{
+		type: 'button',
+		name: 'navigation_buttons',
+		icon: 'mdi:gamepad',
+	},
+	{
+		type: 'button',
+		name: 'dpad',
+		icon: 'mdi:gamepad',
 	},
 	{
 		type: 'touchpad',

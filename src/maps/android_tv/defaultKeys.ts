@@ -57,6 +57,11 @@ export const androidTVDefaultKeys: IElementConfig[] = [
 		icon: 'mdi:volume-low',
 	},
 	{
+		type: 'button',
+		name: 'volume_buttons',
+		icon: 'mdi:volume-plus',
+	},
+	{
 		type: 'slider',
 		name: 'slider',
 		range: [0, 1],
@@ -103,6 +108,16 @@ export const androidTVDefaultKeys: IElementConfig[] = [
 		name: 'center',
 		tap_action: { action: 'key', key: 'DPAD_CENTER' },
 		icon: 'mdi:checkbox-blank-circle',
+	},
+	{
+		type: 'button',
+		name: 'navigation_buttons',
+		icon: 'mdi:gamepad',
+	},
+	{
+		type: 'button',
+		name: 'dpad',
+		icon: 'mdi:gamepad',
 	},
 	{
 		type: 'touchpad',
@@ -282,6 +297,16 @@ export const androidTVDefaultKeys: IElementConfig[] = [
 	},
 	{
 		type: 'button',
+		name: 'xpad',
+		icon: 'mdi:gamepad-circle',
+	},
+	{
+		type: 'button',
+		name: 'npad',
+		icon: 'mdi:gamepad-circle',
+	},
+	{
+		type: 'button',
 		name: 'n0',
 		tap_action: { action: 'key', key: '0' },
 		icon: 'mdi:numeric-0',
@@ -339,6 +364,11 @@ export const androidTVDefaultKeys: IElementConfig[] = [
 		name: 'n9',
 		tap_action: { action: 'key', key: '9' },
 		icon: 'mdi:numeric-9',
+	},
+	{
+		type: 'button',
+		name: 'numpad',
+		icon: 'mdi:dialpad',
 	},
 	{
 		type: 'button',
