@@ -1643,7 +1643,9 @@ export class UniversalRemoteCardEditor extends LitElement {
 														entry,
 														context,
 													);
-												return html`<li>
+												return html`<li
+													class="action-list-item"
+												>
 													${iconElement}${entry.name}
 												</li>`;
 											},
@@ -1668,7 +1670,9 @@ export class UniversalRemoteCardEditor extends LitElement {
 														entry,
 														context,
 													);
-												return html`<li>
+												return html`<li
+													class="action-list-item"
+												>
 													${iconElement}${entry.name}
 												</li>`;
 											})}
@@ -1694,7 +1698,9 @@ export class UniversalRemoteCardEditor extends LitElement {
 															entry,
 															context,
 														);
-													return html`<li>
+													return html`<li
+														class="action-list-item"
+													>
 														${iconElement}${entry.name}
 													</li>`;
 												},
@@ -3140,8 +3146,13 @@ export class UniversalRemoteCardEditor extends LitElement {
 				-webkit-columns: 2;
 				-moz-columns: 2;
 			}
-			li::marker {
+			.action-list-item::marker {
 				content: '';
+			}
+			.action-list-item {
+				display: flex;
+				flex-direction: row;
+				gap: 2px;
 			}
 			.error,
 			.info {
