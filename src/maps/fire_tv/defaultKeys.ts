@@ -152,7 +152,7 @@ export const fireTVDefaultKeys: IElementConfig[] = [
 		name: 'touchpad',
 		tap_action: {
 			action: 'key',
-			key: 'center',
+			key: 'CENTER',
 		},
 		up: {
 			tap_action: { action: 'key', key: 'UP' },
