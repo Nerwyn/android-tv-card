@@ -1640,13 +1640,17 @@ export class UniversalRemoteCardEditor extends LitElement {
 	}
 
 	buildLayoutEditor() {
-		/**
-		 * TODO add special options to these lists if available
-		 * May have to add to default keys list and make configurable
-		 */
+		// TODO add special options to these lists if available
+		// May have to add to default keys list and make configurable
 
-		// TODO add icons to actions lists
-
+		const customActionNames =
+			this.config.custom_actions?.map((entry) => entry.name) ?? [];
+		const defaultKeys = this.DEFAULT_KEYS.filter(
+			(entry) => !customActionNames.includes(entry.name),
+		);
+		const defaultSources = this.DEFAULT_SOURCES.filter(
+			(entry) => !customActionNames.includes(entry.name),
+		);
 		return html`<div class="content">
 			<div class="layout-editor">
 				${this.buildCodeEditor('layout')}
@@ -1682,12 +1686,12 @@ export class UniversalRemoteCardEditor extends LitElement {
 								<div><hr /></div>`
 						: ''}
 					<div class="default-action-lists-container">
-						${this.DEFAULT_KEYS.length
+						${defaultKeys.length
 							? html`<div class="wrapper">
 									<div class="title-header">Default Keys</div>
 									<div class="action-list-container">
 										<ul class="action-list">
-											${this.DEFAULT_KEYS.map((entry) => {
+											${defaultKeys.map((entry) => {
 												const context =
 													this.getEntryContext(
 														entry as IElementConfig,
@@ -1707,31 +1711,29 @@ export class UniversalRemoteCardEditor extends LitElement {
 									</div>
 							  </div>`
 							: ''}
-						${this.DEFAULT_SOURCES.length
+						${defaultSources.length
 							? html`<div class="wrapper">
 									<div class="title-header">
 										Default Sources
 									</div>
 									<div class="action-list-container">
 										<ul class="action-list">
-											${this.DEFAULT_SOURCES.map(
-												(entry) => {
-													const context =
-														this.getEntryContext(
-															entry as IElementConfig,
-														);
-													const iconElement =
-														this.buildIconElement(
-															entry,
-															context,
-														);
-													return html`<li
-														class="action-list-item"
-													>
-														${iconElement}${entry.name}
-													</li>`;
-												},
-											)}
+											${defaultSources.map((entry) => {
+												const context =
+													this.getEntryContext(
+														entry as IElementConfig,
+													);
+												const iconElement =
+													this.buildIconElement(
+														entry,
+														context,
+													);
+												return html`<li
+													class="action-list-item"
+												>
+													${iconElement}${entry.name}
+												</li>`;
+											})}
 										</ul>
 									</div>
 							  </div>`
