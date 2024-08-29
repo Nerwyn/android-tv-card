@@ -28,10 +28,10 @@ A super customizable universal remote card iterating on the work of several othe
   - LG webOS (no keyboard)
 - Support for multiple buttons, [touchpads](#touchpad), and [sliders](#slider) using default or user defined actions.
 - Complete [Home Assistant actions](<(https://www.home-assistant.io/dashboards/actions/)>) support.
-- [Keyboard](#keyboard) and search dialog for most platforms.
-- Jinja2-like template almost all fields.
-- Haptics.
-- Touchpad multi-touch support.
+- [Keyboard](#keyboard) and search dialog actions for most platforms.
+- Jinja2-like template support for almost all fields.
+- Toggleable haptics.
+- Touchpad multi-touch actions support.
 - User configurable remote layout.
 - Icons and labels for all elements.
 - CSS style options for all sub-elements.
@@ -84,9 +84,9 @@ If you are updating from an older version of this card, you may find that your c
 
 TODO screenshot
 
-Not to be confused with the sections view layout tab above it.
+Not to be confused with the sections view layout tab.
 
-The remote layout is defined using a series of nested arrays. The lowest level of arrays is each row. As you nest arrays further it switches between rows and columns, allowing you to create super unique remote layouts.
+The remote layout is defined using a series of nested arrays. The lowest level of arrays is each row. As you nest arrays further it switches between rows and columns, allowing you to create unique remote layouts.
 
 The default keys and sources lists for your selected platform are displayed below the layout code editor. If you have configured any custom actions, they will be displayed above this. You can use this as reference as you create your remote, or drag and drop entries from these lists to the editor. The default keys list also includes the default touchpad and slider, along with some special elements for button pads and layouts.
 
@@ -2151,4 +2151,3 @@ row_styles:
 [releases-shield]: https://img.shields.io/github/release/Nerwyn/android-tv-card.svg?style=for-the-badge
 [releases]: https://github.com/nerwyn/android-tv-card/releases
 [github]: https://img.shields.io/github/followers/Nerwyn.svg?style=social
-
