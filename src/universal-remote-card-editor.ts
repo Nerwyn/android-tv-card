@@ -376,21 +376,12 @@ export class UniversalRemoteCardEditor extends LitElement {
 		}
 	}
 
-	handleLayoutActionListItemClick(e: MouseEvent) {
-		const target = e.currentTarget as HTMLInputElement;
-		const text = target.value;
-		target.setSelectionRange(0, text.length);
-		if (navigator.clipboard) {
-			navigator.clipboard.writeText(text);
-		}
-	}
-
 	handleLayoutActionListItemDragStart(e: DragEvent) {
 		e.stopPropagation();
 		if (e.isTrusted && e.dataTransfer) {
 			e.dataTransfer.setData(
 				'text/plain',
-				'- ' + (e.currentTarget as HTMLInputElement).value,
+				'- ' + (e.currentTarget as HTMLElement).innerText,
 			);
 		}
 	}
@@ -1692,17 +1683,11 @@ export class UniversalRemoteCardEditor extends LitElement {
 													);
 												return html`<li
 													class="action-list-item"
+													draggable="true"
+													@dragstart=${this
+														.handleLayoutActionListItemDragStart}
 												>
-													${iconElement}
-													<input
-														readonly
-														class="action-list-item-label"
-														value="${entry.name}"
-														@click=${this
-															.handleLayoutActionListItemClick}
-														@dragstart=${this
-															.handleLayoutActionListItemDragStart}
-													/>
+													${iconElement} ${entry.name}
 												</li>`;
 											},
 										)}
@@ -1728,17 +1713,11 @@ export class UniversalRemoteCardEditor extends LitElement {
 													);
 												return html`<li
 													class="action-list-item"
+													draggable="true"
+													@dragstart=${this
+														.handleLayoutActionListItemDragStart}
 												>
-													${iconElement}
-													<input
-														readonly
-														class="action-list-item-label"
-														value="${entry.name}"
-														@click=${this
-															.handleLayoutActionListItemClick}
-														@dragstart=${this
-															.handleLayoutActionListItemDragStart}
-													/>
+													${iconElement} ${entry.name}
 												</li>`;
 											})}
 										</ul>
@@ -1764,17 +1743,11 @@ export class UniversalRemoteCardEditor extends LitElement {
 													);
 												return html`<li
 													class="action-list-item"
+													draggable="true"
+													@dragstart=${this
+														.handleLayoutActionListItemDragStart}
 												>
-													${iconElement}
-													<input
-														readonly
-														class="action-list-item-label"
-														value="${entry.name}"
-														@click=${this
-															.handleLayoutActionListItemClick}
-														@dragstart=${this
-															.handleLayoutActionListItemDragStart}
-													/>
+													${iconElement} ${entry.name}
 												</li>`;
 											})}
 										</ul>
@@ -3307,3 +3280,4 @@ export class UniversalRemoteCardEditor extends LitElement {
 		`;
 	}
 }
+
