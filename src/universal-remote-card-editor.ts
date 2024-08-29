@@ -1746,7 +1746,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 													draggable="true"
 													@dragstart=${this
 														.handleLayoutActionListItemDragStart}
-												>
+												> 
 													${iconElement} ${entry.name}
 												</li>`;
 											})}
