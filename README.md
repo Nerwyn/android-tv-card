@@ -1,4 +1,4 @@
-# Android TV Remote Card
+# Universal Remote Card
 
 [![GitHub Release][releases-shield]][releases]
 [![License][license-shield]](LICENSE.md)
@@ -11,127 +11,141 @@
 
 [![My Home Assistant](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?repository=android-tv-card&owner=Nerwyn&category=Plugin)
 
+_Formerly called Android TV Card_
+
 <img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/screenshot.png" alt="ex" width="300"/>
 
-This repo is started as a fork of usernein's [tv-card](https://github.com/usernein/tv-card), which was a fork of marrobHD's [tv-card](https://github.com/marrobHD/tv-card) merged with features from two other projects. Credit goes to the authors of previous iterations of tv card for giving me a strong foundation to work on.
+A super customizable universal remote card iterating on the work of several other developers. Featuring:
 
-[**Super customizable touchpad**](#touchpad)
+- Configuration UI.
+- Out of the box support for several platforms with default keys and sources lists.
+  - Android TV
+  - Fire TV
+  - Roku
+  - Kodi
+  - Apple TV (no keyboard)
+  - Samsung TV (no keyboard)
+  - LG webOS (no keyboard)
+- Support for multiple buttons, [touchpads](#touchpad), and [sliders](#slider) using default or user defined actions.
+- Complete [Home Assistant actions](<(https://www.home-assistant.io/dashboards/actions/)>) support.
+- [Keyboard](#keyboard) and search dialog for most platforms.
+- Jinja2-like template almost all fields.
+- Haptics.
+- Touchpad multi-touch support.
+- User configurable remote layout.
+- Icons and labels for all elements.
+- CSS style options for all sub-elements.
 
-- [Remap all touchpad actions](#custom-touchpad-commands).
-- [User definable CSS](#touchpad-style) but follows theme colors by default.
-- Toggleable haptics.
-- Multi touch gesture support
-- Supports up to twenty-two different user definable actions via taps, double taps, hold taps, swipes, held swipes, momentary actions, and multi finger taps and swipes.
+# How To Use
 
-**Tap, double tap, hold tap, momentary, and multi-touch actions support for buttons and touchpad on all platforms**
+This project now has a fully featured configuration user interface! To get started, install this project using HACS. Then go to a dashboard and create a universal remote card or edit an existing one.
 
-- All buttons and the touchpad `center` command support tap, double tap, hold tap, and momentary [custom actions](#custom-actions).
-  - Using the [Home Assistant actions](https://www.home-assistant.io/dashboards/actions/) syntax.
-- Any [action](#action-types) can be used for any remote element with little to no restrictions.
+The editor has four tabs - General, Layout, Actions, and Icons.
 
-**Super customizable layout using stylable rows and columns**
+## General
 
-- Rows exist in a `rows` array with no limit on the number of rows you can add.
-- Nest columns within rows, and then rows within those columns infinitely repeating for wild remote layouts.
-- Sliders and touchpads can be placed in rows and columns alongside other elements.
-- [Special button arrays and grids](#special-elements) for volume, navigation, and more.
+TODO screenshot
 
-**Better button and icon handling**
+### Media Platform and Entity IDs
 
-- Many default [keys](https://github.com/Nerwyn/android-tv-card/blob/main/src/models/maps/defaultKeys.ts) and [sources](https://github.com/Nerwyn/android-tv-card/blob/main/src/models/maps/defaultSources.ts)
-- SVG icons provided for sources with no material design icon present in Home Assistant.
-  - Can also be referenced [by name](https://github.com/Nerwyn/android-tv-card/blob/main/src/models/enums/svg.ts) in custom actions.
-- Custom actions inherit default action information like icon and non-overwritten actions.
-- User definable [global](#button-style) and individual custom action CSS.
-- Toggle haptics globally and individually.
+This card supports several media platforms with default key and source lists. It uses the Home Assistant integrations for these platforms via their remote and/or media player entities. Different platforms use the remote and media player entities for different functions, and it's easier for you to provide both if the integration generates them rather than checking which platforms require which. For platforms with keyboard support, the keyboard entity ID (which doesn't always match the remote and media player entities) can also be provided.
 
-[**Fully native slider**](#slider)
+### Action Timings
 
-- Animated on state change.
-- Remappable to a different custom action.
-- [User definable CSS](#slider-style) but follows theme colors by default.
-- Customizable range, step size, entity, and attribute.
-- Tooltip shows current value when held down.
-- Optional icon which tracks thumb.
+Hold and double tap action timings can be adjusted globally here.
 
-[**Keyboard support**](#keyboard)
+Hold time is the amount of time a button needs to be held before the hold action is fired. No actions have different hold actions by default, but will fire their tap actions once hold time has passed. `hold_secs = 0.5` will be added to the action data for key actions, which can change the action behavior on some platforms like Android TV.
 
-- Send text to Android TV, Fire TV, Roku, and Kodi.
-  - Android and Fire TV's require the [Android Debug Bridge](https://www.home-assistant.io/integrations/androidtv/) integration.
-- Includes three different methods:
-  - [**Seamless text entry**](#seamless-text-entry) - Use the action or default button `keyboard` to send text to your media platform every time you enter a key.
-    - Also works with backspace and enter.
-  - [**Bulk text entry**](#bulk-text-entry) - Use the action or default button `textbox` to type up text and send it all at once.
-    - Highly recommended that you also create buttons for `delete` and `enter` so you can remove and send your input text.
-  - [**Google Assistant search**](#google-assistant-search) - Use the action or default button `search` to perform a global search.
+Repeat delay is the time between tap action calls when the hold action is set to repeat. The actions `up`, `down`, `left`, `right`, `volume_up`, and `volume_down` are set to repeat by default. Other actions can be set to repeat by setting their hold actions to repeat in the actions tab. Similarly repeat can be disabled for the above actions by creating a custom action with the same name and changing hold action to something else or none.
 
-[**Template support**](#templating)
+Double tap window is the maximum amount of time the user has to tap the button or touchpad twice to trigger the double tap action. No actions have double tap actions by default and it must be added using custom actions. Adding a double tap action introduces a delay to the tap action equivalent to the double tap window. Be careful of setting double tap window too high, as if it is too close to or greater than the hold time it can cause undesirable behavior.
 
-- Supports Home Assistant jinja2 style templating using nunjucks.
-- Uses the same syntax as normal Home Assistant templating with a subset of functions.
+### Miscellaneous
 
-# Demo
+#### CSS Styles
 
-```yaml
-type: custom:android-tv-card
-remote_id: remote.google_chromecast
-slider_id: media_player.google_chromecast
-keyboard_id: remote.google_chromecast_adb
-title: Example
-custom_actions:
-  slider:
-    icon: mdi:music-note
-rows:
-  - - back
-    - power
-    - home
-  - - keyboard
-    - search
-    - slider
-  - - - netflix
-      - null
-      - youtube
-      - null
-      - spotify
-    - touchpad
-  - - previous
-    - play_pause
-    - next
+Styles can be set and changed for all remote sub-elements using regular CSS with jinja2-like nujucks templating. All styles must be wrapped in a CSS selector, like `:host`, `remote-button`, `.row`, `.column`, etc.
+
+To get ID selectors for individual rows, columns, and pads, hover over the card preview window. A red dashed outline will appear over the currently hovered element with a tooltip with either the element name or the row, column, or pad ID selector.
+
+Use the selector `remote-button` to apply styles to all buttons. Similar styles can be applied to all touchads and sliders with `remote-touchpad` and `remote-slider`.
+
+```css
+TODO fill this in
 ```
 
-# Installation
+#### Other
 
-## Step 1
+You can add a title to the card with the title field. This field is templatable.
 
-This project is now available on [HACS](https://hacs.xyz/)! Search for it under frontend repositories.
+If you are updating from an older version of this card, you may find that your configurations no longer work. Sorry! To upgrade them, click the button `UPDATE OLD CONFIG` at the bottom of the general tab. It should update your configuration to work with newer versions of this card.
 
-## Step 2
+## Layout
 
-When in edit mode on a lovelace view, click add card and search for Android TV Card. Create a remote config like the below examples.
+TODO screenshot
 
-```yaml
-type: custom:android-tv-card
-remote_id: remote.google_chromecast
-slider_id: media_player.google_chromecast
-rows:
-  - - power
-    - channel_up
-    - info
-    - channel_down
-  - - netflix
-    - youtube
-    - spotify
-  - - slider
-  - - touchpad
-  - - back
-    - home
-    - tv
-  - - rewind
-    - play_pause
-    - fast_forward
-```
+Not to be confused with the sections view layout tab above it.
 
-# Options
+The remote layout is defined using a series of nested arrays. The lowest level of arrays is each row. As you nest arrays further it switches between rows and columns, allowing you to create super unique remote layouts.
+
+The default keys and sources lists for your selected platform are displayed below the layout code editor. If you have configured any custom actions, they will be displayed above this. You can use this as reference as you create your remote, or drag and drop entries from these lists to the editor. The default keys list also includes the default touchpad and slider, along with some special elements for button pads and layouts.
+
+## Actions
+
+TODO screenshot
+
+In addition to the default keys and actions, you can create your own custom actions. You can also add to or overwrite default keys and sources by setting the custom action name to match a default one.
+
+Custom action remote elements can be buttons, sliders, or touchpads.
+
+### General Options
+
+TODO screenshot
+
+Every feature can have an entity assigned to it, which is used to track it's internal value. This value can then be used in styles and actions using templates, like {{ value | float }} By default the value will be derived from the entity state, but it can be changed to an attribute use the corresponding field.
+
+Some additional logic is applied for certain attributes:
+
+- `brightness` - Converted from the default range of 0-255 to 0-100.
+- `media_position` - Updated twice a second using the current timestamp and the attribute media_position_updated_at when the entity state is playing, and locked to a max value using the attribute media_duration.
+- `elapsed` - Only for timer entities. Updated twice a second using the the current timestamp and the attributes duration, remaining, and finishes_at, and locked to a max value using the attribute duration.
+  - NOTE: elapsed is not an actual attribute of timer entities, but is a possible value_attribute for timer entities for the purpose of displaying accurate timer elapsed values. Timer entities do have an attribute remaining, which only updates when the timer state changes. The actual remaining attribute can be calculated using the elapsed value and the timer duration attribute.
+
+If you find that the autofilling of the entity ID in the action or tile feature value is causing issues, setting `Autofill` to false may help. Just remember to set the entity ID of the feature and the entity, device, area, or label ID of the action target.
+
+Haptics are disabled for features by default, but can be toggled on at the feature level.
+
+#### Slider General Options
+
+Sliders have some additional general options. They can have range `Min` and `Max` values defined by the user, but default to 0 and 100. They can also have a `Step` size defined, which defaults to 1.
+
+Sliders will wait one second before updating their internal values from Home Assistant. This time can be changed by setting `Update after action delay`.
+
+### Appearance
+
+TODO screenshot
+
+All features can have a `Label`, `Icon`, and `Units`. These fields can also be set using templates. Similar to the general tab, each feature can have it's CSS styles set (including using templates). Some selectors for remote element sub-elements that you may find useful are `button`, `.label`, `.icon`, `toucharea`, `.tooltip`, `input`, and `.background`.
+
+#### A Note on Templating
+
+Almost all fields support nunjucks templating. Nunjucks is a templating engine for JavaScript, which is heavily based on the jinja2 templating engine for Python which Home Assistant uses. While the syntax of nunjucks and jinja2 is almost identical, you may find the [nunjucks documentation](https://mozilla.github.io/nunjucks/templating.html) useful. Not all functions supported by Home Assistant templates are supported by this templating system. Please see the [ha-nunjucks](https://github.com/Nerwyn/ha-nunjucks) repository for a list of available functions. If you want additional functions to be added, please make a feature request on that repository, not this one.
+
+You can include the current value of a remote element and it's units by using the variables `value` and `unit` in a label template. You can also include `hold_secs` in a template if performing a momentary end action. Each custom feature can also reference it's entry using `config` within templates. `config.entity` and `config.attribute` will return the features entity ID and attribute with their templates rendered (if they have them), and other templated config fields can be rendered within templates by wrapping them in the function `render` within a template.
+
+TODO talk about CSS in more depth somewhere
+
+## Icons
+
+TODO screenshot
+
+TODO description
+
+---
+
+---
+
+---
 
 ## Basic
 
@@ -2137,3 +2151,4 @@ row_styles:
 [releases-shield]: https://img.shields.io/github/release/Nerwyn/android-tv-card.svg?style=for-the-badge
 [releases]: https://github.com/nerwyn/android-tv-card/releases
 [github]: https://img.shields.io/github/followers/Nerwyn.svg?style=social
+
