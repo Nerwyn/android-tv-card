@@ -28,8 +28,8 @@ A super customizable universal remote card iterating on the work of several othe
   - LG webOS (no keyboard)
 - Support for multiple buttons, touchpads, and sliders using default or user defined actions.
 - Complete [Home Assistant actions](https://www.home-assistant.io/dashboards/actions/) support.
-- [Keyboard](#keyboard) and search dialog actions for most platforms.
-- [Template](#template) support for almost all fields using nunjucks.
+- Keyboard and search dialog actions for most platforms.
+- Template support for almost all fields using nunjucks.
 - Toggleable haptics.
 - Touchpad multi-touch gesture support.
 - User configurable remote layout.
@@ -162,16 +162,16 @@ The remote layout is defined using a series of nested arrays. The lowest level o
 
 The default keys and sources lists for your selected platform are displayed below the layout code editor. If you have configured any custom actions, they will be displayed above this. You can use this as reference as you create your remote, or drag and drop entries from these lists to the editor. The default keys list also includes the default touchpad and slider, along with some special elements for button pads and layouts. Not all special elements are available for all platforms.
 
-| Name                  | Type        | Description                                                                                                 |
-| --------------------- | ----------- | ----------------------------------------------------------------------------------------------------------- |
-| [touchpad](#touchpad) | touchpad    | A touchpad for navigation.                                                                                  |
-| [slider](#slider)     | slider      | A slider that controls the entity defined by `media_player_id`.                                             |
-| volume_buttons        | button rows | Shorthand to generate a set of volume down, volume mute, and volume up buttons in a row or column.          |
-| navigation_buttons    | button rows | Shorthand to generate a set of up, down, left, right, and center buttons across three rows within a column. |
-| dpad                  | button grid | Shorthand to generate a set of up, down, left, right, and center buttons arranged in a square grid.         |
-| numpad                | button grid | Shorthand to generate a set of 1-9 buttons arranged in a square grid. Does not include `n0`.                |
-| xpad                  | button grid | Shorthand to generate a set of A, B, X, and Y buttons arranged in a square grid.                            |
-| npad                  | button grid | Shorthand to generate a set of A, B, X, and Y buttons arranged in an alternate square grid.                 |
+| Name               | Type        | Description                                                                                                                                                                                     |
+| ------------------ | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| touchpad           | touchpad    | A touchpad for navigation.                                                                                                                                                                      |
+| slider             | slider      | A slider that controls the volume of the entity defined by `media_player_id`. **NOTE**: volume slider support is dependent on the media player supporting the `media_player.volume_set` action. |
+| volume_buttons     | button rows | Shorthand to generate a set of volume down, volume mute, and volume up buttons in a row or column.                                                                                              |
+| navigation_buttons | button rows | Shorthand to generate a set of up, down, left, right, and center buttons across three rows within a column.                                                                                     |
+| dpad               | button grid | Shorthand to generate a set of up, down, left, right, and center buttons arranged in a square grid.                                                                                             |
+| numpad             | button grid | Shorthand to generate a set of 1-9 buttons arranged in a square grid. Does not include `n0`.                                                                                                    |
+| xpad               | button grid | Shorthand to generate a set of A, B, X, and Y buttons arranged in a square grid.                                                                                                                |
+| npad               | button grid | Shorthand to generate a set of A, B, X, and Y buttons arranged in an alternate square grid.                                                                                                     |
 
 # Actions
 
@@ -376,7 +376,7 @@ Once setup, you can reference these icons in custom actions in the icon field by
 
 # YAML Examples
 
-TODO cleanup and convert examples to new format and move user remotes to separate file.
+TODO cleanup and convert examples to new format and move user remotes to separate file. Don't forget your spotify controller!
 
 While all configuration can now be done through the user interface, these YAML examples can provide some insight on how to do some advanced styling and templating.
 
