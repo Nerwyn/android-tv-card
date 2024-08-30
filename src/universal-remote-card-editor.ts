@@ -1462,15 +1462,19 @@ export class UniversalRemoteCardEditor extends LitElement {
 				actionSelectors = html`
 					${actionsTabBar}
 					${this.buildActionOption(
-						'Multi-touch tap behavior (optional)',
+						`Multi-touch ${
+							this.touchpadTabIndex == 2 ? 'tap' : 'swipe'
+						} behavior (optional)`,
 						'multi_tap_action',
 						defaultUiActions,
 					)}
-					${this.buildActionOption(
-						'Multi-touch double tap behavior (optional)',
-						'multi_double_tap_action',
-						defaultUiActions,
-					)}
+					${this.touchpadTabIndex == 2
+						? this.buildActionOption(
+								'Multi-touch double tap behavior (optional)',
+								'multi_double_tap_action',
+								defaultUiActions,
+						  )
+						: ''}
 					${this.buildActionOption(
 						'Multi-touch hold behavior (optional)',
 						'multi_hold_action',
