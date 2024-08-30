@@ -265,14 +265,14 @@ export class KeyboardDialog extends LitElement {
 
 	keyboardOnPaste(e: ClipboardEvent) {
 		e.stopImmediatePropagation();
-		if (this.haAction?.platform != 'KODI') {
+		if (this.haAction?.platform != 'Kodi') {
 			this.forceCursorToEnd();
 		}
 
 		const text = e.clipboardData?.getData('Text');
 		if (text) {
 			switch (this.haAction?.platform) {
-				case 'KODI':
+				case 'Kodi':
 					this.hass.callService('kodi', 'call_method', {
 						entity_id: this.haAction?.keyboard_id,
 						method: 'Input.SendText',
@@ -280,14 +280,14 @@ export class KeyboardDialog extends LitElement {
 						done: false,
 					});
 					break;
-				case 'ROKU':
+				case 'Roku':
 					this.hass.callService('remote', 'send_command', {
 						entity_id: this.haAction?.keyboard_id,
 						command: `Lit_${text}`,
 					});
 					break;
-				case 'FIRE TV':
-				case 'ANDROID TV':
+				case 'Fire TV':
+				case 'Android TV':
 				default: {
 					let domain: string;
 					let service: string;
@@ -316,7 +316,7 @@ export class KeyboardDialog extends LitElement {
 		const text = this.textarea?.value;
 		if (text) {
 			switch (this.haAction?.platform) {
-				case 'KODI':
+				case 'Kodi':
 					this.hass.callService('kodi', 'call_method', {
 						entity_id: this.haAction?.keyboard_id,
 						method: 'Input.SendText',
@@ -324,14 +324,14 @@ export class KeyboardDialog extends LitElement {
 						done: false,
 					});
 					break;
-				case 'ROKU':
+				case 'Roku':
 					this.hass.callService('remote', 'send_command', {
 						entity_id: this.getRokuId('remote'),
 						command: `Lit_${text}`,
 					});
 					break;
-				case 'FIRE TV':
-				case 'ANDROID TV':
+				case 'Fire TV':
+				case 'Android TV':
 				default: {
 					let domain: string;
 					let service: string;
@@ -361,7 +361,7 @@ export class KeyboardDialog extends LitElement {
 		const text = this.textarea?.value;
 		if (text) {
 			switch (this.haAction?.platform) {
-				case 'KODI': {
+				case 'Kodi': {
 					this.hass.callService('kodi', 'call_method', {
 						entity_id: this.haAction?.keyboard_id,
 						method: 'Input.SendText',
@@ -370,14 +370,14 @@ export class KeyboardDialog extends LitElement {
 					});
 					break;
 				}
-				case 'ROKU':
+				case 'Roku':
 					this.hass.callService('roku', 'search', {
 						entity_id: this.getRokuId('media_player'),
 						keyword: text,
 					});
 					break;
-				case 'FIRE TV':
-				case 'ANDROID TV':
+				case 'Fire TV':
+				case 'Android TV':
 				default: {
 					let domain: string;
 					let service: string;
@@ -424,7 +424,7 @@ export class KeyboardDialog extends LitElement {
 		const textarea = this.textarea;
 
 		if (
-			this.haAction?.platform == 'KODI' &&
+			this.haAction?.platform == 'Kodi' &&
 			this.haAction?.action == 'search'
 		) {
 			this.hass.callService('kodi', 'call_method', {
@@ -499,20 +499,20 @@ export class KeyboardDialog extends LitElement {
 			case 'keyboard':
 			default:
 				switch (this.haAction?.platform) {
-					case 'KODI':
+					case 'Kodi':
 						inputHandler = this.kodiOnInput;
 						keyDownHandler = this.kodiOnKeyDown;
 						antiCursorMoveHandler = undefined;
 						break;
-					case 'ROKU':
+					case 'Roku':
 						inputHandler = this.rokuOnInput;
 						keyDownHandler = this.rokuOnKeyDown;
 						break;
-					case 'FIRE TV':
+					case 'Fire TV':
 						inputHandler = this.fireTvOnInput;
 						keyDownHandler = this.fireTvOnKeyDown;
 						break;
-					case 'ANDROID TV':
+					case 'Android TV':
 					default:
 						inputHandler = this.androidTvOnInput;
 						keyDownHandler = this.androidTvOnKeyDown;

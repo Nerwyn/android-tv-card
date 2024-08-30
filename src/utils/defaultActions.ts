@@ -20,31 +20,31 @@ export function getDefaultActions(platform: Platform) {
 	let defaultKeys: IElementConfig[];
 	let defaultSources: IElementConfig[];
 	switch (platform) {
-		case 'WEBOS':
+		case 'LG webOS':
 			defaultKeys = webosDefaultKeys;
 			defaultSources = webosDefaultSources;
 			break;
-		case 'SAMSUNG TV':
+		case 'Samsung TV':
 			defaultKeys = samsungTVDefaultKeys;
 			defaultSources = samsungTVDefaultSources;
 			break;
-		case 'KODI':
+		case 'Kodi':
 			defaultKeys = kodiDefaultKeys;
 			defaultSources = kodiDefaultSources;
 			break;
-		case 'ROKU':
+		case 'Roku':
 			defaultKeys = rokuDefaultKeys;
 			defaultSources = rokuDefaultSources;
 			break;
-		case 'APPLE TV':
+		case 'Apple TV':
 			defaultKeys = appleTVDefaultKeys;
 			defaultSources = appleTVDefaultSources;
 			break;
-		case 'FIRE TV':
+		case 'Fire TV':
 			defaultKeys = fireTVDefaultKeys;
 			defaultSources = fireTVDefaultSources;
 			break;
-		case 'ANDROID TV':
+		case 'Android TV':
 		default:
 			defaultKeys = androidTVDefaultKeys;
 			defaultSources = androidTVDefaultSources;

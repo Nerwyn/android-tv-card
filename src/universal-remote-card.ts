@@ -492,7 +492,7 @@ class UniversalRemoteCard extends LitElement {
 
 		const platform = renderTemplate(
 			this.hass,
-			this.config.platform ?? 'ANDROID TV',
+			this.config.platform ?? 'Android TV',
 			context,
 		) as Platform;
 

@@ -1,3 +1,13 @@
+import { Platform } from '.';
+
+export const KeyboardPlatforms = [
+	'Android TV',
+	'Fire TV',
+	'Roku',
+	'Kodi',
+] as const;
+export type KeyboardPlatform = (typeof KeyboardPlatforms)[number];
+
 export const Actions = [
 	'more-info',
 	'toggle',
@@ -27,22 +37,6 @@ export const ActionTypes = [
 	'momentary_end_action',
 ] as const;
 export type ActionType = (typeof ActionTypes)[number];
-
-export const KeyboardPlatforms = [
-	'ANDROID TV',
-	'FIRE TV',
-	'ROKU',
-	'KODI',
-] as const;
-export type KeyboardPlatform = (typeof KeyboardPlatforms)[number];
-
-export const Platforms = [
-	...KeyboardPlatforms,
-	'APPLE TV',
-	'SAMSUNG TV',
-	'WEBOS',
-] as const;
-export type Platform = (typeof Platforms)[number];
 
 export interface IData {
 	[key: string]: string | string[] | number | number[] | boolean;

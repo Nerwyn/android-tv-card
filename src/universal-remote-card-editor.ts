@@ -1169,7 +1169,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 										reorder: false,
 									},
 								},
-								'ANDROID TV',
+								'Android TV',
 							)}
 						</div>
 						${this.buildSelector(
@@ -1779,7 +1779,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 										reorder: false,
 									},
 								},
-								'ANDROID TV',
+								'Android TV',
 							)}
 							${this.buildSelector('Remote ID', 'remote_id', {
 								entity: {
@@ -1962,7 +1962,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 
 		const platform = renderTemplate(
 			this.hass,
-			this.config.platform ?? 'ANDROID TV',
+			this.config.platform ?? 'Android TV',
 			context,
 		) as Platform;
 
@@ -2190,6 +2190,40 @@ export class UniversalRemoteCardEditor extends LitElement {
 		return entry;
 	}
 
+	updatePlatform(platform?: Platform) {
+		switch (platform) {
+			case 'KODI' as Platform:
+			case 'Kodi':
+				return 'Kodi';
+			case 'ROKU' as Platform:
+			case 'Roku':
+				return 'Roku';
+			case 'FIRE' as Platform:
+			case 'FIRETV' as Platform:
+			case 'FIRE_TV' as Platform:
+			case 'FIRE TV' as Platform:
+			case 'Fire TV':
+				return 'Fire TV';
+			case 'APPLE TV' as Platform:
+			case 'Apple TV':
+				return 'Apple TV';
+			case 'SAMSUNG TV' as Platform:
+			case 'Samsung TV':
+				return 'Samsung TV';
+			case 'WEBOS' as Platform:
+			case 'LG webOS':
+				return 'LG webOS';
+			case 'ANDROID' as Platform:
+			case 'ANDROIDTV' as Platform:
+			case 'ANDROID_TV' as Platform:
+			case 'ANDROID TV' as Platform:
+			case 'Android TV':
+				return 'Android TV';
+			default:
+				return undefined;
+		}
+	}
+
 	autofillDefaultFields(config: IConfig) {
 		const updatedConfig = structuredClone(config);
 		const updatedEntries: IElementConfig[] = [];
@@ -2252,26 +2286,9 @@ export class UniversalRemoteCardEditor extends LitElement {
 						case 'source':
 							action.remote_id =
 								action.remote_id ?? config.remote_id;
-							action.platform =
-								action.platform ?? config.platform;
-							switch (action.platform?.toUpperCase()) {
-								case 'KODI':
-								case 'ROKU':
-									break;
-								case 'FIRE' as Platform:
-								case 'FIRETV' as Platform:
-								case 'FIRE_TV' as Platform:
-								case 'FIRE TV':
-									action.platform = 'FIRE TV';
-									break;
-								case 'ANDROID' as Platform:
-								case 'ANDROIDTV' as Platform:
-								case 'ANDROID_TV' as Platform:
-								case 'ANDROID TV':
-								default:
-									action.platform = 'ANDROID TV';
-									break;
-							}
+							action.platform = this.updatePlatform(
+								action.platform ?? config.platform,
+							);
 							break;
 						case 'toggle':
 						case 'more-info':
@@ -2503,6 +2520,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 				.keyboard_mode as Platform;
 			delete (updatedConfig as Record<string, string>).keyboard_mode;
 		}
+		updatedConfig.platform = this.updatePlatform(updatedConfig.platform);
 
 		// Old haptic feedback toggle names
 		if ('enable_button_feedback' in updatedConfig) {
@@ -3280,4 +3298,3 @@ export class UniversalRemoteCardEditor extends LitElement {
 		`;
 	}
 }
-

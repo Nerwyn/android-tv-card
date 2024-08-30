@@ -1,4 +1,12 @@
-import { IElementConfig, Platform } from '.';
+import { IElementConfig, KeyboardPlatforms } from '.';
+
+export const Platforms = [
+	...KeyboardPlatforms,
+	'Apple TV',
+	'Samsung TV',
+	'LG webOS',
+] as const;
+export type Platform = (typeof Platforms)[number];
 
 export type Row = (string | Row[])[];
 

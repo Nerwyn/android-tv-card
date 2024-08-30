@@ -13,7 +13,7 @@
 
 _Formerly called Android TV Card_
 
-<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/screenshot.png" alt="ex" width="300"/>
+<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/screenshot.png" alt="example" width="300"/>
 
 A super customizable universal remote card iterating on the work of several other developers. Featuring:
 
@@ -29,9 +29,9 @@ A super customizable universal remote card iterating on the work of several othe
 - Support for multiple buttons, [touchpads](#touchpad), and [sliders](#slider) using default or user defined actions.
 - Complete [Home Assistant actions](<(https://www.home-assistant.io/dashboards/actions/)>) support.
 - [Keyboard](#keyboard) and search dialog actions for most platforms.
-- Jinja2-like template support for almost all fields.
+- [Template](#template) support for almost all fields using nunjucks.
 - Toggleable haptics.
-- Touchpad multi-touch actions support.
+- Touchpad multi-touch gesture support.
 - User configurable remote layout.
 - Icons and labels for all elements.
 - CSS style options for all sub-elements.
@@ -44,11 +44,21 @@ The editor has four tabs - General, Layout, Actions, and Icons.
 
 ## General
 
-TODO screenshot
+<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/editor_general_tab.png" alt="editor general tab" width="600"/>
 
 ### Media Platform and Entity IDs
 
-This card supports several media platforms with default key and source lists. It uses the Home Assistant integrations for these platforms via their remote and/or media player entities. Different platforms use the remote and media player entities for different functions, and it's easier for you to provide both if the integration generates them rather than checking which platforms require which. For platforms with keyboard support, the keyboard entity ID (which doesn't always match the remote and media player entities) can also be provided.
+This card supports several media platforms with default key and source lists. It uses the Home Assistant integrations for these platforms via their remote and/or media player entities. Different platforms use the remote and media player entities for different functions as show below. For platforms with keyboard support, the keyboard entity ID (which doesn't always match the remote and media player entities) can also be provided.
+
+| Platform                                                                   | Remote                   | Media Player                       | Keyboard                                                                                                 |
+| -------------------------------------------------------------------------- | ------------------------ | ---------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| [Android TV](https://www.home-assistant.io/integrations/androidtv_remote/) | Default keys and sources | Default slider                     | [ADB](https://www.home-assistant.io/integrations/androidtv/) remote (preferred) or media player          |
+| [Fire TV](https://www.home-assistant.io/integrations/androidtv/)           | Default keys             | Default sources and slider         | Remote (preferred) or media player                                                                       |
+| [Roku](https://www.home-assistant.io/integrations/roku/)                   | Default keys             | Default sources and slider         | Remote for keyboard, media player for search (provide one for keyboard ID and the other in their fields) |
+| [Kodi](https://www.home-assistant.io/integrations/kodi/)                   | NA                       | Default keys, sources, and slider  | Media player                                                                                             |
+| [Apple TV](https://www.home-assistant.io/integrations/apple_tv)            | Default keys             | Default sources and slider         | NA                                                                                                       |
+| [Samsung TV](https://www.home-assistant.io/integrations/samsungtv/)        | Default keys             | Default sources and slider         | NA                                                                                                       |
+| [LG webOS](https://www.home-assistant.io/integrations/webostv/)            | NA                       | Default keys, sources, and sliders | Media player                                                                                             |
 
 ### Action Timings
 

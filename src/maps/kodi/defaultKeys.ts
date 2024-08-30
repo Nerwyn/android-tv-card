@@ -2,7 +2,7 @@ import { IElementConfig } from '../../models';
 
 /**
  * https://www.home-assistant.io/integrations/kodi/#action-kodicall_method
- * https://kodi.wiki/?title=JSON-RPC_API
+ * https://kodi.wiki/view/JSON-RPC_API/v13
  */
 export const kodiDefaultKeys: IElementConfig[] = [
 	{
