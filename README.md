@@ -42,11 +42,11 @@ This project now has a fully featured configuration user interface! To get start
 
 The editor has four tabs - General, Layout, Actions, and Icons.
 
-## General
+# General
 
 <img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/editor_general_tab.png" alt="editor general tab" width="600"/>
 
-### Media Platform and Entity IDs
+## Media Platform and Entity IDs
 
 This card supports several media platforms with default key and source lists. It uses the Home Assistant integrations for these platforms via their remote and/or media player entities. Different platforms use the remote and media player entities for different functions as show below. For platforms with keyboard support, the keyboard entity ID (which doesn't always match the remote and media player entities) can also be provided.
 
@@ -60,59 +60,124 @@ This card supports several media platforms with default key and source lists. It
 | [Samsung TV](https://www.home-assistant.io/integrations/samsungtv/)        | Default keys             | Default sources and slider         | NA                                                                                                       |
 | [LG webOS](https://www.home-assistant.io/integrations/webostv/)            | NA                       | Default keys, sources, and sliders | Media player                                                                                             |
 
-### Action Timings
+## Action Timings
 
-Hold and double tap action timings can be adjusted globally here.
+Double tap and hold actions have user adjustable timings to change how they are triggered.
 
-Hold time is the amount of time a button needs to be held before the hold action is fired. No actions have different hold actions by default, but will fire their tap actions once hold time has passed. `hold_secs = 0.5` will be added to the action data for key actions, which can change the action behavior on some platforms like Android TV.
+### Hold Time
 
-Repeat delay is the time between tap action calls when the hold action is set to repeat. The actions `up`, `down`, `left`, `right`, `volume_up`, and `volume_down` are set to repeat by default. Other actions can be set to repeat by setting their hold actions to repeat in the actions tab. Similarly repeat can be disabled for the above actions by creating a custom action with the same name and changing hold action to something else or none.
+Hold actions are triggered by holding down on a button for a defined amount of time and then releasing. The default amount of time is 500ms. You can change this by setting `Hold time` in the hold action to a different number.
 
-Double tap window is the maximum amount of time the user has to tap the button or touchpad twice to trigger the double tap action. No actions have double tap actions by default and it must be added using custom actions. Adding a double tap action introduces a delay to the tap action equivalent to the double tap window. Be careful of setting double tap window too high, as if it is too close to or greater than the hold time it can cause undesirable behavior.
+### Repeat and Repeat Delay
 
-### Miscellaneous
+By setting a hold action to `repeat`, the tap action will repeat while the button is held down. The default delay between repeats is 100ms. You can change this by setting `Repeat delay` in the hold action to a different number. See the below section on [repeat](#repeat) for more.
 
-#### CSS Styles
+### Double Tap Window
 
-Styles can be set and changed for all remote sub-elements using regular CSS with jinja2-like nujucks templating. All styles must be wrapped in a CSS selector, like `:host`, `remote-button`, `.row`, `.column`, etc.
+Double tap actions have a default window of 200ms to trigger before a single tap action is triggered instead. You can change this by setting `Double tap window` in the double tap action to a different number.
+
+**NOTE**: Setting `Double tap window` above or too close to `Hold time` can result in undesirable behavior, as the hold timer expires before the double tap window does.
+
+## Miscellaneous
+
+### CSS Styles
+
+Styles can be set and changed for all remote sub-elements using regular CSS and templating. CSS styles have to be encapsulated in a CSS selector like the following.
+
+| CSS Selector  | Element               |
+| ------------- | --------------------- |
+| :host         | Global values.        |
+| .row          | All rows.             |
+| .column       | All columns.          |
+| .button-pad   | All button pads.      |
+| remote-button | All buttons.          |
+| #row-1        | The first row.        |
+| #column-1     | The first column.     |
+| #pad-1        | The first button pad. |
+
+```css
+.row {
+  justify-content: center;
+}
+remote-button {
+  background: rgb(27, 27, 27);
+  padding: 8px;
+  margin: 4px;
+  border-radius: 24px;
+  --size: 24px;
+}
+```
 
 To get ID selectors for individual rows, columns, and pads, hover over the card preview window. A red dashed outline will appear over the currently hovered element with a tooltip with either the element name or the row, column, or pad ID selector.
 
-Use the selector `remote-button` to apply styles to all buttons. Similar styles can be applied to all touchads and sliders with `remote-touchpad` and `remote-slider`.
+<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/editor_hover_id.png" alt="editor hover id" width="600"/>
 
-```css
-TODO fill this in
-```
+### Autofill and Haptics
 
-#### Other
+When creating custom actions, the card editor will autofill fields using information set in the general tab. This can be disabled by toggling `Autofill` off. This value can also be set at the custom action level. Haptics can be similarly toggled globally.
 
-You can add a title to the card with the title field. This field is templatable.
+### Other
+
+You can add a title to the card with the title field.
 
 If you are updating from an older version of this card, you may find that your configurations no longer work. Sorry! To upgrade them, click the button `UPDATE OLD CONFIG` at the bottom of the general tab. It should update your configuration to work with newer versions of this card.
 
-## Layout
+# Layout
 
-TODO screenshot
-
-Not to be confused with the sections view layout tab.
+<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/editor_layout_tab.png" alt="editor layout tab" width="600"/>
 
 The remote layout is defined using a series of nested arrays. The lowest level of arrays is each row. As you nest arrays further it switches between rows and columns, allowing you to create unique remote layouts.
 
-The default keys and sources lists for your selected platform are displayed below the layout code editor. If you have configured any custom actions, they will be displayed above this. You can use this as reference as you create your remote, or drag and drop entries from these lists to the editor. The default keys list also includes the default touchpad and slider, along with some special elements for button pads and layouts.
+```yaml
+- - home
+  - menu
+  - back
+  - keyboard
+- - - volume_buttons
+    - momentary_light
+  - - netflix
+    - hulu
+    - disney
+    - max
+    - primevideo
+  - touchpad
+  - slider
+- - chandelier_light_color
+  - light_color
+  - sunroom_light
+  - search
+```
 
-## Actions
+The default keys and sources lists for your selected platform are displayed below the layout code editor. If you have configured any custom actions, they will be displayed above this. You can use this as reference as you create your remote, or drag and drop entries from these lists to the editor. The default keys list also includes the default touchpad and slider, along with some special elements for button pads and layouts. Not all special elements are available for all platforms.
 
-TODO screenshot
+| Name                  | Type        | Description                                                                                                 |
+| --------------------- | ----------- | ----------------------------------------------------------------------------------------------------------- |
+| [touchpad](#touchpad) | touchpad    | A touchpad for navigation.                                                                                  |
+| [slider](#slider)     | slider      | A slider that controls the entity defined by `media_player_id`.                                             |
+| volume_buttons        | button rows | Shorthand to generate a set of volume down, volume mute, and volume up buttons in a row or column.          |
+| navigation_buttons    | button rows | Shorthand to generate a set of up, down, left, right, and center buttons across three rows within a column. |
+| dpad                  | button grid | Shorthand to generate a set of up, down, left, right, and center buttons arranged in a square grid.         |
+| numpad                | button grid | Shorthand to generate a set of 1-9 buttons arranged in a square grid. Does not include `n0`.                |
+| xpad                  | button grid | Shorthand to generate a set of A, B, X, and Y buttons arranged in a square grid.                            |
+| npad                  | button grid | Shorthand to generate a set of A, B, X, and Y buttons arranged in an alternate square grid.                 |
 
-In addition to the default keys and actions, you can create your own custom actions. You can also add to or overwrite default keys and sources by setting the custom action name to match a default one.
+# Actions
 
-Custom action remote elements can be buttons, sliders, or touchpads.
+<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/editor_actions_tab.png" alt="editor actions tab" width="600"/>
 
-### General Options
+In addition to the default keys and actions, you can create your own custom actions. You can also overwrite default keys and sources by setting the custom action name to match a default one. If you do so the default key or source information will be autopopulated if autofill is enabled.
 
-TODO screenshot
+Click the `ADD REMOTE ELEMENT` button to add a custom action remote element. Custom action remote elements can be buttons, sliders, or touchpads.
 
-Every feature can have an entity assigned to it, which is used to track it's internal value. This value can then be used in styles and actions using templates, like {{ value | float }} By default the value will be derived from the entity state, but it can be changed to an attribute use the corresponding field.
+Custom actions in this list can be reordered for organization, but does not have any effect on the the cards layout. They can also be deleted, copied, and edited.
+
+## General Options
+
+<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/editor_actions_general_options.png" alt="editor actions general options" width="600"/>
+
+Every remote element must have a name so that it can be added to your remote.
+
+Every remote element can have an entity assigned to it, which is used to track it's internal value. This value can then be used in styles and actions using templates, like {{ value | float }} By default the value will be derived from the entity state, but it can be changed to an attribute use the corresponding field.
 
 Some additional logic is applied for certain attributes:
 
@@ -121,29 +186,96 @@ Some additional logic is applied for certain attributes:
 - `elapsed` - Only for timer entities. Updated twice a second using the the current timestamp and the attributes duration, remaining, and finishes_at, and locked to a max value using the attribute duration.
   - NOTE: elapsed is not an actual attribute of timer entities, but is a possible value_attribute for timer entities for the purpose of displaying accurate timer elapsed values. Timer entities do have an attribute remaining, which only updates when the timer state changes. The actual remaining attribute can be calculated using the elapsed value and the timer duration attribute.
 
-If you find that the autofilling of the entity ID in the action or tile feature value is causing issues, setting `Autofill` to false may help. Just remember to set the entity ID of the feature and the entity, device, area, or label ID of the action target.
+If you find that the autofilling of the entity ID in the action or remote element value is causing issues, setting `Autofill` to false may help. Just remember to set the entity ID of the remote element and the entity, device, area, or label ID of the action target.
 
-Haptics are disabled for features by default, but can be toggled on at the feature level.
+Haptics are enabled for remote elements by default, but can be toggled globally or at the custom action level.
 
-#### Slider General Options
+### Slider General Options
 
-Sliders have some additional general options. They can have range `Min` and `Max` values defined by the user, but default to 0 and 100. They can also have a `Step` size defined, which defaults to 1.
+<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/editor_actions_general_options_slider.png" alt="editor actions general options slider" width="600"/>
+
+Sliders have some additional general options. They can have range `Min` and `Max` values defined by the user, but default to 0 and 1. They can also have a `Step` size defined, which defaults to 0.01.
 
 Sliders will wait one second before updating their internal values from Home Assistant. This time can be changed by setting `Update after action delay`.
 
-### Appearance
+## Appearance
 
-TODO screenshot
+<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/editor_actions_appearance_options.png" alt="editor actions appearance options" width="600"/>
 
-All features can have a `Label`, `Icon`, and `Units`. These fields can also be set using templates. Similar to the general tab, each feature can have it's CSS styles set (including using templates). Some selectors for remote element sub-elements that you may find useful are `button`, `.label`, `.icon`, `toucharea`, `.tooltip`, `input`, and `.background`.
+All remote elements can have a `Label`, `Icon`, and `Units`. These fields can also be set using templates. Similar to the general tab, each remote element can have it's CSS styles set (including using templates).
 
-#### A Note on Templating
+Some selectors for remote element sub-elements that you may find useful are `button`, `.label`, `.icon`, `toucharea`, `.tooltip`, `input`, and `.background`.
+
+| CSS Selector | Element                        |
+| ------------ | ------------------------------ |
+| :host        | The element itself.            |
+| .icon        | The element icon.              |
+| .label       | The element label.             |
+| button       | A button element background.   |
+| .background  | A slider element background.   |
+| .toucharea   | A touchpad element background. |
+| .button-pad  | All button pads.               |
+
+While you can now set most CSS fields directly using their sub-element selectors, you may find the following CSS properties useful, especially for the slider which uses and modifies them internally.
+
+| Name                | Description                                                                                                                                                                                                                                                                 |
+| ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| --size              | Height and width of the icon.                                                                                                                                                                                                                                               |
+| --height            | Slider height when horizontal and width when vertical.                                                                                                                                                                                                                      |
+| --tooltip-label     | Slider tooltip label template, defaults to `'{{ value }}'`.                                                                                                                                                                                                                 |
+| --tooltip-transform | Slider tooltip location transform function, defaults to `translate(var(--thumb-offset), calc(-0.5 * var(--height) - 0.4em - 10px))` for horizontal sliders and `translate(calc(-0.3 * var(--height) - 0.8em - 18px), calc(-1 * var(--thumb-offset)))` for vertical sliders. |
+| --icon-transform    | Slider icon transform function, defaults to `translateX(var(--thumb-offset)).                                                                                                                                                                                               |
+
+Sliders have an additional `Vertical` toggle to make a vertical. By default sliders will be horizontal.
+
+### A Note on Templating
 
 Almost all fields support nunjucks templating. Nunjucks is a templating engine for JavaScript, which is heavily based on the jinja2 templating engine for Python which Home Assistant uses. While the syntax of nunjucks and jinja2 is almost identical, you may find the [nunjucks documentation](https://mozilla.github.io/nunjucks/templating.html) useful. Not all functions supported by Home Assistant templates are supported by this templating system. Please see the [ha-nunjucks](https://github.com/Nerwyn/ha-nunjucks) repository for a list of available functions. If you want additional functions to be added, please make a feature request on that repository, not this one.
 
-You can include the current value of a remote element and it's units by using the variables `value` and `unit` in a label template. You can also include `hold_secs` in a template if performing a momentary end action. Each custom feature can also reference it's entry using `config` within templates. `config.entity` and `config.attribute` will return the features entity ID and attribute with their templates rendered (if they have them), and other templated config fields can be rendered within templates by wrapping them in the function `render` within a template.
+You can include the current value of a remote element and it's units by using the variables `value` and `unit` in a label template. You can also include `hold_secs` in a template if performing a momentary end action. Each remote element can also reference it's configuration using `config` within templates. `config.entity` and `config.attribute` will return the remote element's entity ID and attribute with their templates rendered (if they have them), and other templated config fields can be rendered within templates by wrapping them in the function `render` within a template.
 
-TODO talk about CSS in more depth somewhere
+## Interactions
+
+There are three traditional ways to trigger an action - tap, double tap, and hold. Buttons, selector options, and spinbox buttons support all three, and sliders only support tap actions. Defining a double tap action that is not `none` introduces a 200ms delay to single tap actions.
+
+<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/editor_actions_interactions.png" alt="editor actions interactions" width="600"/>
+
+Each action also supports the `confirmation` field. More information on Home Assistant action confirmations can be found [here](https://www.home-assistant.io/dashboards/actions/#options-for-confirmation).
+
+When setting the action for a slider, you must use `value` within a template in the action data to use the feature value in action. For convenience, a codebox for the action will be displayed below the normal action options.
+
+<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/editor_actions_interactions_slider.png" alt="editor actions interactions slider" width="600"/>
+
+### Action Types
+
+Actions follow the [Home Assistant actions](https://www.home-assistant.io/dashboards/actions/) syntax. All Home Assistant actions are supported along with some additional ones.
+
+| Action         | Description                                                                                                                                                                                                                             |
+| -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| More info      | Open the more info dialog.                                                                                                                                                                                                              |
+| Toggle         | Toggle between the target's on and off (or similar) states.                                                                                                                                                                             |
+| Navigate       | Navigate to another Home Assistant page.                                                                                                                                                                                                |
+| URL            | Navigate to an external URL.                                                                                                                                                                                                            |
+| Perform action | Call any Home Assistant service action.                                                                                                                                                                                                 |
+| Assist         | Open the assist dialog. Uses the mobile dialog if available, like in the Home Assistant app. The pipeline ID and start listening options only work in the mobile assist dialog.                                                         |
+| Key            | Send a key to the media platform via the action `remote.send_command`.                                                                                                                                                                  |
+| Source         | Open a source via the action `remote.turn_on`.                                                                                                                                                                                          |
+| Keyboard       | Open a dialog for sending seamless keyboard input.                                                                                                                                                                                      |
+| Textbox        | Open a dialog for sending bulk keyboard input.                                                                                                                                                                                          |
+| Search         | Open a dialog for sending a global search query.                                                                                                                                                                                        |
+| Fire DOM event | Fire a browser dom event using the action object as the event detail. Useful for opening [browser mod popup cards](https://github.com/thomasloven/hass-browser_mod?tab=readme-ov-file#how-do-i-update-a-popup-from-the-browser-mod-15). |
+| Repeat         | Repeat the tap action ten times a second while held. Only applicable to hold.                                                                                                                                                           |
+| No action      | Explicilty set a command to do nothing.                                                                                                                                                                                                 |
+
+### Momentary Mode
+
+<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/editor_actions_interactions_momentary.png" alt="editor actions interactions momentary" width="600"/>
+
+As an alternative to normal tap, hold, and double tap actions, buttons and the touchpad center can also be used in a momentary mode. Configuring this option disables the normal tap, hold, and double tap actions.
+
+The momentary start action is fired when you first press down on a button or touchpad. The momentary end action is fired when you release the button or touchpad. While these are meant to be used together you can use one or the other.
+
+You can include the number of seconds a button has been held down using `hold_secs` in a template. For convenience, the momentary end action YAML is included in a code box below the action, like shown above.
 
 ## Icons
 
@@ -769,15 +901,15 @@ custom_actions:
 
 ## Slider
 
-| Name                  | Type             | Description                                                                                                                                                                                                                             |
-| --------------------- | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| slider_id             | string           | The entity id to use for the slider.                                                                                                                                                                                                    |
-| value_from_hass_delay | number           | The time the feature will wait after firing an action before it starts retrieving values from Home Assistant again. Useful for preventing bouncing between new and old values if an entity takes a while to update. Defaults to 1000ms. |
-| vertical              | boolean          | Renders a vertical slider when true. Defaults to false.                                                                                                                                                                                 |
-| icon                  | string           | The name of the optional slider icon. Follows the slider thumb by default but this can be changed with style options.                                                                                                                   |
-| value_attribute       | string           | An entity attribute (or state) for the slider to track, defaults to `volume_level` for the slider and `state` for buttons and touchpad.                                                                                                 |
-| range                 | [number, number] | The range of the slider, defaults to [0,1].                                                                                                                                                                                             |
-| step                  | number           | The step size of the slider, defaults to one hundredth of the range.                                                                                                                                                                    |
+| Name                  | Type             | Description                                                                                                                                                                                                                                    |
+| --------------------- | ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| slider_id             | string           | The entity id to use for the slider.                                                                                                                                                                                                           |
+| value_from_hass_delay | number           | The time the remote element will wait after firing an action before it starts retrieving values from Home Assistant again. Useful for preventing bouncing between new and old values if an entity takes a while to update. Defaults to 1000ms. |
+| vertical              | boolean          | Renders a vertical slider when true. Defaults to false.                                                                                                                                                                                        |
+| icon                  | string           | The name of the optional slider icon. Follows the slider thumb by default but this can be changed with style options.                                                                                                                          |
+| value_attribute       | string           | An entity attribute (or state) for the slider to track, defaults to `volume_level` for the slider and `state` for buttons and touchpad.                                                                                                        |
+| range                 | [number, number] | The range of the slider, defaults to [0,1].                                                                                                                                                                                                    |
+| step                  | number           | The step size of the slider, defaults to one hundredth of the range.                                                                                                                                                                           |
 
 By default the slider calls the `media_player.volume_set` action, with `entity_id` set to `slider_id` and `volume_level` set to the slider value.
 
@@ -1019,10 +1151,6 @@ You can also use the keyboard to send text on the following supported platforms 
 | `ROKU`         | Uses the Roku remote entity ID for seamless and bulk modes, and the Roku media player ID for global search. Either one can be provided as the keyboard ID, but the other must be provided as the remote or media player ID in order to support all three keyboard modes. |
 
 More may be added as requested if there is a way to do so through their Home Assistant (or possibly community made) integrations.
-
-## Templating
-
-All fields support nunjucks templating. Nunjucks is a templating engine for JavaScript, which is heavily based on the jinja2 templating engine which Home Assistant uses. While the syntax of nunjucks and jinja2 is almost identical, you may find the [nunjucks documentation](https://mozilla.github.io/nunjucks/templating.html) useful. Please see the [ha-nunjucks](https://github.com/Nerwyn/ha-nunjucks) repository for a list of available functions. If you want additional functions to be added, please make a feature request on that repository, not this one.
 
 ## Examples and Alternate Media Platforms
 

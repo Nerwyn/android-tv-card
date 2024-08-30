@@ -79,114 +79,102 @@ class UniversalRemoteCard extends LitElement {
 			return actions;
 		}
 
-		actions.autofill_entity_id =
-			actions.autofill_entity_id ??
-			this.config.autofill_entity_id ??
-			true;
-		if (
-			renderTemplate(
-				this.hass,
-				actions.autofill_entity_id as unknown as string,
-			)
-		) {
-			// Set haptics if defined globally
-			actions.haptics = actions.haptics ?? this.config.haptics ?? true;
+		for (const actionType of ActionTypes) {
+			if (actions[actionType]) {
+				const action = actions[actionType] ?? ({} as IAction);
 
-			for (const actionType of ActionTypes) {
-				if (actions[actionType]) {
-					const action = actions[actionType] ?? ({} as IAction);
-
-					switch (action.action) {
-						case 'keyboard':
-						case 'textbox':
-						case 'search':
-							action.keyboard_id = this.config.keyboard_id;
-							action.media_player_id =
-								this.config.media_player_id;
-						// falls through
-						case 'key':
-						case 'source':
-							action.remote_id = this.config.remote_id;
-							action.platform = this.config.platform;
-							break;
-						case 'perform-action': {
-							const [domain, _service] = (
-								action.perform_action ?? ''
-							).split('.');
-							switch (domain) {
-								case 'remote':
-									action.target = {
-										entity_id: this.config.remote_id,
-									};
-									break;
-								case 'media_player':
-								case 'kodi':
-								case 'denonavr':
-								case 'webos':
-									action.target = {
-										entity_id: this.config.media_player_id,
-									};
-									break;
-								default:
-									break;
-							}
-							break;
+				switch (action.action) {
+					case 'keyboard':
+					case 'textbox':
+					case 'search':
+						action.keyboard_id = this.config.keyboard_id;
+						action.media_player_id = this.config.media_player_id;
+					// falls through
+					case 'key':
+					case 'source':
+						action.remote_id = this.config.remote_id;
+						action.platform = this.config.platform;
+						break;
+					case 'perform-action': {
+						const [domain, _service] = (
+							action.perform_action ?? ''
+						).split('.');
+						switch (domain) {
+							case 'remote':
+								action.target = {
+									entity_id: this.config.remote_id,
+								};
+								break;
+							case 'media_player':
+							case 'kodi':
+							case 'denonavr':
+							case 'webos':
+								action.target = {
+									entity_id: this.config.media_player_id,
+								};
+								break;
+							default:
+								break;
 						}
-						default:
-							break;
+						break;
 					}
-
-					actions[actionType] = action;
+					default:
+						break;
 				}
+
+				actions[actionType] = action;
 			}
+		}
 
-			// Set hold time if defined globally
-			if (this.config.hold_time) {
-				if (actions.hold_action) {
-					actions.hold_action.hold_time =
-						actions.hold_action?.hold_time ?? this.config.hold_time;
-				}
-				if (actions.multi_hold_action) {
-					actions.multi_hold_action.hold_time =
-						actions.multi_hold_action?.hold_time ??
-						this.config.hold_time;
-				}
+		// Set haptics if defined globally
+		actions.haptics = actions.haptics ?? this.config.haptics ?? true;
+
+		// Set hold time if defined globally
+		if (this.config.hold_time) {
+			if (actions.hold_action) {
+				actions.hold_action.hold_time =
+					actions.hold_action?.hold_time ?? this.config.hold_time;
 			}
-
-			// Set repeat delay if defined globally
-			if (this.config.repeat_delay) {
-				if (actions.hold_action?.action == 'repeat') {
-					actions.hold_action.repeat_delay =
-						actions.hold_action.repeat_delay ??
-						this.config.repeat_delay;
-				}
-				if (
-					actions.multi_hold_action &&
-					actions.multi_hold_action?.action == 'repeat'
-				) {
-					actions.multi_hold_action.repeat_delay =
-						actions.multi_hold_action.repeat_delay ??
-						this.config.repeat_delay;
-				}
+			if (actions.multi_hold_action) {
+				actions.multi_hold_action.hold_time =
+					actions.multi_hold_action?.hold_time ??
+					this.config.hold_time;
 			}
+		}
 
-			// Set double tap window if defined globally
-			if (this.config.double_tap_window) {
-				if (actions.double_tap_action) {
-					actions.double_tap_action.double_tap_window =
-						actions.double_tap_action?.double_tap_window ??
-						this.config.double_tap_window;
-				}
-				if (actions.multi_double_tap_action) {
-					actions.multi_double_tap_action.double_tap_window =
-						actions.multi_double_tap_action.double_tap_window ??
-						this.config.double_tap_window;
-				}
+		// Set repeat delay if defined globally
+		if (this.config.repeat_delay) {
+			if (actions.hold_action?.action == 'repeat') {
+				actions.hold_action.repeat_delay =
+					actions.hold_action.repeat_delay ??
+					this.config.repeat_delay;
+			}
+			if (
+				actions.multi_hold_action &&
+				actions.multi_hold_action?.action == 'repeat'
+			) {
+				actions.multi_hold_action.repeat_delay =
+					actions.multi_hold_action.repeat_delay ??
+					this.config.repeat_delay;
+			}
+		}
+
+		// Set double tap window if defined globally
+		if (this.config.double_tap_window) {
+			if (actions.double_tap_action) {
+				actions.double_tap_action.double_tap_window =
+					actions.double_tap_action?.double_tap_window ??
+					this.config.double_tap_window;
+			}
+			if (actions.multi_double_tap_action) {
+				actions.multi_double_tap_action.double_tap_window =
+					actions.multi_double_tap_action.double_tap_window ??
+					this.config.double_tap_window;
 			}
 		}
 
 		// Update touchpad directions
-		if (actions.type == 'touchpad' && actions.name == 'touchpad') {
+		if (actions.type == 'touchpad') {
 			for (const direction of DirectionActions) {
 				actions[direction] = this.updateDefaultActions(
 					(actions[direction] ?? {}) as IElementConfig,
@@ -195,11 +183,7 @@ class UniversalRemoteCard extends LitElement {
 		}
 
 		// Set slider target to media player ID
-		if (
-			actions.type == 'slider' &&
-			actions.name == 'slider' &&
-			this.config.media_player_id
-		) {
+		if (actions.type == 'slider' && this.config.media_player_id) {
 			actions.entity_id = this.config.media_player_id;
 			const tapAction = actions.tap_action ?? ({} as IAction);
 			const target = tapAction.target ?? ({} as ITarget);
