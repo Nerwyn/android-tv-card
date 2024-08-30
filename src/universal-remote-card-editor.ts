@@ -1488,15 +1488,19 @@ export class UniversalRemoteCardEditor extends LitElement {
 				actionSelectors = html`
 					${actionsTabBar}
 					${this.buildActionOption(
-						'Tap behavior (optional)',
+						`${
+							this.touchpadTabIndex == 2 ? 'Tap' : 'Swipe'
+						} behavior (optional)`,
 						'tap_action',
 						defaultUiActions,
 					)}
-					${this.buildActionOption(
-						'Double tap behavior (optional)',
-						'double_tap_action',
-						defaultUiActions,
-					)}
+					${this.touchpadTabIndex == 2
+						? this.buildActionOption(
+								'Double tap behavior (optional)',
+								'double_tap_action',
+								defaultUiActions,
+						  )
+						: ''}
 					${this.buildActionOption(
 						'Hold behavior (optional)',
 						'hold_action',
