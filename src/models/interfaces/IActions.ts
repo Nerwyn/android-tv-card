@@ -1,5 +1,3 @@
-import { Platform } from '.';
-
 export const KeyboardPlatforms = [
 	'Android TV',
 	'Fire TV',
@@ -7,6 +5,13 @@ export const KeyboardPlatforms = [
 	'Kodi',
 ] as const;
 export type KeyboardPlatform = (typeof KeyboardPlatforms)[number];
+export const Platforms = [
+	...KeyboardPlatforms,
+	'Apple TV',
+	'Samsung TV',
+	'LG webOS',
+] as const;
+export type Platform = (typeof Platforms)[number];
 
 export const Actions = [
 	'more-info',
