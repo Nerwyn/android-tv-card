@@ -44,7 +44,7 @@ The editor has four tabs - General, Layout, Actions, and Icons.
 
 # General
 
-<img src='assets/editor_general_tab.png' onerror='this.onerror=null;this.src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/editor_general_tab.png"' alt="editor general tab" width="600"/>
+<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/editor_general_tab.png" onerror='this.onerror=null;this.src="assets/editor_general_tab.png"' alt="editor general tab" width="600"/>
 
 ## Media Platform and Entity IDs
 
