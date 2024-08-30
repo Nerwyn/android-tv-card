@@ -725,6 +725,8 @@ export class UniversalRemoteCardEditor extends LitElement {
 	buildAddEntryButton() {
 		switch (this.baseTabIndex) {
 			case 3:
+				// TODO fix margin of button to match add remote element button
+				// margin: 0 18px 12px;
 				return html`
 					<ha-button
 						@click=${this.addEntry}
