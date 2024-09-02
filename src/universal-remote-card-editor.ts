@@ -725,12 +725,11 @@ export class UniversalRemoteCardEditor extends LitElement {
 	buildAddEntryButton() {
 		switch (this.baseTabIndex) {
 			case 3:
-				// TODO fix margin of button to match add remote element button
-				// margin: 0 18px 12px;
 				return html`
 					<ha-button
 						@click=${this.addEntry}
 						outlined
+						class="add-list-item"
 						.label="${'ADD SVG ICON'}"
 					>
 						<ha-icon .icon=${'mdi:plus'} slot="icon"></ha-icon>
@@ -741,6 +740,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 				return html`
 					<ha-button-menu
 						fixed
+						class="add-list-item"
 						@action=${this.addEntry}
 						@closed=${(e: CustomEvent) => e.stopPropagation()}
 					>
@@ -3108,7 +3108,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 				display: flex;
 				color: var(--secondary-text-color);
 			}
-			ha-button-menu {
+			.add-list-item {
 				margin: 0 18px 12px;
 			}
 			ha-button {
