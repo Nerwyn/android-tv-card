@@ -2704,6 +2704,10 @@ export class UniversalRemoteCardEditor extends LitElement {
 			updateSlider = true;
 		}
 		if ('slider_id' in updatedConfig) {
+			if (!updatedConfig.media_player_id) {
+				updatedConfig.media_player_id =
+					updatedConfig.slider_id as string;
+			}
 			slider.entity_id =
 				slider.entity_id ??
 				(updatedConfig.slider_id as string) ??
