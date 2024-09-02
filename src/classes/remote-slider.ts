@@ -433,7 +433,6 @@ export class RemoteSlider extends BaseRemoteElement {
 					flex-grow: 0;
 					place-content: center space-evenly;
 					align-items: center;
-					align-self: stretch;
 					position: relative;
 					height: unset;
 					width: 100%;
