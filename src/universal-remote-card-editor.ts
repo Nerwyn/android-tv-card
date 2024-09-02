@@ -2822,18 +2822,15 @@ export class UniversalRemoteCardEditor extends LitElement {
 			const centerCustomAction = customActions.filter(
 				(customAction) => customAction.name == 'center',
 			)[0];
-			if (
-				centerCustomAction &&
-				updatedConfig.rows.toString().includes('touchpad')
-			) {
+			if (centerCustomAction) {
 				for (const actionType of ActionTypes) {
-					if (!touchpad[actionType]) {
-						if (centerCustomAction[actionType]) {
-							touchpad[actionType] =
-								centerCustomAction[actionType];
-						} else if (defaultTouchpad[actionType]) {
-							touchpad[actionType] = defaultTouchpad[actionType];
-						}
+					if (centerCustomAction[actionType]) {
+						touchpad[actionType] = centerCustomAction[actionType];
+					} else if (
+						defaultTouchpad[actionType] &&
+						!touchpad[actionType]
+					) {
+						touchpad[actionType] = defaultTouchpad[actionType];
 					}
 				}
 				updateTouchpad = true;
