@@ -2846,6 +2846,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 					updatedConfig.rows.toString().includes('touchpad')
 				) {
 					touchpad[direction] = customAction;
+					delete touchpad[direction]?.icon;
 					updateTouchpad = true;
 				}
 			}
