@@ -2858,6 +2858,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 						defaultTouchpad[direction] ?? {},
 					);
 					delete touchpad[direction]?.['type' as keyof IBasicActions];
+					delete touchpad[direction]?.icon;
 				}
 			}
 			if (touchpadIndex > -1) {
