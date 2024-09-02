@@ -2872,38 +2872,19 @@ export class UniversalRemoteCardEditor extends LitElement {
 		}
 
 		for (const [i, entry] of customActions.entries()) {
-			const updatedEntry = this.updateDeprecatedActionFields(entry);
+			const updatedEntry = this.updateDeprecatedActionFields(
+				entry,
+				customActions,
+			);
 			for (const direction of DirectionActions) {
 				if (updatedEntry[direction]) {
 					updatedEntry[direction] = this.updateDeprecatedActionFields(
 						updatedEntry[direction] as IElementConfig,
+						customActions,
 					);
 				}
 			}
 			customActions[i] = updatedEntry;
-		}
-
-		for (const [i, entry] of customActions.entries()) {
-			if ('template' in entry) {
-				const templateActions =
-					customActions?.filter(
-						(customActions) =>
-							entry['template' as keyof IElementConfig] ==
-							customActions.name,
-					)[0] ??
-					this.DEFAULT_ACTIONS.filter(
-						(defaultActions) =>
-							entry['template' as keyof IElementConfig] ==
-							defaultActions.name,
-					)[0] ??
-					{};
-				const updatedEntry = mergeDeep(
-					structuredClone(templateActions),
-					entry,
-				) as IElementConfig;
-				delete updatedEntry['template' as keyof IElementConfig];
-				customActions[i] = updatedEntry;
-			}
 		}
 
 		// Convert style object to styles string
@@ -2957,8 +2938,11 @@ export class UniversalRemoteCardEditor extends LitElement {
 		return updatedConfig;
 	}
 
-	updateDeprecatedActionFields(entry: IElementConfig) {
-		const customAction = structuredClone(entry);
+	updateDeprecatedActionFields(
+		entry: IElementConfig,
+		customActions: IElementConfig[],
+	) {
+		let customAction = structuredClone(entry);
 
 		// Copy svg_path to icon
 		if ('svg_path' in customAction) {
@@ -3069,6 +3053,27 @@ export class UniversalRemoteCardEditor extends LitElement {
 			styles += '\n}';
 			customAction.styles = styles.trim();
 			delete customAction['style' as keyof IElementConfig];
+		}
+
+		// Obsolete template field
+		if ('template' in entry) {
+			const templateActions =
+				customActions?.filter(
+					(customActions) =>
+						entry['template' as keyof IElementConfig] ==
+						customActions.name,
+				)[0] ??
+				this.DEFAULT_ACTIONS.filter(
+					(defaultActions) =>
+						entry['template' as keyof IElementConfig] ==
+						defaultActions.name,
+				)[0] ??
+				{};
+			customAction = mergeDeep(
+				structuredClone(templateActions),
+				entry,
+			) as IElementConfig;
+			delete customAction['template' as keyof IElementConfig];
 		}
 
 		return customAction;
