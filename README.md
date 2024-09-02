@@ -377,9 +377,7 @@ Once setup, you can reference these icons in custom actions in the icon field by
 
 # YAML Examples
 
-TODO move user remotes to separate file. Don't forget your spotify controller!
-
-While all configuration can now be done through the user interface, these YAML examples can provide some insight on how to do some advanced styling and templating.
+While all configuration can now be done through the user interface, these YAML examples can provide some insight on layout basics. For more advanced and user provided examples see the [examples file](https://github.com/Nerwyn/android-tv-card/blob/main/EXAMPLES.md)
 
 ## Example 1
 
@@ -508,7 +506,7 @@ rows:
 
 ## Example 5
 
-A tablet UI using columns.
+A tablet layout using nexted row and columns.
 
 ```yaml
 type: custom:android-tv-card
@@ -553,28 +551,24 @@ custom_actions:
         key: DPAD_UP
       hold_action:
         action: repeat
-      type: button
     down:
       tap_action:
         action: key
         key: DPAD_DOWN
       hold_action:
         action: repeat
-      type: button
     left:
       tap_action:
         action: key
         key: DPAD_LEFT
       hold_action:
         action: repeat
-      type: button
     right:
       tap_action:
         action: key
         key: DPAD_RIGHT
       hold_action:
         action: repeat
-      type: button
     styles: |-
       toucharea {
         height: 300px;
@@ -587,7 +581,7 @@ Result:
 
 ## Example 6
 
-Apple TV.
+Combining Apple TVs `wakeup` and `suspend` keys into one custom power action and using an icon for the touchpad background.
 
 ```yaml
 type: custom:android-tv-card
@@ -643,24 +637,14 @@ custom_actions:
       remote_id: remote.apple_tv
       platform: Apple TV
     up:
-      type: button
-      name: up
       tap_action:
         action: key
         key: up
         remote_id: remote.apple_tv
         platform: Apple TV
-      icon: ''
       hold_action:
         action: repeat
-      autofill_entity_id: true
-      value_attribute: state
-      haptics: true
-      entity_id: remote.apple_tv
-      styles: ''
     down:
-      type: button
-      name: down
       tap_action:
         action: key
         key: down
@@ -669,13 +653,7 @@ custom_actions:
       icon: ''
       hold_action:
         action: repeat
-      autofill_entity_id: true
-      value_attribute: state
-      haptics: true
-      entity_id: remote.apple_tv
     left:
-      type: button
-      name: left
       tap_action:
         action: key
         key: up
@@ -684,13 +662,7 @@ custom_actions:
       icon: ''
       hold_action:
         action: repeat
-      autofill_entity_id: true
-      value_attribute: state
-      haptics: true
-      entity_id: remote.apple_tv
     right:
-      type: button
-      name: right
       tap_action:
         action: key
         key: right
@@ -699,10 +671,6 @@ custom_actions:
       icon: ''
       hold_action:
         action: repeat
-      autofill_entity_id: true
-      value_attribute: state
-      haptics: true
-      entity_id: remote.apple_tv
     styles: |-
       .icon {
         --size: 250px;
@@ -725,7 +693,7 @@ Result:
 
 ## Example 7
 
-Kodi with keyboard and touchpad.
+A user's Kodi remote.
 
 ```yaml
 type: custom:android-tv-card
@@ -755,8 +723,6 @@ custom_actions:
       target:
         entity_id: media_player.kodi
     up:
-      type: button
-      name: up
       tap_action:
         action: perform-action
         perform_action: kodi.call_method
@@ -766,15 +732,7 @@ custom_actions:
           entity_id: media_player.kodi
       hold_action:
         action: repeat
-      icon: ''
-      autofill_entity_id: true
-      value_attribute: state
-      haptics: true
-      entity_id: media_player.kodi
-      styles: ''
     down:
-      type: button
-      name: down
       tap_action:
         action: perform-action
         perform_action: kodi.call_method
@@ -784,14 +742,7 @@ custom_actions:
           entity_id: media_player.kodi
       hold_action:
         action: repeat
-      icon: ''
-      autofill_entity_id: true
-      value_attribute: state
-      haptics: true
-      entity_id: media_player.kodi
     left:
-      type: button
-      name: left
       tap_action:
         action: perform-action
         perform_action: kodi.call_method
@@ -801,14 +752,7 @@ custom_actions:
           entity_id: media_player.kodi
       hold_action:
         action: repeat
-      icon: ''
-      autofill_entity_id: true
-      value_attribute: state
-      haptics: true
-      entity_id: media_player.kodi
     right:
-      type: button
-      name: right
       tap_action:
         action: perform-action
         perform_action: kodi.call_method
@@ -818,11 +762,6 @@ custom_actions:
           entity_id: media_player.kodi
       hold_action:
         action: repeat
-      icon: ''
-      autofill_entity_id: true
-      value_attribute: state
-      haptics: true
-      entity_id: media_player.kodi
     styles: |-
       toucharea {
         height: 200px;
@@ -873,61 +812,33 @@ custom_actions:
       key: DpadCenter
       remote_id: remote.sony_bravia
     up:
-      type: button
-      name: up
       tap_action:
         action: key
         key: Up
         remote_id: remote.sony_bravia
       hold_action:
         action: repeat
-      icon: ''
-      autofill_entity_id: true
-      value_attribute: state
-      haptics: true
-      entity_id: remote.sony_bravia
     down:
-      type: button
-      name: down
       tap_action:
         action: key
         key: Down
         remote_id: remote.sony_bravia
       hold_action:
         action: repeat
-      icon: ''
-      autofill_entity_id: true
-      value_attribute: state
-      haptics: true
-      entity_id: remote.sony_bravia
     left:
-      type: button
-      name: left
       tap_action:
         action: key
         key: Left
         remote_id: remote.sony_bravia
       hold_action:
         action: repeat
-      icon: ''
-      autofill_entity_id: true
-      value_attribute: state
-      haptics: true
-      entity_id: remote.sony_bravia
     right:
-      type: button
-      name: right
       tap_action:
         action: key
         key: Right
         remote_id: remote.sony_bravia
       hold_action:
         action: repeat
-      icon: ''
-      autofill_entity_id: true
-      value_attribute: state
-      haptics: true
-      entity_id: remote.sony_bravia
     double_tap_action:
       action: key
       key: Back
@@ -940,7 +851,7 @@ custom_actions:
 
 ## Example 9
 
-[Denon/Marantz Receiver](https://www.home-assistant.io/integrations/denonavr).
+A touchpad remapped to work with a [Denon/Marantz Receiver](https://www.home-assistant.io/integrations/denonavr).
 
 ```yaml
 type: custom:android-tv-card
@@ -959,8 +870,6 @@ custom_actions:
       target:
         entity_id: media_player.marantz_sr7013
     up:
-      type: button
-      name: up
       tap_action:
         action: perform-action
         perform_action: denonavr.get_command
@@ -970,15 +879,7 @@ custom_actions:
           entity_id: media_player.marantz_sr7013
       hold_action:
         action: repeat
-      icon: ''
-      autofill_entity_id: true
-      value_attribute: state
-      haptics: true
-      entity_id: media_player.marantz_sr7013
-      styles: ''
     down:
-      type: button
-      name: down
       tap_action:
         action: perform-action
         perform_action: denonavr.get_command
@@ -988,15 +889,7 @@ custom_actions:
           entity_id: media_player.marantz_sr7013
       hold_action:
         action: repeat
-      icon: ''
-      autofill_entity_id: true
-      value_attribute: state
-      haptics: true
-      entity_id: media_player.marantz_sr7013
-      styles: ''
     left:
-      type: button
-      name: left
       tap_action:
         action: perform-action
         perform_action: denonavr.get_command
@@ -1006,15 +899,7 @@ custom_actions:
           entity_id: media_player.marantz_sr7013
       hold_action:
         action: repeat
-      icon: ''
-      autofill_entity_id: true
-      value_attribute: state
-      haptics: true
-      entity_id: media_player.marantz_sr7013
-      styles: ''
     right:
-      type: button
-      name: right
       tap_action:
         action: perform-action
         perform_action: denonavr.get_command
@@ -1024,11 +909,6 @@ custom_actions:
           entity_id: media_player.marantz_sr7013
       hold_action:
         action: repeat
-      icon: ''
-      autofill_entity_id: true
-      value_attribute: state
-      haptics: true
-      entity_id: media_player.marantz_sr7013
     styles: |-
       toucharea {
         height: 200px;
@@ -1182,11 +1062,6 @@ custom_actions:
         remote_id: remote.google_chromecast
       hold_action:
         action: repeat
-      type: button
-      autofill_entity_id: true
-      value_attribute: state
-      haptics: true
-      entity_id: remote.google_chromecast
     down:
       tap_action:
         action: key
@@ -1194,11 +1069,6 @@ custom_actions:
         remote_id: remote.google_chromecast
       hold_action:
         action: repeat
-      type: button
-      autofill_entity_id: true
-      value_attribute: state
-      haptics: true
-      entity_id: remote.google_chromecast
     left:
       tap_action:
         action: key
@@ -1206,11 +1076,6 @@ custom_actions:
         remote_id: remote.google_chromecast
       hold_action:
         action: repeat
-      type: button
-      autofill_entity_id: true
-      value_attribute: state
-      haptics: true
-      entity_id: remote.google_chromecast
     right:
       tap_action:
         action: key
@@ -1218,11 +1083,6 @@ custom_actions:
         remote_id: remote.google_chromecast
       hold_action:
         action: repeat
-      type: button
-      autofill_entity_id: true
-      value_attribute: state
-      haptics: true
-      entity_id: remote.google_chromecast
     styles: |-
       toucharea {
         background: linear-gradient(217deg, rgba(255,0,0,.8), rgba(255,0,0,0) 70.71%), linear-gradient(127deg, rgba(0,255,0,.8), rgba(0,255,0,0) 70.71%), linear-gradient(336deg, rgba(0,0,255,.8), rgba(0,0,255,0) 70.71%);
@@ -1882,7 +1742,245 @@ styles: |-
   }
 ```
 
-<img src="https://github.com/Nerwyn/android-tv-card/blob/main/assets/google_tv_dpad.png" alt="`google tv app styled dpad" width="500"/>
+<img src="https://github.com/Nerwyn/android-tv-card/blob/main/assets/google_tv_dpad.png" alt="google tv app styled dpad" width="500"/>
+
+## Example 16
+
+A music player with multiple sliders for volume and media position and a touchpad for media controls and album art.
+
+```yaml
+type: custom:android-tv-card
+media_player_id: media_player.spotify
+autofill_entity_id: true
+rows:
+  - - touchpad
+    - volume
+  - - media_position
+custom_actions:
+  - type: slider
+    name: volume
+    range:
+      - 0
+      - 1
+    value_attribute: volume_level
+    autofill_entity_id: true
+    tap_action:
+      action: perform-action
+      perform_action: media_player.volume_set
+      data:
+        volume_level: '{{ value | float }}'
+      target:
+        entity_id: media_player.spotify
+    icon: mdi:spotify
+    vertical: true
+    styles: |-
+      :host {
+        --tooltip-label: "{{ (100 * value) | int }}%";
+      }
+    entity_id: media_player.spotify
+    step: 0.01
+    haptics: true
+  - type: slider
+    name: media_position
+    autofill_entity_id: true
+    value_attribute: media_position
+    haptics: true
+    entity_id: media_player.spotify
+    range:
+      - 0
+      - '{{ state_attr(config.entity, "media_duration") }}'
+    tap_action:
+      action: perform-action
+      data:
+        seek_position: '{{ value }}'
+      target:
+        entity_id: media_player.spotify
+      perform_action: media_player.media_seek
+    step: 1
+    styles: |-
+      :host {
+        --thumb-width: 5px;
+        --tooltip-label: '{{ (value / 60) | int }}:{{ 0 if (value - 60*((value / 60) | int)) < 10 else "" }}{{ (value - 60*((value / 60) | int)) | int }}';
+        height: 14px;
+      }
+      .label {
+        filter: invert(1);
+        mix-blend-mode: difference;
+      }
+    label: |2-
+        {% set minutes = (value / 60) | int %} {% set seconds = (value - 60 * minutes)
+        | int %} {{ minutes }}:{{ 0 if seconds < 10 else "" }}{{ seconds | int }}/{{ (state_attr(config.entity, "media_duration") / 60) | int }}:{{ 0 if
+        (state_attr(config.entity, "media_duration") - 60*((state_attr(config.entity,
+        "media_duration") / 60) | int)) < 10 else "" }}{{ (state_attr(config.entity,
+        "media_duration") - 60*((state_attr(config.entity, "media_duration") / 60) |
+        int)) | int }}
+  - type: touchpad
+    name: touchpad
+    tap_action:
+      action: perform-action
+      perform_action: media_player.media_play_pause
+      target:
+        entity_id: media_player.spotify
+      data: {}
+    up:
+      tap_action:
+        action: none
+      hold_action:
+        action: none
+    down:
+      tap_action:
+        action: none
+      hold_action:
+        action: none
+    left:
+      tap_action:
+        action: perform-action
+        perform_action: media_player.media_next_track
+        target:
+          entity_id:
+            - media_player.spotify
+        data: {}
+      hold_action:
+        action: repeat
+      icon: mdi:skip-previous
+    right:
+      tap_action:
+        action: perform-action
+        perform_action: media_player.media_previous_track
+        target:
+          entity_id:
+            - media_player.spotify
+        data: {}
+      hold_action:
+        action: repeat
+      icon: mdi:skip-next
+    styles: |-
+      toucharea {
+        background-color: rgb(0, 0, 0, 0);
+        background-image: url("http://homeassistant.local:8123{{ state_attr(config.entity, 'entity_picture') }}");
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-position: center;
+        height: 400px;
+        --size: 48px;
+      }
+    autofill_entity_id: true
+    entity_id: media_player.spotify
+    hold_action:
+      action: more-info
+      target:
+        entity_id: media_player.spotify
+      data: {}
+    value_attribute: state
+    haptics: true
+    icon: mdi:play-pause
+```
+
+<img src="https://github.com/Nerwyn/android-tv-card/blob/main/assets/music_controls.png" alt="music controls" width="500"/>
+
+## Example 17
+
+Multiple sliders for light color control.
+
+```yaml
+type: custom:android-tv-card
+rows:
+  - - brightness
+    - color_temp
+    - hs_color
+custom_actions:
+  - type: slider
+    vertical: true
+    entity_id: light.sunroom_ceiling
+    value_attribute: brightness
+    range:
+      - 0
+      - 100
+    step: 1
+    tap_action:
+      action: perform-action
+      perform_action: light.turn_on
+      data:
+        brightness_pct: '{{ value | int }}'
+      target:
+        entity_id: '{{ config.entity }}'
+    styles: |
+      :host {
+        height: 400px;
+        border-radius: 4px;
+        --height: 36px;
+        --thumb-width: 18px;
+        --color: rgb({{ state_attr(config.entity, "rgb_color") }});
+        --thumb-border-radius: 4px;
+      }
+      .background {
+        height: 24px;
+      }
+    autofill_entity_id: true
+    name: brightness
+    haptics: true
+  - type: slider
+    vertical: true
+    autofill_entity_id: true
+    entity_id: light.sunroom_ceiling
+    value_attribute: color_temp
+    range:
+      - '{{ state_attr(config.entity, "min_mireds") }}'
+      - '{{ state_attr(config.entity, "max_mireds") }}'
+    step: 1
+    tap_action:
+      action: perform-action
+      data:
+        color_temp: '{{ value | int }}'
+      perform_action: light.turn_on
+      target:
+        entity_id: light.sunroom_ceiling
+    styles: |
+      :host {
+        height: 400px;
+        --color: rgba(0, 0, 0, 0.2);
+        --background: linear-gradient(-90deg, rgb(255, 167, 87), rgb(255, 255, 251));
+        --thumb-box-shadow: none;
+      }
+      .icon {
+        filter: invert(1);
+        mix-blend-mode: difference;
+      }
+    name: color_temp
+    haptics: true
+    icon: mdi:thermometer
+  - type: slider
+    range:
+      - 0
+      - 360
+    value_attribute: hs_color[0]
+    autofill_entity_id: true
+    tap_action:
+      action: perform-action
+      perform_action: light.turn_on
+      data:
+        hs_color:
+          - '{{ value | int }}'
+          - 100
+      target:
+        entity_id: light.sunroom_ceiling
+    vertical: true
+    step: 0.1
+    icon: mdi:palette
+    styles: |-
+      :host {
+        height: 400px;
+        color: hsl({{ value | int }}, 100%, 50%);
+        --color: rgba(0, 0, 0, 0.5);
+        --background: linear-gradient(to right, #f00 0%, #ff0 17%, #0f0 33%, #0ff 50%, #00f 66%, #f0f 83%, #f00 100%);
+        --thumb-box-shadow: none;
+      }
+    entity_id: light.sunroom_ceiling
+    name: hs_color
+    haptics: true
+```
+
+<img src="https://github.com/Nerwyn/android-tv-card/blob/main/assets/color_controls.png" alt="color controls" width="500"/>
 
 [last-commit-shield]: https://img.shields.io/github/last-commit/Nerwyn/android-tv-card?style=for-the-badge
 [commits]: https://github.com/Nerwyn/android-tv-card/commits/main

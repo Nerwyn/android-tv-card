@@ -784,6 +784,8 @@ export class BaseRemoteElement extends LitElement {
 				transform: var(--icon-transform);
 				color: var(--icon-color, var(--primary-text-color));
 				filter: var(--icon-filter, none);
+				height: var(--size, 48px);
+				width: var(--size, 48px);
 
 				--mdc-icon-size: var(--size, 48px);
 			}
