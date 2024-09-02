@@ -2511,7 +2511,8 @@ export class UniversalRemoteCardEditor extends LitElement {
 	}
 
 	handleUpdateDeprecatedConfig() {
-		const config = this.updateDeprecatedFields(this.config);
+		let config = this.updateDeprecatedFields(this.config);
+		config = this.autofillDefaultFields(config);
 		this.configChanged(config);
 	}
 
