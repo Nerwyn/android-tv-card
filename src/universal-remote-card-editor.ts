@@ -2889,7 +2889,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 		for (const [i, entry] of customActions.entries()) {
 			if ('template' in entry) {
 				const templateActions =
-					updatedConfig.custom_actions?.filter(
+					customActions?.filter(
 						(customActions) =>
 							entry['template' as keyof IElementConfig] ==
 							customActions.name,
