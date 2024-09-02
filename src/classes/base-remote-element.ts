@@ -617,8 +617,8 @@ export class BaseRemoteElement extends LitElement {
 
 	buildIcon(icon?: string, context?: object) {
 		icon = this.renderTemplate(icon ?? '', context) as string;
+		let iconElement = html``;
 		if (icon) {
-			let iconElement = html``;
 			if (icon.includes(':')) {
 				iconElement = html` <ha-icon .icon="${icon}"></ha-icon> `;
 			} else {
@@ -635,9 +635,8 @@ export class BaseRemoteElement extends LitElement {
 					></ha-svg-icon>
 				`;
 			}
-			return html`<div class="icon">${iconElement}</div>`;
 		}
-		return '';
+		return html`<div class="icon">${iconElement}</div>`;
 	}
 
 	buildLabel(label?: string, context?: object) {
