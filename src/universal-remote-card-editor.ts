@@ -2202,12 +2202,11 @@ export class UniversalRemoteCardEditor extends LitElement {
 		parentName?: string,
 		childName?: string,
 	) {
-		if (!('autofill_entity_id' in entry)) {
-			entry.autofill_entity_id = config.autofill_entity_id ?? true;
-		}
 		if (
 			this.renderTemplate(
-				(entry.autofill_entity_id ?? true) as unknown as string,
+				(entry.autofill_entity_id ??
+					config.autofill_entity_id ??
+					true) as unknown as string,
 				this.getEntryContext(entry),
 			)
 		) {
@@ -2239,6 +2238,10 @@ export class UniversalRemoteCardEditor extends LitElement {
 					...entry,
 					value_attribute: entry.value_attribute ?? 'state',
 					haptics: entry.haptics ?? config.haptics ?? true,
+					autofill_entity_id:
+						entry.autofill_entity_id ??
+						config.autofill_entity_id ??
+						true,
 				};
 			}
 
