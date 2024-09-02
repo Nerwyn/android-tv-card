@@ -2924,7 +2924,15 @@ export class UniversalRemoteCardEditor extends LitElement {
 				'row_styles' as keyof IConfig
 			] as unknown as Record<string, Record<string, string>>;
 			for (const style in rowStyles) {
-				styles += `\n#${style} {`;
+				if (style.includes('-')) {
+					styles += `\n#${style} {`;
+				} else if (style == 'rows') {
+					styles += '\n.row {';
+				} else if (style == 'columns') {
+					styles += '\n.column {';
+				} else {
+					continue;
+				}
 				for (const field in rowStyles[style]) {
 					styles += `\n  ${field}: ${rowStyles[style][field]};`;
 				}
