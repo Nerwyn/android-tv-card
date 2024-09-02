@@ -928,7 +928,7 @@ custom_actions:
 
 ## Example 10
 
-Even more disorder with columns and special elements in the same row as buttons, and stylized everything.
+Even more disorder with columns and special elements in the same row as buttons, stylized everything, and a label to display the slider value.
 
 ```yaml
 type: custom:android-tv-card
@@ -1047,8 +1047,24 @@ custom_actions:
         --background: red;
         --thumb-border-radius: 0;
       }
+      .icon {
+        display: none;
+      }
+      .label {
+        {% if not states(config.entity, 'on') %}
+        display: none;
+        {% endif %}
+        transform: var(--icon-transform);
+        font-size: 14px;
+        font-weight: 1000;
+        color: var(--primary-text-color);
+      }
+      .tooltip {
+        display: none;
+      }
     autofill_entity_id: true
     haptics: true
+    label: '{{ (value * 100 ) | int }}%'
   - type: touchpad
     name: touchpad
     tap_action:
