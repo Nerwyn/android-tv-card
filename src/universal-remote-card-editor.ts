@@ -2149,57 +2149,6 @@ export class UniversalRemoteCardEditor extends LitElement {
 		}
 	}
 
-	populateMissingEntityId(entry: IElementConfig, parentEntityId: string) {
-		for (const actionType of ActionTypes) {
-			if (actionType in entry) {
-				const action =
-					entry[actionType as ActionType] ?? ({} as IAction);
-				if (['perform-action', 'more-info'].includes(action.action)) {
-					const data = action.data ?? {};
-					const target = action.target ?? {};
-					for (const targetId of [
-						'entity_id',
-						'device_id',
-						'area_id',
-						'label_id',
-					]) {
-						if (data[targetId]) {
-							target[targetId as keyof ITarget] = data[
-								targetId
-							] as string | string[];
-							delete data[targetId];
-						}
-					}
-					if (
-						!target.entity_id &&
-						!target.device_id &&
-						!target.area_id &&
-						!target.label_id
-					) {
-						target.entity_id = entry.entity_id ?? parentEntityId;
-						action.target = target;
-						entry[actionType as ActionType] = action;
-					}
-					action.data = data;
-					action.target = target;
-				}
-			}
-		}
-
-		if (!('entity_id' in entry)) {
-			let entity_id =
-				entry.tap_action?.target?.entity_id ??
-				entry.tap_action?.data?.entity_id ??
-				parentEntityId;
-			if (Array.isArray(entity_id)) {
-				entity_id = entity_id[0];
-			}
-			entry.entity_id = entity_id as string;
-		}
-
-		return entry;
-	}
-
 	updatePlatform(platform?: Platform) {
 		switch (platform) {
 			case 'KODI' as Platform:
@@ -2247,7 +2196,12 @@ export class UniversalRemoteCardEditor extends LitElement {
 		return updatedConfig;
 	}
 
-	autofillDefaultEntryFields(config: IConfig, entry: IElementConfig) {
+	autofillDefaultEntryFields(
+		config: IConfig,
+		entry: IElementConfig,
+		parentName?: string,
+		childName?: string,
+	) {
 		if (!('autofill_entity_id' in entry)) {
 			entry.autofill_entity_id = config.autofill_entity_id ?? true;
 		}
@@ -2258,19 +2212,35 @@ export class UniversalRemoteCardEditor extends LitElement {
 			)
 		) {
 			// Copy custom action onto default action
-			const defaultActions =
-				structuredClone(
-					this.DEFAULT_ACTIONS.filter(
-						(defaultActions) => defaultActions.name == entry.name,
-					)[0],
-				) ?? {};
-			entry = {
-				...defaultActions,
-				...entry,
-			};
-
-			entry.value_attribute = entry.value_attribute ?? 'state';
-			entry.haptics = entry.haptics ?? config.haptics ?? true;
+			if (parentName && childName) {
+				const parentActions =
+					structuredClone(
+						this.DEFAULT_ACTIONS.filter(
+							(defaultActions) =>
+								defaultActions.name == parentName,
+						)[0],
+					) ?? {};
+				const defaultActions =
+					parentActions[childName as DirectionAction];
+				entry = {
+					...defaultActions,
+					...entry,
+				};
+			} else {
+				const defaultActions =
+					structuredClone(
+						this.DEFAULT_ACTIONS.filter(
+							(defaultActions) =>
+								defaultActions.name == entry.name,
+						)[0],
+					) ?? {};
+				entry = {
+					...defaultActions,
+					...entry,
+					value_attribute: entry.value_attribute ?? 'state',
+					haptics: entry.haptics ?? config.haptics ?? true,
+				};
+			}
 
 			for (const actionType of ActionTypes) {
 				if (entry[actionType]) {
@@ -2304,11 +2274,22 @@ export class UniversalRemoteCardEditor extends LitElement {
 						case 'more-info':
 						case 'service' as 'perform-action':
 						case 'perform-action':
+							for (const targetId of [
+								'entity_id',
+								'device_id',
+								'area_id',
+								'label_id',
+							]) {
+								if (action.data?.[targetId]) {
+									action.target = action.target ?? {};
+									action.target[targetId as keyof ITarget] =
+										action.data?.[targetId] as
+											| string
+											| string[];
+									delete action.data?.[targetId];
+								}
+							}
 							if (
-								!action.data?.entity_id &&
-								!action.data?.device_id &&
-								!action.data?.area_id &&
-								!action.data?.label_id &&
 								!action.target?.entity_id &&
 								!action.target?.device_id &&
 								!action.target?.area_id &&
@@ -2401,13 +2382,18 @@ export class UniversalRemoteCardEditor extends LitElement {
 			}
 
 			// Feature entity ID
-			entry = this.populateMissingEntityId(
-				entry,
-				config.remote_id ??
+			if (!('entity_id' in entry) && !parentName && !childName) {
+				let entityId =
+					entry.tap_action?.target?.entity_id ??
+					entry.tap_action?.data?.entity_id ??
+					config.remote_id ??
 					config.media_player_id ??
-					config.keyboard_id ??
-					'',
-			);
+					config.keyboard_id;
+				if (Array.isArray(entityId)) {
+					entityId = entityId[0];
+				}
+				entry.entity_id = entityId as string;
+			}
 			const entityId = this.renderTemplate(
 				entry.entity_id as string,
 				this.getEntryContext(entry),
@@ -2498,6 +2484,8 @@ export class UniversalRemoteCardEditor extends LitElement {
 							entry[direction] = this.autofillDefaultEntryFields(
 								config,
 								(entry[direction] ?? {}) as IElementConfig,
+								entry.name,
+								direction,
 							);
 						}
 					}
