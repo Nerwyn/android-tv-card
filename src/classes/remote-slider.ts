@@ -399,7 +399,8 @@ export class RemoteSlider extends BaseRemoteElement {
 			}
 
 			if (this.vertical) {
-				this.style.width = 'fit-content';
+				this.style.setProperty('width', 'fit-content');
+				this.style.setProperty('align-self', 'stretch');
 				containerStyle['height'] = `${this.sliderWidth}px`;
 				containerStyle['width'] = 'var(--height)';
 			}
