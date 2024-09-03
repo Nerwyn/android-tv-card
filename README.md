@@ -197,7 +197,7 @@ Some additional logic is applied for certain attributes:
 
 - `brightness` - Converted from the default range of 0-255 to 0-100.
 - `media_position` - Updated twice a second using the current timestamp and the attribute `media_position_updated_at` when the entity state is `playing`, and locked to a max value using the attribute `media_duration`.
-- `elapsed` - Only for timer entities. Updated twice a second using the the current timestamp and the attributes `duration`, `remainin`, and `finishes_at`, and locked to a max value using the attribute `duration`.
+- `elapsed` - Only for timer entities. Updated twice a second using the the current timestamp and the attributes `duration`, `remaining`, and `finishes_at`, and locked to a max value using the attribute `duration`.
   - NOTE: elapsed is not an actual attribute of timer entities, but is a possible attribute for timer entities for the purpose of displaying accurate timer elapsed values. Timer entities do have an attribute `remaining`, which only updates when the timer state changes. The actual `remaining` attribute can be calculated using the elapsed value and the timer duration attribute.
 
 If you find that the autofilling of the entity ID in the action or remote element value is causing issues, setting `Autofill` to false may help. Just remember to set the entity ID of the remote element and the entity, device, area, or label ID of the action target.
@@ -208,15 +208,15 @@ Haptics are enabled for remote elements by default, but can be toggled globally 
 
 <img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/editor_actions_general_options_slider.png" alt="editor actions general options slider" width="600"/>
 
-Sliders have some additional general options. They can have range `Min` and `Max` values defined by the user, but default to 0 and 1. They can also have a `Step` size defined, which defaults to 0.01.
+Sliders have some additional general options. They have a range `Min` and `Max` which defaults to 0 and 1 respectively. They also have a `Step` size which defaults to 0.01.
 
-Sliders will wait one second before updating their internal values from Home Assistant. This time can be changed by setting `Update after action delay`.
+Sliders will wait one second before updating their internal values from Home Assistant to prevent it from bouncing between the old and new values. This time can be changed by setting `Update after action delay`. It defaults to 1000ms
 
 ### Touchpad Tabs
 
 <img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/editor_actions_general_options_touchpad.png" alt="editor actions general options touchpad" width="600"/>
 
-Touchpads have five tabs at the top of their actions page - up, down, center, left, and right. Only the center tab has general options as these apply to the entire touchpad remote element. Center and each remote direction have their own options for appearance and interactions as described below.
+Touchpads have five tabs at the top of their actions page for each direction and it's center. Only the center tab has general options as these apply to the entire touchpad remote element. Each direction and center have their own options for appearance and interactions as described below.
 
 ## Appearance
 
@@ -251,7 +251,13 @@ While you can now set most CSS fields directly using their sub-element selectors
 
 ### Vertical Sliders
 
-Sliders have an additional `Vertical` toggle to make it vertical. By default sliders will be horizontal.
+Sliders have an additional `Vertical` toggle which rotates it 90 degrees to make it vertical. By default sliders will be horizontal. Vertical sliders heights are determined by it's sibling elements. If it has no siblings or you find that it is not consistently rendering, then you may need to explicitly set it's height using the style options like so:
+
+```css
+:host {
+  height: 350px;
+}
+```
 
 ### Multiple Icons and Labels for Touchpads
 
