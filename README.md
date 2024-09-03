@@ -18,7 +18,7 @@ _Formerly called Android TV Card_
 A super customizable universal remote card iterating on the work of several other developers. Featuring:
 
 - Configuration UI.
-- Out of the box support for several platforms with default keys and sources lists.
+- Out of the box support for [several platforms](#media-platform-and-entity-ids) with default keys and sources lists.
   - Android TV
   - Fire TV
   - Roku
@@ -29,10 +29,10 @@ A super customizable universal remote card iterating on the work of several othe
 - Support for multiple buttons, touchpads, and sliders using default or user defined actions.
 - Complete [Home Assistant actions](https://www.home-assistant.io/dashboards/actions/) support.
 - Keyboard and search dialog actions for most platforms.
-- Template support for almost all fields using nunjucks.
+- [Template](#a-note-on-templating) support for almost all fields using nunjucks.
 - Toggleable haptics.
-- Touchpad multi-touch gesture support.
-- User configurable remote layout.
+- Touchpad [multi-touch](#touchpad-actions) gesture support.
+- User configurable remote [layout](#layout).
 - Icons and labels for all elements.
 - CSS style options for all sub-elements.
 
@@ -46,23 +46,25 @@ The editor has four tabs - General, Layout, Actions, and Icons.
 
 <img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/editor_general_tab.png" alt="editor general tab" width="600"/>
 
+Fields set in the general tab will be used for default keys and sources, and will autofill into custom actions when they are initially created if autofill is enabled. If these values are changed after a custom action is created, the custom action will not be updated and will have to also be changed by the user.
+
 ## Media Platform and Entity IDs
 
 This card supports several media platforms with default key and source lists. It uses the Home Assistant integrations for these platforms via their remote and/or media player entities. Different platforms use the remote and media player entities for different functions as shown below. For platforms with keyboard support, the keyboard entity ID (which doesn't always match the remote and media player entities) can also be provided.
 
-| Platform                                                                   | Remote                   | Media Player                       | Keyboard                                                                                                 |
-| -------------------------------------------------------------------------- | ------------------------ | ---------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| [Android TV](https://www.home-assistant.io/integrations/androidtv_remote/) | Default keys and sources | Default slider                     | [ADB](https://www.home-assistant.io/integrations/androidtv/) remote (preferred) or media player          |
-| [Fire TV](https://www.home-assistant.io/integrations/androidtv/)           | Default keys             | Default sources and slider         | Remote (preferred) or media player                                                                       |
-| [Roku](https://www.home-assistant.io/integrations/roku/)                   | Default keys             | Default sources and slider         | Remote for keyboard, media player for search (provide one for keyboard ID and the other in their fields) |
-| [Kodi](https://www.home-assistant.io/integrations/kodi/)                   | NA                       | Default keys, sources, and slider  | Media player                                                                                             |
-| [Apple TV](https://www.home-assistant.io/integrations/apple_tv)            | Default keys             | Default sources and slider         | NA                                                                                                       |
-| [Samsung TV](https://www.home-assistant.io/integrations/samsungtv/)        | Default keys             | Default sources and slider         | NA                                                                                                       |
-| [LG webOS](https://www.home-assistant.io/integrations/webostv/)            | NA                       | Default keys, sources, and sliders | NA                                                                                                       |
+| Platform                                                                   | Remote                   | Media Player                       | Keyboard                                                                                                  |
+| -------------------------------------------------------------------------- | ------------------------ | ---------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| [Android TV](https://www.home-assistant.io/integrations/androidtv_remote/) | Default keys and sources | Default slider                     | [ADB](https://www.home-assistant.io/integrations/androidtv/) remote (preferred) or media player           |
+| [Fire TV](https://www.home-assistant.io/integrations/androidtv/)           | Default keys             | Default sources and slider         | Remote (preferred) or media player                                                                        |
+| [Roku](https://www.home-assistant.io/integrations/roku/)                   | Default keys             | Default sources and slider         | Remote for keyboard, media player for search (provide one for keyboard ID and the others in their fields) |
+| [Kodi](https://www.home-assistant.io/integrations/kodi/)                   | NA                       | Default keys, sources, and slider  | Media player                                                                                              |
+| [Apple TV](https://www.home-assistant.io/integrations/apple_tv)            | Default keys             | Default sources and slider         | NA                                                                                                        |
+| [Samsung TV](https://www.home-assistant.io/integrations/samsungtv/)        | Default keys             | Default sources and slider         | NA                                                                                                        |
+| [LG webOS](https://www.home-assistant.io/integrations/webostv/)            | NA                       | Default keys, sources, and sliders | NA                                                                                                        |
 
 ## Action Timings
 
-Double tap and hold actions have user adjustable timings to change how they are triggered.
+Double tap and hold actions have user adjustable timings to change how they are triggered. These values can be set globally in the general tab or for each custom action.
 
 ### Hold Time
 
@@ -126,7 +128,7 @@ To get ID selectors for individual rows, columns, and pads, hover over the card 
 
 ### Autofill and Haptics
 
-When creating custom actions, the card editor will autofill fields using information set in the general tab. This can be disabled by toggling `Autofill` off. This value can also be set at the custom remote element level. Haptics can be similarly toggled globally or for individual custom remote elements.
+When creating custom actions, the card editor will autofill fields using information set in the general tab. This can be disabled by toggling `Autofill` off. This value can also be set at the custom remote element level. Haptics can be similarly toggled globally or for individual custom remote elements and are enabled by default.
 
 ### Other
 
@@ -249,7 +251,7 @@ While you can now set most CSS fields directly using their sub-element selectors
 
 ### Vertical Sliders
 
-Sliders have an additional `Vertical` toggle to make a vertical. By default sliders will be horizontal.
+Sliders have an additional `Vertical` toggle to make it vertical. By default sliders will be horizontal.
 
 ### Multiple Icons and Labels for Touchpads
 
@@ -322,7 +324,7 @@ You can include the number of seconds a button has been held down using `hold_se
 
 The touchpad's center acts like a button, with support for the same actions. The touchpad's direction actions are activated when the user swipes in a direction, and do not support double tap actions or momentary mode.
 
-Touchpads support an additional multi-touch mode, which fires alternate actions when more than one finger is used with it. This mode is disabled by default but can be enabled by setting it's actions to something other than `Nothing`. Multi-touch mode supports tap, double tap, and hold actions. Touchpad swipe directions do not support momentary mode, but it's center does.
+Touchpads also support multi-touch mode, which fires alternate actions when more than one finger is used with it. This mode is disabled by default but can be enabled by setting a touchpad's multi-touch actions to something other than `Nothing`. Multi-touch mode supports center tap, double tap, and hold actions, and direction swipe and hold actions.
 
 ### Keyboard, Textbox, and Search
 

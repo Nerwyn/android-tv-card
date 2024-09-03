@@ -910,7 +910,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 					{
 						boolean: {},
 					},
-					false,
+					true,
 				)}
 			</div>
 		</div> `;
@@ -1880,7 +1880,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 								{
 									boolean: {},
 								},
-								false,
+								true,
 							)}
 						</div>
 						${this.buildSelector('Title', 'title', {
