@@ -1632,7 +1632,7 @@ custom_actions:
     entity_id: remote.rm4_pro
 ```
 
-<img src="https://github.com/Nerwyn/android-tv-card/blob/main/assets/rgb.png" alt="rgb remote example" width="500"/>
+<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/rgb.png" alt="rgb remote example" width="500"/>
 
 ## Example 15
 
@@ -1760,7 +1760,7 @@ styles: |-
   }
 ```
 
-<img src="https://github.com/Nerwyn/android-tv-card/blob/main/assets/google_tv_dpad.png" alt="google tv app styled dpad" width="500"/>
+<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/google_tv_dpad.png" alt="google tv app styled dpad" width="500"/>
 
 ## Example 16
 
@@ -1894,7 +1894,7 @@ custom_actions:
     icon: mdi:play-pause
 ```
 
-<img src="https://github.com/Nerwyn/android-tv-card/blob/main/assets/music_controls.png" alt="music controls" width="500"/>
+<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/music_controls.png" alt="music controls" width="500"/>
 
 ## Example 17
 
@@ -1998,7 +1998,7 @@ custom_actions:
     haptics: true
 ```
 
-<img src="https://github.com/Nerwyn/android-tv-card/blob/main/assets/color_controls.png" alt="color controls" width="500"/>
+<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/color_controls.png" alt="color controls" width="500"/>
 
 [last-commit-shield]: https://img.shields.io/github/last-commit/Nerwyn/android-tv-card?style=for-the-badge
 [commits]: https://github.com/Nerwyn/android-tv-card/commits/main
