@@ -5,7 +5,18 @@ import { property, state } from 'lit/decorators.js';
 import { HomeAssistant } from 'custom-card-helpers';
 import { dump, load } from 'js-yaml';
 
-import { defaultIcons } from './maps';
+import {
+	AUTOFILL,
+	DOUBLE_TAP_WINDOW,
+	HAPTICS,
+	HOLD_TIME,
+	RANGE_MAX,
+	RANGE_MIN,
+	REPEAT_DELAY,
+	STEP,
+	STEP_COUNT,
+	UPDATE_AFTER_ACTION_DELAY,
+} from './models/constants';
 import {
 	ActionType,
 	ActionTypes,
@@ -26,7 +37,8 @@ import {
 	RemoteElementType,
 	RemoteElementTypes,
 	Row,
-} from './models';
+} from './models/interfaces';
+import { defaultIcons } from './models/maps';
 import { deepGet, deepSet, getDefaultActions, mergeDeep } from './utils';
 
 export class UniversalRemoteCardEditor extends LitElement {
@@ -414,7 +426,8 @@ export class UniversalRemoteCardEditor extends LitElement {
 				entries.push({
 					type: RemoteElementTypes[i],
 					name: name,
-					autofill_entity_id: this.config.autofill_entity_id ?? true,
+					autofill_entity_id:
+						this.config.autofill_entity_id ?? AUTOFILL,
 				});
 				break;
 			}
@@ -902,7 +915,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 					{
 						boolean: {},
 					},
-					this.config.autofill_entity_id ?? true,
+					this.config.autofill_entity_id ?? AUTOFILL,
 				)}
 				${this.buildSelector(
 					'Haptics',
@@ -910,7 +923,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 					{
 						boolean: {},
 					},
-					true,
+					HAPTICS,
 				)}
 			</div>
 		</div> `;
@@ -1025,7 +1038,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 								unit_of_measurement: 'ms',
 							},
 						},
-						200,
+						DOUBLE_TAP_WINDOW,
 				  )
 				: action != 'none' && actionType == 'multi_double_tap_action'
 				? this.buildSelector(
@@ -1039,7 +1052,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 								unit_of_measurement: 'ms',
 							},
 						},
-						200,
+						DOUBLE_TAP_WINDOW,
 				  )
 				: action != 'none' && actionType == 'hold_action'
 				? html`<div class="form">
@@ -1054,7 +1067,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 									unit_of_measurement: 'ms',
 								},
 							},
-							500,
+							HOLD_TIME,
 						)}
 						${this.renderTemplate(
 							(this.activeEntry as IElementConfig)?.hold_action
@@ -1072,7 +1085,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 											unit_of_measurement: 'ms',
 										},
 									},
-									100,
+									REPEAT_DELAY,
 							  )
 							: ''}
 				  </div>`
@@ -1089,7 +1102,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 									unit_of_measurement: 'ms',
 								},
 							},
-							500,
+							HOLD_TIME,
 						)}
 						${this.renderTemplate(
 							(this.activeEntry as IElementConfig)
@@ -1107,7 +1120,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 											unit_of_measurement: 'ms',
 										},
 									},
-									100,
+									REPEAT_DELAY,
 							  )
 							: ''}
 				  </div>`
@@ -1324,19 +1337,24 @@ export class UniversalRemoteCardEditor extends LitElement {
 		const context = this.getEntryContext(
 			(this.activeEntry as IElementConfig) ?? ({} as IElementConfig),
 		);
-		const rangeMin = this.renderTemplate(
-			(this.activeEntry as IElementConfig)?.range?.[0] as number,
-			context,
+		const rangeMin = Number(
+			this.renderTemplate(
+				(this.activeEntry as IElementConfig)?.range?.[0] as number,
+				context,
+			),
 		);
-		const rangeMax = this.renderTemplate(
-			(this.activeEntry as IElementConfig)?.range?.[0] as number,
-			context,
+		const rangeMax = Number(
+			this.renderTemplate(
+				(this.activeEntry as IElementConfig)?.range?.[0] as number,
+				context,
+			),
 		);
-		const step =
+		const step = Number(
 			this.renderTemplate(
 				(this.activeEntry as IElementConfig)?.step as number,
 				context,
-			) ?? 1;
+			),
+		);
 		const unit = this.renderTemplate(
 			(this.activeEntry as IElementConfig)?.unit_of_measurement as string,
 			context,
@@ -1353,6 +1371,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 							mode: 'box',
 							unit_of_measurement: unit,
 						},
+						RANGE_MIN,
 					})}
 					${this.buildSelector('Max', 'range.1', {
 						number: {
@@ -1361,6 +1380,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 							mode: 'box',
 							unit_of_measurement: unit,
 						},
+						RANGE_MAX,
 					})}
 					${this.buildSelector('Step', 'step', {
 						number: {
@@ -1369,15 +1389,14 @@ export class UniversalRemoteCardEditor extends LitElement {
 								step ??
 								Math.min(
 									1,
-									(((this.activeEntry as IElementConfig)
-										?.range?.[1] ?? 1) -
-										((this.activeEntry as IElementConfig)
-											?.range?.[0] ?? 0)) /
-										100,
+									((rangeMax ?? RANGE_MAX) -
+										(rangeMin ?? RANGE_MIN)) /
+										STEP_COUNT,
 								),
 							mode: 'box',
 							unit_of_measurement: unit,
 						},
+						STEP,
 					})}
 					${this.buildSelector(
 						'Update after action delay',
@@ -1390,7 +1409,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 								unit_of_measurement: 'ms',
 							},
 						},
-						1000,
+						UPDATE_AFTER_ACTION_DELAY,
 					)}
 				`,
 			)}
@@ -1832,7 +1851,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 										unit_of_measurement: 'ms',
 									},
 								},
-								500,
+								HOLD_TIME,
 							)}
 							${this.buildSelector(
 								'Repeat delay',
@@ -1845,7 +1864,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 										unit_of_measurement: 'ms',
 									},
 								},
-								100,
+								REPEAT_DELAY,
 							)}
 							${this.buildSelector(
 								'Double tap window',
@@ -1858,7 +1877,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 										unit_of_measurement: 'ms',
 									},
 								},
-								200,
+								DOUBLE_TAP_WINDOW,
 							)}
 						</div>
 					</div>
@@ -1872,7 +1891,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 								{
 									boolean: {},
 								},
-								true,
+								AUTOFILL,
 							)}
 							${this.buildSelector(
 								'Haptics',
@@ -1880,7 +1899,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 								{
 									boolean: {},
 								},
-								true,
+								HAPTICS,
 							)}
 						</div>
 						${this.buildSelector('Title', 'title', {
@@ -2206,7 +2225,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 			this.renderTemplate(
 				(entry.autofill_entity_id ??
 					config.autofill_entity_id ??
-					true) as unknown as string,
+					AUTOFILL) as unknown as string,
 				this.getEntryContext(entry),
 			)
 		) {
@@ -2237,11 +2256,11 @@ export class UniversalRemoteCardEditor extends LitElement {
 					...defaultActions,
 					...entry,
 					value_attribute: entry.value_attribute ?? 'state',
-					haptics: entry.haptics ?? config.haptics ?? true,
+					haptics: entry.haptics ?? config.haptics ?? HAPTICS,
 					autofill_entity_id:
 						entry.autofill_entity_id ??
 						config.autofill_entity_id ??
-						true,
+						AUTOFILL,
 				};
 			}
 
@@ -2415,11 +2434,13 @@ export class UniversalRemoteCardEditor extends LitElement {
 					let rangeMax = entry.range?.[1];
 					if (rangeMin == undefined) {
 						rangeMin =
-							this.hass.states[entityId]?.attributes?.min ?? 0;
+							this.hass.states[entityId]?.attributes?.min ??
+							RANGE_MIN;
 					}
 					if (rangeMax == undefined) {
 						rangeMax =
-							this.hass.states[entityId]?.attributes?.max ?? 1;
+							this.hass.states[entityId]?.attributes?.max ??
+							RANGE_MAX;
 					}
 					entry.range = [rangeMin as number, rangeMax as number];
 
@@ -2476,7 +2497,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 										entry.range[0],
 										entryContext,
 									) as unknown as number)) /
-								100;
+								STEP_COUNT;
 						}
 					}
 					break;

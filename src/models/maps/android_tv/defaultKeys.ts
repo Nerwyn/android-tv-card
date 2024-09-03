@@ -1,4 +1,4 @@
-import { IElementConfig } from '../../models';
+import { IElementConfig } from '../../interfaces';
 
 /**
  * This is the list of most common commands from the Android TV Remote integration page.

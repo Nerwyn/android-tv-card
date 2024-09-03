@@ -6,8 +6,13 @@ import {
 	DirectionAction,
 	IActions,
 	ITouchpadConfig,
-} from '../models';
+} from '../models/interfaces';
 
+import {
+	DOUBLE_TAP_WINDOW,
+	HOLD_TIME,
+	REPEAT_DELAY,
+} from '../models/constants';
 import { BaseRemoteElement } from './base-remote-element';
 
 @customElement('remote-touchpad')
@@ -48,19 +53,29 @@ export class RemoteTouchpad extends BaseRemoteElement {
 				this.sendAction(doubleTapAction);
 				this.endAction();
 			} else {
-				// Single tap action is triggered if double tap is not within 200ms
+				// Single tap action is triggered if double tap is not within window
 				if (!this.clickTimer) {
-					const doubleTapWindow: number =
+					const actionType = this.getMultiPrefix();
+					let doubleTapWindow: number =
 						'double_tap_window' in
 						(this.config[doubleTapAction] ?? {})
 							? (this.renderTemplate(
 									this.config[doubleTapAction]
 										?.double_tap_window as unknown as string,
 							  ) as number)
-							: 200;
+							: DOUBLE_TAP_WINDOW;
+					if (
+						actionType == 'multi_' &&
+						this.config.multi_double_tap_action
+					) {
+						doubleTapWindow = this.renderTemplate(
+							this.config.multi_double_tap_action
+								?.double_tap_window ?? REPEAT_DELAY,
+						) as number;
+					}
 					this.clickTimer = setTimeout(() => {
 						this.fireHapticEvent('light');
-						this.sendAction(`${this.getMultiPrefix()}tap_action`);
+						this.sendAction(`${actionType}tap_action`);
 						this.endAction();
 					}, doubleTapWindow);
 				}
@@ -244,7 +259,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		const actions = this.getActions();
 
 		const holdTime = this.renderTemplate(
-			actions[holdAction as ActionType]?.hold_time ?? 500,
+			actions[holdAction as ActionType]?.hold_time ?? HOLD_TIME,
 		) as number;
 
 		this.holdTimer = setTimeout(() => {
@@ -258,7 +273,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 				this.renderTemplate(actions.hold_action?.action as string) ==
 				'repeat';
 			let repeat_delay = this.renderTemplate(
-				actions.hold_action?.repeat_delay ?? 100,
+				actions.hold_action?.repeat_delay ?? REPEAT_DELAY,
 			) as number;
 			if (actionType == 'multi_' && actions.multi_hold_action) {
 				repeat =
@@ -266,7 +281,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 						actions.multi_hold_action?.action as string,
 					) == 'repeat';
 				repeat_delay = this.renderTemplate(
-					actions.multi_hold_action?.repeat_delay ?? 100,
+					actions.multi_hold_action?.repeat_delay ?? REPEAT_DELAY,
 				) as number;
 			}
 

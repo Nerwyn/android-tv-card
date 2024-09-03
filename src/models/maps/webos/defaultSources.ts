@@ -1,4 +1,4 @@
-import { IElementConfig } from '../../models';
+import { IElementConfig } from '../../interfaces';
 
 /**
  * https://www.home-assistant.io/integrations/webostv/#action-webostvbutton

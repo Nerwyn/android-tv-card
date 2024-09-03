@@ -1,20 +1,17 @@
-import { IElementConfig } from '../../models';
+import { IElementConfig } from '../../interfaces';
 
-/**
- * https://www.home-assistant.io/integrations/androidtv#media_playerselect_source
- */
-export const fireTVDefaultSources: IElementConfig[] = [
+export const samsungTVDefaultSources: IElementConfig[] = [
 	{
 		type: 'button',
-		name: 'hulu',
+		name: 'dazn',
 		tap_action: {
 			action: 'perform-action',
 			perform_action: 'media_player.select_source',
 			data: {
-				source: 'com.hulu.plus',
+				source: 'DAZN',
 			},
 		},
-		icon: 'mdi:hulu',
+		icon: 'dazn',
 	},
 	{
 		type: 'button',
@@ -23,7 +20,7 @@ export const fireTVDefaultSources: IElementConfig[] = [
 			action: 'perform-action',
 			perform_action: 'media_player.select_source',
 			data: {
-				source: 'com.netflix.ninja',
+				source: 'Netflix',
 			},
 		},
 		icon: 'mdi:netflix',
@@ -35,7 +32,7 @@ export const fireTVDefaultSources: IElementConfig[] = [
 			action: 'perform-action',
 			perform_action: 'media_player.select_source',
 			data: {
-				source: 'com.amazon.firebat/.deeplink.DeepLinkRoutingActivity',
+				source: 'Prime Video',
 			},
 		},
 		icon: 'primevideo',
@@ -47,7 +44,7 @@ export const fireTVDefaultSources: IElementConfig[] = [
 			action: 'perform-action',
 			perform_action: 'media_player.select_source',
 			data: {
-				source: 'com.amazon.firetv.youtube',
+				source: 'YouTube',
 			},
 		},
 		icon: 'mdi:youtube',

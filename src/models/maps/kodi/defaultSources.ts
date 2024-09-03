@@ -1,3 +1,3 @@
-import { IElementConfig } from '../../models';
+import { IElementConfig } from '../../interfaces';
 
 export const kodiDefaultSources: IElementConfig[] = [];

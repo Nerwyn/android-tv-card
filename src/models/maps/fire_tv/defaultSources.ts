@@ -1,21 +1,9 @@
-import { IElementConfig } from '../../models';
+import { IElementConfig } from '../../interfaces';
 
 /**
- * https://www.home-assistant.io/integrations/roku/#source-automation
+ * https://www.home-assistant.io/integrations/androidtv#media_playerselect_source
  */
-export const rokuDefaultSources: IElementConfig[] = [
-	{
-		type: 'button',
-		name: 'disney',
-		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'Disney Plus',
-			},
-		},
-		icon: 'disney',
-	},
+export const fireTVDefaultSources: IElementConfig[] = [
 	{
 		type: 'button',
 		name: 'hulu',
@@ -23,10 +11,22 @@ export const rokuDefaultSources: IElementConfig[] = [
 			action: 'perform-action',
 			perform_action: 'media_player.select_source',
 			data: {
-				source: 'Hulu',
+				source: 'com.hulu.plus',
 			},
 		},
 		icon: 'mdi:hulu',
+	},
+	{
+		type: 'button',
+		name: 'netflix',
+		tap_action: {
+			action: 'perform-action',
+			perform_action: 'media_player.select_source',
+			data: {
+				source: 'com.netflix.ninja',
+			},
+		},
+		icon: 'mdi:netflix',
 	},
 	{
 		type: 'button',
@@ -35,22 +35,10 @@ export const rokuDefaultSources: IElementConfig[] = [
 			action: 'perform-action',
 			perform_action: 'media_player.select_source',
 			data: {
-				source: 'Prime Video',
+				source: 'com.amazon.firebat/.deeplink.DeepLinkRoutingActivity',
 			},
 		},
 		icon: 'primevideo',
-	},
-	{
-		type: 'button',
-		name: 'spotify',
-		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'Spotify',
-			},
-		},
-		icon: 'mdi:spotify',
 	},
 	{
 		type: 'button',
@@ -59,7 +47,7 @@ export const rokuDefaultSources: IElementConfig[] = [
 			action: 'perform-action',
 			perform_action: 'media_player.select_source',
 			data: {
-				source: 'YouTube',
+				source: 'com.amazon.firetv.youtube',
 			},
 		},
 		icon: 'mdi:youtube',

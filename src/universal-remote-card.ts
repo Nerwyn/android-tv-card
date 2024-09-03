@@ -15,7 +15,7 @@ import {
 	IElementConfig,
 	ITarget,
 	Platform,
-} from './models';
+} from './models/interfaces';
 
 import { UniversalRemoteCardEditor } from './universal-remote-card-editor';
 import { getDefaultActions } from './utils';
@@ -24,6 +24,7 @@ import './classes/keyboard-dialog';
 import './classes/remote-button';
 import './classes/remote-slider';
 import './classes/remote-touchpad';
+import { DOUBLE_TAP_WINDOW, HOLD_TIME, REPEAT_DELAY } from './models/constants';
 
 console.info(
 	`%c UNIVERSAL-REMOTE-CARD v${packageInfo.version}`,
@@ -133,12 +134,15 @@ class UniversalRemoteCard extends LitElement {
 		if (this.config.hold_time) {
 			if (actions.hold_action) {
 				actions.hold_action.hold_time =
-					actions.hold_action?.hold_time ?? this.config.hold_time;
+					actions.hold_action?.hold_time ??
+					this.config.hold_time ??
+					HOLD_TIME;
 			}
 			if (actions.multi_hold_action) {
 				actions.multi_hold_action.hold_time =
 					actions.multi_hold_action?.hold_time ??
-					this.config.hold_time;
+					this.config.hold_time ??
+					HOLD_TIME;
 			}
 		}
 
@@ -147,7 +151,8 @@ class UniversalRemoteCard extends LitElement {
 			if (actions.hold_action?.action == 'repeat') {
 				actions.hold_action.repeat_delay =
 					actions.hold_action.repeat_delay ??
-					this.config.repeat_delay;
+					this.config.repeat_delay ??
+					REPEAT_DELAY;
 			}
 			if (
 				actions.multi_hold_action &&
@@ -155,7 +160,8 @@ class UniversalRemoteCard extends LitElement {
 			) {
 				actions.multi_hold_action.repeat_delay =
 					actions.multi_hold_action.repeat_delay ??
-					this.config.repeat_delay;
+					this.config.repeat_delay ??
+					REPEAT_DELAY;
 			}
 		}
 
@@ -164,12 +170,14 @@ class UniversalRemoteCard extends LitElement {
 			if (actions.double_tap_action) {
 				actions.double_tap_action.double_tap_window =
 					actions.double_tap_action?.double_tap_window ??
-					this.config.double_tap_window;
+					this.config.double_tap_window ??
+					DOUBLE_TAP_WINDOW;
 			}
 			if (actions.multi_double_tap_action) {
 				actions.multi_double_tap_action.double_tap_window =
 					actions.multi_double_tap_action.double_tap_window ??
-					this.config.double_tap_window;
+					this.config.double_tap_window ??
+					DOUBLE_TAP_WINDOW;
 			}
 		}
 
@@ -187,8 +195,8 @@ class UniversalRemoteCard extends LitElement {
 			actions.entity_id = this.config.media_player_id;
 			const tapAction = actions.tap_action ?? ({} as IAction);
 			const target = tapAction.target ?? ({} as ITarget);
-			(target.entity_id = this.config.media_player_id),
-				(tapAction.target = target);
+			target.entity_id = this.config.media_player_id;
+			tapAction.target = target;
 			actions.tap_action = tapAction;
 		}
 

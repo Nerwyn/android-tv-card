@@ -1,4 +1,4 @@
-import { IIconConfig } from '../models';
+import { IIconConfig } from '../interfaces';
 
 export const defaultIcons: IIconConfig[] = [
 	{

@@ -4,7 +4,6 @@ import { eventOptions, property, state } from 'lit/decorators.js';
 import { HapticType, HomeAssistant, forwardHaptic } from 'custom-card-helpers';
 import { renderTemplate } from 'ha-nunjucks';
 
-import { defaultIcons } from '../maps';
 import {
 	ActionType,
 	IAction,
@@ -13,7 +12,8 @@ import {
 	IData,
 	IElementConfig,
 	IIconConfig,
-} from '../models';
+} from '../models/interfaces';
+import { defaultIcons } from '../models/maps';
 import { deepGet, deepSet, getDeepKeys } from '../utils';
 
 export class BaseRemoteElement extends LitElement {

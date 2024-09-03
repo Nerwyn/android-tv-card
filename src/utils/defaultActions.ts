@@ -1,3 +1,4 @@
+import { IElementConfig, Platform } from '../models/interfaces';
 import {
 	androidTVDefaultKeys,
 	androidTVDefaultSources,
@@ -13,8 +14,7 @@ import {
 	samsungTVDefaultSources,
 	webosDefaultKeys,
 	webosDefaultSources,
-} from '../maps';
-import { IElementConfig, Platform } from '../models';
+} from '../models/maps';
 
 export function getDefaultActions(platform: Platform) {
 	let defaultKeys: IElementConfig[];

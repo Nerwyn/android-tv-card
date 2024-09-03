@@ -2,7 +2,15 @@ import { CSSResult, css, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { StyleInfo, styleMap } from 'lit/directives/style-map.js';
 
-import { ISliderConfig } from '../models';
+import {
+	RANGE_MAX,
+	RANGE_MIN,
+	SLIDER_ANIMATION,
+	STEP,
+	STEP_COUNT,
+	UPDATE_AFTER_ACTION_DELAY,
+} from '../models/constants';
+import { ISliderConfig } from '../models/interfaces';
 import { BaseRemoteElement } from './base-remote-element';
 
 @customElement('remote-slider')
@@ -17,8 +25,8 @@ export class RemoteSlider extends BaseRemoteElement {
 	oldValue?: number;
 	newValue?: number;
 	speed: number = 0.02;
-	range: [number, number] = [0, 1];
-	step: number = 0.01;
+	range: [number, number] = [RANGE_MIN, RANGE_MAX];
+	step: number = STEP;
 	intervalId?: ReturnType<typeof setTimeout>;
 
 	@state() sliderWidth: number = 0;
@@ -76,7 +84,7 @@ export class RemoteSlider extends BaseRemoteElement {
 						this.currentValue = end;
 						this.setThumbOffset();
 					}
-				}, 1);
+				}, SLIDER_ANIMATION);
 			} else if (start < end) {
 				this.sliderOn = true;
 				this.intervalId = setInterval(() => {
@@ -90,7 +98,7 @@ export class RemoteSlider extends BaseRemoteElement {
 						this.currentValue = end;
 						this.setThumbOffset();
 					}
-				}, 1);
+				}, SLIDER_ANIMATION);
 			} else {
 				this.currentValue = end;
 			}
@@ -224,7 +232,7 @@ export class RemoteSlider extends BaseRemoteElement {
 
 	resetGetValueFromHass() {
 		const valueFromHassDelay = this.renderTemplate(
-			this.config.value_from_hass_delay ?? 1000,
+			this.config.value_from_hass_delay ?? UPDATE_AFTER_ACTION_DELAY,
 		) as number;
 		this.getValueFromHassTimer = setTimeout(
 			() => (this.getValueFromHass = true),
@@ -352,16 +360,16 @@ export class RemoteSlider extends BaseRemoteElement {
 
 		if (this.config.range) {
 			this.range[0] = parseFloat(
-				this.renderTemplate(
+				(this.renderTemplate(
 					this.config.range[0] as unknown as string,
 					context,
-				) as string,
+				) as string) ?? RANGE_MIN,
 			);
 			this.range[1] = parseFloat(
-				this.renderTemplate(
+				(this.renderTemplate(
 					this.config.range[1] as unknown as string,
 					context,
-				) as string,
+				) as string) ?? RANGE_MAX,
 			);
 		}
 
@@ -370,7 +378,7 @@ export class RemoteSlider extends BaseRemoteElement {
 		if (this.config.step) {
 			this.step = Number(this.renderTemplate(this.config.step, context));
 		} else {
-			this.step = (this.range[1] - this.range[0]) / 100;
+			this.step = (this.range[1] - this.range[0]) / STEP_COUNT;
 		}
 		const splitStep = this.step.toString().split('.');
 		if (splitStep.length > 1) {

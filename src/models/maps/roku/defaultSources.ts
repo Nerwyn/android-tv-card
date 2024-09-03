@@ -1,29 +1,32 @@
-import { IElementConfig } from '../../models';
+import { IElementConfig } from '../../interfaces';
 
-export const samsungTVDefaultSources: IElementConfig[] = [
+/**
+ * https://www.home-assistant.io/integrations/roku/#source-automation
+ */
+export const rokuDefaultSources: IElementConfig[] = [
 	{
 		type: 'button',
-		name: 'dazn',
+		name: 'disney',
 		tap_action: {
 			action: 'perform-action',
 			perform_action: 'media_player.select_source',
 			data: {
-				source: 'DAZN',
+				source: 'Disney Plus',
 			},
 		},
-		icon: 'dazn',
+		icon: 'disney',
 	},
 	{
 		type: 'button',
-		name: 'netflix',
+		name: 'hulu',
 		tap_action: {
 			action: 'perform-action',
 			perform_action: 'media_player.select_source',
 			data: {
-				source: 'Netflix',
+				source: 'Hulu',
 			},
 		},
-		icon: 'mdi:netflix',
+		icon: 'mdi:hulu',
 	},
 	{
 		type: 'button',
@@ -36,6 +39,18 @@ export const samsungTVDefaultSources: IElementConfig[] = [
 			},
 		},
 		icon: 'primevideo',
+	},
+	{
+		type: 'button',
+		name: 'spotify',
+		tap_action: {
+			action: 'perform-action',
+			perform_action: 'media_player.select_source',
+			data: {
+				source: 'Spotify',
+			},
+		},
+		icon: 'mdi:spotify',
 	},
 	{
 		type: 'button',

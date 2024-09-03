@@ -1,7 +1,12 @@
 import { CSSResult, css, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
-import { IButtonConfig } from '../models';
+import {
+	DOUBLE_TAP_WINDOW,
+	HOLD_TIME,
+	REPEAT_DELAY,
+} from '../models/constants';
+import { IButtonConfig } from '../models/interfaces';
 import { BaseRemoteElement } from './base-remote-element';
 
 @customElement('remote-button')
@@ -31,14 +36,14 @@ export class RemoteButton extends BaseRemoteElement {
 				this.sendAction('double_tap_action');
 				this.endAction();
 			} else {
-				// Single tap action is triggered if double tap is not within 200ms
+				// Single tap action is triggered if double tap is not within window
 				const doubleTapWindow: number =
 					'double_tap_window' in (this.config.double_tap_action ?? {})
 						? (this.renderTemplate(
 								this.config.double_tap_action
 									?.double_tap_window as unknown as string,
 						  ) as number)
-						: 200;
+						: DOUBLE_TAP_WINDOW;
 				if (!this.clickTimer) {
 					this.clickTimer = setTimeout(() => {
 						this.fireHapticEvent('light');
@@ -83,7 +88,7 @@ export class RemoteButton extends BaseRemoteElement {
 			this.momentaryStart = performance.now();
 		} else if (!this.holdTimer) {
 			const holdTime = this.renderTemplate(
-				this.config.hold_action?.hold_time ?? 500,
+				this.config.hold_action?.hold_time ?? HOLD_TIME,
 			) as number;
 
 			this.holdTimer = setTimeout(() => {
@@ -96,7 +101,8 @@ export class RemoteButton extends BaseRemoteElement {
 						) == 'repeat'
 					) {
 						const repeat_delay = this.renderTemplate(
-							this.config.hold_action?.repeat_delay ?? 100,
+							this.config.hold_action?.repeat_delay ??
+								REPEAT_DELAY,
 						) as number;
 						if (!this.holdInterval) {
 							this.holdInterval = setInterval(() => {

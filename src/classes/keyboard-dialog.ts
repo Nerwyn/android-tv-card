@@ -2,7 +2,7 @@ import { HomeAssistant } from 'custom-card-helpers';
 import { LitElement, css, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 
-import { IAction } from '../models';
+import { IAction } from '../models/interfaces';
 
 @customElement('keyboard-dialog')
 export class KeyboardDialog extends LitElement {
