@@ -485,11 +485,8 @@ custom_actions:
       perform_action: media_player.volume_set
       data:
         volume_level: '{{ value | float }}'
-      target:
-        entity_id: media_player.google_chromecast
     vertical: true
     icon: mdi:volume-high
-    entity_id: media_player.google_chromecast
 ```
 
 Result:
@@ -498,7 +495,7 @@ Result:
 
 ## Example 4
 
-In any row, if you add an empty or `null` item, there will be an empty button sized space.
+In any row, if you add a `null` item, there will be an empty button sized space.
 
 ```yaml
 type: custom:android-tv-card
@@ -627,58 +624,37 @@ custom_actions:
     tap_action:
       action: key
       key: wakeup
-      remote_id: remote.apple_tv
-      platform: Apple TV
     icon: mdi:power
-    autofill_entity_id: true
-    value_attribute: state
-    haptics: true
-    entity_id: remote.apple_tv
     hold_action:
       action: key
-      remote_id: remote.apple_tv
-      platform: Apple TV
       key: suspend
   - type: touchpad
     name: touchpad
     tap_action:
       action: key
       key: select
-      remote_id: remote.apple_tv
-      platform: Apple TV
     up:
       tap_action:
         action: key
         key: up
-        remote_id: remote.apple_tv
-        platform: Apple TV
       hold_action:
         action: repeat
     down:
       tap_action:
         action: key
         key: down
-        remote_id: remote.apple_tv
-        platform: Apple TV
-      icon: ''
       hold_action:
         action: repeat
     left:
       tap_action:
         action: key
         key: up
-        remote_id: remote.apple_tv
-        platform: Apple TV
-      icon: ''
       hold_action:
         action: repeat
     right:
       tap_action:
         action: key
         key: right
-        remote_id: remote.apple_tv
-        platform: Apple TV
-      icon: ''
       hold_action:
         action: repeat
     styles: |-
@@ -688,12 +664,6 @@ custom_actions:
     double_tap_action:
       action: key
       key: menu
-      remote_id: remote.apple_tv
-      platform: Apple TV
-    autofill_entity_id: true
-    value_attribute: state
-    haptics: true
-    entity_id: remote.apple_tv
     icon: mdi:apple
 ```
 
@@ -710,7 +680,6 @@ type: custom:android-tv-card
 keyboard_id: media_player.kodi
 media_player_id: media_player.kodi
 platform: Kodi
-autofill_entity_id: true
 rows:
   - - back
     - home
@@ -730,16 +699,12 @@ custom_actions:
       perform_action: kodi.call_method
       data:
         method: Input.Select
-      target:
-        entity_id: media_player.kodi
     up:
       tap_action:
         action: perform-action
         perform_action: kodi.call_method
         data:
           method: Input.Up
-        target:
-          entity_id: media_player.kodi
       hold_action:
         action: repeat
     down:
@@ -748,8 +713,6 @@ custom_actions:
         perform_action: kodi.call_method
         data:
           method: Input.Down
-        target:
-          entity_id: media_player.kodi
       hold_action:
         action: repeat
     left:
@@ -758,8 +721,6 @@ custom_actions:
         perform_action: kodi.call_method
         data:
           method: Input.Left
-        target:
-          entity_id: media_player.kodi
       hold_action:
         action: repeat
     right:
@@ -768,8 +729,6 @@ custom_actions:
         perform_action: kodi.call_method
         data:
           method: Input.Right
-        target:
-          entity_id: media_player.kodi
       hold_action:
         action: repeat
     styles: |-
@@ -786,19 +745,11 @@ custom_actions:
       perform_action: kodi.call_method
       data:
         method: Input.ContextMenu
-      target:
-        entity_id: media_player.kodi
     double_tap_action:
       action: perform-action
       perform_action: kodi.call_method
       data:
         method: Input.Back
-      target:
-        entity_id: media_player.kodi
-    autofill_entity_id: true
-    value_attribute: state
-    haptics: true
-    entity_id: media_player.kodi
 ```
 
 Result:
@@ -820,43 +771,33 @@ custom_actions:
     tap_action:
       action: key
       key: DpadCenter
-      remote_id: remote.sony_bravia
     up:
       tap_action:
         action: key
         key: Up
-        remote_id: remote.sony_bravia
       hold_action:
         action: repeat
     down:
       tap_action:
         action: key
         key: Down
-        remote_id: remote.sony_bravia
       hold_action:
         action: repeat
     left:
       tap_action:
         action: key
         key: Left
-        remote_id: remote.sony_bravia
       hold_action:
         action: repeat
     right:
       tap_action:
         action: key
         key: Right
-        remote_id: remote.sony_bravia
       hold_action:
         action: repeat
     double_tap_action:
       action: key
       key: Back
-      remote_id: remote.sony_bravia
-    autofill_entity_id: true
-    value_attribute: state
-    haptics: true
-    entity_id: remote.sony_bravia
 ```
 
 ## Example 9
@@ -877,16 +818,12 @@ custom_actions:
       perform_action: denonavr.get_command
       data:
         command: /goform/formiPhoneAppDirect.xml?MNENT
-      target:
-        entity_id: media_player.marantz_sr7013
     up:
       tap_action:
         action: perform-action
         perform_action: denonavr.get_command
         data:
           command: /goform/formiPhoneAppDirect.xml?MNCUP
-        target:
-          entity_id: media_player.marantz_sr7013
       hold_action:
         action: repeat
     down:
@@ -895,8 +832,6 @@ custom_actions:
         perform_action: denonavr.get_command
         data:
           command: /goform/formiPhoneAppDirect.xml?MNCDN
-        target:
-          entity_id: media_player.marantz_sr7013
       hold_action:
         action: repeat
     left:
@@ -905,8 +840,6 @@ custom_actions:
         perform_action: denonavr.get_command
         data:
           command: /goform/formiPhoneAppDirect.xml?MNCLT
-        target:
-          entity_id: media_player.marantz_sr7013
       hold_action:
         action: repeat
     right:
@@ -915,8 +848,6 @@ custom_actions:
         perform_action: denonavr.get_command
         data:
           command: /goform/formiPhoneAppDirect.xml?MNCRT
-        target:
-          entity_id: media_player.marantz_sr7013
       hold_action:
         action: repeat
     styles: |-
@@ -928,12 +859,6 @@ custom_actions:
       perform_action: denonavr.get_command
       data:
         command: /goform/formiPhoneAppDirect.xml?MNRTN
-      target:
-        entity_id: media_player.marantz_sr7013
-    autofill_entity_id: true
-    value_attribute: state
-    haptics: true
-    entity_id: media_player.marantz_sr7013
 ```
 
 ## Example 10
@@ -963,76 +888,51 @@ custom_actions:
     tap_action:
       action: source
       source: netflix://
-      remote_id: remote.google_chromecast
     icon: mdi:netflix
     styles: |-
       :host {
         --icon-color: rgb(229, 9, 20);
       }
-    autofill_entity_id: true
-    value_attribute: state
-    haptics: true
-    entity_id: remote.google_chromecast
   - type: button
     name: hulu
     tap_action:
       action: source
       source: hulu://
-      remote_id: remote.google_chromecast
     icon: mdi:hulu
     styles: |-
       :host {
         --icon-color: rgb(28, 231, 131);
       }
-    autofill_entity_id: true
-    value_attribute: state
-    haptics: true
-    entity_id: remote.google_chromecast
   - type: button
     name: disney
     tap_action:
       action: source
       source: https://www.disneyplus.com
-      remote_id: remote.google_chromecast
     icon: disney
     styles: |-
       :host {
         --icon-color: rgb(17, 60, 207);
       }
-    autofill_entity_id: true
-    value_attribute: state
-    haptics: true
-    entity_id: remote.google_chromecast
   - type: button
     name: max
     tap_action:
       action: source
       source: market://launch?id=com.wbd.stream
-      remote_id: remote.google_chromecast
     icon: max
     styles: |-
       :host {
         --icon-color: rgb(0, 35, 246);
       }
-    autofill_entity_id: true
-    value_attribute: state
-    haptics: true
-    entity_id: remote.google_chromecast
   - type: button
     name: primevideo
     tap_action:
       action: source
       source: https://app.primevideo.com
-      remote_id: remote.google_chromecast
     icon: primevideo
     styles: |-
       :host {
         --icon-color: rgb(0, 165, 222);
       }
-    autofill_entity_id: true
-    value_attribute: state
-    haptics: true
-    entity_id: remote.google_chromecast
   - type: slider
     name: slider
     range:
@@ -1045,9 +945,6 @@ custom_actions:
       perform_action: media_player.volume_set
       data:
         volume_level: '{{ value | float }}'
-      target:
-        entity_id: media_player.google_chromecast
-    entity_id: media_player.google_chromecast
     styles: |-
       :host {
         height: 24px;
@@ -1072,51 +969,40 @@ custom_actions:
       .tooltip {
         display: none;
       }
-    autofill_entity_id: true
-    haptics: true
     label: '{{ (value * 100 ) | int }}%'
   - type: touchpad
     name: touchpad
     tap_action:
       action: key
       key: DPAD_CENTER
-      remote_id: remote.google_chromecast
     up:
       tap_action:
         action: key
         key: DPAD_UP
-        remote_id: remote.google_chromecast
       hold_action:
         action: repeat
     down:
       tap_action:
         action: key
         key: DPAD_DOWN
-        remote_id: remote.google_chromecast
       hold_action:
         action: repeat
     left:
       tap_action:
         action: key
         key: DPAD_LEFT
-        remote_id: remote.google_chromecast
       hold_action:
         action: repeat
     right:
       tap_action:
         action: key
         key: DPAD_RIGHT
-        remote_id: remote.google_chromecast
       hold_action:
         action: repeat
     styles: |-
       toucharea {
         background: linear-gradient(217deg, rgba(255,0,0,.8), rgba(255,0,0,0) 70.71%), linear-gradient(127deg, rgba(0,255,0,.8), rgba(0,255,0,0) 70.71%), linear-gradient(336deg, rgba(0,0,255,.8), rgba(0,0,255,0) 70.71%);
       }
-    autofill_entity_id: true
-    value_attribute: state
-    haptics: true
-    entity_id: remote.google_chromecast
 ```
 
 Result:
@@ -1139,7 +1025,6 @@ custom_actions:
     tap_action:
       action: key
       key: BUTTON_A
-      remote_id: remote.google_chromecast
     icon: mdi:alpha-a-circle
     styles: |-
       :host {
@@ -1148,16 +1033,11 @@ custom_actions:
         --size: 48px;
         --icon-color: #C1121C;
       }
-    autofill_entity_id: true
-    value_attribute: state
-    haptics: true
-    entity_id: remote.google_chromecast
   - type: button
     name: b
     tap_action:
       action: key
       key: BUTTON_B
-      remote_id: remote.google_chromecast
     icon: mdi:alpha-b-circle
     styles: |-
       :host {
@@ -1166,16 +1046,11 @@ custom_actions:
         --size: 48px;
         --icon-color: #F7BA0B;
       }
-    autofill_entity_id: true
-    value_attribute: state
-    haptics: true
-    entity_id: remote.google_chromecast
   - type: button
     name: x
     tap_action:
       action: key
       key: BUTTON_X
-      remote_id: remote.google_chromecast
     icon: mdi:alpha-x-circle
     styles: |-
       :host {
@@ -1184,16 +1059,11 @@ custom_actions:
         --size: 48px;
         --icon-color: #00387b;
       }
-    autofill_entity_id: true
-    value_attribute: state
-    haptics: true
-    entity_id: remote.google_chromecast
   - type: button
     name: 'y'
     tap_action:
       action: key
       key: BUTTON_Y
-      remote_id: remote.google_chromecast
     icon: mdi:alpha-y-circle
     styles: |-
       :host {
@@ -1202,10 +1072,6 @@ custom_actions:
         --size: 48px;
         --icon-color: #007243;
       }
-    autofill_entity_id: true
-    value_attribute: state
-    haptics: true
-    entity_id: remote.google_chromecast
 styles: |-
   remote-button {
     background: rgb(27,27,27);
@@ -1232,7 +1098,6 @@ type: custom:android-tv-card
 remote_id: remote.samsung_tv
 media_player_id: media_player.samsung_tv
 platform: Samsung TV
-autofill_entity_id: true
 rows:
   - - power
     - null
@@ -1290,9 +1155,6 @@ custom_actions:
       action: perform-action
       perform_action: input_select.select_next
     type: button
-    autofill_entity_id: true
-    value_attribute: state
-    haptics: true
     entity_id: input_select.select_test
 ```
 
@@ -1330,8 +1192,6 @@ custom_actions:
     tap_action:
       action: perform-action
       perform_action: remote.send_command
-      target:
-        entity_id: remote.rm4_pro
       data:
         device: Office TV Led
         command: red
@@ -1342,16 +1202,10 @@ custom_actions:
         --size: 42px;
         --icon-color: red;
       }
-    autofill_entity_id: true
-    value_attribute: state
-    haptics: true
-    entity_id: remote.rm4_pro
   - icon: mdi:circle
     tap_action:
       action: perform-action
       perform_action: remote.send_command
-      target:
-        entity_id: remote.rm4_pro
       data:
         device: Office TV Led
         command: green
@@ -1362,16 +1216,10 @@ custom_actions:
         --size: 42px;
         --icon-color: green;;
       }
-    autofill_entity_id: true
-    value_attribute: state
-    haptics: true
-    entity_id: remote.rm4_pro
   - icon: mdi:circle
     tap_action:
       action: perform-action
       perform_action: remote.send_command
-      target:
-        entity_id: remote.rm4_pro
       data:
         device: Office TV Led
         command: dark_blue
@@ -1382,16 +1230,10 @@ custom_actions:
         --size: 42px;
         --icon-color: darkblue;;
       }
-    autofill_entity_id: true
-    value_attribute: state
-    haptics: true
-    entity_id: remote.rm4_pro
   - icon: mdi:circle
     tap_action:
       action: perform-action
       perform_action: remote.send_command
-      target:
-        entity_id: remote.rm4_pro
       data:
         device: Office TV Led
         command: yellow
@@ -1402,16 +1244,10 @@ custom_actions:
         --size: 42px;
         --icon-color: yellow;;
       }
-    autofill_entity_id: true
-    value_attribute: state
-    haptics: true
-    entity_id: remote.rm4_pro
   - icon: mdi:circle
     tap_action:
       action: perform-action
       perform_action: remote.send_command
-      target:
-        entity_id: remote.rm4_pro
       data:
         device: Office TV Led
         command: yellow-orange
@@ -1422,16 +1258,10 @@ custom_actions:
         --size: 42px;
         --icon-color: goldenrod;;
       }
-    autofill_entity_id: true
-    value_attribute: state
-    haptics: true
-    entity_id: remote.rm4_pro
   - icon: mdi:circle
     tap_action:
       action: perform-action
       perform_action: remote.send_command
-      target:
-        entity_id: remote.rm4_pro
       data:
         device: Office TV Led
         command: orange
@@ -1442,16 +1272,10 @@ custom_actions:
         --size: 42px;
         --icon-color: orange;;
       }
-    autofill_entity_id: true
-    value_attribute: state
-    haptics: true
-    entity_id: remote.rm4_pro
   - icon: mdi:circle
     tap_action:
       action: perform-action
       perform_action: remote.send_command
-      target:
-        entity_id: remote.rm4_pro
       data:
         device: Office TV Led
         command: orange-light
@@ -1462,16 +1286,10 @@ custom_actions:
         --size: 42px;
         --icon-color: lightsalmon;;
       }
-    autofill_entity_id: true
-    value_attribute: state
-    haptics: true
-    entity_id: remote.rm4_pro
   - icon: mdi:circle
     tap_action:
       action: perform-action
       perform_action: remote.send_command
-      target:
-        entity_id: remote.rm4_pro
       data:
         device: Office TV Led
         command: cyan
@@ -1482,16 +1300,10 @@ custom_actions:
         --size: 42px;
         --icon-color: cyan;;
       }
-    autofill_entity_id: true
-    value_attribute: state
-    haptics: true
-    entity_id: remote.rm4_pro
   - icon: mdi:circle
     tap_action:
       action: perform-action
       perform_action: remote.send_command
-      target:
-        entity_id: remote.rm4_pro
       data:
         device: Office TV Led
         command: blue
@@ -1502,16 +1314,10 @@ custom_actions:
         --size: 42px;
         --icon-color: blue;;
       }
-    autofill_entity_id: true
-    value_attribute: state
-    haptics: true
-    entity_id: remote.rm4_pro
   - icon: mdi:circle
     tap_action:
       action: perform-action
       perform_action: remote.send_command
-      target:
-        entity_id: remote.rm4_pro
       data:
         device: Office TV Led
         command: pink
@@ -1522,16 +1328,10 @@ custom_actions:
         --size: 42px;
         --icon-color: magenta;;
       }
-    autofill_entity_id: true
-    value_attribute: state
-    haptics: true
-    entity_id: remote.rm4_pro
   - icon: mdi:circle
     tap_action:
       action: perform-action
       perform_action: remote.send_command
-      target:
-        entity_id: remote.rm4_pro
       data:
         device: Office TV Led
         command: green_light
@@ -1542,16 +1342,10 @@ custom_actions:
         --size: 42px;
         --icon-color: mediumseagreen;;
       }
-    autofill_entity_id: true
-    value_attribute: state
-    haptics: true
-    entity_id: remote.rm4_pro
   - icon: mdi:circle
     tap_action:
       action: perform-action
       perform_action: remote.send_command
-      target:
-        entity_id: remote.rm4_pro
       data:
         device: Office TV Led
         command: white
@@ -1562,17 +1356,11 @@ custom_actions:
         --size: 42px;
         --icon-color: white;;
       }
-    autofill_entity_id: true
-    value_attribute: state
-    haptics: true
-    entity_id: remote.rm4_pro
   - type: button
     name: power
     tap_action:
       action: perform-action
       perform_action: remote.send_command
-      target:
-        entity_id: remote.rm4_pro
       data:
         device: Office TV Led
         command: 'on'
@@ -1581,16 +1369,10 @@ custom_actions:
       :host {
         --icon-color: green;
       }
-    autofill_entity_id: true
-    value_attribute: state
-    haptics: true
-    entity_id: remote.rm4_pro
   - icon: mdi:power
     tap_action:
       action: perform-action
       perform_action: remote.send_command
-      target:
-        entity_id: remote.rm4_pro
       data:
         device: Office TV Led
         command: 'off'
@@ -1600,44 +1382,28 @@ custom_actions:
       :host {
         --icon-color: red;
       }
-    autofill_entity_id: true
-    value_attribute: state
-    haptics: true
-    entity_id: remote.rm4_pro
   - type: button
     name: up
     tap_action:
       action: perform-action
       perform_action: remote.send_command
-      target:
-        entity_id: remote.rm4_pro
       data:
         device: Office TV Led
         command: brightness+
     hold_action:
       action: repeat
     icon: mdi:chevron-up
-    autofill_entity_id: true
-    value_attribute: state
-    haptics: true
-    entity_id: remote.rm4_pro
   - type: button
     name: down
     tap_action:
       action: perform-action
       perform_action: remote.send_command
-      target:
-        entity_id: remote.rm4_pro
       data:
         device: Office TV Led
         command: brightness-
     hold_action:
       action: repeat
     icon: mdi:chevron-down
-    autofill_entity_id: true
-    value_attribute: state
-    haptics: true
-    entity_id: remote.rm4_pro
 ```
 
 <img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/rgb.png" alt="rgb remote example" width="500"/>
@@ -1657,7 +1423,6 @@ custom_actions:
     tap_action:
       action: key
       key: DPAD_CENTER
-      remote_id: remote.google_tv
     icon: mdi:checkbox-blank-circle
     styles: |-
       :host {
@@ -1668,16 +1433,11 @@ custom_actions:
         margin: -70px;
         padding: 70px;
       }
-    autofill_entity_id: true
-    value_attribute: state
-    haptics: true
-    entity_id: remote.google_tv
   - type: button
     name: up
     tap_action:
       action: key
       key: DPAD_UP
-      remote_id: remote.google_tv
     hold_action:
       action: repeat
     icon: mdi:chevron-up
@@ -1689,16 +1449,11 @@ custom_actions:
         height: 90px;
         width: 300px;
       }
-    autofill_entity_id: true
-    value_attribute: state
-    haptics: true
-    entity_id: remote.google_tv
   - type: button
     name: down
     tap_action:
       action: key
       key: DPAD_DOWN
-      remote_id: remote.google_tv
     hold_action:
       action: repeat
     icon: mdi:chevron-down
@@ -1710,16 +1465,11 @@ custom_actions:
         height: 90px;
         width: 300px;
       }
-    autofill_entity_id: true
-    value_attribute: state
-    haptics: true
-    entity_id: remote.google_tv
   - type: button
     name: left
     tap_action:
       action: key
       key: DPAD_LEFT
-      remote_id: remote.google_tv
     hold_action:
       action: repeat
     icon: mdi:chevron-left
@@ -1731,16 +1481,11 @@ custom_actions:
         height: 170px;
         width: 90px;
       }
-    autofill_entity_id: true
-    value_attribute: state
-    haptics: true
-    entity_id: remote.google_tv
   - type: button
     name: right
     tap_action:
       action: key
       key: DPAD_RIGHT
-      remote_id: remote.google_tv
     hold_action:
       action: repeat
     icon: mdi:chevron-right
@@ -1752,10 +1497,6 @@ custom_actions:
         height: 170px;
         width: 90px;
       }
-    autofill_entity_id: true
-    value_attribute: state
-    haptics: true
-    entity_id: remote.google_tv
 styles: |-
   #row-1 {
     justify-content: center;
@@ -1777,7 +1518,6 @@ A music player with multiple sliders for volume and media position and a touchpa
 ```yaml
 type: custom:android-tv-card
 media_player_id: media_player.spotify
-autofill_entity_id: true
 rows:
   - - touchpad
     - volume
@@ -1785,43 +1525,30 @@ rows:
 custom_actions:
   - type: slider
     name: volume
-    range:
-      - 0
-      - 1
     value_attribute: volume_level
-    autofill_entity_id: true
     tap_action:
       action: perform-action
       perform_action: media_player.volume_set
       data:
         volume_level: '{{ value | float }}'
-      target:
-        entity_id: media_player.spotify
     icon: mdi:spotify
     vertical: true
     styles: |-
       :host {
         --tooltip-label: "{{ (100 * value) | int }}%";
       }
-    entity_id: media_player.spotify
-    step: 0.01
     haptics: true
   - type: slider
     name: media_position
-    autofill_entity_id: true
     value_attribute: media_position
-    haptics: true
-    entity_id: media_player.spotify
     range:
       - 0
       - '{{ state_attr(config.entity, "media_duration") }}'
     tap_action:
       action: perform-action
+      perform_action: media_player.media_seek
       data:
         seek_position: '{{ value }}'
-      target:
-        entity_id: media_player.spotify
-      perform_action: media_player.media_seek
     step: 1
     styles: |-
       :host {
@@ -1845,9 +1572,6 @@ custom_actions:
     tap_action:
       action: perform-action
       perform_action: media_player.media_play_pause
-      target:
-        entity_id: media_player.spotify
-      data: {}
     up:
       tap_action:
         action: none
@@ -1862,23 +1586,15 @@ custom_actions:
       tap_action:
         action: perform-action
         perform_action: media_player.media_next_track
-        target:
-          entity_id:
-            - media_player.spotify
-        data: {}
       hold_action:
-        action: repeat
+        action: none
       icon: mdi:skip-previous
     right:
       tap_action:
         action: perform-action
         perform_action: media_player.media_previous_track
-        target:
-          entity_id:
-            - media_player.spotify
-        data: {}
       hold_action:
-        action: repeat
+        action: none
       icon: mdi:skip-next
     styles: |-
       toucharea {
@@ -1890,15 +1606,8 @@ custom_actions:
         height: 400px;
         --size: 48px;
       }
-    autofill_entity_id: true
-    entity_id: media_player.spotify
     hold_action:
       action: more-info
-      target:
-        entity_id: media_player.spotify
-      data: {}
-    value_attribute: state
-    haptics: true
     icon: mdi:play-pause
 ```
 
@@ -1942,12 +1651,9 @@ custom_actions:
       .background {
         height: 24px;
       }
-    autofill_entity_id: true
     name: brightness
-    haptics: true
   - type: slider
     vertical: true
-    autofill_entity_id: true
     entity_id: light.sunroom_ceiling
     value_attribute: color_temp
     range:
@@ -1960,7 +1666,7 @@ custom_actions:
         color_temp: '{{ value | int }}'
       perform_action: light.turn_on
       target:
-        entity_id: light.sunroom_ceiling
+        entity_id: '{{ config.entity }}'
     styles: |
       :host {
         height: 400px;
@@ -1973,14 +1679,12 @@ custom_actions:
         mix-blend-mode: difference;
       }
     name: color_temp
-    haptics: true
     icon: mdi:thermometer
   - type: slider
     range:
       - 0
       - 360
     value_attribute: hs_color[0]
-    autofill_entity_id: true
     tap_action:
       action: perform-action
       perform_action: light.turn_on
@@ -1989,7 +1693,7 @@ custom_actions:
           - '{{ value | int }}'
           - 100
       target:
-        entity_id: light.sunroom_ceiling
+        entity_id: '{{ config.entity }}'
     vertical: true
     step: 0.1
     icon: mdi:palette
@@ -2003,7 +1707,6 @@ custom_actions:
       }
     entity_id: light.sunroom_ceiling
     name: hs_color
-    haptics: true
 ```
 
 <img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/color_controls.png" alt="color controls" width="500"/>
