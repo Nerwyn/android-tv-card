@@ -876,7 +876,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 		return html`<ha-selector
 			.hass=${hass}
 			.selector=${selector}
-			.value=${value}
+			.value=${value ?? placeholder}
 			.placeholder=${placeholder}
 			.label="${label}"
 			.name="${label}"
