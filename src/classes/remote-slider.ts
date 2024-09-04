@@ -389,9 +389,7 @@ export class RemoteSlider extends BaseRemoteElement {
 
 		this.vertical =
 			this.renderTemplate(this.config.vertical ?? false, context) == true;
-		this.resizeObserver.observe(
-			this.shadowRoot?.querySelector('.container') ?? this,
-		);
+		this.resizeObserver.observe(this);
 
 		// Thumb width, height, and vertical slider style adjustments
 		const containerStyle: StyleInfo = {};
