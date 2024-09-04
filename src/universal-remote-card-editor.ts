@@ -2299,8 +2299,9 @@ export class UniversalRemoteCardEditor extends LitElement {
 						case 'toggle':
 						case 'more-info':
 						case 'service' as 'perform-action':
-						case 'perform-action':
+						case 'perform-action': {
 							// Move target IDs from data to target
+							const target = action.target ?? ({} as ITarget);
 							for (const targetId of [
 								'entity_id',
 								'device_id',
@@ -2308,15 +2309,50 @@ export class UniversalRemoteCardEditor extends LitElement {
 								'label_id',
 							]) {
 								if (action.data?.[targetId]) {
-									action.target = action.target ?? {};
-									action.target[targetId as keyof ITarget] =
-										action.data?.[targetId] as
-											| string
-											| string[];
+									target[targetId as keyof ITarget] = action
+										.data?.[targetId] as string | string[];
 									delete action.data?.[targetId];
 								}
 							}
-						// falls through
+							// Set target if not defined
+							const [domain, _service] = (
+								action.perform_action ?? ''
+							).split('.');
+							if (
+								!target.entity_id &&
+								!target.device_id &&
+								!target.area_id &&
+								!target.label_id
+							) {
+								switch (domain) {
+									case 'remote':
+										target.entity_id =
+											entry.entity_id?.startsWith(
+												'remote',
+											)
+												? entry.entity_id
+												: this.config.remote_id;
+										break;
+									case 'media_player':
+									case 'kodi':
+									case 'denonavr':
+									case 'webos':
+										target.entity_id =
+											entry.entity_id?.startsWith(
+												'media_player',
+											)
+												? entry.entity_id
+												: this.config.media_player_id;
+										break;
+									default:
+										target.entity_id = entry.entity_id;
+										break;
+								}
+								break;
+							}
+							action.target = target;
+							// falls through
+						}
 						default:
 							// Remove keyboard/key/source fields
 							delete action.keyboard_id;
@@ -2370,7 +2406,11 @@ export class UniversalRemoteCardEditor extends LitElement {
 
 					if (!entry.tap_action) {
 						// Default actions for number/input_number
-						const tap_action = {} as IAction;
+						const tap_action = {
+							target: {
+								entity_id: entityId,
+							},
+						} as IAction;
 						const data = tap_action.data ?? {};
 						tap_action.action = 'perform-action';
 						switch (domain) {
@@ -2393,17 +2433,6 @@ export class UniversalRemoteCardEditor extends LitElement {
 								break;
 						}
 						entry.tap_action = tap_action;
-					}
-
-					// Set target to global media player or entry entity ID if not set
-					const target = entry.tap_action.target ?? {};
-					if (!Object.keys(target).length) {
-						if (domain == 'media_player') {
-							target.entity_id = config.media_player_id;
-						} else {
-							target.entity_id = entityId as string;
-						}
-						entry.tap_action.target = target;
 					}
 
 					if (!entry.step) {
