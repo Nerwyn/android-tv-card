@@ -136,7 +136,6 @@ class UniversalRemoteCard extends LitElement {
 											updatedActions.entity_id;
 										break;
 								}
-								break;
 							}
 							action.target = target;
 						}
@@ -237,13 +236,13 @@ class UniversalRemoteCard extends LitElement {
 		return updatedActions;
 	}
 
-	getElementConfig(action: string): IElementConfig {
+	getElementConfig(name: string): IElementConfig {
 		let customActionsList = this.config.custom_actions;
 		if (!Array.isArray(customActionsList)) {
 			customActionsList = [];
 		}
 		const customActions = customActionsList.filter(
-			(customActions) => customActions.name == action,
+			(customActions) => customActions.name == name,
 		)[0];
 		if (customActions) {
 			if (
@@ -258,7 +257,7 @@ class UniversalRemoteCard extends LitElement {
 
 		const defaultActions = this.updateElementConfig(
 			this.DEFAULT_ACTIONS.filter(
-				(defaultActions) => defaultActions.name == action,
+				(defaultActions) => defaultActions.name == name,
 			)[0] ?? {},
 			true,
 		);
