@@ -894,9 +894,24 @@ export class UniversalRemoteCardEditor extends LitElement {
 			${this.buildSelector('Name', 'name', {
 				text: {},
 			})}
-			${this.buildSelector('Entity', 'entity_id', {
-				entity: {},
-			})}
+			${this.buildSelector(
+				'Entity',
+				'entity_id',
+				{
+					entity: {},
+				},
+				(Array.isArray(
+					(this.activeEntry as IElementConfig)?.tap_action?.target
+						?.entity_id,
+				)
+					? (this.activeEntry as IElementConfig)?.tap_action?.target
+							?.entity_id?.[0]
+					: ((this.activeEntry as IElementConfig)?.tap_action?.target
+							?.entity_id as string)) ??
+					this.config.remote_id ??
+					this.config.media_player_id ??
+					this.config.keyboard_id,
+			)}
 			${
 				this.hass.states[
 					(this.activeEntry as IElementConfig)?.entity_id ?? ''
@@ -2331,23 +2346,6 @@ export class UniversalRemoteCardEditor extends LitElement {
 				}
 			}
 
-			// Feature entity ID
-			if (!entry.entity_id && !parentName && !childName) {
-				let entityId =
-					entry.tap_action?.target?.entity_id ??
-					config.remote_id ??
-					config.media_player_id ??
-					config.keyboard_id;
-				if (Array.isArray(entityId)) {
-					entityId = entityId[0];
-				}
-				entry.entity_id = entityId as string;
-			}
-			const entityId = this.renderTemplate(
-				entry.entity_id as string,
-				this.getEntryContext(entry),
-			) as string;
-
 			switch (
 				this.renderTemplate(
 					entry.type as string,
@@ -2355,6 +2353,21 @@ export class UniversalRemoteCardEditor extends LitElement {
 				)
 			) {
 				case 'slider': {
+					const entityId = this.renderTemplate(
+						(Array.isArray(
+							(this.activeEntry as IElementConfig)?.tap_action
+								?.target?.entity_id,
+						)
+							? (this.activeEntry as IElementConfig)?.tap_action
+									?.target?.entity_id?.[0]
+							: ((this.activeEntry as IElementConfig)?.tap_action
+									?.target?.entity_id as string)) ??
+							this.config.remote_id ??
+							this.config.media_player_id ??
+							this.config.keyboard_id ??
+							'',
+						this.getEntryContext(entry),
+					) as string;
 					const [domain, _service] = (entityId ?? '').split('.');
 
 					// Use range attribute if available

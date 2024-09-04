@@ -167,7 +167,7 @@ The default keys and sources lists for your selected platform are displayed belo
 | Name               | Type        | Description                                                                                                                                                                                     |
 | ------------------ | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | touchpad           | touchpad    | A touchpad for navigation.                                                                                                                                                                      |
-| slider             | slider      | A slider that controls the volume of the entity defined by `media_player_id`. **NOTE**: volume slider support is dependent on the media player supporting the `media_player.volume_set` action. |
+| slider             | slider      | A slider that controls the volume of the entity defined by `media_player_id`. **NOTE**: Volume slider support is dependent on the media player supporting the `media_player.volume_set` action. |
 | volume_buttons     | button rows | Shorthand to generate a set of volume down, volume mute, and volume up buttons in a row or column.                                                                                              |
 | navigation_buttons | button rows | Shorthand to generate a set of up, down, left, right, and center buttons across three rows within a column.                                                                                     |
 | dpad               | button grid | Shorthand to generate a set of up, down, left, right, and center buttons arranged in a square grid.                                                                                             |
@@ -180,6 +180,8 @@ The default keys and sources lists for your selected platform are displayed belo
 <img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/editor_actions_tab.png" alt="editor actions tab" width="600"/>
 
 In addition to the default keys and actions, you can create your own custom actions. You can also overwrite default keys and sources by setting the custom action name to match a default one. If you do so the default key or source information will be autopopulated if autofill is enabled.
+
+**NOTE**: If the remote element (default and custom) entity ID and target are not explicitly set in the UI it will be autofilled using the remote element entity ID or global IDs depending on which best matches the `perform-action` domain.
 
 Click the `ADD REMOTE ELEMENT` button to add a custom action remote element. Custom action remote elements can be buttons, sliders, or touchpads.
 

@@ -223,19 +223,23 @@ class UniversalRemoteCard extends LitElement {
 			}
 		}
 
-		// Set default slider entity and target to media player ID
+		// Set element entity
 		if (
 			updatedElement.type == 'slider' &&
-			updatedElement.name == 'slider' &&
-			this.config.media_player_id
+			updatedElement.name == 'slider'
 		) {
 			updatedElement.entity_id =
 				updatedElement.entity_id ?? this.config.media_player_id;
-			const tapAction = updatedElement.tap_action ?? ({} as IAction);
-			const target = tapAction.target ?? ({} as ITarget);
-			target.entity_id = target.entity_id ?? this.config.media_player_id;
-			tapAction.target = target;
-			updatedElement.tap_action = tapAction;
+		} else {
+			updatedElement.entity_id =
+				updatedElement.entity_id ??
+				(Array.isArray(updatedElement.tap_action?.target?.entity_id)
+					? updatedElement.tap_action?.target?.entity_id?.[0]
+					: (updatedElement.tap_action?.target
+							?.entity_id as string)) ??
+				this.config.remote_id ??
+				this.config.media_player_id ??
+				this.config.keyboard_id;
 		}
 
 		return updatedElement;
