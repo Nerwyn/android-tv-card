@@ -830,7 +830,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 		label: string,
 		key: string,
 		selector: object,
-		backupValue: string | number | boolean | object = '',
+		placeholder?: string | number | boolean | object,
 	) {
 		const hass: HomeAssistant = {
 			...this.hass,
@@ -876,7 +876,8 @@ export class UniversalRemoteCardEditor extends LitElement {
 		return html`<ha-selector
 			.hass=${hass}
 			.selector=${selector}
-			.value=${value ?? backupValue}
+			.value=${value}
+			.placeholder=${placeholder}
 			.label="${label}"
 			.name="${label}"
 			.required=${false}
