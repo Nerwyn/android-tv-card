@@ -890,6 +890,18 @@ export class UniversalRemoteCardEditor extends LitElement {
 		additionalOptions: TemplateResult<1> = html``,
 		additionalFormOptions: TemplateResult<1> = html``,
 	) {
+		const placeholderEntityId =
+			(Array.isArray(
+				(this.activeEntry as IElementConfig)?.tap_action?.target
+					?.entity_id,
+			)
+				? (this.activeEntry as IElementConfig)?.tap_action?.target
+						?.entity_id?.[0]
+				: ((this.activeEntry as IElementConfig)?.tap_action?.target
+						?.entity_id as string)) ??
+			this.config.remote_id ??
+			this.config.media_player_id ??
+			this.config.keyboard_id;
 		return html`
 			${this.buildSelector('Name', 'name', {
 				text: {},
@@ -900,21 +912,13 @@ export class UniversalRemoteCardEditor extends LitElement {
 				{
 					entity: {},
 				},
-				(Array.isArray(
-					(this.activeEntry as IElementConfig)?.tap_action?.target
-						?.entity_id,
-				)
-					? (this.activeEntry as IElementConfig)?.tap_action?.target
-							?.entity_id?.[0]
-					: ((this.activeEntry as IElementConfig)?.tap_action?.target
-							?.entity_id as string)) ??
-					this.config.remote_id ??
-					this.config.media_player_id ??
-					this.config.keyboard_id,
+				placeholderEntityId,
 			)}
 			${
 				this.hass.states[
-					(this.activeEntry as IElementConfig)?.entity_id ?? ''
+					(this.activeEntry as IElementConfig)?.entity_id ??
+						placeholderEntityId ??
+						''
 				]
 					? this.buildSelector(
 							'Attribute',
