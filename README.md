@@ -15,7 +15,7 @@ _Formerly called Android TV Card_
 
 <img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/screenshot.png" alt="example" width="300"/>
 
-A super customizable universal remote card iterating on the work of several other developers. Featuring:
+A super customizable universal remote card iterating on the work of several other projects. Featuring:
 
 - Configuration UI.
 - Out of the box support for [several platforms](#media-platform-and-entity-ids) with default keys and sources lists.
@@ -26,14 +26,16 @@ A super customizable universal remote card iterating on the work of several othe
   - Apple TV
   - Samsung TV
   - LG webOS
-- Support for multiple buttons, touchpads, and sliders using default or user defined actions.
+- Support for multiple buttons, touchpads, and sliders using default or user defined custom actions.
 - Complete [Home Assistant actions](https://www.home-assistant.io/dashboards/actions/) support.
 - Keyboard and search dialog actions for most platforms.
 - [Template](#a-note-on-templating) support for almost all fields using nunjucks.
 - Toggleable haptics.
-- Touchpad [multi-touch](#touchpad-actions) gesture support.
+- Remappable touchpad with [multi-touch](#touchpad-actions) gesture support.
+- Remappable slider with vertical orientation support.
 - User configurable remote [layout](#layout).
 - Icons and labels for all elements.
+- Custom SVG icon support.
 - CSS style options for all sub-elements.
 
 # How To Use
@@ -46,7 +48,7 @@ The editor has four tabs - General, Layout, Actions, and Icons.
 
 <img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/editor_general_tab.png" alt="editor general tab" width="600"/>
 
-Platform, entity ID, and timing field values set in the general tab will be used for default and custom actions. You can also changes these values on a per custom action basis. Note that if you explicitly set one of these fields in a custom action, it will not be overwritten if you change the matching general value and you must clear the value in the custom action for it to use the general field value. You may find it easier to find fields you have set non-overwritable values for by switching to the code editor and searching (CTRL + F) for them.
+Platform, entity ID, and timing fields set in the general tab will be used for default keys and sources. If you do not set these fields for custom actions and autofill is enabled, they will also use these fields. If you explicitly set one of these fields in a custom action, it will not be overwritten if you change the matching general field until you clear the field in the custom action.
 
 ## Media Platform and Entity IDs
 
