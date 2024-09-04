@@ -24,7 +24,12 @@ import './classes/keyboard-dialog';
 import './classes/remote-button';
 import './classes/remote-slider';
 import './classes/remote-touchpad';
-import { DOUBLE_TAP_WINDOW, HOLD_TIME, REPEAT_DELAY } from './models/constants';
+import {
+	AUTOFILL,
+	DOUBLE_TAP_WINDOW,
+	HOLD_TIME,
+	REPEAT_DELAY,
+} from './models/constants';
 
 console.info(
 	`%c UNIVERSAL-REMOTE-CARD v${packageInfo.version}`,
@@ -75,47 +80,65 @@ class UniversalRemoteCard extends LitElement {
 		this.config = config;
 	}
 
-	updateDefaultActions(actions: IElementConfig) {
+	updateElementConfig(actions: IElementConfig, isDefault: boolean) {
 		if (!Object.keys(actions).length) {
 			return actions;
 		}
 
+		const updatedActions = structuredClone(actions);
 		for (const actionType of ActionTypes) {
-			if (actions[actionType]) {
-				const action = actions[actionType] ?? ({} as IAction);
+			if (updatedActions[actionType]) {
+				const action = updatedActions[actionType] ?? ({} as IAction);
 
 				switch (action.action) {
 					case 'keyboard':
 					case 'textbox':
 					case 'search':
-						action.keyboard_id = this.config.keyboard_id;
-						action.media_player_id = this.config.media_player_id;
+						action.keyboard_id =
+							action.keyboard_id ?? this.config.keyboard_id;
+						action.media_player_id =
+							action.media_player_id ??
+							this.config.media_player_id;
 					// falls through
 					case 'key':
 					case 'source':
-						action.remote_id = this.config.remote_id;
-						action.platform = this.config.platform;
+						action.remote_id =
+							action.remote_id ?? this.config.remote_id;
+						action.platform =
+							action.platform ?? this.config.platform;
 						break;
 					case 'perform-action': {
-						const [domain, _service] = (
-							action.perform_action ?? ''
-						).split('.');
-						switch (domain) {
-							case 'remote':
-								action.target = {
-									entity_id: this.config.remote_id,
-								};
+						if (isDefault) {
+							const [domain, _service] = (
+								action.perform_action ?? ''
+							).split('.');
+							const target = action.target ?? ({} as ITarget);
+							if (
+								!target.entity_id &&
+								!target.device_id &&
+								!target.area_id &&
+								!target.label_id
+							) {
+								switch (domain) {
+									case 'remote':
+										target.entity_id =
+											this.config.remote_id;
+										break;
+									case 'media_player':
+									case 'kodi':
+									case 'denonavr':
+									case 'webos':
+										target.entity_id =
+											this.config.media_player_id;
+										break;
+									default:
+										target.entity_id =
+											updatedActions.entity_id;
+										break;
+								}
 								break;
-							case 'media_player':
-							case 'kodi':
-							case 'denonavr':
-							case 'webos':
-								action.target = {
-									entity_id: this.config.media_player_id,
-								};
-								break;
-							default:
-								break;
+							}
+							action.target = target;
 						}
 						break;
 					}
@@ -123,24 +146,25 @@ class UniversalRemoteCard extends LitElement {
 						break;
 				}
 
-				actions[actionType] = action;
+				updatedActions[actionType] = action;
 			}
 		}
 
 		// Set haptics if defined globally
-		actions.haptics = actions.haptics ?? this.config.haptics ?? true;
+		updatedActions.haptics =
+			updatedActions.haptics ?? this.config.haptics ?? true;
 
 		// Set hold time if defined globally
 		if (this.config.hold_time) {
-			if (actions.hold_action) {
-				actions.hold_action.hold_time =
-					actions.hold_action?.hold_time ??
+			if (updatedActions.hold_action) {
+				updatedActions.hold_action.hold_time =
+					updatedActions.hold_action?.hold_time ??
 					this.config.hold_time ??
 					HOLD_TIME;
 			}
-			if (actions.multi_hold_action) {
-				actions.multi_hold_action.hold_time =
-					actions.multi_hold_action?.hold_time ??
+			if (updatedActions.multi_hold_action) {
+				updatedActions.multi_hold_action.hold_time =
+					updatedActions.multi_hold_action?.hold_time ??
 					this.config.hold_time ??
 					HOLD_TIME;
 			}
@@ -148,18 +172,18 @@ class UniversalRemoteCard extends LitElement {
 
 		// Set repeat delay if defined globally
 		if (this.config.repeat_delay) {
-			if (actions.hold_action?.action == 'repeat') {
-				actions.hold_action.repeat_delay =
-					actions.hold_action.repeat_delay ??
+			if (updatedActions.hold_action?.action == 'repeat') {
+				updatedActions.hold_action.repeat_delay =
+					updatedActions.hold_action.repeat_delay ??
 					this.config.repeat_delay ??
 					REPEAT_DELAY;
 			}
 			if (
-				actions.multi_hold_action &&
-				actions.multi_hold_action?.action == 'repeat'
+				updatedActions.multi_hold_action &&
+				updatedActions.multi_hold_action?.action == 'repeat'
 			) {
-				actions.multi_hold_action.repeat_delay =
-					actions.multi_hold_action.repeat_delay ??
+				updatedActions.multi_hold_action.repeat_delay =
+					updatedActions.multi_hold_action.repeat_delay ??
 					this.config.repeat_delay ??
 					REPEAT_DELAY;
 			}
@@ -167,40 +191,41 @@ class UniversalRemoteCard extends LitElement {
 
 		// Set double tap window if defined globally
 		if (this.config.double_tap_window) {
-			if (actions.double_tap_action) {
-				actions.double_tap_action.double_tap_window =
-					actions.double_tap_action?.double_tap_window ??
+			if (updatedActions.double_tap_action) {
+				updatedActions.double_tap_action.double_tap_window =
+					updatedActions.double_tap_action?.double_tap_window ??
 					this.config.double_tap_window ??
 					DOUBLE_TAP_WINDOW;
 			}
-			if (actions.multi_double_tap_action) {
-				actions.multi_double_tap_action.double_tap_window =
-					actions.multi_double_tap_action.double_tap_window ??
+			if (updatedActions.multi_double_tap_action) {
+				updatedActions.multi_double_tap_action.double_tap_window =
+					updatedActions.multi_double_tap_action.double_tap_window ??
 					this.config.double_tap_window ??
 					DOUBLE_TAP_WINDOW;
 			}
 		}
 
 		// Update touchpad directions
-		if (actions.type == 'touchpad') {
+		if (updatedActions.type == 'touchpad') {
 			for (const direction of DirectionActions) {
-				actions[direction] = this.updateDefaultActions(
-					(actions[direction] ?? {}) as IElementConfig,
+				updatedActions[direction] = this.updateElementConfig(
+					(updatedActions[direction] ?? {}) as IElementConfig,
+					isDefault,
 				);
 			}
 		}
 
 		// Set slider target to media player ID
-		if (actions.type == 'slider' && this.config.media_player_id) {
-			actions.entity_id = this.config.media_player_id;
-			const tapAction = actions.tap_action ?? ({} as IAction);
+		if (updatedActions.type == 'slider' && this.config.media_player_id) {
+			updatedActions.entity_id = this.config.media_player_id;
+			const tapAction = updatedActions.tap_action ?? ({} as IAction);
 			const target = tapAction.target ?? ({} as ITarget);
 			target.entity_id = this.config.media_player_id;
 			tapAction.target = target;
-			actions.tap_action = tapAction;
+			updatedActions.tap_action = tapAction;
 		}
 
-		return actions;
+		return updatedActions;
 	}
 
 	getElementConfig(action: string): IElementConfig {
@@ -208,21 +233,25 @@ class UniversalRemoteCard extends LitElement {
 		if (!Array.isArray(customActionsList)) {
 			customActionsList = [];
 		}
-		const customActions = structuredClone(
-			customActionsList.filter(
-				(customActions) => customActions.name == action,
-			)[0],
-		);
+		const customActions = customActionsList.filter(
+			(customActions) => customActions.name == action,
+		)[0];
 		if (customActions) {
+			if (
+				customActions.autofill_entity_id ??
+				this.config.autofill_entity_id ??
+				AUTOFILL
+			) {
+				return this.updateElementConfig(customActions, false);
+			}
 			return customActions;
 		}
 
-		const defaultActions = this.updateDefaultActions(
-			structuredClone(
-				this.DEFAULT_ACTIONS.filter(
-					(defaultActions) => defaultActions.name == action,
-				)[0],
-			) ?? {},
+		const defaultActions = this.updateElementConfig(
+			this.DEFAULT_ACTIONS.filter(
+				(defaultActions) => defaultActions.name == action,
+			)[0] ?? {},
+			true,
 		);
 		return defaultActions;
 	}

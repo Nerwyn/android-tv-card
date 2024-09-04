@@ -898,12 +898,18 @@ export class UniversalRemoteCardEditor extends LitElement {
 			})}
 			${
 				(this.activeEntry as IElementConfig)?.entity_id
-					? this.buildSelector('Attribute', 'value_attribute', {
-							attribute: {
-								entity_id: (this.activeEntry as IElementConfig)
-									.entity_id,
+					? this.buildSelector(
+							'Attribute',
+							'value_attribute',
+							{
+								attribute: {
+									entity_id: (
+										this.activeEntry as IElementConfig
+									).entity_id,
+								},
 							},
-					  })
+							'state',
+					  )
 					: ''
 			}
 			${additionalOptions}
@@ -923,7 +929,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 					{
 						boolean: {},
 					},
-					HAPTICS,
+					this.config.haptics ?? HAPTICS,
 				)}
 			</div>
 		</div> `;
@@ -1038,7 +1044,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 								unit_of_measurement: 'ms',
 							},
 						},
-						DOUBLE_TAP_WINDOW,
+						this.config.double_tap_window ?? DOUBLE_TAP_WINDOW,
 				  )
 				: action != 'none' && actionType == 'multi_double_tap_action'
 				? this.buildSelector(
@@ -1052,7 +1058,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 								unit_of_measurement: 'ms',
 							},
 						},
-						DOUBLE_TAP_WINDOW,
+						this.config.double_tap_window ?? DOUBLE_TAP_WINDOW,
 				  )
 				: action != 'none' && actionType == 'hold_action'
 				? html`<div class="form">
@@ -1067,7 +1073,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 									unit_of_measurement: 'ms',
 								},
 							},
-							HOLD_TIME,
+							this.config.hold_time ?? HOLD_TIME,
 						)}
 						${this.renderTemplate(
 							(this.activeEntry as IElementConfig)?.hold_action
@@ -1085,7 +1091,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 											unit_of_measurement: 'ms',
 										},
 									},
-									REPEAT_DELAY,
+									this.config.repeat_delay ?? REPEAT_DELAY,
 							  )
 							: ''}
 				  </div>`
@@ -1102,7 +1108,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 									unit_of_measurement: 'ms',
 								},
 							},
-							HOLD_TIME,
+							this.config.hold_time ?? HOLD_TIME,
 						)}
 						${this.renderTemplate(
 							(this.activeEntry as IElementConfig)
@@ -1120,7 +1126,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 											unit_of_measurement: 'ms',
 										},
 									},
-									REPEAT_DELAY,
+									this.config.repeat_delay ?? REPEAT_DELAY,
 							  )
 							: ''}
 				  </div>`
@@ -1137,6 +1143,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 									},
 								},
 							},
+							this.config.remote_id,
 						)}
 						${this.buildSelector('Key', `${actionType}.key`, {
 							text: {},
@@ -1155,6 +1162,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 									},
 								},
 							},
+							this.config.remote_id,
 						)}
 						${this.buildSelector('Source', `${actionType}.source`, {
 							text: {},
@@ -1173,6 +1181,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 										},
 									},
 								},
+								this.config.keyboard_id,
 							)}
 							${this.buildSelector(
 								'Platform',
@@ -1184,7 +1193,11 @@ export class UniversalRemoteCardEditor extends LitElement {
 										reorder: false,
 									},
 								},
-								'Android TV',
+								KeyboardPlatforms.includes(
+									this.config.platform as KeyboardPlatform,
+								)
+									? this.config.platform
+									: 'Android TV',
 							)}
 						</div>
 						${this.buildSelector(
@@ -1202,6 +1215,10 @@ export class UniversalRemoteCardEditor extends LitElement {
 						{
 							entity: {},
 						},
+						(this.activeEntry as IElementConfig)?.entity_id ??
+							this.config.remote_id ??
+							this.config.media_player_id ??
+							this.config.keyboard_id,
 				  )
 				: ''}
 			${action == 'toggle'
@@ -2256,11 +2273,6 @@ export class UniversalRemoteCardEditor extends LitElement {
 					...defaultActions,
 					...entry,
 					value_attribute: entry.value_attribute ?? 'state',
-					haptics: entry.haptics ?? config.haptics ?? HAPTICS,
-					autofill_entity_id:
-						entry.autofill_entity_id ??
-						config.autofill_entity_id ??
-						AUTOFILL,
 				};
 			}
 
@@ -2272,30 +2284,15 @@ export class UniversalRemoteCardEditor extends LitElement {
 						case 'keyboard':
 						case 'textbox':
 						case 'search':
-							action.keyboard_id =
-								action.keyboard_id ??
-								(config.keyboard_id &&
-								KeyboardPlatforms.includes(
-									config.keyboard_id as KeyboardPlatform,
-								)
-									? config.keyboard_id
-									: undefined);
-							action.media_player_id =
-								action.media_player_id ??
-								config.media_player_id;
-						// falls through
 						case 'key':
 						case 'source':
-							action.remote_id =
-								action.remote_id ?? config.remote_id;
-							action.platform = this.updatePlatform(
-								action.platform ?? config.platform,
-							);
+							// Do nothing
 							break;
 						case 'toggle':
 						case 'more-info':
 						case 'service' as 'perform-action':
 						case 'perform-action':
+							// Move target IDs from data to target
 							for (const targetId of [
 								'entity_id',
 								'device_id',
@@ -2311,47 +2308,9 @@ export class UniversalRemoteCardEditor extends LitElement {
 									delete action.data?.[targetId];
 								}
 							}
-							if (
-								!action.target?.entity_id &&
-								!action.target?.device_id &&
-								!action.target?.area_id &&
-								!action.target?.label_id
-							) {
-								let entityId: string | undefined;
-								const [domain, _service] = (
-									renderTemplate(
-										this.hass,
-										action.perform_action ??
-											(action[
-												'service' as 'perform_action'
-											] as string) ??
-											'',
-										this.getEntryContext(entry),
-									) as string
-								).split('.');
-								switch (domain) {
-									case 'remote':
-										entityId = config.remote_id;
-										break;
-									case 'media_player':
-									case 'kodi':
-									case 'denonavr':
-									case 'webos':
-										entityId = config.media_player_id;
-										break;
-									default:
-										entityId = entry.entity_id;
-										break;
-								}
-								if (entityId) {
-									action.target = {
-										...action.target,
-										entity_id: entityId,
-									};
-								}
-							}
 						// falls through
 						default:
+							// Remove keyboard/key/source fields
 							delete action.keyboard_id;
 							delete action.keyboard_prompt;
 							delete action.remote_id;
@@ -2364,47 +2323,8 @@ export class UniversalRemoteCardEditor extends LitElement {
 				}
 			}
 
-			// Set hold time if defined globally
-			if (config.hold_time) {
-				if (entry.hold_action) {
-					entry.hold_action.hold_time =
-						entry.hold_action?.hold_time ?? config.hold_time;
-				}
-				if (entry.multi_hold_action) {
-					entry.multi_hold_action.hold_time =
-						entry.multi_hold_action?.hold_time ?? config.hold_time;
-				}
-			}
-
-			// Set repeat delay if defined globally
-			if (config.repeat_delay) {
-				if (entry.hold_action?.action == 'repeat') {
-					entry.hold_action.repeat_delay =
-						entry.hold_action.repeat_delay ?? config.repeat_delay;
-				}
-				if (entry.multi_hold_action?.action == 'repeat') {
-					entry.multi_hold_action.repeat_delay =
-						entry.multi_hold_action.repeat_delay ??
-						config.repeat_delay;
-				}
-			}
-
-			// Set double tap window if defined globally
-			if (config.double_tap_window) {
-				if (entry.double_tap_action) {
-					entry.double_tap_action.double_tap_window =
-						entry.double_tap_action.double_tap_window ??
-						config.double_tap_window;
-				}
-				if (entry.multi_double_tap_action) {
-					entry.multi_double_tap_action.double_tap_window =
-						entry.multi_double_tap_action.double_tap_window ??
-						config.double_tap_window;
-				}
-			}
-
 			// Feature entity ID
-			if (!('entity_id' in entry) && !parentName && !childName) {
+			if (!entry.entity_id && !parentName && !childName) {
 				let entityId =
 					entry.tap_action?.target?.entity_id ??
 					entry.tap_action?.data?.entity_id ??
@@ -2430,21 +2350,19 @@ export class UniversalRemoteCardEditor extends LitElement {
 				case 'slider': {
 					const [domain, _service] = (entityId ?? '').split('.');
 
-					let rangeMin = entry.range?.[0];
-					let rangeMax = entry.range?.[1];
-					if (rangeMin == undefined) {
-						rangeMin =
-							this.hass.states[entityId]?.attributes?.min ??
-							RANGE_MIN;
-					}
-					if (rangeMax == undefined) {
-						rangeMax =
-							this.hass.states[entityId]?.attributes?.max ??
-							RANGE_MAX;
-					}
-					entry.range = [rangeMin as number, rangeMax as number];
+					// Use range attribute if available
+					const rangeMin =
+						entry.range?.[0] ??
+						this.hass.states[entityId]?.attributes?.min ??
+						RANGE_MIN;
+					const rangeMax =
+						entry.range?.[1] ??
+						this.hass.states[entityId]?.attributes?.min ??
+						RANGE_MIN;
+					entry.range = [rangeMin, rangeMax];
 
 					if (!entry.tap_action) {
+						// Default actions for number/input_number
 						const tap_action = {} as IAction;
 						const data = tap_action.data ?? {};
 						tap_action.action = 'perform-action';
@@ -2468,15 +2386,17 @@ export class UniversalRemoteCardEditor extends LitElement {
 								break;
 						}
 
+						// Set target to global media player if not set
 						const target = tap_action.target ?? {};
 						if (!target.entity_id) {
-							if (entityId.startsWith('remote.')) {
+							if (domain == 'media_player') {
 								target.entity_id = config.media_player_id;
 							} else {
 								target.entity_id = entityId as string;
 							}
 							tap_action.target = target;
 						}
+
 						entry.tap_action = tap_action;
 					}
 
@@ -3047,6 +2967,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 						delete action['service' as 'perform_action'];
 					}
 
+					// Rename service_data to data
 					if (action['service_data' as 'data']) {
 						action.data = {
 							...action['service_data' as 'data'],
@@ -3054,6 +2975,8 @@ export class UniversalRemoteCardEditor extends LitElement {
 						};
 						delete action['service_data' as 'data'];
 					}
+
+					customAction[actionType] = action;
 				}
 			}
 		}
