@@ -925,9 +925,9 @@ export class UniversalRemoteCardEditor extends LitElement {
 							'value_attribute',
 							{
 								attribute: {
-									entity_id: (
-										this.activeEntry as IElementConfig
-									).entity_id,
+									entity_id:
+										(this.activeEntry as IElementConfig)
+											?.entity_id ?? placeholderEntityId,
 								},
 							},
 							'state',
