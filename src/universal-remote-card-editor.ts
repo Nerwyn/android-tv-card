@@ -2114,11 +2114,17 @@ export class UniversalRemoteCardEditor extends LitElement {
 			},
 		};
 		context.config.attribute = this.renderTemplate(
-			entry?.value_attribute ?? '',
+			entry?.value_attribute ?? 'state',
 			context,
 		) as string;
 		context.config.entity = this.renderTemplate(
-			entry?.entity_id ?? '',
+			entry?.entity_id ??
+				(Array.isArray(entry?.tap_action?.target?.entity_id)
+					? entry?.tap_action?.target?.entity_id?.[0]
+					: (entry?.tap_action?.target?.entity_id as string)) ??
+				this.config.remote_id ??
+				this.config.media_player_id ??
+				this.config.keyboard_id,
 			context,
 		) as string;
 		const unit = this.renderTemplate(
@@ -2262,12 +2268,13 @@ export class UniversalRemoteCardEditor extends LitElement {
 		parentName?: string,
 		childName?: string,
 	) {
+		const context = this.getEntryContext(entry);
 		if (
 			this.renderTemplate(
 				(entry.autofill_entity_id ??
 					config.autofill_entity_id ??
 					AUTOFILL) as unknown as string,
-				this.getEntryContext(entry),
+				context,
 			)
 		) {
 			// Copy custom action onto default action
@@ -2290,16 +2297,15 @@ export class UniversalRemoteCardEditor extends LitElement {
 					structuredClone(
 						this.DEFAULT_ACTIONS.filter(
 							(defaultActions) =>
-								defaultActions.name == entry.name,
+								defaultActions.name ==
+								this.renderTemplate(entry.name, context),
 						)[0],
 					) ?? {};
 				entry = {
 					...defaultActions,
 					...entry,
 					value_attribute:
-						entry.value_attribute ??
-						defaultActions.value_attribute ??
-						'state',
+						entry.value_attribute ?? defaultActions.value_attribute,
 				};
 			}
 
@@ -2307,7 +2313,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 				if (entry[actionType]) {
 					const action = entry[actionType] ?? ({} as IAction);
 
-					switch (action.action) {
+					switch (this.renderTemplate(action.action, context)) {
 						case 'keyboard':
 						case 'textbox':
 						case 'search':
@@ -2350,105 +2356,19 @@ export class UniversalRemoteCardEditor extends LitElement {
 				}
 			}
 
-			switch (
-				this.renderTemplate(
-					entry.type as string,
-					this.getEntryContext(entry),
-				)
+			if (
+				this.renderTemplate(entry.type as string, context) == 'touchpad'
 			) {
-				case 'slider': {
-					const entityId = this.renderTemplate(
-						(Array.isArray(
-							(this.activeEntry as IElementConfig)?.tap_action
-								?.target?.entity_id,
-						)
-							? (this.activeEntry as IElementConfig)?.tap_action
-									?.target?.entity_id?.[0]
-							: ((this.activeEntry as IElementConfig)?.tap_action
-									?.target?.entity_id as string)) ??
-							this.config.remote_id ??
-							this.config.media_player_id ??
-							this.config.keyboard_id ??
-							'',
-						this.getEntryContext(entry),
-					) as string;
-					const [domain, _service] = (entityId ?? '').split('.');
-
-					// Use range attribute if available
-					const rangeMin =
-						entry.range?.[0] ??
-						this.hass.states[entityId]?.attributes?.min ??
-						RANGE_MIN;
-					const rangeMax =
-						entry.range?.[1] ??
-						this.hass.states[entityId]?.attributes?.min ??
-						RANGE_MAX;
-					entry.range = [rangeMin, rangeMax];
-
-					if (!entry.tap_action) {
-						// Default actions for number/input_number
-						const tap_action = {} as IAction;
-						const data = tap_action.data ?? {};
-						tap_action.action = 'perform-action';
-						switch (domain) {
-							case 'number':
-								tap_action.perform_action = 'number.set_value';
-								if (!data.value) {
-									data.value = '{{ value | float }}';
-									tap_action.data = data;
-								}
-								break;
-							case 'input_number':
-								tap_action.perform_action =
-									'input_number.set_value';
-								if (!data.value) {
-									data.value = '{{ value | float }}';
-									tap_action.data = data;
-								}
-								break;
-							default:
-								break;
-						}
-						entry.tap_action = tap_action;
+				for (const direction of DirectionActions) {
+					if (entry[direction]) {
+						entry[direction] = this.autofillDefaultEntryFields(
+							config,
+							(entry[direction] ?? {}) as IElementConfig,
+							this.renderTemplate(entry.name, context) as string,
+							direction,
+						);
 					}
-
-					if (!entry.step) {
-						const defaultStep =
-							this.hass.states[entityId as string]?.attributes
-								?.step;
-						if (defaultStep) {
-							entry.step = defaultStep;
-						} else {
-							const entryContext = this.getEntryContext(entry);
-							entry.step =
-								((this.renderTemplate(
-									entry.range[1],
-									entryContext,
-								) as unknown as number) -
-									(this.renderTemplate(
-										entry.range[0],
-										entryContext,
-									) as unknown as number)) /
-								STEP_COUNT;
-						}
-					}
-					break;
 				}
-				case 'touchpad':
-					for (const direction of DirectionActions) {
-						if (entry[direction]) {
-							entry[direction] = this.autofillDefaultEntryFields(
-								config,
-								(entry[direction] ?? {}) as IElementConfig,
-								entry.name,
-								direction,
-							);
-						}
-					}
-					break;
-				case 'button':
-				case 'default':
-					break;
 			}
 		}
 		return entry;

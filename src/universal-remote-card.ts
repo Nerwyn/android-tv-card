@@ -86,11 +86,28 @@ class UniversalRemoteCard extends LitElement {
 		}
 
 		const updatedElement = structuredClone(element);
+		const context = {
+			config: {
+				...this.config,
+				entity: renderTemplate(
+					this.hass,
+					updatedElement.entity_id ??
+						this.config.remote_id ??
+						this.config.media_player_id ??
+						this.config.keyboard_id ??
+						'',
+				),
+				attribute: renderTemplate(
+					this.hass,
+					updatedElement.value_attribute ?? 'state',
+				),
+			},
+		};
 		for (const actionType of ActionTypes) {
 			if (updatedElement[actionType]) {
 				const action = updatedElement[actionType] ?? ({} as IAction);
 
-				switch (action.action) {
+				switch (renderTemplate(this.hass, action.action, context)) {
 					case 'keyboard':
 					case 'textbox':
 					case 'search':
@@ -109,7 +126,11 @@ class UniversalRemoteCard extends LitElement {
 						break;
 					case 'perform-action': {
 						const [domain, _service] = (
-							action.perform_action ?? ''
+							renderTemplate(
+								this.hass,
+								action.perform_action ?? '',
+								context,
+							) as string
 						).split('.');
 						const target = action.target ?? ({} as ITarget);
 						if (
@@ -118,25 +139,28 @@ class UniversalRemoteCard extends LitElement {
 							!target.area_id &&
 							!target.label_id
 						) {
+							const entity = renderTemplate(
+								this.hass,
+								updatedElement.entity_id ?? '',
+								context,
+							) as string;
 							switch (domain) {
 								case 'remote':
-									target.entity_id =
-										updatedElement.entity_id?.startsWith(
-											'remote',
-										)
-											? updatedElement.entity_id
-											: this.config.remote_id;
+									target.entity_id = entity.startsWith(
+										'remote',
+									)
+										? updatedElement.entity_id
+										: this.config.remote_id;
 									break;
 								case 'media_player':
 								case 'kodi':
 								case 'denonavr':
 								case 'webos':
-									target.entity_id =
-										updatedElement.entity_id?.startsWith(
-											'media_player',
-										)
-											? updatedElement.entity_id
-											: this.config.media_player_id;
+									target.entity_id = entity.startsWith(
+										'media_player',
+									)
+										? updatedElement.entity_id
+										: this.config.media_player_id;
 									break;
 								default:
 									target.entity_id = updatedElement.entity_id;
@@ -214,19 +238,15 @@ class UniversalRemoteCard extends LitElement {
 			}
 		}
 
-		// Update touchpad directions
-		if (updatedElement.type == 'touchpad') {
-			for (const direction of DirectionActions) {
-				updatedElement[direction] = this.updateElementConfig(
-					(updatedElement[direction] ?? {}) as IElementConfig,
-				);
-			}
-		}
-
 		// Set element entity
+		const elementType = renderTemplate(
+			this.hass,
+			updatedElement.type,
+			context,
+		);
 		if (
-			updatedElement.type == 'slider' &&
-			updatedElement.name == 'slider'
+			elementType == 'slider' &&
+			renderTemplate(this.hass, updatedElement.name, context) == 'slider'
 		) {
 			updatedElement.entity_id =
 				updatedElement.entity_id ?? this.config.media_player_id;
@@ -240,6 +260,19 @@ class UniversalRemoteCard extends LitElement {
 				this.config.remote_id ??
 				this.config.media_player_id ??
 				this.config.keyboard_id;
+		}
+
+		// Update touchpad directions
+		if (elementType == 'touchpad') {
+			for (const direction of DirectionActions) {
+				(updatedElement[direction] as IElementConfig).entity_id =
+					updatedElement.entity_id;
+				(updatedElement[direction] as IElementConfig).value_attribute =
+					updatedElement.value_attribute;
+				updatedElement[direction] = this.updateElementConfig(
+					(updatedElement[direction] ?? {}) as IElementConfig,
+				);
+			}
 		}
 
 		return updatedElement;
@@ -524,6 +557,7 @@ class UniversalRemoteCard extends LitElement {
 						this.config.keyboard_id ??
 						'',
 				),
+				attribute: 'state',
 			},
 		};
 
