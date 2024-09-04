@@ -555,6 +555,7 @@ export class BaseRemoteElement extends LitElement {
 			config: {
 				...this.config,
 				entity: this.entityId,
+				attribute: this.valueAttribute,
 			},
 			...context,
 		};

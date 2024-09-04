@@ -406,6 +406,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 @customElement('remote-icon-label')
 export class IconLabelContainer extends BaseRemoteElement {
 	render() {
+		this.setValue();
 		return html`
 			${this.buildIcon(this.config.icon)}${this.buildLabel(
 				this.config.label,
