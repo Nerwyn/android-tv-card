@@ -19,13 +19,13 @@ A super customizable universal remote card iterating on the work of several othe
 
 - Configuration UI.
 - Out of the box support for [several platforms](#media-platform-and-entity-ids) with default keys and sources lists.
-  - Android TV
-  - Fire TV
-  - Roku
-  - Kodi
-  - Apple TV (no keyboard)
-  - Samsung TV (no keyboard)
-  - LG webOS (no keyboard)
+  - Android TV (with keyboard)
+  - Fire TV (with keyboard)
+  - Roku (with keyboard)
+  - Kodi (with keyboard)
+  - Apple TV
+  - Samsung TV
+  - LG webOS
 - Support for multiple buttons, touchpads, and sliders using default or user defined actions.
 - Complete [Home Assistant actions](https://www.home-assistant.io/dashboards/actions/) support.
 - Keyboard and search dialog actions for most platforms.
