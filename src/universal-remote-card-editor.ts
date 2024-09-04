@@ -2359,7 +2359,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 					const rangeMax =
 						entry.range?.[1] ??
 						this.hass.states[entityId]?.attributes?.min ??
-						RANGE_MIN;
+						RANGE_MAX;
 					entry.range = [rangeMin, rangeMax];
 
 					if (!entry.tap_action) {

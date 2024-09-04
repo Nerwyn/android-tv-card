@@ -210,11 +210,10 @@ export class RemoteButton extends BaseRemoteElement {
 				@touchcancel=${this.onTouchCancel}
 				@contextmenu=${this.onContextMenu}
 			>
-				${this.buildIcon(this.config.icon)}${this.buildRipple()}
+				${this.buildIcon(this.config.icon)}
+				${this.buildLabel(this.config.label)}${this.buildRipple()}
 			</button>
-			${this.buildLabel(this.config.label)}${this.buildStyles(
-				this.config.styles,
-			)}
+			${this.buildStyles(this.config.styles)}
 		`;
 	}
 
