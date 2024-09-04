@@ -46,7 +46,7 @@ The editor has four tabs - General, Layout, Actions, and Icons.
 
 <img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/editor_general_tab.png" alt="editor general tab" width="600"/>
 
-Fields set in the general tab will be used for default keys and sources, and will autofill into custom actions when they are initially created if autofill is enabled. If these values are changed after a custom action is created, the custom action will not be updated and will have to also be changed by the user.
+Platform, entity ID, and timing field values set in the general tab will be used for default and custom actions. You can also changes these values on a per custom action basis. Note that if you explicitly set one of these fields in a custom action, it will not be overwritten if you change the matching general value and you must clear the value in the custom action for it to use the general field value. You may find it easier to find fields you have set non-overwritable values for by switching to the code editor and searching (CTRL + F) for them.
 
 ## Media Platform and Entity IDs
 
@@ -200,7 +200,7 @@ Some additional logic is applied for certain attributes:
 - `elapsed` - Only for timer entities. Updated twice a second using the the current timestamp and the attributes `duration`, `remaining`, and `finishes_at`, and locked to a max value using the attribute `duration`.
   - NOTE: elapsed is not an actual attribute of timer entities, but is a possible attribute for timer entities for the purpose of displaying accurate timer elapsed values. Timer entities do have an attribute `remaining`, which only updates when the timer state changes. The actual `remaining` attribute can be calculated using the elapsed value and the timer duration attribute.
 
-If you find that the autofilling of the entity ID in the action or remote element value is causing issues, setting `Autofill` to false may help. Just remember to set the entity ID of the remote element and the entity, device, area, or label ID of the action target.
+If you find that the autofilling of fields in actions or remote element values is causing issues, setting `Autofill` to false may help. Just remember to set the entity ID of the remote element and the entity, device, area, or label ID of the action target.
 
 Haptics are enabled for remote elements by default, but can be toggled globally or at the custom action level.
 

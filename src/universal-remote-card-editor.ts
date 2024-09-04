@@ -898,7 +898,9 @@ export class UniversalRemoteCardEditor extends LitElement {
 				entity: {},
 			})}
 			${
-				(this.activeEntry as IElementConfig)?.entity_id
+				this.hass.states[
+					(this.activeEntry as IElementConfig)?.entity_id ?? ''
+				]
 					? this.buildSelector(
 							'Attribute',
 							'value_attribute',
@@ -2333,7 +2335,6 @@ export class UniversalRemoteCardEditor extends LitElement {
 			if (!entry.entity_id && !parentName && !childName) {
 				let entityId =
 					entry.tap_action?.target?.entity_id ??
-					entry.tap_action?.data?.entity_id ??
 					config.remote_id ??
 					config.media_player_id ??
 					config.keyboard_id;
