@@ -1061,7 +1061,13 @@ export class UniversalRemoteCardEditor extends LitElement {
 						},
 						this.config.double_tap_window ?? DOUBLE_TAP_WINDOW,
 				  )
-				: action != 'none' && actionType == 'hold_action'
+				: (action != 'none' && actionType == 'hold_action') ||
+				  (this.renderTemplate(
+						(this.activeEntry as IElementConfig)?.hold_action
+							?.action ?? 'none',
+						context,
+				  ) == 'none' &&
+						actionType == 'double_tap_action')
 				? html`<div class="form">
 						${this.buildSelector(
 							'Hold time',
@@ -1096,7 +1102,13 @@ export class UniversalRemoteCardEditor extends LitElement {
 							  )
 							: ''}
 				  </div>`
-				: action != 'none' && actionType == 'multi_hold_action'
+				: (action != 'none' && actionType == 'multi_hold_action') ||
+				  (this.renderTemplate(
+						(this.activeEntry as IElementConfig)?.multi_hold_action
+							?.action ?? 'none',
+						context,
+				  ) == 'none' &&
+						actionType == 'multi_double_tap_action')
 				? html`<div class="form">
 						${this.buildSelector(
 							'Hold time',

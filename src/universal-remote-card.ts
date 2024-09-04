@@ -154,20 +154,41 @@ class UniversalRemoteCard extends LitElement {
 		updatedActions.haptics =
 			updatedActions.haptics ?? this.config.haptics ?? true;
 
-		// Set hold time if defined globally
-		if (this.config.hold_time) {
-			if (updatedActions.hold_action) {
-				updatedActions.hold_action.hold_time =
-					updatedActions.hold_action?.hold_time ??
-					this.config.hold_time ??
-					HOLD_TIME;
+		// Set double tap window if defined globally
+		if (this.config.double_tap_window) {
+			if (updatedActions.double_tap_action) {
+				updatedActions.double_tap_action.double_tap_window =
+					updatedActions.double_tap_action?.double_tap_window ??
+					this.config.double_tap_window ??
+					DOUBLE_TAP_WINDOW;
 			}
-			if (updatedActions.multi_hold_action) {
-				updatedActions.multi_hold_action.hold_time =
-					updatedActions.multi_hold_action?.hold_time ??
-					this.config.hold_time ??
-					HOLD_TIME;
+			if (updatedActions.multi_double_tap_action) {
+				updatedActions.multi_double_tap_action.double_tap_window =
+					updatedActions.multi_double_tap_action.double_tap_window ??
+					this.config.double_tap_window ??
+					DOUBLE_TAP_WINDOW;
 			}
+		}
+
+		// Set hold time if defined globally or if double tap action is defined
+		if (
+			this.config.hold_time ||
+			updatedActions.double_tap_action ||
+			updatedActions.multi_double_tap_action
+		) {
+			updatedActions.hold_action =
+				updatedActions.hold_action ?? ({} as IAction);
+			updatedActions.hold_action.hold_time =
+				updatedActions.hold_action?.hold_time ??
+				this.config.hold_time ??
+				HOLD_TIME;
+
+			updatedActions.multi_hold_action =
+				updatedActions.multi_hold_action ?? ({} as IAction);
+			updatedActions.multi_hold_action.hold_time =
+				updatedActions.multi_hold_action?.hold_time ??
+				this.config.hold_time ??
+				HOLD_TIME;
 		}
 
 		// Set repeat delay if defined globally
@@ -186,22 +207,6 @@ class UniversalRemoteCard extends LitElement {
 					updatedActions.multi_hold_action.repeat_delay ??
 					this.config.repeat_delay ??
 					REPEAT_DELAY;
-			}
-		}
-
-		// Set double tap window if defined globally
-		if (this.config.double_tap_window) {
-			if (updatedActions.double_tap_action) {
-				updatedActions.double_tap_action.double_tap_window =
-					updatedActions.double_tap_action?.double_tap_window ??
-					this.config.double_tap_window ??
-					DOUBLE_TAP_WINDOW;
-			}
-			if (updatedActions.multi_double_tap_action) {
-				updatedActions.multi_double_tap_action.double_tap_window =
-					updatedActions.multi_double_tap_action.double_tap_window ??
-					this.config.double_tap_window ??
-					DOUBLE_TAP_WINDOW;
 			}
 		}
 
