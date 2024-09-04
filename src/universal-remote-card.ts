@@ -215,8 +215,12 @@ class UniversalRemoteCard extends LitElement {
 			}
 		}
 
-		// Set slider target to media player ID
-		if (updatedActions.type == 'slider' && this.config.media_player_id) {
+		// Set default slider target to media player ID
+		if (
+			isDefault &&
+			updatedActions.type == 'slider' &&
+			this.config.media_player_id
+		) {
 			updatedActions.entity_id = this.config.media_player_id;
 			const tapAction = updatedActions.tap_action ?? ({} as IAction);
 			const target = tapAction.target ?? ({} as ITarget);

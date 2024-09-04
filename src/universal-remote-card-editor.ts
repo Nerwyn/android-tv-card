@@ -875,11 +875,11 @@ export class UniversalRemoteCardEditor extends LitElement {
 
 		return html`<ha-selector
 			.hass=${hass}
+			.name="${label}"
 			.selector=${selector}
 			.value=${value ?? placeholder}
-			.placeholder=${placeholder}
 			.label="${label}"
-			.name="${label}"
+			.placeholder=${placeholder}
 			.required=${false}
 			id="${key}"
 			@value-changed=${this.handleSelectorChange}
@@ -2386,19 +2386,18 @@ export class UniversalRemoteCardEditor extends LitElement {
 							default:
 								break;
 						}
-
-						// Set target to global media player if not set
-						const target = tap_action.target ?? {};
-						if (!target.entity_id) {
-							if (domain == 'media_player') {
-								target.entity_id = config.media_player_id;
-							} else {
-								target.entity_id = entityId as string;
-							}
-							tap_action.target = target;
-						}
-
 						entry.tap_action = tap_action;
+					}
+
+					// Set target to global media player or entry entity ID if not set
+					const target = entry.tap_action.target ?? {};
+					if (!Object.keys(target).length) {
+						if (domain == 'media_player') {
+							target.entity_id = config.media_player_id;
+						} else {
+							target.entity_id = entityId as string;
+						}
+						entry.tap_action.target = target;
 					}
 
 					if (!entry.step) {
