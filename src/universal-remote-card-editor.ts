@@ -426,8 +426,6 @@ export class UniversalRemoteCardEditor extends LitElement {
 				entries.push({
 					type: RemoteElementTypes[i],
 					name: name,
-					autofill_entity_id:
-						this.config.autofill_entity_id ?? AUTOFILL,
 				});
 				break;
 			}
@@ -890,13 +888,12 @@ export class UniversalRemoteCardEditor extends LitElement {
 		additionalOptions: TemplateResult<1> = html``,
 		additionalFormOptions: TemplateResult<1> = html``,
 	) {
-		const autofill =
-			(this.renderTemplate(
-				(this.activeEntry as IElementConfig).autofill_entity_id ??
-					this.config.autofill_entity_id ??
-					AUTOFILL,
-				this.getEntryContext(this.activeEntry as IElementConfig),
-			) as boolean) ?? true;
+		const autofill = this.renderTemplate(
+			(this.activeEntry as IElementConfig).autofill_entity_id ??
+				this.config.autofill_entity_id ??
+				AUTOFILL,
+			this.getEntryContext(this.activeEntry as IElementConfig),
+		) as boolean;
 		const placeholderEntityId =
 			(Array.isArray(
 				(this.activeEntry as IElementConfig)?.tap_action?.target
@@ -950,9 +947,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 					{
 						boolean: {},
 					},
-					autofill
-						? this.config.autofill_entity_id ?? AUTOFILL
-						: AUTOFILL,
+					this.config.autofill_entity_id ?? AUTOFILL,
 				)}
 				${this.buildSelector(
 					'Haptics',
@@ -1056,13 +1051,12 @@ export class UniversalRemoteCardEditor extends LitElement {
 		const context = this.getEntryContext(
 			(this.activeEntry as IElementConfig) ?? ({} as IElementConfig),
 		);
-		const autofill =
-			(this.renderTemplate(
-				(this.activeEntry as IElementConfig).autofill_entity_id ??
-					this.config.autofill_entity_id ??
-					AUTOFILL,
-				context,
-			) as boolean) ?? true;
+		const autofill = this.renderTemplate(
+			(this.activeEntry as IElementConfig).autofill_entity_id ??
+				this.config.autofill_entity_id ??
+				AUTOFILL,
+			context,
+		) as boolean;
 		const action = this.renderTemplate(
 			(this.activeEntry as IElementConfig)?.[actionType]?.action ??
 				'none',
