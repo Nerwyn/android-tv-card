@@ -2395,17 +2395,6 @@ export class UniversalRemoteCardEditor extends LitElement {
 						entry.tap_action = tap_action;
 					}
 
-					// Set target to global media player or entry entity ID if not set
-					const target = entry.tap_action.target ?? {};
-					if (!Object.keys(target).length) {
-						if (domain == 'media_player') {
-							target.entity_id = config.media_player_id;
-						} else {
-							target.entity_id = entityId as string;
-						}
-						entry.tap_action.target = target;
-					}
-
 					if (!entry.step) {
 						const defaultStep =
 							this.hass.states[entityId as string]?.attributes
