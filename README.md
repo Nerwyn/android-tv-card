@@ -90,7 +90,7 @@ The following default keys have hold actions set to `repeat` by default. You can
 
 Double tap actions have a default window of 200ms to trigger before a single tap action is triggered instead. You can change this by setting `Double tap window` in the double tap action to a different number.
 
-**NOTE**: Setting `Double tap window` above or too close to `Hold time` can result in undesirable behavior, as the hold timer expires before the double tap window does.
+**NOTE**: Setting `Double tap window` above or too close to `Hold time` can result in undesirable behavior, as the hold timer expires before the double tap timer does. If you increase the `Double tap window` you should also increase `Hold time` to not be too close to it by at least 100ms if not more. In a custom action without a hold action defined, you can set `Hold behavior` explicitly to `Nothing` to render the `Hold time` field.
 
 ## Miscellaneous
 
