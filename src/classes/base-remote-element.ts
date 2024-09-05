@@ -547,11 +547,14 @@ export class BaseRemoteElement extends LitElement {
 		if (this.momentaryStart && this.momentaryEnd) {
 			holdSecs = (this.momentaryEnd - this.momentaryStart) / 1000;
 		}
+
 		context = {
 			VALUE: this.value as string,
 			HOLD_SECS: holdSecs ?? 0,
+			UNIT: this.unitOfMeasurement,
 			value: this.value as string,
 			hold_secs: holdSecs ?? 0,
+			unit: this.unitOfMeasurement,
 			config: {
 				...this.config,
 				entity: this.entityId,
@@ -583,12 +586,12 @@ export class BaseRemoteElement extends LitElement {
 			return res;
 		}
 
-		// Legacy VALUE interpolation (and others)
+		// Legacy string interpolation
 		if (typeof str == 'string') {
-			for (const key of ['VALUE', 'HOLD_SECS']) {
+			for (const key of ['VALUE', 'HOLD_SECS', 'UNIT']) {
 				if (str == key) {
 					return context[key as keyof object] as string;
-				} else if (str.toString().includes(key)) {
+				} else if (str.includes(key)) {
 					str = str.replace(
 						new RegExp(key, 'g'),
 						(context[key as keyof object] ?? '') as string,

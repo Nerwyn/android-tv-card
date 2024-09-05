@@ -2195,7 +2195,8 @@ export class UniversalRemoteCardEditor extends LitElement {
 			entry?.unit_of_measurement as string,
 			context,
 		) as string;
-		(context.UNIT = unit), (context.unit = unit);
+		context.UNIT = unit;
+		context.unit = unit;
 		const value = this.getFeatureValue(
 			context.config.entity,
 			context.config.attribute,
