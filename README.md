@@ -48,7 +48,7 @@ The editor has four tabs - General, Layout, Actions, and Icons.
 
 <img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/editor_general_tab.png" alt="editor general tab" width="600"/>
 
-Platform, entity ID, and timing fields set in the general tab will be used for default keys and sources. If you do not set these fields for custom actions and autofill is enabled, they will also use these fields. If you explicitly set one of these fields in a custom action, it will not be overwritten if you change the matching general field until you clear the field in the custom action.
+Platform, entity ID, and timing fields set in the general tab will be used for default keys and sources. If you do not set these fields for custom actions and autofill is enabled, they will also use these fields. If you explicitly set one of these fields in a custom action, it will not be overwritten if you change the matching general field until you clear the field in the custom action. To completely clear toggle fields, you must remove them from the config using the code editor.
 
 ## Media Platform and Entity IDs
 
@@ -124,7 +124,7 @@ remote-button {
 }
 ```
 
-To get ID selectors for individual rows, columns, and pads, hover over the card preview window. A red dashed outline will appear over the currently hovered element with a tooltip with either the element name or the row, column, or pad ID selector.
+If you hover over the card preview window, a red dashed outline will appear along with a tooltip showing either the element name or the row, column, or pad ID selector.
 
 <img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/editor_hover_id.png" alt="editor hover id" width="600"/>
 
@@ -181,13 +181,13 @@ The default keys and sources lists for your selected platform are displayed belo
 
 <img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/editor_actions_tab.png" alt="editor actions tab" width="600"/>
 
-In addition to the default keys and actions, you can create your own custom actions. You can also overwrite default keys and sources by setting the custom action name to match a default one. If you do so the default key or source information will be autopopulated if autofill is enabled.
+In addition to the default keys and sources, you can create your own custom actions. You can also overwrite default keys and sources (including the default touchpad and slider) by setting the custom action name to match a default one. If you do so the default key or source information will be autopopulated if autofill is enabled.
 
-**NOTE**: If the remote element (default and custom) entity ID and target are not explicitly set in the UI it will be autofilled using the remote element entity ID or global IDs depending on which best matches the `perform-action` domain.
+**NOTE**: If the remote element (default or custom) actions targets are not explicitly set in the UI they will be autofilled (if autofill is enabled) using the custom action entity or global IDs depending on which best matches the `perform-action` domain.
 
 Click the `ADD REMOTE ELEMENT` button to add a custom action remote element. Custom action remote elements can be buttons, sliders, or touchpads.
 
-Custom actions in this list can be reordered for organization, but does not have any effect on the the cards layout. They can also be deleted, copied, and edited.
+Custom actions in this list can be reordered for organization, but doing so does not have any effect on the the remote card layout. They can also be deleted, copied, and edited.
 
 ## General Options
 
@@ -195,14 +195,14 @@ Custom actions in this list can be reordered for organization, but does not have
 
 Every remote element must have a name so that it can be added to your remote.
 
-Every remote element can have an entity assigned to it, which is used to track it's internal value. This value can then be used in styles and actions using templates, like `{{ value | float }}` By default the value will be derived from the entity state, but it can be changed to an attribute use the corresponding field.
+Every remote element can have an entity assigned to it, which is used to track it's internal value. This value can then be used in styles and actions using templates, like `{{ value | float }}`. By default the value will be derived from the entity state, but it can be changed to an attribute using the corresponding field.
 
-Some additional logic is applied for certain attributes:
+Some additional value logic is applied for certain attributes:
 
 - `brightness` - Converted from the default range of 0-255 to 0-100.
-- `media_position` - Updated twice a second using the current timestamp and the attribute `media_position_updated_at` when the entity state is `playing`, and locked to a max value using the attribute `media_duration`.
-- `elapsed` - Only for timer entities. Updated twice a second using the the current timestamp and the attributes `duration`, `remaining`, and `finishes_at`, and locked to a max value using the attribute `duration`.
-  - NOTE: elapsed is not an actual attribute of timer entities, but is a possible attribute for timer entities for the purpose of displaying accurate timer elapsed values. Timer entities do have an attribute `remaining`, which only updates when the timer state changes. The actual `remaining` attribute can be calculated using the elapsed value and the timer duration attribute.
+- `media_position` - Updated twice per second using the current timestamp and the attribute `media_position_updated_at` when the entity state is `playing`, and locked to a max value using the attribute `media_duration`.
+- `elapsed` - Only for timer entities. Updated twice per second using the the current timestamp and the attributes `duration`, `remaining`, and `finishes_at`, and locked to a max value using the attribute `duration`.
+  - **NOTE**: `elapsed` is not an actual attribute of timer entities, but is a possible attribute for timer entities in this card for the purpose of displaying accurate timer elapsed values. Timer entities do have an attribute `remaining`, which only updates when the timer state changes. The actual `remaining` attribute can be calculated using the elapsed value and the timer duration attribute.
 
 If you find that the autofilling of fields in actions or remote element values is causing issues, setting `Autofill` to false may help. Just remember to set the entity ID of the remote element and the entity, device, area, or label ID of the action target.
 
@@ -214,7 +214,7 @@ Haptics are enabled for remote elements by default, but can be toggled globally 
 
 Sliders have some additional general options. They have a range `Min` and `Max` which defaults to 0 and 1 respectively. They also have a `Step` size which defaults to 0.01.
 
-Sliders will wait one second before updating their internal values from Home Assistant to prevent it from bouncing between the old and new values. This time can be changed by setting `Update after action delay`. It defaults to 1000ms
+Sliders will wait one second before updating their internal values from Home Assistant to prevent it from bouncing between the old and new values. This time can be changed by setting `Update after action delay`, which defaults to 1000ms
 
 ### Touchpad Tabs
 
@@ -226,7 +226,7 @@ Touchpads have five tabs at the top of their actions page for each direction and
 
 <img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/editor_actions_appearance_options.png" alt="editor actions appearance options" width="600"/>
 
-All remote elements can have a `Label`, `Icon`, and `Units`. These fields can also be set using templates. Similar to the general tab, each remote element can have it's CSS styles set (including using templates).
+All remote elements can have a `Label`, `Icon`, and `Units`. These fields can also be set using templates. Similar to the general tab, each remote element can have it's CSS styles set (also supports templates).
 
 You may find the following CSS selectors useful for styling:
 
@@ -242,7 +242,7 @@ You may find the following CSS selectors useful for styling:
 | .tooltip     | A slider element tooltip.      |
 | .button-pad  | All button pads.               |
 
-While you can now set most CSS fields directly using their sub-element selectors, you may find the following CSS properties useful, especially for the slider which uses and modifies them internally.
+While you can now set most CSS fields directly using their sub-element selectors, you may find the following CSS properties useful, especially for sliders which use and modify them internally.
 
 | Name                | Description                                                                                                                                                                                                                                                                 |
 | ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -251,11 +251,11 @@ While you can now set most CSS fields directly using their sub-element selectors
 | --height            | Slider height when horizontal and width when vertical.                                                                                                                                                                                                                      |
 | --tooltip-label     | Slider tooltip label template, defaults to `'{{ value }}'`.                                                                                                                                                                                                                 |
 | --tooltip-transform | Slider tooltip location transform function, defaults to `translate(var(--thumb-offset), calc(-0.5 * var(--height) - 0.4em - 10px))` for horizontal sliders and `translate(calc(-0.3 * var(--height) - 0.8em - 18px), calc(-1 * var(--thumb-offset)))` for vertical sliders. |
-| --icon-transform    | Slider icon transform function, defaults to `translateX(var(--thumb-offset)).                                                                                                                                                                                               |
+| --icon-transform    | Slider icon transform function, defaults to `translateX(var(--thumb-offset))` for horizontal sliders and `translateY(calc(-1 * var(--thumb-offset)))` for vertical sliders.                                                                                                 |
 
 ### Vertical Sliders
 
-Sliders have an additional `Vertical` toggle which rotates it 90 degrees to make it vertical. By default sliders will be horizontal. Vertical sliders heights are determined by it's sibling elements. If it has no siblings or you find that it is not consistently rendering, then you may need to explicitly set it's height using the style options like so:
+Sliders have an additional `Vertical` toggle which rotates it 90 degrees to make it vertical. By default sliders will be horizontal. Vertical slider heights are determined by the slider's sibling elements. If it has no sibling elements or you find that it is not consistently rendering correctly, then you may need to explicitly set it's height using the style options like so:
 
 ```css
 :host {
@@ -275,7 +275,7 @@ You can include the current value of a remote element and it's units by using th
 
 ## Interactions
 
-There are three traditional ways to trigger an action - tap, double tap, and hold. Buttons, selector options, and spinbox buttons support all three, and sliders only support tap actions. Defining a double tap action that is not `none` introduces a 200ms delay to single tap actions.
+There are three traditional ways to trigger an action - tap, double tap, and hold. Buttons and touchpad center support all three, touchpad swipes only support tap and hold actions, and sliders only support tap actions. Defining a double tap action that is not `none` introduces a 200ms delay to single tap actions.
 
 <img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/editor_actions_interactions.png" alt="editor actions interactions" width="600"/>
 
@@ -310,7 +310,7 @@ Actions follow the [Home Assistant actions](https://www.home-assistant.io/dashbo
 
 `Key` and `Source` are shortcuts for `remote.send_command` and `remote.turn_on` respectively. They will use the general remote ID if set but can be overridden at the custom action level.
 
-The `key` field does not refer to the default key name as it appears in the list, but as the actual key string to be sent in the action data. You should read the documentation for the platform you are using to learn more about available options.
+The `key` field does not refer to the default key name as it appears in the list, but as the actual key string to be sent in the action data. You should read the documentation for the platform you are using to learn more about available options, or look at the default key and source maps files [here](https://github.com/Nerwyn/android-tv-card/tree/main/src/models/maps).
 
 The `source` field generally refers to an application to open and varies by platform. For Android TV you may find the [Android TV deep linking guide helpful](https://community.home-assistant.io/t/android-tv-remote-app-links-deep-linking-guide/567921).
 
@@ -324,9 +324,9 @@ Not all platforms use `Key` and `Source` for their default keys and sources, som
 
 As an alternative to normal tap, hold, and double tap actions, buttons and the touchpad center can also be used in a momentary mode. Configuring this option disables the normal tap, hold, and double tap actions.
 
-The momentary start action is fired when you first press down on a button or touchpad. The momentary end action is fired when you release the button or touchpad. While these are meant to be used together you can use one or the other.
+The momentary start action is fired when you first press down on a button or touchpad. The momentary end action is fired when you release the button or touchpad. These actions can be used together or separately.
 
-You can include the number of seconds a button has been held down using `hold_secs` in a template. For convenience, the momentary end action YAML is included in a code box below the action, like shown above.
+For momentary end actions you can include the number of seconds a button has been held down using `hold_secs` in a template. For convenience, the momentary end action YAML is included in a code box below the action, like shown above.
 
 ### Touchpad Actions
 
@@ -345,7 +345,7 @@ This card supports sending text to the following platforms:
 - Roku
 - Kodi
 
-If the general platform is listed above, then any action set to a keyboard action will inherit it. Otherwise it will default to `Android TV`. Keyboard support for more platforms can be added if there is a way to do so through their Home Assistant (or possibly community made) integrations.
+If the user defined general platform is listed above, then any action set to a keyboard action (that has autofill enabled) will inherit it. Otherwise it will default to `Android TV`. Keyboard support for more platforms can be added if there is a way to do so through their Home Assistant (or possibly community made) integrations.
 
 When you use any keyboard action, a dialog will open that can be typed into.
 
@@ -356,6 +356,10 @@ You can change the prompt text that appears before you type anything using the `
 <img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/editor_actions_interactions_keyboard_prompt.png" alt="editor actions interactions keyboard prompt" width="300"/>
 
 <img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/keyboard_dialog_custom_prompt.png" alt="keyboard dialog custom prompt" width="300"/>
+
+For Android TV you need to include the Android TV Remote integration remote entity ID at the general or action level as it is used to send the keys enter and delete (backspace).
+
+For Roku make sure to include both the remote and media player IDs at the general or action level, as the remote is used for normal keyboard entry while the media player is used for search.
 
 #### Keyboard - Seamless Text Entry
 
@@ -372,8 +376,6 @@ Send text to your supported media platform in bulk using the action or default b
 #### Search - Global Search
 
 Send a global search query to your media platform using the action or default button `search`. Like the bulk entry method, the dialog will not send any information until you tap the search button. This method cannot be used to enter text into currently visible text fields.
-
-For Roku make sure to include both the remote and media player IDs at the general or action level, as the remote ID is used for normal keyboard entry while the media player ID is used for search.
 
 ## Icons
 
