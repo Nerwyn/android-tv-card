@@ -50,12 +50,14 @@ export const samsungTVDefaultKeys: IElementConfig[] = [
 		type: 'button',
 		name: 'volume_up',
 		tap_action: { action: 'key', key: 'KEY_VOLUP' },
+		hold_action: { action: 'repeat' },
 		icon: 'mdi:volume-high',
 	},
 	{
 		type: 'button',
 		name: 'volume_down',
 		tap_action: { action: 'key', key: 'KEY_VOLDOWN' },
+		hold_action: { action: 'repeat' },
 		icon: 'mdi:volume-medium',
 	},
 	{
@@ -87,24 +89,28 @@ export const samsungTVDefaultKeys: IElementConfig[] = [
 		type: 'button',
 		name: 'up',
 		tap_action: { action: 'key', key: 'KEY_UP' },
+		hold_action: { action: 'repeat' },
 		icon: 'mdi:chevron-up',
 	},
 	{
 		type: 'button',
 		name: 'down',
 		tap_action: { action: 'key', key: 'KEY_DOWN' },
+		hold_action: { action: 'repeat' },
 		icon: 'mdi:chevron-down',
 	},
 	{
 		type: 'button',
 		name: 'left',
 		tap_action: { action: 'key', key: 'KEY_LEFT' },
+		hold_action: { action: 'repeat' },
 		icon: 'mdi:chevron-left',
 	},
 	{
 		type: 'button',
 		name: 'right',
 		tap_action: { action: 'key', key: 'KEY_RIGHT' },
+		hold_action: { action: 'repeat' },
 		icon: 'mdi:chevron-right',
 	},
 	{

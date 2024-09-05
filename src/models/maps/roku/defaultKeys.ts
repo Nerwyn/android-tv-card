@@ -26,12 +26,14 @@ export const rokuDefaultKeys: IElementConfig[] = [
 		type: 'button',
 		name: 'volume_up',
 		tap_action: { action: 'key', key: 'volume_up' },
+		hold_action: { action: 'repeat' },
 		icon: 'mdi:volume-high',
 	},
 	{
 		type: 'button',
 		name: 'volume_down',
 		tap_action: { action: 'key', key: 'volume_down' },
+		hold_action: { action: 'repeat' },
 		icon: 'mdi:volume-medium',
 	},
 	{
@@ -63,24 +65,28 @@ export const rokuDefaultKeys: IElementConfig[] = [
 		type: 'button',
 		name: 'up',
 		tap_action: { action: 'key', key: 'up' },
+		hold_action: { action: 'repeat' },
 		icon: 'chevron-up',
 	},
 	{
 		type: 'button',
 		name: 'down',
 		tap_action: { action: 'key', key: 'down' },
+		hold_action: { action: 'repeat' },
 		icon: 'chevron-down',
 	},
 	{
 		type: 'button',
 		name: 'left',
 		tap_action: { action: 'key', key: 'left' },
+		hold_action: { action: 'repeat' },
 		icon: 'chevron-left',
 	},
 	{
 		type: 'button',
 		name: 'right',
 		tap_action: { action: 'key', key: 'right' },
+		hold_action: { action: 'repeat' },
 		icon: 'chevron-right',
 	},
 	{
@@ -169,6 +175,7 @@ export const rokuDefaultKeys: IElementConfig[] = [
 		type: 'button',
 		name: 'delete',
 		tap_action: { action: 'key', key: 'backspace' },
+		hold_action: { action: 'repeat' },
 		icon: 'mdi:backspace',
 	},
 	{

@@ -52,6 +52,7 @@ export const kodiDefaultKeys: IElementConfig[] = [
 				volume: 'increment',
 			},
 		},
+		hold_action: { action: 'repeat' },
 		icon: 'mdi:volume-high',
 	},
 	{
@@ -65,6 +66,7 @@ export const kodiDefaultKeys: IElementConfig[] = [
 				volume: 'decrement',
 			},
 		},
+		hold_action: { action: 'repeat' },
 		icon: 'mdi:volume-medium',
 	},
 	{
@@ -109,6 +111,7 @@ export const kodiDefaultKeys: IElementConfig[] = [
 				method: 'Input.Up',
 			},
 		},
+		hold_action: { action: 'repeat' },
 		icon: 'mdi:chevron-up',
 	},
 	{
@@ -121,6 +124,7 @@ export const kodiDefaultKeys: IElementConfig[] = [
 				method: 'Input.Down',
 			},
 		},
+		hold_action: { action: 'repeat' },
 		icon: 'mdi:chevron-down',
 	},
 	{
@@ -133,6 +137,7 @@ export const kodiDefaultKeys: IElementConfig[] = [
 				method: 'Input.Left',
 			},
 		},
+		hold_action: { action: 'repeat' },
 		icon: 'mdi:chevron-left',
 	},
 	{
@@ -145,6 +150,7 @@ export const kodiDefaultKeys: IElementConfig[] = [
 				method: 'Input.Right',
 			},
 		},
+		hold_action: { action: 'repeat' },
 		icon: 'mdi:chevron-right',
 	},
 	{

@@ -74,6 +74,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 				method: 'VOLUMEUP',
 			},
 		},
+		hold_action: { action: 'repeat' },
 		icon: 'mdi:volume-high',
 	},
 	{
@@ -86,6 +87,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 				method: 'VOLUMEDOWN',
 			},
 		},
+		hold_action: { action: 'repeat' },
 		icon: 'mdi:volume-medium',
 	},
 	{
@@ -129,6 +131,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 				method: 'UP',
 			},
 		},
+		hold_action: { action: 'repeat' },
 		icon: 'mdi:chevron-up',
 	},
 	{
@@ -141,6 +144,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 				method: 'DOWN',
 			},
 		},
+		hold_action: { action: 'repeat' },
 		icon: 'mdi:chevron-down',
 	},
 	{
@@ -153,6 +157,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 				method: 'LEFT',
 			},
 		},
+		hold_action: { action: 'repeat' },
 		icon: 'mdi:chevron-left',
 	},
 	{
@@ -165,6 +170,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 				method: 'RIGHT',
 			},
 		},
+		hold_action: { action: 'repeat' },
 		icon: 'mdi:chevron-right',
 	},
 	{

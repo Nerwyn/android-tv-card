@@ -56,6 +56,7 @@ export const appleTVDefaultKeys: IElementConfig[] = [
 			action: 'key',
 			key: 'volume_up',
 		},
+		hold_action: { action: 'repeat' },
 		icon: 'mdi:volume-high',
 	},
 	{
@@ -65,6 +66,7 @@ export const appleTVDefaultKeys: IElementConfig[] = [
 			action: 'key',
 			key: 'volume_down',
 		},
+		hold_action: { action: 'repeat' },
 		icon: 'mdi:volume-medium',
 	},
 	{
@@ -88,6 +90,7 @@ export const appleTVDefaultKeys: IElementConfig[] = [
 			action: 'key',
 			key: 'up',
 		},
+		hold_action: { action: 'repeat' },
 		icon: 'mdi:chevron-up',
 	},
 	{
@@ -97,6 +100,7 @@ export const appleTVDefaultKeys: IElementConfig[] = [
 			action: 'key',
 			key: 'down',
 		},
+		hold_action: { action: 'repeat' },
 		icon: 'mdi:chevron-down',
 	},
 	{
@@ -106,6 +110,7 @@ export const appleTVDefaultKeys: IElementConfig[] = [
 			action: 'key',
 			key: 'left',
 		},
+		hold_action: { action: 'repeat' },
 		icon: 'mdi:chevron-left',
 	},
 	{
@@ -115,6 +120,7 @@ export const appleTVDefaultKeys: IElementConfig[] = [
 			action: 'key',
 			key: 'right',
 		},
+		hold_action: { action: 'repeat' },
 		icon: 'mdi:chevron-right',
 	},
 	{
