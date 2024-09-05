@@ -1251,6 +1251,8 @@ export class UniversalRemoteCardEditor extends LitElement {
 										: 'Android TV'
 									: 'Android TV',
 							)}
+						</div>
+						<div class="form">
 							${['Android TV', 'Roku'].includes(platform)
 								? this.buildSelector(
 										'Remote ID',
