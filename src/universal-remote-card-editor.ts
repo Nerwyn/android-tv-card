@@ -56,7 +56,6 @@ export class UniversalRemoteCardEditor extends LitElement {
 	yamlString?: string;
 	yamlStringsCache: Record<string, string> = {};
 	autofillCooldown = false;
-	codeEditorDelay?: ReturnType<typeof setTimeout>;
 	people: Record<string, string>[] = [];
 
 	BASE_TABS = ['general', 'layout', 'actions', 'icons'];
@@ -325,9 +324,9 @@ export class UniversalRemoteCardEditor extends LitElement {
 	}
 
 	handleBaseTabSelected(e: CustomEvent) {
+		this.yamlStringsCache = {};
 		this.yamlString = undefined;
 		this.entryIndex = -1;
-		this.yamlStringsCache = {};
 		this.guiMode = true;
 		const i = e.detail.index;
 		if (this.baseTabIndex == i) {
@@ -337,8 +336,8 @@ export class UniversalRemoteCardEditor extends LitElement {
 	}
 
 	handleActionsTabSelected(e: CustomEvent) {
-		const i = e.detail.index;
 		this.yamlStringsCache = {};
+		const i = e.detail.index;
 		if (this.actionsTabIndex == i) {
 			return;
 		}
@@ -509,6 +508,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 	}
 
 	editEntry(e: CustomEvent) {
+		this.yamlStringsCache = {};
 		this.yamlString = undefined;
 		const i = (
 			e.currentTarget as unknown as CustomEvent & Record<'index', number>
@@ -526,6 +526,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 	}
 
 	exitEditEntry(_e: CustomEvent) {
+		this.yamlStringsCache = {};
 		this.yamlString = undefined;
 		this.entryIndex = -1;
 	}
