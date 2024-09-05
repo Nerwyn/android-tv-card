@@ -353,9 +353,9 @@ When you use any keyboard action, a dialog will open that can be typed into.
 
 You can change the prompt text that appears before you type anything using the `Prompt` field at the action level.
 
-<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/editor_actions_interactions_keyboard_prompt.png" alt="editor actions interactions keyboard prompt" width="300"/>
+<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/editor_actions_interactions_keyboard_prompt.png" alt="editor actions interactions keyboard prompt" width="600"/>
 
-<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/keyboard_dialog_custom_prompt.png" alt="keyboard dialog custom prompt" width="300"/>
+<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/keyboard_dialog_custom_prompt.png" alt="keyboard dialog custom prompt" width="600"/>
 
 For Android TV you need to include the Android TV Remote integration remote entity ID at the general or action level as it is used to send the keys enter and delete (backspace).
 
