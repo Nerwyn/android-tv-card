@@ -1062,6 +1062,11 @@ export class UniversalRemoteCardEditor extends LitElement {
 				'none',
 			context,
 		) as string;
+		const platform = this.renderTemplate(
+			(this.activeEntry as IElementConfig)?.[actionType]?.platform ??
+				'Android TV',
+			context,
+		) as string;
 		return html`<div class="action-options">
 			${this.buildSelector(label, actionType, selector)}
 			${action != 'none' && actionType == 'double_tap_action'
@@ -1246,6 +1251,38 @@ export class UniversalRemoteCardEditor extends LitElement {
 										: 'Android TV'
 									: 'Android TV',
 							)}
+							${['Android TV', 'Roku'].includes(platform)
+								? this.buildSelector(
+										'Remote ID',
+										`${actionType}.remote_id`,
+										{
+											entity: {
+												filter: {
+													domain: 'remote',
+												},
+											},
+										},
+										autofill
+											? this.config.remote_id
+											: undefined,
+								  )
+								: ''}
+							${'Roku' == platform
+								? this.buildSelector(
+										'Media Player ID',
+										`${actionType}.media_player_id`,
+										{
+											entity: {
+												filter: {
+													domain: 'media_player',
+												},
+											},
+										},
+										autofill
+											? this.config.media_player_id
+											: undefined,
+								  )
+								: ''}
 						</div>
 						${this.buildSelector(
 							'Prompt',

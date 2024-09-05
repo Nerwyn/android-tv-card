@@ -7,23 +7,24 @@ import { IAction } from '../models/interfaces';
 @customElement('keyboard-dialog')
 export class KeyboardDialog extends LitElement {
 	@property() hass!: HomeAssistant;
-	@state() haAction?: IAction;
+	@state() config?: IAction;
 	domain?: string;
+	service?: string;
 
 	textarea?: HTMLTextAreaElement;
 	onKeyDownFired: boolean = false;
 
 	getRokuId(domain: 'remote' | 'media_player') {
-		if ((this.haAction?.keyboard_id ?? '').split('.')[0] != domain) {
+		if ((this.config?.keyboard_id ?? '').split('.')[0] != domain) {
 			switch (domain) {
 				case 'media_player':
-					return this.haAction?.media_player_id;
+					return this.config?.media_player_id;
 				case 'remote':
 				default:
-					return this.haAction?.remote_id;
+					return this.config?.remote_id;
 			}
 		}
-		return this.haAction?.keyboard_id;
+		return this.config?.keyboard_id;
 	}
 
 	forceCursorToEnd() {
@@ -42,7 +43,7 @@ export class KeyboardDialog extends LitElement {
 		if (['Backspace', 'Enter'].includes(e.key)) {
 			const text = this.textarea?.value ?? '';
 			this.hass.callService('kodi', 'call_method', {
-				entity_id: this.haAction?.keyboard_id,
+				entity_id: this.config?.keyboard_id,
 				method: 'Input.SendText',
 				text: text,
 				done: false,
@@ -55,7 +56,7 @@ export class KeyboardDialog extends LitElement {
 
 		const text = this.textarea?.value ?? '';
 		this.hass.callService('kodi', 'call_method', {
-			entity_id: this.haAction?.keyboard_id,
+			entity_id: this.config?.keyboard_id,
 			method: 'Input.SendText',
 			text: text,
 			done: false,
@@ -92,7 +93,7 @@ export class KeyboardDialog extends LitElement {
 		const text = e.data ?? '';
 		if (text && inputType == 'insertText') {
 			this.hass.callService('remote', 'send_command', {
-				entity_id: this.haAction?.keyboard_id,
+				entity_id: this.config?.keyboard_id,
 				command: `Lit_${text}`,
 			});
 		} else if (!this.onKeyDownFired) {
@@ -125,23 +126,14 @@ export class KeyboardDialog extends LitElement {
 
 		if (outKey) {
 			this.onKeyDownFired = true;
-			let domain: string;
-			let service: string;
-			switch (this.haAction?.keyboard_id) {
-				case 'media_player':
-					domain = 'androidtv';
-					service = 'adb_command';
-					break;
-				case 'remote':
-				default:
-					domain = 'remote';
-					service = 'send_command';
-					break;
-			}
-			this.hass.callService(domain, service, {
-				entity_id: this.haAction?.keyboard_id,
-				command: `input keyevent ${outKey}`,
-			});
+			this.hass.callService(
+				this.domain ?? 'remote',
+				this.service ?? 'send_command',
+				{
+					entity_id: this.config?.keyboard_id,
+					command: `input keyevent ${outKey}`,
+				},
+			);
 			if (inKey == 'Enter') {
 				this.closeDialog();
 			}
@@ -164,23 +156,14 @@ export class KeyboardDialog extends LitElement {
 			const key = inputTypeToKey[inputType ?? ''];
 
 			if (key) {
-				let domain: string;
-				let service: string;
-				switch (this.haAction?.keyboard_id) {
-					case 'media_player':
-						domain = 'androidtv';
-						service = 'adb_command';
-						break;
-					case 'remote':
-					default:
-						domain = 'remote';
-						service = 'send_command';
-						break;
-				}
-				this.hass.callService(domain, service, {
-					entity_id: this.haAction?.keyboard_id,
-					command: `input keyevent ${key}`,
-				});
+				this.hass.callService(
+					this.domain ?? 'remote',
+					this.service ?? 'send_command',
+					{
+						entity_id: this.config?.keyboard_id,
+						command: `input keyevent ${key}`,
+					},
+				);
 			}
 		}
 		this.onKeyDownFired = false;
@@ -199,7 +182,7 @@ export class KeyboardDialog extends LitElement {
 		if (outKey) {
 			this.onKeyDownFired = true;
 			this.hass.callService('remote', 'send_command', {
-				entity_id: this.haAction?.remote_id,
+				entity_id: this.config?.remote_id,
 				command: outKey,
 			});
 			if (inKey == 'Enter') {
@@ -224,7 +207,7 @@ export class KeyboardDialog extends LitElement {
 			const key = inputTypeToKey[inputType ?? ''];
 			if (key) {
 				this.hass.callService('remote', 'send_command', {
-					entity_id: this.haAction?.remote_id,
+					entity_id: this.config?.remote_id,
 					command: key,
 				});
 				if (inputType == 'insertLineBreak') {
@@ -237,44 +220,35 @@ export class KeyboardDialog extends LitElement {
 
 	androidTvEnterAndClose() {
 		this.hass.callService('remote', 'send_command', {
-			entity_id: this.haAction?.remote_id,
+			entity_id: this.config?.remote_id,
 			command: 'ENTER',
 		});
 		this.closeDialog();
 	}
 
 	androidTvSendText(text: string) {
-		let domain: string;
-		let service: string;
-		switch (this.domain) {
-			case 'media_player':
-				domain = 'androidtv';
-				service = 'adb_command';
-				break;
-			case 'remote':
-			default:
-				domain = 'remote';
-				service = 'send_command';
-				break;
-		}
-		this.hass.callService(domain, service, {
-			entity_id: this.haAction?.keyboard_id,
-			command: `input text "${text}"`,
-		});
+		this.hass.callService(
+			this.domain ?? 'remote',
+			this.service ?? 'send_command',
+			{
+				entity_id: this.config?.keyboard_id,
+				command: `input text "${text}"`,
+			},
+		);
 	}
 
 	keyboardOnPaste(e: ClipboardEvent) {
 		e.stopImmediatePropagation();
-		if (this.haAction?.platform != 'Kodi') {
+		if (this.config?.platform != 'Kodi') {
 			this.forceCursorToEnd();
 		}
 
 		const text = e.clipboardData?.getData('Text');
 		if (text) {
-			switch (this.haAction?.platform) {
+			switch (this.config?.platform) {
 				case 'Kodi':
 					this.hass.callService('kodi', 'call_method', {
-						entity_id: this.haAction?.keyboard_id,
+						entity_id: this.config?.keyboard_id,
 						method: 'Input.SendText',
 						text: this.textarea?.value ?? '',
 						done: false,
@@ -282,30 +256,21 @@ export class KeyboardDialog extends LitElement {
 					break;
 				case 'Roku':
 					this.hass.callService('remote', 'send_command', {
-						entity_id: this.haAction?.keyboard_id,
+						entity_id: this.config?.keyboard_id,
 						command: `Lit_${text}`,
 					});
 					break;
 				case 'Fire TV':
 				case 'Android TV':
 				default: {
-					let domain: string;
-					let service: string;
-					switch (this.domain) {
-						case 'remote':
-							domain = 'remote';
-							service = 'send_command';
-							break;
-						case 'media_player':
-						default:
-							domain = 'androidtv';
-							service = 'adb_command';
-							break;
-					}
-					this.hass.callService(domain, service, {
-						entity_id: this.haAction?.keyboard_id,
-						command: `input text "${text}"`,
-					});
+					this.hass.callService(
+						this.domain ?? 'remote',
+						this.service ?? 'send_command',
+						{
+							entity_id: this.config?.keyboard_id,
+							command: `input text "${text}"`,
+						},
+					);
 					break;
 				}
 			}
@@ -315,10 +280,10 @@ export class KeyboardDialog extends LitElement {
 	textBox(_e: MouseEvent) {
 		const text = this.textarea?.value;
 		if (text) {
-			switch (this.haAction?.platform) {
+			switch (this.config?.platform) {
 				case 'Kodi':
 					this.hass.callService('kodi', 'call_method', {
-						entity_id: this.haAction?.keyboard_id,
+						entity_id: this.config?.keyboard_id,
 						method: 'Input.SendText',
 						text: text,
 						done: false,
@@ -333,23 +298,14 @@ export class KeyboardDialog extends LitElement {
 				case 'Fire TV':
 				case 'Android TV':
 				default: {
-					let domain: string;
-					let service: string;
-					switch (this.domain) {
-						case 'remote':
-							domain = 'remote';
-							service = 'send_command';
-							break;
-						case 'media_player':
-						default:
-							domain = 'androidtv';
-							service = 'adb_command';
-							break;
-					}
-					this.hass.callService(domain, service, {
-						entity_id: this.haAction?.keyboard_id,
-						command: `input text "${text}"`,
-					});
+					this.hass.callService(
+						this.domain ?? 'remote',
+						this.service ?? 'send_command',
+						{
+							entity_id: this.config?.keyboard_id,
+							command: `input text "${text}"`,
+						},
+					);
 					break;
 				}
 			}
@@ -360,10 +316,10 @@ export class KeyboardDialog extends LitElement {
 	search(_e: MouseEvent) {
 		const text = this.textarea?.value;
 		if (text) {
-			switch (this.haAction?.platform) {
+			switch (this.config?.platform) {
 				case 'Kodi': {
 					this.hass.callService('kodi', 'call_method', {
-						entity_id: this.haAction?.keyboard_id,
+						entity_id: this.config?.keyboard_id,
 						method: 'Input.SendText',
 						text: text,
 						done: true,
@@ -379,23 +335,14 @@ export class KeyboardDialog extends LitElement {
 				case 'Fire TV':
 				case 'Android TV':
 				default: {
-					let domain: string;
-					let service: string;
-					switch (this.domain) {
-						case 'remote':
-							domain = 'remote';
-							service = 'send_command';
-							break;
-						case 'media_player':
-						default:
-							domain = 'androidtv';
-							service = 'adb_command';
-							break;
-					}
-					this.hass.callService(domain, service, {
-						entity_id: this.haAction?.keyboard_id,
-						command: `am start -a "android.search.action.GLOBAL_SEARCH" --es query "${text}"`,
-					});
+					this.hass.callService(
+						this.domain ?? 'remote',
+						this.service ?? 'send_command',
+						{
+							entity_id: this.config?.keyboard_id,
+							command: `am start -a "android.search.action.GLOBAL_SEARCH" --es query "${text}"`,
+						},
+					);
 					break;
 				}
 			}
@@ -404,8 +351,19 @@ export class KeyboardDialog extends LitElement {
 	}
 
 	showDialog(e: CustomEvent) {
-		this.haAction = e.detail;
-		this.domain = (this.haAction?.keyboard_id ?? '').split('.')[0];
+		this.config = e.detail;
+
+		switch ((this.config?.keyboard_id ?? '').split('.')[0]) {
+			case 'media_player':
+				this.domain = 'androidtv';
+				this.service = 'adb_command';
+				break;
+			case 'remote':
+			default:
+				this.domain = 'remote';
+				this.service = 'send_command';
+				break;
+		}
 
 		const dialog = this.shadowRoot?.querySelector('dialog');
 		if (dialog) {
@@ -424,11 +382,11 @@ export class KeyboardDialog extends LitElement {
 		const textarea = this.textarea;
 
 		if (
-			this.haAction?.platform == 'Kodi' &&
-			this.haAction?.action == 'search'
+			this.config?.platform == 'Kodi' &&
+			this.config?.action == 'search'
 		) {
 			this.hass.callService('kodi', 'call_method', {
-				entity_id: this.haAction.keyboard_id,
+				entity_id: this.config.keyboard_id,
 				method: 'Addons.ExecuteAddon',
 				addonid: 'script.globalsearch',
 			});
@@ -461,8 +419,9 @@ export class KeyboardDialog extends LitElement {
 			this.textarea.value = '';
 			this.textarea.blur();
 		}
-		this.haAction = undefined;
+		this.config = undefined;
 		this.domain = undefined;
+		this.service = undefined;
 		this.textarea = undefined;
 	}
 
@@ -481,7 +440,7 @@ export class KeyboardDialog extends LitElement {
 		let pasteHandler: ((e: ClipboardEvent) => void) | undefined;
 		let antiCursorMoveHandler: ((e: Event) => void) | undefined =
 			this.forceCursorToEndEvent;
-		switch (this.haAction?.action) {
+		switch (this.config?.action) {
 			case 'search':
 				placeholder = 'Search for something...';
 				buttons = html`${this.buildDialogButton(
@@ -498,7 +457,7 @@ export class KeyboardDialog extends LitElement {
 				break;
 			case 'keyboard':
 			default:
-				switch (this.haAction?.platform) {
+				switch (this.config?.platform) {
 					case 'Kodi':
 						inputHandler = this.kodiOnInput;
 						keyDownHandler = this.kodiOnKeyDown;
@@ -529,7 +488,7 @@ export class KeyboardDialog extends LitElement {
 				)}`;
 				break;
 		}
-		placeholder = this.haAction?.keyboard_prompt ?? placeholder;
+		placeholder = this.config?.keyboard_prompt ?? placeholder;
 
 		const textarea = html`<textarea
 			spellcheck="false"
