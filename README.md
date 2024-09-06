@@ -19,7 +19,7 @@ A super customizable universal remote card iterating on the work of several othe
 
 - Configuration UI.
 - Out of the box support for [several platforms](#media-platform-and-entity-ids) with default keys and sources lists.
-  - Android TV (with keyboard)
+  - Android TV (with keyboard via ADB)
   - Fire TV (with keyboard)
   - Roku (with keyboard)
   - Kodi (with keyboard)
