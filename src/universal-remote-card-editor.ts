@@ -2492,7 +2492,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 					row = ['navigation_' + row[0]];
 				}
 				rows.push(row);
-				delete (config as Record<string, string[]>)[name];
+				delete (updatedConfig as Record<string, string[]>)[name];
 			}
 			updatedConfig.rows = rows;
 		}
