@@ -11,7 +11,7 @@ export const webosDefaultSources: IElementConfig[] = [
 			action: 'perform-action',
 			perform_action: 'webostv.button',
 			data: {
-				method: 'NETFLIX',
+				button: 'NETFLIX',
 			},
 		},
 		icon: 'mdi:netflix',
@@ -23,7 +23,7 @@ export const webosDefaultSources: IElementConfig[] = [
 			action: 'perform-action',
 			perform_action: 'webostv.button',
 			data: {
-				method: 'AMAZON',
+				button: 'AMAZON',
 			},
 		},
 		icon: 'primevideo',

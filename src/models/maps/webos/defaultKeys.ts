@@ -11,7 +11,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 			action: 'perform-action',
 			perform_action: 'webostv.button',
 			data: {
-				method: 'HOME',
+				button: 'HOME',
 			},
 		},
 		icon: 'mdi:home',
@@ -23,7 +23,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 			action: 'perform-action',
 			perform_action: 'webostv.button',
 			data: {
-				method: 'BACK',
+				button: 'BACK',
 			},
 		},
 		icon: 'mdi:keyboard-backspace',
@@ -35,7 +35,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 			action: 'perform-action',
 			perform_action: 'webostv.button',
 			data: {
-				method: 'MENU',
+				button: 'MENU',
 			},
 		},
 		icon: 'mdi:menu',
@@ -47,7 +47,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 			action: 'perform-action',
 			perform_action: 'webostv.button',
 			data: {
-				method: 'DASH',
+				button: 'DASH',
 			},
 		},
 		icon: 'mdi:view-dashboard-variant',
@@ -59,7 +59,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 			action: 'perform-action',
 			perform_action: 'webostv.button',
 			data: {
-				method: 'EXIT',
+				button: 'EXIT',
 			},
 		},
 		icon: 'mdi:exit-to-app',
@@ -71,7 +71,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 			action: 'perform-action',
 			perform_action: 'webostv.button',
 			data: {
-				method: 'VOLUMEUP',
+				button: 'VOLUMEUP',
 			},
 		},
 		hold_action: { action: 'repeat' },
@@ -84,7 +84,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 			action: 'perform-action',
 			perform_action: 'webostv.button',
 			data: {
-				method: 'VOLUMEDOWN',
+				button: 'VOLUMEDOWN',
 			},
 		},
 		hold_action: { action: 'repeat' },
@@ -97,7 +97,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 			action: 'perform-action',
 			perform_action: 'webostv.button',
 			data: {
-				method: 'MUTE',
+				button: 'MUTE',
 			},
 		},
 		icon: 'mdi:volume-low',
@@ -128,7 +128,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 			action: 'perform-action',
 			perform_action: 'webostv.button',
 			data: {
-				method: 'UP',
+				button: 'UP',
 			},
 		},
 		hold_action: { action: 'repeat' },
@@ -141,7 +141,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 			action: 'perform-action',
 			perform_action: 'webostv.button',
 			data: {
-				method: 'DOWN',
+				button: 'DOWN',
 			},
 		},
 		hold_action: { action: 'repeat' },
@@ -154,7 +154,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 			action: 'perform-action',
 			perform_action: 'webostv.button',
 			data: {
-				method: 'LEFT',
+				button: 'LEFT',
 			},
 		},
 		hold_action: { action: 'repeat' },
@@ -167,7 +167,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 			action: 'perform-action',
 			perform_action: 'webostv.button',
 			data: {
-				method: 'RIGHT',
+				button: 'RIGHT',
 			},
 		},
 		hold_action: { action: 'repeat' },
@@ -180,7 +180,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 			action: 'perform-action',
 			perform_action: 'webostv.button',
 			data: {
-				method: 'ENTER',
+				button: 'ENTER',
 			},
 		},
 		icon: 'mdi:circle',
@@ -202,7 +202,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 			action: 'perform-action',
 			perform_action: 'webostv.button',
 			data: {
-				method: 'ENTER',
+				button: 'ENTER',
 			},
 		},
 		up: {
@@ -210,7 +210,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 				action: 'perform-action',
 				perform_action: 'webostv.button',
 				data: {
-					method: 'UP',
+					button: 'UP',
 				},
 			},
 			hold_action: { action: 'repeat' },
@@ -220,7 +220,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 				action: 'perform-action',
 				perform_action: 'webostv.button',
 				data: {
-					method: 'DOWN',
+					button: 'DOWN',
 				},
 			},
 			hold_action: { action: 'repeat' },
@@ -230,7 +230,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 				action: 'perform-action',
 				perform_action: 'webostv.button',
 				data: {
-					method: 'LEFT',
+					button: 'LEFT',
 				},
 			},
 			hold_action: { action: 'repeat' },
@@ -240,7 +240,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 				action: 'perform-action',
 				perform_action: 'webostv.button',
 				data: {
-					method: 'RIGHT',
+					button: 'RIGHT',
 				},
 			},
 			hold_action: { action: 'repeat' },
@@ -253,7 +253,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 			action: 'perform-action',
 			perform_action: 'webostv.button',
 			data: {
-				method: 'PLAY',
+				button: 'PLAY',
 			},
 		},
 		icon: 'mdi:play',
@@ -265,7 +265,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 			action: 'perform-action',
 			perform_action: 'webostv.button',
 			data: {
-				method: 'PAUSE',
+				button: 'PAUSE',
 			},
 		},
 		icon: 'mdi:pause',
@@ -277,7 +277,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 			action: 'perform-action',
 			perform_action: 'webostv.button',
 			data: {
-				method: 'CHANNELUP',
+				button: 'CHANNELUP',
 			},
 		},
 		icon: 'mdi:arrow-up-circle',
@@ -289,7 +289,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 			action: 'perform-action',
 			perform_action: 'webostv.button',
 			data: {
-				method: 'CHANNELDOWN',
+				button: 'CHANNELDOWN',
 			},
 		},
 		icon: 'mdi:arrow-down-circle',
@@ -301,7 +301,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 			action: 'perform-action',
 			perform_action: 'webostv.button',
 			data: {
-				method: 'RED',
+				button: 'RED',
 			},
 		},
 		icon: 'mdi:alpha-r-box',
@@ -313,7 +313,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 			action: 'perform-action',
 			perform_action: 'webostv.button',
 			data: {
-				method: 'GREEN',
+				button: 'GREEN',
 			},
 		},
 		icon: 'mdi:alpha-g-box',
@@ -325,7 +325,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 			action: 'perform-action',
 			perform_action: 'webostv.button',
 			data: {
-				method: 'YELLOW',
+				button: 'YELLOW',
 			},
 		},
 		icon: 'mdi:alpha-y-box',
@@ -337,7 +337,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 			action: 'perform-action',
 			perform_action: 'webostv.button',
 			data: {
-				method: 'BLUE',
+				button: 'BLUE',
 			},
 		},
 		icon: 'mdi:alpha-b-box',
@@ -349,7 +349,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 			action: 'perform-action',
 			perform_action: 'webostv.button',
 			data: {
-				method: '0',
+				button: '0',
 			},
 		},
 		icon: 'mdi:numeric-0',
@@ -361,7 +361,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 			action: 'perform-action',
 			perform_action: 'webostv.button',
 			data: {
-				method: '1',
+				button: '1',
 			},
 		},
 		icon: 'mdi:numeric-1',
@@ -373,7 +373,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 			action: 'perform-action',
 			perform_action: 'webostv.button',
 			data: {
-				method: '2',
+				button: '2',
 			},
 		},
 		icon: 'mdi:numeric-2',
@@ -385,7 +385,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 			action: 'perform-action',
 			perform_action: 'webostv.button',
 			data: {
-				method: '3',
+				button: '3',
 			},
 		},
 		icon: 'mdi:numeric-3',
@@ -397,7 +397,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 			action: 'perform-action',
 			perform_action: 'webostv.button',
 			data: {
-				method: '4',
+				button: '4',
 			},
 		},
 		icon: 'mdi:numeric-4',
@@ -409,7 +409,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 			action: 'perform-action',
 			perform_action: 'webostv.button',
 			data: {
-				method: '5',
+				button: '5',
 			},
 		},
 		icon: 'mdi:numeric-5',
@@ -421,7 +421,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 			action: 'perform-action',
 			perform_action: 'webostv.button',
 			data: {
-				method: '6',
+				button: '6',
 			},
 		},
 		icon: 'mdi:numeric-6',
@@ -433,7 +433,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 			action: 'perform-action',
 			perform_action: 'webostv.button',
 			data: {
-				method: '7',
+				button: '7',
 			},
 		},
 		icon: 'mdi:numeric-7',
@@ -445,7 +445,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 			action: 'perform-action',
 			perform_action: 'webostv.button',
 			data: {
-				method: '8',
+				button: '8',
 			},
 		},
 		icon: 'mdi:numeric-8',
@@ -457,7 +457,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 			action: 'perform-action',
 			perform_action: 'webostv.button',
 			data: {
-				method: '9',
+				button: '9',
 			},
 		},
 		icon: 'mdi:numeric-9',
@@ -474,7 +474,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 			action: 'perform-action',
 			perform_action: 'webostv.button',
 			data: {
-				method: 'ASTERISK',
+				button: 'ASTERISK',
 			},
 		},
 		icon: 'mdi:asterisk',
@@ -486,7 +486,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 			action: 'perform-action',
 			perform_action: 'webostv.button',
 			data: {
-				method: 'INFO',
+				button: 'INFO',
 			},
 		},
 		icon: 'mdi:information',
@@ -498,7 +498,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 			action: 'perform-action',
 			perform_action: 'webostv.button',
 			data: {
-				method: 'GUIDE',
+				button: 'GUIDE',
 			},
 		},
 		icon: 'mdi:television-box',
@@ -510,7 +510,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 			action: 'perform-action',
 			perform_action: 'webostv.button',
 			data: {
-				method: 'CC',
+				button: 'CC',
 			},
 		},
 		icon: 'mdi:closed-caption',
