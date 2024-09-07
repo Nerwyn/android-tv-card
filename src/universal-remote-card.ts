@@ -155,7 +155,7 @@ class UniversalRemoteCard extends LitElement {
 								case 'media_player':
 								case 'kodi':
 								case 'denonavr':
-								case 'webos':
+								case 'webostv':
 									target.entity_id = entity.startsWith(
 										'media_player',
 									)

@@ -9,7 +9,7 @@ export const webosDefaultSources: IElementConfig[] = [
 		name: 'netflix',
 		tap_action: {
 			action: 'perform-action',
-			perform_action: 'webos.button',
+			perform_action: 'webostv.button',
 			data: {
 				method: 'NETFLIX',
 			},
@@ -21,7 +21,7 @@ export const webosDefaultSources: IElementConfig[] = [
 		name: 'primevideo',
 		tap_action: {
 			action: 'perform-action',
-			perform_action: 'webos.button',
+			perform_action: 'webostv.button',
 			data: {
 				method: 'AMAZON',
 			},

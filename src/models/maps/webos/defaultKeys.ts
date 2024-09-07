@@ -9,7 +9,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 		name: 'home',
 		tap_action: {
 			action: 'perform-action',
-			perform_action: 'webos.button',
+			perform_action: 'webostv.button',
 			data: {
 				method: 'HOME',
 			},
@@ -21,7 +21,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 		name: 'back',
 		tap_action: {
 			action: 'perform-action',
-			perform_action: 'webos.button',
+			perform_action: 'webostv.button',
 			data: {
 				method: 'BACK',
 			},
@@ -33,7 +33,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 		name: 'menu',
 		tap_action: {
 			action: 'perform-action',
-			perform_action: 'webos.button',
+			perform_action: 'webostv.button',
 			data: {
 				method: 'MENU',
 			},
@@ -45,7 +45,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 		name: 'dash',
 		tap_action: {
 			action: 'perform-action',
-			perform_action: 'webos.button',
+			perform_action: 'webostv.button',
 			data: {
 				method: 'DASH',
 			},
@@ -57,7 +57,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 		name: 'exit',
 		tap_action: {
 			action: 'perform-action',
-			perform_action: 'webos.button',
+			perform_action: 'webostv.button',
 			data: {
 				method: 'EXIT',
 			},
@@ -69,7 +69,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 		name: 'volume_up',
 		tap_action: {
 			action: 'perform-action',
-			perform_action: 'webos.button',
+			perform_action: 'webostv.button',
 			data: {
 				method: 'VOLUMEUP',
 			},
@@ -82,7 +82,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 		name: 'volume_down',
 		tap_action: {
 			action: 'perform-action',
-			perform_action: 'webos.button',
+			perform_action: 'webostv.button',
 			data: {
 				method: 'VOLUMEDOWN',
 			},
@@ -95,7 +95,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 		name: 'volume_mute',
 		tap_action: {
 			action: 'perform-action',
-			perform_action: 'webos.button',
+			perform_action: 'webostv.button',
 			data: {
 				method: 'MUTE',
 			},
@@ -126,7 +126,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 		name: 'up',
 		tap_action: {
 			action: 'perform-action',
-			perform_action: 'webos.button',
+			perform_action: 'webostv.button',
 			data: {
 				method: 'UP',
 			},
@@ -139,7 +139,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 		name: 'down',
 		tap_action: {
 			action: 'perform-action',
-			perform_action: 'webos.button',
+			perform_action: 'webostv.button',
 			data: {
 				method: 'DOWN',
 			},
@@ -152,7 +152,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 		name: 'left',
 		tap_action: {
 			action: 'perform-action',
-			perform_action: 'webos.button',
+			perform_action: 'webostv.button',
 			data: {
 				method: 'LEFT',
 			},
@@ -165,7 +165,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 		name: 'right',
 		tap_action: {
 			action: 'perform-action',
-			perform_action: 'webos.button',
+			perform_action: 'webostv.button',
 			data: {
 				method: 'RIGHT',
 			},
@@ -178,7 +178,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 		name: 'center',
 		tap_action: {
 			action: 'perform-action',
-			perform_action: 'webos.button',
+			perform_action: 'webostv.button',
 			data: {
 				method: 'ENTER',
 			},
@@ -200,7 +200,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 		name: 'touchpad',
 		tap_action: {
 			action: 'perform-action',
-			perform_action: 'webos.button',
+			perform_action: 'webostv.button',
 			data: {
 				method: 'ENTER',
 			},
@@ -208,7 +208,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 		up: {
 			tap_action: {
 				action: 'perform-action',
-				perform_action: 'webos.button',
+				perform_action: 'webostv.button',
 				data: {
 					method: 'UP',
 				},
@@ -218,7 +218,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 		down: {
 			tap_action: {
 				action: 'perform-action',
-				perform_action: 'webos.button',
+				perform_action: 'webostv.button',
 				data: {
 					method: 'DOWN',
 				},
@@ -228,7 +228,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 		left: {
 			tap_action: {
 				action: 'perform-action',
-				perform_action: 'webos.button',
+				perform_action: 'webostv.button',
 				data: {
 					method: 'LEFT',
 				},
@@ -238,7 +238,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 		right: {
 			tap_action: {
 				action: 'perform-action',
-				perform_action: 'webos.button',
+				perform_action: 'webostv.button',
 				data: {
 					method: 'RIGHT',
 				},
@@ -251,7 +251,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 		name: 'play',
 		tap_action: {
 			action: 'perform-action',
-			perform_action: 'webos.button',
+			perform_action: 'webostv.button',
 			data: {
 				method: 'PLAY',
 			},
@@ -263,7 +263,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 		name: 'pause',
 		tap_action: {
 			action: 'perform-action',
-			perform_action: 'webos.button',
+			perform_action: 'webostv.button',
 			data: {
 				method: 'PAUSE',
 			},
@@ -275,7 +275,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 		name: 'channel_up',
 		tap_action: {
 			action: 'perform-action',
-			perform_action: 'webos.button',
+			perform_action: 'webostv.button',
 			data: {
 				method: 'CHANNELUP',
 			},
@@ -287,7 +287,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 		name: 'channel_down',
 		tap_action: {
 			action: 'perform-action',
-			perform_action: 'webos.button',
+			perform_action: 'webostv.button',
 			data: {
 				method: 'CHANNELDOWN',
 			},
@@ -299,7 +299,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 		name: 'red',
 		tap_action: {
 			action: 'perform-action',
-			perform_action: 'webos.button',
+			perform_action: 'webostv.button',
 			data: {
 				method: 'RED',
 			},
@@ -311,7 +311,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 		name: 'green',
 		tap_action: {
 			action: 'perform-action',
-			perform_action: 'webos.button',
+			perform_action: 'webostv.button',
 			data: {
 				method: 'GREEN',
 			},
@@ -323,7 +323,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 		name: 'yellow',
 		tap_action: {
 			action: 'perform-action',
-			perform_action: 'webos.button',
+			perform_action: 'webostv.button',
 			data: {
 				method: 'YELLOW',
 			},
@@ -335,7 +335,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 		name: 'blue',
 		tap_action: {
 			action: 'perform-action',
-			perform_action: 'webos.button',
+			perform_action: 'webostv.button',
 			data: {
 				method: 'BLUE',
 			},
@@ -347,7 +347,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 		name: 'n0',
 		tap_action: {
 			action: 'perform-action',
-			perform_action: 'webos.button',
+			perform_action: 'webostv.button',
 			data: {
 				method: '0',
 			},
@@ -359,7 +359,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 		name: 'n1',
 		tap_action: {
 			action: 'perform-action',
-			perform_action: 'webos.button',
+			perform_action: 'webostv.button',
 			data: {
 				method: '1',
 			},
@@ -371,7 +371,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 		name: 'n2',
 		tap_action: {
 			action: 'perform-action',
-			perform_action: 'webos.button',
+			perform_action: 'webostv.button',
 			data: {
 				method: '2',
 			},
@@ -383,7 +383,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 		name: 'n3',
 		tap_action: {
 			action: 'perform-action',
-			perform_action: 'webos.button',
+			perform_action: 'webostv.button',
 			data: {
 				method: '3',
 			},
@@ -395,7 +395,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 		name: 'n4',
 		tap_action: {
 			action: 'perform-action',
-			perform_action: 'webos.button',
+			perform_action: 'webostv.button',
 			data: {
 				method: '4',
 			},
@@ -407,7 +407,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 		name: 'n5',
 		tap_action: {
 			action: 'perform-action',
-			perform_action: 'webos.button',
+			perform_action: 'webostv.button',
 			data: {
 				method: '5',
 			},
@@ -419,7 +419,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 		name: 'n6',
 		tap_action: {
 			action: 'perform-action',
-			perform_action: 'webos.button',
+			perform_action: 'webostv.button',
 			data: {
 				method: '6',
 			},
@@ -431,7 +431,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 		name: 'n7',
 		tap_action: {
 			action: 'perform-action',
-			perform_action: 'webos.button',
+			perform_action: 'webostv.button',
 			data: {
 				method: '7',
 			},
@@ -443,7 +443,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 		name: 'n8',
 		tap_action: {
 			action: 'perform-action',
-			perform_action: 'webos.button',
+			perform_action: 'webostv.button',
 			data: {
 				method: '8',
 			},
@@ -455,7 +455,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 		name: 'n9',
 		tap_action: {
 			action: 'perform-action',
-			perform_action: 'webos.button',
+			perform_action: 'webostv.button',
 			data: {
 				method: '9',
 			},
@@ -472,7 +472,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 		name: 'asterisk',
 		tap_action: {
 			action: 'perform-action',
-			perform_action: 'webos.button',
+			perform_action: 'webostv.button',
 			data: {
 				method: 'ASTERISK',
 			},
@@ -484,7 +484,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 		name: 'info',
 		tap_action: {
 			action: 'perform-action',
-			perform_action: 'webos.button',
+			perform_action: 'webostv.button',
 			data: {
 				method: 'INFO',
 			},
@@ -496,7 +496,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 		name: 'guide',
 		tap_action: {
 			action: 'perform-action',
-			perform_action: 'webos.button',
+			perform_action: 'webostv.button',
 			data: {
 				method: 'GUIDE',
 			},
@@ -508,7 +508,7 @@ export const webosDefaultKeys: IElementConfig[] = [
 		name: 'captions',
 		tap_action: {
 			action: 'perform-action',
-			perform_action: 'webos.button',
+			perform_action: 'webostv.button',
 			data: {
 				method: 'CC',
 			},
