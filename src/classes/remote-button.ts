@@ -239,6 +239,7 @@ export class RemoteButton extends BaseRemoteElement {
 					padding: 0;
 					background: rgb(0, 0, 0, 0);
 					border: none;
+					flex-direction: column;
 					align-content: center;
 					text-align: center;
 					justify-content: center;
