@@ -44,6 +44,7 @@ export class RemoteSlider extends BaseRemoteElement {
 			this.setThumbOffset();
 		}
 	});
+	rtl: boolean = false;
 
 	onInput(e: InputEvent) {
 		const slider = e.currentTarget as HTMLInputElement;
@@ -250,7 +251,7 @@ export class RemoteSlider extends BaseRemoteElement {
 	buildBackground() {
 		const style: StyleInfo = {};
 		if (this.vertical) {
-			style['transform'] = 'rotateZ(270deg)';
+			style['transform'] = `rotateZ(${this.rtl ? '90deg' : '270deg'})`;
 			style['width'] = `${this.sliderWidth}px`;
 			style[
 				'height'
@@ -320,7 +321,7 @@ export class RemoteSlider extends BaseRemoteElement {
 			style['pointer-events'] = 'none';
 		}
 		if (this.vertical) {
-			style['transform'] = 'rotateZ(270deg)';
+			style['transform'] = `rotateZ(${this.rtl ? '90deg' : '270deg'})`;
 			style['height'] = `${this.sliderHeight}px`;
 			style['width'] = `${this.sliderWidth}px`;
 			style['touch-action'] = 'none';
@@ -411,8 +412,12 @@ export class RemoteSlider extends BaseRemoteElement {
 				containerStyle['width'] = 'var(--height)';
 			}
 		}
+		this.rtl = getComputedStyle(this).direction == 'rtl';
 		this.setThumbOffset();
-		this.style.setProperty('--thumb-offset', `${this.thumbOffset}px`);
+		this.style.setProperty(
+			'--thumb-offset',
+			`${this.rtl ? '-1 * ' : ''}${this.thumbOffset})px`,
+		);
 
 		return html`
 			<div class="container" style=${styleMap(containerStyle)}>
