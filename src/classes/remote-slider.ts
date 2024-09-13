@@ -251,7 +251,7 @@ export class RemoteSlider extends BaseRemoteElement {
 	buildBackground() {
 		const style: StyleInfo = {};
 		if (this.vertical) {
-			style['transform'] = 'rotateZ(270deg)';
+			style['transform'] = `rotateZ(${this.rtl ? '90deg' : '270deg'})`;
 			style['width'] = `${this.sliderWidth}px`;
 			style[
 				'height'
@@ -268,7 +268,7 @@ export class RemoteSlider extends BaseRemoteElement {
 		`;
 	}
 
-	buildTooltipStyle(context: object) {
+	buildSliderStyles(context: object) {
 		let height, width;
 		const containerElement = this.shadowRoot?.querySelector('.container');
 		if (containerElement) {
@@ -295,6 +295,8 @@ export class RemoteSlider extends BaseRemoteElement {
 			iconTransform = 'translateX(var(--thumb-offset))';
 		}
 
+		const scale = this.rtl ? '-1' : '1';
+
 		// Moved out of html literal to prevent it from being broken by the minifier
 		const styles = `
 		:host {
@@ -302,7 +304,12 @@ export class RemoteSlider extends BaseRemoteElement {
 			--tooltip-transform: ${tooltipTransform};
 			--icon-transform: ${iconTransform};
 		}
-		`;
+		.slider::-webkit-slider-thumb {
+			scale: ${scale};
+		}
+		.slider::-moz-range-thumb {
+			scale: ${scale};
+		}`;
 
 		return html`<style>
 			${styles}
@@ -321,7 +328,7 @@ export class RemoteSlider extends BaseRemoteElement {
 			style['pointer-events'] = 'none';
 		}
 		if (this.vertical) {
-			style['transform'] = 'rotateZ(270deg)';
+			style['transform'] = `rotateZ(${this.rtl ? '90deg' : '270deg'})`;
 			style['height'] = `${this.sliderHeight}px`;
 			style['width'] = `${this.sliderWidth}px`;
 			style['touch-action'] = 'none';
@@ -425,7 +432,7 @@ export class RemoteSlider extends BaseRemoteElement {
 				${this.buildIcon(this.config.icon, context)}
 				${this.buildLabel(this.config.label, context)}
 			</div>
-			${this.buildTooltip()}${this.buildTooltipStyle(context)}
+			${this.buildTooltip()}${this.buildSliderStyles(context)}
 			${this.buildStyles(this.config.styles, context)}
 		`;
 	}
