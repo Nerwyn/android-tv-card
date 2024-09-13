@@ -251,7 +251,7 @@ export class RemoteSlider extends BaseRemoteElement {
 	buildBackground() {
 		const style: StyleInfo = {};
 		if (this.vertical) {
-			style['transform'] = `rotateZ(${this.rtl ? '90deg' : '270deg'})`;
+			style['transform'] = 'rotateZ(270deg)';
 			style['width'] = `${this.sliderWidth}px`;
 			style[
 				'height'
@@ -321,7 +321,7 @@ export class RemoteSlider extends BaseRemoteElement {
 			style['pointer-events'] = 'none';
 		}
 		if (this.vertical) {
-			style['transform'] = `rotateZ(${this.rtl ? '90deg' : '270deg'})`;
+			style['transform'] = 'rotateZ(270deg)';
 			style['height'] = `${this.sliderHeight}px`;
 			style['width'] = `${this.sliderWidth}px`;
 			style['touch-action'] = 'none';
