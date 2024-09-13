@@ -251,7 +251,7 @@ export class RemoteSlider extends BaseRemoteElement {
 	buildBackground() {
 		const style: StyleInfo = {};
 		if (this.vertical) {
-			style['transform'] = `rotateZ(${this.rtl ? '90deg' : '270deg'})`;
+			style['transform'] = `rotateZ(${this.rtl ? '90' : '270'}deg)`;
 			style['width'] = `${this.sliderWidth}px`;
 			style[
 				'height'
@@ -295,8 +295,6 @@ export class RemoteSlider extends BaseRemoteElement {
 			iconTransform = 'translateX(var(--thumb-offset))';
 		}
 
-		const scale = this.rtl ? '-1' : '1';
-
 		// Moved out of html literal to prevent it from being broken by the minifier
 		const styles = `
 		:host {
@@ -304,12 +302,19 @@ export class RemoteSlider extends BaseRemoteElement {
 			--tooltip-transform: ${tooltipTransform};
 			--icon-transform: ${iconTransform};
 		}
+		${
+			this.rtl
+				? `
 		.slider::-webkit-slider-thumb {
-			scale: ${scale};
+			scale: -1;
 		}
 		.slider::-moz-range-thumb {
-			scale: ${scale};
-		}`;
+			scale: -1;
+		}
+		`
+				: ''
+		}
+		`;
 
 		return html`<style>
 			${styles}
@@ -328,7 +333,7 @@ export class RemoteSlider extends BaseRemoteElement {
 			style['pointer-events'] = 'none';
 		}
 		if (this.vertical) {
-			style['transform'] = `rotateZ(${this.rtl ? '90deg' : '270deg'})`;
+			style['transform'] = `rotateZ(${this.rtl ? '90' : '270'}deg)`;
 			style['height'] = `${this.sliderHeight}px`;
 			style['width'] = `${this.sliderWidth}px`;
 			style['touch-action'] = 'none';
