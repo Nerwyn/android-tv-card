@@ -423,7 +423,9 @@ export class RemoteSlider extends BaseRemoteElement {
 		this.setThumbOffset();
 		this.style.setProperty(
 			'--thumb-offset',
-			`calc(${this.rtl ? '-1 * ' : ''}${this.thumbOffset}px)`,
+			`calc(${this.rtl && !this.vertical ? '-1 * ' : ''}${
+				this.thumbOffset
+			}px)`,
 		);
 
 		return html`
