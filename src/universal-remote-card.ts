@@ -448,7 +448,7 @@ class UniversalRemoteCard extends LitElement {
 						rowContent.push(this.buildNavButtons());
 						break;
 					case 'dpad':
-						centerRow = ['left', 'center', 'right,'];
+						centerRow = ['left', 'center', 'right'];
 						if (this.rtl) {
 							centerRow.reverse();
 						}
