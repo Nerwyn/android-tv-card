@@ -46,6 +46,7 @@ class UniversalRemoteCard extends LitElement {
 	nColumns: number = 0;
 	nPads: number = 0;
 	editMode: boolean = false;
+	rtl: boolean = false;
 
 	static get properties() {
 		return {
@@ -394,13 +395,17 @@ class UniversalRemoteCard extends LitElement {
 	}
 
 	buildNavButtons(): TemplateResult {
+		const centerRow = [
+			this.buildButton('left'),
+			this.buildButton('center'),
+			this.buildButton('right'),
+		];
+		if (this.rtl) {
+			centerRow.reverse();
+		}
 		return this.buildColumn([
 			this.buildRow([this.buildButton('up')]),
-			this.buildRow([
-				this.buildButton('left'),
-				this.buildButton('center'),
-				this.buildButton('right'),
-			]),
+			this.buildRow(centerRow),
 			this.buildRow([this.buildButton('down')]),
 		]);
 	}
@@ -429,6 +434,7 @@ class UniversalRemoteCard extends LitElement {
 				);
 			} else {
 				// Special shortcuts
+				let centerRow = [];
 				switch (elementName) {
 					case 'volume_buttons': {
 						const volumeButtons = this.buildVolumeButtons();
@@ -442,14 +448,16 @@ class UniversalRemoteCard extends LitElement {
 						rowContent.push(this.buildNavButtons());
 						break;
 					case 'dpad':
+						centerRow = ['left', 'center', 'right,'];
+						if (this.rtl) {
+							centerRow.reverse();
+						}
 						rowContent.push(
 							this.buildPad([
 								'',
 								'up',
 								'',
-								'left',
-								'center',
-								'right',
+								...centerRow,
 								'',
 								'down',
 								'',
@@ -472,6 +480,10 @@ class UniversalRemoteCard extends LitElement {
 						);
 						break;
 					case 'xpad':
+						centerRow = ['x', '', 'b'];
+						if (this.rtl) {
+							centerRow.reverse();
+						}
 						rowContent.push(
 							this.buildPad([
 								'',
@@ -487,6 +499,10 @@ class UniversalRemoteCard extends LitElement {
 						);
 						break;
 					case 'npad':
+						centerRow = ['y', '', 'a'];
+						if (this.rtl) {
+							centerRow.reverse();
+						}
 						rowContent.push(
 							this.buildPad([
 								'',
@@ -546,6 +562,7 @@ class UniversalRemoteCard extends LitElement {
 				?.shadowRoot?.querySelector('hui-dialog-edit-card')
 				?.shadowRoot?.querySelector('ha-dialog'),
 		);
+		this.rtl = getComputedStyle(this).direction == 'rtl';
 
 		const context = {
 			config: {
