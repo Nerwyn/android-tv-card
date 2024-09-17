@@ -100,16 +100,17 @@ Double tap actions have a default window of 200ms to trigger before a single tap
 
 Styles can be set and changed for all remote sub-elements using regular CSS and templating. CSS styles have to be encapsulated in a CSS selector like the following.
 
-| CSS Selector  | Element               |
-| ------------- | --------------------- |
-| :host         | Global values.        |
-| .row          | All rows.             |
-| .column       | All columns.          |
-| .button-pad   | All button pads.      |
-| remote-button | All buttons.          |
-| #row-1        | The first row.        |
-| #column-1     | The first column.     |
-| #pad-1        | The first button pad. |
+| CSS Selector  | Element                       |
+| ------------- | ----------------------------- |
+| :host         | Global values.                |
+| .row          | All rows.                     |
+| .column       | All columns.                  |
+| .button-pad   | All button pads.              |
+| .empty-button | All empty/null button spaces. |
+| remote-button | All buttons.                  |
+| #row-1        | The first row.                |
+| #column-1     | The first column.             |
+| #pad-1        | The first button pad.         |
 
 ```css
 .row {
