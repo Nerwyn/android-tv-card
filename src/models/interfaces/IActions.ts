@@ -10,6 +10,7 @@ export const Platforms = [
 	'Apple TV',
 	'Samsung TV',
 	'LG webOS',
+	'Sony BRAVIA'
 ] as const;
 export type Platform = (typeof Platforms)[number];
 
