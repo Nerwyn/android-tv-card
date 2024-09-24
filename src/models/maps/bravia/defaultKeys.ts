@@ -6,7 +6,7 @@ import { IElementConfig } from '../../interfaces';
  * Not all are ensured to work, and if they do not it is likely an issue with the underlying package used by the Android TV Remote integration or the Android TV Remote Protocol V2 itself.
  * https://www.home-assistant.io/integrations/androidtv_remote/#remote
  */
-export const androidTVDefaultKeys: IElementConfig[] = [
+export const braviaTVDefaultKeys: IElementConfig[] = [
 	{
 		type: 'button',
 		name: 'power',
