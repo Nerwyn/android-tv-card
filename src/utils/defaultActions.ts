@@ -4,6 +4,8 @@ import {
 	androidTVDefaultSources,
 	appleTVDefaultKeys,
 	appleTVDefaultSources,
+	braviaTVDefaultKeys,
+	braviaTVDefaultSources,
 	fireTVDefaultKeys,
 	fireTVDefaultSources,
 	kodiDefaultKeys,
