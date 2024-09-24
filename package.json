@@ -63,6 +63,6 @@
 		"ts-loader": "latest",
 		"typescript": "latest",
 		"webpack": "latest",
-		"webpack-cli": "latest"
+		"webpack-cli": "^5.1.4"
 	}
 }
