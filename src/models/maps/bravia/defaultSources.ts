@@ -229,7 +229,7 @@ export const braviaTVDefaultSources: IElementConfig[] = [
 	{
 		type: 'button',
 		name: 'youtube',
-		tap_action: { action: 'source', source: 'vnd.youtube://' },
+		tap_action: { action: 'source', source: 'YouTube' },
 		icon: 'mdi:youtube',
 	},
 	{
