@@ -2310,6 +2310,9 @@ export class UniversalRemoteCardEditor extends LitElement {
 			case 'ANDROID TV' as Platform:
 			case 'Android TV':
 				return 'Android TV';
+			case 'Sony BRAVIA' as Platform:
+			case 'BRAVIA':
+				return 'Sony BRAVIA';
 			default:
 				return undefined;
 		}
