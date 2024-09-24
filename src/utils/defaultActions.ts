@@ -44,6 +44,9 @@ export function getDefaultActions(platform: Platform) {
 			defaultKeys = fireTVDefaultKeys;
 			defaultSources = fireTVDefaultSources;
 			break;
+		case 'Sony BRAVIA':
+			defaultKeys = braviaTVDefaultKeys;
+			defaultSources = braviaTVDefaultSources;
 		case 'Android TV':
 		default:
 			defaultKeys = androidTVDefaultKeys;
