@@ -63,6 +63,7 @@ This card supports several media platforms with default key and source lists. It
 | [Apple TV](https://www.home-assistant.io/integrations/apple_tv)            | Default keys             | Default sources and slider         | NA                                                                                                        |
 | [Samsung TV](https://www.home-assistant.io/integrations/samsungtv/)        | Default keys             | Default sources and slider         | NA                                                                                                        |
 | [LG webOS](https://www.home-assistant.io/integrations/webostv/)            | NA                       | Default keys, sources, and sliders | NA                                                                                                        |
+| [Sony BRAVIA](https://www.home-assistant.io/integrations/braviatv/#remote) | Default Keys | Default sources | NA
 
 ## Action Timings
 
