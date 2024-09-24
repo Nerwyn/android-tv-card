@@ -69,7 +69,7 @@ export const braviaTVDefaultSources: IElementConfig[] = [
 	{
 		type: 'button',
 		name: 'jellyfin',
-		tap_action: { action: 'play_media', media_content_id: 'jellyfin', media_content_type: 'app' },
+		tap_action: { action: 'source', source: 'jellyfin' },
 		icon: 'jellyfin',
 	},
 	{
@@ -175,7 +175,7 @@ export const braviaTVDefaultSources: IElementConfig[] = [
 	{
 		type: 'button',
 		name: 'spotify',
-		tap_action: { action: 'play_media', media_content_id: 'spotify', media_content_type: 'app' },
+		tap_action: { action: 'source', source: 'spotify' },
 		icon: 'mdi:spotify',
 	},
 	{
@@ -229,7 +229,7 @@ export const braviaTVDefaultSources: IElementConfig[] = [
 	{
 		type: 'button',
 		name: 'youtube',
-		tap_action: { action: 'play_media', media_content_id: 'YouTube', media_content_type: 'app' },
+		tap_action: { action: 'source', source: 'vnd.youtube://' },
 		icon: 'mdi:youtube',
 	},
 	{
