@@ -5,7 +5,7 @@ import { IElementConfig } from '../../interfaces';
  * Not all have been tested, if any do not work please let me know!
  * https://community.home-assistant.io/t/android-tv-remote-app-links-deep-linking-guide/567921
  */
-export const androidTVDefaultSources: IElementConfig[] = [
+export const braviaTVDefaultSources: IElementConfig[] = [
 	{
 		type: 'button',
 		name: 'appletv',
