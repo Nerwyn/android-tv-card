@@ -2,10 +2,11 @@
 import { IElementConfig } from '../../interfaces';
 
 /**
- * This is the list of most common commands from the Android TV Remote integration page.
- * Not all are ensured to work, and if they do not it is likely an issue with the underlying package used by the Android TV Remote integration or the Android TV Remote Protocol V2 itself.
- * https://www.home-assistant.io/integrations/androidtv_remote/#remote
- */
+* This list contains commands listed by the Sony BRAVIA KD-55X750H used during development.
+* Additional commands may be supported.
+* 
+* https://www.home-assistant.io/integrations/braviatv/
+*/
 export const braviaTVDefaultKeys: IElementConfig[] = [
 	{
 		type: 'button',
@@ -341,4 +342,10 @@ export const braviaTVDefaultKeys: IElementConfig[] = [
 		tap_action: { action: 'key', key: 'MediaAudioTrack' },
 		icon: 'mdi:waveform',
 	},
+	{
+		type: 'button',
+		name: 'netflix',
+		tap_action: { action: 'key', key: 'Netflix' },
+		icon: 'mdi:netflix'
+	}
 ];
