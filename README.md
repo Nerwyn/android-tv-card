@@ -26,6 +26,7 @@ A super customizable universal remote card iterating on the work of several othe
   - Apple TV
   - Samsung TV
   - LG webOS
+  - Sony BRAVIA
 - Support for multiple buttons, touchpads, and sliders using default or user defined custom actions.
 - Complete [Home Assistant actions](https://www.home-assistant.io/dashboards/actions/) support.
 - Keyboard and search dialog actions for most platforms.
