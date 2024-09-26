@@ -4,6 +4,8 @@ import {
 	androidTVDefaultSources,
 	appleTVDefaultKeys,
 	appleTVDefaultSources,
+	braviaTVDefaultKeys,
+	braviaTVDefaultSources,
 	fireTVDefaultKeys,
 	fireTVDefaultSources,
 	kodiDefaultKeys,
@@ -43,6 +45,10 @@ export function getDefaultActions(platform: Platform) {
 		case 'Fire TV':
 			defaultKeys = fireTVDefaultKeys;
 			defaultSources = fireTVDefaultSources;
+			break;
+		case 'Sony BRAVIA':
+			defaultKeys = braviaTVDefaultKeys;
+			defaultSources = braviaTVDefaultSources;
 			break;
 		case 'Android TV':
 		default:

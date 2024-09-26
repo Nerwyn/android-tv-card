@@ -6,3 +6,4 @@ export * from './kodi';
 export * from './roku';
 export * from './samsung_tv';
 export * from './webos';
+export * from './bravia';

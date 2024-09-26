@@ -1,6 +1,6 @@
 {
 	"name": "universal-remote-card",
-	"version": "4.0.5",
+	"version": "4.0.6",
 	"description": "Universal Remote Card",
 	"main": "./dist/universal-remote-card.min.js",
 	"scripts": {
@@ -20,6 +20,15 @@
 	"keywords": [
 		"androidtv",
 		"android",
+		"bravia",
+		"roku",
+		"webos",
+		"firetv",
+		"kodi",
+		"appletv",
+		"samsungtv",
+		"samsung",
+		"apple",
 		"googletv",
 		"google",
 		"tvcard",
@@ -54,6 +63,6 @@
 		"ts-loader": "latest",
 		"typescript": "latest",
 		"webpack": "latest",
-		"webpack-cli": "latest"
+		"webpack-cli": "^5.1.4"
 	}
 }
