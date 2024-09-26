@@ -392,7 +392,7 @@ Once setup, you can reference these icons in custom actions in the icon field by
 
 # YAML Examples
 
-While all configuration can now be done through the user interface, these YAML examples can provide some insight on layout basics. For more advanced and user provided examples see the [examples file](https://github.com/Nerwyn/android-tv-card/blob/main/EXAMPLES.md)
+While all configuration can now be done through the user interface, these YAML examples can provide some insight on layout basics.
 
 ## Example 1
 
