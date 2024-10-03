@@ -72,7 +72,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 	}
 
 	configChanged(config: IConfig) {
-		config = this.autofillDefaultFields(this.config);
+		config = this.autofillDefaultFields(config);
 		const event = new Event('config-changed', {
 			bubbles: true,
 			composed: true,
