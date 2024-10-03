@@ -55,7 +55,6 @@ export class UniversalRemoteCardEditor extends LitElement {
 
 	yamlString?: string;
 	yamlStringsCache: Record<string, string> = {};
-	autofillCooldown = false;
 	people: Record<string, string>[] = [];
 
 	BASE_TABS = ['general', 'layout', 'actions', 'icons'];
@@ -73,6 +72,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 	}
 
 	configChanged(config: IConfig) {
+		config = this.autofillDefaultFields(this.config);
 		const event = new Event('config-changed', {
 			bubbles: true,
 			composed: true,
@@ -158,7 +158,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 
 	toggleGuiMode(_e: CustomEvent) {
 		this.yamlString = undefined;
-		this.autofillCooldown = false;
+		this.configChanged(this.config);
 		this.guiMode = !this.guiMode;
 	}
 
@@ -366,7 +366,6 @@ export class UniversalRemoteCardEditor extends LitElement {
 				};
 			});
 		}
-		this.autofillCooldown = false;
 		switch (this.baseTabIndex) {
 			case 3:
 			case 2:
@@ -429,7 +428,6 @@ export class UniversalRemoteCardEditor extends LitElement {
 				break;
 			}
 		}
-		this.autofillCooldown = false;
 		this.entriesChanged(entries);
 		const entriesList = this.shadowRoot?.querySelector('.features');
 		if (entriesList) {
@@ -2069,15 +2067,8 @@ export class UniversalRemoteCardEditor extends LitElement {
 	}
 
 	render() {
-		if (!this.hass) {
+		if (!this.hass || !this.config) {
 			return html``;
-		}
-
-		if (!this.autofillCooldown) {
-			this.autofillCooldown = true;
-			const config = this.autofillDefaultFields(this.config);
-			this.configChanged(config);
-			setTimeout(() => (this.autofillCooldown = false), 1000);
 		}
 
 		this.buildPeopleList();
@@ -2441,8 +2432,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 	}
 
 	handleUpdateDeprecatedConfig() {
-		let config = this.updateDeprecatedFields(this.config);
-		config = this.autofillDefaultFields(config);
+		const config = this.updateDeprecatedFields(this.config);
 		this.configChanged(config);
 	}
 
