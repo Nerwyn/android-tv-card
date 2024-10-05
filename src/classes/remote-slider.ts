@@ -8,7 +8,6 @@ import {
 	SLIDER_ANIMATION,
 	STEP,
 	STEP_COUNT,
-	UPDATE_AFTER_ACTION_DELAY,
 } from '../models/constants';
 import { ISliderConfig } from '../models/interfaces';
 import { BaseRemoteElement } from './base-remote-element';
@@ -50,8 +49,8 @@ export class RemoteSlider extends BaseRemoteElement {
 		const slider = e.currentTarget as HTMLInputElement;
 
 		if (!this.swiping) {
-			this.getValueFromHass = false;
 			clearTimeout(this.getValueFromHassTimer);
+			this.getValueFromHass = false;
 			this.value = slider.value;
 
 			this.fireHapticEvent('selection');
@@ -120,8 +119,8 @@ export class RemoteSlider extends BaseRemoteElement {
 		const slider = e.currentTarget as HTMLInputElement;
 
 		if (!this.swiping) {
-			this.getValueFromHass = false;
 			clearTimeout(this.getValueFromHassTimer);
+			this.getValueFromHass = false;
 			this.currentValue = slider.value;
 			this.value = slider.value;
 			this.setThumbOffset();
@@ -229,16 +228,6 @@ export class RemoteSlider extends BaseRemoteElement {
 				(this.entityId?.startsWith('timer.') &&
 					this.hass.states[this.entityId as string]?.state == 'idle')
 			) || (Number(value) as number) > this.range[0];
-	}
-
-	resetGetValueFromHass() {
-		const valueFromHassDelay = this.renderTemplate(
-			this.config.value_from_hass_delay ?? UPDATE_AFTER_ACTION_DELAY,
-		) as number;
-		this.getValueFromHassTimer = setTimeout(
-			() => (this.getValueFromHass = true),
-			valueFromHassDelay,
-		);
 	}
 
 	endAction() {
