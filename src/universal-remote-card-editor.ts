@@ -323,6 +323,22 @@ export class UniversalRemoteCardEditor extends LitElement {
 		}
 	}
 
+	handleEvalCodeChanged(e: CustomEvent) {
+		e.stopPropagation();
+		const actionType = (e.target as HTMLElement).id as ActionType;
+		const evalString = e.detail.value;
+		if (this.activeEntry) {
+			this.entryChanged({
+				type: (this.activeEntry as IElementConfig).type,
+				name: this.activeEntry.name,
+				[actionType]: {
+					...(this.activeEntry as IElementConfig)[actionType],
+					eval: evalString,
+				},
+			});
+		}
+	}
+
 	handleBaseTabSelected(e: CustomEvent) {
 		this.yamlStringsCache = {};
 		this.yamlString = undefined;
@@ -883,10 +899,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 		></ha-selector>`;
 	}
 
-	buildMainFeatureOptions(
-		additionalOptions: TemplateResult<1> = html``,
-		additionalFormOptions: TemplateResult<1> = html``,
-	) {
+	buildMainFeatureOptions(additionalOptions: TemplateResult<1> = html``) {
 		const autofill = this.renderTemplate(
 			(this.activeEntry as IElementConfig).autofill_entity_id ??
 				this.config.autofill_entity_id ??
@@ -937,9 +950,8 @@ export class UniversalRemoteCardEditor extends LitElement {
 					  )
 					: ''
 			}
-			${additionalOptions}
 			<div class="form">
-				${additionalFormOptions}
+				${additionalOptions}
 				${this.buildSelector(
 					'Autofill',
 					'autofill_entity_id',
@@ -1316,6 +1328,15 @@ export class UniversalRemoteCardEditor extends LitElement {
 			${buildCodeEditor || action == 'fire-dom-event'
 				? this.buildCodeEditor('action', actionType)
 				: ''}
+			${action == 'eval'
+				? html`
+						${this.buildAlertBox(
+							"Evaluating raw JavaScript strings in browser is considered extremely unsafe. Do not use unless you know what you're doing!",
+							'warning',
+						)}
+						${this.buildCodeEditor('eval', actionType)}
+				  `
+				: ''}
 			${action != 'none'
 				? html`${this.buildSelector(
 						'Confirmation',
@@ -1465,58 +1486,55 @@ export class UniversalRemoteCardEditor extends LitElement {
 		);
 
 		return html`
-			${this.buildMainFeatureOptions(
-				undefined,
-				html`
-					${this.buildSelector('Min', 'range.0', {
-						number: {
-							max: rangeMax ?? undefined,
-							step: step,
-							mode: 'box',
-							unit_of_measurement: unit,
-						},
-						RANGE_MIN,
-					})}
-					${this.buildSelector('Max', 'range.1', {
-						number: {
-							min: rangeMin ?? undefined,
-							step: step,
-							mode: 'box',
-							unit_of_measurement: unit,
-						},
-						RANGE_MAX,
-					})}
-					${this.buildSelector('Step', 'step', {
+			${this.buildMainFeatureOptions(html`
+				${this.buildSelector('Min', 'range.0', {
+					number: {
+						max: rangeMax ?? undefined,
+						step: step,
+						mode: 'box',
+						unit_of_measurement: unit,
+					},
+					RANGE_MIN,
+				})}
+				${this.buildSelector('Max', 'range.1', {
+					number: {
+						min: rangeMin ?? undefined,
+						step: step,
+						mode: 'box',
+						unit_of_measurement: unit,
+					},
+					RANGE_MAX,
+				})}
+				${this.buildSelector('Step', 'step', {
+					number: {
+						min: 0,
+						step:
+							step ??
+							Math.min(
+								1,
+								((rangeMax ?? RANGE_MAX) -
+									(rangeMin ?? RANGE_MIN)) /
+									STEP_COUNT,
+							),
+						mode: 'box',
+						unit_of_measurement: unit,
+					},
+					STEP,
+				})}
+				${this.buildSelector(
+					'Update after action delay',
+					'value_from_hass_delay',
+					{
 						number: {
 							min: 0,
-							step:
-								step ??
-								Math.min(
-									1,
-									((rangeMax ?? RANGE_MAX) -
-										(rangeMin ?? RANGE_MIN)) /
-										STEP_COUNT,
-								),
+							step: 0,
 							mode: 'box',
-							unit_of_measurement: unit,
+							unit_of_measurement: 'ms',
 						},
-						STEP,
-					})}
-					${this.buildSelector(
-						'Update after action delay',
-						'value_from_hass_delay',
-						{
-							number: {
-								min: 0,
-								step: 0,
-								mode: 'box',
-								unit_of_measurement: 'ms',
-							},
-						},
-						UPDATE_AFTER_ACTION_DELAY,
-					)}
-				`,
-			)}
+					},
+					UPDATE_AFTER_ACTION_DELAY,
+				)}
+			`)}
 			${this.buildAppearancePanel(
 				html`${this.buildCommonAppearanceOptions()}${this.buildSelector(
 					'Vertical',
@@ -1740,6 +1758,20 @@ export class UniversalRemoteCardEditor extends LitElement {
 				value = this.yaml;
 				handler = this.handleYamlCodeChanged;
 				value = value.trim() == '[]' ? '' : value;
+				autocompleteEntities = false;
+				autocompleteIcons = false;
+				break;
+			case 'eval':
+				mode = 'jinja2';
+				value =
+					this.yamlStringsCache[`${id}.eval`] ??
+					(
+						(this.activeEntry as IElementConfig)?.[
+							id as ActionType
+						] as IAction
+					).eval ??
+					'';
+				handler = this.handleEvalCodeChanged;
 				autocompleteEntities = false;
 				autocompleteIcons = false;
 				break;
@@ -3088,6 +3120,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 				justify-content: flex-start;
 				flex-grow: 1;
 				gap: 8px;
+				overflow: hidden;
 			}
 			.primary:first-letter {
 				text-transform: capitalize;
