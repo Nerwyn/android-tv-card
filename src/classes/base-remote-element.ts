@@ -114,9 +114,7 @@ export class BaseRemoteElement extends LitElement {
 		}
 		action = this.deepRenderTemplate(action);
 		if (!action || !this.handleConfirmation(action)) {
-			clearTimeout(this.getValueFromHassTimer);
-			this.getValueFromHass = true;
-			this.requestUpdate();
+			this.dispatchEvent(new CustomEvent('confirmation-failed'));
 			return;
 		}
 
@@ -149,6 +147,9 @@ export class BaseRemoteElement extends LitElement {
 					break;
 				case 'fire-dom-event':
 					this.fireDomEvent(action);
+					break;
+				case 'eval':
+					this.eval(action);
 					break;
 				case 'textbox':
 				case 'search':
@@ -328,6 +329,10 @@ export class BaseRemoteElement extends LitElement {
 		this.dispatchEvent(event);
 	}
 
+	eval(action: IAction) {
+		eval(action.eval ?? '');
+	}
+
 	handleConfirmation(action: IAction): boolean {
 		if (action.confirmation) {
 			let text = `Are you sure you want to run action '${action.action}'?`;
@@ -349,6 +354,16 @@ export class BaseRemoteElement extends LitElement {
 			return confirm(text);
 		}
 		return true;
+	}
+
+	firstUpdated() {
+		this.addEventListener('confirmation-failed', this.confirmationFailed);
+	}
+
+	confirmationFailed() {
+		clearTimeout(this.getValueFromHassTimer);
+		this.getValueFromHass = true;
+		this.requestUpdate();
 	}
 
 	setValue() {

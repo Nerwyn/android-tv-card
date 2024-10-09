@@ -26,6 +26,7 @@ export const Actions = [
 	'textbox',
 	'search',
 	'fire-dom-event',
+	'eval',
 	'repeat',
 	'none',
 ] as const;
@@ -91,6 +92,8 @@ export interface IAction {
 
 	event_type?: string;
 	browser_mod?: IBrowserMod;
+
+	eval?: string;
 
 	double_tap_window?: number;
 	hold_time?: number;
