@@ -47,6 +47,15 @@ export const androidTVDefaultSources: IElementConfig[] = [
 	},
 	{
 		type: 'button',
+		name: 'f1tv',
+		tap_action: {
+			action: 'source',
+			source: 'com.formulaone.production',
+		}, // UNTESTED
+		icon: 'f1tv',
+	},
+	{
+		type: 'button',
 		name: 'filmplus',
 		tap_action: {
 			action: 'source',

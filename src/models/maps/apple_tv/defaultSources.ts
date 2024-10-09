@@ -90,6 +90,18 @@ export const appleTVDefaultSources: IElementConfig[] = [
 	},
 	{
 		type: 'button',
+		name: 'f1tv',
+		tap_action: {
+			action: 'perform-action',
+			perform_action: 'media_player.select_source',
+			data: {
+				source: 'F1 TV',
+			},
+		},
+		icon: 'f1tv',
+	},
+	{
+		type: 'button',
 		name: 'foxsports',
 		tap_action: {
 			action: 'perform-action',
