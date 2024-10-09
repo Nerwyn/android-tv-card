@@ -853,6 +853,8 @@ export class UniversalRemoteCardEditor extends LitElement {
 						'Repeat',
 					'ui.panel.lovelace.editor.action-editor.actions.fire-dom-event':
 						'Fire DOM event',
+					'ui.panel.lovelace.editor.action-editor.actions.eval':
+						'Evaluate JS',
 					'ui.panel.lovelace.editor.action-editor.actions.key': 'Key',
 					'ui.panel.lovelace.editor.action-editor.actions.source':
 						'Source',
