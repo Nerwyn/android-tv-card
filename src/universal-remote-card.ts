@@ -3,9 +3,9 @@ import packageInfo from '../package.json';
 import { LitElement, TemplateResult, css, html } from 'lit';
 import { property } from 'lit/decorators.js';
 
-import { HomeAssistant } from 'custom-card-helpers';
 import { renderTemplate } from 'ha-nunjucks';
 import { load } from 'js-yaml';
+import { HomeAssistant } from './models/interfaces';
 
 import {
 	ActionTypes,

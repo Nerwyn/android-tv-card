@@ -17,6 +17,6 @@ declare global {
 
 	interface Event {
 		// eslint-disable-next-line
-		detail?: Record<string, any>;
+		detail?: any;
 	}
 }

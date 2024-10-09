@@ -1,6 +1,6 @@
-import { HomeAssistant } from 'custom-card-helpers';
 import { LitElement, css, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
+import { HomeAssistant } from '../models/interfaces';
 
 import { IAction } from '../models/interfaces';
 

@@ -1,8 +1,8 @@
 import { CSSResult, LitElement, css, html } from 'lit';
 import { eventOptions, property, state } from 'lit/decorators.js';
 
-import { HapticType, HomeAssistant, forwardHaptic } from 'custom-card-helpers';
 import { renderTemplate } from 'ha-nunjucks';
+import { HapticType, HomeAssistant } from '../models/interfaces';
 
 import { UPDATE_AFTER_ACTION_DELAY } from '../models/constants';
 import {
@@ -50,7 +50,12 @@ export class BaseRemoteElement extends LitElement {
 			this.renderTemplate(this.config.haptics as unknown as string) ??
 			true
 		) {
-			forwardHaptic(haptic);
+			const event = new Event('haptic', {
+				bubbles: true,
+				composed: true,
+			});
+			event.detail = haptic;
+			window.dispatchEvent(event);
 		}
 	}
 
@@ -336,7 +341,7 @@ export class BaseRemoteElement extends LitElement {
 			if (
 				action.confirmation?.exemptions
 					?.map((exemption) => exemption.user)
-					.includes(this.hass.user.id)
+					.includes(this.hass.user?.id as string)
 			) {
 				return true;
 			}
