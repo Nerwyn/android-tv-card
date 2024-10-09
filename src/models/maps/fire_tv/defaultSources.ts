@@ -210,6 +210,18 @@ export const fireTVDefaultSources: IElementConfig[] = [
 	},
 	{
 		type: 'button',
+		name: 'pia',
+		tap_action: {
+			action: 'perform-action',
+			perform_action: 'media_player.select_source',
+			data: {
+				source: 'com.privateinternetaccess.android',
+			},
+		},
+		icon: 'pia',
+	},
+	{
+		type: 'button',
 		name: 'plex',
 		tap_action: {
 			action: 'perform-action',
@@ -231,18 +243,6 @@ export const fireTVDefaultSources: IElementConfig[] = [
 			},
 		},
 		icon: 'primevideo',
-	},
-	{
-		type: 'button',
-		name: 'pia',
-		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'com.privateinternetaccess.android',
-			},
-		},
-		icon: 'pia',
 	},
 	{
 		type: 'button',

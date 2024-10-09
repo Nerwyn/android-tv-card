@@ -222,6 +222,18 @@ export const appleTVDefaultSources: IElementConfig[] = [
 	},
 	{
 		type: 'button',
+		name: 'pia',
+		tap_action: {
+			action: 'perform-action',
+			perform_action: 'media_player.select_source',
+			data: {
+				source: 'PIA VPN',
+			},
+		},
+		icon: 'pia',
+	},
+	{
+		type: 'button',
 		name: 'plex',
 		tap_action: {
 			action: 'perform-action',
@@ -243,18 +255,6 @@ export const appleTVDefaultSources: IElementConfig[] = [
 			},
 		},
 		icon: 'primevideo',
-	},
-	{
-		type: 'button',
-		name: 'pia',
-		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'PIA VPN',
-			},
-		},
-		icon: 'pia',
 	},
 	{
 		type: 'button',

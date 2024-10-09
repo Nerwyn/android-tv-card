@@ -159,6 +159,12 @@ export const androidTVDefaultSources: IElementConfig[] = [
 	},
 	{
 		type: 'button',
+		name: 'pia',
+		tap_action: { action: 'source', source: 'piavpn://' }, // UNTESTED
+		icon: 'pia',
+	},
+	{
+		type: 'button',
 		name: 'plex',
 		tap_action: { action: 'source', source: 'plex://' },
 		icon: 'mdi:plex',
@@ -168,12 +174,6 @@ export const androidTVDefaultSources: IElementConfig[] = [
 		name: 'primevideo',
 		tap_action: { action: 'source', source: 'https://app.primevideo.com' },
 		icon: 'primevideo',
-	},
-	{
-		type: 'button',
-		name: 'pia',
-		tap_action: { action: 'source', source: 'piavpn://' }, // UNTESTED
-		icon: 'pia',
 	},
 	{
 		type: 'button',
