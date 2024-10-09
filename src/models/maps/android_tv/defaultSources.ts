@@ -83,10 +83,19 @@ export const androidTVDefaultSources: IElementConfig[] = [
 	},
 	{
 		type: 'button',
+		name: 'kodi',
+		tap_action: {
+			action: 'source',
+			source: 'org.xbmc.kodi',
+		},
+		icon: 'mdi:kodi',
+	},
+	{
+		type: 'button',
 		name: 'max',
 		tap_action: {
 			action: 'source',
-			source: 'market://launch?id=com.wbd.stream',
+			source: 'com.wbd.stream',
 		}, // BROKEN
 		icon: 'max',
 	},
@@ -110,7 +119,7 @@ export const androidTVDefaultSources: IElementConfig[] = [
 	},
 	{
 		type: 'button',
-		name: 'npo_start',
+		name: 'npostart',
 		tap_action: {
 			action: 'source',
 			source: 'nl.uitzendinggemist',
@@ -126,6 +135,12 @@ export const androidTVDefaultSources: IElementConfig[] = [
 			source: 'nrktv://',
 		},
 		icon: 'nrktv',
+	},
+	{
+		type: 'button',
+		name: 'pandora',
+		tap_action: { action: 'source', source: 'com.pandora.android.atv' },
+		icon: 'mdi:pandora',
 	},
 	{
 		type: 'button',
@@ -186,6 +201,12 @@ export const androidTVDefaultSources: IElementConfig[] = [
 	},
 	{
 		type: 'button',
+		name: 'steam',
+		tap_action: { action: 'source', source: 'com.valvesoftware.steamlink' },
+		icon: 'mdi:steam',
+	},
+	{
+		type: 'button',
 		name: 'stremio',
 		tap_action: { action: 'source', source: 'stremio://' },
 		icon: 'stremio',
@@ -219,6 +240,12 @@ export const androidTVDefaultSources: IElementConfig[] = [
 		name: 'videoland',
 		tap_action: { action: 'source', source: 'videoland-v2://' },
 		icon: 'videoland',
+	},
+	{
+		type: 'button',
+		name: 'vlc',
+		tap_action: { action: 'source', source: 'org.videolan.vlc' },
+		icon: 'mdi:vlc',
 	},
 	{
 		type: 'button',
