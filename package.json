@@ -7,10 +7,10 @@
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"build": "npx webpack",
 		"prelint": "tsc --noemit",
+		"lint": "eslint --fix --config ./.eslintrc.config.cjs",
 		"build-css": "tcm src"
 	},
 	"lint-staged": {
-		"*.ts": "eslint ./src --fix --config ./.eslintrc.js",
 		"*": "prettier -w"
 	},
 	"repository": {
@@ -34,7 +34,6 @@
 	},
 	"homepage": "https://github.com/Nerwyn/android-tv-card#readme",
 	"dependencies": {
-		"custom-card-helpers": "latest",
 		"ha-nunjucks": "latest",
 		"js-yaml": "latest",
 		"lit": "latest"
@@ -50,7 +49,7 @@
 		"lit-css-loader": "latest",
 		"minify-html-literals-loader": "latest",
 		"prettier": "latest",
-		"prettier-plugin-organize-imports": "^4.0.0",
+		"prettier-plugin-organize-imports": "latest",
 		"ts-loader": "latest",
 		"typescript": "latest",
 		"webpack": "latest",
