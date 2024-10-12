@@ -354,6 +354,30 @@ export const fireTVDefaultSources: IElementConfig[] = [
 	},
 	{
 		type: 'button',
+		name: 'waiputv',
+		tap_action: {
+			action: 'perform-action',
+			perform_action: 'media_player.select_source',
+			data: {
+				source: 'de.exaring.waipu.firetv.live',
+			},
+		},
+		icon: 'waiputv',
+	},
+	{
+		type: 'button',
+		name: 'wow',
+		tap_action: {
+			action: 'perform-action',
+			perform_action: 'media_player.select_source',
+			data: {
+				source: 'de.sky.online',
+			},
+		},
+		icon: 'wow',
+	},
+	{
+		type: 'button',
 		name: 'youtube',
 		tap_action: {
 			action: 'perform-action',

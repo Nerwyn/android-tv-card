@@ -264,6 +264,18 @@ export const androidTVDefaultSources: IElementConfig[] = [
 	},
 	{
 		type: 'button',
+		name: 'waiputv',
+		tap_action: { action: 'source', source: 'de.exaring.waipu' },
+		icon: 'waiputv',
+	},
+	{
+		type: 'button',
+		name: 'wow',
+		tap_action: { action: 'source', source: 'de.sky.online' },
+		icon: 'wow',
+	},
+	{
+		type: 'button',
 		name: 'youtube',
 		tap_action: { action: 'source', source: 'vnd.youtube://' },
 		icon: 'mdi:youtube',
