@@ -137,6 +137,18 @@ export const rokuDefaultKeys: IElementConfig[] = [
 	},
 	{
 		type: 'button',
+		name: 'pause',
+		tap_action: { action: 'key', key: 'play' },
+		icon: 'mdi:pause',
+	},
+	{
+		type: 'button',
+		name: 'play_pause',
+		tap_action: { action: 'key', key: 'play' },
+		icon: 'mdi:play-pause',
+	},
+	{
+		type: 'button',
 		name: 'forward',
 		tap_action: { action: 'key', key: 'forward' },
 		icon: 'mdi:fast-forward',

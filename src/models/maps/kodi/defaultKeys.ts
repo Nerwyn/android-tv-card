@@ -228,6 +228,34 @@ export const kodiDefaultKeys: IElementConfig[] = [
 	},
 	{
 		type: 'button',
+		name: 'play',
+		tap_action: {
+			action: 'perform-action',
+			perform_action: 'kodi.call_method',
+			data: {
+				method: 'Player.PlayPause',
+				playerid: 1,
+				play: true,
+			},
+		},
+		icon: 'mdi:play',
+	},
+	{
+		type: 'button',
+		name: 'pause',
+		tap_action: {
+			action: 'perform-action',
+			perform_action: 'kodi.call_method',
+			data: {
+				method: 'Player.PlayPause',
+				playerid: 1,
+				play: false,
+			},
+		},
+		icon: 'mdi:pause',
+	},
+	{
+		type: 'button',
 		name: 'play_pause',
 		tap_action: {
 			action: 'perform-action',
