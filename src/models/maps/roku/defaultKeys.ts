@@ -218,7 +218,7 @@ export const rokuDefaultKeys: IElementConfig[] = [
 		type: 'button',
 		name: 'info',
 		tap_action: { action: 'key', key: 'info' },
-		icon: 'mdi:information',
+		icon: 'mdi:asterisk',
 	},
 	{
 		type: 'button',
