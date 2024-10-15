@@ -402,7 +402,9 @@ export class UniversalRemoteCardEditor extends LitElement {
 		}
 		if (value == undefined) {
 			// Fixes autofill issue where default value does not overwrite selector default undefined
-			this.configChanged(this.config);
+			setTimeout(() => {
+				this.configChanged(this.config);
+			}, 100);
 		}
 	}
 
