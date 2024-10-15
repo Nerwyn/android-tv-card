@@ -1202,103 +1202,103 @@ export class UniversalRemoteCardEditor extends LitElement {
 				: ''}
 			${action == 'key'
 				? html`<div class="actions-form">
-						${['Kodi', 'LG webOS'].includes(platform)
-							? this.buildSelector(
-									'Media Player ID',
-									`${actionType}.media_player_id`,
-									{
-										entity: {
-											filter: {
-												domain: 'media_player',
+							${['Kodi', 'LG webOS'].includes(platform)
+								? this.buildSelector(
+										'Media Player ID',
+										`${actionType}.media_player_id`,
+										{
+											entity: {
+												filter: {
+													domain: 'media_player',
+												},
 											},
 										},
-									},
-									autofill
-										? this.config.media_player_id
-										: undefined,
-							  )
-							: this.buildSelector(
-									'Remote ID',
-									`${actionType}.remote_id`,
-									{
-										entity: {
-											filter: {
-												domain: 'remote',
+										autofill
+											? this.config.media_player_id
+											: undefined,
+								  )
+								: this.buildSelector(
+										'Remote ID',
+										`${actionType}.remote_id`,
+										{
+											entity: {
+												filter: {
+													domain: 'remote',
+												},
 											},
 										},
+										autofill
+											? this.config.remote_id
+											: undefined,
+								  )}
+							${this.buildSelector(
+								'Platform',
+								`${actionType}.platform`,
+								{
+									select: {
+										mode: 'dropdown',
+										options: Platforms,
+										reorder: false,
 									},
-									autofill
-										? this.config.remote_id
-										: undefined,
-							  )}
-						${this.buildSelector(
-							'Platform',
-							`${actionType}.platform`,
-							{
-								select: {
-									mode: 'dropdown',
-									options: Platforms,
-									reorder: false,
 								},
-							},
-							autofill
-								? this.config.platform ?? 'Android TV'
-								: 'Android TV',
-						)}
+								autofill
+									? this.config.platform ?? 'Android TV'
+									: 'Android TV',
+							)}
+						</div>
 						${this.buildSelector('Key', `${actionType}.key`, {
 							text: {},
-						})}
-				  </div>`
+						})}`
 				: ''}
 			${action == 'source'
 				? html`<div class="actions-form">
-						${['Android TV'].includes(platform)
-							? this.buildSelector(
-									'Remote ID',
-									`${actionType}.remote_id`,
-									{
-										entity: {
-											filter: {
-												domain: 'remote',
+							${['Android TV'].includes(platform)
+								? this.buildSelector(
+										'Remote ID',
+										`${actionType}.remote_id`,
+										{
+											entity: {
+												filter: {
+													domain: 'remote',
+												},
 											},
 										},
-									},
-									autofill
-										? this.config.remote_id
-										: undefined,
-							  )
-							: this.buildSelector(
-									'Media Player ID',
-									`${actionType}.media_player_id`,
-									{
-										entity: {
-											filter: {
-												domain: 'media_player',
+										autofill
+											? this.config.remote_id
+											: undefined,
+								  )
+								: this.buildSelector(
+										'Media Player ID',
+										`${actionType}.media_player_id`,
+										{
+											entity: {
+												filter: {
+													domain: 'media_player',
+												},
 											},
 										},
+										autofill
+											? this.config.media_player_id
+											: undefined,
+								  )}
+							${this.buildSelector(
+								'Platform',
+								`${actionType}.platform`,
+								{
+									select: {
+										mode: 'dropdown',
+										options: Platforms,
+										reorder: false,
 									},
-									autofill
-										? this.config.media_player_id
-										: undefined,
-							  )}
-						${this.buildSelector(
-							'Platform',
-							`${actionType}.platform`,
-							{
-								select: {
-									mode: 'dropdown',
-									options: Platforms,
-									reorder: false,
 								},
-							},
-							autofill
-								? this.config.platform ?? 'Android TV'
-								: 'Android TV',
-						)}
+								autofill
+									? this.config.platform ?? 'Android TV'
+									: 'Android TV',
+							)}
+						</div>
 						${this.buildSelector('Source', `${actionType}.source`, {
 							text: {},
-						})}
-				  </div>`
+						})}`
 				: ''}
 			${['keyboard', 'textbox', 'search'].includes(action)
 				? html`<div class="actions-form">
@@ -1334,9 +1334,9 @@ export class UniversalRemoteCardEditor extends LitElement {
 									: 'Android TV',
 							)}
 						</div>
-						<div class="actions-form">
-							${['Android TV', 'Roku'].includes(platform)
-								? this.buildSelector(
+						${['Android TV', 'Roku'].includes(platform)
+							? html`<div class="actions-form">
+									${this.buildSelector(
 										'Remote ID',
 										`${actionType}.remote_id`,
 										{
@@ -1349,25 +1349,26 @@ export class UniversalRemoteCardEditor extends LitElement {
 										autofill
 											? this.config.remote_id
 											: undefined,
-								  )
-								: ''}
-							${'Roku' == platform
-								? this.buildSelector(
-										'Media Player ID',
-										`${actionType}.media_player_id`,
-										{
-											entity: {
-												filter: {
-													domain: 'media_player',
+									)}
+									${'Roku' == platform
+										? this.buildSelector(
+												'Media Player ID',
+												`${actionType}.media_player_id`,
+												{
+													entity: {
+														filter: {
+															domain: 'media_player',
+														},
+													},
 												},
-											},
-										},
-										autofill
-											? this.config.media_player_id
-											: undefined,
-								  )
-								: ''}
-						</div>
+												autofill
+													? this.config
+															.media_player_id
+													: undefined,
+										  )
+										: ''}
+							  </div>`
+							: ''}
 						${this.buildSelector(
 							'Prompt',
 							`${actionType}.keyboard_prompt`,
