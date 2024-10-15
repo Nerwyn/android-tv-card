@@ -401,13 +401,10 @@ export class UniversalRemoteCardEditor extends LitElement {
 				break;
 		}
 		if (value == undefined) {
-			this.addEventListener(
-				'config-changed',
-				() => {
-					this.configChanged(this.config);
-				},
-				{ once: true },
-			);
+			// Fixes autofill issue where default value does not overwrite selector default undefined
+			setTimeout(() => {
+				this.configChanged(this.config);
+			}, 100);
 		}
 	}
 
@@ -1513,7 +1510,6 @@ export class UniversalRemoteCardEditor extends LitElement {
 						{
 							ui_action: {
 								actions: Actions,
-								default_action: 'none',
 							},
 						},
 					)}
@@ -1626,7 +1622,6 @@ export class UniversalRemoteCardEditor extends LitElement {
 					{
 						ui_action: {
 							actions: actionsNoRepeat,
-							default_action: 'perform-action',
 						},
 					},
 					true,
@@ -1651,7 +1646,6 @@ export class UniversalRemoteCardEditor extends LitElement {
 		const defaultUiActions = {
 			ui_action: {
 				actions: actionsNoRepeat,
-				default_action: 'none',
 			},
 		};
 		switch (this.actionsTabIndex) {
@@ -1697,7 +1691,6 @@ export class UniversalRemoteCardEditor extends LitElement {
 						{
 							ui_action: {
 								actions: Actions,
-								default_action: 'none',
 							},
 						},
 					)}
@@ -1727,7 +1720,6 @@ export class UniversalRemoteCardEditor extends LitElement {
 						{
 							ui_action: {
 								actions: Actions,
-								default_action: 'none',
 							},
 						},
 					)}
