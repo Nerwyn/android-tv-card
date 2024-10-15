@@ -170,11 +170,13 @@ export class BaseRemoteElement extends LitElement {
 		switch (action.platform) {
 			case 'Kodi':
 				this.hass.callService('kodi', 'call_method', {
+					entity_id: action.media_player_id,
 					method: action.key,
 				});
 				break;
 			case 'LG webOS':
 				this.hass.callService('webostv', 'button', {
+					entity_id: action.media_player_id,
 					button: action.key,
 				});
 				break;

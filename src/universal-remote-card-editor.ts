@@ -1077,6 +1077,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 		) as string;
 		const platform = this.renderTemplate(
 			(this.activeEntry as IElementConfig)?.[actionType]?.platform ??
+				this.config.platform ??
 				'Android TV',
 			context,
 		) as string;
@@ -1224,6 +1225,18 @@ export class UniversalRemoteCardEditor extends LitElement {
 										? this.config.remote_id
 										: undefined,
 							  )}
+						${this.buildSelector(
+							'Platform',
+							`${actionType}.platform`,
+							{
+								select: {
+									mode: 'dropdown',
+									options: Platforms,
+									reorder: false,
+								},
+							},
+							autofill ? this.config.platform : 'Android TV',
+						)}
 						${this.buildSelector('Key', `${actionType}.key`, {
 							text: {},
 						})}
@@ -1260,6 +1273,18 @@ export class UniversalRemoteCardEditor extends LitElement {
 										? this.config.media_player_id
 										: undefined,
 							  )}
+						${this.buildSelector(
+							'Platform',
+							`${actionType}.platform`,
+							{
+								select: {
+									mode: 'dropdown',
+									options: Platforms,
+									reorder: false,
+								},
+							},
+							autofill ? this.config.platform : 'Android TV',
+						)}
 						${this.buildSelector('Source', `${actionType}.source`, {
 							text: {},
 						})}
