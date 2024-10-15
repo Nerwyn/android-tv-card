@@ -8,11 +8,8 @@ export const fireTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'appletv',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'com.apple.atve.amazon.appletv',
-			},
+			action: 'source',
+			source: 'com.apple.atve.amazon.appletv',
 		},
 		icon: 'appletv',
 	},
@@ -20,11 +17,8 @@ export const fireTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'crunchyroll',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'com.crunchyroll.crunchyroid',
-			},
+			action: 'source',
+			source: 'com.crunchyroll.crunchyroid',
 		},
 		icon: 'crunchyroll',
 	},
@@ -32,11 +26,8 @@ export const fireTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'dazn',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'com.dazn',
-			},
+			action: 'source',
+			source: 'com.dazn',
 		},
 		icon: 'dazn',
 	},
@@ -44,11 +35,8 @@ export const fireTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'discoveryplus',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'com.discovery.discoveryplus.firetv',
-			},
+			action: 'source',
+			source: 'com.discovery.discoveryplus.firetv',
 		},
 		icon: 'discovery',
 	},
@@ -56,11 +44,8 @@ export const fireTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'disney',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'com.disney.disneyplus',
-			},
+			action: 'source',
+			source: 'com.disney.disneyplus',
 		},
 		icon: 'disney',
 	},
@@ -68,11 +53,8 @@ export const fireTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'emby',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'tv.emby.embyatv',
-			},
+			action: 'source',
+			source: 'tv.emby.embyatv',
 		},
 		icon: 'mdi:emby',
 	},
@@ -80,11 +62,8 @@ export const fireTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'f1tv',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'com.formulaone.production',
-			},
+			action: 'source',
+			source: 'com.formulaone.production',
 		},
 		icon: 'f1tv',
 	},
@@ -92,11 +71,8 @@ export const fireTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'foxsports',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'com.foxsports.videogo',
-			},
+			action: 'source',
+			source: 'com.foxsports.videogo',
 		},
 		icon: 'foxsports',
 	},
@@ -104,11 +80,8 @@ export const fireTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'hulu',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'com.hulu.plus',
-			},
+			action: 'source',
+			source: 'com.hulu.plus',
 		},
 		icon: 'mdi:hulu',
 	},
@@ -116,11 +89,8 @@ export const fireTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'jellyfin',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'org.jellyfin.androidtv',
-			},
+			action: 'source',
+			source: 'org.jellyfin.androidtv',
 		},
 		icon: 'jellyfin',
 	},
@@ -128,11 +98,8 @@ export const fireTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'kodi',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'org.xbmc.kodi',
-			},
+			action: 'source',
+			source: 'org.xbmc.kodi',
 		},
 		icon: 'mdi:kodi',
 	},
@@ -140,11 +107,8 @@ export const fireTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'max',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'com.hbo.hbonow',
-			},
+			action: 'source',
+			source: 'com.hbo.hbonow',
 		},
 		icon: 'max',
 	},
@@ -152,11 +116,8 @@ export const fireTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'mlbtv',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'com.bamnetworks.mobile.android.gameday.atbat',
-			},
+			action: 'source',
+			source: 'com.bamnetworks.mobile.android.gameday.atbat',
 		},
 		icon: 'mlbtv',
 	},
@@ -164,11 +125,8 @@ export const fireTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'netflix',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'com.netflix.ninja',
-			},
+			action: 'source',
+			source: 'com.netflix.ninja',
 		},
 		icon: 'mdi:netflix',
 	},
@@ -176,11 +134,8 @@ export const fireTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'nrktv',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'no.nrk.tv',
-			},
+			action: 'source',
+			source: 'no.nrk.tv',
 		},
 		icon: 'nrktv',
 	},
@@ -188,11 +143,8 @@ export const fireTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'pandora',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'com.pandora.android.gtv',
-			},
+			action: 'source',
+			source: 'com.pandora.android.gtv',
 		},
 		icon: 'mdi:pandora',
 	},
@@ -200,11 +152,8 @@ export const fireTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'paramount',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'com.cbs.ott',
-			},
+			action: 'source',
+			source: 'com.cbs.ott',
 		},
 		icon: 'paramount',
 	},
@@ -212,11 +161,8 @@ export const fireTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'pia',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'com.privateinternetaccess.android',
-			},
+			action: 'source',
+			source: 'com.privateinternetaccess.android',
 		},
 		icon: 'pia',
 	},
@@ -224,11 +170,8 @@ export const fireTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'plex',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'com.plexapp.android',
-			},
+			action: 'source',
+			source: 'com.plexapp.android',
 		},
 		icon: 'mdi:plex',
 	},
@@ -236,11 +179,8 @@ export const fireTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'primevideo',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'com.amazon.firebat',
-			},
+			action: 'source',
+			source: 'com.amazon.firebat',
 		},
 		icon: 'primevideo',
 	},
@@ -248,11 +188,8 @@ export const fireTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'skyshowtime',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'com.skyshowtime.skyshowtime.google',
-			},
+			action: 'source',
+			source: 'com.skyshowtime.skyshowtime.google',
 		},
 		icon: 'showtime',
 	},
@@ -260,11 +197,8 @@ export const fireTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'spotify',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'com.spotify.tv.android',
-			},
+			action: 'source',
+			source: 'com.spotify.tv.android',
 		},
 		icon: 'mdi:spotify',
 	},
@@ -272,11 +206,8 @@ export const fireTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'steam',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'com.valvesoftware.steamlink',
-			},
+			action: 'source',
+			source: 'com.valvesoftware.steamlink',
 		},
 		icon: 'mdi:steam',
 	},
@@ -284,11 +215,8 @@ export const fireTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'stremio',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'com.stremio.tv',
-			},
+			action: 'source',
+			source: 'com.stremio.tv',
 		},
 		icon: 'stremio',
 	},
@@ -296,11 +224,8 @@ export const fireTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'surfshark',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'com.surfshark.vpnclient.android',
-			},
+			action: 'source',
+			source: 'com.surfshark.vpnclient.android',
 		},
 		icon: 'surfshark',
 	},
@@ -308,11 +233,8 @@ export const fireTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'viaplay',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'com.viaplay.android',
-			},
+			action: 'source',
+			source: 'com.viaplay.android',
 		},
 		icon: 'viaplay',
 	},
@@ -320,11 +242,8 @@ export const fireTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'videoland',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'nl.rtl.videoland.v2.firetv',
-			},
+			action: 'source',
+			source: 'nl.rtl.videoland.v2.firetv',
 		},
 		icon: 'videoland',
 	},
@@ -332,11 +251,8 @@ export const fireTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'vlc',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'org.videolan.vlc',
-			},
+			action: 'source',
+			source: 'org.videolan.vlc',
 		},
 		icon: 'mdi:vlc',
 	},
@@ -344,11 +260,8 @@ export const fireTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'vudu',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'com.fandango.vudu.firetv',
-			},
+			action: 'source',
+			source: 'com.fandango.vudu.firetv',
 		},
 		icon: 'vudu',
 	},
@@ -356,11 +269,8 @@ export const fireTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'waiputv',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'de.exaring.waipu.firetv.live',
-			},
+			action: 'source',
+			source: 'de.exaring.waipu.firetv.live',
 		},
 		icon: 'waiputv',
 	},
@@ -368,11 +278,8 @@ export const fireTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'wow',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'de.sky.online',
-			},
+			action: 'source',
+			source: 'de.sky.online',
 		},
 		icon: 'wow',
 	},
@@ -380,11 +287,8 @@ export const fireTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'youtube',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'com.amazon.firetv.youtube',
-			},
+			action: 'source',
+			source: 'com.amazon.firetv.youtube',
 		},
 		icon: 'mdi:youtube',
 	},
@@ -392,11 +296,8 @@ export const fireTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'youtubetv',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'com.amazon.firetv.tv',
-			},
+			action: 'source',
+			source: 'com.amazon.firetv.tv',
 		},
 		icon: 'mdi:youtube-tv',
 	},

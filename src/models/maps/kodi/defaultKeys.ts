@@ -9,11 +9,8 @@ export const kodiDefaultKeys: IElementConfig[] = [
 		type: 'button',
 		name: 'home',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'kodi.call_method',
-			data: {
-				method: 'Input.Home',
-			},
+			action: 'key',
+			key: 'Input.Home',
 		},
 		icon: 'mdi:home',
 	},
@@ -21,11 +18,8 @@ export const kodiDefaultKeys: IElementConfig[] = [
 		type: 'button',
 		name: 'back',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'kodi.call_method',
-			data: {
-				method: 'Input.Back',
-			},
+			action: 'key',
+			key: 'Input.Back',
 		},
 		icon: 'mdi:keyboard-backspace',
 	},
@@ -33,11 +27,8 @@ export const kodiDefaultKeys: IElementConfig[] = [
 		type: 'button',
 		name: 'menu',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'kodi.call_method',
-			data: {
-				method: 'Input.ContextMenu',
-			},
+			action: 'key',
+			key: 'Input.ContextMenu',
 		},
 		icon: 'mdi:menu',
 	},
@@ -105,11 +96,8 @@ export const kodiDefaultKeys: IElementConfig[] = [
 		type: 'button',
 		name: 'up',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'kodi.call_method',
-			data: {
-				method: 'Input.Up',
-			},
+			action: 'key',
+			key: 'Input.Up',
 		},
 		hold_action: { action: 'repeat' },
 		icon: 'mdi:chevron-up',
@@ -118,11 +106,8 @@ export const kodiDefaultKeys: IElementConfig[] = [
 		type: 'button',
 		name: 'down',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'kodi.call_method',
-			data: {
-				method: 'Input.Down',
-			},
+			action: 'key',
+			key: 'Input.Down',
 		},
 		hold_action: { action: 'repeat' },
 		icon: 'mdi:chevron-down',
@@ -131,11 +116,8 @@ export const kodiDefaultKeys: IElementConfig[] = [
 		type: 'button',
 		name: 'left',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'kodi.call_method',
-			data: {
-				method: 'Input.Left',
-			},
+			action: 'key',
+			key: 'Input.Left',
 		},
 		hold_action: { action: 'repeat' },
 		icon: 'mdi:chevron-left',
@@ -144,11 +126,8 @@ export const kodiDefaultKeys: IElementConfig[] = [
 		type: 'button',
 		name: 'right',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'kodi.call_method',
-			data: {
-				method: 'Input.Right',
-			},
+			action: 'key',
+			key: 'Input.Right',
 		},
 		hold_action: { action: 'repeat' },
 		icon: 'mdi:chevron-right',
@@ -157,11 +136,8 @@ export const kodiDefaultKeys: IElementConfig[] = [
 		type: 'button',
 		name: 'center',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'kodi.call_method',
-			data: {
-				method: 'Input.Select',
-			},
+			action: 'key',
+			key: 'Input.Select',
 		},
 		icon: 'mdi:circle',
 	},
@@ -179,49 +155,34 @@ export const kodiDefaultKeys: IElementConfig[] = [
 		type: 'touchpad',
 		name: 'touchpad',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'kodi.call_method',
-			data: {
-				method: 'Input.Select',
-			},
+			action: 'key',
+			key: 'Input.Select',
 		},
 		up: {
 			tap_action: {
-				action: 'perform-action',
-				perform_action: 'kodi.call_method',
-				data: {
-					method: 'Input.Up',
-				},
+				action: 'key',
+				key: 'Input.Up',
 			},
 			hold_action: { action: 'repeat' },
 		},
 		down: {
 			tap_action: {
-				action: 'perform-action',
-				perform_action: 'kodi.call_method',
-				data: {
-					method: 'Input.Down',
-				},
+				action: 'key',
+				key: 'Input.Down',
 			},
 			hold_action: { action: 'repeat' },
 		},
 		left: {
 			tap_action: {
-				action: 'perform-action',
-				perform_action: 'kodi.call_method',
-				data: {
-					method: 'Input.Left',
-				},
+				action: 'key',
+				key: 'Input.Left',
 			},
 			hold_action: { action: 'repeat' },
 		},
 		right: {
 			tap_action: {
-				action: 'perform-action',
-				perform_action: 'kodi.call_method',
-				data: {
-					method: 'Input.Right',
-				},
+				action: 'key',
+				key: 'Input.Right',
 			},
 			hold_action: { action: 'repeat' },
 		},
@@ -315,11 +276,8 @@ export const kodiDefaultKeys: IElementConfig[] = [
 		type: 'button',
 		name: 'info',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'kodi.call_method',
-			data: {
-				method: 'Input.Info',
-			},
+			action: 'key',
+			key: 'Input.Info',
 		},
 		icon: 'mdi:information',
 	},
@@ -327,11 +285,8 @@ export const kodiDefaultKeys: IElementConfig[] = [
 		type: 'button',
 		name: 'codec',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'kodi.call_method',
-			data: {
-				method: 'Input.ShowCodec',
-			},
+			action: 'key',
+			key: 'Input.ShowCodec',
 		},
 		icon: 'mdi:information-box',
 	},
@@ -339,11 +294,8 @@ export const kodiDefaultKeys: IElementConfig[] = [
 		type: 'button',
 		name: 'osd',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'kodi.call_method',
-			data: {
-				method: 'Input.ShowOSD',
-			},
+			action: 'key',
+			key: 'Input.ShowOSD',
 		},
 		icon: 'mdi:television-guide',
 	},
@@ -351,11 +303,8 @@ export const kodiDefaultKeys: IElementConfig[] = [
 		type: 'button',
 		name: 'process_info',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'kodi.call_method',
-			data: {
-				method: 'Input.ShowPlayerProcessInfo',
-			},
+			action: 'key',
+			key: 'Input.ShowPlayerProcessInfo',
 		},
 		icon: 'mdi:information-variant-circle',
 	},

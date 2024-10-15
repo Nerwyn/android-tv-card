@@ -8,11 +8,8 @@ export const rokuDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'appletv',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'Apple TV',
-			},
+			action: 'source',
+			source: 'Apple TV',
 		},
 		icon: 'appletv',
 	},
@@ -20,11 +17,8 @@ export const rokuDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'crunchyroll',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'Crunchyroll',
-			},
+			action: 'source',
+			source: 'Crunchyroll',
 		},
 		icon: 'crunchyroll',
 	},
@@ -32,11 +26,8 @@ export const rokuDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'dazn',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'DAZN Live Sports Streaming',
-			},
+			action: 'source',
+			source: 'DAZN Live Sports Streaming',
 		},
 		icon: 'dazn',
 	},
@@ -44,11 +35,8 @@ export const rokuDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'discoveryplus',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'discovery+ | Stream TV Shows',
-			},
+			action: 'source',
+			source: 'discovery+ | Stream TV Shows',
 		},
 		icon: 'discovery',
 	},
@@ -56,11 +44,8 @@ export const rokuDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'disney',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'Disney Plus',
-			},
+			action: 'source',
+			source: 'Disney Plus',
 		},
 		icon: 'disney',
 	},
@@ -68,11 +53,8 @@ export const rokuDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'emby',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'Emby',
-			},
+			action: 'source',
+			source: 'Emby',
 		},
 		icon: 'mdi:emby',
 	},
@@ -80,11 +62,8 @@ export const rokuDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'f1tv',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'F1 TV',
-			},
+			action: 'source',
+			source: 'F1 TV',
 		},
 		icon: 'f1tv',
 	},
@@ -92,11 +71,8 @@ export const rokuDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'foxsports',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'FOX Sports',
-			},
+			action: 'source',
+			source: 'FOX Sports',
 		},
 		icon: 'foxsports',
 	},
@@ -104,11 +80,8 @@ export const rokuDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'hulu',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'Hulu',
-			},
+			action: 'source',
+			source: 'Hulu',
 		},
 		icon: 'mdi:hulu',
 	},
@@ -116,11 +89,8 @@ export const rokuDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'jellyfin',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'Jellyfin',
-			},
+			action: 'source',
+			source: 'Jellyfin',
 		},
 		icon: 'jellyfin',
 	},
@@ -128,11 +98,8 @@ export const rokuDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'max',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'Max',
-			},
+			action: 'source',
+			source: 'Max',
 		},
 		icon: 'max',
 	},
@@ -140,11 +107,8 @@ export const rokuDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'mlbtv',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'MLB',
-			},
+			action: 'source',
+			source: 'MLB',
 		},
 		icon: 'mlbtv',
 	},
@@ -152,11 +116,8 @@ export const rokuDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'nba',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'NBA',
-			},
+			action: 'source',
+			source: 'NBA',
 		},
 		icon: 'nba',
 	},
@@ -164,11 +125,8 @@ export const rokuDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'netflix',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'Netflix',
-			},
+			action: 'source',
+			source: 'Netflix',
 		},
 		icon: 'mdi:netflix',
 	},
@@ -176,11 +134,8 @@ export const rokuDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'pandora',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'Pandora',
-			},
+			action: 'source',
+			source: 'Pandora',
 		},
 		icon: 'mdi:pandora',
 	},
@@ -188,11 +143,8 @@ export const rokuDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'paramount',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'Paramount Plus',
-			},
+			action: 'source',
+			source: 'Paramount Plus',
 		},
 		icon: 'paramount',
 	},
@@ -200,11 +152,8 @@ export const rokuDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'plex',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'Plex - Free Movies & TV',
-			},
+			action: 'source',
+			source: 'Plex - Free Movies & TV',
 		},
 		icon: 'mdi:plex',
 	},
@@ -212,11 +161,8 @@ export const rokuDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'primevideo',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'Prime Video',
-			},
+			action: 'source',
+			source: 'Prime Video',
 		},
 		icon: 'primevideo',
 	},
@@ -224,11 +170,8 @@ export const rokuDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'spotify',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'Spotify',
-			},
+			action: 'source',
+			source: 'Spotify',
 		},
 		icon: 'mdi:spotify',
 	},
@@ -236,11 +179,8 @@ export const rokuDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'vudu',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'Fandango at Home',
-			},
+			action: 'source',
+			source: 'Fandango at Home',
 		},
 		icon: 'vudu',
 	},
@@ -248,11 +188,8 @@ export const rokuDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'youtube',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'YouTube',
-			},
+			action: 'source',
+			source: 'YouTube',
 		},
 		icon: 'mdi:youtube',
 	},
@@ -260,11 +197,8 @@ export const rokuDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'youtubetv',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'YouTube TV',
-			},
+			action: 'source',
+			source: 'YouTube TV',
 		},
 		icon: 'mdi:youtube-tv',
 	},

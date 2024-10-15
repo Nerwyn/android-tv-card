@@ -8,11 +8,8 @@ export const appleTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'allente',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'Allente',
-			},
+			action: 'source',
+			source: 'Allente',
 		},
 		icon: 'allente',
 	},
@@ -20,11 +17,8 @@ export const appleTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'appletv',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'TV',
-			},
+			action: 'source',
+			source: 'TV',
 		},
 		icon: 'appletv',
 	},
@@ -32,11 +26,8 @@ export const appleTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'crunchyroll',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'Crunchyroll',
-			},
+			action: 'source',
+			source: 'Crunchyroll',
 		},
 		icon: 'crunchyroll',
 	},
@@ -44,11 +35,8 @@ export const appleTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'dazn',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'DAZN',
-			},
+			action: 'source',
+			source: 'DAZN',
 		},
 		icon: 'dazn',
 	},
@@ -56,11 +44,8 @@ export const appleTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'discoveryplus',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'discovery+',
-			},
+			action: 'source',
+			source: 'discovery+',
 		},
 		icon: 'discovery',
 	},
@@ -68,11 +53,8 @@ export const appleTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'disney',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'Disney+',
-			},
+			action: 'source',
+			source: 'Disney+',
 		},
 		icon: 'disney',
 	},
@@ -80,11 +62,8 @@ export const appleTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'emby',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'Emby',
-			},
+			action: 'source',
+			source: 'Emby',
 		},
 		icon: 'mdi:emby',
 	},
@@ -92,11 +71,8 @@ export const appleTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'f1tv',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'F1 TV',
-			},
+			action: 'source',
+			source: 'F1 TV',
 		},
 		icon: 'f1tv',
 	},
@@ -104,11 +80,8 @@ export const appleTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'foxsports',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'FOX Sports',
-			},
+			action: 'source',
+			source: 'FOX Sports',
 		},
 		icon: 'foxsports',
 	},
@@ -116,11 +89,8 @@ export const appleTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'hulu',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'Hulu',
-			},
+			action: 'source',
+			source: 'Hulu',
 		},
 		icon: 'mdi:hulu',
 	},
@@ -128,11 +98,8 @@ export const appleTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'max',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'Max',
-			},
+			action: 'source',
+			source: 'Max',
 		},
 		icon: 'max',
 	},
@@ -140,11 +107,8 @@ export const appleTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'mlbtv',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'MLB',
-			},
+			action: 'source',
+			source: 'MLB',
 		},
 		icon: 'mlbtv',
 	},
@@ -152,11 +116,8 @@ export const appleTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'nba',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'NBA',
-			},
+			action: 'source',
+			source: 'NBA',
 		},
 		icon: 'nba',
 	},
@@ -164,11 +125,8 @@ export const appleTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'netflix',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'Netflix',
-			},
+			action: 'source',
+			source: 'Netflix',
 		},
 		icon: 'mdi:netflix',
 	},
@@ -176,11 +134,8 @@ export const appleTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'npostart',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'NPO',
-			},
+			action: 'source',
+			source: 'NPO',
 		},
 		icon: 'npo',
 	},
@@ -188,11 +143,8 @@ export const appleTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'nrktv',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'NRK TV',
-			},
+			action: 'source',
+			source: 'NRK TV',
 		},
 		icon: 'nrktv',
 	},
@@ -200,11 +152,8 @@ export const appleTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'pandora',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'Pandora',
-			},
+			action: 'source',
+			source: 'Pandora',
 		},
 		icon: 'mdi:pandora',
 	},
@@ -212,11 +161,8 @@ export const appleTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'paramount',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'Paramount+',
-			},
+			action: 'source',
+			source: 'Paramount+',
 		},
 		icon: 'paramount',
 	},
@@ -224,11 +170,8 @@ export const appleTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'pia',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'PIA VPN',
-			},
+			action: 'source',
+			source: 'PIA VPN',
 		},
 		icon: 'pia',
 	},
@@ -236,11 +179,8 @@ export const appleTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'plex',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'Plex',
-			},
+			action: 'source',
+			source: 'Plex',
 		},
 		icon: 'mdi:plex',
 	},
@@ -248,11 +188,8 @@ export const appleTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'primevideo',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'Prime Video',
-			},
+			action: 'source',
+			source: 'Prime Video',
 		},
 		icon: 'primevideo',
 	},
@@ -260,11 +197,8 @@ export const appleTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'skyshowtime',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'SkyShowtime',
-			},
+			action: 'source',
+			source: 'SkyShowtime',
 		},
 		icon: 'showtime',
 	},
@@ -272,11 +206,8 @@ export const appleTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'spotify',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'Spotify',
-			},
+			action: 'source',
+			source: 'Spotify',
 		},
 		icon: 'mdi:spotify',
 	},
@@ -284,11 +215,8 @@ export const appleTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'steam',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'Steam Link',
-			},
+			action: 'source',
+			source: 'Steam Link',
 		},
 		icon: 'mdi:steam',
 	},
@@ -296,11 +224,8 @@ export const appleTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'tv2play',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'TV 2 Play',
-			},
+			action: 'source',
+			source: 'TV 2 Play',
 		},
 		icon: 'tv2play',
 	},
@@ -308,11 +233,8 @@ export const appleTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'viaplay',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'Viaplay',
-			},
+			action: 'source',
+			source: 'Viaplay',
 		},
 		icon: 'viaplay',
 	},
@@ -320,11 +242,8 @@ export const appleTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'videoland',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'Videoland',
-			},
+			action: 'source',
+			source: 'Videoland',
 		},
 		icon: 'videoland',
 	},
@@ -332,11 +251,8 @@ export const appleTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'vlc',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'VLC',
-			},
+			action: 'source',
+			source: 'VLC',
 		},
 		icon: 'mdi:vlc',
 	},
@@ -344,11 +260,8 @@ export const appleTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'vudu',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'Fandango at Home',
-			},
+			action: 'source',
+			source: 'Fandango at Home',
 		},
 		icon: 'vudu',
 	},
@@ -356,11 +269,8 @@ export const appleTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'waiputv',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'waipu.tv',
-			},
+			action: 'source',
+			source: 'waipu.tv',
 		},
 		icon: 'waiputv',
 	},
@@ -368,11 +278,8 @@ export const appleTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'wow',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'WOW',
-			},
+			action: 'source',
+			source: 'WOW',
 		},
 		icon: 'wow',
 	},
@@ -380,11 +287,8 @@ export const appleTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'youtube',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'YouTube',
-			},
+			action: 'source',
+			source: 'YouTube',
 		},
 		icon: 'mdi:youtube',
 	},
@@ -392,11 +296,8 @@ export const appleTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'youtubetv',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'YouTube TV',
-			},
+			action: 'source',
+			source: 'YouTube TV',
 		},
 		icon: 'mdi:youtube-tv',
 	},

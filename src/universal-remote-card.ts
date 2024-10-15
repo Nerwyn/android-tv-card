@@ -114,14 +114,14 @@ class UniversalRemoteCard extends LitElement {
 					case 'search':
 						action.keyboard_id =
 							action.keyboard_id ?? this.config.keyboard_id;
-						action.media_player_id =
-							action.media_player_id ??
-							this.config.media_player_id;
 					// falls through
 					case 'key':
 					case 'source':
 						action.remote_id =
 							action.remote_id ?? this.config.remote_id;
+						action.media_player_id =
+							action.media_player_id ??
+							this.config.media_player_id;
 						action.platform =
 							action.platform ?? this.config.platform;
 						break;

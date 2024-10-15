@@ -8,11 +8,8 @@ export const webosDefaultKeys: IElementConfig[] = [
 		type: 'button',
 		name: 'home',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'webostv.button',
-			data: {
-				button: 'HOME',
-			},
+			action: 'key',
+			key: 'HOME',
 		},
 		icon: 'mdi:home',
 	},
@@ -20,11 +17,8 @@ export const webosDefaultKeys: IElementConfig[] = [
 		type: 'button',
 		name: 'back',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'webostv.button',
-			data: {
-				button: 'BACK',
-			},
+			action: 'key',
+			key: 'BACK',
 		},
 		icon: 'mdi:keyboard-backspace',
 	},
@@ -32,11 +26,8 @@ export const webosDefaultKeys: IElementConfig[] = [
 		type: 'button',
 		name: 'menu',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'webostv.button',
-			data: {
-				button: 'MENU',
-			},
+			action: 'key',
+			key: 'MENU',
 		},
 		icon: 'mdi:menu',
 	},
@@ -44,11 +35,8 @@ export const webosDefaultKeys: IElementConfig[] = [
 		type: 'button',
 		name: 'dash',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'webostv.button',
-			data: {
-				button: 'DASH',
-			},
+			action: 'key',
+			key: 'DASH',
 		},
 		icon: 'mdi:view-dashboard-variant',
 	},
@@ -56,11 +44,8 @@ export const webosDefaultKeys: IElementConfig[] = [
 		type: 'button',
 		name: 'exit',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'webostv.button',
-			data: {
-				button: 'EXIT',
-			},
+			action: 'key',
+			key: 'EXIT',
 		},
 		icon: 'mdi:exit-to-app',
 	},
@@ -68,11 +53,8 @@ export const webosDefaultKeys: IElementConfig[] = [
 		type: 'button',
 		name: 'volume_up',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'webostv.button',
-			data: {
-				button: 'VOLUMEUP',
-			},
+			action: 'key',
+			key: 'VOLUMEUP',
 		},
 		hold_action: { action: 'repeat' },
 		icon: 'mdi:volume-high',
@@ -81,11 +63,8 @@ export const webosDefaultKeys: IElementConfig[] = [
 		type: 'button',
 		name: 'volume_down',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'webostv.button',
-			data: {
-				button: 'VOLUMEDOWN',
-			},
+			action: 'key',
+			key: 'VOLUMEDOWN',
 		},
 		hold_action: { action: 'repeat' },
 		icon: 'mdi:volume-medium',
@@ -94,11 +73,8 @@ export const webosDefaultKeys: IElementConfig[] = [
 		type: 'button',
 		name: 'volume_mute',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'webostv.button',
-			data: {
-				button: 'MUTE',
-			},
+			action: 'key',
+			key: 'MUTE',
 		},
 		icon: 'mdi:volume-low',
 	},
@@ -125,11 +101,8 @@ export const webosDefaultKeys: IElementConfig[] = [
 		type: 'button',
 		name: 'up',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'webostv.button',
-			data: {
-				button: 'UP',
-			},
+			action: 'key',
+			key: 'UP',
 		},
 		hold_action: { action: 'repeat' },
 		icon: 'mdi:chevron-up',
@@ -138,11 +111,8 @@ export const webosDefaultKeys: IElementConfig[] = [
 		type: 'button',
 		name: 'down',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'webostv.button',
-			data: {
-				button: 'DOWN',
-			},
+			action: 'key',
+			key: 'DOWN',
 		},
 		hold_action: { action: 'repeat' },
 		icon: 'mdi:chevron-down',
@@ -151,11 +121,8 @@ export const webosDefaultKeys: IElementConfig[] = [
 		type: 'button',
 		name: 'left',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'webostv.button',
-			data: {
-				button: 'LEFT',
-			},
+			action: 'key',
+			key: 'LEFT',
 		},
 		hold_action: { action: 'repeat' },
 		icon: 'mdi:chevron-left',
@@ -164,11 +131,8 @@ export const webosDefaultKeys: IElementConfig[] = [
 		type: 'button',
 		name: 'right',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'webostv.button',
-			data: {
-				button: 'RIGHT',
-			},
+			action: 'key',
+			key: 'RIGHT',
 		},
 		hold_action: { action: 'repeat' },
 		icon: 'mdi:chevron-right',
@@ -177,11 +141,8 @@ export const webosDefaultKeys: IElementConfig[] = [
 		type: 'button',
 		name: 'center',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'webostv.button',
-			data: {
-				button: 'ENTER',
-			},
+			action: 'key',
+			key: 'ENTER',
 		},
 		icon: 'mdi:circle',
 	},
@@ -199,49 +160,34 @@ export const webosDefaultKeys: IElementConfig[] = [
 		type: 'touchpad',
 		name: 'touchpad',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'webostv.button',
-			data: {
-				button: 'ENTER',
-			},
+			action: 'key',
+			key: 'ENTER',
 		},
 		up: {
 			tap_action: {
-				action: 'perform-action',
-				perform_action: 'webostv.button',
-				data: {
-					button: 'UP',
-				},
+				action: 'key',
+				key: 'UP',
 			},
 			hold_action: { action: 'repeat' },
 		},
 		down: {
 			tap_action: {
-				action: 'perform-action',
-				perform_action: 'webostv.button',
-				data: {
-					button: 'DOWN',
-				},
+				action: 'key',
+				key: 'DOWN',
 			},
 			hold_action: { action: 'repeat' },
 		},
 		left: {
 			tap_action: {
-				action: 'perform-action',
-				perform_action: 'webostv.button',
-				data: {
-					button: 'LEFT',
-				},
+				action: 'key',
+				key: 'LEFT',
 			},
 			hold_action: { action: 'repeat' },
 		},
 		right: {
 			tap_action: {
-				action: 'perform-action',
-				perform_action: 'webostv.button',
-				data: {
-					button: 'RIGHT',
-				},
+				action: 'key',
+				key: 'RIGHT',
 			},
 			hold_action: { action: 'repeat' },
 		},
@@ -250,11 +196,8 @@ export const webosDefaultKeys: IElementConfig[] = [
 		type: 'button',
 		name: 'play',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'webostv.button',
-			data: {
-				button: 'PLAY',
-			},
+			action: 'key',
+			key: 'PLAY',
 		},
 		icon: 'mdi:play',
 	},
@@ -262,11 +205,8 @@ export const webosDefaultKeys: IElementConfig[] = [
 		type: 'button',
 		name: 'pause',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'webostv.button',
-			data: {
-				button: 'PAUSE',
-			},
+			action: 'key',
+			key: 'PAUSE',
 		},
 		icon: 'mdi:pause',
 	},
@@ -274,11 +214,8 @@ export const webosDefaultKeys: IElementConfig[] = [
 		type: 'button',
 		name: 'channel_up',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'webostv.button',
-			data: {
-				button: 'CHANNELUP',
-			},
+			action: 'key',
+			key: 'CHANNELUP',
 		},
 		icon: 'mdi:arrow-up-circle',
 	},
@@ -286,11 +223,8 @@ export const webosDefaultKeys: IElementConfig[] = [
 		type: 'button',
 		name: 'channel_down',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'webostv.button',
-			data: {
-				button: 'CHANNELDOWN',
-			},
+			action: 'key',
+			key: 'CHANNELDOWN',
 		},
 		icon: 'mdi:arrow-down-circle',
 	},
@@ -298,11 +232,8 @@ export const webosDefaultKeys: IElementConfig[] = [
 		type: 'button',
 		name: 'red',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'webostv.button',
-			data: {
-				button: 'RED',
-			},
+			action: 'key',
+			key: 'RED',
 		},
 		icon: 'mdi:alpha-r-box',
 	},
@@ -310,11 +241,8 @@ export const webosDefaultKeys: IElementConfig[] = [
 		type: 'button',
 		name: 'green',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'webostv.button',
-			data: {
-				button: 'GREEN',
-			},
+			action: 'key',
+			key: 'GREEN',
 		},
 		icon: 'mdi:alpha-g-box',
 	},
@@ -322,11 +250,8 @@ export const webosDefaultKeys: IElementConfig[] = [
 		type: 'button',
 		name: 'yellow',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'webostv.button',
-			data: {
-				button: 'YELLOW',
-			},
+			action: 'key',
+			key: 'YELLOW',
 		},
 		icon: 'mdi:alpha-y-box',
 	},
@@ -334,11 +259,8 @@ export const webosDefaultKeys: IElementConfig[] = [
 		type: 'button',
 		name: 'blue',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'webostv.button',
-			data: {
-				button: 'BLUE',
-			},
+			action: 'key',
+			key: 'BLUE',
 		},
 		icon: 'mdi:alpha-b-box',
 	},
@@ -346,11 +268,8 @@ export const webosDefaultKeys: IElementConfig[] = [
 		type: 'button',
 		name: 'n0',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'webostv.button',
-			data: {
-				button: '0',
-			},
+			action: 'key',
+			key: '0',
 		},
 		icon: 'mdi:numeric-0',
 	},
@@ -358,11 +277,8 @@ export const webosDefaultKeys: IElementConfig[] = [
 		type: 'button',
 		name: 'n1',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'webostv.button',
-			data: {
-				button: '1',
-			},
+			action: 'key',
+			key: '1',
 		},
 		icon: 'mdi:numeric-1',
 	},
@@ -370,11 +286,8 @@ export const webosDefaultKeys: IElementConfig[] = [
 		type: 'button',
 		name: 'n2',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'webostv.button',
-			data: {
-				button: '2',
-			},
+			action: 'key',
+			key: '2',
 		},
 		icon: 'mdi:numeric-2',
 	},
@@ -382,11 +295,8 @@ export const webosDefaultKeys: IElementConfig[] = [
 		type: 'button',
 		name: 'n3',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'webostv.button',
-			data: {
-				button: '3',
-			},
+			action: 'key',
+			key: '3',
 		},
 		icon: 'mdi:numeric-3',
 	},
@@ -394,11 +304,8 @@ export const webosDefaultKeys: IElementConfig[] = [
 		type: 'button',
 		name: 'n4',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'webostv.button',
-			data: {
-				button: '4',
-			},
+			action: 'key',
+			key: '4',
 		},
 		icon: 'mdi:numeric-4',
 	},
@@ -406,11 +313,8 @@ export const webosDefaultKeys: IElementConfig[] = [
 		type: 'button',
 		name: 'n5',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'webostv.button',
-			data: {
-				button: '5',
-			},
+			action: 'key',
+			key: '5',
 		},
 		icon: 'mdi:numeric-5',
 	},
@@ -418,11 +322,8 @@ export const webosDefaultKeys: IElementConfig[] = [
 		type: 'button',
 		name: 'n6',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'webostv.button',
-			data: {
-				button: '6',
-			},
+			action: 'key',
+			key: '6',
 		},
 		icon: 'mdi:numeric-6',
 	},
@@ -430,11 +331,8 @@ export const webosDefaultKeys: IElementConfig[] = [
 		type: 'button',
 		name: 'n7',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'webostv.button',
-			data: {
-				button: '7',
-			},
+			action: 'key',
+			key: '7',
 		},
 		icon: 'mdi:numeric-7',
 	},
@@ -442,11 +340,8 @@ export const webosDefaultKeys: IElementConfig[] = [
 		type: 'button',
 		name: 'n8',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'webostv.button',
-			data: {
-				button: '8',
-			},
+			action: 'key',
+			key: '8',
 		},
 		icon: 'mdi:numeric-8',
 	},
@@ -454,11 +349,8 @@ export const webosDefaultKeys: IElementConfig[] = [
 		type: 'button',
 		name: 'n9',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'webostv.button',
-			data: {
-				button: '9',
-			},
+			action: 'key',
+			key: '9',
 		},
 		icon: 'mdi:numeric-9',
 	},
@@ -471,11 +363,8 @@ export const webosDefaultKeys: IElementConfig[] = [
 		type: 'button',
 		name: 'asterisk',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'webostv.button',
-			data: {
-				button: 'ASTERISK',
-			},
+			action: 'key',
+			key: 'ASTERISK',
 		},
 		icon: 'mdi:asterisk',
 	},
@@ -483,11 +372,8 @@ export const webosDefaultKeys: IElementConfig[] = [
 		type: 'button',
 		name: 'info',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'webostv.button',
-			data: {
-				button: 'INFO',
-			},
+			action: 'key',
+			key: 'INFO',
 		},
 		icon: 'mdi:information',
 	},
@@ -495,11 +381,8 @@ export const webosDefaultKeys: IElementConfig[] = [
 		type: 'button',
 		name: 'guide',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'webostv.button',
-			data: {
-				button: 'GUIDE',
-			},
+			action: 'key',
+			key: 'GUIDE',
 		},
 		icon: 'mdi:television-box',
 	},
@@ -507,11 +390,8 @@ export const webosDefaultKeys: IElementConfig[] = [
 		type: 'button',
 		name: 'captions',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'webostv.button',
-			data: {
-				button: 'CC',
-			},
+			action: 'key',
+			key: 'CC',
 		},
 		icon: 'mdi:closed-caption',
 	},

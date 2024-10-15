@@ -1195,18 +1195,35 @@ export class UniversalRemoteCardEditor extends LitElement {
 				: ''}
 			${action == 'key'
 				? html`<div class="form">
-						${this.buildSelector(
-							'Remote ID',
-							`${actionType}.remote_id`,
-							{
-								entity: {
-									filter: {
-										domain: 'remote',
+						${['Kodi', 'LG webOS'].includes(platform)
+							? this.buildSelector(
+									'Media Player ID',
+									`${actionType}.media_player_id`,
+									{
+										entity: {
+											filter: {
+												domain: 'media_player',
+											},
+										},
 									},
-								},
-							},
-							autofill ? this.config.remote_id : undefined,
-						)}
+									autofill
+										? this.config.media_player_id
+										: undefined,
+							  )
+							: this.buildSelector(
+									'Remote ID',
+									`${actionType}.remote_id`,
+									{
+										entity: {
+											filter: {
+												domain: 'remote',
+											},
+										},
+									},
+									autofill
+										? this.config.remote_id
+										: undefined,
+							  )}
 						${this.buildSelector('Key', `${actionType}.key`, {
 							text: {},
 						})}
@@ -1214,18 +1231,35 @@ export class UniversalRemoteCardEditor extends LitElement {
 				: ''}
 			${action == 'source'
 				? html`<div class="form">
-						${this.buildSelector(
-							'Remote ID',
-							`${actionType}.remote_id`,
-							{
-								entity: {
-									filter: {
-										domain: 'remote',
+						${['Android TV'].includes(platform)
+							? this.buildSelector(
+									'Remote ID',
+									`${actionType}.remote_id`,
+									{
+										entity: {
+											filter: {
+												domain: 'remote',
+											},
+										},
 									},
-								},
-							},
-							autofill ? this.config.remote_id : undefined,
-						)}
+									autofill
+										? this.config.remote_id
+										: undefined,
+							  )
+							: this.buildSelector(
+									'Media Player ID',
+									`${actionType}.media_player_id`,
+									{
+										entity: {
+											filter: {
+												domain: 'media_player',
+											},
+										},
+									},
+									autofill
+										? this.config.media_player_id
+										: undefined,
+							  )}
 						${this.buildSelector('Source', `${actionType}.source`, {
 							text: {},
 						})}

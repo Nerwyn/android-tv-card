@@ -8,11 +8,8 @@ export const samsungTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'dazn',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'DAZN',
-			},
+			action: 'source',
+			source: 'DAZN',
 		},
 		icon: 'dazn',
 	},
@@ -20,11 +17,8 @@ export const samsungTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'netflix',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'Netflix',
-			},
+			action: 'source',
+			source: 'Netflix',
 		},
 		icon: 'mdi:netflix',
 	},
@@ -32,11 +26,8 @@ export const samsungTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'primevideo',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'Prime Video',
-			},
+			action: 'source',
+			source: 'Prime Video',
 		},
 		icon: 'primevideo',
 	},
@@ -44,11 +35,8 @@ export const samsungTVDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'youtube',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'media_player.select_source',
-			data: {
-				source: 'YouTube',
-			},
+			action: 'source',
+			source: 'YouTube',
 		},
 		icon: 'mdi:youtube',
 	},

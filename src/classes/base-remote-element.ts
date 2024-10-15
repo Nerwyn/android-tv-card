@@ -167,21 +167,61 @@ export class BaseRemoteElement extends LitElement {
 	}
 
 	key(action: IAction, actionType: ActionType) {
-		const data: IData = {
-			entity_id: action.remote_id ?? '',
-			command: action.key ?? '',
-		};
-		if (actionType == 'hold_action' && !this.config.hold_action) {
-			data.hold_secs = 0.5;
+		switch (action.platform) {
+			case 'Kodi':
+				this.hass.callService('kodi', 'call_method', {
+					method: action.key,
+				});
+				break;
+			case 'LG webOS':
+				this.hass.callService('webostv', 'button', {
+					button: action.key,
+				});
+				break;
+			case 'Android TV':
+			case 'Apple TV':
+			case 'Fire TV':
+			case 'Roku':
+			case 'Samsung TV':
+			default: {
+				const data: IData = {
+					entity_id: action.remote_id ?? '',
+					command: action.key ?? '',
+				};
+				if (
+					actionType == 'hold_action' &&
+					(!this.config.hold_action ||
+						this.config.hold_action.action == 'none')
+				) {
+					data.hold_secs = 0.5;
+				}
+				this.hass.callService('remote', 'send_command', data);
+				break;
+			}
 		}
-		this.hass.callService('remote', 'send_command', data);
 	}
 
 	source(action: IAction) {
-		this.hass.callService('remote', 'turn_on', {
-			entity_id: action.remote_id ?? '',
-			activity: action.source ?? '',
-		});
+		switch (action.platform) {
+			case 'Fire TV':
+			case 'Roku':
+			case 'Kodi':
+			case 'Apple TV':
+			case 'Samsung TV':
+			case 'LG webOS':
+				this.hass.callService('media_player', 'select_source', {
+					entity_id: action.media_player_id ?? '',
+					source: action.source ?? '',
+				});
+				break;
+			case 'Android TV':
+			default:
+				this.hass.callService('remote', 'turn_on', {
+					entity_id: action.remote_id ?? '',
+					activity: action.source ?? '',
+				});
+				break;
+		}
 	}
 
 	callService(action: IAction) {

@@ -309,15 +309,13 @@ Actions follow the [Home Assistant actions](https://www.home-assistant.io/dashbo
 
 ### Key and Source
 
-`Key` and `Source` are shortcuts for `remote.send_command` and `remote.turn_on` respectively. They will use the general remote ID if set but can be overridden at the custom action level.
+`Key` and `Source` are shortcuts for `perform-action` actions and vary by platform. Read the Home Assistant documentation as linked above [in this table](#media-platform-and-entity-ids) for more information on the actions performed by each platform. You can also look at the default key and source map files [here](https://github.com/Nerwyn/android-tv-card/tree/main/src/models/maps). They will use the general remote or media player ID if set but can be overridden at the custom action level.
 
-The `key` field does not refer to the default key name as it appears in the list, but as the actual key string to be sent in the action data. You should read the documentation for the platform you are using to learn more about available options, or look at the default key and source maps files [here](https://github.com/Nerwyn/android-tv-card/tree/main/src/models/maps).
-
-The `source` field generally refers to an application to open and varies by platform. For Android TV you may find the [Android TV deep linking guide helpful](https://community.home-assistant.io/t/android-tv-remote-app-links-deep-linking-guide/567921).
+For Android TV you may find the [Android TV deep linking guide helpful](https://community.home-assistant.io/t/android-tv-remote-app-links-deep-linking-guide/567921).
 
 If you find keys or sources that are not part of the default lists that you wish to add, please make a feature or even a pull request to add them, especially if they are for a platform other than Android TV (Android TV default list improvements also welcome).
 
-Not all platforms use `Key` and `Source` for their default keys and sources, some instead use `Perform action` to call alternate services.
+While most default keys use the `key` action, some actions require more information and call the actions directly.
 
 ### Momentary Mode
 

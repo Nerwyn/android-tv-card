@@ -6,13 +6,19 @@ import { IElementConfig } from '../../interfaces';
 export const webosDefaultSources: IElementConfig[] = [
 	{
 		type: 'button',
+		name: 'disney',
+		tap_action: {
+			action: 'source',
+			source: 'Disney+',
+		},
+		icon: 'disney',
+	},
+	{
+		type: 'button',
 		name: 'netflix',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'webostv.button',
-			data: {
-				button: 'NETFLIX',
-			},
+			action: 'key',
+			key: 'NETFLIX',
 		},
 		icon: 'mdi:netflix',
 	},
@@ -20,12 +26,45 @@ export const webosDefaultSources: IElementConfig[] = [
 		type: 'button',
 		name: 'primevideo',
 		tap_action: {
-			action: 'perform-action',
-			perform_action: 'webostv.button',
-			data: {
-				button: 'AMAZON',
-			},
+			action: 'key',
+			key: 'AMAZON',
 		},
 		icon: 'primevideo',
+	},
+	{
+		type: 'button',
+		name: 'rakutentv',
+		tap_action: {
+			action: 'source',
+			source: 'Rakuten TV',
+		},
+		icon: 'rakutentv',
+	},
+	{
+		type: 'button',
+		name: 'waiputv',
+		tap_action: {
+			action: 'source',
+			source: 'waipu.tv',
+		},
+		icon: 'waiputv',
+	},
+	{
+		type: 'button',
+		name: 'wow',
+		tap_action: {
+			action: 'source',
+			source: 'WOW',
+		},
+		icon: 'wow',
+	},
+	{
+		type: 'button',
+		name: 'youtube',
+		tap_action: {
+			action: 'source',
+			source: 'YouTube',
+		},
+		icon: 'youtube',
 	},
 ];
