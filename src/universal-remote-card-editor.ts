@@ -39,13 +39,7 @@ import {
 	Row,
 } from './models/interfaces';
 import { defaultIcons } from './models/maps';
-import {
-	deepDel,
-	deepGet,
-	deepSet,
-	getDefaultActions,
-	mergeDeep,
-} from './utils';
+import { deepGet, deepSet, getDefaultActions, mergeDeep } from './utils';
 
 export class UniversalRemoteCardEditor extends LitElement {
 	@property() hass!: HomeAssistant;
@@ -391,22 +385,13 @@ export class UniversalRemoteCardEditor extends LitElement {
 		switch (this.baseTabIndex) {
 			case 3:
 			case 2:
-				if (value == undefined) {
-					const entry = deepDel(
+				this.entryChanged(
+					deepSet(
 						structuredClone(this.activeEntry) as object,
 						key,
-					) as IElementConfig;
-					console.log(entry);
-					this.entryChanged(entry);
-				} else {
-					this.entryChanged(
-						deepSet(
-							structuredClone(this.activeEntry) as object,
-							key,
-							value,
-						) as IElementConfig,
-					);
-				}
+						value,
+					) as IElementConfig,
+				);
 				break;
 			default:
 				this.configChanged({
@@ -414,6 +399,15 @@ export class UniversalRemoteCardEditor extends LitElement {
 					[key]: value,
 				});
 				break;
+		}
+		if (value == undefined) {
+			this.addEventListener(
+				'config-changed',
+				() => {
+					this.configChanged(this.config);
+				},
+				{ once: true },
+			);
 		}
 	}
 
