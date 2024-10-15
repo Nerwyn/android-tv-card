@@ -952,7 +952,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 					  )
 					: ''
 			}
-			<div class="form">
+			<div class="actions-form">
 				${additionalOptions}
 				${this.buildSelector(
 					'Autofill',
@@ -1025,7 +1025,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 		return html`${this.buildSelector('Label', 'label', {
 				text: { multiline: true },
 			})}
-			<div class="form">
+			<div class="actions-form">
 				${this.buildSelector('Icon', 'icon', {
 					icon: {},
 				})}${customIcon ?? ''}${this.buildSelector(
@@ -1117,7 +1117,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 				  )
 				: actionType == 'hold_action' &&
 				  (this.activeEntry as IElementConfig).hold_action
-				? html`<div class="form">
+				? html`<div class="actions-form">
 						${this.buildSelector(
 							'Hold time',
 							'hold_action.hold_time',
@@ -1156,7 +1156,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 				  </div>`
 				: actionType == 'multi_hold_action' &&
 				  (this.activeEntry as IElementConfig).multi_hold_action
-				? html`<div class="form">
+				? html`<div class="actions-form">
 						${this.buildSelector(
 							'Hold time',
 							'multi_hold_action.hold_time',
@@ -1195,7 +1195,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 				  </div>`
 				: ''}
 			${action == 'key'
-				? html`<div class="form">
+				? html`<div class="actions-form">
 						${['Kodi', 'LG webOS'].includes(platform)
 							? this.buildSelector(
 									'Media Player ID',
@@ -1243,7 +1243,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 				  </div>`
 				: ''}
 			${action == 'source'
-				? html`<div class="form">
+				? html`<div class="actions-form">
 						${['Android TV'].includes(platform)
 							? this.buildSelector(
 									'Remote ID',
@@ -1291,7 +1291,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 				  </div>`
 				: ''}
 			${['keyboard', 'textbox', 'search'].includes(action)
-				? html`<div class="form">
+				? html`<div class="actions-form">
 							${this.buildSelector(
 								'Keyboard ID',
 								`${actionType}.keyboard_id`,
@@ -1324,7 +1324,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 									: 'Android TV',
 							)}
 						</div>
-						<div class="form">
+						<div class="actions-form">
 							${['Android TV', 'Roku'].includes(platform)
 								? this.buildSelector(
 										'Remote ID',
@@ -3328,6 +3328,14 @@ export class UniversalRemoteCardEditor extends LitElement {
 					minmax(var(--form-grid-min-width, 200px), 1fr)
 				);
 				gap: 24px 8px;
+			}
+			.actions-form {
+				display: grid;
+				grid-template-columns: repeat(
+					var(--form-grid-column-count, auto-fit),
+					minmax(var(--form-grid-min-width, 200px), 1fr)
+				);
+				gap: 8px;
 			}
 			.custom-icon-picked {
 				position: absolute;
