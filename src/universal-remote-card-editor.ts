@@ -375,7 +375,6 @@ export class UniversalRemoteCardEditor extends LitElement {
 		this.yamlStringsCache = {};
 		const key = (e.target as HTMLElement).id;
 		let value = e.detail.value;
-		console.log(`key: ${key} | value: ${value}`);
 		if (key.endsWith('.confirmation.exemptions')) {
 			value = ((value as string[]) ?? []).map((v) => {
 				return {
@@ -400,6 +399,10 @@ export class UniversalRemoteCardEditor extends LitElement {
 					[key]: value,
 				});
 				break;
+		}
+		if (value == undefined) {
+			// Fixes autofill issue where default value does not overwrite selector default undefined
+			this.configChanged(this.config);
 		}
 	}
 
