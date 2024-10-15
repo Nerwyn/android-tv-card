@@ -375,6 +375,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 		this.yamlStringsCache = {};
 		const key = (e.target as HTMLElement).id;
 		let value = e.detail.value;
+		console.log(`key: ${key} | value: ${value}`);
 		if (key.endsWith('.confirmation.exemptions')) {
 			value = ((value as string[]) ?? []).map((v) => {
 				return {
@@ -1235,7 +1236,9 @@ export class UniversalRemoteCardEditor extends LitElement {
 									reorder: false,
 								},
 							},
-							autofill ? this.config.platform : 'Android TV',
+							autofill
+								? this.config.platform ?? 'Android TV'
+								: 'Android TV',
 						)}
 						${this.buildSelector('Key', `${actionType}.key`, {
 							text: {},
@@ -1283,7 +1286,9 @@ export class UniversalRemoteCardEditor extends LitElement {
 									reorder: false,
 								},
 							},
-							autofill ? this.config.platform : 'Android TV',
+							autofill
+								? this.config.platform ?? 'Android TV'
+								: 'Android TV',
 						)}
 						${this.buildSelector('Source', `${actionType}.source`, {
 							text: {},
