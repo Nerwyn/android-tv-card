@@ -39,7 +39,13 @@ import {
 	Row,
 } from './models/interfaces';
 import { defaultIcons } from './models/maps';
-import { deepGet, deepSet, getDefaultActions, mergeDeep } from './utils';
+import {
+	deepDel,
+	deepGet,
+	deepSet,
+	getDefaultActions,
+	mergeDeep,
+} from './utils';
 
 export class UniversalRemoteCardEditor extends LitElement {
 	@property() hass!: HomeAssistant;
@@ -385,13 +391,22 @@ export class UniversalRemoteCardEditor extends LitElement {
 		switch (this.baseTabIndex) {
 			case 3:
 			case 2:
-				this.entryChanged(
-					deepSet(
-						structuredClone(this.activeEntry) as object,
-						key,
-						value,
-					) as IElementConfig,
-				);
+				if (value == undefined) {
+					this.entryChanged(
+						deepDel(
+							structuredClone(this.activeEntry) as object,
+							key,
+						) as IElementConfig,
+					);
+				} else {
+					this.entryChanged(
+						deepSet(
+							structuredClone(this.activeEntry) as object,
+							key,
+							value,
+						) as IElementConfig,
+					);
+				}
 				break;
 			default:
 				this.configChanged({
@@ -399,12 +414,6 @@ export class UniversalRemoteCardEditor extends LitElement {
 					[key]: value,
 				});
 				break;
-		}
-		if (value == undefined) {
-			// Fixes autofill issue where default value does not overwrite selector default undefined
-			setTimeout(() => {
-				this.configChanged(this.config);
-			}, 100);
 		}
 	}
 
@@ -1467,7 +1476,6 @@ export class UniversalRemoteCardEditor extends LitElement {
 		const defaultUiActions = {
 			ui_action: {
 				actions: actionsNoRepeat,
-				default_action: 'none',
 			},
 		};
 		switch (this.actionsTabIndex) {

@@ -48,6 +48,28 @@ export function deepSet<T extends object>(
 	return obj;
 }
 
+export function deepDel<T extends object>(obj: T, key: string): T {
+	const keys = key.split('.');
+	if (keys.length == 1) {
+		delete obj[keys[0] as keyof object];
+	} else {
+		if (
+			!(keys[0] in obj) ||
+			!(typeof obj[keys[0] as keyof object] == 'object')
+		) {
+			if (/^-?\d+$/.test(keys[1])) {
+				obj[keys[0] as keyof object] = new Array(
+					parseInt(keys[1]),
+				) as never;
+			} else {
+				obj[keys[0] as keyof object] = {} as never;
+			}
+		}
+		deepDel(obj[keys[0] as keyof object], keys.splice(1).join('.'));
+	}
+	return obj;
+}
+
 export function mergeDeep<T extends object>(target: T, ...sources: [T]): T {
 	function isObject(item: object) {
 		return item && typeof item === 'object' && !Array.isArray(item);
