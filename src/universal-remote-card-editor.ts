@@ -392,12 +392,12 @@ export class UniversalRemoteCardEditor extends LitElement {
 			case 3:
 			case 2:
 				if (value == undefined) {
-					this.entryChanged(
-						deepDel(
-							structuredClone(this.activeEntry) as object,
-							key,
-						) as IElementConfig,
-					);
+					const entry = deepDel(
+						structuredClone(this.activeEntry) as object,
+						key,
+					) as IElementConfig;
+					console.log(entry);
+					this.entryChanged(entry);
 				} else {
 					this.entryChanged(
 						deepSet(
