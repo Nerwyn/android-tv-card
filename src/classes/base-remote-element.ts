@@ -293,7 +293,9 @@ export class BaseRemoteElement extends LitElement {
 			cancelable: true,
 			composed: true,
 		});
-		event.detail = { entityId: action.target?.entity_id };
+		event.detail = {
+			entityId: action.target?.entity_id ?? this.config.entity_id,
+		};
 		this.dispatchEvent(event);
 	}
 
