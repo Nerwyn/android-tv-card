@@ -396,6 +396,12 @@ While all configuration can now be done through the user interface, these YAML e
 
 Playing with order, moving and repeating buttons.
 
+<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/disorder.png" alt="disorder example" width="300"/>
+
+<details>
+
+<summary>Remote Config</summary>
+
 ```yaml
 type: custom:android-tv-card
 remote_id: remote.google_chromecast
@@ -422,13 +428,17 @@ rows:
     - fast_forward
 ```
 
-Result:
-
-<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/disorder.png" alt="disorder example" width="300"/>
+</details>
 
 ## Example 2
 
 Buttons, buttons everywhere!
+
+<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/buttons_everywhere.png" alt="buttons example" width="300"/>
+
+<details>
+
+<summary>Remote Config</summary>
 
 ```yaml
 type: custom:android-tv-card
@@ -453,13 +463,17 @@ rows:
     - fast_forward
 ```
 
-Result:
-
-<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/buttons_everywhere.png" alt="buttons example" width="300"/>
+</details>
 
 ## Example 3
 
 Using less and a vertical slider.
+
+<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/using_less.png" alt="less example" width="300"/>
+
+<details>
+
+<summary>Remote Config</summary>
 
 ```yaml
 type: custom:android-tv-card
@@ -492,13 +506,17 @@ custom_actions:
     icon: mdi:volume-high
 ```
 
-Result:
-
-<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/using_less.png" alt="less example" width="300"/>
+</details>
 
 ## Example 4
 
 In any row, if you add a `null` item, there will be an empty button sized space.
+
+<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/empty_buttons.png" alt="empty buttons example" width="300"/>
+
+<details>
+
+<summary>Remote Config</summary>
 
 ```yaml
 type: custom:android-tv-card
@@ -512,11 +530,17 @@ rows:
     - fast_forward
 ```
 
-<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/empty_buttons.png" alt="empty buttons example" width="300"/>
+</details>
 
 ## Example 5
 
 A tablet layout using nexted row and columns.
+
+<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/tablet.png" alt="tablet example" width="800"/>
+
+<details>
+
+<summary>Remote Config</summary>
 
 ```yaml
 type: custom:android-tv-card
@@ -585,13 +609,17 @@ custom_actions:
       }
 ```
 
-Result:
-
-<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/tablet.png" alt="tablet example" width="800"/>
+</details>
 
 ## Example 6
 
 Combining Apple TVs `wakeup` and `suspend` keys into one custom power action and using an icon for the touchpad background.
+
+<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/apple_tv.png" alt="apple tv example" width="400"/>
+
+<details>
+
+<summary>Remote Config</summary>
 
 ```yaml
 type: custom:android-tv-card
@@ -670,13 +698,17 @@ custom_actions:
     icon: mdi:apple
 ```
 
-Result:
-
-<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/apple_tv.png" alt="apple tv example" width="400"/>
+</details>
 
 ## Example 7
 
 A user's Kodi remote.
+
+<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/kodi.png" alt="kodi example" width="400"/>
+
+<details>
+
+<summary>Remote Config</summary>
 
 ```yaml
 type: custom:android-tv-card
@@ -688,50 +720,42 @@ rows:
     - home
     - menu
   - - info
+    - osd
     - play_pause
   - - - volume_buttons
     - touchpad
-    - - textbox
+    - - keyboard
       - null
       - search
 custom_actions:
   - type: touchpad
     name: touchpad
     tap_action:
-      action: perform-action
-      perform_action: kodi.call_method
-      data:
-        method: Input.Select
+      action: key
+      key: Input.Select
     up:
       tap_action:
-        action: perform-action
-        perform_action: kodi.call_method
-        data:
-          method: Input.Up
+        action: key
+        key: Input.Up
       hold_action:
         action: repeat
+      styles: ''
     down:
       tap_action:
-        action: perform-action
-        perform_action: kodi.call_method
-        data:
-          method: Input.Down
+        action: key
+        key: Input.Down
       hold_action:
         action: repeat
     left:
       tap_action:
-        action: perform-action
-        perform_action: kodi.call_method
-        data:
-          method: Input.Left
+        action: key
+        key: Input.Left
       hold_action:
         action: repeat
     right:
       tap_action:
-        action: perform-action
-        perform_action: kodi.call_method
-        data:
-          method: Input.Right
+        action: key
+        key: Input.Right
       hold_action:
         action: repeat
     styles: |-
@@ -743,25 +767,17 @@ custom_actions:
         background-position: center;
         opacity: 1.0;;
       }
-    hold_action:
-      action: perform-action
-      perform_action: kodi.call_method
-      data:
-        method: Input.ContextMenu
-    double_tap_action:
-      action: perform-action
-      perform_action: kodi.call_method
-      data:
-        method: Input.Back
 ```
 
-Result:
-
-<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/kodi.png" alt="kodi example" width="400"/>
+</details>
 
 ## Example 8
 
 [Sony Bravia](https://www.home-assistant.io/integrations/braviatv/) KD.xx TV. Note that newer Sony Bravia TVs come with Android/Google TV.
+
+<details>
+
+<summary>Remote Config</summary>
 
 ```yaml
 type: custom:android-tv-card
@@ -803,9 +819,15 @@ custom_actions:
       key: Back
 ```
 
+</details>
+
 ## Example 9
 
 A touchpad remapped to work with a [Denon/Marantz Receiver](https://www.home-assistant.io/integrations/denonavr).
+
+<details>
+
+<summary>Remote Config</summary>
 
 ```yaml
 type: custom:android-tv-card
@@ -864,9 +886,17 @@ custom_actions:
         command: /goform/formiPhoneAppDirect.xml?MNRTN
 ```
 
+</details>
+
 ## Example 10
 
 Even more disorder with columns and special elements in the same row as buttons, stylized everything, and a label to display the slider value.
+
+<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/more_disorder.png" alt="more disorder example" width="500"/>
+
+<details>
+
+<summary>Remote Config</summary>
 
 ```yaml
 type: custom:android-tv-card
@@ -1008,13 +1038,17 @@ custom_actions:
       }
 ```
 
-Result:
-
-<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/more_disorder.png" alt="more disorder example" width="500"/>
+</details>
 
 ## Example 11
 
 A simple gamepad.
+
+<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/gamepad.png" alt="gamepad example" width="500"/>
+
+<details>
+
+<summary>Remote Config</summary>
 
 ```yaml
 type: custom:android-tv-card
@@ -1088,48 +1122,17 @@ styles: |-
   }
 ```
 
-Result:
-
-<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/gamepad.png" alt="gamepad example" width="500"/>
+</details>
 
 ## Example 12
 
-Samsung TV.
-
-```yaml
-type: custom:android-tv-card
-remote_id: remote.samsung_tv
-media_player_id: media_player.samsung_tv
-platform: Samsung TV
-rows:
-  - - power
-    - null
-    - volume_mute
-  - - slider
-  - - ch_up
-    - ch_down
-  - - netflix
-    - youtube
-    - dazn
-    - primevideo
-  - - touchpad
-  - - back
-    - home
-  - - n1
-    - n2
-    - n3
-    - n4
-    - n5
-  - - n6
-    - n7
-    - n8
-    - n9
-    - n0
-```
-
-## Example 13
-
 Conditional layouts using templating and an input select.
+
+<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/conditional_layouts.png" alt="conditional layouts example" width="500"/>
+
+<details>
+
+<summary>Remote Config</summary>
 
 ```yaml
 type: custom:android-tv-card
@@ -1161,11 +1164,17 @@ custom_actions:
     entity_id: input_select.select_test
 ```
 
-<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/conditional_layouts.png" alt="conditional layouts example" width="500"/>
+</details>
 
-## Example 14
+## Example 13
 
 RGB Remote using Broadlink RM4 Pro.
+
+<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/rgb.png" alt="rgb remote example" width="500"/>
+
+<details>
+
+<summary>Remote Config</summary>
 
 ```yaml
 type: custom:android-tv-card
@@ -1409,11 +1418,17 @@ custom_actions:
     icon: mdi:chevron-down
 ```
 
-<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/rgb.png" alt="rgb remote example" width="500"/>
+</details>
 
-## Example 15
+## Example 14
 
 Style the dpad to be like the Google TV app remote.
+
+<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/google_tv_dpad.png" alt="google tv app styled dpad" width="500"/>
+
+<details>
+
+<summary>Remote Config</summary>
 
 ```yaml
 type: custom:android-tv-card
@@ -1512,11 +1527,17 @@ styles: |-
   }
 ```
 
-<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/google_tv_dpad.png" alt="google tv app styled dpad" width="500"/>
+</details>
 
-## Example 16
+## Example 15
 
 A music player with multiple sliders for volume and media position and a touchpad for media controls and album art.
+
+<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/music_controls.png" alt="music controls" width="500"/>
+
+<details>
+
+<summary>Remote Config</summary>
 
 ```yaml
 type: custom:android-tv-card
@@ -1614,11 +1635,17 @@ custom_actions:
     icon: mdi:play-pause
 ```
 
-<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/music_controls.png" alt="music controls" width="500"/>
+</details>
 
-## Example 17
+## Example 16
 
 Multiple sliders for light color control.
+
+<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/color_controls.png" alt="color controls" width="500"/>
+
+<details>
+
+<summary>Remote Config</summary>
 
 ```yaml
 type: custom:android-tv-card
@@ -1712,7 +1739,7 @@ custom_actions:
     name: hs_color
 ```
 
-<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/color_controls.png" alt="color controls" width="500"/>
+</details>
 
 [last-commit-shield]: https://img.shields.io/github/last-commit/Nerwyn/android-tv-card?style=for-the-badge
 [commits]: https://github.com/Nerwyn/android-tv-card/commits/main

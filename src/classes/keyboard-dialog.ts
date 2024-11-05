@@ -341,6 +341,12 @@ export class KeyboardDialog extends LitElement {
 	enterDialog() {
 		switch (this.config?.platform) {
 			case 'Kodi':
+				this.hass.callService('kodi', 'call_method', {
+					entity_id: this.config?.keyboard_id,
+					method: 'Input.SendText',
+					text: this.textarea?.value ?? '',
+					done: true,
+				});
 				break;
 			case 'Roku':
 				this.hass.callService('remote', 'send_command', {
