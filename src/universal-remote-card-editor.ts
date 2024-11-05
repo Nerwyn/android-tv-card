@@ -1780,6 +1780,9 @@ export class UniversalRemoteCardEditor extends LitElement {
 					case 'touchpad':
 						entryGuiEditor = this.buildTouchpadGuiEditor();
 						break;
+					case 'button pad':
+						entryGuiEditor = this.buildButtonPadGuiEditor();
+						break;
 					case 'button':
 					default:
 						entryGuiEditor = this.buildButtonGuiEditor();
