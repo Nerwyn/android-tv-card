@@ -254,7 +254,7 @@ export class KeyboardDialog extends LitElement {
 					break;
 				case 'Fire TV':
 				case 'Android TV':
-				default: {
+				default:
 					this.hass.callService(
 						this.domain ?? 'remote',
 						this.service ?? 'send_command',
@@ -264,7 +264,6 @@ export class KeyboardDialog extends LitElement {
 						},
 					);
 					break;
-				}
 			}
 		}
 	}
@@ -273,7 +272,7 @@ export class KeyboardDialog extends LitElement {
 		const text = this.textarea?.value;
 		if (text) {
 			switch (this.config?.platform) {
-				case 'Kodi': {
+				case 'Kodi':
 					this.hass.callService('kodi', 'call_method', {
 						entity_id: this.config?.keyboard_id,
 						method: 'Input.SendText',
@@ -281,7 +280,6 @@ export class KeyboardDialog extends LitElement {
 						done: true,
 					});
 					break;
-				}
 				case 'Roku':
 					this.hass.callService('roku', 'search', {
 						entity_id: this.getRokuId('media_player'),
@@ -290,7 +288,7 @@ export class KeyboardDialog extends LitElement {
 					break;
 				case 'Fire TV':
 				case 'Android TV':
-				default: {
+				default:
 					this.hass.callService(
 						this.domain ?? 'remote',
 						this.service ?? 'send_command',
@@ -300,7 +298,6 @@ export class KeyboardDialog extends LitElement {
 						},
 					);
 					break;
-				}
 			}
 		}
 		this.closeDialog();
@@ -326,7 +323,7 @@ export class KeyboardDialog extends LitElement {
 					break;
 				case 'Fire TV':
 				case 'Android TV':
-				default: {
+				default:
 					this.hass.callService(
 						this.domain ?? 'remote',
 						this.service ?? 'send_command',
@@ -336,7 +333,6 @@ export class KeyboardDialog extends LitElement {
 						},
 					);
 					break;
-				}
 			}
 		}
 		this.closeDialog();
@@ -354,6 +350,7 @@ export class KeyboardDialog extends LitElement {
 				break;
 			case 'Fire TV':
 			case 'Android TV':
+			default:
 				this.hass.callService('remote', 'send_command', {
 					entity_id: this.config?.remote_id,
 					command: 'ENTER',
