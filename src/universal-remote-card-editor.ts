@@ -2384,6 +2384,9 @@ export class UniversalRemoteCardEditor extends LitElement {
 			case 'FIRE TV' as Platform:
 			case 'Fire TV':
 				return 'Fire TV';
+			case 'BRAVIA' as Platform:
+			case 'Sony BRAVIA':
+				return 'Sony BRAVIA';
 			case 'APPLE TV' as Platform:
 			case 'Apple TV':
 				return 'Apple TV';
