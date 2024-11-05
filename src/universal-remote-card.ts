@@ -340,18 +340,15 @@ class UniversalRemoteCard extends LitElement {
 	): TemplateResult {
 		this.nPads++;
 		const id = `pad-${this.nPads}`;
+		const buttons = actions.buttons ?? [];
+		// prettier-ignore
 		return html`
 			<div
-				title="${elementName}"
 				class="button-pad"
 				id="${id}"
-				title="${this.editMode ? `#${id}` : ''}"
+				title="${elementName}${this.editMode ? ` #${id}` : ''}"
 			>
-				${(actions.buttons ?? []).map((b) => {
-					const c = this.getElementConfig(b);
-					console.log(c);
-					return this.buildButton(b, c);
-				})}
+				${buttons.map((b) => this.buildButton(b, this.getElementConfig(b)))}
 			</div>
 		`;
 	}
