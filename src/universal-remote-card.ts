@@ -340,7 +340,6 @@ class UniversalRemoteCard extends LitElement {
 	): TemplateResult {
 		this.nPads++;
 		const id = `pad-${this.nPads}`;
-		console.log(actions);
 		return html`
 			<div
 				title="${elementName}"
@@ -349,8 +348,9 @@ class UniversalRemoteCard extends LitElement {
 				title="${this.editMode ? `#${id}` : ''}"
 			>
 				${(actions.buttons ?? []).map((b) => {
-					console.log(b);
-					return this.buildButton(b, this.getElementConfig(b));
+					const c = this.getElementConfig(b);
+					console.log(c);
+					return this.buildButton(b, c);
 				})}
 			</div>
 		`;
