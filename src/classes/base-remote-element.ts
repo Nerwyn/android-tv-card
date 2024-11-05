@@ -183,6 +183,7 @@ export class BaseRemoteElement extends LitElement {
 			case 'Android TV':
 			case 'Apple TV':
 			case 'Fire TV':
+			case 'Sony BRAVIA':
 			case 'Roku':
 			case 'Samsung TV':
 			default: {
@@ -212,15 +213,22 @@ export class BaseRemoteElement extends LitElement {
 			case 'Samsung TV':
 			case 'LG webOS':
 				this.hass.callService('media_player', 'select_source', {
-					entity_id: action.media_player_id ?? '',
-					source: action.source ?? '',
+					entity_id: action.media_player_id,
+					source: action.source,
+				});
+				break;
+			case 'Sony BRAVIA':
+				this.hass.callService('media_player', 'play_media', {
+					entity_id: action.media_player_id,
+					media_content_id: action.source,
+					media_content_type: 'app',
 				});
 				break;
 			case 'Android TV':
 			default:
 				this.hass.callService('remote', 'turn_on', {
-					entity_id: action.remote_id ?? '',
-					activity: action.source ?? '',
+					entity_id: action.remote_id,
+					activity: action.source,
 				});
 				break;
 		}

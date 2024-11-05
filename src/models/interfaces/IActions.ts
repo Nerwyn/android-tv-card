@@ -1,16 +1,16 @@
 export const KeyboardPlatforms = [
 	'Android TV',
+	'Sony BRAVIA',
 	'Fire TV',
 	'Roku',
 	'Kodi',
-	'Sony BRAVIA'
 ] as const;
 export type KeyboardPlatform = (typeof KeyboardPlatforms)[number];
 export const Platforms = [
 	...KeyboardPlatforms,
 	'Apple TV',
 	'Samsung TV',
-	'LG webOS'
+	'LG webOS',
 ] as const;
 export type Platform = (typeof Platforms)[number];
 

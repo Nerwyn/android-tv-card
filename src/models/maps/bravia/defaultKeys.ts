@@ -1,12 +1,11 @@
-
 import { IElementConfig } from '../../interfaces';
 
 /**
-* This list contains commands listed by the Sony BRAVIA KD-55X750H used during development.
-* Additional commands may be supported.
-* 
-* https://www.home-assistant.io/integrations/braviatv/
-*/
+ * This list contains commands listed by the Sony BRAVIA KD-55X750H used during development.
+ * Additional commands may be supported.
+ *
+ * https://www.home-assistant.io/integrations/braviatv/#remote
+ */
 export const braviaTVDefaultKeys: IElementConfig[] = [
 	{
 		type: 'button',
@@ -207,12 +206,6 @@ export const braviaTVDefaultKeys: IElementConfig[] = [
 	},
 	{
 		type: 'button',
-		name: 'enter',
-		tap_action: { action: 'key', key: 'Confirm' },
-		icon: 'mdi:magnify',
-	},
-	{
-		type: 'button',
 		name: 'channel_up',
 		tap_action: { action: 'key', key: 'ChannelUp' },
 		icon: 'mdi:arrow-up-circle',
@@ -247,7 +240,7 @@ export const braviaTVDefaultKeys: IElementConfig[] = [
 		tap_action: { action: 'key', key: 'Blue' },
 		icon: 'mdi:alpha-b-box',
 	},
-  {
+	{
 		type: 'button',
 		name: 'n0',
 		tap_action: { action: 'key', key: 'Num0' },
@@ -342,10 +335,4 @@ export const braviaTVDefaultKeys: IElementConfig[] = [
 		tap_action: { action: 'key', key: 'MediaAudioTrack' },
 		icon: 'mdi:waveform',
 	},
-	{
-		type: 'button',
-		name: 'netflix',
-		tap_action: { action: 'key', key: 'Netflix' },
-		icon: 'mdi:netflix'
-	}
 ];

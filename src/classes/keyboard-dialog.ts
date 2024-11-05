@@ -1,6 +1,6 @@
 import { LitElement, css, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { HomeAssistant } from '../models/interfaces';
+import { HomeAssistant, KeyboardPlatform } from '../models/interfaces';
 
 import { IAction } from '../models/interfaces';
 
@@ -237,7 +237,7 @@ export class KeyboardDialog extends LitElement {
 
 		const text = e.clipboardData?.getData('Text');
 		if (text) {
-			switch (this.config?.platform) {
+			switch (this.config?.platform as KeyboardPlatform) {
 				case 'Kodi':
 					this.hass.callService('kodi', 'call_method', {
 						entity_id: this.config?.keyboard_id,
@@ -253,6 +253,7 @@ export class KeyboardDialog extends LitElement {
 					});
 					break;
 				case 'Fire TV':
+				case 'Sony BRAVIA':
 				case 'Android TV':
 				default:
 					this.hass.callService(
@@ -271,7 +272,7 @@ export class KeyboardDialog extends LitElement {
 	search(_e: MouseEvent) {
 		const text = this.textarea?.value;
 		if (text) {
-			switch (this.config?.platform) {
+			switch (this.config?.platform as KeyboardPlatform) {
 				case 'Kodi':
 					this.hass.callService('kodi', 'call_method', {
 						entity_id: this.config?.keyboard_id,
@@ -287,6 +288,7 @@ export class KeyboardDialog extends LitElement {
 					});
 					break;
 				case 'Fire TV':
+				case 'Sony BRAVIA':
 				case 'Android TV':
 				default:
 					this.hass.callService(
@@ -306,7 +308,7 @@ export class KeyboardDialog extends LitElement {
 	textBox(_e: MouseEvent) {
 		const text = this.textarea?.value;
 		if (text) {
-			switch (this.config?.platform) {
+			switch (this.config?.platform as KeyboardPlatform) {
 				case 'Kodi':
 					this.hass.callService('kodi', 'call_method', {
 						entity_id: this.config?.keyboard_id,
@@ -322,6 +324,7 @@ export class KeyboardDialog extends LitElement {
 					});
 					break;
 				case 'Fire TV':
+				case 'Sony BRAVIA':
 				case 'Android TV':
 				default:
 					this.hass.callService(
@@ -339,7 +342,7 @@ export class KeyboardDialog extends LitElement {
 	}
 
 	enterDialog() {
-		switch (this.config?.platform) {
+		switch (this.config?.platform as KeyboardPlatform) {
 			case 'Kodi':
 				this.hass.callService('kodi', 'call_method', {
 					entity_id: this.config?.keyboard_id,
@@ -355,6 +358,16 @@ export class KeyboardDialog extends LitElement {
 				});
 				break;
 			case 'Fire TV':
+			case 'Sony BRAVIA':
+				this.hass.callService(
+					this.domain ?? 'remote',
+					this.service ?? 'send_command',
+					{
+						entity_id: this.config?.keyboard_id,
+						command: 'input keyevent 66',
+					},
+				);
+				break;
 			case 'Android TV':
 			default:
 				this.hass.callService('remote', 'send_command', {
@@ -473,7 +486,7 @@ export class KeyboardDialog extends LitElement {
 			case 'keyboard':
 			default:
 				antiCursorMoveHandler = this.forceCursorToEndEvent;
-				switch (this.config?.platform) {
+				switch (this.config?.platform as KeyboardPlatform) {
 					case 'Kodi':
 						inputHandler = this.kodiOnInput;
 						keyDownHandler = this.kodiOnKeyDown;
@@ -484,6 +497,7 @@ export class KeyboardDialog extends LitElement {
 						keyDownHandler = this.rokuOnKeyDown;
 						break;
 					case 'Fire TV':
+					case 'Sony BRAVIA':
 						inputHandler = this.adbOnInput;
 						keyDownHandler = this.adbOnKeyDown;
 						break;

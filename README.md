@@ -20,13 +20,13 @@ A super customizable universal remote card iterating on the work of several othe
 - Configuration UI.
 - Out of the box support for [several platforms](#media-platform-and-entity-ids) with default keys and sources lists.
   - Android TV (with keyboard via ADB)
+  - Sony BRAVIA (with keyboard via ADB)
   - Fire TV (with keyboard)
   - Roku (with keyboard)
   - Kodi (with keyboard)
   - Apple TV
   - Samsung TV
   - LG webOS
-  - Sony BRAVIA
 - Support for multiple buttons, touchpads, and sliders using default or user defined custom actions.
 - Complete [Home Assistant actions](https://www.home-assistant.io/dashboards/actions/) support.
 - Keyboard and search dialog actions for most platforms.
@@ -58,13 +58,13 @@ This card supports several media platforms with default key and source lists. Fo
 | Platform                                                                   | Remote                   | Media Player                                                                                                                           | Keyboard                                                                                                  |
 | -------------------------------------------------------------------------- | ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
 | [Android TV](https://www.home-assistant.io/integrations/androidtv_remote/) | Default keys and sources | Default slider                                                                                                                         | [ADB](https://www.home-assistant.io/integrations/androidtv/) remote (preferred) or media player           |
+| [Sony BRAVIA](https://www.home-assistant.io/integrations/braviatv/)        | Default keys             | Default sources and slider                                                                                                             | [ADB](https://www.home-assistant.io/integrations/androidtv/) remote (preferred) or media player           |
 | [Fire TV](https://www.home-assistant.io/integrations/androidtv/)           | Default keys             | Default sources and slider                                                                                                             | Remote (preferred) or media player                                                                        |
 | [Roku](https://www.home-assistant.io/integrations/roku/)                   | Default keys             | Default sources and slider                                                                                                             | Remote for keyboard, media player for search (provide one for keyboard ID and the others in their fields) |
 | [Kodi](https://www.home-assistant.io/integrations/kodi/)                   | NA                       | Default keys, sources, and slider                                                                                                      | Media player                                                                                              |
 | [Apple TV](https://www.home-assistant.io/integrations/apple_tv)            | Default keys             | Default sources and slider                                                                                                             | NA                                                                                                        |
 | [Samsung TV](https://www.home-assistant.io/integrations/samsungtv/)        | Default keys             | Default sources (requires the [SamsungTV Smart Component custom integration](https://github.com/ollo69/ha-samsungtv-smart)) and slider | NA                                                                                                        |
-| [LG webOS](https://www.home-assistant.io/integrations/webostv/)            | NA                       | Default keys, sources, and sliders                                                                                                     | NA                                                                                                        |
-| [Sony BRAVIA](https://www.home-assistant.io/integrations/braviatv/)        | Default Keys             | Default sources                    | NA
+| [LG webOS](https://www.home-assistant.io/integrations/webostv/)            | NA                       | Default keys, sources, and slider                                                                                                      | NA                                                                                                        |
 
 ## Action Timings
 
@@ -342,6 +342,7 @@ Touchpads also support multi-touch mode, which fires alternate actions when more
 This card supports sending text to the following platforms:
 
 - Android TV
+- Sony BRAVIA
 - Fire TV
 - Roku
 - Kodi
@@ -368,7 +369,7 @@ Send text to your supported media platform seamlessly using the action or defaul
 
 Because we do not have a way to retrieve the currently on screen text of most media platforms, the dialog and platform text may become out of sync if a message gets dropped due to a network issue, you attempt to erase more than one character at a time, you try to modify the middle of the entered text, or if you prematurely close the dialog window. The keyboard dialog will attempt to prevent you from doing things that would cause this, but please remember that if you make a mistake you have to backspace all the way to the incorrect character from the end of your input text one character at at a time. In my testing the dialog always kept in sync with the platform text unless I attempted to delete more than one character. This does not apply to Kodi, which sets the text field to the entire dialog text every time it's action is called.
 
-ADB can be slow and you may notice some delay in what you type and what appears on your Android or Fire TV device. Make sure to use the newer ADB integration remote entity for a faster typing experience.
+ADB can be slow and you may notice some delay in what you type and what appears on your Android TV, Sony BRAVIA, or Fire TV device. Make sure to use the newer ADB integration remote entity for a faster typing experience.
 
 #### Textbox - Bulk Text Entry
 
@@ -775,56 +776,6 @@ custom_actions:
 
 ## Example 8
 
-[Sony Bravia](https://www.home-assistant.io/integrations/braviatv/) KD.xx TV. Note that newer Sony Bravia TVs come with Android/Google TV.
-
-<details>
-
-<summary>Remote Config</summary>
-
-```yaml
-type: custom:android-tv-card
-remote_id: remote.sony_bravia
-rows:
-  - - touchpad
-custom_actions:
-  - type: touchpad
-    name: touchpad
-    tap_action:
-      action: key
-      key: DpadCenter
-    up:
-      tap_action:
-        action: key
-        key: Up
-      hold_action:
-        action: repeat
-    down:
-      tap_action:
-        action: key
-        key: Down
-      hold_action:
-        action: repeat
-    left:
-      tap_action:
-        action: key
-        key: Left
-      hold_action:
-        action: repeat
-    right:
-      tap_action:
-        action: key
-        key: Right
-      hold_action:
-        action: repeat
-    double_tap_action:
-      action: key
-      key: Back
-```
-
-</details>
-
-## Example 9
-
 A touchpad remapped to work with a [Denon/Marantz Receiver](https://www.home-assistant.io/integrations/denonavr).
 
 <details>
@@ -890,7 +841,7 @@ custom_actions:
 
 </details>
 
-## Example 10
+## Example 9
 
 Even more disorder with columns and special elements in the same row as buttons, stylized everything, and a label to display the slider value.
 
@@ -1042,7 +993,7 @@ custom_actions:
 
 </details>
 
-## Example 11
+## Example 10
 
 A simple gamepad.
 
@@ -1126,7 +1077,7 @@ styles: |-
 
 </details>
 
-## Example 12
+## Example 11
 
 Conditional layouts using templating and an input select.
 
@@ -1168,7 +1119,7 @@ custom_actions:
 
 </details>
 
-## Example 13
+## Example 12
 
 RGB Remote using Broadlink RM4 Pro.
 
@@ -1422,7 +1373,7 @@ custom_actions:
 
 </details>
 
-## Example 14
+## Example 13
 
 Style the dpad to be like the Google TV app remote.
 
@@ -1531,7 +1482,7 @@ styles: |-
 
 </details>
 
-## Example 15
+## Example 14
 
 A music player with multiple sliders for volume and media position and a touchpad for media controls and album art.
 
@@ -1639,7 +1590,7 @@ custom_actions:
 
 </details>
 
-## Example 16
+## Example 15
 
 Multiple sliders for light color control.
 
