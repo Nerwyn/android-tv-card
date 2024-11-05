@@ -1,16 +1,16 @@
 {
 	"name": "universal-remote-card",
-	"version": "4.0.6",
+	"version": "4.1.3",
 	"description": "Universal Remote Card",
 	"main": "./dist/universal-remote-card.min.js",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"build": "npx webpack",
 		"prelint": "tsc --noemit",
+		"lint": "eslint --fix --config ./.eslintrc.config.cjs",
 		"build-css": "tcm src"
 	},
 	"lint-staged": {
-		"*.ts": "eslint ./src --fix --config ./.eslintrc.js",
 		"*": "prettier -w"
 	},
 	"repository": {
@@ -20,15 +20,6 @@
 	"keywords": [
 		"androidtv",
 		"android",
-		"bravia",
-		"roku",
-		"webos",
-		"firetv",
-		"kodi",
-		"appletv",
-		"samsungtv",
-		"samsung",
-		"apple",
 		"googletv",
 		"google",
 		"tvcard",
@@ -43,8 +34,7 @@
 	},
 	"homepage": "https://github.com/Nerwyn/android-tv-card#readme",
 	"dependencies": {
-		"custom-card-helpers": "latest",
-		"ha-nunjucks": "latest",
+		"ha-nunjucks": "^1.3.0",
 		"js-yaml": "latest",
 		"lit": "latest"
 	},
@@ -59,10 +49,10 @@
 		"lit-css-loader": "latest",
 		"minify-html-literals-loader": "latest",
 		"prettier": "latest",
-		"prettier-plugin-organize-imports": "^4.0.0",
+		"prettier-plugin-organize-imports": "latest",
 		"ts-loader": "latest",
 		"typescript": "latest",
 		"webpack": "latest",
-		"webpack-cli": "^5.1.4"
+		"webpack-cli": "latest"
 	}
 }

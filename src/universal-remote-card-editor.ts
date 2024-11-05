@@ -2,8 +2,8 @@ import { renderTemplate } from 'ha-nunjucks';
 import { LitElement, TemplateResult, css, html } from 'lit';
 import { property, state } from 'lit/decorators.js';
 
-import { HomeAssistant } from 'custom-card-helpers';
 import { dump, load } from 'js-yaml';
+import { HomeAssistant } from './models/interfaces';
 
 import {
 	AUTOFILL,
@@ -55,7 +55,6 @@ export class UniversalRemoteCardEditor extends LitElement {
 
 	yamlString?: string;
 	yamlStringsCache: Record<string, string> = {};
-	autofillCooldown = false;
 	people: Record<string, string>[] = [];
 
 	BASE_TABS = ['general', 'layout', 'actions', 'icons'];
@@ -73,6 +72,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 	}
 
 	configChanged(config: IConfig) {
+		config = this.autofillDefaultFields(config);
 		const event = new Event('config-changed', {
 			bubbles: true,
 			composed: true,
@@ -158,7 +158,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 
 	toggleGuiMode(_e: CustomEvent) {
 		this.yamlString = undefined;
-		this.autofillCooldown = false;
+		this.configChanged(this.config);
 		this.guiMode = !this.guiMode;
 	}
 
@@ -323,6 +323,22 @@ export class UniversalRemoteCardEditor extends LitElement {
 		}
 	}
 
+	handleEvalCodeChanged(e: CustomEvent) {
+		e.stopPropagation();
+		const actionType = (e.target as HTMLElement).id as ActionType;
+		const evalString = e.detail.value;
+		if (this.activeEntry) {
+			this.entryChanged({
+				type: (this.activeEntry as IElementConfig).type,
+				name: this.activeEntry.name,
+				[actionType]: {
+					...(this.activeEntry as IElementConfig)[actionType],
+					eval: evalString,
+				},
+			});
+		}
+	}
+
 	handleBaseTabSelected(e: CustomEvent) {
 		this.yamlStringsCache = {};
 		this.yamlString = undefined;
@@ -366,7 +382,6 @@ export class UniversalRemoteCardEditor extends LitElement {
 				};
 			});
 		}
-		this.autofillCooldown = false;
 		switch (this.baseTabIndex) {
 			case 3:
 			case 2:
@@ -384,6 +399,12 @@ export class UniversalRemoteCardEditor extends LitElement {
 					[key]: value,
 				});
 				break;
+		}
+		if (value == undefined) {
+			// Fixes autofill issue where default value does not overwrite selector default undefined
+			setTimeout(() => {
+				this.configChanged(this.config);
+			}, 100);
 		}
 	}
 
@@ -429,7 +450,6 @@ export class UniversalRemoteCardEditor extends LitElement {
 				break;
 			}
 		}
-		this.autofillCooldown = false;
 		this.entriesChanged(entries);
 		const entriesList = this.shadowRoot?.querySelector('.features');
 		if (entriesList) {
@@ -839,6 +859,8 @@ export class UniversalRemoteCardEditor extends LitElement {
 						'Repeat',
 					'ui.panel.lovelace.editor.action-editor.actions.fire-dom-event':
 						'Fire DOM event',
+					'ui.panel.lovelace.editor.action-editor.actions.eval':
+						'Evaluate JS',
 					'ui.panel.lovelace.editor.action-editor.actions.key': 'Key',
 					'ui.panel.lovelace.editor.action-editor.actions.source':
 						'Source',
@@ -885,10 +907,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 		></ha-selector>`;
 	}
 
-	buildMainFeatureOptions(
-		additionalOptions: TemplateResult<1> = html``,
-		additionalFormOptions: TemplateResult<1> = html``,
-	) {
+	buildMainFeatureOptions(additionalOptions: TemplateResult<1> = html``) {
 		const autofill = this.renderTemplate(
 			(this.activeEntry as IElementConfig).autofill_entity_id ??
 				this.config.autofill_entity_id ??
@@ -939,9 +958,8 @@ export class UniversalRemoteCardEditor extends LitElement {
 					  )
 					: ''
 			}
-			${additionalOptions}
-			<div class="form">
-				${additionalFormOptions}
+			<div class="actions-form">
+				${additionalOptions}
 				${this.buildSelector(
 					'Autofill',
 					'autofill_entity_id',
@@ -1013,7 +1031,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 		return html`${this.buildSelector('Label', 'label', {
 				text: { multiline: true },
 			})}
-			<div class="form">
+			<div class="actions-form">
 				${this.buildSelector('Icon', 'icon', {
 					icon: {},
 				})}${customIcon ?? ''}${this.buildSelector(
@@ -1065,6 +1083,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 		) as string;
 		const platform = this.renderTemplate(
 			(this.activeEntry as IElementConfig)?.[actionType]?.platform ??
+				this.config.platform ??
 				'Android TV',
 			context,
 		) as string;
@@ -1104,7 +1123,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 				  )
 				: actionType == 'hold_action' &&
 				  (this.activeEntry as IElementConfig).hold_action
-				? html`<div class="form">
+				? html`<div class="actions-form">
 						${this.buildSelector(
 							'Hold time',
 							'hold_action.hold_time',
@@ -1143,7 +1162,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 				  </div>`
 				: actionType == 'multi_hold_action' &&
 				  (this.activeEntry as IElementConfig).multi_hold_action
-				? html`<div class="form">
+				? html`<div class="actions-form">
 						${this.buildSelector(
 							'Hold time',
 							'multi_hold_action.hold_time',
@@ -1182,45 +1201,107 @@ export class UniversalRemoteCardEditor extends LitElement {
 				  </div>`
 				: ''}
 			${action == 'key'
-				? html`<div class="form">
-						${this.buildSelector(
-							'Remote ID',
-							`${actionType}.remote_id`,
-							{
-								entity: {
-									filter: {
-										domain: 'remote',
+				? html`<div class="actions-form">
+							${['Kodi', 'LG webOS'].includes(platform)
+								? this.buildSelector(
+										'Media Player ID',
+										`${actionType}.media_player_id`,
+										{
+											entity: {
+												filter: {
+													domain: 'media_player',
+												},
+											},
+										},
+										autofill
+											? this.config.media_player_id
+											: undefined,
+								  )
+								: this.buildSelector(
+										'Remote ID',
+										`${actionType}.remote_id`,
+										{
+											entity: {
+												filter: {
+													domain: 'remote',
+												},
+											},
+										},
+										autofill
+											? this.config.remote_id
+											: undefined,
+								  )}
+							${this.buildSelector(
+								'Platform',
+								`${actionType}.platform`,
+								{
+									select: {
+										mode: 'dropdown',
+										options: Platforms,
+										reorder: false,
 									},
 								},
-							},
-							autofill ? this.config.remote_id : undefined,
-						)}
+								autofill
+									? this.config.platform ?? 'Android TV'
+									: 'Android TV',
+							)}
+						</div>
 						${this.buildSelector('Key', `${actionType}.key`, {
 							text: {},
-						})}
-				  </div>`
+						})}`
 				: ''}
 			${action == 'source'
-				? html`<div class="form">
-						${this.buildSelector(
-							'Remote ID',
-							`${actionType}.remote_id`,
-							{
-								entity: {
-									filter: {
-										domain: 'remote',
+				? html`<div class="actions-form">
+							${['Android TV'].includes(platform)
+								? this.buildSelector(
+										'Remote ID',
+										`${actionType}.remote_id`,
+										{
+											entity: {
+												filter: {
+													domain: 'remote',
+												},
+											},
+										},
+										autofill
+											? this.config.remote_id
+											: undefined,
+								  )
+								: this.buildSelector(
+										'Media Player ID',
+										`${actionType}.media_player_id`,
+										{
+											entity: {
+												filter: {
+													domain: 'media_player',
+												},
+											},
+										},
+										autofill
+											? this.config.media_player_id
+											: undefined,
+								  )}
+							${this.buildSelector(
+								'Platform',
+								`${actionType}.platform`,
+								{
+									select: {
+										mode: 'dropdown',
+										options: Platforms,
+										reorder: false,
 									},
 								},
-							},
-							autofill ? this.config.remote_id : undefined,
-						)}
+								autofill
+									? this.config.platform ?? 'Android TV'
+									: 'Android TV',
+							)}
+						</div>
 						${this.buildSelector('Source', `${actionType}.source`, {
 							text: {},
-						})}
-				  </div>`
+						})}`
 				: ''}
 			${['keyboard', 'textbox', 'search'].includes(action)
-				? html`<div class="form">
+				? html`<div class="actions-form">
 							${this.buildSelector(
 								'Keyboard ID',
 								`${actionType}.keyboard_id`,
@@ -1253,9 +1334,9 @@ export class UniversalRemoteCardEditor extends LitElement {
 									: 'Android TV',
 							)}
 						</div>
-						<div class="form">
-							${['Android TV', 'Roku'].includes(platform)
-								? this.buildSelector(
+						${['Android TV', 'Roku'].includes(platform)
+							? html`<div class="actions-form">
+									${this.buildSelector(
 										'Remote ID',
 										`${actionType}.remote_id`,
 										{
@@ -1268,25 +1349,26 @@ export class UniversalRemoteCardEditor extends LitElement {
 										autofill
 											? this.config.remote_id
 											: undefined,
-								  )
-								: ''}
-							${'Roku' == platform
-								? this.buildSelector(
-										'Media Player ID',
-										`${actionType}.media_player_id`,
-										{
-											entity: {
-												filter: {
-													domain: 'media_player',
+									)}
+									${'Roku' == platform
+										? this.buildSelector(
+												'Media Player ID',
+												`${actionType}.media_player_id`,
+												{
+													entity: {
+														filter: {
+															domain: 'media_player',
+														},
+													},
 												},
-											},
-										},
-										autofill
-											? this.config.media_player_id
-											: undefined,
-								  )
-								: ''}
-						</div>
+												autofill
+													? this.config
+															.media_player_id
+													: undefined,
+										  )
+										: ''}
+							  </div>`
+							: ''}
 						${this.buildSelector(
 							'Prompt',
 							`${actionType}.keyboard_prompt`,
@@ -1317,6 +1399,15 @@ export class UniversalRemoteCardEditor extends LitElement {
 				: ''}
 			${buildCodeEditor || action == 'fire-dom-event'
 				? this.buildCodeEditor('action', actionType)
+				: ''}
+			${action == 'eval'
+				? html`
+						${this.buildAlertBox(
+							"Evaluating raw JavaScript strings in browser is considered extremely unsafe. Do not use unless you know what you're doing!",
+							'warning',
+						)}
+						${this.buildCodeEditor('eval', actionType)}
+				  `
 				: ''}
 			${action != 'none'
 				? html`${this.buildSelector(
@@ -1377,7 +1468,6 @@ export class UniversalRemoteCardEditor extends LitElement {
 		const defaultUiActions = {
 			ui_action: {
 				actions: actionsNoRepeat,
-				default_action: 'none',
 			},
 		};
 		switch (this.actionsTabIndex) {
@@ -1421,7 +1511,6 @@ export class UniversalRemoteCardEditor extends LitElement {
 						{
 							ui_action: {
 								actions: Actions,
-								default_action: 'none',
 							},
 						},
 					)}
@@ -1467,58 +1556,55 @@ export class UniversalRemoteCardEditor extends LitElement {
 		);
 
 		return html`
-			${this.buildMainFeatureOptions(
-				undefined,
-				html`
-					${this.buildSelector('Min', 'range.0', {
-						number: {
-							max: rangeMax ?? undefined,
-							step: step,
-							mode: 'box',
-							unit_of_measurement: unit,
-						},
-						RANGE_MIN,
-					})}
-					${this.buildSelector('Max', 'range.1', {
-						number: {
-							min: rangeMin ?? undefined,
-							step: step,
-							mode: 'box',
-							unit_of_measurement: unit,
-						},
-						RANGE_MAX,
-					})}
-					${this.buildSelector('Step', 'step', {
+			${this.buildMainFeatureOptions(html`
+				${this.buildSelector('Min', 'range.0', {
+					number: {
+						max: rangeMax ?? undefined,
+						step: step,
+						mode: 'box',
+						unit_of_measurement: unit,
+					},
+					RANGE_MIN,
+				})}
+				${this.buildSelector('Max', 'range.1', {
+					number: {
+						min: rangeMin ?? undefined,
+						step: step,
+						mode: 'box',
+						unit_of_measurement: unit,
+					},
+					RANGE_MAX,
+				})}
+				${this.buildSelector('Step', 'step', {
+					number: {
+						min: 0,
+						step:
+							step ??
+							Math.min(
+								1,
+								((rangeMax ?? RANGE_MAX) -
+									(rangeMin ?? RANGE_MIN)) /
+									STEP_COUNT,
+							),
+						mode: 'box',
+						unit_of_measurement: unit,
+					},
+					STEP,
+				})}
+				${this.buildSelector(
+					'Update after action delay',
+					'value_from_hass_delay',
+					{
 						number: {
 							min: 0,
-							step:
-								step ??
-								Math.min(
-									1,
-									((rangeMax ?? RANGE_MAX) -
-										(rangeMin ?? RANGE_MIN)) /
-										STEP_COUNT,
-								),
+							step: 0,
 							mode: 'box',
-							unit_of_measurement: unit,
+							unit_of_measurement: 'ms',
 						},
-						STEP,
-					})}
-					${this.buildSelector(
-						'Update after action delay',
-						'value_from_hass_delay',
-						{
-							number: {
-								min: 0,
-								step: 0,
-								mode: 'box',
-								unit_of_measurement: 'ms',
-							},
-						},
-						UPDATE_AFTER_ACTION_DELAY,
-					)}
-				`,
-			)}
+					},
+					UPDATE_AFTER_ACTION_DELAY,
+				)}
+			`)}
 			${this.buildAppearancePanel(
 				html`${this.buildCommonAppearanceOptions()}${this.buildSelector(
 					'Vertical',
@@ -1537,7 +1623,6 @@ export class UniversalRemoteCardEditor extends LitElement {
 					{
 						ui_action: {
 							actions: actionsNoRepeat,
-							default_action: 'perform-action',
 						},
 					},
 					true,
@@ -1562,7 +1647,6 @@ export class UniversalRemoteCardEditor extends LitElement {
 		const defaultUiActions = {
 			ui_action: {
 				actions: actionsNoRepeat,
-				default_action: 'none',
 			},
 		};
 		switch (this.actionsTabIndex) {
@@ -1608,7 +1692,6 @@ export class UniversalRemoteCardEditor extends LitElement {
 						{
 							ui_action: {
 								actions: Actions,
-								default_action: 'none',
 							},
 						},
 					)}
@@ -1638,7 +1721,6 @@ export class UniversalRemoteCardEditor extends LitElement {
 						{
 							ui_action: {
 								actions: Actions,
-								default_action: 'none',
 							},
 						},
 					)}
@@ -1742,6 +1824,20 @@ export class UniversalRemoteCardEditor extends LitElement {
 				value = this.yaml;
 				handler = this.handleYamlCodeChanged;
 				value = value.trim() == '[]' ? '' : value;
+				autocompleteEntities = false;
+				autocompleteIcons = false;
+				break;
+			case 'eval':
+				mode = 'jinja2';
+				value =
+					this.yamlStringsCache[`${id}.eval`] ??
+					(
+						(this.activeEntry as IElementConfig)?.[
+							id as ActionType
+						] as IAction
+					).eval ??
+					'';
+				handler = this.handleEvalCodeChanged;
 				autocompleteEntities = false;
 				autocompleteIcons = false;
 				break;
@@ -2069,15 +2165,8 @@ export class UniversalRemoteCardEditor extends LitElement {
 	}
 
 	render() {
-		if (!this.hass) {
+		if (!this.hass || !this.config) {
 			return html``;
-		}
-
-		if (!this.autofillCooldown) {
-			this.autofillCooldown = true;
-			const config = this.autofillDefaultFields(this.config);
-			this.configChanged(config);
-			setTimeout(() => (this.autofillCooldown = false), 1000);
 		}
 
 		this.buildPeopleList();
@@ -2295,6 +2384,9 @@ export class UniversalRemoteCardEditor extends LitElement {
 			case 'FIRE TV' as Platform:
 			case 'Fire TV':
 				return 'Fire TV';
+			case 'BRAVIA' as Platform:
+			case 'Sony BRAVIA':
+				return 'Sony BRAVIA';
 			case 'APPLE TV' as Platform:
 			case 'Apple TV':
 				return 'Apple TV';
@@ -2310,9 +2402,6 @@ export class UniversalRemoteCardEditor extends LitElement {
 			case 'ANDROID TV' as Platform:
 			case 'Android TV':
 				return 'Android TV';
-			case 'BRAVIA' as Platform:
-			case 'Sony BRAVIA':
-				return 'Sony BRAVIA';
 			default:
 				return undefined;
 		}
@@ -2444,8 +2533,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 	}
 
 	handleUpdateDeprecatedConfig() {
-		let config = this.updateDeprecatedFields(this.config);
-		config = this.autofillDefaultFields(config);
+		const config = this.updateDeprecatedFields(this.config);
 		this.configChanged(config);
 	}
 
@@ -3101,6 +3189,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 				justify-content: flex-start;
 				flex-grow: 1;
 				gap: 8px;
+				overflow: hidden;
 			}
 			.primary:first-letter {
 				text-transform: capitalize;
@@ -3247,6 +3336,14 @@ export class UniversalRemoteCardEditor extends LitElement {
 					minmax(var(--form-grid-min-width, 200px), 1fr)
 				);
 				gap: 24px 8px;
+			}
+			.actions-form {
+				display: grid;
+				grid-template-columns: repeat(
+					var(--form-grid-column-count, auto-fit),
+					minmax(var(--form-grid-min-width, 200px), 1fr)
+				);
+				gap: 8px;
 			}
 			.custom-icon-picked {
 				position: absolute;

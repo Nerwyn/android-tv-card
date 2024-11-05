@@ -3,9 +3,9 @@ import packageInfo from '../package.json';
 import { LitElement, TemplateResult, css, html } from 'lit';
 import { property } from 'lit/decorators.js';
 
-import { HomeAssistant } from 'custom-card-helpers';
 import { renderTemplate } from 'ha-nunjucks';
 import { load } from 'js-yaml';
+import { HomeAssistant } from './models/interfaces';
 
 import {
 	ActionTypes,
@@ -114,14 +114,14 @@ class UniversalRemoteCard extends LitElement {
 					case 'search':
 						action.keyboard_id =
 							action.keyboard_id ?? this.config.keyboard_id;
-						action.media_player_id =
-							action.media_player_id ??
-							this.config.media_player_id;
 					// falls through
 					case 'key':
 					case 'source':
 						action.remote_id =
 							action.remote_id ?? this.config.remote_id;
+						action.media_player_id =
+							action.media_player_id ??
+							this.config.media_player_id;
 						action.platform =
 							action.platform ?? this.config.platform;
 						break;

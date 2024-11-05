@@ -1,14 +1,14 @@
 import { CSSResult, LitElement, css, html } from 'lit';
 import { eventOptions, property, state } from 'lit/decorators.js';
 
-import { HapticType, HomeAssistant, forwardHaptic } from 'custom-card-helpers';
 import { renderTemplate } from 'ha-nunjucks';
+import { HapticType, HomeAssistant } from '../models/interfaces';
 
+import { UPDATE_AFTER_ACTION_DELAY } from '../models/constants';
 import {
 	ActionType,
 	IAction,
 	IActions,
-	IConfirmation,
 	IData,
 	IElementConfig,
 	IIconConfig,
@@ -50,7 +50,12 @@ export class BaseRemoteElement extends LitElement {
 			this.renderTemplate(this.config.haptics as unknown as string) ??
 			true
 		) {
-			forwardHaptic(haptic);
+			const event = new Event('haptic', {
+				bubbles: true,
+				composed: true,
+			});
+			event.detail = haptic;
+			window.dispatchEvent(event);
 		}
 	}
 
@@ -102,10 +107,14 @@ export class BaseRemoteElement extends LitElement {
 		}
 
 		if (!action) {
+			clearTimeout(this.getValueFromHassTimer);
+			this.getValueFromHass = true;
+			this.requestUpdate();
 			return;
 		}
 		action = this.deepRenderTemplate(action);
-		if (!this.handleConfirmation(action)) {
+		if (!action || !this.handleConfirmation(action)) {
+			this.dispatchEvent(new CustomEvent('confirmation-failed'));
 			return;
 		}
 
@@ -139,6 +148,9 @@ export class BaseRemoteElement extends LitElement {
 				case 'fire-dom-event':
 					this.fireDomEvent(action);
 					break;
+				case 'eval':
+					this.eval(action);
+					break;
 				case 'textbox':
 				case 'search':
 				case 'keyboard':
@@ -155,21 +167,63 @@ export class BaseRemoteElement extends LitElement {
 	}
 
 	key(action: IAction, actionType: ActionType) {
-		const data: IData = {
-			entity_id: action.remote_id ?? '',
-			command: action.key ?? '',
-		};
-		if (actionType == 'hold_action' && !this.config.hold_action) {
-			data.hold_secs = 0.5;
+		switch (action.platform) {
+			case 'Kodi':
+				this.hass.callService('kodi', 'call_method', {
+					entity_id: action.media_player_id,
+					method: action.key,
+				});
+				break;
+			case 'LG webOS':
+				this.hass.callService('webostv', 'button', {
+					entity_id: action.media_player_id,
+					button: action.key,
+				});
+				break;
+			case 'Android TV':
+			case 'Apple TV':
+			case 'Fire TV':
+			case 'Roku':
+			case 'Samsung TV':
+			default: {
+				const data: IData = {
+					entity_id: action.remote_id ?? '',
+					command: action.key ?? '',
+				};
+				if (
+					actionType == 'hold_action' &&
+					(!this.config.hold_action ||
+						this.config.hold_action.action == 'none')
+				) {
+					data.hold_secs = 0.5;
+				}
+				this.hass.callService('remote', 'send_command', data);
+				break;
+			}
 		}
-		this.hass.callService('remote', 'send_command', data);
 	}
 
 	source(action: IAction) {
-		this.hass.callService('remote', 'turn_on', {
-			entity_id: action.remote_id ?? '',
-			activity: action.source ?? '',
-		});
+		switch (action.platform) {
+			case 'Fire TV':
+			case 'Roku':
+			case 'Kodi':
+			case 'Apple TV':
+			case 'Samsung TV':
+			case 'LG webOS':
+				this.hass.callService('media_player', 'select_source', {
+					entity_id: action.media_player_id ?? '',
+					source: action.source ?? '',
+				});
+				break;
+			case 'Android TV':
+			default:
+				this.hass.callService('remote', 'turn_on', {
+					entity_id: action.remote_id ?? '',
+					activity: action.source ?? '',
+				});
+				break;
+		}
 	}
 
 	callService(action: IAction) {
@@ -239,7 +293,9 @@ export class BaseRemoteElement extends LitElement {
 			cancelable: true,
 			composed: true,
 		});
-		event.detail = { entityId: action.target?.entity_id };
+		event.detail = {
+			entityId: action.target?.entity_id ?? this.config.entity_id,
+		};
 		this.dispatchEvent(event);
 	}
 
@@ -317,40 +373,41 @@ export class BaseRemoteElement extends LitElement {
 		this.dispatchEvent(event);
 	}
 
-	handleConfirmation(action: IAction): boolean {
-		if ('confirmation' in action) {
-			const confirmation = action.confirmation;
-			if (confirmation != false) {
-				this.fireHapticEvent('warning');
+	eval(action: IAction) {
+		eval(action.eval ?? '');
+	}
 
-				let text: string = '';
-				if (confirmation != true && confirmation?.text) {
-					text = confirmation.text;
-				} else {
-					text = `Are you sure you want to run action '${action.action}'?`;
-				}
-				if (confirmation == true) {
-					if (!confirm(text)) {
-						return false;
-					}
-				} else {
-					if (confirmation?.exemptions) {
-						if (
-							!(confirmation as IConfirmation).exemptions
-								?.map((exemption) => exemption.user)
-								.includes(this.hass.user.id)
-						) {
-							if (!confirm(text)) {
-								return false;
-							}
-						}
-					} else if (!confirm(text)) {
-						return false;
-					}
-				}
+	handleConfirmation(action: IAction): boolean {
+		if (action.confirmation) {
+			let text = `Are you sure you want to run action '${action.action}'?`;
+			if (action.confirmation == true) {
+				this.fireHapticEvent('warning');
+				return confirm(text);
 			}
+			if (action.confirmation?.text) {
+				text = action.confirmation.text;
+			}
+			if (
+				action.confirmation?.exemptions
+					?.map((exemption) => exemption.user)
+					.includes(this.hass.user?.id as string)
+			) {
+				return true;
+			}
+			this.fireHapticEvent('warning');
+			return confirm(text);
 		}
 		return true;
+	}
+
+	firstUpdated() {
+		this.addEventListener('confirmation-failed', this.confirmationFailed);
+	}
+
+	confirmationFailed() {
+		clearTimeout(this.getValueFromHassTimer);
+		this.getValueFromHass = true;
+		this.requestUpdate();
 	}
 
 	setValue() {
@@ -617,6 +674,16 @@ export class BaseRemoteElement extends LitElement {
 			);
 		}
 		return res;
+	}
+
+	resetGetValueFromHass() {
+		const valueFromHassDelay = this.renderTemplate(
+			this.config.value_from_hass_delay ?? UPDATE_AFTER_ACTION_DELAY,
+		) as number;
+		this.getValueFromHassTimer = setTimeout(() => {
+			this.getValueFromHass = true;
+			this.requestUpdate();
+		}, valueFromHassDelay);
 	}
 
 	buildIcon(icon?: string, context?: object) {

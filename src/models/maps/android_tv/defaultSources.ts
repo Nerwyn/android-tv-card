@@ -47,6 +47,15 @@ export const androidTVDefaultSources: IElementConfig[] = [
 	},
 	{
 		type: 'button',
+		name: 'f1tv',
+		tap_action: {
+			action: 'source',
+			source: 'com.formulaone.production',
+		}, // UNTESTED
+		icon: 'f1tv',
+	},
+	{
+		type: 'button',
 		name: 'filmplus',
 		tap_action: {
 			action: 'source',
@@ -83,10 +92,19 @@ export const androidTVDefaultSources: IElementConfig[] = [
 	},
 	{
 		type: 'button',
+		name: 'kodi',
+		tap_action: {
+			action: 'source',
+			source: 'org.xbmc.kodi',
+		},
+		icon: 'mdi:kodi',
+	},
+	{
+		type: 'button',
 		name: 'max',
 		tap_action: {
 			action: 'source',
-			source: 'market://launch?id=com.wbd.stream',
+			source: 'com.wbd.stream',
 		}, // BROKEN
 		icon: 'max',
 	},
@@ -110,7 +128,7 @@ export const androidTVDefaultSources: IElementConfig[] = [
 	},
 	{
 		type: 'button',
-		name: 'npo_start',
+		name: 'npostart',
 		tap_action: {
 			action: 'source',
 			source: 'nl.uitzendinggemist',
@@ -129,9 +147,21 @@ export const androidTVDefaultSources: IElementConfig[] = [
 	},
 	{
 		type: 'button',
+		name: 'pandora',
+		tap_action: { action: 'source', source: 'com.pandora.android.atv' },
+		icon: 'mdi:pandora',
+	},
+	{
+		type: 'button',
 		name: 'paramount',
 		tap_action: { action: 'source', source: 'com.cbs.ott' },
 		icon: 'paramount',
+	},
+	{
+		type: 'button',
+		name: 'pia',
+		tap_action: { action: 'source', source: 'piavpn://' }, // UNTESTED
+		icon: 'pia',
 	},
 	{
 		type: 'button',
@@ -144,12 +174,6 @@ export const androidTVDefaultSources: IElementConfig[] = [
 		name: 'primevideo',
 		tap_action: { action: 'source', source: 'https://app.primevideo.com' },
 		icon: 'primevideo',
-	},
-	{
-		type: 'button',
-		name: 'pia',
-		tap_action: { action: 'source', source: 'piavpn://' }, // UNTESTED
-		icon: 'pia',
 	},
 	{
 		type: 'button',
@@ -183,6 +207,12 @@ export const androidTVDefaultSources: IElementConfig[] = [
 		name: 'starplus',
 		tap_action: { action: 'source', source: 'https://www.starplus.com' },
 		icon: 'starplus',
+	},
+	{
+		type: 'button',
+		name: 'steam',
+		tap_action: { action: 'source', source: 'com.valvesoftware.steamlink' },
+		icon: 'mdi:steam',
 	},
 	{
 		type: 'button',
@@ -222,9 +252,27 @@ export const androidTVDefaultSources: IElementConfig[] = [
 	},
 	{
 		type: 'button',
+		name: 'vlc',
+		tap_action: { action: 'source', source: 'org.videolan.vlc' },
+		icon: 'mdi:vlc',
+	},
+	{
+		type: 'button',
 		name: 'vudu',
 		tap_action: { action: 'source', source: 'vuduapp://' },
 		icon: 'vudu',
+	},
+	{
+		type: 'button',
+		name: 'waiputv',
+		tap_action: { action: 'source', source: 'de.exaring.waipu' },
+		icon: 'waiputv',
+	},
+	{
+		type: 'button',
+		name: 'wow',
+		tap_action: { action: 'source', source: 'de.sky.online' },
+		icon: 'wow',
 	},
 	{
 		type: 'button',

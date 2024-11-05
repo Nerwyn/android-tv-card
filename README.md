@@ -53,17 +53,17 @@ Platform, entity ID, and timing fields set in the general tab will be used for d
 
 ## Media Platform and Entity IDs
 
-This card supports several media platforms with default key and source lists. It uses the Home Assistant integrations for these platforms via their remote and/or media player entities. Different platforms use the remote and media player entities for different functions as shown below. For platforms with keyboard support, the keyboard entity ID (which doesn't always match the remote and media player entities) can also be provided.
+This card supports several media platforms with default key and source lists. For the most part it uses the Home Assistant integrations for these platforms via their remote and/or media player entities. Some platforms require custom integrations as listed below. Different platforms use the remote and media player entities for different functions as shown below. For platforms with keyboard support, the keyboard entity ID (which doesn't always match the remote and media player entities) can also be provided.
 
-| Platform                                                                   | Remote                   | Media Player                       | Keyboard                                                                                                  |
-| -------------------------------------------------------------------------- | ------------------------ | ---------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| [Android TV](https://www.home-assistant.io/integrations/androidtv_remote/) | Default keys and sources | Default slider                     | [ADB](https://www.home-assistant.io/integrations/androidtv/) remote (preferred) or media player           |
-| [Fire TV](https://www.home-assistant.io/integrations/androidtv/)           | Default keys             | Default sources and slider         | Remote (preferred) or media player                                                                        |
-| [Roku](https://www.home-assistant.io/integrations/roku/)                   | Default keys             | Default sources and slider         | Remote for keyboard, media player for search (provide one for keyboard ID and the others in their fields) |
-| [Kodi](https://www.home-assistant.io/integrations/kodi/)                   | NA                       | Default keys, sources, and slider  | Media player                                                                                              |
-| [Apple TV](https://www.home-assistant.io/integrations/apple_tv)            | Default keys             | Default sources and slider         | NA                                                                                                        |
-| [Samsung TV](https://www.home-assistant.io/integrations/samsungtv/)        | Default keys             | Default sources and slider         | NA                                                                                                        |
-| [LG webOS](https://www.home-assistant.io/integrations/webostv/)            | NA                       | Default keys, sources, and sliders | NA                                                                                                        |
+| Platform                                                                   | Remote                   | Media Player                                                                                                                           | Keyboard                                                                                                  |
+| -------------------------------------------------------------------------- | ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| [Android TV](https://www.home-assistant.io/integrations/androidtv_remote/) | Default keys and sources | Default slider                                                                                                                         | [ADB](https://www.home-assistant.io/integrations/androidtv/) remote (preferred) or media player           |
+| [Fire TV](https://www.home-assistant.io/integrations/androidtv/)           | Default keys             | Default sources and slider                                                                                                             | Remote (preferred) or media player                                                                        |
+| [Roku](https://www.home-assistant.io/integrations/roku/)                   | Default keys             | Default sources and slider                                                                                                             | Remote for keyboard, media player for search (provide one for keyboard ID and the others in their fields) |
+| [Kodi](https://www.home-assistant.io/integrations/kodi/)                   | NA                       | Default keys, sources, and slider                                                                                                      | Media player                                                                                              |
+| [Apple TV](https://www.home-assistant.io/integrations/apple_tv)            | Default keys             | Default sources and slider                                                                                                             | NA                                                                                                        |
+| [Samsung TV](https://www.home-assistant.io/integrations/samsungtv/)        | Default keys             | Default sources (requires the [SamsungTV Smart Component custom integration](https://github.com/ollo69/ha-samsungtv-smart)) and slider | NA                                                                                                        |
+| [LG webOS](https://www.home-assistant.io/integrations/webostv/)            | NA                       | Default keys, sources, and sliders                                                                                                     | NA                                                                                                        |
 | [Sony BRAVIA](https://www.home-assistant.io/integrations/braviatv/)        | Default Keys             | Default sources                    | NA
 
 ## Action Timings
@@ -272,7 +272,7 @@ Touchpads can have a separate icon and label for the center and each direction. 
 
 ### A Note on Templating
 
-Almost all fields support nunjucks templating. Nunjucks is a templating engine for JavaScript, which is heavily based on the jinja2 templating engine for Python which Home Assistant uses. While the syntax of nunjucks and jinja2 is almost identical, you may find the [nunjucks documentation](https://mozilla.github.io/nunjucks/templating.html) useful. Not all functions supported by Home Assistant templates are supported by this templating system. Please see the [ha-nunjucks](https://github.com/Nerwyn/ha-nunjucks) repository for a list of available functions. If you want additional functions to be added, please make a feature request on that repository, not this one.
+Almost all fields support nunjucks templating. Nunjucks is a templating engine for JavaScript, which is heavily based on the jinja2 templating engine for Python which Home Assistant uses. While the syntax of nunjucks and jinja2 is almost identical, you may find the [nunjucks documentation](https://mozilla.github.io/nunjucks/templating.html) useful. Most extensions supported by Home Assistant templates are supported by this templating system, but not all and the syntax may vary. Please see the [ha-nunjucks](https://github.com/Nerwyn/ha-nunjucks) repository for a list of available extensions. If you want additional extensions to be added or have templating questions or bugs, please make an issue or discussion on that repository, not this one.
 
 You can include the current value of a remote element and it's units by using the variables `value` and `unit` in a label template. You can also include `hold_secs` in a template if performing a momentary end action. Each remote element can also reference it's configuration using `config` within templates. `config.entity` and `config.attribute` will return the remote element's entity ID and attribute with their templates rendered (if they have them), and other templated config fields can be rendered within templates by wrapping them in the function `render` within a template.
 
@@ -311,15 +311,13 @@ Actions follow the [Home Assistant actions](https://www.home-assistant.io/dashbo
 
 ### Key and Source
 
-`Key` and `Source` are shortcuts for `remote.send_command` and `remote.turn_on` respectively. They will use the general remote ID if set but can be overridden at the custom action level.
+`Key` and `Source` are shortcuts for `perform-action` actions and vary by platform. Read the Home Assistant documentation as linked above [in this table](#media-platform-and-entity-ids) for more information on the actions performed by each platform. You can also look at the default key and source map files [here](https://github.com/Nerwyn/android-tv-card/tree/main/src/models/maps). They will use the general remote or media player ID if set but can be overridden at the custom action level.
 
-The `key` field does not refer to the default key name as it appears in the list, but as the actual key string to be sent in the action data. You should read the documentation for the platform you are using to learn more about available options, or look at the default key and source maps files [here](https://github.com/Nerwyn/android-tv-card/tree/main/src/models/maps).
-
-The `source` field generally refers to an application to open and varies by platform. For Android TV you may find the [Android TV deep linking guide helpful](https://community.home-assistant.io/t/android-tv-remote-app-links-deep-linking-guide/567921).
+For Android TV you may find the [Android TV deep linking guide helpful](https://community.home-assistant.io/t/android-tv-remote-app-links-deep-linking-guide/567921).
 
 If you find keys or sources that are not part of the default lists that you wish to add, please make a feature or even a pull request to add them, especially if they are for a platform other than Android TV (Android TV default list improvements also welcome).
 
-Not all platforms use `Key` and `Source` for their default keys and sources, some instead use `Perform action` to call alternate services.
+While most default keys use the `key` action, some actions require more information and call the actions directly.
 
 ### Momentary Mode
 
@@ -394,11 +392,17 @@ Once setup, you can reference these icons in custom actions in the icon field by
 
 # YAML Examples
 
-While all configuration can now be done through the user interface, these YAML examples can provide some insight on layout basics. For more advanced and user provided examples see the [examples file](https://github.com/Nerwyn/android-tv-card/blob/main/EXAMPLES.md)
+While all configuration can now be done through the user interface, these YAML examples can provide some insight on layout basics.
 
 ## Example 1
 
 Playing with order, moving and repeating buttons.
+
+<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/disorder.png" alt="disorder example" width="300"/>
+
+<details>
+
+<summary>Remote Config</summary>
 
 ```yaml
 type: custom:android-tv-card
@@ -426,13 +430,17 @@ rows:
     - fast_forward
 ```
 
-Result:
-
-<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/disorder.png" alt="disorder example" width="300"/>
+</details>
 
 ## Example 2
 
 Buttons, buttons everywhere!
+
+<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/buttons_everywhere.png" alt="buttons example" width="300"/>
+
+<details>
+
+<summary>Remote Config</summary>
 
 ```yaml
 type: custom:android-tv-card
@@ -457,13 +465,17 @@ rows:
     - fast_forward
 ```
 
-Result:
-
-<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/buttons_everywhere.png" alt="buttons example" width="300"/>
+</details>
 
 ## Example 3
 
 Using less and a vertical slider.
+
+<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/using_less.png" alt="less example" width="300"/>
+
+<details>
+
+<summary>Remote Config</summary>
 
 ```yaml
 type: custom:android-tv-card
@@ -496,13 +508,17 @@ custom_actions:
     icon: mdi:volume-high
 ```
 
-Result:
-
-<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/using_less.png" alt="less example" width="300"/>
+</details>
 
 ## Example 4
 
 In any row, if you add a `null` item, there will be an empty button sized space.
+
+<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/empty_buttons.png" alt="empty buttons example" width="300"/>
+
+<details>
+
+<summary>Remote Config</summary>
 
 ```yaml
 type: custom:android-tv-card
@@ -516,11 +532,17 @@ rows:
     - fast_forward
 ```
 
-<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/empty_buttons.png" alt="empty buttons example" width="300"/>
+</details>
 
 ## Example 5
 
 A tablet layout using nexted row and columns.
+
+<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/tablet.png" alt="tablet example" width="800"/>
+
+<details>
+
+<summary>Remote Config</summary>
 
 ```yaml
 type: custom:android-tv-card
@@ -589,13 +611,17 @@ custom_actions:
       }
 ```
 
-Result:
-
-<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/tablet.png" alt="tablet example" width="800"/>
+</details>
 
 ## Example 6
 
 Combining Apple TVs `wakeup` and `suspend` keys into one custom power action and using an icon for the touchpad background.
+
+<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/apple_tv.png" alt="apple tv example" width="400"/>
+
+<details>
+
+<summary>Remote Config</summary>
 
 ```yaml
 type: custom:android-tv-card
@@ -674,13 +700,17 @@ custom_actions:
     icon: mdi:apple
 ```
 
-Result:
-
-<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/apple_tv.png" alt="apple tv example" width="400"/>
+</details>
 
 ## Example 7
 
 A user's Kodi remote.
+
+<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/kodi.png" alt="kodi example" width="400"/>
+
+<details>
+
+<summary>Remote Config</summary>
 
 ```yaml
 type: custom:android-tv-card
@@ -692,50 +722,42 @@ rows:
     - home
     - menu
   - - info
+    - osd
     - play_pause
   - - - volume_buttons
     - touchpad
-    - - textbox
+    - - keyboard
       - null
       - search
 custom_actions:
   - type: touchpad
     name: touchpad
     tap_action:
-      action: perform-action
-      perform_action: kodi.call_method
-      data:
-        method: Input.Select
+      action: key
+      key: Input.Select
     up:
       tap_action:
-        action: perform-action
-        perform_action: kodi.call_method
-        data:
-          method: Input.Up
+        action: key
+        key: Input.Up
       hold_action:
         action: repeat
+      styles: ''
     down:
       tap_action:
-        action: perform-action
-        perform_action: kodi.call_method
-        data:
-          method: Input.Down
+        action: key
+        key: Input.Down
       hold_action:
         action: repeat
     left:
       tap_action:
-        action: perform-action
-        perform_action: kodi.call_method
-        data:
-          method: Input.Left
+        action: key
+        key: Input.Left
       hold_action:
         action: repeat
     right:
       tap_action:
-        action: perform-action
-        perform_action: kodi.call_method
-        data:
-          method: Input.Right
+        action: key
+        key: Input.Right
       hold_action:
         action: repeat
     styles: |-
@@ -747,25 +769,17 @@ custom_actions:
         background-position: center;
         opacity: 1.0;;
       }
-    hold_action:
-      action: perform-action
-      perform_action: kodi.call_method
-      data:
-        method: Input.ContextMenu
-    double_tap_action:
-      action: perform-action
-      perform_action: kodi.call_method
-      data:
-        method: Input.Back
 ```
 
-Result:
-
-<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/kodi.png" alt="kodi example" width="400"/>
+</details>
 
 ## Example 8
 
 [Sony Bravia](https://www.home-assistant.io/integrations/braviatv/) KD.xx TV. Note that newer Sony Bravia TVs come with Android/Google TV.
+
+<details>
+
+<summary>Remote Config</summary>
 
 ```yaml
 type: custom:android-tv-card
@@ -807,9 +821,15 @@ custom_actions:
       key: Back
 ```
 
+</details>
+
 ## Example 9
 
 A touchpad remapped to work with a [Denon/Marantz Receiver](https://www.home-assistant.io/integrations/denonavr).
+
+<details>
+
+<summary>Remote Config</summary>
 
 ```yaml
 type: custom:android-tv-card
@@ -868,9 +888,17 @@ custom_actions:
         command: /goform/formiPhoneAppDirect.xml?MNRTN
 ```
 
+</details>
+
 ## Example 10
 
 Even more disorder with columns and special elements in the same row as buttons, stylized everything, and a label to display the slider value.
+
+<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/more_disorder.png" alt="more disorder example" width="500"/>
+
+<details>
+
+<summary>Remote Config</summary>
 
 ```yaml
 type: custom:android-tv-card
@@ -1012,13 +1040,17 @@ custom_actions:
       }
 ```
 
-Result:
-
-<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/more_disorder.png" alt="more disorder example" width="500"/>
+</details>
 
 ## Example 11
 
 A simple gamepad.
+
+<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/gamepad.png" alt="gamepad example" width="500"/>
+
+<details>
+
+<summary>Remote Config</summary>
 
 ```yaml
 type: custom:android-tv-card
@@ -1092,48 +1124,17 @@ styles: |-
   }
 ```
 
-Result:
-
-<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/gamepad.png" alt="gamepad example" width="500"/>
+</details>
 
 ## Example 12
 
-Samsung TV.
-
-```yaml
-type: custom:android-tv-card
-remote_id: remote.samsung_tv
-media_player_id: media_player.samsung_tv
-platform: Samsung TV
-rows:
-  - - power
-    - null
-    - volume_mute
-  - - slider
-  - - ch_up
-    - ch_down
-  - - netflix
-    - youtube
-    - dazn
-    - primevideo
-  - - touchpad
-  - - back
-    - home
-  - - n1
-    - n2
-    - n3
-    - n4
-    - n5
-  - - n6
-    - n7
-    - n8
-    - n9
-    - n0
-```
-
-## Example 13
-
 Conditional layouts using templating and an input select.
+
+<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/conditional_layouts.png" alt="conditional layouts example" width="500"/>
+
+<details>
+
+<summary>Remote Config</summary>
 
 ```yaml
 type: custom:android-tv-card
@@ -1165,11 +1166,17 @@ custom_actions:
     entity_id: input_select.select_test
 ```
 
-<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/conditional_layouts.png" alt="conditional layouts example" width="500"/>
+</details>
 
-## Example 14
+## Example 13
 
 RGB Remote using Broadlink RM4 Pro.
+
+<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/rgb.png" alt="rgb remote example" width="500"/>
+
+<details>
+
+<summary>Remote Config</summary>
 
 ```yaml
 type: custom:android-tv-card
@@ -1413,11 +1420,17 @@ custom_actions:
     icon: mdi:chevron-down
 ```
 
-<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/rgb.png" alt="rgb remote example" width="500"/>
+</details>
 
-## Example 15
+## Example 14
 
 Style the dpad to be like the Google TV app remote.
+
+<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/google_tv_dpad.png" alt="google tv app styled dpad" width="500"/>
+
+<details>
+
+<summary>Remote Config</summary>
 
 ```yaml
 type: custom:android-tv-card
@@ -1516,11 +1529,17 @@ styles: |-
   }
 ```
 
-<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/google_tv_dpad.png" alt="google tv app styled dpad" width="500"/>
+</details>
 
-## Example 16
+## Example 15
 
 A music player with multiple sliders for volume and media position and a touchpad for media controls and album art.
+
+<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/music_controls.png" alt="music controls" width="500"/>
+
+<details>
+
+<summary>Remote Config</summary>
 
 ```yaml
 type: custom:android-tv-card
@@ -1618,11 +1637,17 @@ custom_actions:
     icon: mdi:play-pause
 ```
 
-<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/music_controls.png" alt="music controls" width="500"/>
+</details>
 
-## Example 17
+## Example 16
 
 Multiple sliders for light color control.
+
+<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/color_controls.png" alt="color controls" width="500"/>
+
+<details>
+
+<summary>Remote Config</summary>
 
 ```yaml
 type: custom:android-tv-card
@@ -1716,7 +1741,7 @@ custom_actions:
     name: hs_color
 ```
 
-<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/color_controls.png" alt="color controls" width="500"/>
+</details>
 
 [last-commit-shield]: https://img.shields.io/github/last-commit/Nerwyn/android-tv-card?style=for-the-badge
 [commits]: https://github.com/Nerwyn/android-tv-card/commits/main

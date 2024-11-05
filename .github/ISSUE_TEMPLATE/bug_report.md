@@ -17,6 +17,7 @@ assignees: ''
 
 - [ ] I updated to the latest version available
 - [ ] I cleared the cache of my browser
+- [ ] I have confirmed that this is an issue with this project and not an integration by making the same actions with the [actions dev tool](http://homeassistant.local:8123/developer-tools/action)
 
 **Release with the issue:**
 

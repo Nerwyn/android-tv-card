@@ -29,6 +29,12 @@ module.exports = {
 				test: /\.(jsx?|tsx?)$/,
 				loader: 'minify-html-literals-loader',
 			},
+			{
+				test: /\.m?js/,
+				resolve: {
+					fullySpecified: false,
+				},
+			},
 		],
 	},
 	performance: {
