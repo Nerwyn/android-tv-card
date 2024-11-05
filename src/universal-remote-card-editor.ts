@@ -996,7 +996,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 					${this.buildAlertBox(
 						"Change the feature appearance based on its value using a template like '{{ value | float }}'.",
 					)}
-					${appearanceOptions}${this.buildCodeEditor('jinja2')}
+					${appearanceOptions}${this.buildCodeEditor('css')}
 				</div>
 			</ha-expansion-panel>
 		`;
@@ -1525,6 +1525,10 @@ export class UniversalRemoteCardEditor extends LitElement {
 		`;
 	}
 
+	buildButtonPadGuiEditor() {
+		return html`Coming Soon!`;
+	}
+
 	buildSliderGuiEditor() {
 		const actionsNoRepeat = Actions.concat();
 		actionsNoRepeat.splice(Actions.indexOf('repeat'), 1);
@@ -1787,14 +1791,19 @@ export class UniversalRemoteCardEditor extends LitElement {
 		return html`<div class="gui-editor">${entryGuiEditor}</div>`;
 	}
 
-	buildCodeEditor(mode: string, id?: string) {
+	buildCodeEditor(
+		mode: 'css' | 'action' | 'layout' | 'eval' | 'yaml',
+		id?: string,
+	) {
 		let title: string | undefined;
 		let value: string;
 		let handler: (e: CustomEvent) => void;
 		let autocompleteEntities: boolean;
 		let autocompleteIcons: boolean;
+		let codeEditorMode: 'yaml' | 'jinja2';
 		switch (mode) {
-			case 'jinja2':
+			case 'css':
+				codeEditorMode = 'jinja2';
 				value =
 					(this.entryIndex > -1
 						? (this.activeEntry as IElementConfig)?.styles
@@ -1805,7 +1814,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 				autocompleteIcons = false;
 				break;
 			case 'action':
-				mode = 'yaml';
+				codeEditorMode = 'yaml';
 				handler = this.handleActionCodeChanged;
 				id = id ?? 'tap_action';
 				value =
@@ -1820,7 +1829,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 				autocompleteIcons = false;
 				break;
 			case 'layout':
-				mode = 'yaml';
+				codeEditorMode = 'yaml';
 				value = this.yaml;
 				handler = this.handleYamlCodeChanged;
 				value = value.trim() == '[]' ? '' : value;
@@ -1828,7 +1837,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 				autocompleteIcons = false;
 				break;
 			case 'eval':
-				mode = 'jinja2';
+				codeEditorMode = 'jinja2';
 				value =
 					this.yamlStringsCache[`${id}.eval`] ??
 					(
@@ -1843,6 +1852,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 				break;
 			case 'yaml':
 			default:
+				codeEditorMode = 'yaml';
 				value = this.yaml;
 				handler = this.handleYamlCodeChanged;
 				autocompleteEntities = true;
@@ -1853,7 +1863,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 			<div class="yaml-editor">
 				${title ? html`<div class="style-header">${title}</div>` : ''}
 				<ha-code-editor
-					mode="${mode}"
+					mode="${codeEditorMode}"
 					id="${id}"
 					dir="ltr"
 					?autocomplete-entities="${autocompleteEntities}"
@@ -2085,7 +2095,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 					</div>
 					<div class="wrapper">
 						<div class="title-header">Miscellaneous</div>
-						${this.buildCodeEditor('jinja2')}
+						${this.buildCodeEditor('css')}
 						<div class="form">
 							${this.buildSelector(
 								'Autofill',

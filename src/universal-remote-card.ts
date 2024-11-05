@@ -334,25 +334,27 @@ class UniversalRemoteCard extends LitElement {
 		`;
 	}
 
-	buildPad(buttons: string[]): TemplateResult {
+	buildButtonPad(
+		elementName: string,
+		actions: IElementConfig,
+	): TemplateResult {
 		this.nPads++;
 		const id = `pad-${this.nPads}`;
 		return html`
 			<div
+				title="${elementName}"
 				class="button-pad"
 				id="${id}"
 				title="${this.editMode ? `#${id}` : ''}"
 			>
-				${buttons.map((b) => this.buildButton(b))}
+				${(actions.buttons ?? []).map((b) =>
+					this.buildButton(b, this.getElementConfig(b)),
+				)}
 			</div>
 		`;
 	}
 
-	buildButton(elementName: string, actions?: IElementConfig): TemplateResult {
-		if (!actions) {
-			actions = this.getElementConfig(elementName);
-		}
-
+	buildButton(elementName: string, actions: IElementConfig): TemplateResult {
 		if (!Object.keys(actions).length) {
 			return html`<div class="empty-button"></div>`;
 		}
@@ -388,25 +390,35 @@ class UniversalRemoteCard extends LitElement {
 
 	buildVolumeButtons(): TemplateResult[] {
 		return [
-			this.buildButton('volume_down'),
-			this.buildButton('volume_mute'),
-			this.buildButton('volume_up'),
+			this.buildButton(
+				'volume_down',
+				this.getElementConfig('volume_down'),
+			),
+			this.buildButton(
+				'volume_mute',
+				this.getElementConfig('volume_mute'),
+			),
+			this.buildButton('volume_up', this.getElementConfig('volume_up')),
 		];
 	}
 
 	buildNavButtons(): TemplateResult {
 		const centerRow = [
-			this.buildButton('left'),
-			this.buildButton('center'),
-			this.buildButton('right'),
+			this.buildButton('left', this.getElementConfig('left')),
+			this.buildButton('center', this.getElementConfig('center')),
+			this.buildButton('right', this.getElementConfig('right')),
 		];
 		if (this.rtl) {
 			centerRow.reverse();
 		}
 		return this.buildColumn([
-			this.buildRow([this.buildButton('up')]),
+			this.buildRow([
+				this.buildButton('up', this.getElementConfig('up')),
+			]),
 			this.buildRow(centerRow),
-			this.buildRow([this.buildButton('down')]),
+			this.buildRow([
+				this.buildButton('down', this.getElementConfig('down')),
+			]),
 		]);
 	}
 
@@ -433,8 +445,7 @@ class UniversalRemoteCard extends LitElement {
 					this.buildElements(elementName, !isColumn, context),
 				);
 			} else {
-				// Special shortcuts
-				let centerRow = [];
+				// Legacy shortcuts
 				switch (elementName) {
 					case 'volume_buttons': {
 						const volumeButtons = this.buildVolumeButtons();
@@ -446,72 +457,6 @@ class UniversalRemoteCard extends LitElement {
 					}
 					case 'navigation_buttons':
 						rowContent.push(this.buildNavButtons());
-						break;
-					case 'dpad':
-						centerRow = ['left', 'center', 'right'];
-						if (this.rtl) {
-							centerRow.reverse();
-						}
-						rowContent.push(
-							this.buildPad([
-								'',
-								'up',
-								'',
-								...centerRow,
-								'',
-								'down',
-								'',
-							]),
-						);
-						break;
-					case 'numpad':
-						rowContent.push(
-							this.buildPad([
-								'n7',
-								'n8',
-								'n9',
-								'n4',
-								'n5',
-								'n6',
-								'n1',
-								'n2',
-								'n3',
-							]),
-						);
-						break;
-					case 'xpad':
-						centerRow = ['x', '', 'b'];
-						if (this.rtl) {
-							centerRow.reverse();
-						}
-						rowContent.push(
-							this.buildPad([
-								'',
-								'y',
-								'',
-								...centerRow,
-								'',
-								'a',
-								'',
-							]),
-						);
-						break;
-					case 'npad':
-						centerRow = ['y', '', 'a'];
-						if (this.rtl) {
-							centerRow.reverse();
-						}
-						rowContent.push(
-							this.buildPad([
-								'',
-								'x',
-								'',
-								...centerRow,
-								'',
-								'b',
-								'',
-							]),
-						);
 						break;
 					default: {
 						const actions = this.getElementConfig(elementName);
@@ -527,6 +472,12 @@ class UniversalRemoteCard extends LitElement {
 									this.buildTouchpad(elementName, actions),
 								);
 								break;
+							case 'button pad':
+								rowContent.push(
+									this.buildButtonPad(elementName, actions),
+								);
+								break;
+							case 'button':
 							default:
 								rowContent.push(
 									this.buildButton(elementName, actions),
@@ -688,6 +639,7 @@ class UniversalRemoteCard extends LitElement {
 			}
 			.button-pad {
 				display: grid;
+				direction: ltr;
 				grid-template-rows: repeat(3, var(--size, 48px));
 				grid-template-columns: repeat(3, var(--size, 48px));
 				grid-gap: 8px 16px;
