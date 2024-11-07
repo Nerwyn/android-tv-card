@@ -159,6 +159,15 @@ export const androidTVDefaultSources: IElementConfig[] = [
 	},
 	{
 		type: 'button',
+		name: 'peacock',
+		tap_action: {
+			action: 'source',
+			source: 'com.peacocktv.peacockandroid',
+		},
+		icon: 'peacock',
+	},
+	{
+		type: 'button',
 		name: 'pia',
 		tap_action: { action: 'source', source: 'piavpn://' }, // UNTESTED
 		icon: 'pia',

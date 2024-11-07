@@ -150,6 +150,15 @@ export const rokuDefaultSources: IElementConfig[] = [
 	},
 	{
 		type: 'button',
+		name: 'peacock',
+		tap_action: {
+			action: 'source',
+			source: 'Peacock TV',
+		},
+		icon: 'peacock',
+	},
+	{
+		type: 'button',
 		name: 'plex',
 		tap_action: {
 			action: 'source',

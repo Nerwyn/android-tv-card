@@ -168,6 +168,15 @@ export const appleTVDefaultSources: IElementConfig[] = [
 	},
 	{
 		type: 'button',
+		name: 'peacock',
+		tap_action: {
+			action: 'source',
+			source: 'Peacock',
+		},
+		icon: 'peacock',
+	},
+	{
+		type: 'button',
 		name: 'pia',
 		tap_action: {
 			action: 'source',

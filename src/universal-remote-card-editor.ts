@@ -636,6 +636,9 @@ export class UniversalRemoteCardEditor extends LitElement {
 						icon = 'mdi:tune-variant';
 					}
 					break;
+				case 'button pad':
+					icon = 'mdi:grid';
+					break;
 				case 'button':
 				default:
 					icon = 'mdi:circle-small';
@@ -1526,6 +1529,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 	}
 
 	buildButtonPadGuiEditor() {
+		// TODO
 		return html`Coming Soon!`;
 	}
 

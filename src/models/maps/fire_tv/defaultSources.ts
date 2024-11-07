@@ -159,6 +159,15 @@ export const fireTVDefaultSources: IElementConfig[] = [
 	},
 	{
 		type: 'button',
+		name: 'peacock',
+		tap_action: {
+			action: 'source',
+			source: 'com.peacocktv.peacockfiretv',
+		},
+		icon: 'peacock',
+	},
+	{
+		type: 'button',
 		name: 'pia',
 		tap_action: {
 			action: 'source',
