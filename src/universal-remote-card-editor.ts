@@ -1900,6 +1900,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 	}
 
 	buildLayoutEditor() {
+		console.log(this.customActionsFromFile);
 		const customActionNames = Array.from(
 			new Set([
 				...(this.config.custom_actions?.map((entry) => entry.name) ??
@@ -2491,6 +2492,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 		parentName?: string,
 		childName?: string,
 	) {
+		console.log(this.customActionsFromFile);
 		const context = this.getEntryContext(entry);
 		if (
 			this.renderTemplate(
