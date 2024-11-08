@@ -504,19 +504,18 @@ class UniversalRemoteCard extends LitElement {
 		}
 
 		if (!this.customActionsFromFile && this.config.custom_actions_file) {
+			const filename = `${
+				this.config.custom_actions_file.startsWith('/') ? '' : '/'
+			}${this.config.custom_actions_file}`;
 			try {
-				const extension = this.config.custom_actions_file
-					.split('.')
-					.pop()
-					?.toLowerCase();
+				const extension = filename.split('.').pop()?.toLowerCase();
 				switch (extension) {
 					case 'json':
 						this.hass
-							.fetchWithAuth(this.config.custom_actions_file)
+							.fetchWithAuth(filename)
 							.then((r) => r.json())
 							.then((json) => {
 								this.customActionsFromFile = json;
-								console.log(this.customActionsFromFile);
 								this.requestUpdate();
 							});
 						break;
@@ -524,13 +523,12 @@ class UniversalRemoteCard extends LitElement {
 					case 'yml':
 					default:
 						this.hass
-							.fetchWithAuth(this.config.custom_actions_file)
+							.fetchWithAuth(filename)
 							.then((r) => r.text())
 							.then((text) => {
 								this.customActionsFromFile = load(
 									text,
 								) as IElementConfig[];
-								console.log(this.customActionsFromFile);
 								this.requestUpdate();
 							});
 						break;
