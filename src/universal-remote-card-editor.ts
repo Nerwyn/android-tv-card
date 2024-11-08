@@ -2137,14 +2137,18 @@ export class UniversalRemoteCardEditor extends LitElement {
 								HAPTICS,
 							)}
 						</div>
-						${this.buildSelector('Title', 'title', {
-							text: {},
-						})}
-						${this.buildSelector(
-							'Custom Actions File',
-							'custom_actions_file',
-							{ text: {} },
-						)}
+						<div class="selector-margin">
+							${this.buildSelector('Title', 'title', {
+								text: {},
+							})}
+						</div>
+						<div class="selector-margin">
+							${this.buildSelector(
+								'Custom Actions File',
+								'custom_actions_file',
+								{ text: {} },
+							)}
+						</div>
 					</div>
 					<ha-button
 						@click=${this.handleUpdateDeprecatedConfig}
@@ -3428,6 +3432,9 @@ export class UniversalRemoteCardEditor extends LitElement {
 					minmax(var(--form-grid-min-width, 200px), 1fr)
 				);
 				gap: 8px;
+			}
+			.selector-margin {
+				margin: 8px 0;
 			}
 			.custom-icon-picked {
 				position: absolute;
