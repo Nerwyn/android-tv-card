@@ -2499,7 +2499,6 @@ export class UniversalRemoteCardEditor extends LitElement {
 		parentName?: string,
 		childName?: string,
 	) {
-		console.log(this.customActionsFromFile);
 		const context = this.getEntryContext(entry);
 		if (
 			this.renderTemplate(
@@ -2528,7 +2527,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 					...entry,
 				};
 			} else {
-				const defaultActions =
+				const actions =
 					[
 						...(this.customActionsFromFile ?? []),
 						...this.DEFAULT_ACTIONS,
@@ -2536,10 +2535,10 @@ export class UniversalRemoteCardEditor extends LitElement {
 						(defaultActions) => defaultActions.name == parentName,
 					)[0] ?? {};
 				entry = {
-					...defaultActions,
+					...actions,
 					...entry,
 					value_attribute:
-						entry.value_attribute ?? defaultActions.value_attribute,
+						entry.value_attribute ?? actions.value_attribute,
 				};
 			}
 
