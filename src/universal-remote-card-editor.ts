@@ -39,13 +39,7 @@ import {
 	Row,
 } from './models/interfaces';
 import { defaultIcons } from './models/maps';
-import {
-	deepGet,
-	deepSet,
-	fetchCustomActionsFromFile,
-	getDefaultActions,
-	mergeDeep,
-} from './utils';
+import { deepGet, deepSet, getDefaultActions, mergeDeep } from './utils';
 
 export class UniversalRemoteCardEditor extends LitElement {
 	@property() hass!: HomeAssistant;
@@ -2195,17 +2189,52 @@ export class UniversalRemoteCardEditor extends LitElement {
 		}
 	}
 
+	fetchCustomActionsFromFile() {
+		if (!this.customActionsFromFile && this.config.custom_actions_file) {
+			const filename = `${
+				this.config.custom_actions_file.startsWith('/') ? '' : '/'
+			}${this.config.custom_actions_file}`;
+			try {
+				const extension = filename.split('.').pop()?.toLowerCase();
+				switch (extension) {
+					case 'json':
+						this.hass
+							.fetchWithAuth(filename)
+							.then((r) => r.json())
+							.then((json) => {
+								this.customActionsFromFile = json;
+								this.requestUpdate();
+							});
+						break;
+					case 'yaml':
+					case 'yml':
+					default:
+						this.hass
+							.fetchWithAuth(filename)
+							.then((r) => r.text())
+							.then((text) => {
+								this.customActionsFromFile = load(
+									text,
+								) as IElementConfig[];
+								this.requestUpdate();
+							});
+						break;
+				}
+			} catch (e) {
+				console.error(
+					`File ${this.config.custom_actions_file} is not a valid JSON or YAML\n${e}`,
+				);
+			}
+		}
+	}
+
 	render() {
 		if (!this.hass || !this.config) {
 			return html``;
 		}
 
 		this.buildPeopleList();
-		fetchCustomActionsFromFile(
-			this.hass,
-			this.config.custom_actions_file,
-			this.customActionsFromFile,
-		);
+		this.fetchCustomActionsFromFile();
 
 		const context = {
 			config: {

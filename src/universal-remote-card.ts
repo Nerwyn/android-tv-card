@@ -31,8 +31,6 @@ import {
 	REPEAT_DELAY,
 } from './models/constants';
 
-import { fetchCustomActionsFromFile } from './utils';
-
 console.info(
 	`%c UNIVERSAL-REMOTE-CARD v${packageInfo.version}`,
 	'color: white; font-weight: bold; background: green',
@@ -500,17 +498,7 @@ class UniversalRemoteCard extends LitElement {
 		return html`<keyboard-dialog .hass=${this.hass}></keyboard-dialog>`;
 	}
 
-	render() {
-		if (!this.config || !this.hass) {
-			return html``;
-		}
-
-		fetchCustomActionsFromFile(
-			this.hass,
-			this.config.custom_actions_file,
-			this.customActionsFromFile,
-		);
-
+	fetchCustomActionsFromFile() {
 		if (!this.customActionsFromFile && this.config.custom_actions_file) {
 			const filename = `${
 				this.config.custom_actions_file.startsWith('/') ? '' : '/'
@@ -547,6 +535,14 @@ class UniversalRemoteCard extends LitElement {
 				);
 			}
 		}
+	}
+
+	render() {
+		if (!this.config || !this.hass) {
+			return html``;
+		}
+
+		this.fetchCustomActionsFromFile();
 
 		this.editMode = Boolean(
 			document
