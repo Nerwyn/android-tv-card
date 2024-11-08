@@ -2512,13 +2512,13 @@ export class UniversalRemoteCardEditor extends LitElement {
 			if (parentName && childName) {
 				const parentActions =
 					structuredClone(
-						[
-							...(this.customActionsFromFile ?? []),
-							...this.DEFAULT_ACTIONS,
-						].filter(
-							(defaultActions) =>
-								defaultActions.name == parentName,
-						)[0],
+						this.customActionsFromFile?.filter(
+							(customActions) => customActions.name == parentName,
+						)[0] ??
+							this.DEFAULT_ACTIONS.filter(
+								(defaultActions) =>
+									defaultActions.name == parentName,
+							)[0],
 					) ?? {};
 				const defaultActions =
 					parentActions[childName as DirectionAction];
@@ -2529,13 +2529,13 @@ export class UniversalRemoteCardEditor extends LitElement {
 			} else {
 				const actions =
 					structuredClone(
-						[
-							...(this.customActionsFromFile ?? []),
-							...this.DEFAULT_ACTIONS,
-						].filter(
-							(defaultActions) =>
-								defaultActions.name == parentName,
-						)[0],
+						this.customActionsFromFile?.filter(
+							(customActions) => customActions.name == parentName,
+						)[0] ??
+							this.DEFAULT_ACTIONS.filter(
+								(defaultActions) =>
+									defaultActions.name == parentName,
+							)[0],
 					) ?? {};
 				entry = {
 					...actions,
