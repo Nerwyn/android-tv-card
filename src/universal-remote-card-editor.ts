@@ -1900,7 +1900,6 @@ export class UniversalRemoteCardEditor extends LitElement {
 	}
 
 	buildLayoutEditor() {
-		console.log(this.customActionsFromFile);
 		const customActionNames = Array.from(
 			new Set([
 				...(this.config.custom_actions?.map((entry) => entry.name) ??
@@ -1908,6 +1907,16 @@ export class UniversalRemoteCardEditor extends LitElement {
 				...(this.customActionsFromFile?.map((entry) => entry.name) ??
 					[]),
 			]),
+		);
+		const customActions = customActionNames.map(
+			(name) =>
+				this.config.custom_actions?.filter(
+					(entry) => entry.name == name,
+				)[0] ??
+				this.customActionsFromFile?.filter(
+					(entry) => entry.name == name,
+				)[0] ??
+				({ type: 'button', name: '' } as IElementConfig),
 		);
 		const defaultKeys = this.DEFAULT_KEYS.filter(
 			(entry) => !customActionNames.includes(entry.name),
@@ -1927,27 +1936,25 @@ export class UniversalRemoteCardEditor extends LitElement {
 										Custom Actions
 									</div>
 									<ul class="action-list custom-action-list">
-										${this.config.custom_actions.map(
-											(entry) => {
-												const context =
-													this.getEntryContext(
-														entry as IElementConfig,
-													);
-												const iconElement =
-													this.buildIconElement(
-														entry,
-														context,
-													);
-												return html`<li
-													class="action-list-item"
-													draggable="true"
-													@dragstart=${this
-														.handleLayoutActionListItemDragStart}
-												>
-													${iconElement} ${entry.name}
-												</li>`;
-											},
-										)}
+										${customActions.map((entry) => {
+											const context =
+												this.getEntryContext(
+													entry as IElementConfig,
+												);
+											const iconElement =
+												this.buildIconElement(
+													entry,
+													context,
+												);
+											return html`<li
+												class="action-list-item"
+												draggable="true"
+												@dragstart=${this
+													.handleLayoutActionListItemDragStart}
+											>
+												${iconElement} ${entry.name}
+											</li>`;
+										})}
 									</ul>
 								</div>
 								<div><hr /></div>`
