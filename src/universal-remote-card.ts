@@ -507,7 +507,8 @@ class UniversalRemoteCard extends LitElement {
 			try {
 				const extension = this.config.custom_actions_file
 					.split('.')
-					[this.config.custom_actions_file.length - 1].toLowerCase();
+					.pop()
+					?.toLowerCase();
 				switch (extension) {
 					case 'json':
 						fetch(this.config.custom_actions_file)
