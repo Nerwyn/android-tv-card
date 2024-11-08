@@ -509,8 +509,12 @@ class UniversalRemoteCard extends LitElement {
 							.fetchWithAuth(filename)
 							.then((r) => r.json())
 							.then((json) => {
-								this.customActionsFromFile = json;
-								this.requestUpdate();
+								if (Array.isArray(json)) {
+									this.customActionsFromFile = json;
+									this.requestUpdate();
+								} else {
+									throw TypeError(`Not an array\n${json}`);
+								}
 							});
 						break;
 					case 'yaml':
@@ -520,16 +524,19 @@ class UniversalRemoteCard extends LitElement {
 							.fetchWithAuth(filename)
 							.then((r) => r.text())
 							.then((text) => {
-								this.customActionsFromFile = load(
-									text,
-								) as IElementConfig[];
-								this.requestUpdate();
+								const json = load(text) as IElementConfig[];
+								if (Array.isArray(json)) {
+									this.customActionsFromFile = json;
+									this.requestUpdate();
+								} else {
+									throw TypeError(`Not an array\n${json}`);
+								}
 							});
 						break;
 				}
 			} catch (e) {
 				console.error(
-					`File ${filename} is not a valid JSON or YAML\n${e}`,
+					`File ${filename} is not a valid JSON or YAML array\n${e}`,
 				);
 				this.customActionsFromFile = [];
 			}
