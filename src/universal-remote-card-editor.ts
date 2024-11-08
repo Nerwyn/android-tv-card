@@ -2206,11 +2206,9 @@ export class UniversalRemoteCardEditor extends LitElement {
 		}
 	}
 
-	fetchCustomActionsFromFile() {
-		if (!this.customActionsFromFile && this.config.custom_actions_file) {
-			const filename = `${
-				this.config.custom_actions_file.startsWith('/') ? '' : '/'
-			}${this.config.custom_actions_file}`;
+	fetchCustomActionsFromFile(filename?: string) {
+		if (!this.customActionsFromFile && filename) {
+			filename = `${filename.startsWith('/') ? '' : '/'}${filename}`;
 			try {
 				const extension = filename.split('.').pop()?.toLowerCase();
 				switch (extension) {
@@ -2239,7 +2237,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 				}
 			} catch (e) {
 				console.error(
-					`File ${this.config.custom_actions_file} is not a valid JSON or YAML\n${e}`,
+					`File ${filename} is not a valid JSON or YAML\n${e}`,
 				);
 			}
 		}
@@ -2249,9 +2247,6 @@ export class UniversalRemoteCardEditor extends LitElement {
 		if (!this.hass || !this.config) {
 			return html``;
 		}
-
-		this.buildPeopleList();
-		this.fetchCustomActionsFromFile();
 
 		const context = {
 			config: {
@@ -2263,8 +2258,17 @@ export class UniversalRemoteCardEditor extends LitElement {
 						this.config.keyboard_id ??
 						'',
 				),
+				attribute: 'state',
 			},
 		};
+
+		this.buildPeopleList();
+		this.fetchCustomActionsFromFile(
+			renderTemplate(
+				this.hass,
+				this.config.custom_actions_file ?? '',
+			) as string,
+		);
 
 		const platform = renderTemplate(
 			this.hass,

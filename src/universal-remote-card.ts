@@ -498,11 +498,9 @@ class UniversalRemoteCard extends LitElement {
 		return html`<keyboard-dialog .hass=${this.hass}></keyboard-dialog>`;
 	}
 
-	fetchCustomActionsFromFile() {
-		if (!this.customActionsFromFile && this.config.custom_actions_file) {
-			const filename = `${
-				this.config.custom_actions_file.startsWith('/') ? '' : '/'
-			}${this.config.custom_actions_file}`;
+	fetchCustomActionsFromFile(filename?: string) {
+		if (!this.customActionsFromFile && filename) {
+			filename = `${filename.startsWith('/') ? '' : '/'}${filename}`;
 			try {
 				const extension = filename.split('.').pop()?.toLowerCase();
 				switch (extension) {
@@ -531,7 +529,7 @@ class UniversalRemoteCard extends LitElement {
 				}
 			} catch (e) {
 				console.error(
-					`File ${this.config.custom_actions_file} is not a valid JSON or YAML\n${e}`,
+					`File ${filename} is not a valid JSON or YAML\n${e}`,
 				);
 			}
 		}
@@ -541,16 +539,6 @@ class UniversalRemoteCard extends LitElement {
 		if (!this.config || !this.hass) {
 			return html``;
 		}
-
-		this.fetchCustomActionsFromFile();
-
-		this.editMode = Boolean(
-			document
-				.querySelector('home-assistant')
-				?.shadowRoot?.querySelector('hui-dialog-edit-card')
-				?.shadowRoot?.querySelector('ha-dialog'),
-		);
-		this.rtl = getComputedStyle(this).direction == 'rtl';
 
 		const context = {
 			config: {
@@ -565,6 +553,21 @@ class UniversalRemoteCard extends LitElement {
 				attribute: 'state',
 			},
 		};
+
+		this.fetchCustomActionsFromFile(
+			renderTemplate(
+				this.hass,
+				this.config.custom_actions_file ?? '',
+			) as string,
+		);
+
+		this.editMode = Boolean(
+			document
+				.querySelector('home-assistant')
+				?.shadowRoot?.querySelector('hui-dialog-edit-card')
+				?.shadowRoot?.querySelector('ha-dialog'),
+		);
+		this.rtl = getComputedStyle(this).direction == 'rtl';
 
 		const platform = renderTemplate(
 			this.hass,
