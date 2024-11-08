@@ -39,7 +39,13 @@ import {
 	Row,
 } from './models/interfaces';
 import { defaultIcons } from './models/maps';
-import { deepGet, deepSet, getDefaultActions, mergeDeep } from './utils';
+import {
+	deepGet,
+	deepSet,
+	fetchCustomActionsFromFile,
+	getDefaultActions,
+	mergeDeep,
+} from './utils';
 
 export class UniversalRemoteCardEditor extends LitElement {
 	@property() hass!: HomeAssistant;
@@ -62,6 +68,8 @@ export class UniversalRemoteCardEditor extends LitElement {
 	DEFAULT_KEYS: IElementConfig[] = [];
 	DEFAULT_SOURCES: IElementConfig[] = [];
 	DEFAULT_ACTIONS: IElementConfig[] = [];
+
+	customActionsFromFile?: IElementConfig[];
 
 	static get properties() {
 		return { hass: {}, config: {} };
@@ -1898,8 +1906,14 @@ export class UniversalRemoteCardEditor extends LitElement {
 	}
 
 	buildLayoutEditor() {
-		const customActionNames =
-			this.config.custom_actions?.map((entry) => entry.name) ?? [];
+		const customActionNames = Array.from(
+			new Set([
+				...(this.config.custom_actions?.map((entry) => entry.name) ??
+					[]),
+				...(this.customActionsFromFile?.map((entry) => entry.name) ??
+					[]),
+			]),
+		);
 		const defaultKeys = this.DEFAULT_KEYS.filter(
 			(entry) => !customActionNames.includes(entry.name),
 		);
@@ -2187,6 +2201,11 @@ export class UniversalRemoteCardEditor extends LitElement {
 		}
 
 		this.buildPeopleList();
+		fetchCustomActionsFromFile(
+			this.hass,
+			this.config.custom_actions_file,
+			this.customActionsFromFile,
+		);
 
 		const context = {
 			config: {
@@ -2456,7 +2475,10 @@ export class UniversalRemoteCardEditor extends LitElement {
 			if (parentName && childName) {
 				const parentActions =
 					structuredClone(
-						this.DEFAULT_ACTIONS.filter(
+						[
+							...(this.customActionsFromFile ?? []),
+							...this.DEFAULT_ACTIONS,
+						].filter(
 							(defaultActions) =>
 								defaultActions.name == parentName,
 						)[0],
@@ -2469,13 +2491,12 @@ export class UniversalRemoteCardEditor extends LitElement {
 				};
 			} else {
 				const defaultActions =
-					structuredClone(
-						this.DEFAULT_ACTIONS.filter(
-							(defaultActions) =>
-								defaultActions.name ==
-								this.renderTemplate(entry.name, context),
-						)[0],
-					) ?? {};
+					[
+						...(this.customActionsFromFile ?? []),
+						...this.DEFAULT_ACTIONS,
+					].filter(
+						(defaultActions) => defaultActions.name == parentName,
+					)[0] ?? {};
 				entry = {
 					...defaultActions,
 					...entry,

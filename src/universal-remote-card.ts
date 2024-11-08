@@ -31,6 +31,8 @@ import {
 	REPEAT_DELAY,
 } from './models/constants';
 
+import { fetchCustomActionsFromFile } from './utils';
+
 console.info(
 	`%c UNIVERSAL-REMOTE-CARD v${packageInfo.version}`,
 	'color: white; font-weight: bold; background: green',
@@ -283,8 +285,8 @@ class UniversalRemoteCard extends LitElement {
 
 	getElementConfig(name: string): IElementConfig {
 		const customActionsList = [
-			...(this.customActionsFromFile ?? []),
 			...(this.config.custom_actions ?? []),
+			...(this.customActionsFromFile ?? []),
 		];
 		const customActions = customActionsList.filter(
 			(customActions) => customActions.name == name,
@@ -502,6 +504,12 @@ class UniversalRemoteCard extends LitElement {
 		if (!this.config || !this.hass) {
 			return html``;
 		}
+
+		fetchCustomActionsFromFile(
+			this.hass,
+			this.config.custom_actions_file,
+			this.customActionsFromFile,
+		);
 
 		if (!this.customActionsFromFile && this.config.custom_actions_file) {
 			const filename = `${
