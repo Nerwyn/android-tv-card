@@ -17,6 +17,7 @@ export interface IConfig {
 	autofill_entity_id?: boolean;
 
 	custom_actions?: IElementConfig[];
+	custom_actions_file?: string;
 	custom_icons?: IIconConfig[];
 
 	styles?: string;

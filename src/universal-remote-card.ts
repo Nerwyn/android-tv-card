@@ -48,6 +48,8 @@ class UniversalRemoteCard extends LitElement {
 	editMode: boolean = false;
 	rtl: boolean = false;
 
+	customActionsFromFile?: IElementConfig[];
+
 	static get properties() {
 		return {
 			hass: {},
@@ -280,10 +282,10 @@ class UniversalRemoteCard extends LitElement {
 	}
 
 	getElementConfig(name: string): IElementConfig {
-		let customActionsList = this.config.custom_actions;
-		if (!Array.isArray(customActionsList)) {
-			customActionsList = [];
-		}
+		const customActionsList = [
+			...(this.customActionsFromFile ?? []),
+			...(this.config.custom_actions ?? []),
+		];
 		const customActions = customActionsList.filter(
 			(customActions) => customActions.name == name,
 		)[0];
@@ -499,6 +501,40 @@ class UniversalRemoteCard extends LitElement {
 	render() {
 		if (!this.config || !this.hass) {
 			return html``;
+		}
+
+		if (!this.customActionsFromFile && this.config.custom_actions_file) {
+			try {
+				const extension = this.config.custom_actions_file
+					.split('.')
+					[this.config.custom_actions_file.length - 1].toLowerCase();
+				switch (extension) {
+					case 'json':
+						fetch(this.config.custom_actions_file)
+							.then((r) => r.json())
+							.then((r) => {
+								this.customActionsFromFile = r;
+								this.requestUpdate();
+							});
+						break;
+					case 'yaml':
+					case 'yml':
+					default:
+						fetch(this.config.custom_actions_file)
+							.then((r) => r.text())
+							.then((r) => {
+								this.customActionsFromFile = load(
+									r,
+								) as IElementConfig[];
+								this.requestUpdate();
+							});
+						break;
+				}
+			} catch {
+				console.error(
+					`File ${this.config.custom_actions_file} is not a valid JSON or YAML`,
+				);
+			}
 		}
 
 		this.editMode = Boolean(
