@@ -530,9 +530,9 @@ class UniversalRemoteCard extends LitElement {
 							});
 						break;
 				}
-			} catch {
+			} catch (e) {
 				console.error(
-					`File ${this.config.custom_actions_file} is not a valid JSON or YAML`,
+					`File ${this.config.custom_actions_file} is not a valid JSON or YAML\n${e}`,
 				);
 			}
 		}
