@@ -62,8 +62,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 	DEFAULT_KEYS: IElementConfig[] = [];
 	DEFAULT_SOURCES: IElementConfig[] = [];
 	DEFAULT_ACTIONS: IElementConfig[] = [];
-
-	customActionsFromFile?: IElementConfig[];
+	customActionsFromFile: IElementConfig[] = [];
 
 	static get properties() {
 		return { hass: {}, config: {} };
@@ -2207,7 +2206,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 	}
 
 	fetchCustomActionsFromFile(filename?: string) {
-		if (!this.customActionsFromFile && filename) {
+		if (!this.customActionsFromFile.length && filename) {
 			filename = `${filename.startsWith('/') ? '' : '/'}${filename}`;
 			try {
 				const extension = filename.split('.').pop()?.toLowerCase();
