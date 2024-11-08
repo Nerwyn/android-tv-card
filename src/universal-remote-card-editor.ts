@@ -2211,43 +2211,18 @@ export class UniversalRemoteCardEditor extends LitElement {
 			filename = `${filename.startsWith('/') ? '' : '/'}${filename}`;
 			try {
 				const extension = filename.split('.').pop()?.toLowerCase();
-				switch (extension) {
-					case 'json':
-						this.hass
-							.fetchWithAuth(filename)
-							.then((r) => r.json())
-							.then((json) => {
-								if (Array.isArray(json)) {
-									this.customActionsFromFile = json;
-									this.requestUpdate();
-								} else {
-									console.error(json);
-									throw TypeError(
-										'Provided file is not an array',
-									);
-								}
-							});
-						break;
-					case 'yaml':
-					case 'yml':
-					default:
-						this.hass
-							.fetchWithAuth(filename)
-							.then((r) => r.text())
-							.then((text) => {
-								const json = load(text) as IElementConfig[];
-								if (Array.isArray(json)) {
-									this.customActionsFromFile = json;
-									this.requestUpdate();
-								} else {
-									console.error(json);
-									throw TypeError(
-										'Provided file is not an array',
-									);
-								}
-							});
-						break;
-				}
+				this.hass
+					.fetchWithAuth(filename)
+					.then((r1) => (extension == 'json' ? r1.json() : r1.text()))
+					.then((r2) => {
+						const json = extension == 'json' ? r2 : load(r2);
+						if (Array.isArray(json)) {
+							this.customActionsFromFile = json;
+							this.requestUpdate();
+						} else {
+							throw TypeError(json);
+						}
+					});
 			} catch (e) {
 				console.error(
 					`File ${filename} is not a valid JSON or YAML array\n${e}`,
