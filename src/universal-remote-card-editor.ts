@@ -2140,6 +2140,11 @@ export class UniversalRemoteCardEditor extends LitElement {
 						${this.buildSelector('Title', 'title', {
 							text: {},
 						})}
+						${this.buildSelector(
+							'Custom Actions File',
+							'custom_actions_file',
+							{ text: {} },
+						)}
 					</div>
 					<ha-button
 						@click=${this.handleUpdateDeprecatedConfig}
