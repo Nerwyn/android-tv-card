@@ -511,10 +511,11 @@ class UniversalRemoteCard extends LitElement {
 					?.toLowerCase();
 				switch (extension) {
 					case 'json':
-						fetch(this.config.custom_actions_file)
+						this.hass
+							.fetchWithAuth(this.config.custom_actions_file)
 							.then((r) => r.json())
-							.then((r) => {
-								this.customActionsFromFile = r;
+							.then((json) => {
+								this.customActionsFromFile = json;
 								console.log(this.customActionsFromFile);
 								this.requestUpdate();
 							});
@@ -522,15 +523,12 @@ class UniversalRemoteCard extends LitElement {
 					case 'yaml':
 					case 'yml':
 					default:
-						fetch(this.config.custom_actions_file)
-							.then((r) => {
-								const f = r.text();
-								console.log(f);
-								return f;
-							})
-							.then((r) => {
+						this.hass
+							.fetchWithAuth(this.config.custom_actions_file)
+							.then((r) => r.text())
+							.then((text) => {
 								this.customActionsFromFile = load(
-									r,
+									text,
 								) as IElementConfig[];
 								console.log(this.customActionsFromFile);
 								this.requestUpdate();
