@@ -48,7 +48,7 @@ class UniversalRemoteCard extends LitElement {
 	editMode: boolean = false;
 	rtl: boolean = false;
 
-	customActionsFromFile: IElementConfig[] = [];
+	customActionsFromFile?: IElementConfig[];
 
 	static get properties() {
 		return {
@@ -499,7 +499,7 @@ class UniversalRemoteCard extends LitElement {
 	}
 
 	fetchCustomActionsFromFile(filename?: string) {
-		if (!this.customActionsFromFile.length && filename) {
+		if (!this.customActionsFromFile && filename) {
 			filename = `${filename.startsWith('/') ? '' : '/'}${filename}`;
 			try {
 				const extension = filename.split('.').pop()?.toLowerCase();
@@ -531,6 +531,7 @@ class UniversalRemoteCard extends LitElement {
 				console.error(
 					`File ${filename} is not a valid JSON or YAML\n${e}`,
 				);
+				this.customActionsFromFile = [];
 			}
 		}
 	}

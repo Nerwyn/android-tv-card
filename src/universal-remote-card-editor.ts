@@ -62,7 +62,8 @@ export class UniversalRemoteCardEditor extends LitElement {
 	DEFAULT_KEYS: IElementConfig[] = [];
 	DEFAULT_SOURCES: IElementConfig[] = [];
 	DEFAULT_ACTIONS: IElementConfig[] = [];
-	customActionsFromFile: IElementConfig[] = [];
+
+	customActionsFromFile?: IElementConfig[];
 
 	static get properties() {
 		return { hass: {}, config: {} };
@@ -2206,7 +2207,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 	}
 
 	fetchCustomActionsFromFile(filename?: string) {
-		if (!this.customActionsFromFile.length && filename) {
+		if (!this.customActionsFromFile && filename) {
 			filename = `${filename.startsWith('/') ? '' : '/'}${filename}`;
 			try {
 				const extension = filename.split('.').pop()?.toLowerCase();
@@ -2238,6 +2239,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 				console.error(
 					`File ${filename} is not a valid JSON or YAML\n${e}`,
 				);
+				this.customActionsFromFile = [];
 			}
 		}
 	}
