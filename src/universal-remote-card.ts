@@ -513,7 +513,10 @@ class UniversalRemoteCard extends LitElement {
 									this.customActionsFromFile = json;
 									this.requestUpdate();
 								} else {
-									throw TypeError(`Not an array\n${json}`);
+									console.error(json);
+									throw TypeError(
+										'Provided file is not an array',
+									);
 								}
 							});
 						break;
@@ -529,7 +532,10 @@ class UniversalRemoteCard extends LitElement {
 									this.customActionsFromFile = json;
 									this.requestUpdate();
 								} else {
-									throw TypeError(`Not an array\n${json}`);
+									console.error(json);
+									throw TypeError(
+										'Provided file is not an array',
+									);
 								}
 							});
 						break;
