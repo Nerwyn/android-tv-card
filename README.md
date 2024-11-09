@@ -995,7 +995,7 @@ custom_actions:
 
 ## Example 10
 
-A simple gamepad.
+A simple gamepad with a custom button grid
 
 <img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/gamepad.png" alt="gamepad example" width="500"/>
 
@@ -1004,10 +1004,18 @@ A simple gamepad.
 <summary>Remote Config</summary>
 
 ```yaml
-type: custom:android-tv-card
+ttype: custom:android-tv-card
 remote_id: remote.google_chromecast
 rows:
-  - - dpad
+  - - - null
+      - up
+      - null
+      - left
+      - null
+      - right
+      - null
+      - down
+      - null
     - xpad
 custom_actions:
   - type: button
@@ -1073,6 +1081,18 @@ styles: |-
   .row {
     justify-content: center;
   }
+  #column-1 {
+    display: grid;
+    direction: ltr;
+    grid-template-rows: repeat(3, var(--size, 48px));
+    grid-template-columns: repeat(3, var(--size, 48px));
+    grid-gap: 8px 16px;
+    padding: 0;
+    flex: 0;
+    background: rgb(27,27,27);
+    border-radius: 128px;
+  }
+haptics: false
 ```
 
 </details>
