@@ -139,6 +139,8 @@ When creating custom actions, the card editor will autofill fields using informa
 
 You can add a title to the card with the title field.
 
+Instead of copying the same custom actions across multiple remote cards, you can put custom actions in an array in a JSON or YAML file on your Home Assistant server's config www folder and fetch them by filename, like `local/remote_card_custom_actions.yaml`.
+
 If you are updating from an older version of this card, you may find that your configurations no longer work. Sorry! To upgrade them, click the button `UPDATE OLD CONFIG` at the bottom of the general tab. It should update your configuration to work with newer versions of this card.
 
 # Layout
