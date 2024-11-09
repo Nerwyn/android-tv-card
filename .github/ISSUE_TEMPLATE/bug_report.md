@@ -7,6 +7,7 @@ assignees: ''
 ---
 
 <!-- READ THIS FIRST:
+- DO NOT DELETE THIS TEMPLATE. If you do not follow it or otherwise do not provide enough information your issue will be marked invalid and closed.
 - If you need additional help with this template please refer to https://www.home-assistant.io/help/reporting_issues/
 - Make sure you are running the latest version of Home Assistant before reporting an issue: https://github.com/home-assistant/home-assistant/releases
 - Provide as many details as possible. Do not delete any text from this template!
