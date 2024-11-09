@@ -125,10 +125,9 @@ export const samsungTVDefaultKeys: IElementConfig[] = [
 		icon: 'mdi:gamepad',
 	},
 	{
-		type: 'button pad',
+		type: 'button',
 		name: 'dpad',
 		icon: 'mdi:gamepad',
-		buttons: ['', 'up', '', 'left', 'center', 'right', '', 'down', ''],
 	},
 	{
 		type: 'touchpad',
@@ -305,10 +304,9 @@ export const samsungTVDefaultKeys: IElementConfig[] = [
 		icon: 'mdi:numeric-9',
 	},
 	{
-		type: 'button pad',
+		type: 'button',
 		name: 'numpad',
 		icon: 'mdi:dialpad',
-		buttons: ['n7', 'n8', 'n9', 'n4', 'n5', 'n6', 'n1', 'n2', 'n3'],
 	},
 	{
 		type: 'button',

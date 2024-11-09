@@ -337,19 +337,15 @@ class UniversalRemoteCard extends LitElement {
 		`;
 	}
 
-	buildButtonPad(
-		elementName: string,
-		actions: IElementConfig,
-	): TemplateResult {
+	buildPad(buttons: string[]): TemplateResult {
 		this.nPads++;
 		const id = `pad-${this.nPads}`;
-		const buttons = actions.buttons ?? [];
 		// prettier-ignore
 		return html`
 			<div
 				class="button-pad"
 				id="${id}"
-				title="${elementName}${this.editMode ? ` #${id}` : ''}"
+				title="${this.editMode ? `#${id}` : ''}"
 			>
 				${buttons.map((b) => this.buildButton(b, this.getElementConfig(b)))}
 			</div>
@@ -446,7 +442,7 @@ class UniversalRemoteCard extends LitElement {
 					this.buildElements(elementName, !isColumn, context),
 				);
 			} else {
-				// Legacy shortcuts
+				// Special shortcuts
 				switch (elementName) {
 					case 'volume_buttons': {
 						const volumeButtons = this.buildVolumeButtons();
@@ -458,6 +454,66 @@ class UniversalRemoteCard extends LitElement {
 					}
 					case 'navigation_buttons':
 						rowContent.push(this.buildNavButtons());
+						break;
+					case 'dpad':
+						rowContent.push(
+							this.buildPad([
+								'',
+								'up',
+								'',
+								'left',
+								'center',
+								'right',
+								'',
+								'down',
+								'',
+							]),
+						);
+						break;
+					case 'numpad':
+						rowContent.push(
+							this.buildPad([
+								'n7',
+								'n8',
+								'n9',
+								'n4',
+								'n5',
+								'n6',
+								'n1',
+								'n2',
+								'n3',
+							]),
+						);
+						break;
+					case 'xpad':
+						rowContent.push(
+							this.buildPad([
+								'',
+								'y',
+								'',
+								'x',
+								'',
+								'b',
+								'',
+								'a',
+								'',
+							]),
+						);
+						break;
+					case 'npad':
+						rowContent.push(
+							this.buildPad([
+								'',
+								'x',
+								'',
+								'y',
+								'',
+								'a',
+								'',
+								'b',
+								'',
+							]),
+						);
 						break;
 					default: {
 						const actions = this.getElementConfig(elementName);
@@ -471,11 +527,6 @@ class UniversalRemoteCard extends LitElement {
 							case 'touchpad':
 								rowContent.push(
 									this.buildTouchpad(elementName, actions),
-								);
-								break;
-							case 'button pad':
-								rowContent.push(
-									this.buildButtonPad(elementName, actions),
 								);
 								break;
 							case 'button':

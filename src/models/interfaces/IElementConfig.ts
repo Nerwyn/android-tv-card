@@ -6,18 +6,12 @@ import {
 	IMultiActions,
 } from '.';
 
-export const RemoteElementTypes = [
-	'button',
-	'button pad',
-	'slider',
-	'touchpad',
-] as const;
+export const RemoteElementTypes = ['button', 'slider', 'touchpad'] as const;
 export type RemoteElementType = (typeof RemoteElementTypes)[number];
 
 export interface IElementConfig
 	extends IBaseElementConfig,
 		IButtonConfig,
-		IButtonpadConfig,
 		ISliderConfig,
 		ITouchpadConfig,
 		IActions {}
@@ -43,10 +37,6 @@ export interface IButtonConfig
 	extends IBaseElementConfig,
 		IBasicActions,
 		IMomentaryActions {}
-
-export interface IButtonpadConfig extends IBaseElementConfig {
-	buttons?: string[];
-}
 
 export interface ISliderConfig extends IBaseElementConfig {
 	value_from_hass_delay?: boolean;

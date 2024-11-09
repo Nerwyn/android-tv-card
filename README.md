@@ -107,12 +107,12 @@ Styles can be set and changed for all remote sub-elements using regular CSS and 
 | :host         | Global values.                |
 | .row          | All rows.                     |
 | .column       | All columns.                  |
-| .button-pad   | All button pads.              |
+| .button-pad   | All default button pads.      |
 | .empty-button | All empty/null button spaces. |
 | remote-button | All buttons.                  |
 | #row-1        | The first row.                |
 | #column-1     | The first column.             |
-| #pad-1        | The first button pad.         |
+| #pad-1        | The first button default pad. |
 
 ```css
 .row {
