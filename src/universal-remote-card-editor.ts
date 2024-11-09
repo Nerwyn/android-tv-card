@@ -1928,7 +1928,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 			<div class="layout-editor">
 				${this.buildCodeEditor('layout')}
 				<div class="actions-list-container">
-					${this.config.custom_actions?.length
+					${customActions?.length
 						? html`<div
 									class="action-list-container custom-action-list-container"
 								>

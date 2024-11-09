@@ -156,6 +156,7 @@ class UniversalRemoteCard extends LitElement {
 										: this.config.remote_id;
 									break;
 								case 'media_player':
+								case 'androidtv':
 								case 'kodi':
 								case 'denonavr':
 								case 'webostv':
