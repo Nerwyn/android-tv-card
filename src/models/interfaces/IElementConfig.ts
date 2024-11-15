@@ -2,6 +2,7 @@ import {
 	IAction,
 	IActions,
 	IBasicActions,
+	IConfig,
 	IMomentaryActions,
 	IMultiActions,
 } from '.';
@@ -20,6 +21,7 @@ interface IBaseElementConfig extends IDisplayConfig {
 	type: RemoteElementType;
 	name: string;
 	haptics?: boolean;
+	card?: IConfig;
 
 	entity_id?: string;
 	autofill_entity_id?: boolean;
