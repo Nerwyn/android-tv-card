@@ -104,8 +104,8 @@ export const androidTVDefaultSources: IElementConfig[] = [
 		name: 'max',
 		tap_action: {
 			action: 'source',
-			source: 'com.wbd.stream',
-		}, // BROKEN
+			source: 'https://play.max.com',
+		},
 		icon: 'max',
 	},
 	{

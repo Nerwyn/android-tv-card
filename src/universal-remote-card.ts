@@ -39,7 +39,6 @@ console.info(
 class UniversalRemoteCard extends LitElement {
 	@property() hass!: HomeAssistant;
 	@property() config!: IConfig;
-	contextConfig!: IConfig;
 
 	DEFAULT_ACTIONS: IElementConfig[] = [];
 
@@ -280,8 +279,8 @@ class UniversalRemoteCard extends LitElement {
 			}
 		}
 
-		// Add parent card config (without arrays) to element config for templating
-		updatedElement.card = this.contextConfig;
+		// Add parent card config to element config for templating
+		updatedElement.card = this.config;
 
 		return updatedElement;
 	}
@@ -584,11 +583,6 @@ class UniversalRemoteCard extends LitElement {
 		if (!this.config || !this.hass) {
 			return html``;
 		}
-
-		this.contextConfig = structuredClone(this.config);
-		delete this.contextConfig.custom_actions;
-		delete this.contextConfig.custom_icons;
-		delete this.contextConfig.rows;
 
 		const context = {
 			config: {
