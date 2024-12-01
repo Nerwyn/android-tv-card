@@ -3,7 +3,7 @@
 [![GitHub Release](https://img.shields.io/github/release/Nerwyn/android-tv-card.svg?style=for-the-badge)](https://github.com/nerwyn/android-tv-card/releases)
 [![License](https://img.shields.io/github/license/Nerwyn/android-tv-card.svg?style=for-the-badge)](LICENSE)
 [![hacs_badge](https://img.shields.io/badge/HACS-Default-blue.svg?style=for-the-badge)](https://github.com/hacs/default)
-![Project Maintenance](https://img.shields.io/badge/maintainer-Nerwyn-blue.svg?style=for-the-badge)
+[![Project Maintenance](https://img.shields.io/badge/maintainer-Nerwyn-blue.svg?style=for-the-badge)](https://github.com/Nerwyn)
 [![GitHub Activity](https://img.shields.io/github/last-commit/Nerwyn/android-tv-card?style=for-the-badge)](https://github.com/Nerwyn/android-tv-card/commits/main)
 [![Community Forum](https://img.shields.io/badge/community-forum-brightgreen.svg?style=for-the-badge)](https://community.home-assistant.io/t/android-tv-card-a-tv-card-fork-for-android-tv/585089)
 
