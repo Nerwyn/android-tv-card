@@ -1,13 +1,13 @@
 # Universal Remote Card
 
-[![GitHub Release][releases-shield]][releases]
-[![License][license-shield]](LICENSE.md)
-[![hacs_badge](https://img.shields.io/badge/HACS-Default-blue.svg?style=for-the-badge)](https://github.com/hacs/integration)
-![Project Maintenance][maintenance-shield]
-[![GitHub Activity][last-commit-shield]][commits]
-[![Community Forum][forum-shield]][forum]
+[![GitHub Release](https://img.shields.io/github/release/Nerwyn/android-tv-card.svg?style=for-the-badge)](https://github.com/nerwyn/android-tv-card/releases)
+[![License](https://img.shields.io/github/license/Nerwyn/android-tv-card.svg?style=for-the-badge)](LICENSE)
+[![hacs_badge](https://img.shields.io/badge/HACS-Default-blue.svg?style=for-the-badge)](https://github.com/hacs/default)
+![Project Maintenance](https://img.shields.io/badge/maintainer-Nerwyn-blue.svg?style=for-the-badge)
+[![GitHub Activity](https://img.shields.io/github/last-commit/Nerwyn/android-tv-card?style=for-the-badge)](https://github.com/Nerwyn/android-tv-card/commits/main)
+[![Community Forum](https://img.shields.io/badge/community-forum-brightgreen.svg?style=for-the-badge)](https://community.home-assistant.io/t/android-tv-card-a-tv-card-fork-for-android-tv/585089)
 
-[![Github][github]][github]
+![Github](https://img.shields.io/github/followers/Nerwyn.svg?style=social)
 
 [![My Home Assistant](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?repository=android-tv-card&owner=Nerwyn&category=Plugin)
 
@@ -1715,13 +1715,3 @@ custom_actions:
 ```
 
 </details>
-
-[last-commit-shield]: https://img.shields.io/github/last-commit/Nerwyn/android-tv-card?style=for-the-badge
-[commits]: https://github.com/Nerwyn/android-tv-card/commits/main
-[forum-shield]: https://img.shields.io/badge/community-forum-brightgreen.svg?style=for-the-badge
-[forum]: https://community.home-assistant.io/t/android-tv-card-a-tv-card-fork-for-android-tv/585089
-[license-shield]: https://img.shields.io/github/license/Nerwyn/android-tv-card.svg?style=for-the-badge
-[maintenance-shield]: https://img.shields.io/badge/maintainer-Nerwyn-blue.svg?style=for-the-badge
-[releases-shield]: https://img.shields.io/github/release/Nerwyn/android-tv-card.svg?style=for-the-badge
-[releases]: https://github.com/nerwyn/android-tv-card/releases
-[github]: https://img.shields.io/github/followers/Nerwyn.svg?style=social
