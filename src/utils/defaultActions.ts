@@ -35,6 +35,7 @@ export function getDefaultActions(platform: Platform) {
 		case 'Jellyfin':
 			defaultKeys = jellyfinTVDefaultKeys;
 			defaultSources = jellyfinDefaultSources;
+			break;
 		case 'Kodi':
 			defaultKeys = kodiDefaultKeys;
 			defaultSources = kodiDefaultSources;
