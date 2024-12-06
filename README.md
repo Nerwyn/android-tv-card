@@ -23,10 +23,10 @@ A super customizable universal remote card iterating on the work of several othe
   - Sony BRAVIA (with keyboard via ADB)
   - Fire TV (with keyboard)
   - Roku (with keyboard)
+  - LG webOS (with keyboard)
   - Kodi (with keyboard)
   - Apple TV
   - Samsung TV
-  - LG webOS
   - Jellyfin
 - Support for multiple buttons, touchpads, and sliders using default or user defined custom actions.
 - Complete [Home Assistant actions](https://www.home-assistant.io/dashboards/actions/) support.
@@ -62,10 +62,10 @@ This card supports several media platforms with default key and source lists. Fo
 | [Sony BRAVIA](https://www.home-assistant.io/integrations/braviatv/)        | Default keys             | Default sources and slider                                                                                                             | [ADB](https://www.home-assistant.io/integrations/androidtv/) remote (preferred) or media player           |
 | [Fire TV](https://www.home-assistant.io/integrations/androidtv/)           | Default keys             | Default sources and slider                                                                                                             | Remote (preferred) or media player                                                                        |
 | [Roku](https://www.home-assistant.io/integrations/roku/)                   | Default keys             | Default sources and slider                                                                                                             | Remote for keyboard, media player for search (provide one for keyboard ID and the others in their fields) |
+| [LG webOS](https://www.home-assistant.io/integrations/webostv/)            | NA                       | Default keys, sources, and slider                                                                                                      | Media Player                                                                                              |
 | [Kodi](https://www.home-assistant.io/integrations/kodi/)                   | NA                       | Default keys, sources, and slider                                                                                                      | Media player                                                                                              |
 | [Apple TV](https://www.home-assistant.io/integrations/apple_tv)            | Default keys             | Default sources and slider                                                                                                             | NA                                                                                                        |
 | [Samsung TV](https://www.home-assistant.io/integrations/samsungtv/)        | Default keys             | Default sources (requires the [SamsungTV Smart Component custom integration](https://github.com/ollo69/ha-samsungtv-smart)) and slider | NA                                                                                                        |
-| [LG webOS](https://www.home-assistant.io/integrations/webostv/)            | NA                       | Default keys, sources, and slider                                                                                                      | NA                                                                                                        |
 | [Jellyfin](https://www.home-assistant.io/integrations/jellyfin/)           | Default keys             | Play/Pause and slider                                                                                                                  | NA                                                                                                        |
 
 ## Action Timings
@@ -371,7 +371,7 @@ For Roku make sure to include both the remote and media player IDs at the genera
 
 Send text to your supported media platform seamlessly using the action or default key `keyboard`. The dialog has several listeners which will send anything you type to your media platform immediately. You can also paste by holding or typing CTRL + V into the dialog.
 
-Because we do not have a way to retrieve the currently on screen text of most media platforms, the dialog and platform text may become out of sync if a message gets dropped due to a network issue, you attempt to erase more than one character at a time, you try to modify the middle of the entered text, or if you prematurely close the dialog window. The keyboard dialog will attempt to prevent you from doing things that would cause this, but please remember that if you make a mistake you have to backspace all the way to the incorrect character from the end of your input text one character at at a time. In my testing the dialog always kept in sync with the platform text unless I attempted to delete more than one character. This does not apply to Kodi, which sets the text field to the entire dialog text every time it's action is called.
+Because we do not have a way to retrieve the currently on screen text of most media platforms, the dialog and platform text may become out of sync if a message gets dropped due to a network issue, you attempt to erase more than one character at a time, you try to modify the middle of the entered text, or if you prematurely close the dialog window. The keyboard dialog will attempt to prevent you from doing things that would cause this, but please remember that if you make a mistake you have to backspace all the way to the incorrect character from the end of your input text one character at at a time. In my testing the dialog always kept in sync with the platform text unless I attempted to delete more than one character. This does not apply to Kodi or LG webOS, which sets the text field to the entire dialog text every time it's action is called.
 
 ADB can be slow and you may notice some delay in what you type and what appears on your Android TV, Sony BRAVIA, or Fire TV device. Make sure to use the newer ADB integration remote entity for a faster typing experience.
 

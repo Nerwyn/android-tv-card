@@ -173,6 +173,33 @@ export const fireTVDefaultKeys: IElementConfig[] = [
 	},
 	{
 		type: 'button',
+		name: 'play_pause',
+		tap_action: {
+			action: 'perform-action',
+			perform_action: 'media_player.media_play_pause',
+		},
+		icon: 'mdi:play-pause',
+	},
+	{
+		type: 'button',
+		name: 'play',
+		tap_action: {
+			action: 'perform-action',
+			perform_action: 'media_player.media_play',
+		},
+		icon: 'mdi:play',
+	},
+	{
+		type: 'button',
+		name: 'pause',
+		tap_action: {
+			action: 'perform-action',
+			perform_action: 'media_player.media_pause',
+		},
+		icon: 'mdi:pause',
+	},
+	{
+		type: 'button',
 		name: 'fast_forward',
 		tap_action: { action: 'key', key: 'FAST_FORWARD' },
 		icon: 'mdi:fast-forward',

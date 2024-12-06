@@ -155,6 +155,15 @@ export const samsungTVDefaultKeys: IElementConfig[] = [
 	},
 	{
 		type: 'button',
+		name: 'play_pause',
+		tap_action: {
+			action: 'perform-action',
+			perform_action: 'media_player.media_play_pause',
+		},
+		icon: 'mdi:play-pause',
+	},
+	{
+		type: 'button',
 		name: 'play',
 		tap_action: { action: 'key', key: 'KEY_PLAY' },
 		icon: 'mdi:play',

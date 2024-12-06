@@ -194,6 +194,15 @@ export const webosDefaultKeys: IElementConfig[] = [
 	},
 	{
 		type: 'button',
+		name: 'play_pause',
+		tap_action: {
+			action: 'perform-action',
+			perform_action: 'media_player.media_play_pause',
+		},
+		icon: 'mdi:play-pause',
+	},
+	{
+		type: 'button',
 		name: 'play',
 		tap_action: {
 			action: 'key',
@@ -209,6 +218,18 @@ export const webosDefaultKeys: IElementConfig[] = [
 			key: 'PAUSE',
 		},
 		icon: 'mdi:pause',
+	},
+	{
+		type: 'button',
+		name: 'keyboard',
+		tap_action: { action: 'keyboard' },
+		icon: 'mdi:keyboard',
+	},
+	{
+		type: 'button',
+		name: 'textbox',
+		tap_action: { action: 'textbox' },
+		icon: 'mdi:text-box',
 	},
 	{
 		type: 'button',

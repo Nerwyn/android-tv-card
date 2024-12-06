@@ -63,6 +63,36 @@ export class KeyboardDialog extends LitElement {
 		});
 	}
 
+	webosOnKeyDown(e: KeyboardEvent) {
+		e.stopImmediatePropagation();
+
+		if (['Backspace', 'Enter'].includes(e.key)) {
+			const text = this.textarea?.value ?? '';
+			this.hass.callService('webostv', 'command', {
+				entity_id: this.config?.keyboard_id,
+				command: 'com.webos.service.ime/insertText',
+				payload: {
+					text: text,
+					replace: true,
+				},
+			});
+		}
+	}
+
+	webosOnInput(e: InputEvent) {
+		e.stopImmediatePropagation();
+
+		const text = this.textarea?.value ?? '';
+		this.hass.callService('webostv', 'command', {
+			entity_id: this.config?.keyboard_id,
+			command: 'com.webos.service.ime/insertText',
+			payload: {
+				text: text,
+				replace: true,
+			},
+		});
+	}
+
 	rokuOnKeyDown(e: KeyboardEvent) {
 		e.stopImmediatePropagation();
 		this.forceCursorToEnd();
@@ -147,14 +177,13 @@ export class KeyboardDialog extends LitElement {
 		const inputType = e.inputType ?? '';
 		const text = e.data ?? '';
 		if (text && inputType == 'insertText') {
-			this.androidTvSendText(text);
+			this.adbSendText(text);
 		} else if (!this.onKeyDownFired) {
 			const inputTypeToKey: Record<string, string> = {
 				deleteContentBackward: '67',
 				insertLineBreak: '66',
 			};
 			const key = inputTypeToKey[inputType ?? ''];
-
 			if (key) {
 				this.hass.callService(
 					this.domain ?? 'remote',
@@ -167,6 +196,17 @@ export class KeyboardDialog extends LitElement {
 			}
 		}
 		this.onKeyDownFired = false;
+	}
+
+	adbSendText(text: string) {
+		this.hass.callService(
+			this.domain ?? 'remote',
+			this.service ?? 'send_command',
+			{
+				entity_id: this.config?.keyboard_id,
+				command: `input text "${text}"`,
+			},
+		);
 	}
 
 	androidTvOnKeyDown(e: KeyboardEvent) {
@@ -198,7 +238,7 @@ export class KeyboardDialog extends LitElement {
 		const inputType = e.inputType ?? '';
 		const text = e.data ?? '';
 		if (text && inputType == 'insertText') {
-			this.androidTvSendText(text);
+			this.adbSendText(text);
 		} else if (!this.onKeyDownFired) {
 			const inputTypeToKey: Record<string, string> = {
 				deleteContentBackward: 'DEL',
@@ -218,17 +258,6 @@ export class KeyboardDialog extends LitElement {
 		this.onKeyDownFired = false;
 	}
 
-	androidTvSendText(text: string) {
-		this.hass.callService(
-			this.domain ?? 'remote',
-			this.service ?? 'send_command',
-			{
-				entity_id: this.config?.keyboard_id,
-				command: `input text "${text}"`,
-			},
-		);
-	}
-
 	keyboardOnPaste(e: ClipboardEvent) {
 		e.stopImmediatePropagation();
 		if (this.config?.platform != 'Kodi') {
@@ -244,6 +273,14 @@ export class KeyboardDialog extends LitElement {
 						method: 'Input.SendText',
 						text: this.textarea?.value ?? '',
 						done: false,
+					});
+					break;
+				case 'LG webOS':
+					this.hass.callService('webostv', 'command', {
+						entity_id: this.config?.keyboard_id,
+						command: 'com.webos.service.ime/insertText',
+						text: this.textarea?.value ?? '',
+						replace: true,
 					});
 					break;
 				case 'Roku':
@@ -281,6 +318,8 @@ export class KeyboardDialog extends LitElement {
 						done: true,
 					});
 					break;
+				case 'LG webOS':
+					break;
 				case 'Roku':
 					this.hass.callService('roku', 'search', {
 						entity_id: this.getRokuId('media_player'),
@@ -317,6 +356,16 @@ export class KeyboardDialog extends LitElement {
 						done: false,
 					});
 					break;
+				case 'LG webOS':
+					this.hass.callService('webostv', 'command', {
+						entity_id: this.config?.keyboard_id,
+						command: 'com.webos.service.ime/insertText',
+						payload: {
+							text: text,
+							replace: true,
+						},
+					});
+					break;
 				case 'Roku':
 					this.hass.callService('remote', 'send_command', {
 						entity_id: this.getRokuId('remote'),
@@ -349,6 +398,12 @@ export class KeyboardDialog extends LitElement {
 					method: 'Input.SendText',
 					text: this.textarea?.value ?? '',
 					done: true,
+				});
+				break;
+			case 'LG webOS':
+				this.hass.callService('webostv', 'command', {
+					entity_id: this.config?.keyboard_id,
+					command: 'com.webos.service.ime/sendEnterKey',
 				});
 				break;
 			case 'Roku':
@@ -490,6 +545,11 @@ export class KeyboardDialog extends LitElement {
 					case 'Kodi':
 						inputHandler = this.kodiOnInput;
 						keyDownHandler = this.kodiOnKeyDown;
+						antiCursorMoveHandler = undefined;
+						break;
+					case 'LG webOS':
+						inputHandler = this.webosOnInput;
+						keyDownHandler = this.webosOnKeyDown;
 						antiCursorMoveHandler = undefined;
 						break;
 					case 'Roku':

@@ -131,6 +131,12 @@ export const rokuDefaultKeys: IElementConfig[] = [
 	},
 	{
 		type: 'button',
+		name: 'play_pause',
+		tap_action: { action: 'key', key: 'play' },
+		icon: 'mdi:play-pause',
+	},
+	{
+		type: 'button',
 		name: 'play',
 		tap_action: { action: 'key', key: 'play' },
 		icon: 'mdi:play',
@@ -140,12 +146,6 @@ export const rokuDefaultKeys: IElementConfig[] = [
 		name: 'pause',
 		tap_action: { action: 'key', key: 'play' },
 		icon: 'mdi:pause',
-	},
-	{
-		type: 'button',
-		name: 'play_pause',
-		tap_action: { action: 'key', key: 'play' },
-		icon: 'mdi:play-pause',
 	},
 	{
 		type: 'button',
