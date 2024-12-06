@@ -4,7 +4,6 @@ export const KeyboardPlatforms = [
 	'Fire TV',
 	'Roku',
 	'Kodi',
-	'Jellyfin',
 ] as const;
 export type KeyboardPlatform = (typeof KeyboardPlatforms)[number];
 export const Platforms = [
@@ -12,6 +11,7 @@ export const Platforms = [
 	'Apple TV',
 	'Samsung TV',
 	'LG webOS',
+	'Jellyfin',
 ] as const;
 export type Platform = (typeof Platforms)[number];
 

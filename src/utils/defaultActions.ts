@@ -8,6 +8,8 @@ import {
 	braviaTVDefaultSources,
 	fireTVDefaultKeys,
 	fireTVDefaultSources,
+	jellyfinDefaultSources,
+	jellyfinTVDefaultKeys,
 	kodiDefaultKeys,
 	kodiDefaultSources,
 	rokuDefaultKeys,
@@ -30,6 +32,9 @@ export function getDefaultActions(platform: Platform) {
 			defaultKeys = samsungTVDefaultKeys;
 			defaultSources = samsungTVDefaultSources;
 			break;
+		case 'Jellyfin':
+			defaultKeys = jellyfinTVDefaultKeys;
+			defaultSources = jellyfinDefaultSources;
 		case 'Kodi':
 			defaultKeys = kodiDefaultKeys;
 			defaultSources = kodiDefaultSources;
