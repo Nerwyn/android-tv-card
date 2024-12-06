@@ -452,7 +452,7 @@ export const androidTVDefaultKeys: IElementConfig[] = [
 		type: 'button',
 		name: 'guide',
 		tap_action: { action: 'key', key: 'GUIDE' },
-		icon: 'mdi:television-guide',
+		icon: 'mdi:television-box',
 	},
 	{
 		type: 'button',

@@ -186,6 +186,7 @@ export class BaseRemoteElement extends LitElement {
 			case 'Sony BRAVIA':
 			case 'Roku':
 			case 'Samsung TV':
+			case 'Jellyfin':
 			default: {
 				const data: IData = {
 					entity_id: action.remote_id ?? '',
@@ -225,6 +226,7 @@ export class BaseRemoteElement extends LitElement {
 				});
 				break;
 			case 'Android TV':
+			case 'Jellyfin':
 			default:
 				this.hass.callService('remote', 'turn_on', {
 					entity_id: action.remote_id,

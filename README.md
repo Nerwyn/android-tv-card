@@ -27,6 +27,7 @@ A super customizable universal remote card iterating on the work of several othe
   - Apple TV
   - Samsung TV
   - LG webOS
+  - Jellyfin
 - Support for multiple buttons, touchpads, and sliders using default or user defined custom actions.
 - Complete [Home Assistant actions](https://www.home-assistant.io/dashboards/actions/) support.
 - Keyboard and search dialog actions for most platforms.
@@ -65,6 +66,7 @@ This card supports several media platforms with default key and source lists. Fo
 | [Apple TV](https://www.home-assistant.io/integrations/apple_tv)            | Default keys             | Default sources and slider                                                                                                             | NA                                                                                                        |
 | [Samsung TV](https://www.home-assistant.io/integrations/samsungtv/)        | Default keys             | Default sources (requires the [SamsungTV Smart Component custom integration](https://github.com/ollo69/ha-samsungtv-smart)) and slider | NA                                                                                                        |
 | [LG webOS](https://www.home-assistant.io/integrations/webostv/)            | NA                       | Default keys, sources, and slider                                                                                                      | NA                                                                                                        |
+| [Jellyfin](https://www.home-assistant.io/integrations/jellyfin/)           | Default keys             | Play/Pause and slider                                                                                                                  | NA                                                                                                        |
 
 ## Action Timings
 

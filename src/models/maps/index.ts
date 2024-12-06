@@ -3,6 +3,7 @@ export * from './apple_tv';
 export * from './bravia';
 export * from './defaultIcons';
 export * from './fire_tv';
+export * from './jellyfin';
 export * from './kodi';
 export * from './roku';
 export * from './samsung_tv';
