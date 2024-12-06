@@ -170,14 +170,14 @@ export const jellyfinTVDefaultKeys: IElementConfig[] = [
 	},
 	{
 		type: 'button',
-		name: 'up',
+		name: 'page_up',
 		tap_action: { action: 'key', key: 'PageUp' },
 		hold_action: { action: 'repeat' },
 		icon: 'mdi:arrow-up',
 	},
 	{
 		type: 'button',
-		name: 'down',
+		name: 'page_down',
 		tap_action: { action: 'key', key: 'PageDown' },
 		hold_action: { action: 'repeat' },
 		icon: 'mdi:arrow-down',
