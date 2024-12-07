@@ -120,11 +120,54 @@ export class KeyboardDialog extends LitElement {
 		const inputType = e.inputType ?? '';
 		const text = e.data ?? '';
 		if (text && inputType == 'insertText') {
-			this.hass
-				.callService('unified_remote', 'call', {
+			const isUpperCase = text != text.toLowerCase();
+			if (isUpperCase) {
+				this.hass
+					.callService('unified_remote', 'call', {
+						target: this.config?.keyboard_id,
+						remote_id: 'Relmtech.Keyboard',
+						action: 'toggle',
+						extras: {
+							Values: [
+								{
+									Value: 'SHIFT',
+								},
+							],
+						},
+					})
+					.then(() => {
+						this.hass.callService('unified_remote', 'call', {
+							target: this.config?.keyboard_id,
+							remote_id: 'Relmtech.Keyboard',
+							action: 'toggle',
+							extras: {
+								Values: [
+									{
+										Value: text,
+									},
+								],
+							},
+						});
+					})
+					.then(() => {
+						this.hass.callService('unified_remote', 'call', {
+							target: this.config?.keyboard_id,
+							remote_id: 'Relmtech.Keyboard',
+							action: 'toggle',
+							extras: {
+								Values: [
+									{
+										Value: 'SHIFT',
+									},
+								],
+							},
+						});
+					});
+			} else {
+				this.hass.callService('unified_remote', 'call', {
 					target: this.config?.keyboard_id,
-					remote_id: 'Unified.SendText',
-					action: 'change',
+					remote_id: 'Relmtech.Keyboard',
+					action: 'toggle',
 					extras: {
 						Values: [
 							{
@@ -132,14 +175,8 @@ export class KeyboardDialog extends LitElement {
 							},
 						],
 					},
-				})
-				.then(() => {
-					this.hass.callService('unified_remote', 'call', {
-						target: this.config?.keyboard_id,
-						remote_id: 'Unified.SendText',
-						action: 'send',
-					});
 				});
+			}
 		} else if (!this.onKeyDownFired) {
 			const inputTypeToKey: Record<string, string> = {
 				deleteContentBackward: 'back',
