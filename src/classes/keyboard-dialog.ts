@@ -136,32 +136,37 @@ export class KeyboardDialog extends LitElement {
 						},
 					})
 					.then(() => {
-						this.hass.callService('unified_remote', 'call', {
-							target: this.config?.keyboard_id,
-							remote_id: 'Relmtech.Keyboard',
-							action: 'toggle',
-							extras: {
-								Values: [
+						this.hass
+							.callService('unified_remote', 'call', {
+								target: this.config?.keyboard_id,
+								remote_id: 'Relmtech.Keyboard',
+								action: 'toggle',
+								extras: {
+									Values: [
+										{
+											Value: text,
+										},
+									],
+								},
+							})
+							.then(() => {
+								this.hass.callService(
+									'unified_remote',
+									'call',
 									{
-										Value: text,
+										target: this.config?.keyboard_id,
+										remote_id: 'Relmtech.Keyboard',
+										action: 'toggle',
+										extras: {
+											Values: [
+												{
+													Value: 'SHIFT',
+												},
+											],
+										},
 									},
-								],
-							},
-						});
-					})
-					.then(() => {
-						this.hass.callService('unified_remote', 'call', {
-							target: this.config?.keyboard_id,
-							remote_id: 'Relmtech.Keyboard',
-							action: 'toggle',
-							extras: {
-								Values: [
-									{
-										Value: 'SHIFT',
-									},
-								],
-							},
-						});
+								);
+							});
 					});
 			} else {
 				this.hass.callService('unified_remote', 'call', {
