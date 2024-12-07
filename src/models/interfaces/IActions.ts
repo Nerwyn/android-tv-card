@@ -5,6 +5,7 @@ export const KeyboardPlatforms = [
 	'Roku',
 	'LG webOS',
 	'Kodi',
+	'Unified Remote',
 ] as const;
 export type KeyboardPlatform = (typeof KeyboardPlatforms)[number];
 export const Platforms = [
@@ -47,7 +48,8 @@ export const ActionTypes = [
 export type ActionType = (typeof ActionTypes)[number];
 
 export interface IData {
-	[key: string]: string | string[] | number | number[] | boolean;
+	// eslint-disable-next-line
+	[key: string]: any;
 }
 
 export interface ITarget {

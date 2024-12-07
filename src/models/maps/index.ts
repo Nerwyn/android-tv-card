@@ -7,4 +7,5 @@ export * from './jellyfin';
 export * from './kodi';
 export * from './roku';
 export * from './samsung_tv';
+export * from './unified_remote';
 export * from './webos';

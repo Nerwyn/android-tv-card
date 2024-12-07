@@ -93,6 +93,79 @@ export class KeyboardDialog extends LitElement {
 		});
 	}
 
+	unifiedRemoteOnKeyDown(e: KeyboardEvent) {
+		e.stopImmediatePropagation();
+		this.forceCursorToEnd();
+
+		const inKey = e.key;
+		const keyToKey: Record<string, string> = {
+			Backspace: 'BACK',
+			Enter: 'RETURN',
+		};
+		const outKey = keyToKey[inKey ?? ''];
+		if (outKey) {
+			this.onKeyDownFired = true;
+			this.hass.callService('unified_remote', 'call', {
+				target: this.config?.keyboard_id,
+				remote_id: 'Relmtech.Keyboard',
+				action: 'toggle',
+				extras: {
+					Values: [
+						{
+							Value: outKey,
+						},
+					],
+				},
+			});
+		}
+	}
+
+	unifiedRemoteOnInput(e: InputEvent) {
+		e.stopImmediatePropagation();
+		this.forceCursorToEnd();
+
+		const inputType = e.inputType ?? '';
+		const text = e.data ?? '';
+		if (text && inputType == 'insertText') {
+			for (const char of text) {
+				this.hass.callService('unified_remote', 'call', {
+					target: this.config?.keyboard_id,
+					remote_id: 'Relmtech.Keyboard',
+					action: 'toggle',
+					extras: {
+						Values: [
+							{
+								Value: char.toUpperCase(), // TODO figure out capital letters
+							},
+						],
+					},
+				});
+			}
+		} else if (!this.onKeyDownFired) {
+			const inputTypeToKey: Record<string, string> = {
+				deleteContentBackward: 'BACK',
+				insertLineBreak: 'RETURN',
+			};
+			const key = inputTypeToKey[inputType ?? ''];
+
+			if (key) {
+				this.hass.callService('unified_remote', 'call', {
+					target: this.config?.keyboard_id,
+					remote_id: 'Relmtech.Keyboard',
+					action: 'toggle',
+					extras: {
+						Values: [
+							{
+								Value: key,
+							},
+						],
+					},
+				});
+			}
+		}
+		this.onKeyDownFired = false;
+	}
+
 	rokuOnKeyDown(e: KeyboardEvent) {
 		e.stopImmediatePropagation();
 		this.forceCursorToEnd();
@@ -267,6 +340,23 @@ export class KeyboardDialog extends LitElement {
 		const text = e.clipboardData?.getData('Text');
 		if (text) {
 			switch (this.config?.platform as KeyboardPlatform) {
+				case 'Unified Remote':
+					for (const char of text) {
+						// TODO a better way to send bulk text
+						this.hass.callService('unified_remote', 'call', {
+							target: this.config?.keyboard_id,
+							remote_id: 'Relmtech.Keyboard',
+							action: 'toggle',
+							extras: {
+								Values: [
+									{
+										Value: char.toUpperCase(),
+									},
+								],
+							},
+						});
+					}
+					break;
 				case 'Kodi':
 					this.hass.callService('kodi', 'call_method', {
 						entity_id: this.config?.keyboard_id,
@@ -348,6 +438,23 @@ export class KeyboardDialog extends LitElement {
 		const text = this.textarea?.value;
 		if (text) {
 			switch (this.config?.platform as KeyboardPlatform) {
+				case 'Unified Remote':
+					for (const char of text) {
+						// TODO a better way to send bulk text
+						this.hass.callService('unified_remote', 'call', {
+							target: this.config?.keyboard_id,
+							remote_id: 'Relmtech.Keyboard',
+							action: 'toggle',
+							extras: {
+								Values: [
+									{
+										Value: char.toUpperCase(),
+									},
+								],
+							},
+						});
+					}
+					break;
 				case 'Kodi':
 					this.hass.callService('kodi', 'call_method', {
 						entity_id: this.config?.keyboard_id,
@@ -392,6 +499,21 @@ export class KeyboardDialog extends LitElement {
 
 	enterDialog() {
 		switch (this.config?.platform as KeyboardPlatform) {
+			case 'Unified Remote':
+				this.hass.callService('unified_remote', 'call', {
+					target: this.config?.keyboard_id,
+					remote_id: 'Relmtech.Keyboard',
+					action: 'toggle',
+					extras: {
+						Values: [
+							{
+								Value: 'RETURN',
+							},
+						],
+					},
+				});
+
+				break;
 			case 'Kodi':
 				this.hass.callService('kodi', 'call_method', {
 					entity_id: this.config?.keyboard_id,
@@ -542,6 +664,10 @@ export class KeyboardDialog extends LitElement {
 			default:
 				antiCursorMoveHandler = this.forceCursorToEndEvent;
 				switch (this.config?.platform as KeyboardPlatform) {
+					case 'Unified Remote':
+						inputHandler = this.unifiedRemoteOnInput;
+						keyDownHandler = this.unifiedRemoteOnKeyDown;
+						break;
 					case 'Kodi':
 						inputHandler = this.kodiOnInput;
 						keyDownHandler = this.kodiOnKeyDown;

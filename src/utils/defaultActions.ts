@@ -16,6 +16,8 @@ import {
 	rokuDefaultSources,
 	samsungTVDefaultKeys,
 	samsungTVDefaultSources,
+	unifiedRemoteDefaultKeys,
+	unifiedRemoteDefaultSources,
 	webosDefaultKeys,
 	webosDefaultSources,
 } from '../models/maps';
@@ -24,6 +26,10 @@ export function getDefaultActions(platform: Platform) {
 	let defaultKeys: IElementConfig[];
 	let defaultSources: IElementConfig[];
 	switch (platform) {
+		case 'Unified Remote':
+			defaultKeys = unifiedRemoteDefaultKeys;
+			defaultSources = unifiedRemoteDefaultSources;
+			break;
 		case 'LG webOS':
 			defaultKeys = webosDefaultKeys;
 			defaultSources = webosDefaultSources;
