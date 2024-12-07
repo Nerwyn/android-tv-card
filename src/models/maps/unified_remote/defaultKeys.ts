@@ -81,6 +81,7 @@ export const unifiedRemoteDefaultKeys: IElementConfig[] = [
 				action: 'volume_down',
 			},
 		},
+		hold_action: { action: 'repeat' },
 		icon: 'mdi:volume-medium',
 	},
 	{
@@ -94,6 +95,7 @@ export const unifiedRemoteDefaultKeys: IElementConfig[] = [
 				action: 'volume_up',
 			},
 		},
+		hold_action: { action: 'repeat' },
 		icon: 'mdi:volume-high',
 	},
 	{
