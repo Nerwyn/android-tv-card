@@ -166,6 +166,14 @@ class UniversalRemoteCard extends LitElement {
 										? updatedElement.entity_id
 										: this.config.media_player_id;
 									break;
+								case 'unified_remote':
+									action.data = action.data ?? {};
+									action.data.target =
+										action.data.target ??
+										this.config.remote_id ??
+										this.config.media_player_id ??
+										this.config.keyboard_id;
+									break;
 								default:
 									target.entity_id = updatedElement.entity_id;
 									break;
