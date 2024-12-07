@@ -120,23 +120,26 @@ export class KeyboardDialog extends LitElement {
 		const inputType = e.inputType ?? '';
 		const text = e.data ?? '';
 		if (text && inputType == 'insertText') {
-			this.hass.callService('unified_remote', 'call', {
-				target: this.config?.keyboard_id,
-				remote_id: 'Unified.SendText',
-				action: 'change',
-				extras: {
-					Values: [
-						{
-							Value: text,
-						},
-					],
-				},
-			});
-			this.hass.callService('unified_remote', 'call', {
-				target: this.config?.keyboard_id,
-				remote_id: 'Unified.SendText',
-				action: 'send',
-			});
+			this.hass
+				.callService('unified_remote', 'call', {
+					target: this.config?.keyboard_id,
+					remote_id: 'Unified.SendText',
+					action: 'change',
+					extras: {
+						Values: [
+							{
+								Value: text,
+							},
+						],
+					},
+				})
+				.then(() => {
+					this.hass.callService('unified_remote', 'call', {
+						target: this.config?.keyboard_id,
+						remote_id: 'Unified.SendText',
+						action: 'send',
+					});
+				});
 		} else if (!this.onKeyDownFired) {
 			const inputTypeToKey: Record<string, string> = {
 				deleteContentBackward: 'back',
@@ -330,23 +333,26 @@ export class KeyboardDialog extends LitElement {
 		if (text) {
 			switch (this.config?.platform as KeyboardPlatform) {
 				case 'Unified Remote':
-					this.hass.callService('unified_remote', 'call', {
-						target: this.config?.keyboard_id,
-						remote_id: 'Unified.SendText',
-						action: 'change',
-						extras: {
-							Values: [
-								{
-									Value: text,
-								},
-							],
-						},
-					});
-					this.hass.callService('unified_remote', 'call', {
-						target: this.config?.keyboard_id,
-						remote_id: 'Unified.SendText',
-						action: 'send',
-					});
+					this.hass
+						.callService('unified_remote', 'call', {
+							target: this.config?.keyboard_id,
+							remote_id: 'Unified.SendText',
+							action: 'change',
+							extras: {
+								Values: [
+									{
+										Value: text,
+									},
+								],
+							},
+						})
+						.then(() => {
+							this.hass.callService('unified_remote', 'call', {
+								target: this.config?.keyboard_id,
+								remote_id: 'Unified.SendText',
+								action: 'send',
+							});
+						});
 					break;
 				case 'Kodi':
 					this.hass.callService('kodi', 'call_method', {
@@ -430,23 +436,26 @@ export class KeyboardDialog extends LitElement {
 		if (text) {
 			switch (this.config?.platform as KeyboardPlatform) {
 				case 'Unified Remote':
-					this.hass.callService('unified_remote', 'call', {
-						target: this.config?.keyboard_id,
-						remote_id: 'Unified.SendText',
-						action: 'change',
-						extras: {
-							Values: [
-								{
-									Value: text,
-								},
-							],
-						},
-					});
-					this.hass.callService('unified_remote', 'call', {
-						target: this.config?.keyboard_id,
-						remote_id: 'Unified.SendText',
-						action: 'send',
-					});
+					this.hass
+						.callService('unified_remote', 'call', {
+							target: this.config?.keyboard_id,
+							remote_id: 'Unified.SendText',
+							action: 'change',
+							extras: {
+								Values: [
+									{
+										Value: text,
+									},
+								],
+							},
+						})
+						.then(() => {
+							this.hass.callService('unified_remote', 'call', {
+								target: this.config?.keyboard_id,
+								remote_id: 'Unified.SendText',
+								action: 'send',
+							});
+						});
 					break;
 				case 'Kodi':
 					this.hass.callService('kodi', 'call_method', {
