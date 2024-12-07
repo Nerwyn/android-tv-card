@@ -455,6 +455,7 @@ export class KeyboardDialog extends LitElement {
 								remote_id: 'Unified.SendText',
 								action: 'send',
 							});
+							this.closeDialog();
 						});
 					break;
 				case 'Kodi':
@@ -464,6 +465,7 @@ export class KeyboardDialog extends LitElement {
 						text: text,
 						done: false,
 					});
+					this.closeDialog();
 					break;
 				case 'LG webOS':
 					this.hass.callService('webostv', 'command', {
@@ -474,12 +476,14 @@ export class KeyboardDialog extends LitElement {
 							replace: true,
 						},
 					});
+					this.closeDialog();
 					break;
 				case 'Roku':
 					this.hass.callService('remote', 'send_command', {
 						entity_id: this.getRokuId('remote'),
 						command: `Lit_${text}`,
 					});
+					this.closeDialog();
 					break;
 				case 'Fire TV':
 				case 'Sony BRAVIA':
@@ -493,10 +497,10 @@ export class KeyboardDialog extends LitElement {
 							command: `input text "${text}"`,
 						},
 					);
+					this.closeDialog();
 					break;
 			}
 		}
-		this.closeDialog();
 	}
 
 	enterDialog() {
