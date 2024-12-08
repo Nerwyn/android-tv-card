@@ -146,10 +146,10 @@ export const unifiedRemoteDefaultKeys: IElementConfig[] = [
 							Value: 0,
 						},
 						{
-							Value: '{{ 3.5 * deltaX }}',
+							Value: '{{ 3 * deltaX }}',
 						},
 						{
-							Value: '{{ 3.5 * deltaY }}',
+							Value: '{{ 3 * deltaY }}',
 						},
 					],
 				},
@@ -167,10 +167,10 @@ export const unifiedRemoteDefaultKeys: IElementConfig[] = [
 							Value: 0,
 						},
 						{
-							Value: '{{ 3.5 * deltaX }}',
+							Value: '{{ 3 * deltaX }}',
 						},
 						{
-							Value: '{{ 3.5 * deltaY }}',
+							Value: '{{ 3 * deltaY }}',
 						},
 					],
 				},

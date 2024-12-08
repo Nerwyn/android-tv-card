@@ -1,4 +1,3 @@
-import { html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { HOLD_TIME } from '../models/constants';
 import { IMousepadConfig } from '../models/interfaces';
@@ -99,23 +98,5 @@ export class RemoteMousepad extends RemoteTouchpad {
 			this.fireHapticEvent('medium');
 			this.sendAction(`${this.getMultiPrefix()}hold_action`, actions);
 		}, holdTime);
-	}
-
-	render() {
-		this.setValue();
-		return html`<toucharea
-			@mousedown=${this.onMouseDown}
-			@mouseup=${this.onMouseUp}
-			@mousemove=${this.onMouseMove}
-			@mouseleave=${this.onMouseLeave}
-			@touchstart=${this.onTouchStart}
-			@touchend=${this.onTouchEnd}
-			@touchmove=${this.onTouchMove}
-			@touchcancel=${this.onTouchCancel}
-			@contextmenu=${this.onContextMenu}
-			>${this.buildIcon(this.config.icon)}${this.buildLabel(
-				this.config.label,
-			)}</toucharea
-		>`;
 	}
 }
