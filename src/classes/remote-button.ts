@@ -160,8 +160,8 @@ export class RemoteButton extends BaseRemoteElement {
 			currentY = e.clientY;
 		}
 
-		this.deltaX = (this.initialX ?? currentX) - currentX;
-		this.deltaY = (this.initialY ?? currentY) - currentY;
+		this.deltaX = currentX - (this.initialX ?? currentX);
+		this.deltaY = currentY - (this.initialY ?? currentY);
 
 		// Only consider significant enough movement
 		const sensitivity = 24;

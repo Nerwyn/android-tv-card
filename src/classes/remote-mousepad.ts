@@ -66,8 +66,8 @@ export class RemoteMousepad extends RemoteTouchpad {
 			currentY = e.clientY ?? 0;
 		}
 
-		this.deltaX = this.initialX - currentX;
-		this.deltaY = this.initialY - currentY;
+		this.deltaX = currentX - this.initialX;
+		this.deltaY = currentY - this.initialY;
 		this.initialX = currentX;
 		this.initialY = currentY;
 		console.log(`${this.deltaX},${this.deltaY}`);

@@ -180,8 +180,8 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			currentY = e.clientY ?? 0;
 		}
 
-		this.deltaX = this.initialX - currentX;
-		this.deltaY = this.initialY - currentY;
+		this.deltaX = currentX - this.initialX;
+		this.deltaY = currentY - this.initialY;
 
 		// Only consider significant enough movement
 		const sensitivity = 2;
