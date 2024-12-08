@@ -209,7 +209,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 				}
 			}
 		}
-		console.log(this.targetTouches);
+		console.log(this.targetTouches[0]);
 	}
 
 	setInitialXY(e: TouchEvent | MouseEvent) {
@@ -227,6 +227,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			this.initialX = e.clientX;
 			this.initialY = e.clientY;
 		}
+		console.log(`INITIAL: ${this.initialX},${this.initialY}`);
 	}
 
 	setDeltaXY(e: TouchEvent | MouseEvent) {
@@ -247,6 +248,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 
 		this.deltaX = currentX - (this.initialX ?? 0);
 		this.deltaY = currentY - (this.initialY ?? 0);
+		console.log(`DELTA: ${this.deltaX},${this.deltaY}`);
 	}
 
 	endAction() {
