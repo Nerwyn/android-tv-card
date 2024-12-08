@@ -16,15 +16,15 @@ export class RemoteMousepad extends RemoteTouchpad {
 		}
 
 		if ('targetTouches' in e) {
+			let totalX = 0;
+			let totalY = 0;
 			this.targetTouches = e.targetTouches;
-			const touch = Array.from(this.targetTouches).filter(
-				(t) => t.identifier == 0,
-			)[0];
-			if (!touch) {
-				return;
+			for (const touch of this.targetTouches) {
+				totalX += touch.clientX;
+				totalY += touch.clientY;
 			}
-			this.initialX = touch.clientX;
-			this.initialY = touch.clientY;
+			this.initialX = totalX / this.targetTouches.length;
+			this.initialY = totalY / this.targetTouches.length;
 		} else {
 			this.initialX = e.clientX;
 			this.initialY = e.clientY;
@@ -54,14 +54,12 @@ export class RemoteMousepad extends RemoteTouchpad {
 		let currentY: number = 0;
 		if ('targetTouches' in e) {
 			this.targetTouches = e.targetTouches;
-			const touch = Array.from(this.targetTouches).filter(
-				(t) => t.identifier == 0,
-			)[0];
-			if (!touch) {
-				return;
+			for (const touch of this.targetTouches) {
+				currentX += touch.clientX;
+				currentY += touch.clientY;
 			}
-			currentX = touch.clientX;
-			currentY = touch.clientY;
+			currentX = currentX / this.targetTouches.length;
+			currentY = currentY / this.targetTouches.length;
 		} else {
 			currentX = e.clientX ?? 0;
 			currentY = e.clientY ?? 0;
