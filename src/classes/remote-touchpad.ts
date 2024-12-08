@@ -319,7 +319,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 					<remote-icon-label
 						id="up"
 						.hass=${this.hass}
-						.config=${this.config.up}
+						.config=${this.config.up ?? {}}
 						.icons=${this.icons}
 					></remote-icon-label>
 				</div>
@@ -327,7 +327,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 					<remote-icon-label
 						id="left"
 						.hass=${this.hass}
-						.config=${this.config.left}
+						.config=${this.config.left ?? {}}
 						.icons=${this.icons}
 					></remote-icon-label>
 					<remote-icon-label
@@ -339,7 +339,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 					<remote-icon-label
 						id="right"
 						.hass=${this.hass}
-						.config=${this.config.right}
+						.config=${this.config.right ?? {}}
 						.icons=${this.icons}
 					></remote-icon-label>
 				</div>
@@ -347,7 +347,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 					<remote-icon-label
 						id="down"
 						.hass=${this.hass}
-						.config=${this.config.down}
+						.config=${this.config.down ?? {}}
 						.icons=${this.icons}
 					></remote-icon-label>
 				</div>
