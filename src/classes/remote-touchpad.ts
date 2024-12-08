@@ -193,10 +193,10 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		) {
 			if (Math.abs(this.deltaX) > Math.abs(this.deltaY)) {
 				// Sliding horizontally
-				this.direction = this.deltaX > 0 ? 'left' : 'right';
+				this.direction = this.deltaX < 0 ? 'left' : 'right';
 			} else {
 				// Sliding vertically
-				this.direction = this.deltaY > 0 ? 'up' : 'down';
+				this.direction = this.deltaY < 0 ? 'up' : 'down';
 			}
 			if (!this.holdMove) {
 				this.fireHapticEvent('light');
