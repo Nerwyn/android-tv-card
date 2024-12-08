@@ -221,6 +221,42 @@ export const webosDefaultKeys: IElementConfig[] = [
 	},
 	{
 		type: 'button',
+		name: 'stop',
+		tap_action: {
+			action: 'perform-action',
+			perform_action: 'webostv.command',
+			data: {
+				command: 'media.controls/stop',
+			},
+		},
+		icon: 'mdi:stop',
+	},
+	{
+		type: 'button',
+		name: 'rewind',
+		tap_action: {
+			action: 'perform-action',
+			perform_action: 'webostv.command',
+			data: {
+				command: 'media.controls/rewind',
+			},
+		},
+		icon: 'mdi:rewind',
+	},
+	{
+		type: 'button',
+		name: 'fast_forward',
+		tap_action: {
+			action: 'perform-action',
+			perform_action: 'webostv.command',
+			data: {
+				command: 'media.controls/fastForward',
+			},
+		},
+		icon: 'mdi:fast-forward',
+	},
+	{
+		type: 'button',
 		name: 'keyboard',
 		tap_action: { action: 'keyboard' },
 		icon: 'mdi:keyboard',
@@ -230,6 +266,30 @@ export const webosDefaultKeys: IElementConfig[] = [
 		name: 'textbox',
 		tap_action: { action: 'textbox' },
 		icon: 'mdi:text-box',
+	},
+	{
+		type: 'button',
+		name: 'delete',
+		tap_action: {
+			action: 'perform-action',
+			perform_action: 'webostv.command',
+			data: {
+				command: 'com.webos.service.ime/deleteCharacters',
+			},
+		},
+		icon: 'mdi:backspace',
+	},
+	{
+		type: 'button',
+		name: 'enter',
+		tap_action: {
+			action: 'perform-action',
+			perform_action: 'webostv.command',
+			data: {
+				command: 'com.webos.service.ime/sendEnterKey',
+			},
+		},
+		icon: 'mdi:magnify',
 	},
 	{
 		type: 'button',

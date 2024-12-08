@@ -215,6 +215,25 @@ export const braviaTVDefaultKeys: IElementConfig[] = [
 	},
 	{
 		type: 'button',
+		name: 'delete',
+		tap_action: { action: 'key', key: 'input keyevent 67' },
+		hold_action: { action: 'repeat' },
+		icon: 'mdi:backspace',
+	},
+	{
+		type: 'button',
+		name: 'enter',
+		tap_action: {
+			action: 'perform-action',
+			perform_action: 'remote.send_command',
+			data: {
+				command: 'input keyevent 66',
+			},
+		},
+		icon: 'mdi:magnify',
+	},
+	{
+		type: 'button',
 		name: 'channel_up',
 		tap_action: { action: 'key', key: 'ChannelUp' },
 		icon: 'mdi:arrow-up-circle',

@@ -25,15 +25,16 @@ A super customizable universal remote card iterating on the work of several othe
   - Roku (with keyboard)
   - LG webOS (with keyboard)
   - Kodi (with keyboard)
+  - Unified Remote for computers (with keyboard and mousepad)
   - Apple TV
   - Samsung TV
   - Jellyfin
-- Support for multiple buttons, touchpads, and sliders using default or user defined custom actions.
+- Support for multiple buttons, touchpads, mousepads, and sliders using default or user defined custom actions.
 - Complete [Home Assistant actions](https://www.home-assistant.io/dashboards/actions/) support.
 - Keyboard and search dialog actions for most platforms.
 - [Template](#a-note-on-templating) support for almost all fields using nunjucks.
 - Toggleable haptics.
-- Remappable touchpad with [multi-touch](#touchpad-actions) gesture support.
+- Remappable touchpad and mousepad with [multi-touch](#touchpad-actions) gesture support.
 - Remappable slider with vertical orientation support.
 - User configurable remote [layout](#layout).
 - Icons and labels for all elements.
@@ -64,9 +65,14 @@ This card supports several media platforms with default key and source lists. Fo
 | [Roku](https://www.home-assistant.io/integrations/roku/)                   | Default keys             | Default sources and slider                                                                                                             | Remote for keyboard, media player for search (provide one for keyboard ID and the others in their fields) |
 | [LG webOS](https://www.home-assistant.io/integrations/webostv/)            | NA                       | Default keys, sources, and slider                                                                                                      | Media Player                                                                                              |
 | [Kodi](https://www.home-assistant.io/integrations/kodi/)                   | NA                       | Default keys, sources, and slider                                                                                                      | Media player                                                                                              |
+| [Unified Remote](https://github.com/DaviPtrs/hass-unified-remote)          | NA (see below)           | NA (see below)                                                                                                                         | NA (see below)                                                                                            |
 | [Apple TV](https://www.home-assistant.io/integrations/apple_tv)            | Default keys             | Default sources and slider                                                                                                             | NA                                                                                                        |
 | [Samsung TV](https://www.home-assistant.io/integrations/samsungtv/)        | Default keys             | Default sources (requires the [SamsungTV Smart Component custom integration](https://github.com/ollo69/ha-samsungtv-smart)) and slider | NA                                                                                                        |
 | [Jellyfin](https://www.home-assistant.io/integrations/jellyfin/)           | Default keys             | Play/Pause and slider                                                                                                                  | NA                                                                                                        |
+
+### Unified Remote Setup
+
+Unlike most platforms, Unified Remote relies entirely on [a custom integration](https://github.com/DaviPtrs/hass-unified-remote). This custom integration does not create any entities, but does provide us with the action `unified_remote.call`, which can be used to call any Unified Remote API. It requires that you install the integration and setup your computer hosts [as described here in its README](https://github.com/DaviPtrs/hass-unified-remote?tab=readme-ov-file#home-assistant). You can then use the host name or IP address in the remote and keyboard ID fields in the configuration UI (make sure it does not autofill with an actual entity, you may have to fix it with the code editor).
 
 ## Action Timings
 
@@ -171,11 +177,12 @@ The remote layout is defined using a series of nested arrays. The lowest level o
   - search
 ```
 
-The default keys and sources lists for your selected platform are displayed below the layout code editor. If you have configured any custom actions, they will be displayed above this. You can use this as reference as you create your remote, or drag and drop entries from these lists to the editor. The default keys list also includes the default touchpad and slider, along with some special elements for button pads and layouts. Not all special elements are available for all platforms.
+The default keys and sources lists for your selected platform are displayed below the layout code editor. If you have configured any custom actions, they will be displayed above this. You can use this as reference as you create your remote, or drag and drop entries from these lists to the editor. The default keys list also includes the default touchpad, mousepad, and slider, along with some special elements for button pads and layouts. Not all special elements are available for all platforms.
 
 | Name               | Type        | Description                                                                                                                                                                                     |
 | ------------------ | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | touchpad           | touchpad    | A touchpad for navigation.                                                                                                                                                                      |
+| mousepad           | mousepad    | A mousepad for mouse movement and scrolling. **NOTE**: Mousepad support is dependent on the platform support mouse control via its Home Assistant integration.                                  |
 | slider             | slider      | A slider that controls the volume of the entity defined by `media_player_id`. **NOTE**: Volume slider support is dependent on the media player supporting the `media_player.volume_set` action. |
 | volume_buttons     | button rows | Shorthand to generate a set of volume down, volume mute, and volume up buttons in a row or column.                                                                                              |
 | navigation_buttons | button rows | Shorthand to generate a set of up, down, left, right, and center buttons across three rows within a column.                                                                                     |
@@ -223,11 +230,11 @@ Sliders have some additional general options. They have a range `Min` and `Max` 
 
 Sliders will wait one second before updating their internal values from Home Assistant to prevent it from bouncing between the old and new values. This time can be changed by setting `Update after action delay`, which defaults to 1000ms
 
-### Touchpad Tabs
+### Touchpad and Mousepad Tabs
 
 <img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/editor_actions_general_options_touchpad.png" alt="editor actions general options touchpad" width="600"/>
 
-Touchpads have five tabs at the top of their actions page for each direction and it's center. Only the center tab has general options as these apply to the entire touchpad remote element. Each direction and center have their own options for appearance and interactions as described below.
+Touchpads and mousepads have five tabs at the top of their actions page for each direction and it's center. Only the center tab has general options as these apply to the entire touchpad remote element. Each direction and center have their own options for appearance and interactions (touchpad only) as described below.
 
 ## Appearance
 
@@ -270,9 +277,9 @@ Sliders have an additional `Vertical` toggle which rotates it 90 degrees to make
 }
 ```
 
-### Multiple Icons and Labels for Touchpads
+### Multiple Icons and Labels for Touchpads and Mousepads
 
-Touchpads can have a separate icon and label for the center and each direction. You can also style each of these icons and labels independently using their own `CSS Styles` fields. General touchpad styles such as those for `toucharea` like touchpad height should go in the center tab styles.
+Touchpads and mousepads can have a separate icon and label for the center and each direction. You can also style each of these icons and labels independently using their own `CSS Styles` fields. General touchpad and mousepad styles such as those for `toucharea` (mousepad also uses this element name) like height should go in the center tab styles.
 
 ### A Note on Templating
 
@@ -282,7 +289,7 @@ You can include the current value of a remote element and it's units by using th
 
 ## Interactions
 
-There are three traditional ways to trigger an action - tap, double tap, and hold. Buttons and touchpad center support all three, touchpad swipes only support tap and hold actions, and sliders only support tap actions. Defining a double tap action that is not `none` introduces a 200ms delay to single tap actions.
+There are three traditional ways to trigger an action - tap, double tap, and hold. Buttons, touch/mousepad center support all three, touchpad (not mousepad) swipes only support tap and hold actions, and sliders only support tap actions. Defining a double tap action that is not `none` introduces a 200ms delay to single tap actions.
 
 <img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/editor_actions_interactions.png" alt="editor actions interactions" width="600"/>
 
@@ -341,6 +348,14 @@ The touchpad's center acts like a button, with support for the same actions. The
 
 Touchpads also support multi-touch mode, which fires alternate actions when more than one finger is used with it. This mode is disabled by default but can be enabled by setting a touchpad's multi-touch actions to something other than `Nothing`. Multi-touch mode supports center tap, double tap, and hold actions, and direction swipe and hold actions.
 
+### Mousepad Actions
+
+TODO config UI and image
+
+Similar to the touchpad, the mousepad's center acts like a button with support for tap, double tap, and hold actions, but it does not support momentary mode. The center also supports multi-touch mode. This mode is enabled by default.
+
+Instead of seprate direction actions, mousepads support a mouse action. This action is called whenever movement is detected on the mousepad, and is meant to be used with mouse movement actions like Unified Remote's `Core.Input MoveBy`. The mouse X and Y movement can be added to actions using templates using `deltaX` and `deltaY`. The mouse action can also be used in multi-touch mode.
+
 ### Keyboard, Textbox, and Search
 
 This card supports sending text to the following platforms:
@@ -349,9 +364,11 @@ This card supports sending text to the following platforms:
 - Sony BRAVIA
 - Fire TV
 - Roku
+- LG webOS
 - Kodi
+- Unified Remote (PC, Mac, Linux)
 
-If the user defined general platform is listed above, then any action set to a keyboard action (that has autofill enabled) will inherit it. Otherwise it will default to `Android TV`. Keyboard support for more platforms can be added if there is a way to do so through their Home Assistant (or possibly community made) integrations.
+If the user defined general platform is listed above, then any action set to a keyboard action (that has autofill enabled) will inherit it. Otherwise it will default to `Android TV`. Keyboard support for more platforms can be added if there is a way to do so through their Home Assistant (or community made) integrations.
 
 When you use any keyboard action, a dialog will open that can be typed into.
 
@@ -380,6 +397,8 @@ ADB can be slow and you may notice some delay in what you type and what appears 
 Send text to your supported media platform in bulk using the action or default button `textbox`. The dialog will not send any information until you tap the send button. It is highly recommended that you also create buttons for delete and enter so you can easily delete the text you send and quickly search using it.
 
 #### Search - Global Search
+
+Not supported by the platforms LG webOS or Unified Remote.
 
 Send a global search query to your media platform using the action or default button `search`. Like the bulk entry method, the dialog will not send any information until you tap the search button. This method cannot be used to enter text into currently visible text fields.
 

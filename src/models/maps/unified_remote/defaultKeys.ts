@@ -196,6 +196,10 @@ export const unifiedRemoteDefaultKeys: IElementConfig[] = [
 				action: 'right',
 			},
 		},
+		up: {},
+		down: {},
+		left: {},
+		right: {},
 	},
 	{
 		type: 'button',
@@ -465,5 +469,65 @@ export const unifiedRemoteDefaultKeys: IElementConfig[] = [
 		name: 'textbox',
 		tap_action: { action: 'textbox' },
 		icon: 'mdi:text-box',
+	},
+	{
+		type: 'button',
+		name: 'delete',
+		tap_action: {
+			action: 'perform-action',
+			perform_action: 'unified_remote.call',
+			data: {
+				remote_id: 'Core.Input',
+				action: 'Press',
+				extras: {
+					Values: [
+						{
+							Value: 'back',
+						},
+					],
+				},
+			},
+		},
+		icon: 'mdi:backspace',
+	},
+	{
+		type: 'button',
+		name: 'forward_delete',
+		tap_action: {
+			action: 'perform-action',
+			perform_action: 'unified_remote.call',
+			data: {
+				remote_id: 'Core.Input',
+				action: 'Press',
+				extras: {
+					Values: [
+						{
+							Value: 'delete',
+						},
+					],
+				},
+			},
+		},
+		icon: 'mdi:backspace-reverse',
+	},
+	{
+		type: 'button',
+		name: 'enter',
+		tap_action: {
+			action: 'perform-action',
+			perform_action: 'unified_remote.call',
+			data: {
+				remote_id: 'Core.Input',
+				action: 'Press',
+				extras: {
+					Values: [
+						{
+							Value: 'enter',
+						},
+					],
+				},
+			},
+		},
+		icon: 'mdi:magnify',
 	},
 ];

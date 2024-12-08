@@ -145,6 +145,12 @@ export const androidTVDefaultKeys: IElementConfig[] = [
 	},
 	{
 		type: 'button',
+		name: 'play_pause',
+		tap_action: { action: 'key', key: 'MEDIA_PLAY_PAUSE' },
+		icon: 'mdi:play-pause',
+	},
+	{
+		type: 'button',
 		name: 'play',
 		tap_action: { action: 'key', key: 'MEDIA_PLAY' },
 		icon: 'mdi:play',
@@ -154,12 +160,6 @@ export const androidTVDefaultKeys: IElementConfig[] = [
 		name: 'pause',
 		tap_action: { action: 'key', key: 'MEDIA_PAUSE' },
 		icon: 'mdi:pause',
-	},
-	{
-		type: 'button',
-		name: 'play_pause',
-		tap_action: { action: 'key', key: 'MEDIA_PLAY_PAUSE' },
-		icon: 'mdi:play-pause',
 	},
 	{
 		type: 'button',

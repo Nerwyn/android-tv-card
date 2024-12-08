@@ -21,6 +21,7 @@ export interface IElementConfig
 		IButtonConfig,
 		ISliderConfig,
 		ITouchpadConfig,
+		IMousepadConfig,
 		IActions {}
 
 interface IBaseElementConfig extends IDisplayConfig {
@@ -64,8 +65,4 @@ export interface ITouchpadConfig extends IBaseElementConfig, IActions {
 	right?: IBasicActions & IMultiActions & IMomentaryActions & IDisplayConfig;
 }
 
-export interface IMousepadConfig
-	extends IBaseElementConfig,
-		IBasicActions,
-		IMultiActions,
-		IMouseActions {}
+export interface IMousepadConfig extends ITouchpadConfig, IMouseActions {}
