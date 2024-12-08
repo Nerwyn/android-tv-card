@@ -15,20 +15,7 @@ export class RemoteMousepad extends RemoteTouchpad {
 			this.setHoldTimer();
 		}
 
-		if ('targetTouches' in e) {
-			let totalX = 0;
-			let totalY = 0;
-			this.targetTouches = e.targetTouches;
-			for (const touch of this.targetTouches) {
-				totalX += touch.clientX;
-				totalY += touch.clientY;
-			}
-			this.initialX = totalX / this.targetTouches.length;
-			this.initialY = totalY / this.targetTouches.length;
-		} else {
-			this.initialX = e.clientX;
-			this.initialY = e.clientY;
-		}
+		this.setInitialXY(e);
 	}
 
 	onEnd(e: TouchEvent | MouseEvent) {
@@ -50,31 +37,15 @@ export class RemoteMousepad extends RemoteTouchpad {
 			return;
 		}
 
-		let currentX: number = 0;
-		let currentY: number = 0;
-		if ('targetTouches' in e) {
-			this.targetTouches = e.targetTouches;
-			for (const touch of this.targetTouches) {
-				currentX += touch.clientX;
-				currentY += touch.clientY;
-			}
-			currentX = currentX / this.targetTouches.length;
-			currentY = currentY / this.targetTouches.length;
-		} else {
-			currentX = e.clientX ?? 0;
-			currentY = e.clientY ?? 0;
-		}
-
-		this.deltaX = currentX - this.initialX;
-		this.deltaY = currentY - this.initialY;
-		this.initialX = currentX;
-		this.initialY = currentY;
+		this.setDeltaXY(e);
+		this.initialX = this.deltaX ?? 0 + this.initialX;
+		this.initialY = this.deltaY ?? 0 + this.initialY;
 
 		// Only consider significant enough movement
 		const sensitivity = 2;
 		if (
 			this.holdMove ||
-			Math.abs(Math.abs(this.deltaX) - Math.abs(this.deltaY)) >
+			Math.abs(Math.abs(this.deltaX ?? 0) - Math.abs(this.deltaY ?? 0)) >
 				sensitivity
 		) {
 			clearTimeout(this.holdTimer);

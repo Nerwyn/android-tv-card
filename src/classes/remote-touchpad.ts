@@ -29,7 +29,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 	holdMove: boolean = false;
 	direction?: DirectionAction;
 
-	targetTouches?: TouchList;
+	targetTouches?: Touch[];
 
 	onClick(e: TouchEvent | MouseEvent) {
 		e.stopImmediatePropagation();
@@ -113,20 +113,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			this.setHoldTimer();
 		}
 
-		if ('targetTouches' in e) {
-			let totalX = 0;
-			let totalY = 0;
-			this.targetTouches = e.targetTouches;
-			for (const touch of this.targetTouches) {
-				totalX += touch.clientX;
-				totalY += touch.clientY;
-			}
-			this.initialX = totalX / this.targetTouches.length;
-			this.initialY = totalY / this.targetTouches.length;
-		} else {
-			this.initialX = e.clientX;
-			this.initialY = e.clientY;
-		}
+		this.setInitialXY(e);
 	}
 
 	onEnd(e: TouchEvent | MouseEvent) {
@@ -165,36 +152,20 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			return;
 		}
 
-		let currentX: number = 0;
-		let currentY: number = 0;
-		if ('targetTouches' in e) {
-			this.targetTouches = e.targetTouches;
-			for (const touch of this.targetTouches) {
-				currentX += touch.clientX;
-				currentY += touch.clientY;
-			}
-			currentX = currentX / this.targetTouches.length;
-			currentY = currentY / this.targetTouches.length;
-		} else {
-			currentX = e.clientX ?? 0;
-			currentY = e.clientY ?? 0;
-		}
-
-		this.deltaX = currentX - this.initialX;
-		this.deltaY = currentY - this.initialY;
+		this.setDeltaXY(e);
 
 		// Only consider significant enough movement
 		const sensitivity = 2;
 		if (
-			Math.abs(Math.abs(this.deltaX) - Math.abs(this.deltaY)) >
+			Math.abs(Math.abs(this.deltaX ?? 0) - Math.abs(this.deltaY ?? 0)) >
 			sensitivity
 		) {
-			if (Math.abs(this.deltaX) > Math.abs(this.deltaY)) {
+			if (Math.abs(this.deltaX ?? 0) > Math.abs(this.deltaY ?? 0)) {
 				// Sliding horizontally
-				this.direction = this.deltaX < 0 ? 'left' : 'right';
+				this.direction = this.deltaX ?? 0 < 0 ? 'left' : 'right';
 			} else {
 				// Sliding vertically
-				this.direction = this.deltaY < 0 ? 'up' : 'down';
+				this.direction = this.deltaY ?? 0 < 0 ? 'up' : 'down';
 			}
 			if (!this.holdMove) {
 				this.fireHapticEvent('light');
@@ -221,6 +192,60 @@ export class RemoteTouchpad extends BaseRemoteElement {
 	onTouchCancel(_e: TouchEvent) {
 		this.endAction();
 		this.toggleRipple();
+	}
+
+	setTargetTouches(targetTouches: TouchList) {
+		if (!this.targetTouches) {
+			this.targetTouches = Array.from(targetTouches ?? []);
+		} else {
+			for (const touch of targetTouches) {
+				const i = this.targetTouches.findIndex(
+					(t) => t.identifier == touch.identifier,
+				);
+				if (i >= 0) {
+					this.targetTouches[i] = touch;
+				} else {
+					this.targetTouches.push(touch);
+				}
+			}
+		}
+	}
+
+	setInitialXY(e: TouchEvent | MouseEvent) {
+		if ('targetTouches' in e) {
+			let totalX = 0;
+			let totalY = 0;
+			this.setTargetTouches(e.targetTouches);
+			for (const touch of this.targetTouches ?? []) {
+				totalX += touch.clientX;
+				totalY += touch.clientY;
+			}
+			this.initialX = totalX / (this.targetTouches?.length ?? 1);
+			this.initialY = totalY / (this.targetTouches?.length ?? 1);
+		} else {
+			this.initialX = e.clientX;
+			this.initialY = e.clientY;
+		}
+	}
+
+	setDeltaXY(e: TouchEvent | MouseEvent) {
+		let currentX: number = 0;
+		let currentY: number = 0;
+		if ('targetTouches' in e) {
+			this.setTargetTouches(e.targetTouches);
+			for (const touch of this.targetTouches ?? []) {
+				currentX += touch.clientX;
+				currentY += touch.clientY;
+			}
+			currentX = currentX / (this.targetTouches?.length ?? 1);
+			currentY = currentY / (this.targetTouches?.length ?? 1);
+		} else {
+			currentX = e.clientX ?? 0;
+			currentY = e.clientY ?? 0;
+		}
+
+		this.deltaX = currentX - (this.initialX ?? 0);
+		this.deltaY = currentY - (this.initialY ?? 0);
 	}
 
 	endAction() {
