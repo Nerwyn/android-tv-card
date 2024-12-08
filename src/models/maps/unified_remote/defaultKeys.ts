@@ -136,6 +136,7 @@ export const unifiedRemoteDefaultKeys: IElementConfig[] = [
 		name: 'mousepad',
 		mouse_action: {
 			action: 'perform-action',
+			perform_action: 'unified_remote.call',
 			data: {
 				remote_id: 'Relmtech.Basic Input',
 				action: 'delta',
@@ -156,6 +157,7 @@ export const unifiedRemoteDefaultKeys: IElementConfig[] = [
 		},
 		multi_mouse_action: {
 			action: 'perform-action',
+			perform_action: 'unified_remote.call',
 			data: {
 				remote_id: 'Relmtech.Basic Input',
 				action: 'delta', // TODO find scroll action

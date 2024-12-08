@@ -103,7 +103,7 @@ export class RemoteMousepad extends RemoteTouchpad {
 
 	render() {
 		this.setValue();
-		return html`<mousearea
+		return html`<toucharea
 			@mousedown=${this.onMouseDown}
 			@mouseup=${this.onMouseUp}
 			@mousemove=${this.onMouseMove}
@@ -115,7 +115,7 @@ export class RemoteMousepad extends RemoteTouchpad {
 			@contextmenu=${this.onContextMenu}
 			>${this.buildIcon(this.config.icon)}${this.buildLabel(
 				this.config.label,
-			)}</mousearea
+			)}</toucharea
 		>`;
 	}
 }
