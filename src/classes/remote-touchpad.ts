@@ -194,29 +194,29 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		this.toggleRipple();
 	}
 
-	setTargetTouches(targetTouches: TouchList) {
-		// if (!this.targetTouches) {
-		// 	this.targetTouches = Array.from(targetTouches ?? []);
-		// } else {
-		// 	for (const touch of targetTouches) {
-		// 		const i = this.targetTouches.findIndex(
-		// 			(t) => t.identifier == touch.identifier,
-		// 		);
-		// 		if (i >= 0) {
-		// 			this.targetTouches[i] = touch;
-		// 		} else {
-		// 			this.targetTouches.push(touch);
-		// 		}
-		// 	}
-		// }
-		this.targetTouches = Array.from(targetTouches ?? []);
+	setTargetTouches(e: TouchEvent) {
+		if (!this.targetTouches) {
+			this.targetTouches = Array.from(e.targetTouches ?? []);
+		} else {
+			for (const touch of e.targetTouches) {
+				const i = this.targetTouches.findIndex(
+					(t) => t.identifier == touch.identifier,
+				);
+				if (i >= 0) {
+					this.targetTouches[i] = touch;
+				} else {
+					this.targetTouches.push(touch);
+				}
+			}
+		}
+		console.log(this.targetTouches);
 	}
 
 	setInitialXY(e: TouchEvent | MouseEvent) {
 		if ('targetTouches' in e) {
 			let totalX = 0;
 			let totalY = 0;
-			this.setTargetTouches(e.targetTouches);
+			this.setTargetTouches(e);
 			for (const touch of this.targetTouches ?? []) {
 				totalX += touch.clientX;
 				totalY += touch.clientY;
@@ -233,7 +233,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		let currentX: number = 0;
 		let currentY: number = 0;
 		if ('targetTouches' in e) {
-			this.setTargetTouches(e.targetTouches);
+			this.setTargetTouches(e);
 			for (const touch of this.targetTouches ?? []) {
 				currentX += touch.clientX;
 				currentY += touch.clientY;
