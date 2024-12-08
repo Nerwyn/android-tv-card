@@ -155,6 +155,8 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		this.setDeltaXY(e);
 		const totalDeltaX = this.currentX ?? 0 - this.initialX;
 		const totalDeltaY = this.currentY ?? 0 - this.initialY;
+		console.log(`INITIAL: ${this.initialX},${this.initialY}`);
+		console.log(`CURRENT: ${this.currentX},${this.currentY}`);
 		console.log(`TOTAL DELTA: ${totalDeltaX},${totalDeltaY}`);
 
 		// Only consider significant enough movement
