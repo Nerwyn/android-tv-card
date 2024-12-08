@@ -195,20 +195,21 @@ export class RemoteTouchpad extends BaseRemoteElement {
 	}
 
 	setTargetTouches(targetTouches: TouchList) {
-		if (!this.targetTouches) {
-			this.targetTouches = Array.from(targetTouches ?? []);
-		} else {
-			for (const touch of targetTouches) {
-				const i = this.targetTouches.findIndex(
-					(t) => t.identifier == touch.identifier,
-				);
-				if (i >= 0) {
-					this.targetTouches[i] = touch;
-				} else {
-					this.targetTouches.push(touch);
-				}
-			}
-		}
+		// if (!this.targetTouches) {
+		// 	this.targetTouches = Array.from(targetTouches ?? []);
+		// } else {
+		// 	for (const touch of targetTouches) {
+		// 		const i = this.targetTouches.findIndex(
+		// 			(t) => t.identifier == touch.identifier,
+		// 		);
+		// 		if (i >= 0) {
+		// 			this.targetTouches[i] = touch;
+		// 		} else {
+		// 			this.targetTouches.push(touch);
+		// 		}
+		// 	}
+		// }
+		this.targetTouches = Array.from(targetTouches ?? []);
 	}
 
 	setInitialXY(e: TouchEvent | MouseEvent) {
