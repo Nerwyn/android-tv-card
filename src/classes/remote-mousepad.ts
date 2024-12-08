@@ -69,7 +69,6 @@ export class RemoteMousepad extends RemoteTouchpad {
 		this.deltaY = currentY - this.initialY;
 		this.initialX = currentX;
 		this.initialY = currentY;
-		console.log(`${this.deltaX},${this.deltaY}`);
 
 		// Only consider significant enough movement
 		const sensitivity = 2;

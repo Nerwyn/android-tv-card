@@ -138,13 +138,10 @@ export const unifiedRemoteDefaultKeys: IElementConfig[] = [
 			action: 'perform-action',
 			perform_action: 'unified_remote.call',
 			data: {
-				remote_id: 'Relmtech.Basic Input',
-				action: 'delta',
+				remote_id: 'Core.Input',
+				action: 'MoveBy',
 				extras: {
 					Values: [
-						{
-							Value: 0,
-						},
 						{
 							Value: '{{ 3 * deltaX }}',
 						},
@@ -159,18 +156,12 @@ export const unifiedRemoteDefaultKeys: IElementConfig[] = [
 			action: 'perform-action',
 			perform_action: 'unified_remote.call',
 			data: {
-				remote_id: 'Relmtech.Basic Input',
-				action: 'delta', // TODO find scroll action
+				remote_id: 'Core.Input',
+				action: '{{ "Horz" if (deltaX | abs) > (deltaY | abs) else "Vert" }}',
 				extras: {
 					Values: [
 						{
-							Value: 0,
-						},
-						{
-							Value: '{{ 3 * deltaX }}',
-						},
-						{
-							Value: '{{ 3 * deltaY }}',
+							Value: '{{ -0.2 * (deltaX if (deltaX | abs) > (deltaY | abs) else deltaY) }}',
 						},
 					],
 				},
@@ -180,16 +171,8 @@ export const unifiedRemoteDefaultKeys: IElementConfig[] = [
 			action: 'perform-action',
 			perform_action: 'unified_remote.call',
 			data: {
-				remote_id: 'Relmtech.Basic Input',
-				action: 'tap',
-			},
-		},
-		double_tap_action: {
-			action: 'perform-action',
-			perform_action: 'unified_remote.call',
-			data: {
-				remote_id: 'Relmtech.Basic Input',
-				action: 'double',
+				remote_id: 'Core.Input',
+				action: 'Click',
 			},
 		},
 		hold_action: {
