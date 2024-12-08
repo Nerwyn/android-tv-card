@@ -50,6 +50,7 @@ export class RemoteMousepad extends RemoteTouchpad {
 			this.targetTouches = e.targetTouches;
 			currentX = this.targetTouches[0].clientX;
 			currentY = this.targetTouches[0].clientY;
+			console.log(this.targetTouches);
 		} else {
 			currentX = e.clientX ?? 0;
 			currentY = e.clientY ?? 0;

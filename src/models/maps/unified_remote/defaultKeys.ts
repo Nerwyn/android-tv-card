@@ -2,6 +2,11 @@ import { IElementConfig } from '../../interfaces';
 
 /**
  * https://github.com/DaviPtrs/hass-unified-remote?tab=readme-ov-file#how-to-use
+ *
+ * https://github.com/unifiedremote/Remotes/blob/329d04f3c32b29038b0a6bc1ba034eefaff04267/Main/Monitor/remote_win.lua
+ * https://github.com/unifiedremote/Remotes/blob/329d04f3c32b29038b0a6bc1ba034eefaff04267/Main/Media/remote.lua
+ * https://github.com/unifiedremote/Remotes/blob/329d04f3c32b29038b0a6bc1ba034eefaff04267/Main/Keyboards/keyboard.lua
+ * https://github.com/unifiedremote/Remotes/blob/329d04f3c32b29038b0a6bc1ba034eefaff04267/Core/Input/remote.lua
  */
 export const unifiedRemoteDefaultKeys: IElementConfig[] = [
 	{
