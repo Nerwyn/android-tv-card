@@ -180,18 +180,21 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			currentY = e.clientY ?? 0;
 		}
 
-		const diffX = this.initialX - currentX;
-		const diffY = this.initialY - currentY;
+		this.deltaX = this.initialX - currentX;
+		this.deltaY = this.initialY - currentY;
 
 		// Only consider significant enough movement
 		const sensitivity = 2;
-		if (Math.abs(Math.abs(diffX) - Math.abs(diffY)) > sensitivity) {
-			if (Math.abs(diffX) > Math.abs(diffY)) {
+		if (
+			Math.abs(Math.abs(this.deltaX) - Math.abs(this.deltaY)) >
+			sensitivity
+		) {
+			if (Math.abs(this.deltaX) > Math.abs(this.deltaY)) {
 				// Sliding horizontally
-				this.direction = diffX > 0 ? 'left' : 'right';
+				this.direction = this.deltaX > 0 ? 'left' : 'right';
 			} else {
 				// Sliding vertically
-				this.direction = diffY > 0 ? 'up' : 'down';
+				this.direction = this.deltaY > 0 ? 'up' : 'down';
 			}
 			if (!this.holdMove) {
 				this.fireHapticEvent('light');
@@ -235,8 +238,6 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		this.direction = undefined;
 		this.clickCount = 0;
 
-		this.initialX = undefined;
-		this.initialY = undefined;
 		this.targetTouches = undefined;
 
 		super.endAction();
@@ -264,9 +265,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 
 		this.holdTimer = setTimeout(() => {
 			this.hold = true;
-
 			const actions = this.getActions();
-
 			const actionType = this.getMultiPrefix();
 
 			let repeat =

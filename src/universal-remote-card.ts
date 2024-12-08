@@ -22,6 +22,7 @@ import { getDefaultActions } from './utils';
 
 import './classes/keyboard-dialog';
 import './classes/remote-button';
+import './classes/remote-mousepad';
 import './classes/remote-slider';
 import './classes/remote-touchpad';
 import {
@@ -396,6 +397,18 @@ class UniversalRemoteCard extends LitElement {
 		></remote-touchpad>`;
 	}
 
+	buildMousepad(
+		elementName: string,
+		actions: IElementConfig,
+	): TemplateResult {
+		return html`<remote-mousepad
+			title="${elementName}"
+			.hass=${this.hass}
+			.config=${actions}
+			.icons=${this.config.custom_icons}
+		></remote-mousepad>`;
+	}
+
 	buildVolumeButtons(): TemplateResult[] {
 		return [
 			this.buildButton(
@@ -534,10 +547,14 @@ class UniversalRemoteCard extends LitElement {
 									this.buildSlider(elementName, actions),
 								);
 								break;
-
 							case 'touchpad':
 								rowContent.push(
 									this.buildTouchpad(elementName, actions),
+								);
+								break;
+							case 'mousepad':
+								rowContent.push(
+									this.buildMousepad(elementName, actions),
 								);
 								break;
 							case 'button':

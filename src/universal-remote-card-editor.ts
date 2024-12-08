@@ -623,6 +623,9 @@ export class UniversalRemoteCardEditor extends LitElement {
 			switch (
 				this.renderTemplate((entry as IElementConfig)?.type, context)
 			) {
+				case 'mousepad':
+					icon = 'mdi:mouse';
+					break;
 				case 'touchpad':
 					icon = 'mdi:gesture-tap-button';
 					break;

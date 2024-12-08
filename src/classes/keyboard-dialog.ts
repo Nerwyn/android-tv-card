@@ -107,8 +107,15 @@ export class KeyboardDialog extends LitElement {
 			this.onKeyDownFired = true;
 			this.hass.callService('unified_remote', 'call', {
 				target: this.config?.keyboard_id,
-				remote_id: 'Unified.SendText',
-				action: outKey,
+				remote_id: 'Core.Input',
+				action: 'Press',
+				extras: {
+					Values: [
+						{
+							Value: outKey,
+						},
+					],
+				},
 			});
 		}
 	}
@@ -120,68 +127,18 @@ export class KeyboardDialog extends LitElement {
 		const inputType = e.inputType ?? '';
 		const text = e.data ?? '';
 		if (text && inputType == 'insertText') {
-			const isUpperCase = text != text.toLowerCase();
-			if (isUpperCase) {
-				this.hass
-					.callService('unified_remote', 'call', {
-						target: this.config?.keyboard_id,
-						remote_id: 'Relmtech.Keyboard',
-						action: 'toggle',
-						extras: {
-							Values: [
-								{
-									Value: 'SHIFT',
-								},
-							],
+			this.hass.callService('unified_remote', 'call', {
+				target: this.config?.keyboard_id,
+				remote_id: 'Core.Input',
+				action: 'Text',
+				extras: {
+					Values: [
+						{
+							Value: text,
 						},
-					})
-					.then(() => {
-						this.hass
-							.callService('unified_remote', 'call', {
-								target: this.config?.keyboard_id,
-								remote_id: 'Relmtech.Keyboard',
-								action: 'toggle',
-								extras: {
-									Values: [
-										{
-											Value: text,
-										},
-									],
-								},
-							})
-							.then(() => {
-								this.hass.callService(
-									'unified_remote',
-									'call',
-									{
-										target: this.config?.keyboard_id,
-										remote_id: 'Relmtech.Keyboard',
-										action: 'toggle',
-										extras: {
-											Values: [
-												{
-													Value: 'SHIFT',
-												},
-											],
-										},
-									},
-								);
-							});
-					});
-			} else {
-				this.hass.callService('unified_remote', 'call', {
-					target: this.config?.keyboard_id,
-					remote_id: 'Relmtech.Keyboard',
-					action: 'toggle',
-					extras: {
-						Values: [
-							{
-								Value: text,
-							},
-						],
-					},
-				});
-			}
+					],
+				},
+			});
 		} else if (!this.onKeyDownFired) {
 			const inputTypeToKey: Record<string, string> = {
 				deleteContentBackward: 'back',
@@ -192,8 +149,15 @@ export class KeyboardDialog extends LitElement {
 			if (key) {
 				this.hass.callService('unified_remote', 'call', {
 					target: this.config?.keyboard_id,
-					remote_id: 'Unified.SendText',
-					action: key,
+					remote_id: 'Core.Input',
+					action: 'Press',
+					extras: {
+						Values: [
+							{
+								Value: key,
+							},
+						],
+					},
 				});
 			}
 		}
@@ -375,26 +339,18 @@ export class KeyboardDialog extends LitElement {
 		if (text) {
 			switch (this.config?.platform as KeyboardPlatform) {
 				case 'Unified Remote':
-					this.hass
-						.callService('unified_remote', 'call', {
-							target: this.config?.keyboard_id,
-							remote_id: 'Unified.SendText',
-							action: 'change',
-							extras: {
-								Values: [
-									{
-										Value: text,
-									},
-								],
-							},
-						})
-						.then(() => {
-							this.hass.callService('unified_remote', 'call', {
-								target: this.config?.keyboard_id,
-								remote_id: 'Unified.SendText',
-								action: 'send',
-							});
-						});
+					this.hass.callService('unified_remote', 'call', {
+						target: this.config?.keyboard_id,
+						remote_id: 'Core.Input',
+						action: 'Text',
+						extras: {
+							Values: [
+								{
+									Value: text,
+								},
+							],
+						},
+					});
 					break;
 				case 'Kodi':
 					this.hass.callService('kodi', 'call_method', {
@@ -478,27 +434,18 @@ export class KeyboardDialog extends LitElement {
 		if (text) {
 			switch (this.config?.platform as KeyboardPlatform) {
 				case 'Unified Remote':
-					this.hass
-						.callService('unified_remote', 'call', {
-							target: this.config?.keyboard_id,
-							remote_id: 'Unified.SendText',
-							action: 'change',
-							extras: {
-								Values: [
-									{
-										Value: text,
-									},
-								],
-							},
-						})
-						.then(() => {
-							this.hass.callService('unified_remote', 'call', {
-								target: this.config?.keyboard_id,
-								remote_id: 'Unified.SendText',
-								action: 'send',
-							});
-							this.closeDialog();
-						});
+					this.hass.callService('unified_remote', 'call', {
+						target: this.config?.keyboard_id,
+						remote_id: 'Core.Input',
+						action: 'Text',
+						extras: {
+							Values: [
+								{
+									Value: text,
+								},
+							],
+						},
+					});
 					break;
 				case 'Kodi':
 					this.hass.callService('kodi', 'call_method', {
@@ -507,7 +454,6 @@ export class KeyboardDialog extends LitElement {
 						text: text,
 						done: false,
 					});
-					this.closeDialog();
 					break;
 				case 'LG webOS':
 					this.hass.callService('webostv', 'command', {
@@ -518,14 +464,12 @@ export class KeyboardDialog extends LitElement {
 							replace: true,
 						},
 					});
-					this.closeDialog();
 					break;
 				case 'Roku':
 					this.hass.callService('remote', 'send_command', {
 						entity_id: this.getRokuId('remote'),
 						command: `Lit_${text}`,
 					});
-					this.closeDialog();
 					break;
 				case 'Fire TV':
 				case 'Sony BRAVIA':
@@ -539,10 +483,10 @@ export class KeyboardDialog extends LitElement {
 							command: `input text "${text}"`,
 						},
 					);
-					this.closeDialog();
 					break;
 			}
 		}
+		this.closeDialog();
 	}
 
 	enterDialog() {
@@ -550,10 +494,16 @@ export class KeyboardDialog extends LitElement {
 			case 'Unified Remote':
 				this.hass.callService('unified_remote', 'call', {
 					target: this.config?.keyboard_id,
-					remote_id: 'Unified.SendText',
-					action: 'enter',
+					remote_id: 'Core.Input',
+					action: 'Text',
+					extras: {
+						Values: [
+							{
+								Value: this.textarea?.value ?? '',
+							},
+						],
+					},
 				});
-
 				break;
 			case 'Kodi':
 				this.hass.callService('kodi', 'call_method', {

@@ -4,10 +4,16 @@ import {
 	IBasicActions,
 	IConfig,
 	IMomentaryActions,
+	IMouseActions,
 	IMultiActions,
 } from '.';
 
-export const RemoteElementTypes = ['button', 'slider', 'touchpad'] as const;
+export const RemoteElementTypes = [
+	'button',
+	'slider',
+	'touchpad',
+	'mousepad',
+] as const;
 export type RemoteElementType = (typeof RemoteElementTypes)[number];
 
 export interface IElementConfig
@@ -57,3 +63,9 @@ export interface ITouchpadConfig extends IBaseElementConfig, IActions {
 	left?: IBasicActions & IMultiActions & IMomentaryActions & IDisplayConfig;
 	right?: IBasicActions & IMultiActions & IMomentaryActions & IDisplayConfig;
 }
+
+export interface IMousepadConfig
+	extends IBaseElementConfig,
+		IBasicActions,
+		IMultiActions,
+		IMouseActions {}

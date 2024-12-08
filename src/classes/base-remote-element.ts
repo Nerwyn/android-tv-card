@@ -44,6 +44,8 @@ export class BaseRemoteElement extends LitElement {
 	swiping?: boolean = false;
 	initialX?: number;
 	initialY?: number;
+	deltaX?: number;
+	deltaY?: number;
 
 	fireHapticEvent(haptic: HapticType) {
 		if (
@@ -66,11 +68,19 @@ export class BaseRemoteElement extends LitElement {
 		this.swiping = false;
 		this.initialX = undefined;
 		this.initialY = undefined;
+		this.deltaX = undefined;
+		this.deltaY = undefined;
 	}
 
 	sendAction(actionType: ActionType, config: IActions = this.config) {
 		let action;
 		switch (actionType) {
+			case 'mouse_action':
+				action = config.mouse_action;
+				break;
+			case 'multi_mouse_action':
+				action = config.multi_mouse_action ?? config.mouse_action;
+				break;
 			case 'momentary_start_action':
 				action = config.momentary_start_action;
 				break;
@@ -622,6 +632,10 @@ export class BaseRemoteElement extends LitElement {
 			value: this.value as string,
 			hold_secs: holdSecs ?? 0,
 			unit: this.unitOfMeasurement,
+			initialX: this.initialX,
+			initialY: this.initialY,
+			deltaX: this.deltaX,
+			deltaY: this.deltaY,
 			config: {
 				...this.config,
 				entity: this.entityId,

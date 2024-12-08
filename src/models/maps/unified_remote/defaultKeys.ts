@@ -132,6 +132,82 @@ export const unifiedRemoteDefaultKeys: IElementConfig[] = [
 		},
 	},
 	{
+		type: 'mousepad',
+		name: 'mousepad',
+		mouse_action: {
+			action: 'perform-action',
+			data: {
+				remote_id: 'Relmtech.Basic Input',
+				action: 'delta',
+				extras: {
+					Values: [
+						{
+							Value: 0,
+						},
+						{
+							Value: '{{ deltaX }}',
+						},
+						{
+							Value: '{{ deltaY }}',
+						},
+					],
+				},
+			},
+		},
+		multi_mouse_action: {
+			action: 'perform-action',
+			data: {
+				remote_id: 'Relmtech.Basic Input',
+				action: 'delta', // TODO find scroll action
+				extras: {
+					Values: [
+						{
+							Value: 0,
+						},
+						{
+							Value: '{{ deltaX }}',
+						},
+						{
+							Value: '{{ deltaY }}',
+						},
+					],
+				},
+			},
+		},
+		tap_action: {
+			action: 'perform-action',
+			perform_action: 'unified_remote.call',
+			data: {
+				remote_id: 'Relmtech.Basic Input',
+				action: 'tap',
+			},
+		},
+		double_tap_action: {
+			action: 'perform-action',
+			perform_action: 'unified_remote.call',
+			data: {
+				remote_id: 'Relmtech.Basic Input',
+				action: 'double',
+			},
+		},
+		hold_action: {
+			action: 'perform-action',
+			perform_action: 'unified_remote.call',
+			data: {
+				remote_id: 'Relmtech.Basic Input',
+				action: 'hold',
+			},
+		},
+		multi_tap_action: {
+			action: 'perform-action',
+			perform_action: 'unified_remote.call',
+			data: {
+				remote_id: 'Relmtech.Basic Input',
+				action: 'right',
+			},
+		},
+	},
+	{
 		type: 'button',
 		name: 'up',
 		tap_action: {
