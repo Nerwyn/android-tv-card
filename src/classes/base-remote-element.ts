@@ -432,7 +432,7 @@ export class BaseRemoteElement extends LitElement {
 
 	setValue() {
 		this.entityId = this.renderTemplate(
-			this.config.entity_id as string,
+			this.config.entity_id ?? '',
 		) as string;
 
 		this.unitOfMeasurement =
