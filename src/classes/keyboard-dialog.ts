@@ -495,11 +495,11 @@ export class KeyboardDialog extends LitElement {
 				this.hass.callService('unified_remote', 'call', {
 					target: this.config?.keyboard_id,
 					remote_id: 'Core.Input',
-					action: 'Text',
+					action: 'Press',
 					extras: {
 						Values: [
 							{
-								Value: this.textarea?.value ?? '',
+								Value: 'enter',
 							},
 						],
 					},
