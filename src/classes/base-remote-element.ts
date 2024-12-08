@@ -44,6 +44,8 @@ export class BaseRemoteElement extends LitElement {
 	swiping?: boolean = false;
 	initialX?: number;
 	initialY?: number;
+	currentX?: number;
+	currentY?: number;
 	deltaX?: number;
 	deltaY?: number;
 
@@ -68,6 +70,8 @@ export class BaseRemoteElement extends LitElement {
 		this.swiping = false;
 		this.initialX = undefined;
 		this.initialY = undefined;
+		this.currentX = undefined;
+		this.currentY = undefined;
 		this.deltaX = undefined;
 		this.deltaY = undefined;
 	}
@@ -634,6 +638,8 @@ export class BaseRemoteElement extends LitElement {
 			unit: this.unitOfMeasurement,
 			initialX: this.initialX,
 			initialY: this.initialY,
+			currentX: this.currentX,
+			currentY: this.currentY,
 			deltaX: this.deltaX,
 			deltaY: this.deltaY,
 			config: {

@@ -153,19 +153,21 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		}
 
 		this.setDeltaXY(e);
+		const totalDeltaX = this.currentX ?? 0 - this.initialX;
+		const totalDeltaY = this.currentY ?? 0 - this.initialY;
 
 		// Only consider significant enough movement
 		const sensitivity = 2;
 		if (
-			Math.abs(Math.abs(this.deltaX ?? 0) - Math.abs(this.deltaY ?? 0)) >
+			Math.abs(Math.abs(totalDeltaX ?? 0) - Math.abs(totalDeltaY ?? 0)) >
 			sensitivity
 		) {
-			if (Math.abs(this.deltaX ?? 0) > Math.abs(this.deltaY ?? 0)) {
+			if (Math.abs(totalDeltaX ?? 0) > Math.abs(totalDeltaY ?? 0)) {
 				// Sliding horizontally
-				this.direction = this.deltaX ?? 0 < 0 ? 'left' : 'right';
+				this.direction = totalDeltaX ?? 0 < 0 ? 'left' : 'right';
 			} else {
 				// Sliding vertically
-				this.direction = this.deltaY ?? 0 < 0 ? 'up' : 'down';
+				this.direction = totalDeltaY ?? 0 < 0 ? 'up' : 'down';
 			}
 			if (!this.holdMove) {
 				this.fireHapticEvent('light');
@@ -209,7 +211,6 @@ export class RemoteTouchpad extends BaseRemoteElement {
 				}
 			}
 		}
-		console.log(this.targetTouches[0]);
 	}
 
 	setInitialXY(e: TouchEvent | MouseEvent) {
@@ -227,6 +228,8 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			this.initialX = e.clientX;
 			this.initialY = e.clientY;
 		}
+		this.currentX = this.initialX;
+		this.currentY = this.initialY;
 		console.log(`INITIAL: ${this.initialX},${this.initialY}`);
 	}
 
@@ -246,8 +249,10 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			currentY = e.clientY ?? 0;
 		}
 
-		this.deltaX = currentX - (this.initialX ?? 0);
-		this.deltaY = currentY - (this.initialY ?? 0);
+		this.deltaX = currentX - (this.currentX ?? 0);
+		this.deltaY = currentY - (this.currentY ?? 0);
+		this.currentX = currentX;
+		this.currentY = currentY;
 		console.log(`DELTA: ${this.deltaX},${this.deltaY}`);
 	}
 
