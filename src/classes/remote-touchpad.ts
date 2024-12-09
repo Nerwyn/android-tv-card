@@ -136,13 +136,17 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			e.stopImmediatePropagation();
 			e.preventDefault();
 			this.endAction();
+			console.log('Ending action after hold/move');
 			if ('targetTouches' in e && e.targetTouches?.length) {
 				this.holdMove = true;
+				console.log('Finger still down, setting holdMove to true');
 			}
 		} else if (
 			!this.holdMove &&
 			(!('targetTouches' in e) || !e.targetTouches.length)
 		) {
+			console.log(`holdMove: ${this.holdMove}`);
+			console.log(`Touches: ${(e as TouchEvent).targetTouches}`);
 			this.onClick(e);
 		}
 		this.toggleRipple();
