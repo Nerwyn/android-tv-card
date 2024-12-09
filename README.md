@@ -287,6 +287,8 @@ Almost all fields support nunjucks templating. Nunjucks is a templating engine f
 
 You can include the current value of a remote element and it's units by using the variables `value` and `unit` in a label template. You can also include `hold_secs` in a template if performing a momentary end action. Each remote element can also reference it's configuration using `config` within templates. `config.entity` and `config.attribute` will return the remote element's entity ID and attribute with their templates rendered (if they have them), and other templated config fields can be rendered within templates by wrapping them in the function `render` within a template. You can access the entire card config in a template via `config.card`, and global values such as remote ID within that like `config.card.remote_id`. Note that default values for some fields are not actually in the config and will not appear in templates, and you have to default to them using "or", like `config.card.platform or 'Android TV'`.
 
+You can include touch location information in your templates using the values `initialX`, `initialY`, `currentX`, `currentY`, `deltaX`, and `deltaY` This is especially useful when using mouse interactions on the touchpad, like with the Unified Remote default mousepad.
+
 ## Interactions
 
 There are three traditional ways to trigger an action - tap, double tap, and hold. Buttons, touchpad center support all three, touchpad swipes only support tap and hold actions, and sliders only support tap actions. Defining a double tap action that is not `none` introduces a 200ms delay to single tap actions.
