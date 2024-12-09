@@ -568,6 +568,21 @@ export class UniversalRemoteCardEditor extends LitElement {
 		const context = this.getEntryContext(entry);
 		if (
 			this.renderTemplate(
+				entry?.mouse_action?.action ?? 'none',
+				context,
+			) != 'none' ||
+			this.renderTemplate(
+				entry?.multi_mouse_action?.action ?? 'none',
+				context,
+			) != 'none'
+		) {
+			if (entryType == 'touchpad' && this.touchpadTabIndex == 2) {
+				this.actionsTabIndex = 3;
+			} else {
+				this.actionsTabIndex = 0;
+			}
+		} else if (
+			this.renderTemplate(
 				entry?.momentary_start_action?.action ?? 'none',
 				context,
 			) != 'none' ||
@@ -1089,12 +1104,13 @@ export class UniversalRemoteCardEditor extends LitElement {
 				'Android TV',
 			context,
 		) as string;
+
 		return html`<div class="action-options">
 			${this.buildSelector(label, actionType, selector)}
-			${action != 'none' && actionType == 'double_tap_action'
+			${action != 'none' && actionType.includes('double_tap_action')
 				? this.buildSelector(
 						'Double tap window',
-						'double_tap_action.double_tap_window',
+						`${actionType}.double_tap_window`,
 						{
 							number: {
 								min: 0,
@@ -1107,28 +1123,12 @@ export class UniversalRemoteCardEditor extends LitElement {
 							? this.config.double_tap_window
 							: undefined) ?? DOUBLE_TAP_WINDOW,
 				  )
-				: action != 'none' && actionType == 'multi_double_tap_action'
-				? this.buildSelector(
-						'Double tap window',
-						'multi_double_tap_action.double_tap_window',
-						{
-							number: {
-								min: 0,
-								step: 0,
-								mode: 'box',
-								unit_of_measurement: 'ms',
-							},
-						},
-						(autofill
-							? this.config.double_tap_window
-							: undefined) ?? DOUBLE_TAP_WINDOW,
-				  )
-				: actionType == 'hold_action' &&
-				  (this.activeEntry as IElementConfig).hold_action
+				: actionType.includes('hold_action') &&
+				  (this.activeEntry as IElementConfig)[actionType]
 				? html`<div class="actions-form">
 						${this.buildSelector(
 							'Hold time',
-							'hold_action.hold_time',
+							`${actionType}.hold_time`,
 							{
 								number: {
 									min: 0,
@@ -1141,13 +1141,13 @@ export class UniversalRemoteCardEditor extends LitElement {
 								HOLD_TIME,
 						)}
 						${this.renderTemplate(
-							(this.activeEntry as IElementConfig)?.hold_action
+							(this.activeEntry as IElementConfig)?.[actionType]
 								?.action as string,
 							context,
 						) == 'repeat'
 							? this.buildSelector(
 									'Repeat delay',
-									'hold_action.repeat_delay',
+									`${actionType}.repeat_delay`,
 									{
 										number: {
 											min: 0,
@@ -1162,45 +1162,20 @@ export class UniversalRemoteCardEditor extends LitElement {
 							  )
 							: ''}
 				  </div>`
-				: actionType == 'multi_hold_action' &&
-				  (this.activeEntry as IElementConfig).multi_hold_action
-				? html`<div class="actions-form">
-						${this.buildSelector(
-							'Hold time',
-							'multi_hold_action.hold_time',
-							{
-								number: {
-									min: 0,
-									step: 0,
-									mode: 'box',
-									unit_of_measurement: 'ms',
-								},
+				: action != 'none' && actionType.includes('mouse_action')
+				? this.buildSelector(
+						'Repeat delay',
+						`${actionType}.repeat_delay`,
+						{
+							number: {
+								min: 0,
+								step: 0,
+								mode: 'box',
+								unit_of_measurement: 'ms',
 							},
-							(autofill ? this.config.hold_time : undefined) ??
-								HOLD_TIME,
-						)}
-						${this.renderTemplate(
-							(this.activeEntry as IElementConfig)
-								?.multi_hold_action?.action as string,
-							context,
-						) == 'repeat'
-							? this.buildSelector(
-									'Repeat delay',
-									'multi_hold_action.repeat_delay',
-									{
-										number: {
-											min: 0,
-											step: 0,
-											mode: 'box',
-											unit_of_measurement: 'ms',
-										},
-									},
-									(autofill
-										? this.config.repeat_delay
-										: undefined) ?? REPEAT_DELAY,
-							  )
-							: ''}
-				  </div>`
+						},
+						0,
+				  )
 				: ''}
 			${action == 'key'
 				? html`<div class="actions-form">
@@ -1476,6 +1451,10 @@ export class UniversalRemoteCardEditor extends LitElement {
 			case 1:
 				actionSelectors = html`
 					${actionsTabBar}
+					${this.buildAlertBox(
+						'Enabling momentary actions disables tap, double tap, and hold actions.',
+						'warning',
+					)}
 					${this.buildActionOption(
 						'Start behavior (optional)',
 						'momentary_start_action',
@@ -1641,7 +1620,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 	buildTouchpadGuiEditor() {
 		const tabs = ['default', 'multi-touch'];
 		if (this.touchpadTabIndex == 2) {
-			tabs.push('momentary');
+			tabs.push(...['momentary', 'mouse']);
 		}
 		const actionsTabBar = this.buildTabBar(
 			this.actionsTabIndex,
@@ -1657,9 +1636,32 @@ export class UniversalRemoteCardEditor extends LitElement {
 			},
 		};
 		switch (this.actionsTabIndex) {
+			case 3:
+				actionSelectors = html`
+					${actionsTabBar}
+					${this.buildAlertBox(
+						'Enabling mouse actions disables directional swipe actions.',
+						'warning',
+					)}
+					${this.buildActionOption(
+						'Mouse behavior (optional)',
+						'mouse_action',
+						defaultUiActions,
+					)}
+					${this.buildActionOption(
+						'Multi-touch mouse behavior (optional)',
+						'multi_mouse_action',
+						defaultUiActions,
+					)}
+				`;
+				break;
 			case 2:
 				actionSelectors = html`
 					${actionsTabBar}
+					${this.buildAlertBox(
+						'Enabling momentary actions disables tap, double tap, and hold actions.',
+						'warning',
+					)}
 					${this.buildActionOption(
 						'Start behavior (optional)',
 						'momentary_start_action',
