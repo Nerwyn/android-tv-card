@@ -137,7 +137,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			if (e.cancelable) {
 				e.preventDefault();
 			}
-			let holdMove = this.holdMove;
+			let holdMove = false;
 			if ((this.targetTouches?.length ?? 0) > 1) {
 				holdMove = true;
 			}
