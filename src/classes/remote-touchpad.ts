@@ -162,7 +162,6 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		const multiPrefix = this.getMultiPrefix();
 
 		// Only consider significant enough movement
-		const sensitivity = 2;
 		const totalDeltaX = (this.currentX ?? 0) - this.initialX;
 		const totalDeltaY = (this.currentY ?? 0) - this.initialY;
 		if (
@@ -173,8 +172,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			// Mouse actions
 			if (
 				this.holdMove ||
-				Math.abs(Math.abs(totalDeltaX) - Math.abs(totalDeltaY)) >
-					sensitivity
+				Math.abs(Math.abs(totalDeltaX) - Math.abs(totalDeltaY)) > 1
 			) {
 				if (this.fireMouseAction) {
 					clearTimeout(this.holdTimer);
@@ -196,10 +194,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 				}
 			}
 		} else {
-			if (
-				Math.abs(Math.abs(totalDeltaX) - Math.abs(totalDeltaY)) >
-				sensitivity
-			) {
+			if (Math.abs(Math.abs(totalDeltaX) - Math.abs(totalDeltaY)) > 2) {
 				// Directional actions
 				if (Math.abs(totalDeltaX) > Math.abs(totalDeltaY)) {
 					this.direction = totalDeltaX < 0 ? 'left' : 'right';
