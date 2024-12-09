@@ -29,8 +29,6 @@ export class RemoteTouchpad extends BaseRemoteElement {
 	holdMove: boolean = false;
 	direction?: DirectionAction;
 
-	targetTouches?: Touch[];
-
 	onClick(e: TouchEvent | MouseEvent) {
 		e.stopImmediatePropagation();
 		this.clickCount++;
@@ -89,6 +87,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 	}
 
 	onStart(e: TouchEvent | MouseEvent) {
+		super.onStart(e);
 		this.cancelRippleToggle();
 		this.holdStart = true;
 
@@ -112,8 +111,6 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		} else if (!this.holdTimer) {
 			this.setHoldTimer();
 		}
-
-		this.setInitialXY(e);
 	}
 
 	onEnd(e: TouchEvent | MouseEvent) {
@@ -151,10 +148,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		if (!this.initialX || !this.initialY || !this.holdStart) {
 			return;
 		}
-
-		this.setDeltaXY(e);
-		const totalDeltaX = (this.currentX ?? 0) - this.initialX;
-		const totalDeltaY = (this.currentY ?? 0) - this.initialY;
+		super.onMove(e);
 
 		// Only consider significant enough movement
 		const sensitivity = 2;
@@ -166,6 +160,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 					this.config.multi_mouse_action?.action ?? 'none',
 				) != 'none')
 		) {
+			// Mouse actions
 			if (
 				this.holdMove ||
 				Math.abs(
@@ -179,15 +174,16 @@ export class RemoteTouchpad extends BaseRemoteElement {
 				}
 			}
 		} else {
+			const totalDeltaX = (this.currentX ?? 0) - this.initialX;
+			const totalDeltaY = (this.currentY ?? 0) - this.initialY;
 			if (
 				Math.abs(Math.abs(totalDeltaX) - Math.abs(totalDeltaY)) >
 				sensitivity
 			) {
+				// Directional actions
 				if (Math.abs(totalDeltaX) > Math.abs(totalDeltaY)) {
-					// Sliding horizontally
 					this.direction = totalDeltaX < 0 ? 'left' : 'right';
 				} else {
-					// Sliding vertically
 					this.direction = totalDeltaY < 0 ? 'up' : 'down';
 				}
 				if (!this.holdMove) {
@@ -218,64 +214,6 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		this.toggleRipple();
 	}
 
-	setTargetTouches(e: TouchEvent) {
-		if (!this.targetTouches) {
-			this.targetTouches = Array.from(e.targetTouches ?? []);
-		} else {
-			for (const touch of e.targetTouches) {
-				const i = this.targetTouches.findIndex(
-					(t) => t.identifier == touch.identifier,
-				);
-				if (i >= 0) {
-					this.targetTouches[i] = touch;
-				} else {
-					this.targetTouches.push(touch);
-				}
-			}
-		}
-	}
-
-	setInitialXY(e: TouchEvent | MouseEvent) {
-		if ('targetTouches' in e) {
-			let totalX = 0;
-			let totalY = 0;
-			this.setTargetTouches(e);
-			for (const touch of this.targetTouches ?? []) {
-				totalX += touch.clientX;
-				totalY += touch.clientY;
-			}
-			this.initialX = totalX / (this.targetTouches?.length ?? 1);
-			this.initialY = totalY / (this.targetTouches?.length ?? 1);
-		} else {
-			this.initialX = e.clientX;
-			this.initialY = e.clientY;
-		}
-		this.currentX = this.initialX;
-		this.currentY = this.initialY;
-	}
-
-	setDeltaXY(e: TouchEvent | MouseEvent) {
-		let currentX: number = 0;
-		let currentY: number = 0;
-		if ('targetTouches' in e) {
-			this.setTargetTouches(e);
-			for (const touch of this.targetTouches ?? []) {
-				currentX += touch.clientX;
-				currentY += touch.clientY;
-			}
-			currentX = currentX / (this.targetTouches?.length ?? 1);
-			currentY = currentY / (this.targetTouches?.length ?? 1);
-		} else {
-			currentX = e.clientX ?? 0;
-			currentY = e.clientY ?? 0;
-		}
-
-		this.deltaX = currentX - (this.currentX ?? 0);
-		this.deltaY = currentY - (this.currentY ?? 0);
-		this.currentX = currentX;
-		this.currentY = currentY;
-	}
-
 	endAction() {
 		clearTimeout(this.holdTimer as ReturnType<typeof setTimeout>);
 		clearInterval(this.holdInterval as ReturnType<typeof setInterval>);
@@ -290,8 +228,6 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		this.holdMove = false;
 		this.direction = undefined;
 		this.clickCount = 0;
-
-		this.targetTouches = undefined;
 
 		super.endAction();
 	}

@@ -61,15 +61,9 @@ export class RemoteButton extends BaseRemoteElement {
 	}
 
 	onStart(e: TouchEvent | MouseEvent) {
+		super.onStart(e);
 		this.cancelRippleToggle();
 		this.swiping = false;
-		if ('targetTouches' in e) {
-			this.initialX = e.targetTouches[0].clientX;
-			this.initialY = e.targetTouches[0].clientY;
-		} else {
-			this.initialX = e.clientX;
-			this.initialY = e.clientY;
-		}
 
 		if (
 			this.renderTemplate(
@@ -159,14 +153,17 @@ export class RemoteButton extends BaseRemoteElement {
 			currentX = e.clientX;
 			currentY = e.clientY;
 		}
-
-		this.deltaX = currentX - (this.initialX ?? currentX);
-		this.deltaY = currentY - (this.initialY ?? currentY);
+		this.deltaX = currentX - (this.currentX ?? currentX);
+		this.deltaY = currentY - (this.currentY ?? currentY);
+		this.currentX = currentX;
+		this.currentY = currentY;
 
 		// Only consider significant enough movement
 		const sensitivity = 24;
+		const totalDeltaX = this.currentX - (this.initialX ?? 0);
+		const totalDeltaY = this.currentY - (this.initialY ?? 0);
 		if (
-			Math.abs(Math.abs(this.deltaX) - Math.abs(this.deltaY)) >
+			Math.abs(Math.abs(totalDeltaX) - Math.abs(totalDeltaY)) >
 			sensitivity
 		) {
 			this.endAction();

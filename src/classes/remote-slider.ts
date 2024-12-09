@@ -115,7 +115,8 @@ export class RemoteSlider extends BaseRemoteElement {
 		}
 	}
 
-	onStart(e: MouseEvent | TouchEvent) {
+	onStart(e: TouchEvent | MouseEvent) {
+		super.onStart(e);
 		const slider = e.currentTarget as HTMLInputElement;
 
 		if (!this.swiping) {
@@ -129,7 +130,7 @@ export class RemoteSlider extends BaseRemoteElement {
 		}
 	}
 
-	onEnd(_e: MouseEvent | TouchEvent) {
+	onEnd(_e: TouchEvent | MouseEvent) {
 		this.setThumbOffset();
 		this.showTooltip = false;
 		this.setValue();
@@ -157,29 +158,15 @@ export class RemoteSlider extends BaseRemoteElement {
 		this.resetGetValueFromHass();
 	}
 
-	onMove(e: MouseEvent | TouchEvent) {
+	onMove(e: TouchEvent | MouseEvent) {
 		if (!this.vertical) {
-			let currentX: number;
-			if ('clientX' in e) {
-				currentX = e.clientX;
-			} else {
-				currentX = e.touches[0].clientX;
-			}
-			let currentY: number;
-			if ('clientY' in e) {
-				currentY = e.clientY;
-			} else {
-				currentY = e.touches[0].clientY;
-			}
+			super.onMove(e);
 
-			if (this.initialY == undefined) {
-				this.initialY = currentY;
-			}
-			if (this.initialX == undefined) {
-				this.initialX = currentX;
-			} else if (
-				Math.abs(currentX - this.initialX) <
-				Math.abs(currentY - this.initialY) - 50
+			const sensitivity = 50;
+			if (
+				Math.abs((this.currentX ?? 0) - (this.initialX ?? 0)) <
+				Math.abs((this.currentY ?? 0) - (this.initialY ?? 0)) -
+					sensitivity
 			) {
 				this.swiping = true;
 				this.getValueFromHass = true;

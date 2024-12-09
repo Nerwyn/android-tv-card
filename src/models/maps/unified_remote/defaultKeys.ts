@@ -137,7 +137,7 @@ export const unifiedRemoteDefaultKeys: IElementConfig[] = [
 		},
 	},
 	{
-		type: 'mousepad',
+		type: 'touchpad',
 		name: 'mousepad',
 		mouse_action: {
 			action: 'perform-action',

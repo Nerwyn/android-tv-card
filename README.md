@@ -25,16 +25,16 @@ A super customizable universal remote card iterating on the work of several othe
   - Roku (with keyboard)
   - LG webOS (with keyboard)
   - Kodi (with keyboard)
-  - Unified Remote for computers (with keyboard and mousepad)
+  - Unified Remote for computers (with keyboard)
   - Apple TV
   - Samsung TV
   - Jellyfin
-- Support for multiple buttons, touchpads, mousepads, and sliders using default or user defined custom actions.
+- Support for multiple buttons, touchpads, and sliders using default or user defined custom actions.
 - Complete [Home Assistant actions](https://www.home-assistant.io/dashboards/actions/) support.
 - Keyboard and search dialog actions for most platforms.
 - [Template](#a-note-on-templating) support for almost all fields using nunjucks.
 - Toggleable haptics.
-- Remappable touchpad and mousepad with [multi-touch](#touchpad-actions) gesture support.
+- Remappable touchpad with [multi-touch and mouse](#touchpad-actions) gesture support.
 - Remappable slider with vertical orientation support.
 - User configurable remote [layout](#layout).
 - Icons and labels for all elements.
@@ -177,12 +177,12 @@ The remote layout is defined using a series of nested arrays. The lowest level o
   - search
 ```
 
-The default keys and sources lists for your selected platform are displayed below the layout code editor. If you have configured any custom actions, they will be displayed above this. You can use this as reference as you create your remote, or drag and drop entries from these lists to the editor. The default keys list also includes the default touchpad, mousepad, and slider, along with some special elements for button pads and layouts. Not all special elements are available for all platforms.
+The default keys and sources lists for your selected platform are displayed below the layout code editor. If you have configured any custom actions, they will be displayed above this. You can use this as reference as you create your remote, or drag and drop entries from these lists to the editor. The default keys list also includes the default touchpad and slider, along with some special elements for button pads and layouts. Not all special elements are available for all platforms.
 
 | Name               | Type        | Description                                                                                                                                                                                     |
 | ------------------ | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| touchpad           | touchpad    | A touchpad for navigation.                                                                                                                                                                      |
-| mousepad           | mousepad    | A mousepad for mouse movement and scrolling. **NOTE**: Mousepad support is dependent on the platform support mouse control via its Home Assistant integration.                                  |
+| touchpad           | touchpad    | A touchpad for swipe navigation.                                                                                                                                                                |
+| mousepad           | touchpad    | A touchpad for mouse navigation.                                                                                                                                                                |
 | slider             | slider      | A slider that controls the volume of the entity defined by `media_player_id`. **NOTE**: Volume slider support is dependent on the media player supporting the `media_player.volume_set` action. |
 | volume_buttons     | button rows | Shorthand to generate a set of volume down, volume mute, and volume up buttons in a row or column.                                                                                              |
 | navigation_buttons | button rows | Shorthand to generate a set of up, down, left, right, and center buttons across three rows within a column.                                                                                     |
@@ -230,11 +230,11 @@ Sliders have some additional general options. They have a range `Min` and `Max` 
 
 Sliders will wait one second before updating their internal values from Home Assistant to prevent it from bouncing between the old and new values. This time can be changed by setting `Update after action delay`, which defaults to 1000ms
 
-### Touchpad and Mousepad Tabs
+### Touchpad Tabs
 
 <img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/editor_actions_general_options_touchpad.png" alt="editor actions general options touchpad" width="600"/>
 
-Touchpads and mousepads have five tabs at the top of their actions page for each direction and it's center. Only the center tab has general options as these apply to the entire touchpad remote element. Each direction and center have their own options for appearance and interactions (touchpad only) as described below.
+Touchpads have five tabs at the top of their actions page for each direction and it's center. Only the center tab has general options as these apply to the entire touchpad remote element. Each direction and center have their own options for appearance and interactions as described below.
 
 ## Appearance
 
@@ -277,9 +277,9 @@ Sliders have an additional `Vertical` toggle which rotates it 90 degrees to make
 }
 ```
 
-### Multiple Icons and Labels for Touchpads and Mousepads
+### Multiple Icons and Labels for Touchpads
 
-Touchpads and mousepads can have a separate icon and label for the center and each direction. You can also style each of these icons and labels independently using their own `CSS Styles` fields. General touchpad and mousepad styles such as those for `toucharea` (mousepad also uses this element name) like height should go in the center tab styles.
+Touchpads can have a separate icon and label for the center and each direction. You can also style each of these icons and labels independently using their own `CSS Styles` fields. General touchpad styles such as those for `toucharea` like height should go in the center tab styles.
 
 ### A Note on Templating
 
@@ -289,7 +289,7 @@ You can include the current value of a remote element and it's units by using th
 
 ## Interactions
 
-There are three traditional ways to trigger an action - tap, double tap, and hold. Buttons, touch/mousepad center support all three, touchpad (not mousepad) swipes only support tap and hold actions, and sliders only support tap actions. Defining a double tap action that is not `none` introduces a 200ms delay to single tap actions.
+There are three traditional ways to trigger an action - tap, double tap, and hold. Buttons, touchpad center support all three, touchpad swipes only support tap and hold actions, and sliders only support tap actions. Defining a double tap action that is not `none` introduces a 200ms delay to single tap actions.
 
 <img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/editor_actions_interactions.png" alt="editor actions interactions" width="600"/>
 
@@ -342,19 +342,14 @@ For momentary end actions you can include the number of seconds a button has bee
 
 ### Touchpad Actions
 
+TODO Update config UI and make new image with mouse tab
 <img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/editor_actions_interactions_touchpad.png" alt="editor actions interactions touchpad" width="600"/>
 
 The touchpad's center acts like a button, with support for the same actions. The touchpad's direction actions are activated when the user swipes in a direction, and do not support double tap actions or momentary mode.
 
 Touchpads also support multi-touch mode, which fires alternate actions when more than one finger is used with it. This mode is disabled by default but can be enabled by setting a touchpad's multi-touch actions to something other than `Nothing`. Multi-touch mode supports center tap, double tap, and hold actions, and direction swipe and hold actions.
 
-### Mousepad Actions
-
-TODO config UI and image
-
-Similar to the touchpad, the mousepad's center acts like a button with support for tap, double tap, and hold actions, but it does not support momentary mode. The center also supports multi-touch mode. This mode is enabled by default.
-
-Instead of seprate direction actions, mousepads support a mouse action. This action is called whenever movement is detected on the mousepad, and is meant to be used with mouse movement actions like Unified Remote's `Core.Input MoveBy`. The mouse X and Y movement can be added to actions using templates using `deltaX` and `deltaY`. The mouse action can also be used in multi-touch mode.
+Touchpads also support an alternate mouse mode. This action is called whenever movement is detected on the mousepad, and works best with mouse movement actions like Unified Remote's `Core.Input MoveBy`. The mouse X and Y movement can be added to actions using templates using `deltaX` and `deltaY`. The mouse action can also be used in multi-touch mode. Enabling this action disables directional actions.
 
 ### Keyboard, Textbox, and Search
 

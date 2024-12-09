@@ -42,6 +42,7 @@ export class BaseRemoteElement extends LitElement {
 	fireMouseEvent?: boolean = true;
 
 	swiping?: boolean = false;
+	targetTouches?: Touch[];
 	initialX?: number;
 	initialY?: number;
 	currentX?: number;
@@ -68,6 +69,7 @@ export class BaseRemoteElement extends LitElement {
 		this.momentaryEnd = undefined;
 
 		this.swiping = false;
+		this.targetTouches = undefined;
 		this.initialX = undefined;
 		this.initialY = undefined;
 		this.currentX = undefined;
@@ -775,25 +777,79 @@ export class BaseRemoteElement extends LitElement {
 			: '';
 	}
 
-	// Skeletons for overridden event handlers
-	onStart(_e: MouseEvent | TouchEvent) {}
-	onEnd(_e: MouseEvent | TouchEvent) {}
-	onMove(_e: MouseEvent | TouchEvent) {}
+	setTargetTouches(e: TouchEvent) {
+		if (!this.targetTouches) {
+			this.targetTouches = Array.from(e.targetTouches ?? []);
+		} else {
+			for (const touch of e.targetTouches) {
+				const i = this.targetTouches.findIndex(
+					(t) => t.identifier == touch.identifier,
+				);
+				if (i >= 0) {
+					this.targetTouches[i] = touch;
+				} else {
+					this.targetTouches.push(touch);
+				}
+			}
+		}
+	}
+
+	onStart(e: TouchEvent | MouseEvent) {
+		if ('targetTouches' in e) {
+			let totalX = 0;
+			let totalY = 0;
+			this.setTargetTouches(e);
+			for (const touch of this.targetTouches ?? []) {
+				totalX += touch.clientX;
+				totalY += touch.clientY;
+			}
+			this.initialX = totalX / (this.targetTouches?.length ?? 1);
+			this.initialY = totalY / (this.targetTouches?.length ?? 1);
+		} else {
+			this.initialX = e.clientX;
+			this.initialY = e.clientY;
+		}
+		this.currentX = this.initialX;
+		this.currentY = this.initialY;
+	}
+
+	onEnd(e: TouchEvent | MouseEvent) {}
+
+	onMove(e: TouchEvent | MouseEvent) {
+		let currentX: number = 0;
+		let currentY: number = 0;
+		if ('targetTouches' in e) {
+			this.setTargetTouches(e);
+			for (const touch of this.targetTouches ?? []) {
+				currentX += touch.clientX;
+				currentY += touch.clientY;
+			}
+			currentX = currentX / (this.targetTouches?.length ?? 1);
+			currentY = currentY / (this.targetTouches?.length ?? 1);
+		} else {
+			currentX = e.clientX ?? 0;
+			currentY = e.clientY ?? 0;
+		}
+		this.deltaX = currentX - (this.currentX ?? currentX);
+		this.deltaY = currentY - (this.currentY ?? currentY);
+		this.currentX = currentX;
+		this.currentY = currentY;
+	}
 
 	@eventOptions({ passive: true })
-	onMouseDown(e: MouseEvent | TouchEvent) {
+	onMouseDown(e: TouchEvent | MouseEvent) {
 		if (this.fireMouseEvent) {
 			this.onStart(e);
 		}
 	}
-	onMouseUp(e: MouseEvent | TouchEvent) {
+	onMouseUp(e: TouchEvent | MouseEvent) {
 		if (this.fireMouseEvent) {
 			this.onEnd(e);
 		}
 		this.fireMouseEvent = true;
 	}
 	@eventOptions({ passive: true })
-	onMouseMove(e: MouseEvent | TouchEvent) {
+	onMouseMove(e: TouchEvent | MouseEvent) {
 		if (this.fireMouseEvent) {
 			this.onMove(e);
 		}
