@@ -813,7 +813,7 @@ export class BaseRemoteElement extends LitElement {
 		this.currentY = this.initialY;
 	}
 
-	onEnd(e: TouchEvent | MouseEvent) {}
+	onEnd(_e: TouchEvent | MouseEvent) {}
 
 	onMove(e: TouchEvent | MouseEvent) {
 		let currentX: number = 0;

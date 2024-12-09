@@ -28,11 +28,13 @@ export class RemoteTouchpad extends BaseRemoteElement {
 	holdStart: boolean = false;
 	holdMove: boolean = false;
 	direction?: DirectionAction;
+	fireMouseAction: boolean = true;
 
 	onClick(e: TouchEvent | MouseEvent) {
 		e.stopImmediatePropagation();
 		this.clickCount++;
 		const doubleTapThreshold = this.targetTouches?.length || 1;
+		const multiPrefix = this.getMultiPrefix();
 
 		if (
 			this.renderTemplate(
@@ -43,7 +45,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			) != 'none'
 		) {
 			// Double tap action is defined
-			const doubleTapAction: ActionType = `${this.getMultiPrefix()}double_tap_action`;
+			const doubleTapAction: ActionType = `${multiPrefix}double_tap_action`;
 
 			if (this.clickCount > doubleTapThreshold) {
 				// Double tap action is triggered
@@ -53,7 +55,6 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			} else {
 				// Single tap action is triggered if double tap is not within window
 				if (!this.clickTimer) {
-					const actionType = this.getMultiPrefix();
 					let doubleTapWindow: number =
 						'double_tap_window' in
 						(this.config[doubleTapAction] ?? {})
@@ -63,17 +64,17 @@ export class RemoteTouchpad extends BaseRemoteElement {
 							  ) as number)
 							: DOUBLE_TAP_WINDOW;
 					if (
-						actionType == 'multi_' &&
+						multiPrefix == 'multi_' &&
 						this.config.multi_double_tap_action
 					) {
 						doubleTapWindow = this.renderTemplate(
 							this.config.multi_double_tap_action
-								?.double_tap_window ?? REPEAT_DELAY,
+								?.double_tap_window ?? DOUBLE_TAP_WINDOW,
 						) as number;
 					}
 					this.clickTimer = setTimeout(() => {
 						this.fireHapticEvent('light');
-						this.sendAction(`${actionType}tap_action`);
+						this.sendAction(`${multiPrefix}tap_action`);
 						this.endAction();
 					}, doubleTapWindow);
 				}
@@ -81,7 +82,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		} else {
 			// No double tap action defined, tap action is triggered
 			this.fireHapticEvent('light');
-			this.sendAction(`${this.getMultiPrefix()}tap_action`);
+			this.sendAction(`${multiPrefix}tap_action`);
 			this.endAction();
 		}
 	}
@@ -149,6 +150,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			return;
 		}
 		super.onMove(e);
+		const multiPrefix = this.getMultiPrefix();
 
 		// Only consider significant enough movement
 		const sensitivity = 2;
@@ -167,10 +169,23 @@ export class RemoteTouchpad extends BaseRemoteElement {
 					Math.abs(this.deltaX ?? 0) - Math.abs(this.deltaY ?? 0),
 				) > sensitivity
 			) {
-				if (this.holdTimer) {
+				if (this.fireMouseAction) {
 					clearTimeout(this.holdTimer);
+					this.holdTimer = undefined;
 					this.holdMove = true;
-					this.sendAction(`${this.getMultiPrefix()}mouse_action`);
+
+					const repeatDelay = this.renderTemplate(
+						this.config[`${multiPrefix}mouse_action`]
+							?.repeat_delay ?? 0, // default to 0 instead of normal repeat delay
+					) as number;
+					if (repeatDelay) {
+						this.fireMouseAction = false;
+						setTimeout(() => {
+							this.fireMouseAction = true;
+						}, repeatDelay);
+					}
+
+					this.sendAction(`${multiPrefix}mouse_action`);
 				}
 			}
 		} else {
@@ -189,7 +204,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 				if (!this.holdMove) {
 					this.fireHapticEvent('light');
 					this.sendAction(
-						`${this.getMultiPrefix()}tap_action`,
+						`${multiPrefix}tap_action`,
 						this.getActions(),
 					);
 					this.holdMove = true;
@@ -255,20 +270,20 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		this.holdTimer = setTimeout(() => {
 			this.hold = true;
 			const actions = this.getActions();
-			const actionType = this.getMultiPrefix();
+			const multiPrefix = this.getMultiPrefix();
 
 			let repeat =
 				this.renderTemplate(actions.hold_action?.action as string) ==
 				'repeat';
-			let repeat_delay = this.renderTemplate(
+			let repeatDelay = this.renderTemplate(
 				actions.hold_action?.repeat_delay ?? REPEAT_DELAY,
 			) as number;
-			if (actionType == 'multi_' && actions.multi_hold_action) {
+			if (multiPrefix == 'multi_' && actions.multi_hold_action) {
 				repeat =
 					this.renderTemplate(
 						actions.multi_hold_action?.action as string,
 					) == 'repeat';
-				repeat_delay = this.renderTemplate(
+				repeatDelay = this.renderTemplate(
 					actions.multi_hold_action?.repeat_delay ?? REPEAT_DELAY,
 				) as number;
 			}
@@ -281,11 +296,11 @@ export class RemoteTouchpad extends BaseRemoteElement {
 							`${this.getMultiPrefix()}tap_action`,
 							this.getActions(),
 						);
-					}, repeat_delay);
+					}, repeatDelay);
 				}
 			} else {
 				this.fireHapticEvent('medium');
-				this.sendAction(`${this.getMultiPrefix()}hold_action`, actions);
+				this.sendAction(`${multiPrefix}hold_action`, actions);
 			}
 		}, holdTime);
 	}
