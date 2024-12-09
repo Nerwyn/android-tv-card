@@ -167,6 +167,24 @@ export const appleTVDefaultKeys: IElementConfig[] = [
 		},
 	},
 	{
+		type: 'touchpad',
+		name: 'mousepad',
+		tap_action: {
+			action: 'key',
+			key: 'select',
+		},
+		mouse_action: {
+			action: 'key',
+			key: '{{ ("right" if deltaX > 0 else "left") if (deltaX | abs) > (deltaY | abs) else ("down" if deltaY > 0 else "up") }}',
+			repeat_delay: 100,
+		},
+		up: {},
+		down: {},
+		left: {},
+		right: {},
+		icon: 'mdi:mouse',
+	},
+	{
 		type: 'button',
 		name: 'play_pause',
 		tap_action: {

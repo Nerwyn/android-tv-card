@@ -136,6 +136,24 @@ export const jellyfinTVDefaultKeys: IElementConfig[] = [
 		},
 	},
 	{
+		type: 'touchpad',
+		name: 'mousepad',
+		tap_action: {
+			action: 'key',
+			key: 'Select',
+		},
+		mouse_action: {
+			action: 'key',
+			key: '{{ ("MoveRight" if deltaX > 0 else "MoveLeft") if (deltaX | abs) > (deltaY | abs) else ("MoveDown" if deltaY > 0 else "MoveUp") }}',
+			repeat_delay: 100,
+		},
+		up: {},
+		down: {},
+		left: {},
+		right: {},
+		icon: 'mdi:mouse',
+	},
+	{
 		type: 'button',
 		name: 'play_pause',
 		tap_action: {

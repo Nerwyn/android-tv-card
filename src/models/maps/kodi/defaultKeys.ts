@@ -188,6 +188,24 @@ export const kodiDefaultKeys: IElementConfig[] = [
 		},
 	},
 	{
+		type: 'touchpad',
+		name: 'mousepad',
+		tap_action: {
+			action: 'key',
+			key: 'Input.Select',
+		},
+		mouse_action: {
+			action: 'key',
+			key: 'Input.{{ ("Right" if deltaX > 0 else "Left") if (deltaX | abs) > (deltaY | abs) else ("Down" if deltaY > 0 else "Up") }}',
+			repeat_delay: 100,
+		},
+		up: {},
+		down: {},
+		left: {},
+		right: {},
+		icon: 'mdi:mouse',
+	},
+	{
 		type: 'button',
 		name: 'play_pause',
 		tap_action: {

@@ -5,7 +5,7 @@ import { IElementConfig } from '../../interfaces';
  *
  * https://github.com/unifiedremote/Remotes/blob/329d04f3c32b29038b0a6bc1ba034eefaff04267/Main/Monitor/remote_win.lua
  * https://github.com/unifiedremote/Remotes/blob/329d04f3c32b29038b0a6bc1ba034eefaff04267/Main/Media/remote.lua
- * https://github.com/unifiedremote/Remotes/blob/329d04f3c32b29038b0a6bc1ba034eefaff04267/Main/Keyboards/keyboard.lua
+ * https://github.com/unifiedremote/Remotes/blob/329d04f3c32b29038b0a6bc1ba034eefaff04267/Main/Basic%20Input/remote.lua
  * https://github.com/unifiedremote/Remotes/blob/329d04f3c32b29038b0a6bc1ba034eefaff04267/Core/Input/remote.lua
  */
 export const unifiedRemoteDefaultKeys: IElementConfig[] = [
@@ -143,10 +143,13 @@ export const unifiedRemoteDefaultKeys: IElementConfig[] = [
 			action: 'perform-action',
 			perform_action: 'unified_remote.call',
 			data: {
-				remote_id: 'Core.Input',
-				action: 'MoveBy',
+				remote_id: 'Relmtech.Basic Input',
+				action: 'delta',
 				extras: {
 					Values: [
+						{
+							Value: 0,
+						},
 						{
 							Value: '{{ 3 * deltaX }}',
 						},
@@ -176,8 +179,8 @@ export const unifiedRemoteDefaultKeys: IElementConfig[] = [
 			action: 'perform-action',
 			perform_action: 'unified_remote.call',
 			data: {
-				remote_id: 'Core.Input',
-				action: 'Click',
+				remote_id: 'Relmtech.Basic Input',
+				action: 'tap',
 			},
 		},
 		hold_action: {
@@ -200,6 +203,7 @@ export const unifiedRemoteDefaultKeys: IElementConfig[] = [
 		down: {},
 		left: {},
 		right: {},
+		icon: 'mdi:mouse',
 	},
 	{
 		type: 'button',

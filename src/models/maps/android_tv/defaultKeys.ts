@@ -144,6 +144,24 @@ export const androidTVDefaultKeys: IElementConfig[] = [
 		},
 	},
 	{
+		type: 'touchpad',
+		name: 'mousepad',
+		tap_action: {
+			action: 'key',
+			key: 'DPAD_CENTER',
+		},
+		mouse_action: {
+			action: 'key',
+			key: 'DPAD_{{ ("RIGHT" if deltaX > 0 else "LEFT") if (deltaX | abs) > (deltaY | abs) else ("DOWN" if deltaY > 0 else "UP") }}',
+			repeat_delay: 100,
+		},
+		up: {},
+		down: {},
+		left: {},
+		right: {},
+		icon: 'mdi:mouse',
+	},
+	{
 		type: 'button',
 		name: 'play_pause',
 		tap_action: { action: 'key', key: 'MEDIA_PLAY_PAUSE' },
