@@ -1164,7 +1164,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 				  </div>`
 				: action != 'none' && actionType.includes('mouse_action')
 				? this.buildSelector(
-						'Repeat delay',
+						'Sampling delay',
 						`${actionType}.repeat_delay`,
 						{
 							number: {

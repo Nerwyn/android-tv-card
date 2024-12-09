@@ -163,13 +163,14 @@ export const unifiedRemoteDefaultKeys: IElementConfig[] = [
 		multi_mouse_action: {
 			action: 'perform-action',
 			perform_action: 'unified_remote.call',
+			repeat_delay: 50,
 			data: {
 				remote_id: 'Core.Input',
 				action: '{{ "Horz" if (deltaX | abs) > (deltaY | abs) else "Vert" }}',
 				extras: {
 					Values: [
 						{
-							Value: '{{ -0.2 * (deltaX if (deltaX | abs) > (deltaY | abs) else deltaY) }}',
+							Value: '{{ -1 * (deltaX if (deltaX | abs) > (deltaY | abs) else deltaY) }}',
 						},
 					],
 				},
