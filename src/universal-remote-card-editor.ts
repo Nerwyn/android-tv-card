@@ -1506,11 +1506,6 @@ export class UniversalRemoteCardEditor extends LitElement {
 		`;
 	}
 
-	buildButtonPadGuiEditor() {
-		// TODO
-		return html`Coming Soon!`;
-	}
-
 	buildSliderGuiEditor() {
 		const actionsNoRepeat = Actions.concat();
 		actionsNoRepeat.splice(Actions.indexOf('repeat'), 1);

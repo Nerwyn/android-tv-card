@@ -344,14 +344,13 @@ For momentary end actions you can include the number of seconds a button has bee
 
 ### Touchpad Actions
 
-TODO Update config UI and make new image with mouse tab
 <img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/editor_actions_interactions_touchpad.png" alt="editor actions interactions touchpad" width="600"/>
 
 The touchpad's center acts like a button, with support for the same actions. The touchpad's direction actions are activated when the user swipes in a direction, and do not support double tap actions or momentary mode.
 
 Touchpads also support multi-touch mode, which fires alternate actions when more than one finger is used with it. This mode is disabled by default but can be enabled by setting a touchpad's multi-touch actions to something other than `Nothing`. Multi-touch mode supports center tap, double tap, and hold actions, and direction swipe and hold actions.
 
-Touchpads also support an alternate mouse mode. This action is called whenever movement is detected on the mousepad, and works best with mouse movement actions like Unified Remote's `Core.Input MoveBy`. The mouse X and Y movement can be added to actions using templates using `deltaX` and `deltaY`. The mouse action can also be used in multi-touch mode. Enabling this action disables directional actions.
+Touchpads also support an alternate mouse mode. This action is called whenever movement is detected on the mousepad, and works best with mouse movement actions like Unified Remote's `Relmtech.Basic Input delta`. The mouse X and Y movement can be added to actions using templates using `deltaX` and `deltaY`. The mouse action can also be used in multi-touch mode. Enabling this action disables directional actions.
 
 ### Keyboard, Textbox, and Search
 
