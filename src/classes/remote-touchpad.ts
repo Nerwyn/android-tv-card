@@ -137,9 +137,13 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			if (e.cancelable) {
 				e.preventDefault();
 			}
+			let holdMove = this.holdMove;
+			if ((this.targetTouches?.length ?? 0) > 1) {
+				holdMove = true;
+			}
 			this.endAction();
 			console.log('Ending action after hold/move');
-			if ('targetTouches' in e && e.targetTouches?.length) {
+			if (holdMove) {
 				this.holdMove = true;
 				console.log('Finger still down, setting holdMove to true');
 			}
