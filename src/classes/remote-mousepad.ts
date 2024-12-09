@@ -46,9 +46,12 @@ export class RemoteMousepad extends RemoteTouchpad {
 			Math.abs(Math.abs(this.deltaX ?? 0) - Math.abs(this.deltaY ?? 0)) >
 				sensitivity
 		) {
-			clearTimeout(this.holdTimer);
-			this.holdMove = true;
-			this.sendAction(`${this.getMultiPrefix()}mouse_action`);
+			if (this.holdTimer) {
+				clearTimeout(this.holdTimer);
+				this.holdTimer = undefined;
+				this.holdMove = true;
+				this.sendAction(`${this.getMultiPrefix()}mouse_action`);
+			}
 		}
 	}
 

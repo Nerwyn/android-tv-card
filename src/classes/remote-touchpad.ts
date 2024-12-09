@@ -155,36 +155,55 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		this.setDeltaXY(e);
 		const totalDeltaX = (this.currentX ?? 0) - this.initialX;
 		const totalDeltaY = (this.currentY ?? 0) - this.initialY;
-		console.log(`INITIAL: ${this.initialX},${this.initialY}`);
-		console.log(`CURRENT: ${this.currentX},${this.currentY}`);
-		console.log(`TOTAL DELTA: ${totalDeltaX},${totalDeltaY}`);
 
 		// Only consider significant enough movement
 		const sensitivity = 2;
 		if (
-			Math.abs(Math.abs(totalDeltaX) - Math.abs(totalDeltaY)) >
-			sensitivity
+			this.renderTemplate(this.config.mouse_action?.action ?? 'none') !=
+				'none' ||
+			((this.targetTouches?.length ?? 0) > 1 &&
+				this.renderTemplate(
+					this.config.multi_mouse_action?.action ?? 'none',
+				) != 'none')
 		) {
-			if (Math.abs(totalDeltaX) > Math.abs(totalDeltaY)) {
-				// Sliding horizontally
-				this.direction = totalDeltaX < 0 ? 'left' : 'right';
-			} else {
-				// Sliding vertically
-				this.direction = totalDeltaY < 0 ? 'up' : 'down';
-			}
-			console.log(this.direction);
-			if (!this.holdMove) {
-				this.fireHapticEvent('light');
-				this.sendAction(
-					`${this.getMultiPrefix()}tap_action`,
-					this.getActions(),
-				);
-				this.holdMove = true;
-
+			if (
+				this.holdMove ||
+				Math.abs(
+					Math.abs(this.deltaX ?? 0) - Math.abs(this.deltaY ?? 0),
+				) > sensitivity
+			) {
 				if (this.holdTimer) {
 					clearTimeout(this.holdTimer);
 					this.holdTimer = undefined;
-					this.setHoldTimer();
+					this.holdMove = true;
+					this.sendAction(`${this.getMultiPrefix()}mouse_action`);
+				}
+			}
+		} else {
+			if (
+				Math.abs(Math.abs(totalDeltaX) - Math.abs(totalDeltaY)) >
+				sensitivity
+			) {
+				if (Math.abs(totalDeltaX) > Math.abs(totalDeltaY)) {
+					// Sliding horizontally
+					this.direction = totalDeltaX < 0 ? 'left' : 'right';
+				} else {
+					// Sliding vertically
+					this.direction = totalDeltaY < 0 ? 'up' : 'down';
+				}
+				if (!this.holdMove) {
+					this.fireHapticEvent('light');
+					this.sendAction(
+						`${this.getMultiPrefix()}tap_action`,
+						this.getActions(),
+					);
+					this.holdMove = true;
+
+					if (this.holdTimer) {
+						clearTimeout(this.holdTimer);
+						this.holdTimer = undefined;
+						this.setHoldTimer();
+					}
 				}
 			}
 		}
