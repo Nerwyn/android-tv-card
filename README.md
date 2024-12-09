@@ -350,7 +350,7 @@ The touchpad's center acts like a button, with support for the same actions. The
 
 Touchpads also support multi-touch mode, which fires alternate actions when more than one finger is used with it. This mode is disabled by default but can be enabled by setting a touchpad's multi-touch actions to something other than `Nothing`. Multi-touch mode supports center tap, double tap, and hold actions, and direction swipe and hold actions.
 
-Touchpads also support an alternate mouse mode. This action is called whenever movement is detected on the mousepad, and works best with mouse movement actions like Unified Remote's `Relmtech.Basic Input delta`. The mouse X and Y movement can be added to actions using templates using `deltaX` and `deltaY`. The mouse action can also be used in multi-touch mode. Enabling this action disables directional actions.
+Touchpads also support an alternate mouse mode. This action is called whenever movement is detected on the mousepad, and works best with mouse movement actions like Unified Remote's `Relmtech.Basic Input delta`. The mouse X and Y movement can be added to actions using templates using `deltaX` and `deltaY`. Because this action fires every time movement is detected on the touchpad, you may find that it fires too often, or not often enough. You can either use math to modify the values of `deltaX` and `deltaY` within the action data templates, or introduce a delay in which movement will be ignored after a mouse action is fired using the configuration UI option `Sampling delay` to tweak the speed of your mouse movements and action fire rate. The mouse action can also be used in multi-touch mode. Enabling this action disables directional actions.
 
 ### Keyboard, Textbox, and Search
 
