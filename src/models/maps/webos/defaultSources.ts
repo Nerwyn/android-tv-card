@@ -65,6 +65,6 @@ export const webosDefaultSources: IElementConfig[] = [
 			action: 'source',
 			source: 'YouTube',
 		},
-		icon: 'youtube',
+		icon: 'mdi:youtube',
 	},
 ];
