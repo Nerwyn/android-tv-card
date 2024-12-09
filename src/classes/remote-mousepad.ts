@@ -48,7 +48,6 @@ export class RemoteMousepad extends RemoteTouchpad {
 		) {
 			if (this.holdTimer) {
 				clearTimeout(this.holdTimer);
-				this.holdTimer = undefined;
 				this.holdMove = true;
 				this.sendAction(`${this.getMultiPrefix()}mouse_action`);
 			}
