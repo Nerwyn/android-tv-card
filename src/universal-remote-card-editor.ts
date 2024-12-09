@@ -3435,6 +3435,9 @@ export class UniversalRemoteCardEditor extends LitElement {
 				outline: 1px dashed var(--primary-color);
 				--mdc-icon-size: 50%;
 			}
+			mwc-tab-bar {
+				--mdc-tab-horizontal-padding: 16px;
+			}
 		`;
 	}
 }

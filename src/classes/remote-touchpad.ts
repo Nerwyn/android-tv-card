@@ -155,12 +155,9 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		// Only consider significant enough movement
 		const sensitivity = 2;
 		if (
-			this.renderTemplate(this.config.mouse_action?.action ?? 'none') !=
-				'none' ||
-			((this.targetTouches?.length ?? 0) > 1 &&
-				this.renderTemplate(
-					this.config.multi_mouse_action?.action ?? 'none',
-				) != 'none')
+			this.renderTemplate(
+				this.config[`${multiPrefix}mouse_action`]?.action ?? 'none',
+			) != 'none'
 		) {
 			// Mouse actions
 			if (
