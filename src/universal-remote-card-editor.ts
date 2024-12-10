@@ -1915,7 +1915,9 @@ export class UniversalRemoteCardEditor extends LitElement {
 									<div class="title-header">
 										Custom Actions
 									</div>
-									<ul class="action-list custom-action-list">
+									<ul
+										class="action-list two-column-action-list"
+									>
 										${customActions.map((entry) => {
 											const context =
 												this.getEntryContext(
@@ -1944,7 +1946,11 @@ export class UniversalRemoteCardEditor extends LitElement {
 							? html`<div class="wrapper">
 									<div class="title-header">Default Keys</div>
 									<div class="action-list-container">
-										<ul class="action-list">
+										<ul
+											class="action-list ${defaultSources.length
+												? ''
+												: 'two-column-action-list'}"
+										>
 											${defaultKeys.map((entry) => {
 												const context =
 													this.getEntryContext(
@@ -3336,7 +3342,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 				margin-top: 4px;
 				padding-left: 4px;
 			}
-			.custom-action-list {
+			.two-column-action-list {
 				columns: 2;
 				-webkit-columns: 2;
 				-moz-columns: 2;
