@@ -433,9 +433,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 				break;
 			case 2:
 			default: {
-				const entryType = RemoteElementTypes[i];
 				entries = structuredClone(this.config.custom_actions) ?? [];
-
 				entries.push({
 					type: RemoteElementTypes[i],
 					name: '',

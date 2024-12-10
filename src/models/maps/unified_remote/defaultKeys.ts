@@ -100,6 +100,29 @@ export const unifiedRemoteDefaultKeys: IElementConfig[] = [
 	},
 	{
 		type: 'button',
+		name: 'close',
+		tap_action: {
+			action: 'perform-action',
+			perform_action: 'unified_remote.call',
+			data: {
+				remote_id: 'Core.Input',
+				action: 'Stroke',
+				extras: {
+					Values: [
+						{
+							Value: 'alt',
+						},
+						{
+							Value: 'f4',
+						},
+					],
+				},
+			},
+		},
+		icon: 'mdi:window-close',
+	},
+	{
+		type: 'button',
 		name: 'volume_down',
 		tap_action: {
 			action: 'perform-action',
