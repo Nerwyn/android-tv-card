@@ -427,9 +427,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 			case 3:
 				entries = structuredClone(this.config.custom_icons) ?? [];
 				entries.push({
-					name: `custom_icon_${
-						(this.config.custom_icons ?? []).length
-					}`,
+					name: '',
 					path: '',
 				});
 				break;
@@ -437,17 +435,10 @@ export class UniversalRemoteCardEditor extends LitElement {
 			default: {
 				const entryType = RemoteElementTypes[i];
 				entries = structuredClone(this.config.custom_actions) ?? [];
-				let name = entryType;
-				const entriesOfType = this.config.custom_actions?.filter(
-					(entry) => entry.type == entryType,
-				);
-				if (entriesOfType && entriesOfType.length) {
-					name += `_${(this.config.custom_actions ?? []).length}`;
-				}
 
 				entries.push({
 					type: RemoteElementTypes[i],
-					name: name,
+					name: '',
 				});
 				break;
 			}
