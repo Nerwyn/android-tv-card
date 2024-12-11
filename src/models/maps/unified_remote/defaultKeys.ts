@@ -168,21 +168,6 @@ export const unifiedRemoteDefaultKeys: IElementConfig[] = [
 		icon: 'mdi:volume-plus',
 	},
 	{
-		type: 'slider',
-		name: 'slider',
-		range: [0, 1],
-		step: 0.1,
-		value_attribute: 'volume_level',
-		tap_action: {
-			action: 'perform-action',
-			perform_action: 'unified_remote.call',
-			data: {
-				remote_id: 'Unified.Volume',
-				action: 'volume_{{ ((value * 10) | round) * 10 }}',
-			},
-		},
-	},
-	{
 		type: 'touchpad',
 		name: 'mousepad',
 		drag_action: {
