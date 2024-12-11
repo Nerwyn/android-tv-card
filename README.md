@@ -76,7 +76,7 @@ The Home Assistant Samsung TV integration does not allow you to change sources. 
 
 ### Unified Remote Setup
 
-Unlike most platforms, Unified Remote relies entirely on [a custom integration](https://github.com/DaviPtrs/hass-unified-remote). This custom integration does not create any entities, but does provide us with the action `unified_remote.call`, which can be used to call any Unified Remote API. It requires that you install the integration and setup your computer hosts [as described here in its README](https://github.com/DaviPtrs/hass-unified-remote?tab=readme-ov-file#home-assistant). You can then use the host name or IP address in the remote and keyboard ID fields in the configuration UI (make sure it does not autofill with an actual entity, you may have to fix it with the code editor).
+Unlike most platforms, Unified Remote relies entirely on [a custom integration](https://github.com/DaviPtrs/hass-unified-remote), which is used to control a [Unified Remote server](https://www.unifiedremote.com/) on your PC. This custom integration does not create any entities, but does provide us with the action `unified_remote.call`, which can be used to call any Unified Remote API. It requires that you install the integration and setup your computer hosts [as described here in its README](https://github.com/DaviPtrs/hass-unified-remote?tab=readme-ov-file#home-assistant). You can then use the host name or IP address in the remote and keyboard ID fields in the configuration UI (make sure it does not autofill with an actual entity, you may have to fix it with the code editor).
 
 ## Action Timings
 
