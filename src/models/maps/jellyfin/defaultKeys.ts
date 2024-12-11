@@ -137,21 +137,26 @@ export const jellyfinTVDefaultKeys: IElementConfig[] = [
 	},
 	{
 		type: 'touchpad',
-		name: 'mousepad',
+		name: 'dragpad',
 		tap_action: {
 			action: 'key',
 			key: 'Select',
 		},
-		mouse_action: {
+		drag_action: {
 			action: 'key',
 			key: '{{ ("MoveRight" if deltaX > 0 else "MoveLeft") if (deltaX | abs) > (deltaY | abs) else ("MoveDown" if deltaY > 0 else "MoveUp") }}',
 			repeat_delay: 100,
+		},
+		multi_drag_action: {
+			action: 'key',
+			key: '{{ ("MoveRight" if deltaX > 0 else "MoveLeft") if (deltaX | abs) > (deltaY | abs) else ("MoveDown" if deltaY > 0 else "MoveUp") }}',
+			repeat_delay: 50,
 		},
 		up: {},
 		down: {},
 		left: {},
 		right: {},
-		icon: 'mdi:mouse',
+		icon: 'mdi:drag-variant',
 	},
 	{
 		type: 'button',

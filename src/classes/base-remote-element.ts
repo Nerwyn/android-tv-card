@@ -81,11 +81,11 @@ export class BaseRemoteElement extends LitElement {
 	sendAction(actionType: ActionType, config: IActions = this.config) {
 		let action;
 		switch (actionType) {
-			case 'mouse_action':
-				action = config.mouse_action;
+			case 'drag_action':
+				action = config.drag_action;
 				break;
-			case 'multi_mouse_action':
-				action = config.multi_mouse_action ?? config.mouse_action;
+			case 'multi_drag_action':
+				action = config.multi_drag_action ?? config.drag_action;
 				break;
 			case 'momentary_start_action':
 				action = config.momentary_start_action;
@@ -184,6 +184,8 @@ export class BaseRemoteElement extends LitElement {
 
 	key(action: IAction, actionType: ActionType) {
 		switch (action.platform) {
+			case 'Unified Remote':
+				break;
 			case 'Kodi':
 				this.hass.callService('kodi', 'call_method', {
 					entity_id: action.media_player_id,
@@ -209,7 +211,7 @@ export class BaseRemoteElement extends LitElement {
 					command: action.key ?? '',
 				};
 				if (
-					actionType == 'hold_action' &&
+					actionType.includes('hold_action') &&
 					(!this.config.hold_action ||
 						this.config.hold_action.action == 'none')
 				) {
@@ -223,6 +225,8 @@ export class BaseRemoteElement extends LitElement {
 
 	source(action: IAction) {
 		switch (action.platform) {
+			case 'Unified Remote':
+				break;
 			case 'Fire TV':
 			case 'Roku':
 			case 'Kodi':

@@ -557,11 +557,11 @@ export class UniversalRemoteCardEditor extends LitElement {
 		const context = this.getEntryContext(entry);
 		if (
 			this.renderTemplate(
-				entry?.mouse_action?.action ?? 'none',
+				entry?.drag_action?.action ?? 'none',
 				context,
 			) != 'none' ||
 			this.renderTemplate(
-				entry?.multi_mouse_action?.action ?? 'none',
+				entry?.multi_drag_action?.action ?? 'none',
 				context,
 			) != 'none'
 		) {
@@ -1151,7 +1151,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 							  )
 							: ''}
 				  </div>`
-				: action != 'none' && actionType.includes('mouse_action')
+				: action != 'none' && actionType.includes('drag_action')
 				? this.buildSelector(
 						'Sampling delay',
 						`${actionType}.repeat_delay`,
@@ -1604,7 +1604,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 	buildTouchpadGuiEditor() {
 		const tabs = ['default', 'multi-touch'];
 		if (this.touchpadTabIndex == 2) {
-			tabs.push(...['momentary', 'mouse']);
+			tabs.push(...['momentary', 'drag']);
 		}
 		const actionsTabBar = this.buildTabBar(
 			this.actionsTabIndex,
@@ -1624,17 +1624,17 @@ export class UniversalRemoteCardEditor extends LitElement {
 				actionSelectors = html`
 					${actionsTabBar}
 					${this.buildAlertBox(
-						'Enabling mouse actions disables directional swipe actions.',
+						'Enabling drag actions disables directional swipe actions.',
 						'warning',
 					)}
 					${this.buildActionOption(
-						'Mouse behavior (optional)',
-						'mouse_action',
+						'Drag behavior (optional)',
+						'drag_action',
 						defaultUiActions,
 					)}
 					${this.buildActionOption(
-						'Multi-touch mouse behavior (optional)',
-						'multi_mouse_action',
+						'Multi-touch drag behavior (optional)',
+						'multi_drag_action',
 						defaultUiActions,
 					)}
 				`;

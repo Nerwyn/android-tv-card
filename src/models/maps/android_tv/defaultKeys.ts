@@ -145,21 +145,26 @@ export const androidTVDefaultKeys: IElementConfig[] = [
 	},
 	{
 		type: 'touchpad',
-		name: 'mousepad',
+		name: 'dragpad',
 		tap_action: {
 			action: 'key',
 			key: 'DPAD_CENTER',
 		},
-		mouse_action: {
+		drag_action: {
 			action: 'key',
 			key: 'DPAD_{{ ("RIGHT" if deltaX > 0 else "LEFT") if (deltaX | abs) > (deltaY | abs) else ("DOWN" if deltaY > 0 else "UP") }}',
 			repeat_delay: 100,
+		},
+		multi_drag_action: {
+			action: 'key',
+			key: 'DPAD_{{ ("RIGHT" if deltaX > 0 else "LEFT") if (deltaX | abs) > (deltaY | abs) else ("DOWN" if deltaY > 0 else "UP") }}',
+			repeat_delay: 50,
 		},
 		up: {},
 		down: {},
 		left: {},
 		right: {},
-		icon: 'mdi:mouse',
+		icon: 'mdi:drag-variant',
 	},
 	{
 		type: 'button',

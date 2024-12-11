@@ -140,21 +140,26 @@ export const braviaTVDefaultKeys: IElementConfig[] = [
 	},
 	{
 		type: 'touchpad',
-		name: 'mousepad',
+		name: 'dragpad',
 		tap_action: {
 			action: 'key',
 			key: 'Confirm',
 		},
-		mouse_action: {
+		drag_action: {
 			action: 'key',
 			key: '{{ ("Right" if deltaX > 0 else "Left") if (deltaX | abs) > (deltaY | abs) else ("Down" if deltaY > 0 else "Up") }}',
 			repeat_delay: 100,
+		},
+		multi_drag_action: {
+			action: 'key',
+			key: '{{ ("Right" if deltaX > 0 else "Left") if (deltaX | abs) > (deltaY | abs) else ("Down" if deltaY > 0 else "Up") }}',
+			repeat_delay: 50,
 		},
 		up: {},
 		down: {},
 		left: {},
 		right: {},
-		icon: 'mdi:mouse',
+		icon: 'mdi:drag-variant',
 	},
 	{
 		type: 'button',

@@ -44,8 +44,8 @@ export const ActionTypes = [
 	'multi_double_tap_action',
 	'momentary_start_action',
 	'momentary_end_action',
-	'mouse_action',
-	'multi_mouse_action',
+	'drag_action',
+	'multi_drag_action',
 ] as const;
 export type ActionType = (typeof ActionTypes)[number];
 
@@ -110,7 +110,7 @@ export interface IActions
 	extends IBasicActions,
 		IMomentaryActions,
 		IMultiActions,
-		IMouseActions {}
+		IDragActions {}
 
 export interface IBasicActions {
 	tap_action?: IAction;
@@ -129,7 +129,7 @@ export interface IMomentaryActions {
 	momentary_end_action?: IAction;
 }
 
-export interface IMouseActions {
-	mouse_action?: IAction;
-	multi_mouse_action?: IAction;
+export interface IDragActions {
+	drag_action?: IAction;
+	multi_drag_action?: IAction;
 }

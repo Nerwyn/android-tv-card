@@ -42,12 +42,12 @@ export const unifiedRemoteDefaultKeys: IElementConfig[] = [
 			action: 'perform-action',
 			perform_action: 'unified_remote.call',
 			data: {
-				remote_id: 'Unified.Navigation',
-				action: 'toggle',
+				remote_id: 'Core.Input',
+				action: 'Press',
 				extras: {
 					Values: [
 						{
-							Value: 'LWIN',
+							Value: 'lwin',
 						},
 					],
 				},
@@ -85,12 +85,12 @@ export const unifiedRemoteDefaultKeys: IElementConfig[] = [
 			action: 'perform-action',
 			perform_action: 'unified_remote.call',
 			data: {
-				remote_id: 'Unified.Navigation',
-				action: 'toggle',
+				remote_id: 'Core.Input',
+				action: 'Press',
 				extras: {
 					Values: [
 						{
-							Value: 'BACK',
+							Value: 'back',
 						},
 					],
 				},
@@ -123,20 +123,6 @@ export const unifiedRemoteDefaultKeys: IElementConfig[] = [
 	},
 	{
 		type: 'button',
-		name: 'volume_down',
-		tap_action: {
-			action: 'perform-action',
-			perform_action: 'unified_remote.call',
-			data: {
-				remote_id: 'Unified.Media',
-				action: 'volume_down',
-			},
-		},
-		hold_action: { action: 'repeat' },
-		icon: 'mdi:volume-medium',
-	},
-	{
-		type: 'button',
 		name: 'volume_up',
 		tap_action: {
 			action: 'perform-action',
@@ -148,6 +134,20 @@ export const unifiedRemoteDefaultKeys: IElementConfig[] = [
 		},
 		hold_action: { action: 'repeat' },
 		icon: 'mdi:volume-high',
+	},
+	{
+		type: 'button',
+		name: 'volume_down',
+		tap_action: {
+			action: 'perform-action',
+			perform_action: 'unified_remote.call',
+			data: {
+				remote_id: 'Unified.Media',
+				action: 'volume_down',
+			},
+		},
+		hold_action: { action: 'repeat' },
+		icon: 'mdi:volume-medium',
 	},
 	{
 		type: 'button',
@@ -185,7 +185,7 @@ export const unifiedRemoteDefaultKeys: IElementConfig[] = [
 	{
 		type: 'touchpad',
 		name: 'mousepad',
-		mouse_action: {
+		drag_action: {
 			action: 'perform-action',
 			perform_action: 'unified_remote.call',
 			data: {
@@ -206,7 +206,7 @@ export const unifiedRemoteDefaultKeys: IElementConfig[] = [
 				},
 			},
 		},
-		multi_mouse_action: {
+		multi_drag_action: {
 			action: 'perform-action',
 			perform_action: 'unified_remote.call',
 			repeat_delay: 50,
@@ -259,12 +259,12 @@ export const unifiedRemoteDefaultKeys: IElementConfig[] = [
 			action: 'perform-action',
 			perform_action: 'unified_remote.call',
 			data: {
-				remote_id: 'Unified.Navigation',
-				action: 'toggle',
+				remote_id: 'Core.Input',
+				action: 'Press',
 				extras: {
 					Values: [
 						{
-							Value: 'UP',
+							Value: 'up',
 						},
 					],
 				},
@@ -280,12 +280,12 @@ export const unifiedRemoteDefaultKeys: IElementConfig[] = [
 			action: 'perform-action',
 			perform_action: 'unified_remote.call',
 			data: {
-				remote_id: 'Unified.Navigation',
-				action: 'toggle',
+				remote_id: 'Core.Input',
+				action: 'Press',
 				extras: {
 					Values: [
 						{
-							Value: 'DOWN',
+							Value: 'down',
 						},
 					],
 				},
@@ -301,12 +301,12 @@ export const unifiedRemoteDefaultKeys: IElementConfig[] = [
 			action: 'perform-action',
 			perform_action: 'unified_remote.call',
 			data: {
-				remote_id: 'Unified.Navigation',
-				action: 'toggle',
+				remote_id: 'Core.Input',
+				action: 'Press',
 				extras: {
 					Values: [
 						{
-							Value: 'LEFT',
+							Value: 'left',
 						},
 					],
 				},
@@ -322,12 +322,12 @@ export const unifiedRemoteDefaultKeys: IElementConfig[] = [
 			action: 'perform-action',
 			perform_action: 'unified_remote.call',
 			data: {
-				remote_id: 'Unified.Navigation',
-				action: 'toggle',
+				remote_id: 'Core.Input',
+				action: 'Press',
 				extras: {
 					Values: [
 						{
-							Value: 'RIGHT',
+							Value: 'right',
 						},
 					],
 				},
@@ -343,12 +343,12 @@ export const unifiedRemoteDefaultKeys: IElementConfig[] = [
 			action: 'perform-action',
 			perform_action: 'unified_remote.call',
 			data: {
-				remote_id: 'Unified.Navigation',
-				action: 'toggle',
+				remote_id: 'Core.Input',
+				action: 'Press',
 				extras: {
 					Values: [
 						{
-							Value: 'RETURN',
+							Value: 'enter',
 						},
 					],
 				},
@@ -373,12 +373,12 @@ export const unifiedRemoteDefaultKeys: IElementConfig[] = [
 			action: 'perform-action',
 			perform_action: 'unified_remote.call',
 			data: {
-				remote_id: 'Unified.Navigation',
-				action: 'toggle',
+				remote_id: 'Core.Input',
+				action: 'Press',
 				extras: {
 					Values: [
 						{
-							Value: 'RETURN',
+							Value: 'enter',
 						},
 					],
 				},
@@ -389,12 +389,12 @@ export const unifiedRemoteDefaultKeys: IElementConfig[] = [
 				action: 'perform-action',
 				perform_action: 'unified_remote.call',
 				data: {
-					remote_id: 'Unified.Navigation',
-					action: 'toggle',
+					remote_id: 'Core.Input',
+					action: 'Press',
 					extras: {
 						Values: [
 							{
-								Value: 'UP',
+								Value: 'up',
 							},
 						],
 					},
@@ -407,12 +407,12 @@ export const unifiedRemoteDefaultKeys: IElementConfig[] = [
 				action: 'perform-action',
 				perform_action: 'unified_remote.call',
 				data: {
-					remote_id: 'Unified.Navigation',
-					action: 'toggle',
+					remote_id: 'Core.Input',
+					action: 'Press',
 					extras: {
 						Values: [
 							{
-								Value: 'DOWN',
+								Value: 'down',
 							},
 						],
 					},
@@ -425,12 +425,12 @@ export const unifiedRemoteDefaultKeys: IElementConfig[] = [
 				action: 'perform-action',
 				perform_action: 'unified_remote.call',
 				data: {
-					remote_id: 'Unified.Navigation',
-					action: 'toggle',
+					remote_id: 'Core.Input',
+					action: 'Press',
 					extras: {
 						Values: [
 							{
-								Value: 'LEFT',
+								Value: 'left',
 							},
 						],
 					},
@@ -443,12 +443,12 @@ export const unifiedRemoteDefaultKeys: IElementConfig[] = [
 				action: 'perform-action',
 				perform_action: 'unified_remote.call',
 				data: {
-					remote_id: 'Unified.Navigation',
-					action: 'toggle',
+					remote_id: 'Core.Input',
+					action: 'Press',
 					extras: {
 						Values: [
 							{
-								Value: 'RIGHT',
+								Value: 'right',
 							},
 						],
 					},
@@ -456,6 +456,62 @@ export const unifiedRemoteDefaultKeys: IElementConfig[] = [
 			},
 			hold_action: { action: 'repeat' },
 		},
+	},
+	{
+		type: 'touchpad',
+		name: 'dragpad',
+		tap_action: {
+			action: 'perform-action',
+			perform_action: 'unified_remote.call',
+			data: {
+				remote_id: 'Core.Input',
+				action: 'Press',
+				extras: {
+					Values: [
+						{
+							Value: 'enter',
+						},
+					],
+				},
+			},
+		},
+		drag_action: {
+			action: 'perform-action',
+			perform_action: 'unified_remote.call',
+			data: {
+				remote_id: 'Core.Input',
+				action: 'Press',
+				extras: {
+					Values: [
+						{
+							Value: '{{ ("right" if deltaX > 0 else "left") if (deltaX | abs) > (deltaY | abs) else ("down" if deltaY > 0 else "up") }}',
+						},
+					],
+				},
+			},
+			repeat_delay: 100,
+		},
+		multi_drag_action: {
+			action: 'perform-action',
+			perform_action: 'unified_remote.call',
+			data: {
+				remote_id: 'Core.Input',
+				action: 'Press',
+				extras: {
+					Values: [
+						{
+							Value: '{{ ("right" if deltaX > 0 else "left") if (deltaX | abs) > (deltaY | abs) else ("down" if deltaY > 0 else "up") }}',
+						},
+					],
+				},
+			},
+			repeat_delay: 50,
+		},
+		up: {},
+		down: {},
+		left: {},
+		right: {},
+		icon: 'mdi:drag-variant',
 	},
 	{
 		type: 'button',
@@ -539,6 +595,7 @@ export const unifiedRemoteDefaultKeys: IElementConfig[] = [
 				},
 			},
 		},
+		hold_action: { action: 'repeat' },
 		icon: 'mdi:backspace',
 	},
 	{
@@ -559,6 +616,7 @@ export const unifiedRemoteDefaultKeys: IElementConfig[] = [
 				},
 			},
 		},
+		hold_action: { action: 'repeat' },
 		icon: 'mdi:backspace-reverse',
 	},
 	{

@@ -34,7 +34,7 @@ A super customizable universal remote card iterating on the work of several othe
 - Keyboard and search dialog actions for most platforms.
 - [Template](#a-note-on-templating) support for almost all fields using nunjucks.
 - Toggleable haptics.
-- Remappable touchpad with [multi-touch and mouse](#touchpad-actions) gesture support.
+- Remappable touchpad with [momentary, multi-touch, and drag](#touchpad-actions) gesture support.
 - Remappable slider with vertical orientation support.
 - User configurable remote [layout](#layout).
 - Icons and labels for all elements.
@@ -186,7 +186,8 @@ The default keys and sources lists for your selected platform are displayed belo
 | Name               | Type        | Description                                                                                                                                                                                     |
 | ------------------ | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | touchpad           | touchpad    | A touchpad for swipe navigation.                                                                                                                                                                |
-| mousepad           | touchpad    | A touchpad for mouse navigation.                                                                                                                                                                |
+| dragpad            | touchpad    | A touchpad for drag navigation. Use two fingers for faster movement.                                                                                                                            |
+| mousepad           | touchpad    | A touchpad for mouse navigation. **NOTE**: mousepad support is dependent on the platform supporting mouse movement via a Home Assistant action.                                                 |
 | slider             | slider      | A slider that controls the volume of the entity defined by `media_player_id`. **NOTE**: Volume slider support is dependent on the media player supporting the `media_player.volume_set` action. |
 | volume_buttons     | button rows | Shorthand to generate a set of volume down, volume mute, and volume up buttons in a row or column.                                                                                              |
 | navigation_buttons | button rows | Shorthand to generate a set of up, down, left, right, and center buttons across three rows within a column.                                                                                     |
@@ -291,7 +292,7 @@ Almost all fields support nunjucks templating. Nunjucks is a templating engine f
 
 You can include the current value of a remote element and it's units by using the variables `value` and `unit` in a label template. You can also include `hold_secs` in a template if performing a momentary end action. Each remote element can also reference it's configuration using `config` within templates. `config.entity` and `config.attribute` will return the remote element's entity ID and attribute with their templates rendered (if they have them), and other templated config fields can be rendered within templates by wrapping them in the function `render` within a template. You can access the entire card config in a template via `config.card`, and global values such as remote ID within that like `config.card.remote_id`. Note that default values for some fields are not actually in the config and will not appear in templates, and you have to default to them using "or", like `config.card.platform or 'Android TV'`.
 
-You can include touch location information in your templates using the values `initialX`, `initialY`, `currentX`, `currentY`, `deltaX`, and `deltaY` This is especially useful when using mouse interactions on the touchpad, like with the Unified Remote default mousepad.
+You can include touch location information in your templates using the values `initialX`, `initialY`, `currentX`, `currentY`, `deltaX`, and `deltaY` This is especially useful when using drag interactions on the touchpad, like with the Unified Remote default mousepad or as a dragpad on all platforms.
 
 ## Interactions
 
@@ -354,7 +355,7 @@ The touchpad's center acts like a button, with support for the same actions. The
 
 Touchpads also support multi-touch mode, which fires alternate actions when more than one finger is used with it. This mode is disabled by default but can be enabled by setting a touchpad's multi-touch actions to something other than `Nothing`. Multi-touch mode supports center tap, double tap, and hold actions, and direction swipe and hold actions.
 
-Touchpads also support an alternate mouse mode. This action is called whenever movement is detected on the mousepad, and works best with mouse movement actions like Unified Remote's `Relmtech.Basic Input delta`. The mouse X and Y movement can be added to actions using templates using `deltaX` and `deltaY`. Because this action fires every time movement is detected on the touchpad, you may find that it fires too often, or not often enough. You can either use math to modify the values of `deltaX` and `deltaY` within the action data templates, or introduce a delay in which movement will be ignored after a mouse action is fired using the configuration UI option `Sampling delay` to tweak the speed of your mouse movements and action fire rate. The mouse action can also be used in multi-touch mode. Enabling this action disables directional actions.
+Touchpads also support an alternate drag mode. This action is called whenever movement is detected on the touchpad, and works best with mouse movement actions like Unified Remote's `Relmtech.Basic Input delta`. The touchpad X and Y movement can be added to actions using templates using `deltaX` and `deltaY`. Because this action fires every time movement is detected on the touchpad, you may find that it fires too often, or not often enough. You can either use math to modify the values of `deltaX` and `deltaY` within the action data templates, or introduce a delay in which movement will be ignored after a drag action is fired using the configuration UI option `Sampling delay` to tweak the speed of your drag movements and action fire rate. The drag action can also be used in multi-touch mode. Enabling this action disables directional actions.
 
 ### Keyboard, Textbox, and Search
 

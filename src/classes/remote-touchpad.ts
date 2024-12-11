@@ -28,7 +28,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 	holdStart: boolean = false;
 	holdMove: boolean = false;
 	direction?: DirectionAction;
-	fireMouseAction: boolean = true;
+	fireDragAction: boolean = true;
 
 	onClick(e: TouchEvent | MouseEvent) {
 		e.stopImmediatePropagation();
@@ -166,31 +166,31 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		const totalDeltaY = (this.currentY ?? 0) - this.initialY;
 		if (
 			this.renderTemplate(
-				this.config[`${multiPrefix}mouse_action`]?.action ?? 'none',
+				this.config[`${multiPrefix}drag_action`]?.action ?? 'none',
 			) != 'none'
 		) {
-			// Mouse actions
+			// Drag actions
 			if (
 				this.holdMove ||
 				Math.abs(Math.abs(totalDeltaX) - Math.abs(totalDeltaY)) > 1
 			) {
-				if (this.fireMouseAction) {
+				if (this.fireDragAction) {
 					clearTimeout(this.holdTimer);
 					this.holdTimer = undefined;
 					this.holdMove = true;
 
 					const repeatDelay = this.renderTemplate(
-						this.config[`${multiPrefix}mouse_action`]
+						this.config[`${multiPrefix}drag_action`]
 							?.repeat_delay ?? 0, // default to 0 instead of normal repeat delay
 					) as number;
 					if (repeatDelay) {
-						this.fireMouseAction = false;
+						this.fireDragAction = false;
 						setTimeout(() => {
-							this.fireMouseAction = true;
+							this.fireDragAction = true;
 						}, repeatDelay);
 					}
 
-					this.sendAction(`${multiPrefix}mouse_action`);
+					this.sendAction(`${multiPrefix}drag_action`);
 				}
 			}
 		} else {

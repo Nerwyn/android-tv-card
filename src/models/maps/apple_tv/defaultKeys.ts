@@ -168,21 +168,26 @@ export const appleTVDefaultKeys: IElementConfig[] = [
 	},
 	{
 		type: 'touchpad',
-		name: 'mousepad',
+		name: 'dragpad',
 		tap_action: {
 			action: 'key',
 			key: 'select',
 		},
-		mouse_action: {
+		drag_action: {
 			action: 'key',
 			key: '{{ ("right" if deltaX > 0 else "left") if (deltaX | abs) > (deltaY | abs) else ("down" if deltaY > 0 else "up") }}',
 			repeat_delay: 100,
+		},
+		multi_drag_action: {
+			action: 'key',
+			key: '{{ ("right" if deltaX > 0 else "left") if (deltaX | abs) > (deltaY | abs) else ("down" if deltaY > 0 else "up") }}',
+			repeat_delay: 50,
 		},
 		up: {},
 		down: {},
 		left: {},
 		right: {},
-		icon: 'mdi:mouse',
+		icon: 'mdi:drag-variant',
 	},
 	{
 		type: 'button',
