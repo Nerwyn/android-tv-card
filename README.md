@@ -25,7 +25,7 @@ A super customizable universal remote card iterating on the work of several othe
   - Roku (with keyboard)
   - LG webOS (with keyboard)
   - Kodi (with keyboard)
-  - Unified Remote for computers (with keyboard)
+  - Unified Remote for Windows, macOS, and Linux (with keyboard)
   - Apple TV
   - Samsung TV
   - Jellyfin
