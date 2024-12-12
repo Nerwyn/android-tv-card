@@ -1419,7 +1419,7 @@ custom_actions:
 
 ## Example 13
 
-Style the dpad to be like the Google TV app remote.
+Style navigation buttons (NOT `dpad`) to be like the Google TV app remote. **NOTE**: You have to add the provided row styles to the three rows of your navigation buttons, otherwise they will skew to the side on smaller displays. You can find the CSS IDs of your navigation button rows by hovering over the remote in the editor as described [in this section](#css-styles)
 
 <img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/google_tv_dpad.png" alt="google tv app styled dpad" width="500"/>
 
@@ -1513,13 +1513,7 @@ custom_actions:
         width: 90px;
       }
 styles: |-
-  #row-1 {
-    justify-content: center;
-  }
-  #row-2 {
-    justify-content: center;
-  }
-  #row-3 {
+  #row-1, #row-2, #row-3 {
     justify-content: center;
   }
 ```
