@@ -55,26 +55,24 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			} else {
 				// Single tap action is triggered if double tap is not within window
 				if (!this.clickTimer) {
-					let doubleTapWindow: number =
-						'double_tap_window' in
-						(this.config[doubleTapAction] ?? {})
-							? (this.renderTemplate(
-									this.config[doubleTapAction]
-										?.double_tap_window as unknown as string,
-							  ) as number)
-							: DOUBLE_TAP_WINDOW;
-					if (
-						multiPrefix == 'multi_' &&
-						this.config.multi_double_tap_action
-					) {
-						doubleTapWindow = this.renderTemplate(
-							this.config.multi_double_tap_action
-								?.double_tap_window ?? DOUBLE_TAP_WINDOW,
-						) as number;
-					}
+					const doubleTapWindow =
+						(this.renderTemplate(
+							this.config[doubleTapAction]?.double_tap_window ??
+								(this.config.double_tap_action
+									?.double_tap_window as number),
+						) as number) ?? DOUBLE_TAP_WINDOW;
 					this.clickTimer = setTimeout(() => {
 						this.fireHapticEvent('light');
 						this.sendAction(`${multiPrefix}tap_action`);
+
+						// DEBUG REMOVE LATER
+						const clickCount = this.clickCount;
+						const touchesCount = this.targetTouches?.length ?? 0;
+						setTimeout(() => {
+							alert(
+								`Clicks: ${clickCount}\nTouches: ${touchesCount}`,
+							);
+						}, 1000);
 						this.endAction();
 					}, doubleTapWindow);
 				}
@@ -230,19 +228,19 @@ export class RemoteTouchpad extends BaseRemoteElement {
 	}
 
 	endAction() {
+		clearTimeout(this.clickTimer as ReturnType<typeof setTimeout>);
+		this.clickTimer = undefined;
+		this.clickCount = 0;
+
 		clearTimeout(this.holdTimer as ReturnType<typeof setTimeout>);
 		clearInterval(this.holdInterval as ReturnType<typeof setInterval>);
-		clearTimeout(this.clickTimer as ReturnType<typeof setTimeout>);
-
 		this.holdTimer = undefined;
 		this.holdInterval = undefined;
-		this.clickTimer = undefined;
 
 		this.hold = false;
 		this.holdStart = false;
 		this.holdMove = false;
 		this.direction = undefined;
-		this.clickCount = 0;
 
 		super.endAction();
 	}

@@ -38,13 +38,11 @@ export class RemoteButton extends BaseRemoteElement {
 			} else {
 				// Single tap action is triggered if double tap is not within window
 				if (!this.clickTimer) {
-					const doubleTapWindow: number = this.config
-						.double_tap_action?.double_tap_window
-						? (this.renderTemplate(
-								this.config.double_tap_action
-									?.double_tap_window as unknown as string,
-						  ) as number)
-						: DOUBLE_TAP_WINDOW;
+					const doubleTapWindow: number =
+						(this.renderTemplate(
+							this.config.double_tap_action
+								?.double_tap_window as number,
+						) as number) ?? DOUBLE_TAP_WINDOW;
 					this.clickTimer = setTimeout(() => {
 						this.fireHapticEvent('light');
 						this.sendAction('tap_action');
