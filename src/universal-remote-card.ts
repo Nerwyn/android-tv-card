@@ -211,25 +211,21 @@ class UniversalRemoteCard extends LitElement {
 			}
 		}
 
-		// Set hold time if defined globally or if double tap action is defined
-		if (
-			this.config.hold_time ||
-			updatedElement.double_tap_action ||
-			updatedElement.multi_double_tap_action
-		) {
-			updatedElement.hold_action =
-				updatedElement.hold_action ?? ({} as IAction);
-			updatedElement.hold_action.hold_time =
-				updatedElement.hold_action?.hold_time ??
-				this.config.hold_time ??
-				HOLD_TIME;
+		// Set hold time if defined globally
+		if (this.config.hold_time) {
+			if (updatedElement.hold_action) {
+				updatedElement.hold_action.hold_time =
+					updatedElement.hold_action?.hold_time ??
+					this.config.hold_time ??
+					HOLD_TIME;
+			}
 
-			updatedElement.multi_hold_action =
-				updatedElement.multi_hold_action ?? ({} as IAction);
-			updatedElement.multi_hold_action.hold_time =
-				updatedElement.multi_hold_action?.hold_time ??
-				this.config.hold_time ??
-				HOLD_TIME;
+			if (updatedElement.multi_hold_action) {
+				updatedElement.multi_hold_action.hold_time =
+					updatedElement.multi_hold_action?.hold_time ??
+					this.config.hold_time ??
+					HOLD_TIME;
+			}
 		}
 
 		// Set repeat delay if defined globally
