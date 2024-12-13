@@ -275,7 +275,6 @@ export class RemoteTouchpad extends BaseRemoteElement {
 					actions.multi_hold_action?.repeat_delay ?? REPEAT_DELAY,
 				) as number;
 			}
-
 			if (repeat) {
 				if (!this.holdInterval) {
 					this.holdInterval = setInterval(() => {

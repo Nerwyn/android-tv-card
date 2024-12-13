@@ -79,6 +79,7 @@ export class BaseRemoteElement extends LitElement {
 	}
 
 	sendAction(actionType: ActionType, config: IActions = this.config) {
+		console.log(actionType);
 		let action;
 		switch (actionType) {
 			case 'drag_action':
@@ -121,6 +122,7 @@ export class BaseRemoteElement extends LitElement {
 				action = config.tap_action;
 				break;
 		}
+		console.log(action);
 
 		if (!action) {
 			clearTimeout(this.getValueFromHassTimer);
