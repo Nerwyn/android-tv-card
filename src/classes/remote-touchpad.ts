@@ -33,7 +33,6 @@ export class RemoteTouchpad extends BaseRemoteElement {
 	onClick(e: TouchEvent | MouseEvent) {
 		e.stopImmediatePropagation();
 		this.clickCount++;
-		const doubleTapThreshold = this.targetTouches?.length || 1;
 		const multiPrefix = this.getMultiPrefix();
 
 		if (
@@ -47,7 +46,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			// Double tap action is defined
 			const doubleTapAction: ActionType = `${multiPrefix}double_tap_action`;
 
-			if (this.clickCount > doubleTapThreshold) {
+			if (this.clickCount > 1) {
 				// Double tap action is triggered
 				this.fireHapticEvent('success');
 				this.sendAction(doubleTapAction);
@@ -64,15 +63,6 @@ export class RemoteTouchpad extends BaseRemoteElement {
 					this.clickTimer = setTimeout(() => {
 						this.fireHapticEvent('light');
 						this.sendAction(`${multiPrefix}tap_action`);
-
-						// DEBUG REMOVE LATER
-						const clickCount = this.clickCount;
-						const touchesCount = this.targetTouches?.length ?? 0;
-						setTimeout(() => {
-							alert(
-								`Clicks: ${clickCount}\nTouches: ${touchesCount}`,
-							);
-						}, 1000);
 						this.endAction();
 					}, doubleTapWindow);
 				}
