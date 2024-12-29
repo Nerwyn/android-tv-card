@@ -1419,7 +1419,7 @@ custom_actions:
 
 ## Example 13
 
-Style navigation buttons (NOT `dpad`) to be like the Google TV app remote. **NOTE**: You have to add the provided row styles to the three rows of your navigation buttons, otherwise they will skew to the side on smaller displays. You can find the CSS IDs of your navigation button rows by hovering over the remote in the editor as described [in this section](#css-styles).
+Style `dpad` to be like the Google TV app remote. **NOTE**: You have to add the provided overall styles including matching the row number. You can find the CSS IDs of your navigation button rows by hovering over the remote in the editor as described [in this section](#css-styles).
 
 <img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/google_tv_dpad.png" alt="google tv app styled dpad" width="500"/>
 
@@ -1429,24 +1429,31 @@ Style navigation buttons (NOT `dpad`) to be like the Google TV app remote. **NOT
 
 ```yaml
 type: custom:android-tv-card
-remote_id: remote.google_tv
 rows:
-  - - navigation_buttons
+  - - dpad
 custom_actions:
   - type: button
     name: center
     tap_action:
       action: key
       key: DPAD_CENTER
-    icon: mdi:checkbox-blank-circle
+    icon: ''
     styles: |-
       :host {
-        --icon-color: rgb(94, 94, 94);
-        --size: 200px;
-        background: rgb(31, 31, 31);
-        border-radius: 200px;
-        margin: -70px;
-        padding: 70px;
+        border-radius: 50%;
+        z-index: 2;
+        pointer-events: none;
+        width: 200px;
+        height: 200px;
+        top: -75px;
+        left: -75px;
+      }
+      button {
+        height: 80%;
+        width: 80%;
+        border-radius: 50%;
+        background: rgb(94, 94, 94);
+        pointer-events: all;
       }
   - type: button
     name: up
@@ -1457,12 +1464,14 @@ custom_actions:
       action: repeat
     icon: mdi:chevron-up
     styles: |-
-      :host {
-        --icon-color: rgb(197, 199, 197);
-        z-index: 2;
-        top: 25px;
-        height: 90px;
-        width: 300px;
+      button {
+        top: 10%;
+        left: 10%;
+        border-radius: 0;
+      }
+      .icon {
+        transform: rotate(-45deg);
+        color: rgb(197, 199, 197);
       }
   - type: button
     name: down
@@ -1473,12 +1482,14 @@ custom_actions:
       action: repeat
     icon: mdi:chevron-down
     styles: |-
-      :host {
-        --icon-color: rgb(197, 199, 197);
-        z-index: 2;
-        bottom: 25px;
-        height: 90px;
-        width: 300px;
+      button {
+        bottom: 10%;
+        right: 10%;
+        border-radius: 0;
+      }
+      .icon {
+        transform: rotate(-45deg);
+        color: rgb(197, 199, 197);
       }
   - type: button
     name: left
@@ -1489,12 +1500,14 @@ custom_actions:
       action: repeat
     icon: mdi:chevron-left
     styles: |-
-      :host {
-        --icon-color: rgb(197, 199, 197);
-        z-index: 2;
-        left: 30px;
-        height: 170px;
-        width: 90px;
+      button {
+        bottom: 10%;
+        left: 10%;
+        border-radius: 0;
+      }
+      .icon {
+        transform: rotate(-45deg);
+        color: rgb(197, 199, 197);
       }
   - type: button
     name: right
@@ -1505,22 +1518,174 @@ custom_actions:
       action: repeat
     icon: mdi:chevron-right
     styles: |-
-      :host {
-        --icon-color: rgb(197, 199, 197);
-        z-index: 2;
-        right: 30px;
-        height: 170px;
-        width: 90px;
+      button {
+        top: 10%;
+        right: 10%;
+        border-radius: 0;
+      }
+      .icon {
+        transform: rotate(-45deg);
+        color: rgb(197, 199, 197);
       }
 styles: |-
-  #row-1, #row-2, #row-3 {
-    justify-content: center;
+  .button-pad {
+    gap: 98px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: rgb(31, 31, 31);
   }
+  .button-pad .empty-button {
+    width: 0;
+    height: 0;
+  }
+  .button-pad remote-button {
+    top: -125%;
+    left: -125%;
+    width: 170px;
+    height: 170px;
+    transform: rotate(45deg);
+    z-index: 1;
+  }
+  #row-1 {
+    width: fit-content;
+  }
+custom_icons: []
 ```
 
 </details>
 
 ## Example 14
+
+Style `dpad` to be like a traditional tv remote. **NOTE**: You have to add the provided overall styles.
+
+<img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/traditional_dpad.png" alt="traditional remote styled dpad" width="500"/>
+
+<details>
+
+<summary>Remote Config</summary>
+
+```yaml
+type: custom:android-tv-card
+rows:
+  - dpad
+custom_actions:
+  - type: button
+    name: center
+    tap_action:
+      action: key
+      key: DPAD_CENTER
+    icon: ok
+    styles: |-
+      :host {
+        --size: 36px;
+        top: -30%;
+        left: -30%;
+        width: 160%;
+        height: 160%;
+        border: 1px solid rgba(0,0,0,0.5);
+        border-radius: 50%;
+        transform: rotate(0deg);
+        background: radial-gradient(circle at top left,#303030 15%,#101010 100%);
+        z-index: 2;
+      }
+      .icon {
+        color:rgba(128,128,128,0.8);
+      }
+  - type: button
+    name: up
+    tap_action:
+      action: key
+      key: DPAD_UP
+    hold_action:
+      action: repeat
+    icon: mdi:chevron-up
+    styles: |-
+      .icon {
+        transform:rotate(-45deg);
+        color: rgba(96,96,96,0.8);
+      }
+      button {
+        border-radius: 0;
+      }
+  - type: button
+    name: down
+    tap_action:
+      action: key
+      key: DPAD_DOWN
+    hold_action:
+      action: repeat
+    icon: mdi:chevron-down
+    styles: |-
+      .icon {
+        transform:rotate(-45deg);
+        color: rgba(96,96,96,0.8);
+      }
+      button {
+        border-radius: 0;
+      }
+  - type: button
+    name: left
+    tap_action:
+      action: key
+      key: DPAD_LEFT
+    hold_action:
+      action: repeat
+    icon: mdi:chevron-left
+    styles: |-
+      .icon {
+        transform:rotate(-45deg);
+        color: rgba(96,96,96,0.8);
+      }
+      button {
+        border-radius: 0;
+      }
+  - type: button
+    name: right
+    tap_action:
+      action: key
+      key: DPAD_RIGHT
+    hold_action:
+      action: repeat
+    icon: mdi:chevron-right
+    styles: |-
+      .icon {
+        transform:rotate(-45deg);
+        color: rgba(96,96,96,0.8);
+      }
+      button {
+        border-radius: 0;
+      }
+styles: |-
+  .button-pad {
+    gap: 14px;
+    border: 1px solid #444;
+    border-radius: 50%;
+    overflow: hidden;
+    background: radial-gradient(circle at top left,#202020 15%,#303030 100%);
+  }
+  .button-pad .empty-button {
+    width: 0;
+    height: 0;
+  }
+  .button-pad remote-button {
+    top: -40%;
+    left: -40%;
+    width: 180%;
+    height: 180%;
+    transform: rotate(45deg);
+    overflow: hidden;
+    border-radius: 0;
+  }
+custom_icons:
+  - name: ok
+    path: >-
+      M7 7A2 2 0 005 9V15A2 2 0 007 17H9A2 2 0 0011 15V9A2 2 0 009 7H7M7
+      9H9V15H7V9ZM13 7V17H15V13.7L17 17H19L16 12 19 7H17L15 10.3V7H13Z
+```
+
+</details>
+
+## Example 15
 
 A music player with multiple sliders for volume and media position and a touchpad for media controls and album art.
 
@@ -1628,7 +1793,7 @@ custom_actions:
 
 </details>
 
-## Example 15
+## Example 16
 
 Multiple sliders for light color control.
 
