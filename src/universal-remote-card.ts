@@ -670,6 +670,9 @@ class UniversalRemoteCard extends LitElement {
 	static get styles() {
 		return css`
 			ha-card {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
 				padding: 12px;
 
 				-webkit-tap-highlight-color: transparent;
