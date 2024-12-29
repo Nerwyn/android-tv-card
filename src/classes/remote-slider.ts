@@ -161,6 +161,12 @@ export class RemoteSlider extends BaseRemoteElement {
 	onMove(e: TouchEvent | MouseEvent) {
 		if (!this.vertical) {
 			super.onMove(e);
+			console.log(
+				`X: ${Math.abs((this.currentX ?? 0) - (this.initialX ?? 0))}`,
+			);
+			console.log(
+				`Y: ${Math.abs((this.currentY ?? 0) - (this.initialY ?? 0))}`,
+			);
 
 			const sensitivity = 50;
 			if (
