@@ -165,13 +165,6 @@ export class RemoteSlider extends BaseRemoteElement {
 			this.initialY != undefined
 		) {
 			super.onMove(e);
-			console.log(
-				`X: ${Math.abs((this.currentX ?? 0) - (this.initialX ?? 0))}`,
-			);
-			console.log(
-				`Y: ${Math.abs((this.currentY ?? 0) - (this.initialY ?? 0))}`,
-			);
-
 			const sensitivity = 50;
 			if (
 				Math.abs((this.currentX ?? 0) - (this.initialX ?? 0)) <
