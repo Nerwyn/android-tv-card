@@ -458,7 +458,13 @@ export class RemoteSlider extends BaseRemoteElement {
 					overflow: hidden;
 					height: var(--height);
 					align-self: center;
-					color: var(--background, var(--primary-background-color));
+					color: var(
+						--background,
+						var(
+							--lovelace-background,
+							var(--primary-background-color)
+						)
+					);
 				}
 
 				.background {
@@ -467,7 +473,10 @@ export class RemoteSlider extends BaseRemoteElement {
 					height: var(--background-height, 100%);
 					background: var(
 						--background,
-						var(--primary-background-color)
+						var(
+							--lovelace-background,
+							var(--primary-background-color)
+						)
 					);
 				}
 
@@ -553,7 +562,13 @@ export class RemoteSlider extends BaseRemoteElement {
 				.icon {
 					color: var(
 						--icon-color,
-						var(--background, var(--primary-background-color))
+						var(
+							--background,
+							var(
+								--lovelace-background,
+								var(--primary-background-color)
+							)
+						)
 					);
 
 					--mdc-icon-size: var(--size, 32px);
