@@ -683,7 +683,7 @@ export class BaseKeyboard extends LitElement {
 	}
 
 	updated(changedProperties: PropertyValues) {
-		if (changedProperties.get('open')) {
+		if (changedProperties.get('open') == false && this.open) {
 			waitForElement(this.shadowRoot!, 'textarea').then((textarea) => {
 				this.textarea = textarea as HTMLTextAreaElement;
 				this.textarea?.focus();
