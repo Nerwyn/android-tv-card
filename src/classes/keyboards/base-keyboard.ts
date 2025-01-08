@@ -9,6 +9,8 @@ import { waitForElement } from '../../utils';
 export class BaseKeyboard extends LitElement {
 	@property() hass!: HomeAssistant;
 	@property() config!: IAction;
+	@property() open: boolean = false;
+
 	domain?: string;
 	service?: string;
 
@@ -680,12 +682,13 @@ export class BaseKeyboard extends LitElement {
 			<div class="buttons">${buttons}</div>`;
 	}
 
-	firstUpdated() {
-		console.log('first updated triggered');
-		waitForElement(this.shadowRoot!, 'textarea').then((textarea) => {
-			this.textarea = textarea as HTMLTextAreaElement;
-			this.textarea?.focus();
-		});
+	updated() {
+		if (this.open) {
+			waitForElement(this.shadowRoot!, 'textarea').then((textarea) => {
+				this.textarea = textarea as HTMLTextAreaElement;
+				this.textarea?.focus();
+			});
+		}
 	}
 
 	static get styles() {
@@ -709,6 +712,9 @@ export class BaseKeyboard extends LitElement {
 			}
 			.buttons {
 				height: 36px;
+				width: fill-available;
+				width: -webkit-fill-available;
+				width: -moz-available;
 				display: inline-flex;
 				flex-direction: row;
 				justify-content: space-between;

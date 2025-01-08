@@ -8,6 +8,7 @@ import './keyboards/base-keyboard';
 export class KeyboardDialog extends LitElement {
 	@property() hass!: HomeAssistant;
 	@state() config!: IAction;
+	@state() open: boolean = false;
 
 	showDialog(e: CustomEvent) {
 		this.config = e.detail;
@@ -21,6 +22,7 @@ export class KeyboardDialog extends LitElement {
 				dialog.showModal();
 			}
 			window.addEventListener('popstate', () => this.closeDialog());
+			this.open = true;
 		}
 	}
 
@@ -35,6 +37,7 @@ export class KeyboardDialog extends LitElement {
 			}
 			window.removeEventListener('popstate', () => this.closeDialog());
 		}
+		this.open = false;
 	}
 
 	render() {
@@ -47,6 +50,7 @@ export class KeyboardDialog extends LitElement {
 					keyboard = html`<base-keyboard
 						.hass=${this.hass}
 						.config=${this.config ?? {}}
+						.open=${this.open}
 					></base-keyboard>`;
 					break;
 			}
