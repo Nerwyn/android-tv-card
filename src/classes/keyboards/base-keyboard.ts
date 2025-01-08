@@ -9,7 +9,7 @@ import { waitForElement } from '../../utils';
 export class BaseKeyboard extends LitElement {
 	@property() hass!: HomeAssistant;
 	@property() config!: IAction;
-	@property() open: boolean = false;
+	@property() open!: boolean;
 
 	domain?: string;
 	service?: string;
@@ -683,8 +683,7 @@ export class BaseKeyboard extends LitElement {
 	}
 
 	updated(changedProperties: PropertyValues) {
-		console.log(changedProperties);
-		if (changedProperties.get('open') == false && this.open) {
+		if (changedProperties.has('open') && !changedProperties.get('open')) {
 			waitForElement(this.shadowRoot!, 'textarea').then((textarea) => {
 				this.textarea = textarea as HTMLTextAreaElement;
 				setTimeout(() => this.textarea?.focus(), 0.5);
