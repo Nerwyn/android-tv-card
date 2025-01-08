@@ -700,6 +700,9 @@ export class BaseKeyboard extends LitElement {
 
 			textarea {
 				position: relative;
+				width: fill-available;
+				width: -webkit-fill-available;
+				width: -moz-available;
 				height: 180px;
 				padding: 8px;
 				outline: none;

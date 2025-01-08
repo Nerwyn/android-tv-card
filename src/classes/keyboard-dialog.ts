@@ -11,8 +11,8 @@ export class KeyboardDialog extends LitElement {
 	@state() open: boolean = false;
 
 	showDialog(e: CustomEvent) {
-		this.open = true;
 		this.config = e.detail;
+		this.open = true;
 
 		const dialog = this.shadowRoot?.querySelector('dialog');
 		if (dialog) {
