@@ -682,15 +682,13 @@ export class BaseKeyboard extends LitElement {
 			<div class="buttons">${buttons}</div>`;
 	}
 
-	shouldUpdate(changedProperties: PropertyValues) {
-		return changedProperties.get('open');
-	}
-
-	updated() {
-		waitForElement(this.shadowRoot!, 'textarea').then((textarea) => {
-			this.textarea = textarea as HTMLTextAreaElement;
-			this.textarea?.focus();
-		});
+	updated(changedProperties: PropertyValues) {
+		if (changedProperties.get('open')) {
+			waitForElement(this.shadowRoot!, 'textarea').then((textarea) => {
+				this.textarea = textarea as HTMLTextAreaElement;
+				this.textarea?.focus();
+			});
+		}
 	}
 
 	static get styles() {
