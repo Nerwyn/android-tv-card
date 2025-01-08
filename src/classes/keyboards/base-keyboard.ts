@@ -1,4 +1,4 @@
-import { LitElement, css, html } from 'lit';
+import { LitElement, PropertyValues, css, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { HomeAssistant, KeyboardPlatform } from '../../models/interfaces';
 
@@ -682,13 +682,15 @@ export class BaseKeyboard extends LitElement {
 			<div class="buttons">${buttons}</div>`;
 	}
 
+	shouldUpdate(changedProperties: PropertyValues) {
+		return changedProperties.get('open');
+	}
+
 	updated() {
-		if (this.open) {
-			waitForElement(this.shadowRoot!, 'textarea').then((textarea) => {
-				this.textarea = textarea as HTMLTextAreaElement;
-				this.textarea?.focus();
-			});
-		}
+		waitForElement(this.shadowRoot!, 'textarea').then((textarea) => {
+			this.textarea = textarea as HTMLTextAreaElement;
+			this.textarea?.focus();
+		});
 	}
 
 	static get styles() {
