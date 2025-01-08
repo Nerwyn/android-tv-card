@@ -686,7 +686,7 @@ export class BaseKeyboard extends LitElement {
 		if (changedProperties.get('open') == false && this.open) {
 			waitForElement(this.shadowRoot!, 'textarea').then((textarea) => {
 				this.textarea = textarea as HTMLTextAreaElement;
-				this.textarea?.focus();
+				setTimeout(() => this.textarea?.focus(), 0.5);
 			});
 		}
 	}
