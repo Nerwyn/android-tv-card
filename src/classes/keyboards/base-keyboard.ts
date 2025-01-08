@@ -16,16 +16,16 @@ export class BaseKeyboard extends LitElement {
 	onKeyDownFired: boolean = false;
 
 	getRokuId(domain: 'remote' | 'media_player') {
-		if ((this.config?.keyboard_id ?? '').split('.')[0] != domain) {
+		if ((this.config.keyboard_id ?? '').split('.')[0] != domain) {
 			switch (domain) {
 				case 'media_player':
-					return this.config?.media_player_id;
+					return this.config.media_player_id;
 				case 'remote':
 				default:
-					return this.config?.remote_id;
+					return this.config.remote_id;
 			}
 		}
-		return this.config?.keyboard_id;
+		return this.config.keyboard_id;
 	}
 
 	forceCursorToEnd() {
@@ -44,7 +44,7 @@ export class BaseKeyboard extends LitElement {
 		if (['Backspace', 'Enter'].includes(e.key)) {
 			const text = this.textarea?.value ?? '';
 			this.hass.callService('kodi', 'call_method', {
-				entity_id: this.config?.keyboard_id,
+				entity_id: this.config.keyboard_id,
 				method: 'Input.SendText',
 				text: text,
 				done: false,
@@ -57,7 +57,7 @@ export class BaseKeyboard extends LitElement {
 
 		const text = this.textarea?.value ?? '';
 		this.hass.callService('kodi', 'call_method', {
-			entity_id: this.config?.keyboard_id,
+			entity_id: this.config.keyboard_id,
 			method: 'Input.SendText',
 			text: text,
 			done: false,
@@ -70,7 +70,7 @@ export class BaseKeyboard extends LitElement {
 		if (['Backspace', 'Enter'].includes(e.key)) {
 			const text = this.textarea?.value ?? '';
 			this.hass.callService('webostv', 'command', {
-				entity_id: this.config?.keyboard_id,
+				entity_id: this.config.keyboard_id,
 				command: 'com.webos.service.ime/insertText',
 				payload: {
 					text: text,
@@ -85,7 +85,7 @@ export class BaseKeyboard extends LitElement {
 
 		const text = this.textarea?.value ?? '';
 		this.hass.callService('webostv', 'command', {
-			entity_id: this.config?.keyboard_id,
+			entity_id: this.config.keyboard_id,
 			command: 'com.webos.service.ime/insertText',
 			payload: {
 				text: text,
@@ -107,7 +107,7 @@ export class BaseKeyboard extends LitElement {
 		if (outKey) {
 			this.onKeyDownFired = true;
 			this.hass.callService('unified_remote', 'call', {
-				target: this.config?.keyboard_id,
+				target: this.config.keyboard_id,
 				remote_id: 'Core.Input',
 				action: 'Press',
 				extras: {
@@ -129,7 +129,7 @@ export class BaseKeyboard extends LitElement {
 		const text = e.data ?? '';
 		if (text && inputType == 'insertText') {
 			this.hass.callService('unified_remote', 'call', {
-				target: this.config?.keyboard_id,
+				target: this.config.keyboard_id,
 				remote_id: 'Core.Input',
 				action: 'Text',
 				extras: {
@@ -149,7 +149,7 @@ export class BaseKeyboard extends LitElement {
 
 			if (key) {
 				this.hass.callService('unified_remote', 'call', {
-					target: this.config?.keyboard_id,
+					target: this.config.keyboard_id,
 					remote_id: 'Core.Input',
 					action: 'Press',
 					extras: {
@@ -195,7 +195,7 @@ export class BaseKeyboard extends LitElement {
 		const text = e.data ?? '';
 		if (text && inputType == 'insertText') {
 			this.hass.callService('remote', 'send_command', {
-				entity_id: this.config?.keyboard_id,
+				entity_id: this.config.keyboard_id,
 				command: `Lit_${text}`,
 			});
 		} else if (!this.onKeyDownFired) {
@@ -232,7 +232,7 @@ export class BaseKeyboard extends LitElement {
 				this.domain ?? 'remote',
 				this.service ?? 'send_command',
 				{
-					entity_id: this.config?.keyboard_id,
+					entity_id: this.config.keyboard_id,
 					command: `input keyevent ${outKey}`,
 				},
 			);
@@ -261,7 +261,7 @@ export class BaseKeyboard extends LitElement {
 					this.domain ?? 'remote',
 					this.service ?? 'send_command',
 					{
-						entity_id: this.config?.keyboard_id,
+						entity_id: this.config.keyboard_id,
 						command: `input keyevent ${key}`,
 					},
 				);
@@ -275,7 +275,7 @@ export class BaseKeyboard extends LitElement {
 			this.domain ?? 'remote',
 			this.service ?? 'send_command',
 			{
-				entity_id: this.config?.keyboard_id,
+				entity_id: this.config.keyboard_id,
 				command: `input text "${text}"`,
 			},
 		);
@@ -294,7 +294,7 @@ export class BaseKeyboard extends LitElement {
 		if (outKey) {
 			this.onKeyDownFired = true;
 			this.hass.callService('remote', 'send_command', {
-				entity_id: this.config?.remote_id,
+				entity_id: this.config.remote_id,
 				command: outKey,
 			});
 			if (inKey == 'Enter') {
@@ -319,7 +319,7 @@ export class BaseKeyboard extends LitElement {
 			const key = inputTypeToKey[inputType ?? ''];
 			if (key) {
 				this.hass.callService('remote', 'send_command', {
-					entity_id: this.config?.remote_id,
+					entity_id: this.config.remote_id,
 					command: key,
 				});
 				if (inputType == 'insertLineBreak') {
@@ -332,16 +332,16 @@ export class BaseKeyboard extends LitElement {
 
 	keyboardOnPaste(e: ClipboardEvent) {
 		e.stopImmediatePropagation();
-		if (this.config?.platform != 'Kodi') {
+		if (this.config.platform != 'Kodi') {
 			this.forceCursorToEnd();
 		}
 
 		const text = e.clipboardData?.getData('Text');
 		if (text) {
-			switch (this.config?.platform as KeyboardPlatform) {
+			switch (this.config.platform as KeyboardPlatform) {
 				case 'Unified Remote':
 					this.hass.callService('unified_remote', 'call', {
-						target: this.config?.keyboard_id,
+						target: this.config.keyboard_id,
 						remote_id: 'Core.Input',
 						action: 'Text',
 						extras: {
@@ -355,7 +355,7 @@ export class BaseKeyboard extends LitElement {
 					break;
 				case 'Kodi':
 					this.hass.callService('kodi', 'call_method', {
-						entity_id: this.config?.keyboard_id,
+						entity_id: this.config.keyboard_id,
 						method: 'Input.SendText',
 						text: this.textarea?.value ?? '',
 						done: false,
@@ -363,7 +363,7 @@ export class BaseKeyboard extends LitElement {
 					break;
 				case 'LG webOS':
 					this.hass.callService('webostv', 'command', {
-						entity_id: this.config?.keyboard_id,
+						entity_id: this.config.keyboard_id,
 						command: 'com.webos.service.ime/insertText',
 						text: this.textarea?.value ?? '',
 						replace: true,
@@ -371,7 +371,7 @@ export class BaseKeyboard extends LitElement {
 					break;
 				case 'Roku':
 					this.hass.callService('remote', 'send_command', {
-						entity_id: this.config?.keyboard_id,
+						entity_id: this.config.keyboard_id,
 						command: `Lit_${text}`,
 					});
 					break;
@@ -383,7 +383,7 @@ export class BaseKeyboard extends LitElement {
 						this.domain ?? 'remote',
 						this.service ?? 'send_command',
 						{
-							entity_id: this.config?.keyboard_id,
+							entity_id: this.config.keyboard_id,
 							command: `input text "${text}"`,
 						},
 					);
@@ -395,10 +395,10 @@ export class BaseKeyboard extends LitElement {
 	search(_e: MouseEvent) {
 		const text = this.textarea?.value;
 		if (text) {
-			switch (this.config?.platform as KeyboardPlatform) {
+			switch (this.config.platform as KeyboardPlatform) {
 				case 'Kodi':
 					this.hass.callService('kodi', 'call_method', {
-						entity_id: this.config?.keyboard_id,
+						entity_id: this.config.keyboard_id,
 						method: 'Input.SendText',
 						text: text,
 						done: true,
@@ -420,7 +420,7 @@ export class BaseKeyboard extends LitElement {
 						this.domain ?? 'remote',
 						this.service ?? 'send_command',
 						{
-							entity_id: this.config?.keyboard_id,
+							entity_id: this.config.keyboard_id,
 							command: `am start -a "android.search.action.GLOBAL_SEARCH" --es query "${text}"`,
 						},
 					);
@@ -433,10 +433,10 @@ export class BaseKeyboard extends LitElement {
 	textBox(_e: MouseEvent) {
 		const text = this.textarea?.value;
 		if (text) {
-			switch (this.config?.platform as KeyboardPlatform) {
+			switch (this.config.platform as KeyboardPlatform) {
 				case 'Unified Remote':
 					this.hass.callService('unified_remote', 'call', {
-						target: this.config?.keyboard_id,
+						target: this.config.keyboard_id,
 						remote_id: 'Core.Input',
 						action: 'Text',
 						extras: {
@@ -450,7 +450,7 @@ export class BaseKeyboard extends LitElement {
 					break;
 				case 'Kodi':
 					this.hass.callService('kodi', 'call_method', {
-						entity_id: this.config?.keyboard_id,
+						entity_id: this.config.keyboard_id,
 						method: 'Input.SendText',
 						text: text,
 						done: false,
@@ -458,7 +458,7 @@ export class BaseKeyboard extends LitElement {
 					break;
 				case 'LG webOS':
 					this.hass.callService('webostv', 'command', {
-						entity_id: this.config?.keyboard_id,
+						entity_id: this.config.keyboard_id,
 						command: 'com.webos.service.ime/insertText',
 						payload: {
 							text: text,
@@ -480,7 +480,7 @@ export class BaseKeyboard extends LitElement {
 						this.domain ?? 'remote',
 						this.service ?? 'send_command',
 						{
-							entity_id: this.config?.keyboard_id,
+							entity_id: this.config.keyboard_id,
 							command: `input text "${text}"`,
 						},
 					);
@@ -491,10 +491,10 @@ export class BaseKeyboard extends LitElement {
 	}
 
 	enterDialog() {
-		switch (this.config?.platform as KeyboardPlatform) {
+		switch (this.config.platform as KeyboardPlatform) {
 			case 'Unified Remote':
 				this.hass.callService('unified_remote', 'call', {
-					target: this.config?.keyboard_id,
+					target: this.config.keyboard_id,
 					remote_id: 'Core.Input',
 					action: 'Press',
 					extras: {
@@ -508,7 +508,7 @@ export class BaseKeyboard extends LitElement {
 				break;
 			case 'Kodi':
 				this.hass.callService('kodi', 'call_method', {
-					entity_id: this.config?.keyboard_id,
+					entity_id: this.config.keyboard_id,
 					method: 'Input.SendText',
 					text: this.textarea?.value ?? '',
 					done: true,
@@ -516,7 +516,7 @@ export class BaseKeyboard extends LitElement {
 				break;
 			case 'LG webOS':
 				this.hass.callService('webostv', 'command', {
-					entity_id: this.config?.keyboard_id,
+					entity_id: this.config.keyboard_id,
 					command: 'com.webos.service.ime/sendEnterKey',
 				});
 				break;
@@ -532,7 +532,7 @@ export class BaseKeyboard extends LitElement {
 					this.domain ?? 'remote',
 					this.service ?? 'send_command',
 					{
-						entity_id: this.config?.keyboard_id,
+						entity_id: this.config.keyboard_id,
 						command: 'input keyevent 66',
 					},
 				);
@@ -540,7 +540,7 @@ export class BaseKeyboard extends LitElement {
 			case 'Android TV':
 			default:
 				this.hass.callService('remote', 'send_command', {
-					entity_id: this.config?.remote_id,
+					entity_id: this.config.remote_id,
 					command: 'ENTER',
 				});
 				break;
@@ -577,7 +577,7 @@ export class BaseKeyboard extends LitElement {
 	}
 
 	render() {
-		switch ((this.config?.keyboard_id ?? '').split('.')[0]) {
+		switch ((this.config.keyboard_id ?? '').split('.')[0]) {
 			case 'media_player':
 				this.domain = 'androidtv';
 				this.service = 'adb_command';
@@ -589,10 +589,7 @@ export class BaseKeyboard extends LitElement {
 				break;
 		}
 
-		if (
-			this.config?.platform == 'Kodi' &&
-			this.config?.action == 'search'
-		) {
+		if (this.config.platform == 'Kodi' && this.config.action == 'search') {
 			this.hass.callService('kodi', 'call_method', {
 				entity_id: this.config.keyboard_id,
 				method: 'Addons.ExecuteAddon',
@@ -606,7 +603,7 @@ export class BaseKeyboard extends LitElement {
 		let keyDownHandler: ((e: KeyboardEvent) => void) | undefined;
 		let pasteHandler: ((e: ClipboardEvent) => void) | undefined;
 		let antiCursorMoveHandler: ((e: Event) => void) | undefined;
-		switch (this.config?.action) {
+		switch (this.config.action) {
 			case 'search':
 				placeholder = 'Search for something...';
 				buttons = html`${this.buildDialogButton(
@@ -624,7 +621,7 @@ export class BaseKeyboard extends LitElement {
 			case 'keyboard':
 			default:
 				antiCursorMoveHandler = this.forceCursorToEndEvent;
-				switch (this.config?.platform as KeyboardPlatform) {
+				switch (this.config.platform as KeyboardPlatform) {
 					case 'Unified Remote':
 						inputHandler = this.unifiedRemoteOnInput;
 						keyDownHandler = this.unifiedRemoteOnKeyDown;
@@ -662,7 +659,7 @@ export class BaseKeyboard extends LitElement {
 				)}${this.buildDialogButton('Enter', this.enterDialog)}`;
 				break;
 		}
-		placeholder = this.config?.keyboard_prompt ?? placeholder;
+		placeholder = this.config.keyboard_prompt ?? placeholder;
 
 		const textarea = html`<textarea
 			spellcheck="false"

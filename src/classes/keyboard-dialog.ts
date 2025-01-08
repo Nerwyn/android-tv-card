@@ -39,15 +39,17 @@ export class KeyboardDialog extends LitElement {
 
 	render() {
 		let keyboard = html``;
-		switch (this.config.platform as KeyboardPlatform) {
-			case 'Android TV':
-			default:
-				// TODO add other keyboards
-				keyboard = html`<base-keyboard
-					.hass=${this.hass}
-					.config=${this.config}
-				></base-keyboard>`;
-				break;
+		if (this.config) {
+			switch (this.config.platform as KeyboardPlatform) {
+				case 'Android TV':
+				default:
+					// TODO add other keyboards
+					keyboard = html`<base-keyboard
+						.hass=${this.hass}
+						.config=${this.config ?? {}}
+					></base-keyboard>`;
+					break;
+			}
 		}
 
 		return html`<dialog
