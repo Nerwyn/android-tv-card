@@ -15,6 +15,7 @@ export class KeyboardDialog extends LitElement {
 
 		const dialog = this.shadowRoot?.querySelector('dialog');
 		if (dialog) {
+			this.open = true;
 			try {
 				dialog.showModal();
 			} catch {
@@ -22,11 +23,11 @@ export class KeyboardDialog extends LitElement {
 				dialog.showModal();
 			}
 			window.addEventListener('popstate', () => this.closeDialog());
-			this.open = true;
 		}
 	}
 
 	closeDialog() {
+		this.open = false;
 		const dialog = this.shadowRoot?.querySelector('dialog');
 		if (dialog) {
 			try {
@@ -37,7 +38,6 @@ export class KeyboardDialog extends LitElement {
 			}
 			window.removeEventListener('popstate', () => this.closeDialog());
 		}
-		this.open = false;
 	}
 
 	render() {
