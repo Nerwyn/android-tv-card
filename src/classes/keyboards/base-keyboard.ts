@@ -1,11 +1,11 @@
-import { PropertyValues, css, html } from 'lit';
+import { LitElement, PropertyValues, css, html } from 'lit';
 import { property } from 'lit/decorators.js';
 
-import { IAction } from '../../models/interfaces';
+import { HomeAssistant, IAction } from '../../models/interfaces';
 import { waitForElement } from '../../utils';
-import { BaseRemoteElement } from '../base-remote-element';
 
-export class BaseKeyboard extends BaseRemoteElement {
+export class BaseKeyboard extends LitElement {
+	@property() hass!: HomeAssistant;
 	@property() action!: IAction;
 	@property() open!: boolean;
 
@@ -56,12 +56,12 @@ export class BaseKeyboard extends BaseRemoteElement {
 			if (key) {
 				this.sendKey(key);
 			}
+
+			if (this.closeOnEnter && inputType == 'insertLineBreak') {
+				this.closeDialog();
+			}
 		}
 		this.onKeyDownFired = false;
-
-		if (this.closeOnEnter && inputType == 'insertLineBreak') {
-			this.closeDialog();
-		}
 	}
 
 	onPaste(e: ClipboardEvent) {
