@@ -675,7 +675,6 @@ class UniversalRemoteCard extends LitElement {
 					--ha-ripple-pressed-opacity,
 					0.12
 				);
-				--ha-ripple-color: var(--secondary-text-color);
 				--md-ripple-hover-color: var(
 					--ha-ripple-hover-color,
 					var(--ha-ripple-color, var(--secondary-text-color))
