@@ -13,6 +13,8 @@ export class KodiKeyboard extends BaseKeyboard {
 		Enter: 'Enter',
 	};
 
+	forceCursorToEnd(_e?: Event) {}
+
 	sendText(_text: string) {
 		this.hass.callService('kodi', 'call_method', {
 			entity_id: this.action.keyboard_id,

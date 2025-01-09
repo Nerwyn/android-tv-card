@@ -12,6 +12,8 @@ export class WebOSKeyboard extends BaseKeyboard {
 		insertLineBreak: 'Enter',
 	};
 
+	forceCursorToEnd(_e?: Event) {}
+
 	sendText(_text?: string) {
 		this.hass.callService('webostv', 'command', {
 			entity_id: this.action.keyboard_id,
