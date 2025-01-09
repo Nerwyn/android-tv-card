@@ -9,8 +9,8 @@ export class KodiKeyboard extends BaseKeyboard {
 		Enter: 'Enter',
 	};
 	inputMap = {
-		Backspace: 'Backspace',
-		Enter: 'Enter',
+		deleteContentBackward: 'Backspace',
+		insertLineBreak: 'Enter',
 	};
 
 	forceCursorToEnd(_e?: Event) {}
