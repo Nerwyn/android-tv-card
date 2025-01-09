@@ -12,11 +12,11 @@ import './keyboards/webos-keyboard';
 @customElement('keyboard-dialog')
 export class KeyboardDialog extends LitElement {
 	@property() hass!: HomeAssistant;
-	@state() config!: IAction;
+	@state() action!: IAction;
 	@state() open: boolean = false;
 
 	showDialog(e: CustomEvent) {
-		this.config = e.detail;
+		this.action = e.detail;
 		this.open = true;
 
 		const dialog = this.shadowRoot?.querySelector('dialog');
@@ -48,33 +48,33 @@ export class KeyboardDialog extends LitElement {
 
 	render() {
 		let keyboard = html``;
-		if (this.config) {
-			switch (this.config.platform as KeyboardPlatform) {
+		if (this.action) {
+			switch (this.action.platform as KeyboardPlatform) {
 				case 'Unified Remote':
 					keyboard = html`<unified-remote-keyboard
 						.hass=${this.hass}
-						.config=${this.config ?? {}}
+						.action=${this.action ?? {}}
 						.open=${this.open}
 					></unified-remote-keyboard>`;
 					break;
 				case 'Kodi':
 					keyboard = html`<kodi-keyboard
 						.hass=${this.hass}
-						.config=${this.config ?? {}}
+						.action=${this.action ?? {}}
 						.open=${this.open}
 					></kodi-keyboard>`;
 					break;
 				case 'LG webOS':
 					keyboard = html`<webos-keyboard
 						.hass=${this.hass}
-						.config=${this.config ?? {}}
+						.action=${this.action ?? {}}
 						.open=${this.open}
 					></webos-keyboard>`;
 					break;
 				case 'Roku':
 					keyboard = html`<roku-keyboard
 						.hass=${this.hass}
-						.config=${this.config ?? {}}
+						.action=${this.action ?? {}}
 						.open=${this.open}
 					></roku-keyboard>`;
 					break;
@@ -82,7 +82,7 @@ export class KeyboardDialog extends LitElement {
 				case 'Sony BRAVIA':
 					keyboard = html`<adb-keyboard
 						.hass=${this.hass}
-						.config=${this.config ?? {}}
+						.action=${this.action ?? {}}
 						.open=${this.open}
 					></adb-keyboard>`;
 					break;
@@ -90,7 +90,7 @@ export class KeyboardDialog extends LitElement {
 				default:
 					keyboard = html`<android-tv-keyboard
 						.hass=${this.hass}
-						.config=${this.config ?? {}}
+						.action=${this.action ?? {}}
 						.open=${this.open}
 					></android-tv-keyboard>`;
 					break;
