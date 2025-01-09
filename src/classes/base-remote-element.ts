@@ -926,6 +926,12 @@ export class BaseRemoteElement extends LitElement {
 				-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 			}
 
+			md-ripple {
+				height: var(--md-ripple-height, 100%);
+				width: var(--md-ripple-width, 100%);
+				left: var(--md-ripple-left, 0);
+			}
+
 			md-ripple.transition-on {
 				opacity: 1
 				transition: opacity 375ms linear;
