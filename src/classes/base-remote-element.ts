@@ -929,6 +929,7 @@ export class BaseRemoteElement extends LitElement {
 			md-ripple {
 				height: var(--ha-ripple-height, 100%);
 				width: var(--ha-ripple-width, 100%);
+				top: var(--ha-ripple-top, 0);
 				left: var(--ha-ripple-left, 0);
 			}
 
