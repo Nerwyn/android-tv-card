@@ -2,7 +2,12 @@ import { LitElement, css, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { HomeAssistant, IAction, KeyboardPlatform } from '../models/interfaces';
 
-import './keyboards/base-keyboard';
+import './keyboards/adb-keyboard';
+import './keyboards/android-tv-keyboard';
+import './keyboards/kodi-keyboard';
+import './keyboards/roku-keyboard';
+import './keyboards/unified-remote-keyboard';
+import './keyboards/webos-keyboard';
 
 @customElement('keyboard-dialog')
 export class KeyboardDialog extends LitElement {
@@ -28,6 +33,7 @@ export class KeyboardDialog extends LitElement {
 
 	closeDialog() {
 		this.open = false;
+
 		const dialog = this.shadowRoot?.querySelector('dialog');
 		if (dialog) {
 			try {
@@ -44,14 +50,49 @@ export class KeyboardDialog extends LitElement {
 		let keyboard = html``;
 		if (this.config) {
 			switch (this.config.platform as KeyboardPlatform) {
-				case 'Android TV':
-				default:
-					// TODO add other keyboards
-					keyboard = html`<base-keyboard
+				case 'Unified Remote':
+					keyboard = html`<unified-remote-keyboard
 						.hass=${this.hass}
 						.config=${this.config ?? {}}
 						.open=${this.open}
-					></base-keyboard>`;
+					></unified-remote-keyboard>`;
+					break;
+				case 'Kodi':
+					keyboard = html`<kodi-keyboard
+						.hass=${this.hass}
+						.config=${this.config ?? {}}
+						.open=${this.open}
+					></kodi-keyboard>`;
+					break;
+				case 'LG webOS':
+					keyboard = html`<webos-keyboard
+						.hass=${this.hass}
+						.config=${this.config ?? {}}
+						.open=${this.open}
+					></webos-keyboard>`;
+					break;
+				case 'Roku':
+					keyboard = html`<roku-keyboard
+						.hass=${this.hass}
+						.config=${this.config ?? {}}
+						.open=${this.open}
+					></roku-keyboard>`;
+					break;
+				case 'Fire TV':
+				case 'Sony BRAVIA':
+					keyboard = html`<adb-keyboard
+						.hass=${this.hass}
+						.config=${this.config ?? {}}
+						.open=${this.open}
+					></adb-keyboard>`;
+					break;
+				case 'Android TV':
+				default:
+					keyboard = html`<android-tv-keyboard
+						.hass=${this.hass}
+						.config=${this.config ?? {}}
+						.open=${this.open}
+					></android-tv-keyboard>`;
 					break;
 			}
 		}
