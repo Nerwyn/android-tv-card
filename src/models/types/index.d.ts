@@ -11,10 +11,6 @@ declare global {
 		description: string;
 	}
 
-	interface EventTarget {
-		action: string;
-	}
-
 	interface Event {
 		// eslint-disable-next-line
 		detail?: any;

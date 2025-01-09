@@ -14,7 +14,7 @@ export class AndroidTVKeyboard extends ADBKeyboard {
 
 	sendKey(key: string) {
 		this.hass.callService('remote', 'send_command', {
-			entity_id: this.config.remote_id,
+			entity_id: this.action.remote_id,
 			command: key,
 		});
 	}

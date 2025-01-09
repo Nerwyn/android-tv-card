@@ -13,16 +13,16 @@ export class RokuKeyboard extends BaseKeyboard {
 	};
 
 	getRokuId(domain: 'remote' | 'media_player') {
-		if ((this.config.keyboard_id ?? '').split('.')[0] != domain) {
+		if ((this.action.keyboard_id ?? '').split('.')[0] != domain) {
 			switch (domain) {
 				case 'media_player':
-					return this.config.media_player_id;
+					return this.action.media_player_id;
 				case 'remote':
 				default:
-					return this.config.remote_id;
+					return this.action.remote_id;
 			}
 		}
-		return this.config.keyboard_id;
+		return this.action.keyboard_id;
 	}
 
 	sendText(text: string) {

@@ -14,7 +14,7 @@ export class WebOSKeyboard extends BaseKeyboard {
 
 	sendText(_text?: string) {
 		this.hass.callService('webostv', 'command', {
-			entity_id: this.config.keyboard_id,
+			entity_id: this.action.keyboard_id,
 			command: 'com.webos.service.ime/insertText',
 			payload: {
 				text: this.textarea?.value ?? '',
@@ -26,7 +26,7 @@ export class WebOSKeyboard extends BaseKeyboard {
 	sendKey(key: string) {
 		if (key == 'Enter') {
 			this.hass.callService('webostv', 'command', {
-				entity_id: this.config.keyboard_id,
+				entity_id: this.action.keyboard_id,
 				command: 'com.webos.service.ime/sendEnterKey',
 			});
 		} else {

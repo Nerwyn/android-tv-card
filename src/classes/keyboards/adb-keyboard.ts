@@ -21,7 +21,7 @@ export class ADBKeyboard extends BaseKeyboard {
 			this.domain ?? 'remote',
 			this.service ?? 'send_command',
 			{
-				entity_id: this.config.keyboard_id,
+				entity_id: this.action.keyboard_id,
 				command: `input text "${text}"`,
 			},
 		);
@@ -32,7 +32,7 @@ export class ADBKeyboard extends BaseKeyboard {
 			this.domain ?? 'remote',
 			this.service ?? 'send_command',
 			{
-				entity_id: this.config.keyboard_id,
+				entity_id: this.action.keyboard_id,
 				command: `input keyevent ${key}`,
 			},
 		);
@@ -43,7 +43,7 @@ export class ADBKeyboard extends BaseKeyboard {
 			this.domain ?? 'remote',
 			this.service ?? 'send_command',
 			{
-				entity_id: this.config.keyboard_id,
+				entity_id: this.action.keyboard_id,
 				command: `am start -a "android.search.action.GLOBAL_SEARCH" --es query "${text}"`,
 			},
 		);
@@ -57,7 +57,7 @@ export class ADBKeyboard extends BaseKeyboard {
 
 	updated(changedProperties: PropertyValues) {
 		if (changedProperties.has('open') && !changedProperties.get('open')) {
-			switch ((this.config.keyboard_id ?? '').split('.')[0]) {
+			switch ((this.action.keyboard_id ?? '').split('.')[0]) {
 				case 'media_player':
 					this.domain = 'androidtv';
 					this.service = 'adb_command';

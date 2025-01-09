@@ -1,13 +1,12 @@
-import { LitElement, PropertyValues, css, html } from 'lit';
+import { PropertyValues, css, html } from 'lit';
 import { property } from 'lit/decorators.js';
-import { HomeAssistant } from '../../models/interfaces';
 
 import { IAction } from '../../models/interfaces';
 import { waitForElement } from '../../utils';
+import { BaseRemoteElement } from '../base-remote-element';
 
-export class BaseKeyboard extends LitElement {
-	@property() hass!: HomeAssistant;
-	@property() config!: IAction;
+export class BaseKeyboard extends BaseRemoteElement {
+	@property() action!: IAction;
 	@property() open!: boolean;
 
 	textarea?: HTMLTextAreaElement;
@@ -127,7 +126,7 @@ export class BaseKeyboard extends LitElement {
 		let pasteHandler: ((e: ClipboardEvent) => void) | undefined;
 		let forceCursorToEndHandler: ((e: Event) => void) | undefined;
 
-		switch (this.config.action) {
+		switch (this.action.action) {
 			case 'search':
 				placeholder = 'Search for something...';
 				buttons = html`${this.buildDialogButton(
@@ -155,7 +154,7 @@ export class BaseKeyboard extends LitElement {
 				forceCursorToEndHandler = this.forceCursorToEnd;
 				break;
 		}
-		placeholder = this.config.keyboard_prompt ?? placeholder;
+		placeholder = this.action.keyboard_prompt ?? placeholder;
 
 		const textarea = html`<textarea
 			spellcheck="false"
