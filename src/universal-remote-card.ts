@@ -669,14 +669,7 @@ class UniversalRemoteCard extends LitElement {
 
 	static get styles() {
 		return css`
-			ha-card {
-				display: flex;
-				flex-direction: column;
-				align-items: center;
-				padding: 12px;
-
-				-webkit-tap-highlight-color: transparent;
-				-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+			:host {
 				--md-ripple-hover-opacity: var(--ha-ripple-hover-opacity, 0.08);
 				--md-ripple-pressed-opacity: var(
 					--ha-ripple-pressed-opacity,
@@ -691,6 +684,16 @@ class UniversalRemoteCard extends LitElement {
 					--ha-ripple-pressed-color,
 					var(--ha-ripple-color, var(--secondary-text-color))
 				);
+			}
+
+			ha-card {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				padding: 12px;
+
+				-webkit-tap-highlight-color: transparent;
+				-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 			}
 
 			.row {
