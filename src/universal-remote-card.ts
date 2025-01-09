@@ -669,22 +669,6 @@ class UniversalRemoteCard extends LitElement {
 
 	static get styles() {
 		return css`
-			:host {
-				--md-ripple-hover-opacity: var(--ha-ripple-hover-opacity, 0.08);
-				--md-ripple-pressed-opacity: var(
-					--ha-ripple-pressed-opacity,
-					0.12
-				);
-				--md-ripple-hover-color: var(
-					--ha-ripple-hover-color,
-					var(--ha-ripple-color, var(--secondary-text-color))
-				);
-				--md-ripple-pressed-color: var(
-					--ha-ripple-pressed-color,
-					var(--ha-ripple-color, var(--secondary-text-color))
-				);
-			}
-
 			ha-card {
 				display: flex;
 				flex-direction: column;

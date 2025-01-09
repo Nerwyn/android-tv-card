@@ -236,13 +236,37 @@ export class BaseKeyboard extends LitElement {
 			}
 			@media (hover: hover) {
 				button:hover {
-					background: var(--ha-ripple-color);
-					opacity: var(--md-ripple-hover-opacity);
+					background: var(
+						--ha-ripple-hover-color,
+						var(
+							--ha-ripple-color,
+							var(
+								--md-ripple-hover-color,
+								var(--secondary-text-color)
+							)
+						)
+					);
+					opacity: var(
+						--ha-ripple-hover-opacity,
+						var(--md-ripple-hover-opacity, 0.08)
+					);
 				}
 			}
 			button:active {
-				background: var(--ha-ripple-color);
-				opacity: var(--md-ripple-pressed-opacity);
+				background: var(
+					--ha-ripple-pressed-color,
+					var(
+						--ha-ripple-color,
+						var(
+							--md-ripple-pressed-color,
+							var(--secondary-text-color)
+						)
+					)
+				);
+				opacity: var(
+					--ha-ripple-pressed-opacity,
+					var(--md-ripple-pressed-opacity, 0.12)
+				);
 			}
 			.button span {
 				font-family: inherit;
