@@ -20,7 +20,7 @@ export class RemoteButton extends BaseRemoteElement {
 	holdInterval?: ReturnType<typeof setInterval>;
 	hold: boolean = false;
 
-	onClick(e: TouchEvent | MouseEvent) {
+	onClick(e: MouseEvent | PointerEvent) {
 		e.stopImmediatePropagation();
 		this.clickCount++;
 
@@ -58,8 +58,10 @@ export class RemoteButton extends BaseRemoteElement {
 		}
 	}
 
-	onStart(e: TouchEvent | MouseEvent) {
-		super.onStart(e);
+	onDown(e: MouseEvent | PointerEvent) {
+		if (!super.onDown(e)) {
+			return;
+		}
 		this.cancelRippleToggle();
 		this.swiping = false;
 
@@ -111,8 +113,11 @@ export class RemoteButton extends BaseRemoteElement {
 		}
 	}
 
-	onEnd(e: TouchEvent | MouseEvent) {
-		if (!this.swiping) {
+	onUp(e: MouseEvent | PointerEvent) {
+		if (!super.onUp(e)) {
+			return;
+		}
+		if (!this.swiping && this.pointers) {
 			if (
 				this.renderTemplate(
 					this.config.momentary_end_action?.action ?? 'none',
@@ -141,25 +146,15 @@ export class RemoteButton extends BaseRemoteElement {
 		this.toggleRipple();
 	}
 
-	onMove(e: TouchEvent | MouseEvent) {
-		let currentX: number;
-		let currentY: number;
-		if ('targetTouches' in e) {
-			currentX = e.targetTouches[0].clientX;
-			currentY = e.targetTouches[0].clientY;
-		} else {
-			currentX = e.clientX;
-			currentY = e.clientY;
+	onMove(e: MouseEvent | PointerEvent) {
+		if (!super.onMove(e)) {
+			return;
 		}
-		this.deltaX = currentX - (this.currentX ?? currentX);
-		this.deltaY = currentY - (this.currentY ?? currentY);
-		this.currentX = currentX;
-		this.currentY = currentY;
 
 		// Only consider significant enough movement
 		const sensitivity = 24;
-		const totalDeltaX = this.currentX - (this.initialX ?? 0);
-		const totalDeltaY = this.currentY - (this.initialY ?? 0);
+		const totalDeltaX = (this.currentX ?? 0) - (this.initialX ?? 0);
+		const totalDeltaY = (this.currentY ?? 0) - (this.initialY ?? 0);
 		if (
 			Math.abs(Math.abs(totalDeltaX) - Math.abs(totalDeltaY)) >
 			sensitivity
@@ -169,13 +164,13 @@ export class RemoteButton extends BaseRemoteElement {
 		}
 	}
 
-	onMouseLeave(_e: MouseEvent) {
+	onLeave(_e: MouseEvent | PointerEvent) {
 		this.endAction();
 		this.swiping = true;
 		this.toggleRipple();
 	}
 
-	onTouchCancel(_e: TouchEvent) {
+	onCancel(_e: PointerEvent) {
 		this.endAction();
 		this.toggleRipple();
 	}
@@ -198,14 +193,15 @@ export class RemoteButton extends BaseRemoteElement {
 		this.setValue();
 		return html`
 			<button
-				@mousedown=${this.onMouseDown}
-				@mouseup=${this.onMouseUp}
-				@mousemove=${this.onMouseMove}
-				@mouseleave=${this.onMouseLeave}
-				@touchstart=${this.onTouchStart}
-				@touchend=${this.onTouchEnd}
-				@touchmove=${this.onTouchMove}
-				@touchcancel=${this.onTouchCancel}
+				@mousedown=${this.onDown}
+				@mouseup=${this.onUp}
+				@mousemove=${this.onMove}
+				@mouseleave=${this.onLeave}
+				@pointerdown=${this.onDown}
+				@pointerup=${this.onUp}
+				@pointermove=${this.onMove}
+				@pointerleave=${this.onLeave}
+				@pointercancel=${this.onCancel}
 				@contextmenu=${this.onContextMenu}
 			>
 				${this.buildIcon(this.config.icon)}

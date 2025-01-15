@@ -1,5 +1,5 @@
 import { CSSResult, LitElement, css, html } from 'lit';
-import { eventOptions, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
 
 import { renderTemplate } from 'ha-nunjucks';
 import { HapticType, HomeAssistant } from '../models/interfaces';
@@ -39,10 +39,11 @@ export class BaseRemoteElement extends LitElement {
 
 	momentaryStart?: number;
 	momentaryEnd?: number;
-	fireMouseEvent?: boolean = true;
 
 	swiping?: boolean = false;
-	targetTouches?: Touch[];
+
+	pointers: number = 0;
+	fireMouseEvent?: boolean = true;
 	initialX?: number;
 	initialY?: number;
 	currentX?: number;
@@ -69,7 +70,8 @@ export class BaseRemoteElement extends LitElement {
 		this.momentaryEnd = undefined;
 
 		this.swiping = false;
-		this.targetTouches = undefined;
+		this.pointers = 0;
+
 		this.initialX = undefined;
 		this.initialY = undefined;
 		this.currentX = undefined;
@@ -781,104 +783,62 @@ export class BaseRemoteElement extends LitElement {
 			: '';
 	}
 
-	setTargetTouches(e: TouchEvent) {
-		if (!this.targetTouches) {
-			this.targetTouches = Array.from(e.targetTouches ?? []);
-		} else {
-			for (const touch of e.targetTouches) {
-				const i = this.targetTouches.findIndex(
-					(t) => t.identifier == touch.identifier,
-				);
-				if (i >= 0) {
-					this.targetTouches[i] = touch;
-				} else {
-					this.targetTouches.push(touch);
-				}
-			}
+	shouldFire(e: MouseEvent | PointerEvent) {
+		if (e.type.startsWith('pointer')) {
+			this.fireMouseEvent = false;
+		} else if (e.type.startsWith('mouse') && !this.fireMouseEvent) {
+			return false;
 		}
+		return true;
 	}
 
-	onStart(e: TouchEvent | MouseEvent) {
-		if ('targetTouches' in e) {
-			let totalX = 0;
-			let totalY = 0;
-			this.setTargetTouches(e);
-			for (const touch of this.targetTouches ?? []) {
-				totalX += touch.clientX;
-				totalY += touch.clientY;
-			}
-			this.initialX = totalX / (this.targetTouches?.length ?? 1);
-			this.initialY = totalY / (this.targetTouches?.length ?? 1);
-		} else {
+	onDown(e: MouseEvent | PointerEvent): boolean | void {
+		this.pointers++;
+		if (this.shouldFire(e) && !this.initialX && !this.initialY) {
 			this.initialX = e.clientX;
 			this.initialY = e.clientY;
+			this.currentX = e.clientX;
+			this.currentY = e.clientY;
+			this.deltaX = 0;
+			this.deltaY = 0;
+			return true;
 		}
-		this.currentX = this.initialX;
-		this.currentY = this.initialY;
+		return false;
 	}
 
-	onEnd(_e: TouchEvent | MouseEvent) {}
+	onUp(e: MouseEvent | PointerEvent): boolean | void {
+		if (!this.shouldFire(e)) {
+			this.fireMouseEvent = true;
+			return false;
+		}
+		return true;
+	}
 
-	onMove(e: TouchEvent | MouseEvent) {
-		let currentX: number = 0;
-		let currentY: number = 0;
-		if ('targetTouches' in e) {
-			this.setTargetTouches(e);
-			for (const touch of this.targetTouches ?? []) {
-				currentX += touch.clientX;
-				currentY += touch.clientY;
-			}
-			currentX = currentX / (this.targetTouches?.length ?? 1);
-			currentY = currentY / (this.targetTouches?.length ?? 1);
+	onMove(e: MouseEvent | PointerEvent): boolean | void {
+		if (!this.shouldFire(e)) {
+			return false;
+		}
+
+		if (
+			this.currentX &&
+			this.currentY &&
+			(!('isPrimary' in e) || e.isPrimary)
+		) {
+			this.deltaX = e.clientX - this.currentX;
+			this.deltaY = e.clientY - this.currentY;
+			this.currentX = e.clientX;
+			this.currentY = e.clientY;
 		} else {
-			currentX = e.clientX ?? 0;
-			currentY = e.clientY ?? 0;
+			return false;
 		}
-		this.deltaX = currentX - (this.currentX ?? currentX);
-		this.deltaY = currentY - (this.currentY ?? currentY);
-		this.currentX = currentX;
-		this.currentY = currentY;
-	}
 
-	@eventOptions({ passive: true })
-	onMouseDown(e: TouchEvent | MouseEvent) {
-		if (this.fireMouseEvent) {
-			this.onStart(e);
-		}
-	}
-	onMouseUp(e: TouchEvent | MouseEvent) {
-		if (this.fireMouseEvent) {
-			this.onEnd(e);
-		}
-		this.fireMouseEvent = true;
-	}
-	@eventOptions({ passive: true })
-	onMouseMove(e: TouchEvent | MouseEvent) {
-		if (this.fireMouseEvent) {
-			this.onMove(e);
-		}
-	}
-
-	@eventOptions({ passive: true })
-	onTouchStart(e: TouchEvent) {
-		this.fireMouseEvent = false;
-		this.onStart(e);
-	}
-	onTouchEnd(e: TouchEvent) {
-		this.fireMouseEvent = false;
-		this.onEnd(e);
-	}
-	@eventOptions({ passive: true })
-	onTouchMove(e: TouchEvent) {
-		this.fireMouseEvent = false;
-		this.onMove(e);
+		return true;
 	}
 
 	onContextMenu(e: PointerEvent) {
-		if (!this.fireMouseEvent) {
+		if (e.pointerType != 'mouse') {
 			e.preventDefault();
 			e.stopPropagation();
-			return false;
 		}
 	}
 

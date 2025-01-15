@@ -115,8 +115,10 @@ export class RemoteSlider extends BaseRemoteElement {
 		}
 	}
 
-	onStart(e: TouchEvent | MouseEvent) {
-		super.onStart(e);
+	onDown(e: MouseEvent | PointerEvent) {
+		if (!super.onDown(e)) {
+			return;
+		}
 		const slider = e.currentTarget as HTMLInputElement;
 
 		if (!this.swiping) {
@@ -130,7 +132,10 @@ export class RemoteSlider extends BaseRemoteElement {
 		}
 	}
 
-	onEnd(_e: TouchEvent | MouseEvent) {
+	onUp(e: MouseEvent | PointerEvent) {
+		if (!super.onUp(e)) {
+			return;
+		}
 		this.setThumbOffset();
 		this.showTooltip = false;
 		this.setValue();
@@ -158,13 +163,15 @@ export class RemoteSlider extends BaseRemoteElement {
 		this.resetGetValueFromHass();
 	}
 
-	onMove(e: TouchEvent | MouseEvent) {
+	onMove(e: MouseEvent | PointerEvent) {
+		if (!super.onMove(e)) {
+			return;
+		}
 		if (
 			!this.vertical &&
 			this.initialX != undefined &&
 			this.initialY != undefined
 		) {
-			super.onMove(e);
 			const sensitivity = 50;
 			if (
 				Math.abs((this.currentX ?? 0) - (this.initialX ?? 0)) <
@@ -329,12 +336,12 @@ export class RemoteSlider extends BaseRemoteElement {
 				.value="${value}"
 				style=${styleMap(style)}
 				@input=${this.onInput}
-				@mousedown=${this.onMouseDown}
-				@mouseup=${this.onMouseUp}
-				@mousemove=${this.onMouseMove}
-				@touchstart=${this.onTouchStart}
-				@touchend=${this.onTouchEnd}
-				@touchmove=${this.onTouchMove}
+				@mousedown=${this.onDown}
+				@mouseup=${this.onUp}
+				@mousemove=${this.onMove}
+				@pointerdown=${this.onDown}
+				@pointerup=${this.onUp}
+				@pointermove=${this.onMove}
 				@contextmenu=${this.onContextMenu}
 			/>
 		`;

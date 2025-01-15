@@ -24,13 +24,10 @@ export class RemoteTouchpad extends BaseRemoteElement {
 
 	holdTimer?: ReturnType<typeof setTimeout>;
 	holdInterval?: ReturnType<typeof setInterval>;
-	hold: boolean = false;
-	holdStart: boolean = false;
-	holdMove: boolean = false;
 	direction?: DirectionAction;
 	fireDragAction: boolean = true;
 
-	onClick(e: TouchEvent | MouseEvent) {
+	onClick(e: MouseEvent | PointerEvent) {
 		e.stopImmediatePropagation();
 		this.clickCount++;
 		const multiPrefix = this.getMultiPrefix();
@@ -75,10 +72,16 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		}
 	}
 
-	onStart(e: TouchEvent | MouseEvent) {
-		super.onStart(e);
+	onDown(e: MouseEvent | PointerEvent) {
+		if (!super.onDown(e)) {
+			return;
+		}
 		this.cancelRippleToggle();
-		this.holdStart = true;
+
+		// Only consider primary pointer event
+		if ('isPrimary' in e && !e.isPrimary) {
+			return;
+		}
 
 		if (
 			!this.direction &&
@@ -102,8 +105,12 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		}
 	}
 
-	onEnd(e: TouchEvent | MouseEvent) {
+	onUp(e: MouseEvent | PointerEvent) {
+		if (!super.onUp(e)) {
+			return;
+		}
 		if (
+			this.pointers &&
 			!this.direction &&
 			this.renderTemplate(
 				this.config.momentary_end_action?.action ?? 'none',
@@ -120,30 +127,19 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			) != 'none'
 		) {
 			this.endAction();
-		} else if (this.hold || this.holdMove) {
+		} else if (this.holdTimer || this.holdInterval) {
 			e.stopImmediatePropagation();
 			if (e.cancelable) {
 				e.preventDefault();
 			}
-			let holdMove = false;
-			if ((this.targetTouches?.length ?? 0) > 1) {
-				holdMove = true;
-			}
-			this.endAction();
-			if (holdMove) {
-				this.holdMove = true;
-			}
-		} else if (
-			!this.holdMove &&
-			(!('targetTouches' in e) || !e.targetTouches.length)
-		) {
+		} else if (!this.holdInterval && this.pointers) {
 			this.onClick(e);
 		}
 		this.toggleRipple();
 	}
 
-	onMove(e: TouchEvent | MouseEvent) {
-		if (!this.initialX || !this.initialY || !this.holdStart) {
+	onMove(e: MouseEvent | PointerEvent) {
+		if (!this.initialX || !this.initialY) {
 			return;
 		}
 		super.onMove(e);
@@ -158,14 +154,10 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			) != 'none'
 		) {
 			// Drag actions
-			if (
-				this.holdMove ||
-				Math.abs(Math.abs(totalDeltaX) - Math.abs(totalDeltaY)) > 1
-			) {
+			if (Math.abs(Math.abs(totalDeltaX) - Math.abs(totalDeltaY)) > 0.5) {
 				if (this.fireDragAction) {
 					clearTimeout(this.holdTimer);
 					this.holdTimer = undefined;
-					this.holdMove = true;
 
 					const repeatDelay = this.renderTemplate(
 						this.config[`${multiPrefix}drag_action`]
@@ -189,13 +181,12 @@ export class RemoteTouchpad extends BaseRemoteElement {
 				} else {
 					this.direction = totalDeltaY < 0 ? 'up' : 'down';
 				}
-				if (!this.holdMove) {
+				if (!this.holdTimer) {
 					this.fireHapticEvent('light');
 					this.sendAction(
 						`${multiPrefix}tap_action`,
 						this.getActions(),
 					);
-					this.holdMove = true;
 
 					if (this.holdTimer) {
 						clearTimeout(this.holdTimer);
@@ -207,12 +198,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		}
 	}
 
-	onMouseLeave(_e: MouseEvent) {
-		this.endAction();
-		this.toggleRipple();
-	}
-
-	onTouchCancel(_e: TouchEvent) {
+	onLeaveCancel(_e: MouseEvent | PointerEvent) {
 		this.endAction();
 		this.toggleRipple();
 	}
@@ -226,10 +212,6 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		clearInterval(this.holdInterval as ReturnType<typeof setInterval>);
 		this.holdTimer = undefined;
 		this.holdInterval = undefined;
-
-		this.hold = false;
-		this.holdStart = false;
-		this.holdMove = false;
 		this.direction = undefined;
 
 		super.endAction();
@@ -242,9 +224,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 	}
 
 	getMultiPrefix(): 'multi_' | '' {
-		return this.targetTouches && this.targetTouches.length > 1
-			? 'multi_'
-			: '';
+		return this.pointers > 1 ? 'multi_' : '';
 	}
 
 	setHoldTimer() {
@@ -256,7 +236,6 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		) as number;
 
 		this.holdTimer = setTimeout(() => {
-			this.hold = true;
 			const actions = this.getActions();
 			const multiPrefix = this.getMultiPrefix();
 
@@ -296,14 +275,15 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		this.setValue();
 		return html`
 			<toucharea
-				@mousedown=${this.onMouseDown}
-				@mouseup=${this.onMouseUp}
-				@mousemove=${this.onMouseMove}
-				@mouseleave=${this.onMouseLeave}
-				@touchstart=${this.onTouchStart}
-				@touchend=${this.onTouchEnd}
-				@touchmove=${this.onTouchMove}
-				@touchcancel=${this.onTouchCancel}
+				@mousedown=${this.onDown}
+				@mouseup=${this.onUp}
+				@mousemove=${this.onMove}
+				@mouseleave=${this.onLeaveCancel}
+				@pointerdown=${this.onDown}
+				@pointerup=${this.onUp}
+				@pointermove=${this.onMove}
+				@pointerleave=${this.onLeaveCancel}
+				@pointercancel=${this.onLeaveCancel}
 				@contextmenu=${this.onContextMenu}
 			>
 				<div class="toucharea-row">
@@ -387,6 +367,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 					width: fill-available;
 					justify-content: space-around;
 					align-items: center;
+					pointer-events: none;
 				}
 			`,
 		];
