@@ -24,11 +24,13 @@ export class RemoteTouchpad extends BaseRemoteElement {
 
 	holdTimer?: ReturnType<typeof setTimeout>;
 	holdInterval?: ReturnType<typeof setInterval>;
+	hold: boolean = false;
+	holdStart: boolean = false;
+	holdMove: boolean = false;
 	direction?: DirectionAction;
-	fireSwipeAction: boolean = true;
 	fireDragAction: boolean = true;
 
-	onClick(e: MouseEvent | PointerEvent) {
+	onClick(e: TouchEvent | MouseEvent) {
 		e.stopImmediatePropagation();
 		this.clickCount++;
 		const multiPrefix = this.getMultiPrefix();
@@ -42,9 +44,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			) != 'none'
 		) {
 			// Double tap action is defined
-			const doubleTapAction: ActionType = `${
-				this.pointers > 2 ? 'multi_' : ''
-			}double_tap_action`;
+			const doubleTapAction: ActionType = `${multiPrefix}double_tap_action`;
 
 			if (this.clickCount > 1) {
 				// Double tap action is triggered
@@ -80,96 +80,81 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			return;
 		}
 		this.cancelRippleToggle();
+		this.holdStart = true;
 
-		// Only consider primary pointer event
-		if ('isPrimary' in e && !e.isPrimary) {
-			return;
-		}
-
-		if (!this.direction) {
-			// Momentary actions only when no direction action
-			if (
-				this.renderTemplate(
-					this.config.momentary_start_action?.action ?? 'none',
-				) != 'none'
-			) {
-				this.fireHapticEvent('light');
-				this.momentaryStart = performance.now();
-				this.sendAction('momentary_start_action');
-			} else if (
-				this.renderTemplate(
-					this.config.momentary_end_action?.action ?? 'none',
-				) != 'none'
-			) {
-				this.fireHapticEvent('light');
-				this.momentaryStart = performance.now();
-			} else if (!this.holdTimer) {
-				this.setHoldTimer();
-			}
-			return;
+		if (
+			!this.direction &&
+			this.renderTemplate(
+				this.config.momentary_start_action?.action ?? 'none',
+			) != 'none'
+		) {
+			this.fireHapticEvent('light');
+			this.momentaryStart = performance.now();
+			this.sendAction('momentary_start_action');
+		} else if (
+			!this.direction &&
+			this.renderTemplate(
+				this.config.momentary_end_action?.action ?? 'none',
+			) != 'none'
+		) {
+			this.fireHapticEvent('light');
+			this.momentaryStart = performance.now();
+		} else if (!this.holdTimer) {
+			this.setHoldTimer();
 		}
 	}
 
-	onUp(e: MouseEvent | PointerEvent) {
+	onEnd(e: MouseEvent | PointerEvent) {
 		if (!super.onUp(e)) {
 			return;
 		}
-		if (this.pointers) {
-			if (this.direction) {
-				// Swipe or drag actions
-				if (
-					this.renderTemplate(
-						this.config[`${this.getMultiPrefix()}drag_action`]
-							?.action ?? 'none',
-					) == 'none'
-				) {
-					// Swipe direction actions
-					if (this.holdInterval) {
-						e.stopImmediatePropagation();
-						if (e.cancelable) {
-							e.preventDefault();
-						}
-					} else {
-						this.fireHapticEvent('light');
-						this.sendAction(
-							`${this.getMultiPrefix()}tap_action`,
-							this.getActions(),
-						);
-					}
-				}
-				this.endAction();
-				return;
-			}
 
-			if (
-				this.renderTemplate(
-					this.config.momentary_end_action?.action ?? 'none',
-				) != 'none'
-			) {
-				// No direction action and momentary end action is defined
-				this.momentaryEnd = performance.now();
-				this.fireHapticEvent('selection');
-				this.sendAction('momentary_end_action');
-				this.endAction();
-			} else if (
-				this.renderTemplate(
-					this.config.momentary_start_action?.action ?? 'none',
-				) != 'none'
-			) {
-				// No direction action and momentary start action is defined
-				this.endAction();
-			} else {
-				// Tap and double tap actions, clear hold action before proceeding
-				clearInterval(this.holdTimer);
-				this.holdTimer = undefined;
-				this.onClick(e);
+		if (
+			!this.direction &&
+			this.renderTemplate(
+				this.config.momentary_end_action?.action ?? 'none',
+			) != 'none'
+		) {
+			this.momentaryEnd = performance.now();
+			this.fireHapticEvent('selection');
+			this.sendAction('momentary_end_action');
+			this.endAction();
+		} else if (
+			!this.direction &&
+			this.renderTemplate(
+				this.config.momentary_start_action?.action ?? 'none',
+			) != 'none'
+		) {
+			this.endAction();
+		} else if (this.hold || this.holdMove) {
+			e.stopImmediatePropagation();
+			if (e.cancelable) {
+				e.preventDefault();
 			}
+			let holdMove = false;
+			if (this.pointers > 1) {
+				holdMove = true;
+			}
+			this.endAction();
+			if (holdMove) {
+				this.holdMove = true;
+			}
+		} else if (
+			!this.holdMove
+			// && (!('targetTouches' in e) || !e.targetTouches.length)
+		) {
+			this.onClick(e);
 		}
 		this.toggleRipple();
 	}
 
 	onMove(e: MouseEvent | PointerEvent) {
-		if (!this.initialX || !this.initialY || !super.onMove(e)) {
+		if (
+			!super.onMove(e) ||
+			!this.initialX ||
+			!this.initialY ||
+			!this.holdStart
+		) {
 			return;
 		}
 		const multiPrefix = this.getMultiPrefix();
@@ -183,10 +168,14 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			) != 'none'
 		) {
 			// Drag actions
-			if (Math.abs(Math.abs(totalDeltaX) - Math.abs(totalDeltaY)) > 0.5) {
+			if (
+				this.holdMove ||
+				Math.abs(Math.abs(totalDeltaX) - Math.abs(totalDeltaY)) > 1
+			) {
 				if (this.fireDragAction) {
 					clearTimeout(this.holdTimer);
 					this.holdTimer = undefined;
+					this.holdMove = true;
 
 					const repeatDelay = this.renderTemplate(
 						this.config[`${multiPrefix}drag_action`]
@@ -203,26 +192,27 @@ export class RemoteTouchpad extends BaseRemoteElement {
 				}
 			}
 		} else {
-			// Swipe directions
 			if (Math.abs(Math.abs(totalDeltaX) - Math.abs(totalDeltaY)) > 2) {
+				// Directional actions
 				if (Math.abs(totalDeltaX) > Math.abs(totalDeltaY)) {
 					this.direction = totalDeltaX < 0 ? 'left' : 'right';
 				} else {
 					this.direction = totalDeltaY < 0 ? 'up' : 'down';
 				}
-			}
-			if (!this.holdInterval && this.fireSwipeAction) {
-				clearTimeout(this.holdTimer);
-				this.holdTimer = undefined;
-				this.fireSwipeAction = false;
+				if (!this.holdMove) {
+					this.fireHapticEvent('light');
+					this.sendAction(
+						`${multiPrefix}tap_action`,
+						this.getActions(),
+					);
+					this.holdMove = true;
 
-				this.fireHapticEvent('light');
-				this.sendAction(
-					`${this.getMultiPrefix()}tap_action`,
-					this.getActions(),
-				);
-
-				this.setHoldTimer();
+					if (this.holdTimer) {
+						clearTimeout(this.holdTimer);
+						this.holdTimer = undefined;
+						this.setHoldTimer();
+					}
+				}
 			}
 		}
 	}
@@ -241,8 +231,11 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		clearInterval(this.holdInterval as ReturnType<typeof setInterval>);
 		this.holdTimer = undefined;
 		this.holdInterval = undefined;
+
+		this.hold = false;
+		this.holdStart = false;
+		this.holdMove = false;
 		this.direction = undefined;
-		this.fireSwipeAction = true;
 
 		super.endAction();
 	}
@@ -260,11 +253,13 @@ export class RemoteTouchpad extends BaseRemoteElement {
 	setHoldTimer() {
 		const holdAction = `${this.getMultiPrefix()}hold_action`;
 		const actions = this.getActions();
+
 		const holdTime = this.renderTemplate(
 			actions[holdAction as ActionType]?.hold_time ?? HOLD_TIME,
 		) as number;
+
 		this.holdTimer = setTimeout(() => {
-			this.fireSwipeAction = false;
+			this.hold = true;
 			const actions = this.getActions();
 			const multiPrefix = this.getMultiPrefix();
 
@@ -295,8 +290,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 				}
 			} else {
 				this.fireHapticEvent('medium');
-				this.sendAction(`${this.getMultiPrefix()}hold_action`, actions);
-				this.endAction();
+				this.sendAction(`${multiPrefix}hold_action`, actions);
 			}
 		}, holdTime);
 	}
@@ -397,7 +391,6 @@ export class RemoteTouchpad extends BaseRemoteElement {
 					width: fill-available;
 					justify-content: space-around;
 					align-items: center;
-					pointer-events: none;
 				}
 			`,
 		];
