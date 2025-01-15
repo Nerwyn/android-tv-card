@@ -308,7 +308,6 @@ export class RemoteTouchpad extends BaseRemoteElement {
 				@pointerdown=${this.onDown}
 				@pointerup=${this.onUp}
 				@pointermove=${this.onMove}
-				@pointerleave=${this.onLeaveCancel}
 				@pointercancel=${this.onLeaveCancel}
 				@contextmenu=${this.onContextMenu}
 			>
