@@ -109,31 +109,32 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		if (!super.onUp(e)) {
 			return;
 		}
-		if (
-			this.pointers &&
-			!this.direction &&
-			this.renderTemplate(
-				this.config.momentary_end_action?.action ?? 'none',
-			) != 'none'
-		) {
-			this.momentaryEnd = performance.now();
-			this.fireHapticEvent('selection');
-			this.sendAction('momentary_end_action');
-			this.endAction();
-		} else if (
-			!this.direction &&
-			this.renderTemplate(
-				this.config.momentary_start_action?.action ?? 'none',
-			) != 'none'
-		) {
-			this.endAction();
-		} else if (this.holdTimer || this.holdInterval) {
-			e.stopImmediatePropagation();
-			if (e.cancelable) {
-				e.preventDefault();
+		if (this.pointers) {
+			if (
+				!this.direction &&
+				this.renderTemplate(
+					this.config.momentary_end_action?.action ?? 'none',
+				) != 'none'
+			) {
+				this.momentaryEnd = performance.now();
+				this.fireHapticEvent('selection');
+				this.sendAction('momentary_end_action');
+				this.endAction();
+			} else if (
+				!this.direction &&
+				this.renderTemplate(
+					this.config.momentary_start_action?.action ?? 'none',
+				) != 'none'
+			) {
+				this.endAction();
+			} else if (this.holdTimer || this.holdInterval) {
+				e.stopImmediatePropagation();
+				if (e.cancelable) {
+					e.preventDefault();
+				}
+			} else if (!this.holdInterval) {
+				this.onClick(e);
 			}
-		} else if (!this.holdInterval && this.pointers) {
-			this.onClick(e);
 		}
 		this.toggleRipple();
 	}

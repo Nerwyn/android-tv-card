@@ -793,8 +793,12 @@ export class BaseRemoteElement extends LitElement {
 	}
 
 	onDown(e: MouseEvent | PointerEvent): boolean | void {
+		if (this.shouldFire(e)) {
+			return false;
+		}
+
 		this.pointers++;
-		if (this.shouldFire(e) && !this.initialX && !this.initialY) {
+		if (!this.initialX && !this.initialY) {
 			this.initialX = e.clientX;
 			this.initialY = e.clientY;
 			this.currentX = e.clientX;
