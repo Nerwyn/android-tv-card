@@ -38,6 +38,12 @@ export const androidTVDefaultSources: IElementConfig[] = [
 	},
 	{
 		type: 'button',
+		name: 'dropout',
+		tap_action: { action: 'source', source: 'vhxdropout://' }, // UNTESTED
+		icon: 'dropout',
+	},
+	{
+		type: 'button',
 		name: 'emby',
 		tap_action: {
 			action: 'source',
@@ -119,6 +125,12 @@ export const androidTVDefaultSources: IElementConfig[] = [
 		name: 'nba',
 		tap_action: { action: 'source', source: 'gametime://' }, // UNTESTED
 		icon: 'nba',
+	},
+	{
+		type: 'button',
+		name: 'nebula',
+		tap_action: { action: 'source', source: 'https://nebula.tv' }, // UNTESTED
+		icon: 'nebula',
 	},
 	{
 		type: 'button',
