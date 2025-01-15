@@ -25,6 +25,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 	holdTimer?: ReturnType<typeof setTimeout>;
 	holdInterval?: ReturnType<typeof setInterval>;
 	direction?: DirectionAction;
+	fireSwipeAction: boolean = true;
 	fireDragAction: boolean = true;
 
 	onClick(e: MouseEvent | PointerEvent) {
@@ -210,9 +211,10 @@ export class RemoteTouchpad extends BaseRemoteElement {
 					this.direction = totalDeltaY < 0 ? 'up' : 'down';
 				}
 			}
-			if (!this.holdInterval) {
+			if (!this.holdInterval && this.fireSwipeAction) {
 				clearTimeout(this.holdTimer);
 				this.holdTimer = undefined;
+				this.fireSwipeAction = false;
 
 				this.fireHapticEvent('light');
 				this.sendAction(
@@ -240,6 +242,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		this.holdTimer = undefined;
 		this.holdInterval = undefined;
 		this.direction = undefined;
+		this.fireSwipeAction = true;
 
 		super.endAction();
 	}
@@ -257,12 +260,11 @@ export class RemoteTouchpad extends BaseRemoteElement {
 	setHoldTimer() {
 		const holdAction = `${this.getMultiPrefix()}hold_action`;
 		const actions = this.getActions();
-
 		const holdTime = this.renderTemplate(
 			actions[holdAction as ActionType]?.hold_time ?? HOLD_TIME,
 		) as number;
-
 		this.holdTimer = setTimeout(() => {
+			this.fireSwipeAction = false;
 			const actions = this.getActions();
 			const multiPrefix = this.getMultiPrefix();
 
@@ -293,7 +295,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 				}
 			} else {
 				this.fireHapticEvent('medium');
-				this.sendAction(`${multiPrefix}hold_action`, actions);
+				this.sendAction(`${this.getMultiPrefix()}hold_action`, actions);
 				this.endAction();
 			}
 		}, holdTime);
