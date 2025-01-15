@@ -55,6 +55,16 @@ export const braviaTVDefaultSources: IElementConfig[] = [
 	},
 	{
 		type: 'button',
+		name: 'dropout',
+
+		tap_action: {
+			action: 'source',
+			source: 'Dropout', // UNTESTED
+		},
+		icon: 'dropout',
+	},
+	{
+		type: 'button',
 		name: 'emby',
 
 		tap_action: {
@@ -134,6 +144,15 @@ export const braviaTVDefaultSources: IElementConfig[] = [
 			source: 'NBA',
 		},
 		icon: 'nba',
+	},
+	{
+		type: 'button',
+		name: 'nebula',
+		tap_action: {
+			action: 'source',
+			source: 'Nebula', // UNTESTED
+		},
+		icon: 'nebula',
 	},
 	{
 		type: 'button',
