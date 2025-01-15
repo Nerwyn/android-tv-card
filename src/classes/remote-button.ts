@@ -21,7 +21,7 @@ export class RemoteButton extends BaseRemoteElement {
 	hold: boolean = false;
 
 	onClick(e: MouseEvent | PointerEvent) {
-		e.stopImmediatePropagation();
+		// e.stopImmediatePropagation();
 		this.clickCount++;
 
 		if (
@@ -133,11 +133,11 @@ export class RemoteButton extends BaseRemoteElement {
 				) != 'none'
 			) {
 				this.endAction();
-			} else if (this.hold) {
-				// Hold action is triggered
-				e.stopImmediatePropagation();
-				e.preventDefault();
-				this.endAction();
+				// } else if (this.hold) {
+				// 	// Hold action is triggered
+				// 	e.stopImmediatePropagation();
+				// 	e.preventDefault();
+				// 	this.endAction();
 			} else {
 				// Hold action is not triggered, fire tap action
 				this.onClick(e);

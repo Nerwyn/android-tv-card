@@ -30,7 +30,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 	direction?: DirectionAction;
 	fireDragAction: boolean = true;
 
-	onClick(e: TouchEvent | MouseEvent) {
+	onClick(e: MouseEvent | PointerEvent) {
 		e.stopImmediatePropagation();
 		this.clickCount++;
 		const multiPrefix = this.getMultiPrefix();

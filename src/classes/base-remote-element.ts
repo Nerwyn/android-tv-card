@@ -43,7 +43,7 @@ export class BaseRemoteElement extends LitElement {
 	swiping?: boolean = false;
 
 	pointers: number = 0;
-	fireMouseEvent?: boolean = true;
+	fireMouseEvent: boolean = true;
 	initialX?: number;
 	initialY?: number;
 	currentX?: number;
