@@ -15,6 +15,24 @@ export const webosDefaultSources: IElementConfig[] = [
 	},
 	{
 		type: 'button',
+		name: 'dropout',
+		tap_action: {
+			action: 'source',
+			source: 'Dropout', // UNTESTED
+		},
+		icon: 'dropout',
+	},
+	{
+		type: 'button',
+		name: 'nebula',
+		tap_action: {
+			action: 'source',
+			source: 'Nebula', // UNTESTED
+		},
+		icon: 'nebula',
+	},
+	{
+		type: 'button',
 		name: 'netflix',
 		tap_action: {
 			action: 'key',
