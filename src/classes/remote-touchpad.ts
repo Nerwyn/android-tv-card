@@ -60,7 +60,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 					this.clickTimer = setTimeout(() => {
 						this.fireHapticEvent('light');
 						this.sendAction(
-							`${this.clickCount > 1 ? 'multi_' : ''}tap_action`,
+							`${this.pointers > 2 ? 'multi_' : ''}tap_action`,
 						);
 						this.endAction();
 					}, doubleTapWindow);
@@ -192,7 +192,6 @@ export class RemoteTouchpad extends BaseRemoteElement {
 				} else {
 					this.direction = totalDeltaY < 0 ? 'up' : 'down';
 				}
-				console.log(this.direction);
 				if (!this.holdInterval) {
 					this.fireHapticEvent('light');
 					this.sendAction(
