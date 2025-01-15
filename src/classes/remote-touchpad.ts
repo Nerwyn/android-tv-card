@@ -123,7 +123,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 					this.renderTemplate(
 						this.config[`${this.getMultiPrefix()}drag_action`]
 							?.action ?? 'none',
-					) != 'none'
+					) == 'none'
 				) {
 					// Swipe direction actions
 					if (this.holdInterval) {
