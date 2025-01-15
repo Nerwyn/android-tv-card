@@ -44,7 +44,9 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			) != 'none'
 		) {
 			// Double tap action is defined
-			const doubleTapAction: ActionType = `${multiPrefix}double_tap_action`;
+			const doubleTapAction: ActionType = `${
+				this.pointers > 2 ? 'multi_' : ''
+			}double_tap_action`;
 
 			if (this.clickCount > 1) {
 				// Double tap action is triggered
