@@ -212,9 +212,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			}
 			if (!this.holdInterval) {
 				clearTimeout(this.holdTimer);
-				clearInterval(this.holdInterval);
 				this.holdTimer = undefined;
-				this.holdInterval = undefined;
 
 				this.fireHapticEvent('light');
 				this.sendAction(
