@@ -193,10 +193,6 @@ export class RemoteButton extends BaseRemoteElement {
 		this.setValue();
 		return html`
 			<button
-				@mousedown=${this.onDown}
-				@mouseup=${this.onUp}
-				@mousemove=${this.onMove}
-				@mouseleave=${this.onLeave}
 				@pointerdown=${this.onDown}
 				@pointerup=${this.onUp}
 				@pointermove=${this.onMove}

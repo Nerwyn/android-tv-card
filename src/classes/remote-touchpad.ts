@@ -298,10 +298,6 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		this.setValue();
 		return html`
 			<toucharea
-				@mousedown=${this.onDown}
-				@mouseup=${this.onUp}
-				@mousemove=${this.onMove}
-				@mouseleave=${this.onLeaveCancel}
 				@pointerdown=${this.onDown}
 				@pointerup=${this.onUp}
 				@pointermove=${this.onMove}
