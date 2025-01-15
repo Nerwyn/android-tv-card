@@ -51,6 +51,15 @@ export const rokuDefaultSources: IElementConfig[] = [
 	},
 	{
 		type: 'button',
+		name: 'dropout',
+		tap_action: {
+			action: 'source',
+			source: 'Dropout', // UNTESTED
+		},
+		icon: 'dropout',
+	},
+	{
+		type: 'button',
 		name: 'emby',
 		tap_action: {
 			action: 'source',
@@ -120,6 +129,15 @@ export const rokuDefaultSources: IElementConfig[] = [
 			source: 'NBA',
 		},
 		icon: 'nba',
+	},
+	{
+		type: 'button',
+		name: 'nebula',
+		tap_action: {
+			action: 'source',
+			source: 'Nebula', // UNTESTED
+		},
+		icon: 'nebula',
 	},
 	{
 		type: 'button',
