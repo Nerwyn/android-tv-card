@@ -812,7 +812,9 @@ export class BaseRemoteElement extends LitElement {
 
 	onUp(e: MouseEvent | PointerEvent): boolean | void {
 		if (!this.shouldFire(e)) {
-			this.fireMouseEvent = true;
+			if (e.type == 'mouseup') {
+				this.fireMouseEvent = true;
+			}
 			return false;
 		}
 		return true;
