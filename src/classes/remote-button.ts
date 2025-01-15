@@ -21,21 +21,26 @@ export class RemoteButton extends BaseRemoteElement {
 	hold: boolean = false;
 
 	onClick(e: MouseEvent | PointerEvent) {
-		// e.stopImmediatePropagation();
+		console.log('onClick fired');
+		e.stopImmediatePropagation();
 		this.clickCount++;
+		console.log('click counter incremeneted');
 
 		if (
 			this.renderTemplate(
 				this.config.double_tap_action?.action ?? 'none',
 			) != 'none'
 		) {
+			console.log('double tap action defined');
 			// Double tap action is defined
 			if (this.clickCount > 1) {
+				console.log('firing double tap action');
 				// Double tap action is triggered
 				this.fireHapticEvent('success');
 				this.sendAction('double_tap_action');
 				this.endAction();
 			} else {
+				console.log('setting clickTimer');
 				// Single tap action is triggered if double tap is not within window
 				if (!this.clickTimer) {
 					const doubleTapWindow: number =
@@ -44,6 +49,7 @@ export class RemoteButton extends BaseRemoteElement {
 								?.double_tap_window as number,
 						) as number) ?? DOUBLE_TAP_WINDOW;
 					this.clickTimer = setTimeout(() => {
+						console.log('firing tap action');
 						this.fireHapticEvent('light');
 						this.sendAction('tap_action');
 						this.endAction();
@@ -51,11 +57,13 @@ export class RemoteButton extends BaseRemoteElement {
 				}
 			}
 		} else {
+			console.log('firing tap action');
 			// No double tap action defined, tap action is triggered
 			this.fireHapticEvent('light');
 			this.sendAction('tap_action');
 			this.endAction();
 		}
+		console.log('end of onClick');
 	}
 
 	onDown(e: MouseEvent | PointerEvent) {
@@ -133,11 +141,11 @@ export class RemoteButton extends BaseRemoteElement {
 				) != 'none'
 			) {
 				this.endAction();
-				// } else if (this.hold) {
-				// 	// Hold action is triggered
-				// 	e.stopImmediatePropagation();
-				// 	e.preventDefault();
-				// 	this.endAction();
+			} else if (this.hold) {
+				// Hold action is triggered
+				e.stopImmediatePropagation();
+				e.preventDefault();
+				this.endAction();
 			} else {
 				// Hold action is not triggered, fire tap action
 				this.onClick(e);
