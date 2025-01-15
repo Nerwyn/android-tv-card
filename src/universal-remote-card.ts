@@ -656,15 +656,19 @@ class UniversalRemoteCard extends LitElement {
 			  `
 			: '';
 
+		const polyfillPointerEvents = !window.PointerEvent
+			? html`<script src="https://cdn.jsdelivr.net/npm/@wessberg/pointer-events@1.0.9/dist/index.min.js"></script>`
+			: '';
+
 		return html`<ha-card
-			class="${this.editMode ? ' edit-mode' : ''}"
-			.header="${renderTemplate(
-				this.hass,
-				this.config.title as string,
-				context,
-			)}"
-			>${content}${this.buildDialog()}${styles}</ha-card
-		>`;
+				class="${this.editMode ? ' edit-mode' : ''}"
+				.header="${renderTemplate(
+					this.hass,
+					this.config.title as string,
+					context,
+				)}"
+				>${content}${this.buildDialog()}${styles}</ha-card
+			>${polyfillPointerEvents}`;
 	}
 
 	static get styles() {
