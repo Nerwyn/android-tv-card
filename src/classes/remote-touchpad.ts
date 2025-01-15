@@ -41,7 +41,9 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			) != 'none'
 		) {
 			// Double tap action is defined
-			const doubleTapAction: ActionType = `${multiPrefix}double_tap_action`;
+			const doubleTapAction: ActionType = `${
+				this.pointers > 2 ? 'multi_' : ''
+			}double_tap_action`;
 
 			if (this.clickCount > 1) {
 				// Double tap action is triggered
@@ -59,9 +61,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 						) as number) ?? DOUBLE_TAP_WINDOW;
 					this.clickTimer = setTimeout(() => {
 						this.fireHapticEvent('light');
-						this.sendAction(
-							`${this.pointers > 2 ? 'multi_' : ''}tap_action`,
-						);
+						this.sendAction(`${multiPrefix}tap_action`);
 						this.endAction();
 					}, doubleTapWindow);
 				}
@@ -192,7 +192,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 				} else {
 					this.direction = totalDeltaY < 0 ? 'up' : 'down';
 				}
-				if (!this.holdInterval) {
+				if (!this.holdInterval && !this.holdTimer) {
 					this.fireHapticEvent('light');
 					this.sendAction(
 						`${multiPrefix}tap_action`,
