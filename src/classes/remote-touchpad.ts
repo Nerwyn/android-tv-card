@@ -4,6 +4,7 @@ import { customElement, property } from 'lit/decorators.js';
 import {
 	ActionType,
 	DirectionAction,
+	HapticType,
 	IActions,
 	ITouchpadConfig,
 } from '../models/interfaces';
@@ -85,24 +86,28 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			return;
 		}
 
-		if (
-			!this.direction &&
-			this.renderTemplate(
-				this.config.momentary_start_action?.action ?? 'none',
-			) != 'none'
-		) {
-			this.fireHapticEvent('light');
-			this.momentaryStart = performance.now();
-			this.sendAction('momentary_start_action');
-		} else if (
-			!this.direction &&
-			this.renderTemplate(
-				this.config.momentary_end_action?.action ?? 'none',
-			) != 'none'
-		) {
-			this.fireHapticEvent('light');
-			this.momentaryStart = performance.now();
-		} else if (!this.holdTimer) {
+		if (!this.direction) {
+			// Momentary actions only when no direction action
+			if (
+				this.renderTemplate(
+					this.config.momentary_start_action?.action ?? 'none',
+				) != 'none'
+			) {
+				this.fireHapticEvent('light');
+				this.momentaryStart = performance.now();
+				this.sendAction('momentary_start_action');
+			} else if (
+				this.renderTemplate(
+					this.config.momentary_end_action?.action ?? 'none',
+				) != 'none'
+			) {
+				this.fireHapticEvent('light');
+				this.momentaryStart = performance.now();
+			}
+			return;
+		}
+
+		if (!this.holdTimer) {
 			this.setHoldTimer();
 		}
 	}
@@ -113,16 +118,31 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		}
 		if (this.pointers) {
 			if (this.direction) {
-				// Direction actions
-				if (this.holdInterval) {
-					e.stopImmediatePropagation();
-					if (e.cancelable) {
-						e.preventDefault();
+				// Swipe or drag actions
+				if (
+					this.renderTemplate(
+						this.config[`${this.getMultiPrefix()}drag_action`]
+							?.action ?? 'none',
+					) != 'none'
+				) {
+					// Swipe direction actions
+					if (this.holdInterval) {
+						e.stopImmediatePropagation();
+						if (e.cancelable) {
+							e.preventDefault();
+						}
+					} else {
+						this.fireHapticEvent('light');
+						this.sendAction(
+							`${this.getMultiPrefix()}tap_action`,
+							this.getActions(),
+						);
 					}
 				}
 				this.endAction();
 				return;
 			}
+
 			if (
 				this.renderTemplate(
 					this.config.momentary_end_action?.action ?? 'none',
@@ -185,23 +205,12 @@ export class RemoteTouchpad extends BaseRemoteElement {
 				}
 			}
 		} else {
-			// Swipe actions
+			// Swipe directions
 			if (Math.abs(Math.abs(totalDeltaX) - Math.abs(totalDeltaY)) > 2) {
 				if (Math.abs(totalDeltaX) > Math.abs(totalDeltaY)) {
 					this.direction = totalDeltaX < 0 ? 'left' : 'right';
 				} else {
 					this.direction = totalDeltaY < 0 ? 'up' : 'down';
-				}
-				if (!this.holdInterval && !this.holdTimer) {
-					this.fireHapticEvent('light');
-					this.sendAction(
-						`${multiPrefix}tap_action`,
-						this.getActions(),
-					);
-
-					if (!this.holdTimer) {
-						this.setHoldTimer();
-					}
 				}
 			}
 		}
@@ -265,13 +274,17 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			}
 			if (repeat) {
 				if (!this.holdInterval) {
-					this.holdInterval = setInterval(() => {
-						this.fireHapticEvent('selection');
+					const holdIntervalAction = (haptic: HapticType) => {
+						this.fireHapticEvent(haptic);
 						this.sendAction(
 							`${this.getMultiPrefix()}tap_action`,
 							this.getActions(),
 						);
+					};
+					this.holdInterval = setInterval(() => {
+						holdIntervalAction('selection');
 					}, repeatDelay);
+					holdIntervalAction('light');
 				}
 			} else {
 				this.fireHapticEvent('medium');
