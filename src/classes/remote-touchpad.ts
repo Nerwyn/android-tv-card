@@ -116,6 +116,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 					this.config.momentary_end_action?.action ?? 'none',
 				) != 'none'
 			) {
+				// No direction action and momentary end action is defined
 				this.momentaryEnd = performance.now();
 				this.fireHapticEvent('selection');
 				this.sendAction('momentary_end_action');
@@ -126,13 +127,17 @@ export class RemoteTouchpad extends BaseRemoteElement {
 					this.config.momentary_start_action?.action ?? 'none',
 				) != 'none'
 			) {
+				// No direction action and momentary start action is defined
 				this.endAction();
-			} else if (this.holdTimer || this.holdInterval) {
+			} else if (this.holdInterval) {
 				e.stopImmediatePropagation();
 				if (e.cancelable) {
 					e.preventDefault();
 				}
-			} else if (!this.holdInterval) {
+			} else {
+				// Tap and double tap actions, clear hold action before proceeding
+				clearInterval(this.holdTimer);
+				this.holdTimer = undefined;
 				this.onClick(e);
 			}
 		}
