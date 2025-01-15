@@ -783,20 +783,7 @@ export class BaseRemoteElement extends LitElement {
 			: '';
 	}
 
-	shouldFire(e: MouseEvent | PointerEvent) {
-		if (e.type.startsWith('pointer')) {
-			this.fireMouseEvent = false;
-		} else if (e.type.startsWith('mouse') && !this.fireMouseEvent) {
-			return false;
-		}
-		return true;
-	}
-
-	onDown(e: MouseEvent | PointerEvent): boolean | void {
-		if (!this.shouldFire(e)) {
-			return false;
-		}
-
+	onPointerDown(e: PointerEvent) {
 		this.pointers++;
 		if (!this.initialX && !this.initialY) {
 			this.initialX = e.clientX;
@@ -805,40 +792,18 @@ export class BaseRemoteElement extends LitElement {
 			this.currentY = e.clientY;
 			this.deltaX = 0;
 			this.deltaY = 0;
-			return true;
 		}
-		return false;
 	}
 
-	onUp(e: MouseEvent | PointerEvent): boolean | void {
-		if (!this.shouldFire(e)) {
-			if (e.type == 'mouseup') {
-				this.fireMouseEvent = true;
-			}
-			return false;
-		}
-		return true;
-	}
+	onPointerUp(_e: PointerEvent) {}
 
-	onMove(e: MouseEvent | PointerEvent): boolean | void {
-		if (!this.shouldFire(e)) {
-			return false;
-		}
-
-		if (
-			this.currentX &&
-			this.currentY &&
-			(!('isPrimary' in e) || e.isPrimary)
-		) {
+	onPointerMove(e: PointerEvent) {
+		if (this.currentX && this.currentY && e.isPrimary) {
 			this.deltaX = e.clientX - this.currentX;
 			this.deltaY = e.clientY - this.currentY;
 			this.currentX = e.clientX;
 			this.currentY = e.clientY;
-		} else {
-			return false;
 		}
-
-		return true;
 	}
 
 	onContextMenu(e: PointerEvent) {

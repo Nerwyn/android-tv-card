@@ -20,7 +20,7 @@ export class RemoteButton extends BaseRemoteElement {
 	holdInterval?: ReturnType<typeof setInterval>;
 	hold: boolean = false;
 
-	onClick(e: MouseEvent | PointerEvent) {
+	onClick(e: PointerEvent) {
 		e.stopImmediatePropagation();
 		this.clickCount++;
 
@@ -58,10 +58,8 @@ export class RemoteButton extends BaseRemoteElement {
 		}
 	}
 
-	onDown(e: MouseEvent | PointerEvent) {
-		if (!super.onDown(e)) {
-			return;
-		}
+	onPointerDown(e: PointerEvent) {
+		super.onPointerDown(e);
 		this.cancelRippleToggle();
 		this.swiping = false;
 
@@ -113,10 +111,7 @@ export class RemoteButton extends BaseRemoteElement {
 		}
 	}
 
-	onUp(e: MouseEvent | PointerEvent) {
-		if (!super.onUp(e)) {
-			return;
-		}
+	onPointerUp(e: PointerEvent) {
 		if (!this.swiping && this.pointers) {
 			if (
 				this.renderTemplate(
@@ -146,10 +141,8 @@ export class RemoteButton extends BaseRemoteElement {
 		this.toggleRipple();
 	}
 
-	onMove(e: MouseEvent | PointerEvent) {
-		if (!super.onMove(e)) {
-			return;
-		}
+	onPointerMove(e: PointerEvent) {
+		super.onPointerMove(e);
 
 		// Only consider significant enough movement
 		const sensitivity = 24;
@@ -164,14 +157,9 @@ export class RemoteButton extends BaseRemoteElement {
 		}
 	}
 
-	onLeave(_e: MouseEvent | PointerEvent) {
+	onPointerCancel(_e: PointerEvent) {
 		this.endAction();
 		this.swiping = true;
-		this.toggleRipple();
-	}
-
-	onCancel(_e: PointerEvent) {
-		this.endAction();
 		this.toggleRipple();
 	}
 
@@ -193,10 +181,10 @@ export class RemoteButton extends BaseRemoteElement {
 		this.setValue();
 		return html`
 			<button
-				@pointerdown=${this.onDown}
-				@pointerup=${this.onUp}
-				@pointermove=${this.onMove}
-				@pointercancel=${this.onCancel}
+				@pointerdown=${this.onPointerDown}
+				@pointerup=${this.onPointerUp}
+				@pointermove=${this.onPointerMove}
+				@pointercancel=${this.onPointerCancel}
 				@contextmenu=${this.onContextMenu}
 			>
 				${this.buildIcon(this.config.icon)}

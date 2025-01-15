@@ -30,7 +30,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 	direction?: DirectionAction;
 	fireDragAction: boolean = true;
 
-	onClick(e: MouseEvent | PointerEvent) {
+	onClick(e: PointerEvent) {
 		e.stopImmediatePropagation();
 		this.clickCount++;
 		const multiPrefix = this.getMultiPrefix();
@@ -77,10 +77,8 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		}
 	}
 
-	onDown(e: MouseEvent | PointerEvent) {
-		if (!super.onDown(e)) {
-			return;
-		}
+	onPointerDown(e: PointerEvent) {
+		super.onPointerDown(e);
 		this.cancelRippleToggle();
 		this.holdStart = true;
 
@@ -106,11 +104,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		}
 	}
 
-	onUp(e: MouseEvent | PointerEvent) {
-		if (!super.onUp(e)) {
-			return;
-		}
-
+	onPointerUp(e: PointerEvent) {
 		if (
 			!this.direction &&
 			this.renderTemplate(
@@ -147,15 +141,11 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		this.toggleRipple();
 	}
 
-	onMove(e: MouseEvent | PointerEvent) {
-		if (
-			!super.onMove(e) ||
-			!this.initialX ||
-			!this.initialY ||
-			!this.holdStart
-		) {
+	onPointerMove(e: PointerEvent) {
+		if (!this.initialX || !this.initialY || !this.holdStart) {
 			return;
 		}
+		super.onPointerMove(e);
 		const multiPrefix = this.getMultiPrefix();
 
 		// Only consider significant enough movement
@@ -216,7 +206,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		}
 	}
 
-	onLeaveCancel(_e: MouseEvent | PointerEvent) {
+	onPointerCancel(_e: PointerEvent) {
 		this.endAction();
 		this.toggleRipple();
 	}
@@ -298,10 +288,10 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		this.setValue();
 		return html`
 			<toucharea
-				@pointerdown=${this.onDown}
-				@pointerup=${this.onUp}
-				@pointermove=${this.onMove}
-				@pointercancel=${this.onLeaveCancel}
+				@pointerdown=${this.onPointerDown}
+				@pointerup=${this.onPointerUp}
+				@pointermove=${this.onPointerMove}
+				@pointercancel=${this.onPointerCancel}
 				@contextmenu=${this.onContextMenu}
 			>
 				<div class="toucharea-row">

@@ -115,10 +115,8 @@ export class RemoteSlider extends BaseRemoteElement {
 		}
 	}
 
-	onDown(e: MouseEvent | PointerEvent) {
-		if (!super.onDown(e)) {
-			return;
-		}
+	onPointerDown(e: PointerEvent) {
+		super.onPointerDown(e);
 		const slider = e.currentTarget as HTMLInputElement;
 
 		if (!this.swiping) {
@@ -132,10 +130,7 @@ export class RemoteSlider extends BaseRemoteElement {
 		}
 	}
 
-	onUp(e: MouseEvent | PointerEvent) {
-		if (!super.onUp(e)) {
-			return;
-		}
+	onPointerUp(_e: PointerEvent) {
 		this.setThumbOffset();
 		this.showTooltip = false;
 		this.setValue();
@@ -163,10 +158,8 @@ export class RemoteSlider extends BaseRemoteElement {
 		this.resetGetValueFromHass();
 	}
 
-	onMove(e: MouseEvent | PointerEvent) {
-		if (!super.onMove(e)) {
-			return;
-		}
+	onPointerMove(e: PointerEvent) {
+		super.onPointerMove(e);
 		if (
 			!this.vertical &&
 			this.initialX != undefined &&
@@ -336,9 +329,9 @@ export class RemoteSlider extends BaseRemoteElement {
 				.value="${value}"
 				style=${styleMap(style)}
 				@input=${this.onInput}
-				@pointerdown=${this.onDown}
-				@pointerup=${this.onUp}
-				@pointermove=${this.onMove}
+				@pointerdown=${this.onPointerDown}
+				@pointerup=${this.onPointerUp}
+				@pointermove=${this.onPointerMove}
 				@contextmenu=${this.onContextMenu}
 			/>
 		`;
