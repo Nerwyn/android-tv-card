@@ -268,6 +268,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			} else {
 				this.fireHapticEvent('medium');
 				this.sendAction(`${multiPrefix}hold_action`, actions);
+				this.endAction();
 			}
 		}, holdTime);
 	}
