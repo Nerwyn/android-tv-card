@@ -79,6 +79,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		if (!super.onDown(e)) {
 			return;
 		}
+		console.log(e.type);
 		this.cancelRippleToggle();
 
 		// Only consider primary pointer event
@@ -114,6 +115,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		if (!super.onUp(e)) {
 			return;
 		}
+		console.log(e.type);
 		if (this.pointers) {
 			if (this.direction) {
 				// Swipe or drag actions
@@ -172,6 +174,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		if (!this.initialX || !this.initialY || !super.onMove(e)) {
 			return;
 		}
+		console.log(e.type);
 		const multiPrefix = this.getMultiPrefix();
 
 		// Only consider significant enough movement
