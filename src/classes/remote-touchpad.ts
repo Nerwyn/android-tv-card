@@ -104,7 +104,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		}
 	}
 
-	onEnd(e: MouseEvent | PointerEvent) {
+	onUp(e: MouseEvent | PointerEvent) {
 		if (!super.onUp(e)) {
 			return;
 		}
