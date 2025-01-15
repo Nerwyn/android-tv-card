@@ -4,7 +4,6 @@ import { customElement, property } from 'lit/decorators.js';
 import {
 	ActionType,
 	DirectionAction,
-	HapticType,
 	IActions,
 	ITouchpadConfig,
 } from '../models/interfaces';
@@ -211,6 +210,20 @@ export class RemoteTouchpad extends BaseRemoteElement {
 					this.direction = totalDeltaY < 0 ? 'up' : 'down';
 				}
 			}
+			if (!this.holdInterval) {
+				clearTimeout(this.holdTimer);
+				clearInterval(this.holdInterval);
+				this.holdTimer = undefined;
+				this.holdInterval = undefined;
+
+				this.fireHapticEvent('light');
+				this.sendAction(
+					`${this.getMultiPrefix()}tap_action`,
+					this.getActions(),
+				);
+
+				this.setHoldTimer();
+			}
 		}
 	}
 
@@ -244,44 +257,40 @@ export class RemoteTouchpad extends BaseRemoteElement {
 	}
 
 	setHoldTimer() {
-		let multiPrefix = this.getMultiPrefix();
-		let holdAction = `${this.getMultiPrefix()}hold_action`;
-		let actions = this.getActions();
+		const holdAction = `${this.getMultiPrefix()}hold_action`;
+		const actions = this.getActions();
 
 		const holdTime = this.renderTemplate(
 			actions[holdAction as ActionType]?.hold_time ?? HOLD_TIME,
 		) as number;
 
-		let repeat =
-			this.renderTemplate(actions.hold_action?.action as string) ==
-			'repeat';
-		let repeatDelay = this.renderTemplate(
-			actions.hold_action?.repeat_delay ?? REPEAT_DELAY,
-		) as number;
-		if (multiPrefix == 'multi_' && actions.multi_hold_action) {
-			repeat =
-				this.renderTemplate(
-					actions.multi_hold_action?.action as string,
-				) == 'repeat';
-			repeatDelay = this.renderTemplate(
-				actions.multi_hold_action?.repeat_delay ?? REPEAT_DELAY,
-			) as number;
-		}
-
-		const holdIntervalAction = (haptic: HapticType) => {
-			this.fireHapticEvent(haptic);
-			this.sendAction(`${multiPrefix}tap_action`, actions);
-		};
-		if (repeat && this.direction) {
-			holdIntervalAction('light');
-		}
-
 		this.holdTimer = setTimeout(() => {
+			const actions = this.getActions();
+			const multiPrefix = this.getMultiPrefix();
+
+			let repeat =
+				this.renderTemplate(actions.hold_action?.action as string) ==
+				'repeat';
+			let repeatDelay = this.renderTemplate(
+				actions.hold_action?.repeat_delay ?? REPEAT_DELAY,
+			) as number;
+			if (multiPrefix == 'multi_' && actions.multi_hold_action) {
+				repeat =
+					this.renderTemplate(
+						actions.multi_hold_action?.action as string,
+					) == 'repeat';
+				repeatDelay = this.renderTemplate(
+					actions.multi_hold_action?.repeat_delay ?? REPEAT_DELAY,
+				) as number;
+			}
 			if (repeat) {
 				if (!this.holdInterval) {
 					this.holdInterval = setInterval(() => {
-						actions = this.getActions();
-						holdIntervalAction('selection');
+						this.fireHapticEvent('selection');
+						this.sendAction(
+							`${this.getMultiPrefix()}tap_action`,
+							this.getActions(),
+						);
 					}, repeatDelay);
 				}
 			} else {
