@@ -151,10 +151,9 @@ export class RemoteTouchpad extends BaseRemoteElement {
 	}
 
 	onMove(e: MouseEvent | PointerEvent) {
-		if (!this.initialX || !this.initialY) {
+		if (!this.initialX || !this.initialY || !super.onMove(e)) {
 			return;
 		}
-		super.onMove(e);
 		const multiPrefix = this.getMultiPrefix();
 
 		// Only consider significant enough movement
@@ -186,8 +185,8 @@ export class RemoteTouchpad extends BaseRemoteElement {
 				}
 			}
 		} else {
+			// Swipe actions
 			if (Math.abs(Math.abs(totalDeltaX) - Math.abs(totalDeltaY)) > 2) {
-				// Directional actions
 				if (Math.abs(totalDeltaX) > Math.abs(totalDeltaY)) {
 					this.direction = totalDeltaX < 0 ? 'left' : 'right';
 				} else {
