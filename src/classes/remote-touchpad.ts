@@ -169,7 +169,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			// Drag actions
 			if (
 				this.holdMove ||
-				Math.abs(Math.abs(totalDeltaX) - Math.abs(totalDeltaY)) > 1
+				Math.abs(Math.abs(totalDeltaX) - Math.abs(totalDeltaY)) > 0.5
 			) {
 				if (this.fireDragAction) {
 					clearTimeout(this.holdTimer);
