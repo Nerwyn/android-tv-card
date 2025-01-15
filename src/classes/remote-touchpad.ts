@@ -103,12 +103,10 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			) {
 				this.fireHapticEvent('light');
 				this.momentaryStart = performance.now();
+			} else if (!this.holdTimer) {
+				this.setHoldTimer();
 			}
 			return;
-		}
-
-		if (!this.holdTimer) {
-			this.setHoldTimer();
 		}
 	}
 
