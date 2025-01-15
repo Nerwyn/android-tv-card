@@ -141,10 +141,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			if (holdMove) {
 				this.holdMove = true;
 			}
-		} else if (
-			!this.holdMove
-			// && (!('targetTouches' in e) || !e.targetTouches.length)
-		) {
+		} else if (!this.holdMove && (!('isPrimary' in e) || e.isPrimary)) {
 			this.onClick(e);
 		}
 		this.toggleRipple();
