@@ -676,13 +676,18 @@ export class BaseRemoteElement extends LitElement {
 			};
 		}
 
-		const res = renderTemplate(this.hass, str as string, context);
-		if (res != str) {
-			return res;
+		try {
+			const res = renderTemplate(this.hass, str as string, context);
+			if (res != str) {
+				return res;
+			}
+		} catch (e) {
+			console.error(e);
+			return '';
 		}
 
 		// Legacy string interpolation
-		if (typeof str == 'string') {
+		if (typeof str == 'string' && /VALUE|UNIT|HOLD_SECS/g.test(str)) {
 			for (const key of ['VALUE', 'HOLD_SECS', 'UNIT']) {
 				if (str == key) {
 					return context[key as keyof object] as string;

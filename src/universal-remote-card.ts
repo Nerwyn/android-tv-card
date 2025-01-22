@@ -92,16 +92,14 @@ class UniversalRemoteCard extends LitElement {
 		const context = {
 			config: {
 				...this.config,
-				entity: renderTemplate(
-					this.hass,
+				entity: this.renderTemplate(
 					updatedElement.entity_id ??
 						this.config.remote_id ??
 						this.config.media_player_id ??
 						this.config.keyboard_id ??
 						'',
 				),
-				attribute: renderTemplate(
-					this.hass,
+				attribute: this.renderTemplate(
 					updatedElement.value_attribute ?? 'state',
 				),
 			},
@@ -110,7 +108,7 @@ class UniversalRemoteCard extends LitElement {
 			if (updatedElement[actionType]) {
 				const action = updatedElement[actionType] ?? ({} as IAction);
 
-				switch (renderTemplate(this.hass, action.action, context)) {
+				switch (this.renderTemplate(action.action, context)) {
 					case 'keyboard':
 					case 'textbox':
 					case 'search':
@@ -129,8 +127,7 @@ class UniversalRemoteCard extends LitElement {
 						break;
 					case 'perform-action': {
 						const [domain, _service] = (
-							renderTemplate(
-								this.hass,
+							this.renderTemplate(
 								action.perform_action ?? '',
 								context,
 							) as string
@@ -142,8 +139,7 @@ class UniversalRemoteCard extends LitElement {
 							!target.area_id &&
 							!target.label_id
 						) {
-							const entity = renderTemplate(
-								this.hass,
+							const entity = this.renderTemplate(
 								updatedElement.entity_id ?? '',
 								context,
 							) as string;
@@ -248,14 +244,10 @@ class UniversalRemoteCard extends LitElement {
 		}
 
 		// Set element entity
-		const elementType = renderTemplate(
-			this.hass,
-			updatedElement.type,
-			context,
-		);
+		const elementType = this.renderTemplate(updatedElement.type, context);
 		if (
 			elementType == 'slider' &&
-			renderTemplate(this.hass, updatedElement.name, context) == 'slider'
+			this.renderTemplate(updatedElement.name, context) == 'slider'
 		) {
 			updatedElement.entity_id =
 				updatedElement.entity_id ?? this.config.media_player_id;
@@ -315,6 +307,28 @@ class UniversalRemoteCard extends LitElement {
 			)[0] ?? {},
 		);
 		return defaultActions;
+	}
+
+	renderTemplate(
+		str: string | number | boolean,
+		context?: object,
+	): string | number | boolean {
+		context = {
+			render: (str2: string) => this.renderTemplate(str2, context),
+			...context,
+		};
+
+		try {
+			const res = renderTemplate(this.hass, str as string, context);
+			if (res != str) {
+				return res;
+			}
+		} catch (e) {
+			console.error(e);
+			return '';
+		}
+
+		return str;
 	}
 
 	buildRow(content: TemplateResult[]): TemplateResult {
@@ -437,8 +451,7 @@ class UniversalRemoteCard extends LitElement {
 		}
 		const rowContent: TemplateResult[] = [];
 		for (let elementName of row) {
-			elementName = renderTemplate(
-				this.hass,
+			elementName = this.renderTemplate(
 				elementName as string,
 				context,
 			) as string;
@@ -591,8 +604,7 @@ class UniversalRemoteCard extends LitElement {
 		const context = {
 			config: {
 				...this.config,
-				entity: renderTemplate(
-					this.hass,
+				entity: this.renderTemplate(
 					this.config.remote_id ??
 						this.config.media_player_id ??
 						this.config.keyboard_id ??
@@ -603,8 +615,7 @@ class UniversalRemoteCard extends LitElement {
 		};
 
 		this.fetchCustomActionsFromFile(
-			renderTemplate(
-				this.hass,
+			this.renderTemplate(
 				this.config.custom_actions_file ?? '',
 			) as string,
 		);
@@ -617,8 +628,7 @@ class UniversalRemoteCard extends LitElement {
 		);
 		this.rtl = getComputedStyle(this).direction == 'rtl';
 
-		const platform = renderTemplate(
-			this.hass,
+		const platform = this.renderTemplate(
 			this.config.platform ?? 'Android TV',
 			context,
 		) as Platform;
@@ -644,8 +654,7 @@ class UniversalRemoteCard extends LitElement {
 			? html`
 					<style>
 						${(
-							renderTemplate(
-								this.hass,
+							this.renderTemplate(
 								this.config.styles,
 								context,
 							) as string
@@ -662,8 +671,7 @@ class UniversalRemoteCard extends LitElement {
 
 		return html`<ha-card
 				class="${this.editMode ? ' edit-mode' : ''}"
-				.header="${renderTemplate(
-					this.hass,
+				.header="${this.renderTemplate(
 					this.config.title as string,
 					context,
 				)}"
