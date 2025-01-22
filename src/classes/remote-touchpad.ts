@@ -81,6 +81,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		super.onPointerDown(e);
 		this.cancelRippleToggle();
 		this.holdStart = true;
+		this.swiping = false;
 
 		if (
 			!this.direction &&
@@ -157,9 +158,11 @@ export class RemoteTouchpad extends BaseRemoteElement {
 			) != 'none'
 		) {
 			// Drag actions
+			const sensitivity = 0.5;
 			if (
 				this.holdMove ||
-				Math.abs(Math.abs(totalDeltaX) - Math.abs(totalDeltaY)) > 0.5
+				Math.abs(Math.abs(totalDeltaX) - Math.abs(totalDeltaY)) >
+					sensitivity
 			) {
 				if (this.fireDragAction) {
 					clearTimeout(this.holdTimer);
@@ -181,7 +184,11 @@ export class RemoteTouchpad extends BaseRemoteElement {
 				}
 			}
 		} else {
-			if (Math.abs(Math.abs(totalDeltaX) - Math.abs(totalDeltaY)) > 2) {
+			const sensitivity = 2;
+			if (
+				Math.abs(Math.abs(totalDeltaX) - Math.abs(totalDeltaY)) >
+				sensitivity
+			) {
 				// Directional actions
 				if (Math.abs(totalDeltaX) > Math.abs(totalDeltaY)) {
 					this.direction = totalDeltaX < 0 ? 'left' : 'right';
@@ -206,9 +213,20 @@ export class RemoteTouchpad extends BaseRemoteElement {
 		}
 	}
 
-	onPointerCancel(_e: PointerEvent) {
-		this.endAction();
-		this.toggleRipple();
+	onPointerCancel(e: PointerEvent) {
+		if (
+			this.renderTemplate(
+				this.config.momentary_start_action?.action ?? 'none',
+			) != 'none' &&
+			this.renderTemplate(
+				this.config.momentary_end_action?.action ?? 'none',
+			) != 'none'
+		) {
+			this.momentaryEnd = performance.now();
+			this.sendAction('momentary_end_action');
+		}
+
+		super.onPointerCancel(e);
 	}
 
 	endAction() {
@@ -292,6 +310,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 				@pointerup=${this.onPointerUp}
 				@pointermove=${this.onPointerMove}
 				@pointercancel=${this.onPointerCancel}
+				@pointerleave=${this.onPointerLeave}
 				@contextmenu=${this.onContextMenu}
 			>
 				<div class="toucharea-row">

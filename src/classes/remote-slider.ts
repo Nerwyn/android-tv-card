@@ -48,7 +48,7 @@ export class RemoteSlider extends BaseRemoteElement {
 	onInput(e: InputEvent) {
 		const slider = e.currentTarget as HTMLInputElement;
 
-		if (!this.swiping) {
+		if (!this.swiping && this.initialX && this.initialY) {
 			clearTimeout(this.getValueFromHassTimer);
 			this.getValueFromHass = false;
 			this.value = slider.value;
@@ -135,7 +135,7 @@ export class RemoteSlider extends BaseRemoteElement {
 		this.showTooltip = false;
 		this.setValue();
 
-		if (!this.swiping) {
+		if (!this.swiping && this.initialX && this.initialY) {
 			if (!this.newValue && this.newValue != 0) {
 				this.newValue = Number(this.value);
 			}
@@ -160,11 +160,10 @@ export class RemoteSlider extends BaseRemoteElement {
 
 	onPointerMove(e: PointerEvent) {
 		super.onPointerMove(e);
-		if (
-			!this.vertical &&
-			this.initialX != undefined &&
-			this.initialY != undefined
-		) {
+
+		// Disable swipe detection for vertical sliders
+		if (!this.vertical && this.initialX && this.initialY) {
+			// Only consider significant enough movement
 			const sensitivity = 50;
 			if (
 				Math.abs((this.currentX ?? 0) - (this.initialX ?? 0)) <
@@ -332,6 +331,8 @@ export class RemoteSlider extends BaseRemoteElement {
 				@pointerdown=${this.onPointerDown}
 				@pointerup=${this.onPointerUp}
 				@pointermove=${this.onPointerMove}
+				@pointercancel=${this.onPointerCancel}
+				@pointerleave=${this.onPointerLeave}
 				@contextmenu=${this.onContextMenu}
 			/>
 		`;

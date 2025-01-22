@@ -59,55 +59,58 @@ export class RemoteButton extends BaseRemoteElement {
 	}
 
 	onPointerDown(e: PointerEvent) {
-		super.onPointerDown(e);
-		this.cancelRippleToggle();
 		this.swiping = false;
 
-		if (
-			this.renderTemplate(
-				this.config.momentary_start_action?.action ?? 'none',
-			) != 'none'
-		) {
-			this.fireHapticEvent('light');
-			this.momentaryStart = performance.now();
-			this.sendAction('momentary_start_action');
-		} else if (
-			this.renderTemplate(
-				this.config.momentary_end_action?.action ?? 'none',
-			) != 'none'
-		) {
-			this.fireHapticEvent('light');
-			this.momentaryStart = performance.now();
-		} else if (!this.holdTimer) {
-			const holdTime = this.renderTemplate(
-				this.config.hold_action?.hold_time ?? HOLD_TIME,
-			) as number;
+		super.onPointerDown(e);
+		this.cancelRippleToggle();
 
-			this.holdTimer = setTimeout(() => {
-				if (!this.swiping) {
-					this.hold = true;
+		if (!this.swiping) {
+			if (
+				this.renderTemplate(
+					this.config.momentary_start_action?.action ?? 'none',
+				) != 'none'
+			) {
+				this.fireHapticEvent('light');
+				this.momentaryStart = performance.now();
+				this.sendAction('momentary_start_action');
+			} else if (
+				this.renderTemplate(
+					this.config.momentary_end_action?.action ?? 'none',
+				) != 'none'
+			) {
+				this.fireHapticEvent('light');
+				this.momentaryStart = performance.now();
+			} else if (!this.holdTimer) {
+				const holdTime = this.renderTemplate(
+					this.config.hold_action?.hold_time ?? HOLD_TIME,
+				) as number;
 
-					if (
-						this.renderTemplate(
-							this.config.hold_action?.action as string,
-						) == 'repeat'
-					) {
-						const repeat_delay = this.renderTemplate(
-							this.config.hold_action?.repeat_delay ??
-								REPEAT_DELAY,
-						) as number;
-						if (!this.holdInterval) {
-							this.holdInterval = setInterval(() => {
-								this.fireHapticEvent('selection');
-								this.sendAction('tap_action');
-							}, repeat_delay);
+				this.holdTimer = setTimeout(() => {
+					if (!this.swiping) {
+						this.hold = true;
+
+						if (
+							this.renderTemplate(
+								this.config.hold_action?.action as string,
+							) == 'repeat'
+						) {
+							const repeat_delay = this.renderTemplate(
+								this.config.hold_action?.repeat_delay ??
+									REPEAT_DELAY,
+							) as number;
+							if (!this.holdInterval) {
+								this.holdInterval = setInterval(() => {
+									this.fireHapticEvent('selection');
+									this.sendAction('tap_action');
+								}, repeat_delay);
+							}
+						} else {
+							this.fireHapticEvent('medium');
+							this.sendAction('hold_action');
 						}
-					} else {
-						this.fireHapticEvent('medium');
-						this.sendAction('hold_action');
 					}
-				}
-			}, holdTime);
+				}, holdTime);
+			}
 		}
 	}
 
@@ -157,10 +160,20 @@ export class RemoteButton extends BaseRemoteElement {
 		}
 	}
 
-	onPointerCancel(_e: PointerEvent) {
-		this.endAction();
-		this.swiping = true;
-		this.toggleRipple();
+	onPointerCancel(e: PointerEvent) {
+		if (
+			this.renderTemplate(
+				this.config.momentary_start_action?.action ?? 'none',
+			) != 'none' &&
+			this.renderTemplate(
+				this.config.momentary_end_action?.action ?? 'none',
+			) != 'none'
+		) {
+			this.momentaryEnd = performance.now();
+			this.sendAction('momentary_end_action');
+		}
+
+		super.onPointerCancel(e);
 	}
 
 	endAction() {
@@ -185,6 +198,7 @@ export class RemoteButton extends BaseRemoteElement {
 				@pointerup=${this.onPointerUp}
 				@pointermove=${this.onPointerMove}
 				@pointercancel=${this.onPointerCancel}
+				@pointerleave=${this.onPointerLeave}
 				@contextmenu=${this.onContextMenu}
 			>
 				${this.buildIcon(this.config.icon)}
