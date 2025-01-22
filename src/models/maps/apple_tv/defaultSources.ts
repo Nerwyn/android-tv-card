@@ -60,6 +60,15 @@ export const appleTVDefaultSources: IElementConfig[] = [
 	},
 	{
 		type: 'button',
+		name: 'dropout',
+		tap_action: {
+			action: 'source',
+			source: 'Dropout',
+		},
+		icon: 'dropout',
+	},
+	{
+		type: 'button',
 		name: 'emby',
 		tap_action: {
 			action: 'source',
@@ -120,6 +129,15 @@ export const appleTVDefaultSources: IElementConfig[] = [
 			source: 'NBA',
 		},
 		icon: 'nba',
+	},
+	{
+		type: 'button',
+		name: 'nebula',
+		tap_action: {
+			action: 'source',
+			source: 'Nebula',
+		},
+		icon: 'nebula',
 	},
 	{
 		type: 'button',

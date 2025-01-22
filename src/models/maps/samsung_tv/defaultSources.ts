@@ -33,12 +33,30 @@ export const samsungTVDefaultSources: IElementConfig[] = [
 	},
 	{
 		type: 'button',
+		name: 'Dropout',
+		tap_action: {
+			action: 'source',
+			source: 'Dropout', // UNTESTED
+		},
+		icon: 'dropout',
+	},
+	{
+		type: 'button',
 		name: 'hulu',
 		tap_action: {
 			action: 'source',
 			source: 'Hulu',
 		},
 		icon: 'mdi:hulu',
+	},
+	{
+		type: 'button',
+		name: 'nebula',
+		tap_action: {
+			action: 'source',
+			source: 'Nebula', // UNTESTED
+		},
+		icon: 'nebula',
 	},
 	{
 		type: 'button',
