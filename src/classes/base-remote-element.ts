@@ -217,7 +217,7 @@ export class BaseRemoteElement extends LitElement {
 					(!this.config.hold_action ||
 						this.config.hold_action.action == 'none')
 				) {
-					data.hold_secs = 0.5;
+					data.hold_secs = 1;
 				}
 				this.hass.callService('remote', 'send_command', data);
 				break;
