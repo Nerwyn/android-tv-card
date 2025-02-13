@@ -140,6 +140,15 @@ export const androidTVDefaultSources: IElementConfig[] = [
 	},
 	{
 		type: 'button',
+		name: 'nlziet',
+		tap_action: {
+			action: 'source',
+			source: 'nlziet://',
+		},
+		icon: 'nlziet',
+	},
+	{
+		type: 'button',
 		name: 'npostart',
 		tap_action: {
 			action: 'source',
