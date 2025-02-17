@@ -2,7 +2,7 @@ import { LitElement, PropertyValues, css, html } from 'lit';
 import { property } from 'lit/decorators.js';
 
 import { HomeAssistant, IAction } from '../../models/interfaces';
-import { waitForElement } from '../../utils';
+import { querySelectorAsync } from '../../utils';
 
 export class BaseKeyboard extends LitElement {
 	@property() hass!: HomeAssistant;
@@ -16,30 +16,40 @@ export class BaseKeyboard extends LitElement {
 	inputMap: Record<string, string> = {};
 
 	closeOnEnter: boolean = true;
+	replaceOnSend: boolean = false;
 
 	sendText(_text: string) {}
 	sendKey(_text: string) {}
 	sendSearch(_text: string) {}
 
 	forceCursorToEnd(e?: Event) {
-		e?.preventDefault();
-		this.textarea!.selectionStart = this.textarea!.value.length;
-		this.textarea!.selectionEnd = this.textarea!.value.length;
+		if (!this.replaceOnSend) {
+			e?.preventDefault();
+			this.textarea!.selectionStart = this.textarea!.value.length;
+			this.textarea!.selectionEnd = this.textarea!.value.length;
+		}
 	}
 
 	onKeyDown(e: KeyboardEvent) {
-		e.stopImmediatePropagation();
-		this.forceCursorToEnd();
+		const handle = (e: KeyboardEvent) => {
+			e.stopImmediatePropagation();
+			this.forceCursorToEnd();
 
-		const inKey = e.key;
-		const outKey = this.keyMap[inKey ?? ''];
-		if (outKey) {
-			this.onKeyDownFired = true;
-			this.sendKey(outKey);
-		}
+			const inKey = e.key;
+			const outKey = this.keyMap[inKey ?? ''];
+			if (outKey) {
+				this.onKeyDownFired = true;
+				this.sendKey(outKey);
+			}
 
-		if (this.closeOnEnter && inKey == 'Enter') {
-			this.closeDialog();
+			if (this.closeOnEnter && inKey == 'Enter') {
+				this.closeDialog();
+			}
+		};
+		if (this.replaceOnSend) {
+			setTimeout(() => handle(e), 0.5);
+		} else {
+			handle(e);
 		}
 	}
 
@@ -67,9 +77,16 @@ export class BaseKeyboard extends LitElement {
 	onPaste(e: ClipboardEvent) {
 		e.stopImmediatePropagation();
 
-		const text = e.clipboardData?.getData('Text');
-		if (text) {
-			this.sendText(text);
+		const handle = (e: ClipboardEvent) => {
+			const text = e.clipboardData?.getData('Text');
+			if (text) {
+				this.sendText(text);
+			}
+		};
+		if (this.replaceOnSend) {
+			setTimeout(() => handle(e), 0.5);
+		} else {
+			handle(e);
 		}
 	}
 
@@ -177,10 +194,12 @@ export class BaseKeyboard extends LitElement {
 
 	updated(changedProperties: PropertyValues) {
 		if (changedProperties.has('open') && !changedProperties.get('open')) {
-			waitForElement(this.shadowRoot!, 'textarea').then((textarea) => {
-				this.textarea = textarea as HTMLTextAreaElement;
-				setTimeout(() => this.textarea?.focus(), 0.5);
-			});
+			querySelectorAsync(this.shadowRoot!, 'textarea').then(
+				(textarea) => {
+					this.textarea = textarea as HTMLTextAreaElement;
+					setTimeout(() => this.textarea?.focus(), 0.5);
+				},
+			);
 		}
 	}
 

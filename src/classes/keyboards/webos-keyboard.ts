@@ -11,8 +11,7 @@ export class WebOSKeyboard extends BaseKeyboard {
 		deleteContentBackward: 'Backspace',
 		insertLineBreak: 'Enter',
 	};
-
-	forceCursorToEnd(_e?: Event) {}
+	replaceOnSend = false;
 
 	sendText(_text?: string) {
 		this.hass.callService('webostv', 'command', {
@@ -32,7 +31,7 @@ export class WebOSKeyboard extends BaseKeyboard {
 				command: 'com.webos.service.ime/sendEnterKey',
 			});
 		} else {
-			this.sendText();
+			setTimeout(() => this.sendText, 0.5);
 		}
 	}
 }

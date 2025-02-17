@@ -12,8 +12,7 @@ export class KodiKeyboard extends BaseKeyboard {
 		deleteContentBackward: 'Backspace',
 		insertLineBreak: 'Enter',
 	};
-
-	forceCursorToEnd(_e?: Event) {}
+	replaceOnSend = false;
 
 	sendText(_text: string) {
 		this.hass.callService('kodi', 'call_method', {

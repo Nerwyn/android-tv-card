@@ -31,7 +31,7 @@ A super customizable universal remote card iterating on the work of several othe
   - Jellyfin
 - Support for multiple buttons, touchpads, and sliders using default or user defined custom actions.
 - Complete [Home Assistant actions](https://www.home-assistant.io/dashboards/actions/) support.
-- Keyboard and search dialog actions for most platforms.
+- [Keyboard and search](#keyboard-textbox-and-search) dialog actions for most platforms.
 - [Template](#a-note-on-templating) support for almost all fields using nunjucks.
 - Toggleable haptics.
 - Remappable touchpad with [momentary, multi-touch, and drag](#touchpad-actions) gesture support.
@@ -396,9 +396,9 @@ For Roku make sure to include both the remote and media player IDs at the genera
 
 #### Keyboard - Seamless Text Entry
 
-Send text to your supported media platform seamlessly using the action or default key `keyboard`. The dialog has several listeners which will send anything you type to your media platform immediately. You can also paste by holding or typing CTRL + V into the dialog.
+Send text to your supported media platform seamlessly using the action or default key `keyboard`. The dialog has several listeners which will send anything you type to your media platform immediately.
 
-Because we do not have a way to retrieve the currently on screen text of most media platforms, the dialog and platform text may become out of sync if a message gets dropped due to a network issue, you attempt to erase more than one character at a time, you try to modify the middle of the entered text, or if you prematurely close the dialog window. The keyboard dialog will attempt to prevent you from doing things that would cause this, but please remember that if you make a mistake you have to backspace all the way to the incorrect character from the end of your input text one character at at a time. In my testing the dialog always kept in sync with the platform text unless I attempted to delete more than one character. This does not apply to Kodi or LG webOS, which sets the text field to the entire dialog text every time it's action is called.
+Because we do not have a way to retrieve the currently on screen text of most media platforms, the dialog and platform text may become out of sync if a message gets dropped due to a network issue, you attempt to erase more than one character at a time, you try to modify the middle of the entered text, or if you prematurely close the dialog window. The keyboard dialog will attempt to prevent you from doing things that would cause this, but please remember that if you make a mistake you have to backspace all the way to the incorrect character from the end of your input text one character at at a time. In my testing the dialog always kept in sync with the platform text unless I attempted to delete more than one character. This does not apply to Kodi or LG webOS, whose text entry methods replace the on screen text when called instead of appending/inserting.
 
 ADB can be slow and you may notice some delay in what you type and what appears on your Android TV, Sony BRAVIA, or Fire TV device. Make sure to use the newer ADB integration remote entity for a faster typing experience.
 
