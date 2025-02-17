@@ -31,7 +31,7 @@ export class WebOSKeyboard extends BaseKeyboard {
 				command: 'com.webos.service.ime/sendEnterKey',
 			});
 		} else {
-			setTimeout(() => this.sendText, 0.5);
+			setTimeout(() => this.sendText, 100);
 		}
 	}
 }

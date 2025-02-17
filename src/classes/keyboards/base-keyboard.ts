@@ -47,7 +47,7 @@ export class BaseKeyboard extends LitElement {
 			}
 		};
 		if (this.replaceOnSend) {
-			setTimeout(() => handle(e), 0.5);
+			setTimeout(() => handle(e), 100);
 		} else {
 			handle(e);
 		}
@@ -84,7 +84,7 @@ export class BaseKeyboard extends LitElement {
 			}
 		};
 		if (this.replaceOnSend) {
-			setTimeout(() => handle(e), 0.5);
+			setTimeout(() => handle(e), 100);
 		} else {
 			handle(e);
 		}
@@ -197,7 +197,7 @@ export class BaseKeyboard extends LitElement {
 			querySelectorAsync(this.shadowRoot!, 'textarea').then(
 				(textarea) => {
 					this.textarea = textarea as HTMLTextAreaElement;
-					setTimeout(() => this.textarea?.focus(), 0.5);
+					setTimeout(() => this.textarea?.focus(), 100);
 				},
 			);
 		}
