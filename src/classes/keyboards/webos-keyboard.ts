@@ -11,7 +11,7 @@ export class WebOSKeyboard extends BaseKeyboard {
 		deleteContentBackward: 'Backspace',
 		insertLineBreak: 'Enter',
 	};
-	replaceOnSend = false;
+	replaceOnSend = true;
 
 	sendText(_text?: string) {
 		this.hass.callService('webostv', 'command', {
