@@ -30,29 +30,6 @@ export class BaseKeyboard extends LitElement {
 		}
 	}
 
-	onKeyDown(e: KeyboardEvent) {
-		const handle = (e: KeyboardEvent) => {
-			e.stopImmediatePropagation();
-			this.forceCursorToEnd();
-
-			const inKey = e.key;
-			const outKey = this.keyMap[inKey ?? ''];
-			if (outKey) {
-				this.onKeyDownFired = true;
-				this.sendKey(outKey);
-			}
-
-			if (this.closeOnEnter && inKey == 'Enter') {
-				this.closeDialog();
-			}
-		};
-		if (this.replaceOnSend) {
-			setTimeout(() => handle(e), 100);
-		} else {
-			handle(e);
-		}
-	}
-
 	onInput(e: InputEvent) {
 		e.stopImmediatePropagation();
 		this.forceCursorToEnd();
@@ -74,19 +51,36 @@ export class BaseKeyboard extends LitElement {
 		this.onKeyDownFired = false;
 	}
 
+	onKeyDown(e: KeyboardEvent) {
+		e.stopImmediatePropagation();
+		this.forceCursorToEnd();
+
+		const inKey = e.key;
+		const outKey = this.keyMap[inKey ?? ''];
+		if (outKey) {
+			this.onKeyDownFired = true;
+			if (this.replaceOnSend) {
+				setTimeout(() => this.sendKey(outKey), 100);
+			} else {
+				this.sendKey(outKey);
+			}
+		}
+
+		if (this.closeOnEnter && inKey == 'Enter') {
+			this.closeDialog();
+		}
+	}
+
 	onPaste(e: ClipboardEvent) {
 		e.stopImmediatePropagation();
 
-		const handle = (e: ClipboardEvent) => {
-			const text = e.clipboardData?.getData('Text');
-			if (text) {
+		const text = e.clipboardData?.getData('Text');
+		if (text) {
+			if (this.replaceOnSend) {
+				setTimeout(() => this.sendText(text), 100);
+			} else {
 				this.sendText(text);
 			}
-		};
-		if (this.replaceOnSend) {
-			setTimeout(() => handle(e), 100);
-		} else {
-			handle(e);
 		}
 	}
 
