@@ -67,7 +67,11 @@ export class BaseKeyboard extends LitElement {
 		}
 
 		if (this.closeOnEnter && inKey == 'Enter') {
-			this.closeDialog();
+			if (this.replaceOnSend) {
+				setTimeout(() => this.closeDialog(), 100);
+			} else {
+				this.closeDialog();
+			}
 		}
 	}
 
