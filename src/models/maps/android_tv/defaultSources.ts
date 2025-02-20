@@ -8,6 +8,12 @@ import { IElementConfig } from '../../interfaces';
 export const androidTVDefaultSources: IElementConfig[] = [
 	{
 		type: 'button',
+		name: 'abciview',
+		tap_action: { action: 'source', source: 'iview://' },
+		icon: 'abciview',
+	},
+	{
+		type: 'button',
 		name: 'appletv',
 		tap_action: { action: 'source', source: 'https://tv.apple.com' }, // UNTESTED
 		icon: 'appletv',
@@ -140,6 +146,12 @@ export const androidTVDefaultSources: IElementConfig[] = [
 	},
 	{
 		type: 'button',
+		name: 'ninenow',
+		tap_action: { action: 'source', source: 'ninenow://' },
+		icon: 'ninenow',
+	},
+	{
+		type: 'button',
 		name: 'nlziet',
 		tap_action: {
 			action: 'source',
@@ -219,6 +231,24 @@ export const androidTVDefaultSources: IElementConfig[] = [
 	},
 	{
 		type: 'button',
+		name: 'reshet13',
+		tap_action: { action: 'source', source: 'com.applicaster.iReshet' },
+		icon: 'reshet13',
+	},
+	{
+		type: 'button',
+		name: 'sbsondemand',
+		tap_action: { action: 'source', source: 'com.sbs.ondemand.tv' },
+		icon: 'sbsondemand',
+	},
+	{
+		type: 'button',
+		name: 'sevenplus',
+		tap_action: { action: 'source', source: 'seven://' },
+		icon: 'sevenplus',
+	},
+	{
+		type: 'button',
 		name: 'skyshowtime',
 		tap_action: {
 			action: 'source',
@@ -258,6 +288,18 @@ export const androidTVDefaultSources: IElementConfig[] = [
 			source: 'https://surfshark.com/locations-ul',
 		}, // UNTESTED
 		icon: 'surfshark',
+	},
+	{
+		type: 'button',
+		name: 'tenplay',
+		tap_action: { action: 'source', source: 'tenplay://' },
+		icon: 'tenplay',
+	},
+	{
+		type: 'button',
+		name: 'tubi',
+		tap_action: { action: 'source', source: 'tubitv://open' },
+		icon: 'tubi',
 	},
 	{
 		type: 'button',
