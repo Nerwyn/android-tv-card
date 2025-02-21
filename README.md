@@ -1905,21 +1905,3 @@ custom_actions:
 ```
 
 </details>
-
-# Contributing
-
-Want to help make this project better? I'm open to pull requests! Anything from new features, to new supported platforms, to new icons and sources is appreciated. You'll have to have some knowledge of TypeScript and git to contribute. This project is written in TypeScript and compiled into a minified JavaScript file for distribution via the Home Assistant Community Store and requires a little bit of setup on your machine first.
-
-1. Fork this repository on GitHub and then clone that repository to your computer.
-2. Run `npm run setup` to configure the pre-commit githook build pipeline and install dependencies.
-   - Don't worry about the three severe vulnerabilities, they're in the build pipeline and not present in the distributed JavaScript file. If there's more than that then `npm audit fix` may need to be run.
-3. Make your changes.
-4. Either commit to your fork or run `npm run build` to compile the project into a minified JavaScript file.
-5. Navigate to your copy of the minified Javascript file on your Home Assistant instance.
-   - It should be located at `config/www/community/android-tv-card` if installed with HACS.
-6. Copy `universal-remote-card.min.js.gz` to this folder, overwriting the existing copy.
-   - **Make sure it's the gzipped version**. This is what's served to the Home Assistant frontend.
-7. Hard refresh your browser so it'll load the updated code. Either:
-   - CTRL + F5.
-   - Open browser developer tools (F12 or CTRL + I), right click on the refresh button, and click Empty Cache and Hard Reload.
-8. Verify that your changes work!
