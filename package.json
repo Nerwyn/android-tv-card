@@ -54,6 +54,7 @@
 		"ts-loader": "latest",
 		"typescript": "latest",
 		"webpack": "latest",
-		"webpack-cli": "latest"
+		"webpack-cli": "latest",
+		"home-assistant-js-websocket": "latest"
 	}
 }
