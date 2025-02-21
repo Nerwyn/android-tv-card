@@ -30,6 +30,12 @@ In the `dist` folder, the `min.js` file is what is served via the Home Assistant
 
 You should now be able to test that your changes work! Try to test your changes on multiple different browsers or devices. I've run into a lot of issues with different browsers and mobile webviews behaving differently, especially iOS/iPadOS webview.
 
+## The editor and documentation
+
+This project features a UI editor for all fields. Any new fields added to the frontend configuration must be accessible from this editor (barring templating certain fields). This includes creating new sub-editors for new features. The editor is admittedly a huge mess that, and I'm open to doing this work if needed.
+
+Any new features should be documented in the README. This does not include new default keys, sources, and icons.
+
 ## Make a pull request
 
 Once you think your code is ready, make a pull request on the original repository! Make sure to use [the included PR template](https://github.com/Nerwyn/android-tv-card/blob/main/.github/PULL_REQUEST_TEMPLATE/pull_request.md).
