@@ -71,11 +71,11 @@ export interface HomeAssistant {
 	fetchWithAuth(path: string, init?: Record<string, any>): Promise<Response>;
 	sendWS(msg: MessageBase): void;
 	callWS<T>(msg: MessageBase): Promise<T>;
-	// loadBackendTranslation(
-	// 	category: Parameters<typeof getHassTranslations>[2],
-	// 	integrations?: Parameters<typeof getHassTranslations>[3],
-	// 	configFlow?: Parameters<typeof getHassTranslations>[4],
-	// ): Promise<LocalizeFunc>;
+	loadBackendTranslation(
+		category: TranslationCategory,
+		integrations?: string | string[],
+		configFlow?: boolean,
+	): Promise<LocalizeFunc>;
 	// loadFragmentTranslation(
 	// 	fragment: string,
 	// ): Promise<LocalizeFunc | undefined>;
@@ -128,6 +128,24 @@ export interface CurrentUser {
 	credentials: Credential[];
 	mfa_modules: MFAModule[];
 }
+
+export type TranslationCategory =
+	| 'title'
+	| 'state'
+	| 'entity'
+	| 'entity_component'
+	| 'exceptions'
+	| 'config'
+	| 'config_subentries'
+	| 'config_panel'
+	| 'options'
+	| 'device_automation'
+	| 'mfa_setup'
+	| 'system_health'
+	| 'application_credentials'
+	| 'issues'
+	| 'selector'
+	| 'services';
 
 export type HapticType =
 	| 'success'

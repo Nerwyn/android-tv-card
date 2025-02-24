@@ -2,7 +2,7 @@ import { CSSResult, LitElement, css, html } from 'lit';
 import { property, state } from 'lit/decorators.js';
 
 import { renderTemplate } from 'ha-nunjucks';
-import { HapticType, HomeAssistant } from '../models/interfaces';
+import { HapticType, HomeAssistant, IConfirmation } from '../models/interfaces';
 
 import { UPDATE_AFTER_ACTION_DELAY } from '../models/constants';
 import {
@@ -80,7 +80,7 @@ export class BaseRemoteElement extends LitElement {
 		this.deltaY = undefined;
 	}
 
-	sendAction(actionType: ActionType, config: IActions = this.config) {
+	async sendAction(actionType: ActionType, config: IActions = this.config) {
 		let action;
 		switch (actionType) {
 			case 'drag_action':
@@ -131,7 +131,7 @@ export class BaseRemoteElement extends LitElement {
 			return;
 		}
 		action = this.deepRenderTemplate(action);
-		if (!action || !this.handleConfirmation(action)) {
+		if (!action || !(await this.handleConfirmation(action))) {
 			this.dispatchEvent(new CustomEvent('confirmation-failed'));
 			return;
 		}
@@ -409,24 +409,42 @@ export class BaseRemoteElement extends LitElement {
 		eval(action.eval ?? '');
 	}
 
-	handleConfirmation(action: IAction): boolean {
-		if (action.confirmation) {
-			let text = `Are you sure you want to run action '${action.action}'?`;
-			if (action.confirmation == true) {
-				this.fireHapticEvent('warning');
-				return confirm(text);
-			}
-			if (action.confirmation?.text) {
-				text = action.confirmation.text;
-			}
-			if (
-				action.confirmation?.exemptions
-					?.map((exemption) => exemption.user)
-					.includes(this.hass.user?.id as string)
-			) {
-				return true;
-			}
+	async handleConfirmation(action: IAction): Promise<boolean> {
+		if (
+			action.confirmation &&
+			(!(action.confirmation as IConfirmation).exemptions ||
+				!(action.confirmation as IConfirmation).exemptions?.some(
+					(e) => e.user == this.hass.user?.id,
+				))
+		) {
 			this.fireHapticEvent('warning');
+
+			let text = (action.confirmation as IConfirmation).text;
+			if (!text) {
+				const [domain, service] = (
+					action.perform_action ??
+					action['service' as 'perform_action'] ??
+					''
+				).split('.');
+				let serviceName;
+				if (this.hass.services[domain]?.[service]) {
+					const localize =
+						await this.hass.loadBackendTranslation('title');
+					text = `${
+						localize(`component.${domain}.title`) || domain
+					}: ${
+						localize(
+							`component.${domain}.services.${serviceName}.name`,
+						) ||
+						this.hass.services[domain][service].name ||
+						service
+					}`;
+				} else {
+					text = this.hass.localize(
+						`ui.panel.lovelace.editor.action-editor.actions.${action.action}`,
+					);
+				}
+			}
 			return confirm(text);
 		}
 		return true;
