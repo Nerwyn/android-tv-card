@@ -130,7 +130,7 @@ export class RemoteSlider extends BaseRemoteElement {
 		}
 	}
 
-	onPointerUp(_e: PointerEvent) {
+	async onPointerUp(_e: PointerEvent) {
 		this.setThumbOffset();
 		this.showTooltip = false;
 		this.setValue();
@@ -145,7 +145,7 @@ export class RemoteSlider extends BaseRemoteElement {
 			this.value = this.newValue;
 
 			this.fireHapticEvent('light');
-			this.sendAction('tap_action');
+			await this.sendAction('tap_action');
 		} else {
 			this.getValueFromHass = true;
 			this.setValue();

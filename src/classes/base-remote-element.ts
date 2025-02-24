@@ -2,7 +2,12 @@ import { CSSResult, LitElement, css, html } from 'lit';
 import { property, state } from 'lit/decorators.js';
 
 import { renderTemplate } from 'ha-nunjucks';
-import { HapticType, HomeAssistant, IConfirmation } from '../models/interfaces';
+import {
+	Action,
+	HapticType,
+	HomeAssistant,
+	IConfirmation,
+} from '../models/interfaces';
 
 import { UPDATE_AFTER_ACTION_DELAY } from '../models/constants';
 import {
@@ -259,22 +264,35 @@ export class BaseRemoteElement extends LitElement {
 	}
 
 	callService(action: IAction) {
-		const [domain, service] = (
+		const performAction =
 			action.perform_action ??
-			(action['service' as 'perform_action'] as string)
-		).split('.');
+			(action['service' as 'perform_action'] as string);
+
+		if (!performAction) {
+			this.showFailureToast(action.action);
+			return;
+		}
+
+		const [domain, service] = performAction.split('.');
 		this.hass.callService(domain, service, action.data, action.target);
 	}
 
 	navigate(action: IAction) {
-		const path = (action.navigation_path as string) ?? '';
-		const replace = action.navigation_replace ?? false;
+		const path = action.navigation_path as string;
+
+		if (!path) {
+			this.showFailureToast(action.action);
+			return;
+		}
+
 		if (path.includes('//')) {
 			console.error(
 				'Protocol detected in navigation path. To navigate to another website use the action "url" with the key "url_path" instead.',
 			);
 			return;
 		}
+
+		const replace = action.navigation_replace ?? false;
 		if (replace == true) {
 			window.history.replaceState(
 				window.history.state?.root ? { root: true } : null,
@@ -286,7 +304,6 @@ export class BaseRemoteElement extends LitElement {
 		}
 		const event = new Event('location-changed', {
 			bubbles: false,
-			cancelable: true,
 			composed: false,
 		});
 		event.detail = { replace: replace == true };
@@ -295,6 +312,12 @@ export class BaseRemoteElement extends LitElement {
 
 	url(action: IAction) {
 		let url = action.url_path ?? '';
+
+		if (!url) {
+			this.showFailureToast(action.action);
+			return;
+		}
+
 		if (!url.includes('//')) {
 			url = `https://${url}`;
 		}
@@ -320,14 +343,18 @@ export class BaseRemoteElement extends LitElement {
 	}
 
 	moreInfo(action: IAction) {
+		const entityId = action.target?.entity_id ?? this.config.entity_id;
+
+		if (!entityId) {
+			this.showFailureToast(action.action);
+			return;
+		}
+
 		const event = new Event('hass-more-info', {
 			bubbles: true,
-			cancelable: true,
 			composed: true,
 		});
-		event.detail = {
-			entityId: action.target?.entity_id ?? this.config.entity_id,
-		};
+		event.detail = { entityId };
 		this.dispatchEvent(event);
 	}
 
@@ -336,6 +363,11 @@ export class BaseRemoteElement extends LitElement {
 			...action.data,
 			...action.target,
 		};
+
+		if (!Object.keys(target).length) {
+			this.showFailureToast(action.action);
+			return;
+		}
 
 		if (Array.isArray(target.entity_id)) {
 			for (const entityId of target.entity_id) {
@@ -434,7 +466,7 @@ export class BaseRemoteElement extends LitElement {
 						localize(`component.${domain}.title`) || domain
 					}: ${
 						localize(
-							`component.${domain}.services.${serviceName}.name`,
+							`component.${domain}.services.${service}.name`,
 						) ||
 						this.hass.services[domain][service].name ||
 						service
@@ -456,6 +488,40 @@ export class BaseRemoteElement extends LitElement {
 			return confirm(text);
 		}
 		return true;
+	}
+
+	showFailureToast(action: Action) {
+		let suffix = '';
+		switch (action) {
+			case 'more-info':
+				suffix = 'no_entity_more_info';
+				break;
+			case 'navigate':
+				suffix = 'no_navigation_path';
+				break;
+			case 'url':
+				suffix = 'no_url';
+				break;
+			case 'toggle':
+				suffix = 'no_entity_toggle';
+				break;
+			case 'perform-action':
+			case 'call-service' as 'perform-action':
+			default:
+				suffix = 'no_action';
+				break;
+		}
+		const event = new Event('hass-notification', {
+			bubbles: true,
+			composed: true,
+		});
+		event.detail = {
+			message: this.hass.localize(
+				`ui.panel.lovelace.cards.actions.${suffix}`,
+			),
+		};
+		this.dispatchEvent(event);
+		this.fireHapticEvent('failure');
 	}
 
 	firstUpdated() {

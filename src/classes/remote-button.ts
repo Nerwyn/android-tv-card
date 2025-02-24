@@ -20,7 +20,7 @@ export class RemoteButton extends BaseRemoteElement {
 	holdInterval?: ReturnType<typeof setInterval>;
 	hold: boolean = false;
 
-	onClick(e: PointerEvent) {
+	async onClick(e: PointerEvent) {
 		e.stopImmediatePropagation();
 		this.clickCount++;
 
@@ -33,7 +33,7 @@ export class RemoteButton extends BaseRemoteElement {
 			if (this.clickCount > 1) {
 				// Double tap action is triggered
 				this.fireHapticEvent('success');
-				this.sendAction('double_tap_action');
+				await this.sendAction('double_tap_action');
 				this.endAction();
 			} else {
 				// Single tap action is triggered if double tap is not within window
@@ -43,9 +43,9 @@ export class RemoteButton extends BaseRemoteElement {
 							this.config.double_tap_action
 								?.double_tap_window as number,
 						) as number) ?? DOUBLE_TAP_WINDOW;
-					this.clickTimer = setTimeout(() => {
+					this.clickTimer = setTimeout(async () => {
 						this.fireHapticEvent('light');
-						this.sendAction('tap_action');
+						await this.sendAction('tap_action');
 						this.endAction();
 					}, doubleTapWindow);
 				}
@@ -53,12 +53,12 @@ export class RemoteButton extends BaseRemoteElement {
 		} else {
 			// No double tap action defined, tap action is triggered
 			this.fireHapticEvent('light');
-			this.sendAction('tap_action');
+			await this.sendAction('tap_action');
 			this.endAction();
 		}
 	}
 
-	onPointerDown(e: PointerEvent) {
+	async onPointerDown(e: PointerEvent) {
 		this.swiping = false;
 
 		super.onPointerDown(e);
@@ -72,7 +72,7 @@ export class RemoteButton extends BaseRemoteElement {
 			) {
 				this.fireHapticEvent('light');
 				this.momentaryStart = performance.now();
-				this.sendAction('momentary_start_action');
+				await this.sendAction('momentary_start_action');
 			} else if (
 				this.renderTemplate(
 					this.config.momentary_end_action?.action ?? 'none',
@@ -85,7 +85,7 @@ export class RemoteButton extends BaseRemoteElement {
 					this.config.hold_action?.hold_time ?? HOLD_TIME,
 				) as number;
 
-				this.holdTimer = setTimeout(() => {
+				this.holdTimer = setTimeout(async () => {
 					if (!this.swiping) {
 						this.hold = true;
 
@@ -99,14 +99,14 @@ export class RemoteButton extends BaseRemoteElement {
 									REPEAT_DELAY,
 							) as number;
 							if (!this.holdInterval) {
-								this.holdInterval = setInterval(() => {
+								this.holdInterval = setInterval(async () => {
 									this.fireHapticEvent('selection');
-									this.sendAction('tap_action');
+									await this.sendAction('tap_action');
 								}, repeat_delay);
 							}
 						} else {
 							this.fireHapticEvent('medium');
-							this.sendAction('hold_action');
+							await this.sendAction('hold_action');
 						}
 					}
 				}, holdTime);
@@ -114,7 +114,7 @@ export class RemoteButton extends BaseRemoteElement {
 		}
 	}
 
-	onPointerUp(e: PointerEvent) {
+	async onPointerUp(e: PointerEvent) {
 		if (!this.swiping && this.pointers) {
 			if (
 				this.renderTemplate(
@@ -123,7 +123,7 @@ export class RemoteButton extends BaseRemoteElement {
 			) {
 				this.fireHapticEvent('selection');
 				this.momentaryEnd = performance.now();
-				this.sendAction('momentary_end_action');
+				await this.sendAction('momentary_end_action');
 				this.endAction();
 			} else if (
 				this.renderTemplate(
@@ -138,7 +138,7 @@ export class RemoteButton extends BaseRemoteElement {
 				this.endAction();
 			} else {
 				// Hold action is not triggered, fire tap action
-				this.onClick(e);
+				await this.onClick(e);
 			}
 		}
 		this.toggleRipple();
@@ -160,7 +160,7 @@ export class RemoteButton extends BaseRemoteElement {
 		}
 	}
 
-	onPointerCancel(e: PointerEvent) {
+	async onPointerCancel(e: PointerEvent) {
 		if (
 			this.renderTemplate(
 				this.config.momentary_start_action?.action ?? 'none',
@@ -170,7 +170,7 @@ export class RemoteButton extends BaseRemoteElement {
 			) != 'none'
 		) {
 			this.momentaryEnd = performance.now();
-			this.sendAction('momentary_end_action');
+			await this.sendAction('momentary_end_action');
 		}
 
 		super.onPointerCancel(e);
