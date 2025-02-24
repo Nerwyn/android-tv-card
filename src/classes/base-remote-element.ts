@@ -421,16 +421,16 @@ export class BaseRemoteElement extends LitElement {
 
 			let text = (action.confirmation as IConfirmation).text;
 			if (!text) {
+				let serviceName;
 				const [domain, service] = (
 					action.perform_action ??
 					action['service' as 'perform_action'] ??
 					''
 				).split('.');
-				let serviceName;
 				if (this.hass.services[domain]?.[service]) {
 					const localize =
 						await this.hass.loadBackendTranslation('title');
-					text = `${
+					serviceName = `${
 						localize(`component.${domain}.title`) || domain
 					}: ${
 						localize(
@@ -439,11 +439,19 @@ export class BaseRemoteElement extends LitElement {
 						this.hass.services[domain][service].name ||
 						service
 					}`;
-				} else {
-					text = this.hass.localize(
-						`ui.panel.lovelace.editor.action-editor.actions.${action.action}`,
-					);
 				}
+
+				text = this.hass.localize(
+					'ui.panel.lovelace.cards.actions.action_confirmation',
+					{
+						action:
+							serviceName ??
+							this.hass.localize(
+								`ui.panel.lovelace.editor.action-editor.actions.${action.action}`,
+							) ??
+							action.action,
+					},
+				);
 			}
 			return confirm(text);
 		}
