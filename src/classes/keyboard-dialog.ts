@@ -113,8 +113,8 @@ export class KeyboardDialog extends LitElement {
 			}
 
 			dialog {
-				height: 0px;
-				width: 0px;
+				height: fit-content;
+				width: 85%;
 				display: inline-flex;
 				flex-direction: column;
 				position: fixed;
@@ -125,19 +125,20 @@ export class KeyboardDialog extends LitElement {
 				);
 				border-radius: var(--ha-card-border-radius, 12px);
 				opacity: 0;
-				transition: all 0.1s ease-in-out;
 				pointer-events: none;
+				transform: scale(0);
 			}
 			dialog[open] {
-				height: fit-content;
-				width: 85%;
 				opacity: 1;
-				transition: all 0.1s ease-in-out;
+				transform: scale(1);
 				pointer-events: all;
+				transition: all 0.1s ease-in-out;
 			}
 			dialog::backdrop {
-				background: rgb(0, 0, 0);
-				opacity: 0.7;
+				background-color: var(
+					--mdc-dialog-scrim-color,
+					rgba(0, 0, 0, 0.32)
+				);
 			}
 		`;
 	}
