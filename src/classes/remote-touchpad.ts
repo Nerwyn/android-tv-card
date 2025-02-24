@@ -184,7 +184,7 @@ export class RemoteTouchpad extends BaseRemoteElement {
 				}
 			}
 		} else {
-			const sensitivity = 24;
+			const sensitivity = 16;
 			if (
 				Math.abs(Math.abs(totalDeltaX) - Math.abs(totalDeltaY)) >
 				sensitivity
