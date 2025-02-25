@@ -128,9 +128,9 @@ export class RemoteDialog extends LitElement {
 			}
 
 			dialog {
-				height: fit-content;
+				padding: 0 24px;
+				pointer-events: none;
 				display: inline-flex;
-				padding: 24px;
 				flex-direction: column;
 				position: fixed;
 				border: none;
@@ -139,15 +139,24 @@ export class RemoteDialog extends LitElement {
 					var(--card-background-color, #fff)
 				);
 				border-radius: var(--ha-card-border-radius, 12px);
+				transform: translateY(-50px);
+				height: 0;
 				opacity: 0;
-				pointer-events: none;
-				transform: scale(0);
+				transition:
+					transform 0.15s cubic-bezier(0.3, 0, 0, 1),
+					height 0.15s cubic-bezier(0.3, 0, 0.8, 0.15),
+					opacity 0.05s linear 0.025s;
 			}
 			dialog[open] {
-				opacity: 1;
-				transform: scale(1);
 				pointer-events: all;
-				transition: all 0.1s ease-in-out;
+				padding: 24px;
+				transform: translateY(0);
+				height: fit-content;
+				opacity: 1;
+				transition:
+					transform 0.5s cubic-bezier(0.3, 0, 0, 1),
+					height 0.5s cubic-bezier(0.2, 0, 0, 1),
+					opacity 0.05s linear;
 			}
 			dialog::backdrop {
 				background-color: var(
@@ -163,7 +172,6 @@ export class RemoteDialog extends LitElement {
 			.confirmation {
 				width: fit-content;
 				min-width: 320px;
-				transition: all 0.1s ease-in-out;
 			}
 		`;
 	}

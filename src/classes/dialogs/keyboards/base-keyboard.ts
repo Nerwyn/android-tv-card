@@ -142,7 +142,7 @@ export class BaseKeyboard extends BaseDialog {
 				)}${this.buildDialogButton('Search', this.search)}`;
 				break;
 			case 'textbox':
-				placeholder = 'Type something...';
+				placeholder = 'Send something...';
 				buttons = html`${this.buildDialogButton(
 					'Close',
 					this.closeDialog,

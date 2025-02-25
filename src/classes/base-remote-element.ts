@@ -497,6 +497,7 @@ export class BaseRemoteElement extends LitElement {
 				type: 'confirmation',
 				text: text,
 			});
+			// return false // TODO REMOVE
 			return confirm(text);
 		}
 		return true;
