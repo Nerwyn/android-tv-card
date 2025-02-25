@@ -47,6 +47,41 @@ export class RemoteDialog extends LitElement {
 		}
 	}
 
+	onClick(e: MouseEvent) {
+		if (this.config.type == 'confirmation') {
+			const rect = (e.target as HTMLElement)?.getBoundingClientRect();
+			if (
+				rect &&
+				(rect.left > e.clientX ||
+					rect.right < e.clientX ||
+					rect.top > e.clientY ||
+					rect.bottom < e.clientY)
+			) {
+				const dialog = this.shadowRoot?.querySelector('dialog');
+				dialog?.animate(
+					[
+						{
+							transform: 'rotate(-1deg)',
+							'animation-timing-function': 'ease-in',
+						},
+						{
+							transform: 'rotate(1.5deg)',
+							'animation-timing-function': 'ease-out',
+						},
+						{
+							transform: 'rotate(0deg)',
+							'animation-timing-function': 'ease-in',
+						},
+					],
+					{
+						duration: 200,
+						iterations: 2,
+					},
+				);
+			}
+		}
+	}
+
 	render() {
 		let content = html``;
 		let className = '';
@@ -115,6 +150,7 @@ export class RemoteDialog extends LitElement {
 			class="${className}"
 			@dialog-open=${this.showDialog}
 			@dialog-close=${this.closeDialog}
+			@click=${this.onClick}
 		>
 			${content}
 		</dialog>`;
@@ -128,7 +164,7 @@ export class RemoteDialog extends LitElement {
 			}
 
 			dialog {
-				padding: 0 24px;
+				padding: 24px;
 				pointer-events: none;
 				display: inline-flex;
 				flex-direction: column;
@@ -149,7 +185,6 @@ export class RemoteDialog extends LitElement {
 			}
 			dialog[open] {
 				pointer-events: all;
-				padding: 24px;
 				transform: translateY(0);
 				height: fit-content;
 				opacity: 1;
