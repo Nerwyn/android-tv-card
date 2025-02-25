@@ -497,8 +497,14 @@ export class BaseRemoteElement extends LitElement {
 				type: 'confirmation',
 				text: text,
 			});
-			// return false // TODO REMOVE
-			return confirm(text);
+
+			return await new Promise((resolve) => {
+				const handler = (e: Event) => {
+					this.removeEventListener('confirmation-result', handler);
+					resolve(e.detail);
+				};
+				this.addEventListener('confirmation-result', handler);
+			});
 		}
 		return true;
 	}

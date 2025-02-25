@@ -17,12 +17,27 @@ export class ConfirmationDialog extends BaseDialog {
 	}
 
 	onCancel() {
-		// TODO
-		this.closeDialog();
+		this.fireConfirmationEvent(false);
 	}
 
 	onOk() {
-		// TODO
+		this.fireConfirmationEvent(true);
+	}
+
+	fireConfirmationEvent(result: boolean) {
+		const event = new Event('confirmation-result', {
+			bubbles: true,
+			composed: true,
+		});
+		event.detail = result;
+
+		const targets = (
+			(this.getRootNode() as ShadowRoot).host.getRootNode() as ShadowRoot
+		).querySelectorAll('remote-button, remote-slider, remote-touchpad');
+		for (const target of targets) {
+			target.dispatchEvent(event);
+		}
+
 		this.closeDialog();
 	}
 
