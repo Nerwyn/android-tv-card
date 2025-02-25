@@ -1,13 +1,12 @@
-import { LitElement, PropertyValues, css, html } from 'lit';
+import { CSSResult, PropertyValues, css, html } from 'lit';
 import { property } from 'lit/decorators.js';
 
-import { HomeAssistant, IAction } from '../../models/interfaces';
-import { querySelectorAsync } from '../../utils';
+import { IAction } from '../../../models/interfaces';
+import { querySelectorAsync } from '../../../utils';
+import { BaseDialog } from '../base-dialog';
 
-export class BaseKeyboard extends LitElement {
-	@property() hass!: HomeAssistant;
+export class BaseKeyboard extends BaseDialog {
 	@property() action!: IAction;
-	@property() open!: boolean;
 
 	textarea?: HTMLTextAreaElement;
 	onKeyDownFired: boolean = false;
@@ -119,18 +118,11 @@ export class BaseKeyboard extends LitElement {
 		this.textarea = undefined;
 
 		this.dispatchEvent(
-			new Event('keyboard-dialog-close', {
+			new Event('dialog-close', {
 				composed: true,
 				bubbles: true,
 			}),
 		);
-	}
-
-	buildDialogButton(text: string, handler: (e: MouseEvent) => void) {
-		return html`<div class="button">
-			<button @click=${handler}></button>
-			<span>${text}</span>
-		</div>`;
 	}
 
 	render() {
@@ -201,104 +193,26 @@ export class BaseKeyboard extends LitElement {
 		}
 	}
 
-	static get styles() {
-		return css`
-			:host {
-				-webkit-tap-highlight-color: transparent;
-				-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-			}
-
-			textarea {
-				position: relative;
-				width: fill-available;
-				width: -webkit-fill-available;
-				width: -moz-available;
-				height: 180px;
-				padding: 8px;
-				outline: none;
-				background: none;
-				border: none;
-				resize: none;
-				font-family: inherit;
-				font-weight: 500;
-				font-size: 30px;
-			}
-			.buttons {
-				height: 36px;
-				width: fill-available;
-				width: -webkit-fill-available;
-				width: -moz-available;
-				display: inline-flex;
-				flex-direction: row;
-				justify-content: space-between;
-				margin: 0 12px;
-			}
-			.button {
-				height: 100%;
-				width: min-content;
-				align-content: center;
-				cursor: pointer;
-				border-radius: var(--mdc-shape-small, 4px);
-				overflow: hidden;
-			}
-			button {
-				height: 100%;
-				width: 100%;
-				background: 0px 0px;
-				opacity: 1;
-				border: none;
-				overflow: hidden;
-				cursor: pointer;
-				padding: 0;
-			}
-			@media (hover: hover) {
-				button:hover {
-					background: var(
-						--ha-ripple-hover-color,
-						var(
-							--ha-ripple-color,
-							var(
-								--md-ripple-hover-color,
-								var(--secondary-text-color)
-							)
-						)
-					);
-					opacity: var(
-						--ha-ripple-hover-opacity,
-						var(--md-ripple-hover-opacity, 0.08)
-					);
+	static get styles(): CSSResult | CSSResult[] {
+		return [
+			super.styles as CSSResult,
+			css`
+				textarea {
+					position: relative;
+					width: fill-available;
+					width: -webkit-fill-available;
+					width: -moz-available;
+					height: 180px;
+					padding: 8px;
+					outline: none;
+					background: none;
+					border: none;
+					resize: none;
+					font-family: inherit;
+					font-weight: 500;
+					font-size: 30px;
 				}
-			}
-			button:active {
-				background: var(
-					--ha-ripple-pressed-color,
-					var(
-						--ha-ripple-color,
-						var(
-							--md-ripple-pressed-color,
-							var(--secondary-text-color)
-						)
-					)
-				);
-				opacity: var(
-					--ha-ripple-pressed-opacity,
-					var(--md-ripple-pressed-opacity, 0.12)
-				);
-			}
-			.button span {
-				font-family: inherit;
-				font-size: var(--paper-font-body1_-_font-size);
-				font-weight: 600;
-				text-transform: uppercase;
-				color: var(--mdc-theme-primary, #6200ee);
-				user-select: none;
-				-webkit-user-select: none;
-				-moz-user-select: none;
-				position: relative;
-				top: -32px;
-				padding: 0 8px;
-				pointer-events: none;
-			}
-		`;
+			`,
+		];
 	}
 }

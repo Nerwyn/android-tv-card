@@ -133,3 +133,11 @@ export interface IDragActions {
 	drag_action?: IAction;
 	multi_drag_action?: IAction;
 }
+
+export const DialogTypes = ['keyboard', 'confirmation'] as const;
+export type DialogType = (typeof DialogTypes)[number];
+export interface IDialog {
+	type: DialogType;
+	text?: string;
+	action?: IAction;
+}

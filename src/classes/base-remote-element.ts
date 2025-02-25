@@ -7,6 +7,7 @@ import {
 	HapticType,
 	HomeAssistant,
 	IConfirmation,
+	IDialog,
 } from '../models/interfaces';
 
 import { UPDATE_AFTER_ACTION_DELAY } from '../models/constants';
@@ -413,21 +414,6 @@ export class BaseRemoteElement extends LitElement {
 		this.hass.callService(domain, service, { entity_id: entityId });
 	}
 
-	keyboard(action: IAction) {
-		const event = new Event('keyboard-dialog-open', {
-			composed: true,
-			bubbles: true,
-		});
-		event.detail = action;
-		(
-			(this.getRootNode() as ShadowRoot).querySelector(
-				'keyboard-dialog',
-			) as LitElement
-		).shadowRoot
-			?.querySelector('dialog')
-			?.dispatchEvent(event);
-	}
-
 	fireDomEvent(action: IAction) {
 		const event = new Event(action.event_type ?? 'll-custom', {
 			composed: true,
@@ -439,6 +425,28 @@ export class BaseRemoteElement extends LitElement {
 
 	eval(action: IAction) {
 		eval(action.eval ?? '');
+	}
+
+	keyboard(action: IAction) {
+		this.openDialog({
+			type: 'keyboard',
+			action: action,
+		});
+	}
+
+	openDialog(dialogConfig: IDialog) {
+		const event = new Event('dialog-open', {
+			composed: true,
+			bubbles: true,
+		});
+		event.detail = dialogConfig;
+		(
+			(this.getRootNode() as ShadowRoot).querySelector(
+				'remote-dialog',
+			) as LitElement
+		).shadowRoot
+			?.querySelector('dialog')
+			?.dispatchEvent(event);
 	}
 
 	async handleConfirmation(action: IAction): Promise<boolean> {
@@ -485,6 +493,10 @@ export class BaseRemoteElement extends LitElement {
 					},
 				);
 			}
+			this.openDialog({
+				type: 'confirmation',
+				text: text,
+			});
 			return confirm(text);
 		}
 		return true;

@@ -20,8 +20,8 @@ import {
 import { UniversalRemoteCardEditor } from './universal-remote-card-editor';
 import { getDefaultActions } from './utils';
 
-import './classes/keyboard-dialog';
 import './classes/remote-button';
+import './classes/remote-dialog';
 import './classes/remote-slider';
 import './classes/remote-touchpad';
 import {
@@ -568,7 +568,7 @@ class UniversalRemoteCard extends LitElement {
 	}
 
 	buildDialog() {
-		return html`<keyboard-dialog .hass=${this.hass}></keyboard-dialog>`;
+		return html`<remote-dialog .hass=${this.hass}></remote-dialog>`;
 	}
 
 	fetchCustomActionsFromFile(filename?: string) {
