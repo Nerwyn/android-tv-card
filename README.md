@@ -1696,7 +1696,7 @@ custom_icons:
 
 ## Example 15
 
-A music player with multiple sliders for volume and media position and a touchpad for media controls and album art.
+A Spotify app influenced music controller, with album art, album colored background, song info, media position information, controls, and a hidden vertical volume slider.
 
 <img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/music_controls.png" alt="music controls" width="500"/>
 
@@ -1708,10 +1708,108 @@ A music player with multiple sliders for volume and media position and a touchpa
 type: custom:android-tv-card
 media_player_id: media_player.spotify
 rows:
-  - - touchpad
+  - - album_art
     - volume
-  - - media_position
+  - - song_info
+    - show_volume
+  - - shuffle
+    - previous
+    - play_pause
+    - next
+    - repeat
+  - - media_position_label
+    - media_position
+    - media_duration_label
 custom_actions:
+  - type: touchpad
+    name: album_art
+    tap_action:
+      action: more-info
+    styles: |-
+      :host {
+        width: 100%;
+      }
+      toucharea {
+        background-color: rgb(0, 0, 0, 0);
+        background-image: url("{{ state_attr(config.entity, 'entity_picture') }}");
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-position: center;
+        height: var(--album-art-height);
+        aspect-ratio: 1;
+        border-radius: 8px;
+        --ha-ripple-hover-color: transparent;
+      }
+      :host {
+        display: unset;
+      }
+  - type: touchpad
+    name: song_info
+    styles: |-
+      toucharea {
+        background: none;
+        height: 50px;
+        border-radius: 0;
+        justify-content: center;
+        gap: 4px;
+        --ha-ripple-color: none;
+        --size: 0px;
+      }
+      .toucharea-row {
+        justify-content: flex-start;
+      }
+      #left, #right {
+        display: none;
+      }
+      remote-icon-label {
+        width: -webkit-fill-available;
+        width: -moz-available;
+        align-items: flex-start;
+      }
+      .label {
+        font-size: 18px;
+        line-height: 18px;
+        height: 22px;
+        width: -webkit-fill-available;
+        width: -moz-available;
+        justify-content: flex-start;
+        font-weight: 900;
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        text-align: left;
+      }
+    value_attribute: media_title
+    label: '{{ value | safe }}'
+    down:
+      styles: |-
+        .label {
+          color: var(--icon-color);
+          font-weight: 500;
+          width: -webkit-fill-available;
+          width: -moz-available;
+          justify-content: flex-start;
+          display: block;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          text-align: left;
+        }
+      label: '{{ state_attr(config.entity, "media_artist") | safe }}'
+  - type: button
+    name: show_volume
+    icon: mdi:volume-high
+    tap_action:
+      action: eval
+      eval: >-
+        const card = this.parentNode.parentNode;
+
+        const opacity = card.style.getPropertyValue('--volume-opacity');
+
+        card.style.setProperty('--volume-opacity', opacity == 0 ? 100 : 0,
+        'important');
+
+        card.style.setProperty('--volume-pointer-events', opacity == 0 ? 'all' :
+        'none', 'important');
   - type: slider
     name: volume
     value_attribute: volume_level
@@ -1720,13 +1818,142 @@ custom_actions:
       perform_action: media_player.volume_set
       data:
         volume_level: '{{ value | float }}'
-    icon: mdi:spotify
+    icon: mdi:music-note
     vertical: true
     styles: |-
       :host {
+        opacity: var(--volume-opacity);
+        position: absolute;
+        height: var(--album-art-height, 400px);
+        width: 50px;
+        right: 5px;
         --tooltip-label: "{{ (100 * value) | int }}%";
+        --icon-color: var(--background-color);
+        transition: all 0.1s ease-out;
+      }
+      .background {
+        opacity: 0.5;
+      }
+      .slider {
+        pointer-events: var(--volume-pointer-events);
       }
     haptics: true
+  - type: button
+    name: shuffle
+    tap_action:
+      action: perform-action
+      perform_action: media_player.shuffle_set
+      target: {}
+      data:
+        shuffle: '{{ not value }}'
+    styles: |-
+      :host {
+        --size: 24px;
+      }
+      {% if value %}
+      :host {
+        --icon-color: var(--active-color);
+      }
+      {% endif %}
+    value_attribute: shuffle
+    icon: |-
+      {% if value %}
+      mdi:shuffle-variant
+      {% else %}
+      mdi:shuffle-disabled
+      {% endif %}
+  - type: button
+    name: previous
+    tap_action:
+      action: perform-action
+      perform_action: media_player.media_previous_track
+      target: {}
+    icon: mdi:skip-previous
+  - type: button
+    name: play_pause
+    tap_action:
+      action: perform-action
+      perform_action: media_player.media_play_pause
+      target: {}
+    icon: |-
+      {% if is_state(config.entity, "playing") %}
+      mdi:pause
+      {% else %}
+      mdi:play
+      {% endif %}
+    styles: |
+      .icon {
+        color: black;
+      }
+      button {
+        background-color: white;
+        height: var(--button_size);
+        width: var(--button_size);
+        --button_size: 48px;
+      }
+  - type: button
+    name: next
+    tap_action:
+      action: perform-action
+      perform_action: media_player.media_next_track
+      target: {}
+    icon: mdi:skip-next
+  - type: button
+    name: repeat
+    tap_action:
+      action: perform-action
+      perform_action: media_player.repeat_set
+      target: {}
+      data:
+        repeat: |-
+          {% if value == 'off' %}
+          all
+          {% elif value == 'all' %}
+          one
+          {% else %}
+          off
+          {% endif %}
+    styles: |-
+      :host {
+        --size: 24px;
+      }
+      {% if value in ['all', 'one'] %}
+      :host {
+        --icon-color: var(--active-color);
+      }
+      {% endif %}
+    value_attribute: repeat
+    icon: |-
+      {% if value == 'all' %}
+      mdi:repeat
+      {% elif value == 'one' %}
+      mdi:repeat-once
+      {% else %}
+      mdi:repeat-off
+      {% endif %}
+  - type: touchpad
+    name: media_position_label
+    value_attribute: media_position
+    label: |2-
+        {% set minutes = (value / 60) | int %}{% set seconds = (value - 60 * minutes)
+        | int %} {{ minutes }}:{{ 0 if seconds < 10 else "" }}{{ seconds | int }}
+    styles: |-
+      toucharea {
+        background: none;
+        border-radius: 0;
+        justify-content: center;
+        height: unset;
+        width: fit-content;
+        overflow: visible;
+        --ha-ripple-color: none;
+        --size: 0;
+      }
+      .label {
+        color: var(--icon-color);
+        line-height: 0;
+        font-size: 12px;
+        font-weight: 500;
+      }
   - type: slider
     name: media_position
     value_attribute: media_position
@@ -1739,65 +1966,78 @@ custom_actions:
       data:
         seek_position: '{{ value }}'
     step: 1
-    styles: |-
+    styles: |
       :host {
-        --thumb-width: 5px;
+        --thumb-width: 1px;
         --tooltip-label: '{{ (value / 60) | int }}:{{ 0 if (value - 60*((value / 60) | int)) < 10 else "" }}{{ (value - 60*((value / 60) | int)) | int }}';
-        height: 14px;
+        height: 4px;
       }
-      .label {
-        filter: invert(1);
-        mix-blend-mode: difference;
+      .background {
+        background: white;
+        opacity: 0.2;
       }
-    label: |2-
-        {% set minutes = (value / 60) | int %} {% set seconds = (value - 60 * minutes)
-        | int %} {{ minutes }}:{{ 0 if seconds < 10 else "" }}{{ seconds | int }}/{{ (state_attr(config.entity, "media_duration") / 60) | int }}:{{ 0 if
-        (state_attr(config.entity, "media_duration") - 60*((state_attr(config.entity,
-        "media_duration") / 60) | int)) < 10 else "" }}{{ (state_attr(config.entity,
-        "media_duration") - 60*((state_attr(config.entity, "media_duration") / 60) |
-        int)) | int }}
+      @media (hover: hover) {
+        :hover {
+          --color: var(--active-color);
+        }
+      }
   - type: touchpad
-    name: touchpad
-    tap_action:
-      action: perform-action
-      perform_action: media_player.media_play_pause
-    up:
-      tap_action:
-        action: none
-      hold_action:
-        action: none
-    down:
-      tap_action:
-        action: none
-      hold_action:
-        action: none
-    left:
-      tap_action:
-        action: perform-action
-        perform_action: media_player.media_next_track
-      hold_action:
-        action: none
-      icon: mdi:skip-previous
-    right:
-      tap_action:
-        action: perform-action
-        perform_action: media_player.media_previous_track
-      hold_action:
-        action: none
-      icon: mdi:skip-next
+    value_attribute: media_duration
+    label: >-
+      {{ (value  / 60) | int }}:{{ 0 if (value  - 60*((value  / 60) | int)) < 10
+      else "" }}{{ (value  - 60*((value  / 60) | int)) | int }}
     styles: |-
       toucharea {
-        background-color: rgb(0, 0, 0, 0);
-        background-image: url("http://homeassistant.local:8123{{ state_attr(config.entity, 'entity_picture') }}");
-        background-repeat: no-repeat;
-        background-size: contain;
-        background-position: center;
-        height: 400px;
-        --size: 48px;
+        background: none;
+        border-radius: 0;
+        justify-content: center;
+        height: unset;
+        width: fit-content;
+        overflow: visible;
+        --ha-ripple-color: none;
+        --size: 0;
       }
-    hold_action:
-      action: more-info
-    icon: mdi:play-pause
+      .label {
+        color: var(--icon-color);
+        line-height: 0;
+        font-size: 12px;
+        font-weight: 500;
+      }
+    name: media_duration_label
+grid_options:
+  columns: 12
+  rows: auto
+styles: |-
+  ha-card {
+    overflow: hidden;
+    --volume-opacity: 0;
+    --volume-pointer-events: none;
+    --size: 32px;
+    --icon-color: #b3b3b3;
+    --active-color: #1cb955;
+  }
+  ha-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url("{{ state_attr(config.entity, 'entity_picture') }}");
+    background-size: cover;
+    filter: blur(80px) brightness(80%);
+    transform: scale(5);
+  }
+  remote-button:active {
+    filter: brightness(80%);
+  }
+
+  @media (hover: hover) {
+    remote-button:hover {
+      transform: scale(1.02);
+      --icon-color: white;
+    }
+  }
 ```
 
 </details>
