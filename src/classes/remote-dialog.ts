@@ -16,9 +16,14 @@ export class RemoteDialog extends LitElement {
 	@state() config!: IDialog;
 	@state() open: boolean = false;
 
+	outsideClickAnimation: boolean = false;
+
 	showDialog(e: CustomEvent) {
 		this.config = e.detail;
 		this.open = true;
+		setTimeout(() => {
+			this.outsideClickAnimation = true;
+		}, 250);
 
 		const dialog = this.shadowRoot?.querySelector('dialog');
 		if (dialog) {
@@ -34,21 +39,29 @@ export class RemoteDialog extends LitElement {
 
 	closeDialog() {
 		this.open = false;
+		this.outsideClickAnimation = false;
+		setTimeout(() => {
+			this.outsideClickAnimation = false;
+		}, 250);
 
 		const dialog = this.shadowRoot?.querySelector('dialog');
 		if (dialog) {
-			try {
-				dialog.close();
-			} catch {
-				dialog.showModal();
-				dialog.close();
-			}
-			window.removeEventListener('popstate', () => this.closeDialog());
+			setTimeout(() => {
+				try {
+					dialog.close();
+				} catch {
+					dialog.showModal();
+					dialog.close();
+				}
+				window.removeEventListener('popstate', () =>
+					this.closeDialog(),
+				);
+			}, 140);
 		}
 	}
 
 	onClick(e: MouseEvent) {
-		if (this.config.type == 'confirmation') {
+		if (this.outsideClickAnimation && this.config.type == 'confirmation') {
 			const rect = (e.target as HTMLElement)?.getBoundingClientRect();
 			if (
 				rect &&
@@ -147,7 +160,7 @@ export class RemoteDialog extends LitElement {
 		}
 
 		return html`<dialog
-			class="${className}"
+			class="${className} ${this.open ? '' : 'closed'}"
 			@dialog-open=${this.showDialog}
 			@dialog-close=${this.closeDialog}
 			@click=${this.onClick}
@@ -175,13 +188,6 @@ export class RemoteDialog extends LitElement {
 					var(--card-background-color, #fff)
 				);
 				border-radius: var(--ha-card-border-radius, 12px);
-				transform: translateY(-50px);
-				height: 0;
-				opacity: 0;
-				transition:
-					transform 0.15s cubic-bezier(0.3, 0, 0, 1),
-					height 0.15s cubic-bezier(0.3, 0, 0.8, 0.15),
-					opacity 0.05s linear 0.025s;
 			}
 			dialog[open] {
 				pointer-events: all;
@@ -198,6 +204,15 @@ export class RemoteDialog extends LitElement {
 					--mdc-dialog-scrim-color,
 					rgba(0, 0, 0, 0.32)
 				);
+			}
+			.closed {
+				transform: translateY(-50px) !important;
+				height: 0 !important;
+				opacity: 0 !important;
+				transition:
+					transform 0.15s cubic-bezier(0.3, 0, 0, 1),
+					height 0.15s cubic-bezier(0.3, 0, 0.8, 0.15),
+					opacity 0.05s linear 0.025s !important;
 			}
 
 			.keyboard {
