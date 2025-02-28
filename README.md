@@ -1696,7 +1696,7 @@ custom_icons:
 
 ## Example 15
 
-A Spotify app influenced music controller, with album art, album colored background, song info, media position information, controls, and a hidden vertical volume slider. Set `--album-art-height` in the global styles to reduce its size.
+A Spotify app influenced music controller, with album art, album colored background, song info, media position information, controls, and a hidden vertical volume slider. Set `--max-album-height` in the global styles to reduce its size.
 
 <img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/music_controls.png" alt="music controls" width="500"/>
 
@@ -1717,9 +1717,7 @@ rows:
     - play_pause
     - next
     - repeat
-  - - media_position_label
-    - media_position
-    - media_duration_label
+  - - media_position
 custom_actions:
   - type: touchpad
     name: album_art
@@ -1727,22 +1725,26 @@ custom_actions:
       action: more-info
     styles: |-
       :host {
-        width: 100%;
+        display: flex;
+        pointer-events: all;
+        border-radius: 0;
+        --size: 0;
       }
       toucharea {
-        background-color: rgb(0, 0, 0, 0);
-        background-image: url("{{ state_attr(config.entity, 'entity_picture') }}");
-        background-repeat: no-repeat;
-        background-size: contain;
-        background-position: center;
-        height: var(--album-art-height);
-        aspect-ratio: 1;
+        content: url("{{ state_attr(config.entity, 'entity_picture') }}");
+        background: transparent;
+        height: fit-content;
+        width: fit-content;
+        max-width: 100%;
+        max-height: var(--max-album-height, 50vh);
         border-radius: 8px;
         --ha-ripple-hover-color: transparent;
       }
-      :host {
-        display: unset;
-      }
+    down:
+      styles: ''
+    left:
+      styles: ''
+    autofill_entity_id: true
   - type: touchpad
     name: song_info
     styles: |-
@@ -1824,7 +1826,7 @@ custom_actions:
       :host {
         opacity: var(--volume-opacity);
         position: absolute;
-        height: var(--album-art-height, 400px);
+        height: 350px;
         width: 50px;
         right: 5px;
         --tooltip-label: "{{ (100 * value) | int }}%";
@@ -1837,7 +1839,7 @@ custom_actions:
       .slider {
         pointer-events: var(--volume-pointer-events);
       }
-    haptics: true
+    autofill_entity_id: true
   - type: button
     name: shuffle
     tap_action:
@@ -1931,29 +1933,6 @@ custom_actions:
       {% else %}
       mdi:repeat-off
       {% endif %}
-  - type: touchpad
-    name: media_position_label
-    value_attribute: media_position
-    label: |2-
-        {% set minutes = (value / 60) | int %}{% set seconds = (value - 60 * minutes)
-        | int %} {{ minutes }}:{{ 0 if seconds < 10 else "" }}{{ seconds | int }}
-    styles: |-
-      toucharea {
-        background: none;
-        border-radius: 0;
-        justify-content: center;
-        height: unset;
-        width: fit-content;
-        overflow: visible;
-        --ha-ripple-color: none;
-        --size: 0;
-      }
-      .label {
-        color: var(--icon-color);
-        line-height: 0;
-        font-size: 12px;
-        font-weight: 500;
-      }
   - type: slider
     name: media_position
     value_attribute: media_position
@@ -1966,44 +1945,51 @@ custom_actions:
       data:
         seek_position: '{{ value }}'
     step: 1
-    styles: |
+    styles: |-
       :host {
-        --thumb-width: 1px;
-        --tooltip-label: '{{ (value / 60) | int }}:{{ 0 if (value - 60*((value / 60) | int)) < 10 else "" }}{{ (value - 60*((value / 60) | int)) | int }}';
-        height: 4px;
+        height: calc(3 * var(--height));
+        --height: 4px;
+        justify-content: flex-start;
+        font-size: 12px;
+        font-weight: 300;
+        --tooltip-display: none;
       }
+      .container {
+        --thumb-width: 1px;
+        --thumb-border-radius: 0;
+      }
+
       .background {
         background: white;
         opacity: 0.2;
+      }
+      .slider {
+        margin: 0;
       }
       @media (hover: hover) {
         :hover {
           --color: var(--active-color);
         }
       }
-  - type: touchpad
-    value_attribute: media_duration
-    label: >-
-      {{ (value  / 60) | int }}:{{ 0 if (value  - 60*((value  / 60) | int)) < 10
-      else "" }}{{ (value  - 60*((value  / 60) | int)) | int }}
-    styles: |-
-      toucharea {
-        background: none;
-        border-radius: 0;
-        justify-content: center;
-        height: unset;
-        width: fit-content;
-        overflow: visible;
-        --ha-ripple-color: none;
-        --size: 0;
+      :focus-visible, :active {
+        --color: var(--active-color);
       }
-      .label {
-        color: var(--icon-color);
-        line-height: 0;
-        font-size: 12px;
-        font-weight: 500;
+
+      :host::before {
+        content: '{% set minutes = (value / 60) | int %}{% set seconds = (value - 60 * minutes)
+        | int %}{{ minutes }}:{{ 0 if seconds < 10 else "" }}{{ seconds | int }}';
+        position: absolute;
+        left: 0;
+        bottom: 0;
       }
-    name: media_duration_label
+      :host::after {
+        content: '{% set duration = state_attr(config.entity, "media_duration") %}{% set minutes = (duration / 60) | int %}{% set seconds = (duration - 60 * minutes)
+        | int %}{{ minutes }}:{{ 0 if seconds < 10 else "" }}{{ seconds | int }}';
+        position: absolute;
+        right: 0;
+        bottom: 0;
+      }
+    value_from_hass_delay: 5000
 grid_options:
   columns: 12
   rows: auto
@@ -2028,16 +2014,21 @@ styles: |-
     filter: blur(80px) brightness(80%);
     transform: scale(5);
   }
+
   remote-button:active {
     filter: brightness(80%);
   }
-
   @media (hover: hover) {
     remote-button:hover {
       transform: scale(1.02);
       --icon-color: white;
     }
   }
+
+  remote-touchpad {
+    pointer-events: none;
+  }
+haptics: false
 ```
 
 </details>
