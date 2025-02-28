@@ -492,6 +492,7 @@ export class RemoteSlider extends BaseRemoteElement {
 					width: inherit;
 					background: none;
 					overflow: hidden;
+					touch-action: pan-y;
 				}
 
 				.slider::-webkit-slider-thumb {
