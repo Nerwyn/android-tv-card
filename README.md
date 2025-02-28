@@ -1696,7 +1696,7 @@ custom_icons:
 
 ## Example 15
 
-A Spotify app influenced music controller, with album art, album colored background, song info, media position information, controls, and a hidden vertical volume slider. Set `--album-art-height` in the global styles to reduce its size.
+A Spotify app influenced music controller, with album art, album colored background, song info, media position information, controls, and a hidden vertical volume slider. Set `--max-album-height` in the global styles to reduce its size.
 
 <img src="https://raw.githubusercontent.com/Nerwyn/android-tv-card/main/assets/music_controls.png" alt="music controls" width="500"/>
 
