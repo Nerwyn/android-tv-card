@@ -2,13 +2,13 @@ import { LitElement, css, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { HomeAssistant, IDialog, KeyboardPlatform } from '../models/interfaces';
 
-import './dialogs/confirmation-dialog';
 import './dialogs/keyboards/adb-keyboard';
 import './dialogs/keyboards/android-tv-keyboard';
 import './dialogs/keyboards/kodi-keyboard';
 import './dialogs/keyboards/roku-keyboard';
 import './dialogs/keyboards/unified-remote-keyboard';
 import './dialogs/keyboards/webos-keyboard';
+import './dialogs/remote-confirmation-dialog';
 
 @customElement('remote-dialog')
 export class RemoteDialog extends LitElement {
@@ -18,8 +18,8 @@ export class RemoteDialog extends LitElement {
 
 	outsideClickAnimation: boolean = false;
 
-	showDialog(e: CustomEvent) {
-		this.config = e.detail;
+	showDialog(config: IDialog) {
+		this.config = config;
 		this.open = true;
 		setTimeout(() => {
 			this.outsideClickAnimation = true;
@@ -102,10 +102,10 @@ export class RemoteDialog extends LitElement {
 			className = this.config.type;
 			switch (this.config.type) {
 				case 'confirmation':
-					content = html`<confirmation-dialog
+					content = html`<remote-confirmation-dialog
 						.hass=${this.hass}
 						.config=${this.config}
-					></confirmation-dialog>`;
+					></remote-confirmation-dialog>`;
 					break;
 				case 'keyboard':
 				default:
@@ -161,7 +161,6 @@ export class RemoteDialog extends LitElement {
 
 		return html`<dialog
 			class="${className} ${this.open ? '' : 'closed'}"
-			@dialog-open=${this.showDialog}
 			@dialog-close=${this.closeDialog}
 			@click=${this.onClick}
 		>
@@ -183,6 +182,7 @@ export class RemoteDialog extends LitElement {
 				flex-direction: column;
 				position: fixed;
 				border: none;
+				outline: none;
 				background: var(
 					--ha-card-background,
 					var(--card-background-color, #fff)

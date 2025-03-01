@@ -20,8 +20,10 @@ import {
 import { UniversalRemoteCardEditor } from './universal-remote-card-editor';
 import { getDefaultActions } from './utils';
 
+import { BaseRemoteElement } from './classes/base-remote-element';
 import './classes/remote-button';
 import './classes/remote-dialog';
+import { RemoteDialog } from './classes/remote-dialog';
 import './classes/remote-slider';
 import './classes/remote-touchpad';
 import {
@@ -674,6 +676,27 @@ class UniversalRemoteCard extends LitElement {
 			)}"
 			>${content}${this.buildDialog()}${styles}</ha-card
 		>`;
+	}
+
+	showDialog(e: Event) {
+		const dialog = this.shadowRoot?.querySelector(
+			'remote-dialog',
+		) as RemoteDialog;
+		dialog.showDialog(e.detail);
+	}
+
+	onConfirmationResult(e: Event) {
+		const features = (this.shadowRoot?.querySelectorAll(
+			'remote-button, remote-slider, remote-touchpad',
+		) ?? []) as BaseRemoteElement[];
+		for (const feature of features) {
+			feature.onConfirmationResult(e.detail);
+		}
+	}
+
+	firstUpdated() {
+		this.addEventListener('dialog-show', this.showDialog);
+		this.addEventListener('confirmation-result', this.onConfirmationResult);
 	}
 
 	static get styles() {

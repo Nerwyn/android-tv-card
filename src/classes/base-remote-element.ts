@@ -138,7 +138,7 @@ export class BaseRemoteElement extends LitElement {
 		}
 		action = this.deepRenderTemplate(action);
 		if (!action || !(await this.handleConfirmation(action))) {
-			this.dispatchEvent(new CustomEvent('confirmation-failed'));
+			this.dispatchEvent(new Event('confirmation-failed'));
 			return;
 		}
 
@@ -428,25 +428,19 @@ export class BaseRemoteElement extends LitElement {
 	}
 
 	keyboard(action: IAction) {
-		this.openDialog({
+		this.showDialog({
 			type: 'keyboard',
 			action: action,
 		});
 	}
 
-	openDialog(dialogConfig: IDialog) {
-		const event = new Event('dialog-open', {
+	showDialog(dialogConfig: IDialog) {
+		const event = new Event('dialog-show', {
 			composed: true,
 			bubbles: true,
 		});
 		event.detail = dialogConfig;
-		(
-			(this.getRootNode() as ShadowRoot).querySelector(
-				'remote-dialog',
-			) as LitElement
-		).shadowRoot
-			?.querySelector('dialog')
-			?.dispatchEvent(event);
+		this.dispatchEvent(event);
 	}
 
 	async handleConfirmation(action: IAction): Promise<boolean> {
@@ -493,20 +487,35 @@ export class BaseRemoteElement extends LitElement {
 					},
 				);
 			}
-			this.openDialog({
+			this.showDialog({
 				type: 'confirmation',
 				text: text,
 			});
 
 			return await new Promise((resolve) => {
 				const handler = (e: Event) => {
-					this.removeEventListener('confirmation-result', handler);
+					this.shadowRoot?.removeEventListener(
+						'confirmation-result',
+						handler,
+					);
 					resolve(e.detail);
 				};
-				this.addEventListener('confirmation-result', handler);
+				this.shadowRoot?.addEventListener(
+					'confirmation-result',
+					handler,
+				);
 			});
 		}
 		return true;
+	}
+
+	onConfirmationResult(result: boolean) {
+		const event = new Event('confirmation-result', {
+			bubbles: false,
+			composed: false,
+		});
+		event.detail = result;
+		this.shadowRoot?.dispatchEvent(event);
 	}
 
 	showFailureToast(action: Action) {
@@ -541,16 +550,6 @@ export class BaseRemoteElement extends LitElement {
 		};
 		this.dispatchEvent(event);
 		this.fireHapticEvent('failure');
-	}
-
-	firstUpdated() {
-		this.addEventListener('confirmation-failed', this.confirmationFailed);
-	}
-
-	confirmationFailed() {
-		clearTimeout(this.getValueFromHassTimer);
-		this.getValueFromHass = true;
-		this.requestUpdate();
 	}
 
 	setValue() {
@@ -963,6 +962,16 @@ export class BaseRemoteElement extends LitElement {
 		this.renderRippleTransition = undefined;
 		this.rippleTransition = true;
 		this.renderRipple = true;
+	}
+
+	confirmationFailed() {
+		clearTimeout(this.getValueFromHassTimer);
+		this.getValueFromHass = true;
+		this.requestUpdate();
+	}
+
+	firstUpdated() {
+		this.addEventListener('confirmation-failed', this.confirmationFailed);
 	}
 
 	static get styles(): CSSResult | CSSResult[] {

@@ -3,7 +3,7 @@ import { customElement, property } from 'lit/decorators.js';
 import { IDialog } from '../../models/interfaces';
 import { BaseDialog } from './base-dialog';
 
-@customElement('confirmation-dialog')
+@customElement('remote-confirmation-dialog')
 export class ConfirmationDialog extends BaseDialog {
 	@property() config!: IDialog;
 
@@ -31,13 +31,7 @@ export class ConfirmationDialog extends BaseDialog {
 		});
 		event.detail = result;
 
-		const targets = (
-			(this.getRootNode() as ShadowRoot).host.getRootNode() as ShadowRoot
-		).querySelectorAll('remote-button, remote-slider, remote-touchpad');
-		for (const target of targets) {
-			target.dispatchEvent(event);
-		}
-
+		this.dispatchEvent(event);
 		this.closeDialog();
 	}
 
