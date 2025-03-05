@@ -96,6 +96,7 @@ export class RemoteDialog extends LitElement {
 	render() {
 		let content = html``;
 		let className = '';
+		const open = this.open && this.fadedIn;
 		if (this.config) {
 			className = this.config.type;
 			switch (this.config.type) {
@@ -103,6 +104,7 @@ export class RemoteDialog extends LitElement {
 					content = html`<remote-confirmation-dialog
 						.hass=${this.hass}
 						.config=${this.config}
+						.open=${open}
 					></remote-confirmation-dialog>`;
 					break;
 				case 'keyboard':
@@ -112,28 +114,28 @@ export class RemoteDialog extends LitElement {
 							content = html`<unified-remote-keyboard
 								.hass=${this.hass}
 								.action=${this.config.action ?? {}}
-								.open=${this.open}
+								.open=${open}
 							></unified-remote-keyboard>`;
 							break;
 						case 'Kodi':
 							content = html`<kodi-keyboard
 								.hass=${this.hass}
 								.action=${this.config.action ?? {}}
-								.open=${this.open}
+								.open=${open}
 							></kodi-keyboard>`;
 							break;
 						case 'LG webOS':
 							content = html`<webos-keyboard
 								.hass=${this.hass}
 								.action=${this.config.action ?? {}}
-								.open=${this.open}
+								.open=${open}
 							></webos-keyboard>`;
 							break;
 						case 'Roku':
 							content = html`<roku-keyboard
 								.hass=${this.hass}
 								.action=${this.config.action ?? {}}
-								.open=${this.open}
+								.open=${open}
 							></roku-keyboard>`;
 							break;
 						case 'Fire TV':
@@ -141,7 +143,7 @@ export class RemoteDialog extends LitElement {
 							content = html`<adb-keyboard
 								.hass=${this.hass}
 								.action=${this.config.action ?? {}}
-								.open=${this.open}
+								.open=${open}
 							></adb-keyboard>`;
 							break;
 						case 'Android TV':
@@ -149,7 +151,7 @@ export class RemoteDialog extends LitElement {
 							content = html`<android-tv-keyboard
 								.hass=${this.hass}
 								.action=${this.config.action ?? {}}
-								.open=${this.open}
+								.open=${open}
 							></android-tv-keyboard>`;
 							break;
 					}

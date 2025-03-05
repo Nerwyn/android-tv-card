@@ -8,7 +8,7 @@ export class BaseDialog extends LitElement {
 
 	buildDialogButton(text: string, handler: (e: MouseEvent) => void) {
 		return html`<div class="button">
-			<button @click=${handler}></button>
+			<button @click=${this.open ? handler : undefined}></button>
 			<span>${text}</span>
 		</div>`;
 	}
