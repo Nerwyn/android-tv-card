@@ -45,11 +45,11 @@ export class ConfirmationDialog extends BaseDialog {
 			<div class="message">${this.config.text}</div>
 			<div class="buttons">
 				${this.buildDialogButton(
-					this.hass.localize('ui.dialogs.generic.cancel'),
+					this.hass.localize('ui.common.cancel'),
 					this.onCancel,
 				)}
 				${this.buildDialogButton(
-					this.hass.localize('ui.dialogs.generic.ok'),
+					this.hass.localize('ui.common.ok'),
 					this.onOk,
 				)}
 			</div>

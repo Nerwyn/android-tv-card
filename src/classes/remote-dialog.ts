@@ -37,7 +37,8 @@ export class RemoteDialog extends LitElement {
 		}
 	}
 
-	closeDialog() {
+	closeDialog(e?: Event) {
+		e?.preventDefault();
 		clearTimeout(this.fadedInTimer);
 		this.fadedIn = false;
 		this.open = false;
@@ -164,6 +165,7 @@ export class RemoteDialog extends LitElement {
 				? 'faded-in'
 				: 'faded-out'}"
 			@dialog-close=${this.closeDialog}
+			@cancel=${this.closeDialog}
 			@click=${this.onClick}
 		>
 			${content}
