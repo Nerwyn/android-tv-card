@@ -1826,9 +1826,10 @@ custom_actions:
       :host {
         opacity: var(--volume-opacity);
         position: absolute;
-        height: 350px;
+        height: var(--max-album-height, 50vh);
         width: 50px;
-        right: 5px;
+        right: 6px;
+        top: 8px;
         --tooltip-label: "{{ (100 * value) | int }}%";
         --icon-color: var(--background-color);
         transition: all 0.1s ease-out;
