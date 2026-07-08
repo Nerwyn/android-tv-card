@@ -1,5 +1,5 @@
 import { hasTemplate, renderTemplate } from 'ha-nunjucks';
-import { LitElement, TemplateResult, css, html, nothing } from 'lit';
+import { LitElement, TemplateResult, css, html } from 'lit';
 import { property, state } from 'lit/decorators.js';
 
 import { dump, load } from 'js-yaml';
@@ -394,19 +394,29 @@ export class UniversalRemoteCardEditor extends LitElement {
 		switch (this.baseTabIndex) {
 			case 3:
 			case 2:
-				this.entryChanged(
-					deepSet(
-						structuredClone(this.activeEntry) as object,
-						key,
-						value,
-					) as IElementConfig,
-				);
+				if (key == 'this') {
+					this.entryChanged(value);
+				} else {
+					this.entryChanged(
+						deepSet(
+							structuredClone(this.activeEntry) as object,
+							key,
+							value,
+						) as IElementConfig,
+					);
+				}
 				break;
+			case 1:
+			case 0:
 			default:
-				this.configChanged({
-					...this.config,
-					[key]: value,
-				});
+				if (key == 'this') {
+					this.configChanged(value);
+				} else {
+					this.configChanged({
+						...this.config,
+						[key]: value,
+					});
+				}
 				break;
 		}
 		if (value == undefined) {
@@ -867,7 +877,6 @@ export class UniversalRemoteCardEditor extends LitElement {
 				value = deepGet(this.activeEntry as object, key);
 				break;
 			case 1:
-				break;
 			case 0:
 			default:
 				value = this.config[key as keyof IConfig];
@@ -877,6 +886,8 @@ export class UniversalRemoteCardEditor extends LitElement {
 			value = ((value as Record<string, { user: string }>[]) ?? []).map(
 				(v) => v.user,
 			);
+		} else if (key == 'this') {
+			value = this.baseTabIndex > 1 ? this.activeEntry : this.config;
 		}
 
 		return html`<ha-selector
@@ -998,7 +1009,9 @@ export class UniversalRemoteCardEditor extends LitElement {
 					${this.buildAlertBox(
 						"Change the feature appearance based on its value using a template like '{{ value | float }}'.",
 					)}
-					${appearanceOptions}${this.buildCodeEditor('css')}
+					${appearanceOptions}${this.buildSelector('CSS Styles', 'styles', {
+						template: { preview: false },
+					})}
 				</div>
 			</ha-expansion-panel>
 		`;
@@ -1404,7 +1417,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 					})
 				: ''}
 			${buildCodeEditor || action == 'fire-dom-event'
-				? this.buildCodeEditor('action', actionType)
+				? this.buildSelector('', actionType, { object: {} })
 				: ''}
 			${action == 'eval'
 				? html`
@@ -1412,7 +1425,9 @@ export class UniversalRemoteCardEditor extends LitElement {
 							"It's easy to crash your browser or server if you use this to send too many commands in a loop. Make sure you know what you're doing!",
 							'warning',
 						)}
-						${this.buildCodeEditor('eval', actionType)}
+						${this.buildSelector('', `${actionType}.eval`, {
+							template: { preview: false },
+						})}
 					`
 				: ''}
 			${action != 'none'
@@ -1861,96 +1876,12 @@ export class UniversalRemoteCardEditor extends LitElement {
 		return html`<div class="gui-editor">${entryGuiEditor}</div>`;
 	}
 
-	buildCodeEditor(
-		mode: 'css' | 'action' | 'layout' | 'eval' | 'yaml',
-		id?: string,
-	) {
-		let title: string | undefined;
-		let value: string;
-		let handler: (e: Event) => void;
-		let autocompleteEntities: boolean;
-		let autocompleteIcons: boolean;
-		let codeEditorMode: 'yaml' | 'jinja2';
-		switch (mode) {
-			case 'css':
-				codeEditorMode = 'jinja2';
-				value =
-					(this.entryIndex > -1
-						? (this.activeEntry as IElementConfig)?.styles
-						: this.config.styles) ?? '';
-				handler = this.handleStyleCodeChanged;
-				title = 'CSS Styles';
-				autocompleteEntities = true;
-				autocompleteIcons = false;
-				break;
-			case 'action':
-				codeEditorMode = 'yaml';
-				handler = this.handleActionCodeChanged;
-				id = id ?? 'tap_action';
-				value =
-					this.yamlStringsCache[id] ??
-					dump(
-						((this.activeEntry as IElementConfig)?.[
-							id as ActionType
-						] as IAction) ?? {},
-					);
-				value = value.trim() == '{}' ? '' : value;
-				autocompleteEntities = true;
-				autocompleteIcons = false;
-				break;
-			case 'layout':
-				codeEditorMode = 'yaml';
-				value = this.yaml;
-				handler = this.handleYamlCodeChanged;
-				value = value.trim() == '[]' ? '' : value;
-				autocompleteEntities = false;
-				autocompleteIcons = false;
-				break;
-			case 'eval':
-				codeEditorMode = 'jinja2';
-				value =
-					this.yamlStringsCache[`${id}.eval`] ??
-					((this.activeEntry as IElementConfig)?.[id as ActionType] as IAction)
-						.eval ??
-					'';
-				handler = this.handleEvalCodeChanged;
-				autocompleteEntities = false;
-				autocompleteIcons = false;
-				break;
-			case 'yaml':
-			default:
-				codeEditorMode = 'yaml';
-				value = this.yaml;
-				handler = this.handleYamlCodeChanged;
-				autocompleteEntities = true;
-				autocompleteIcons = true;
-				break;
-		}
-		return html`
-			<div class="yaml-editor">
-				${title ? html`<div class="style-header">${title}</div>` : ''}
-				<ha-code-editor
-					mode="${codeEditorMode}"
-					id="${id || nothing}"
-					dir="ltr"
-					?autocomplete-entities="${autocompleteEntities}"
-					?autocomplete-icons="${autocompleteIcons}"
-					.hass=${this.hass}
-					.value=${value}
-					.error=${Boolean(this.errors)}
-					@value-changed=${handler}
-					@keydown=${(e: KeyboardEvent) => e.stopPropagation()}
-				></ha-code-editor>
-			</div>
-		`;
-	}
-
 	buildEntryEditor() {
 		let editor: TemplateResult<1>;
 		if (this.guiMode) {
 			editor = this.buildEntryGuiEditor();
 		} else {
-			editor = this.buildCodeEditor('yaml');
+			editor = this.buildSelector('', 'this', { object: {} });
 		}
 
 		return html`${this.buildEntryHeader()}
@@ -2009,7 +1940,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 
 		return html`<div class="content">
 			<div class="layout-editor">
-				${this.buildCodeEditor('layout')}
+				${this.buildSelector('', 'rows', { object: {} })}
 				<div class="actions-list-container">
 					${customActions?.length
 						? html`<div
@@ -2172,7 +2103,9 @@ export class UniversalRemoteCardEditor extends LitElement {
 					</div>
 					<div class="wrapper">
 						<div class="title-header">Miscellaneous</div>
-						${this.buildCodeEditor('css')}
+						${this.buildSelector('CSS Styles', 'styles', {
+							template: { preview: false },
+						})}
 						<div class="form">
 							${this.buildSelector(
 								'Autofill',
