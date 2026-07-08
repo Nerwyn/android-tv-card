@@ -939,6 +939,13 @@ export class UniversalRemoteCardEditor extends LitElement {
 				autofill ? placeholderEntityId : undefined,
 			)}
 			${
+				(this.activeEntry as IElementConfig)?.entity_id
+					? ''
+					: this.buildSelector('Value template', 'value_template', {
+							template: { preview: false },
+						})
+			}
+			${
 				this.hass.states[
 					(this.activeEntry as IElementConfig)?.entity_id ??
 						(autofill ? placeholderEntityId : '') ??

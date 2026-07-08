@@ -506,7 +506,11 @@ export class BaseRemoteElement extends LitElement {
 			this.config.entity_id as string,
 		) as string;
 
-		if (this.getValueFromHass && this.entityId) {
+		if (!this.getValueFromHass) {
+			return;
+		}
+
+		if (this.entityId) {
 			clearInterval(this.valueUpdateInterval);
 			this.valueUpdateInterval = undefined;
 
@@ -636,6 +640,8 @@ export class BaseRemoteElement extends LitElement {
 					this.value = value;
 				}
 			}
+		} else if (this.config.value_template) {
+			this.value = this.renderTemplate(this.config.value_template);
 		}
 	}
 

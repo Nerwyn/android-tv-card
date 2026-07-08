@@ -282,6 +282,8 @@ Some additional value logic is applied for certain attributes:
 - `elapsed` - Only for timer entities. Updated twice per second using the the current timestamp and the attributes `duration`, `remaining`, and `finishes_at`, and locked to a max value using the attribute `duration`.
   - **Note**: `elapsed` is not an actual attribute of timer entities, but is a possible attribute for timer entities in this card for the purpose of displaying accurate timer elapsed values. Timer entities do have an attribute `remaining`, which only updates when the timer state changes. The actual `remaining` attribute can be calculated using the elapsed value and the timer duration attribute.
 
+If you do not set an entity, you can instead set the remote element value using a template in the value template field. This template is not used if entity ID is set, even if that entity ID does not exist or it's state or attribute is undefined, it is only used if no entity is set at all.
+
 If you find that the autofilling of fields in actions or remote element values is causing issues, setting `Autofill` to false may help. Just remember to set the entity ID of the remote element and the entity, device, area, or label ID of the action target.
 
 Haptics are enabled for remote elements by default, but can be toggled globally or at the custom element level.

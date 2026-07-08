@@ -16,7 +16,8 @@ export const RemoteElementTypes = [
 export type RemoteElementType = (typeof RemoteElementTypes)[number];
 
 export interface IElementConfig
-	extends IBaseElementConfig,
+	extends
+		IBaseElementConfig,
 		IButtonConfig,
 		ISliderConfig,
 		ITouchpadConfig,
@@ -31,6 +32,8 @@ interface IBaseElementConfig extends IDisplayConfig {
 	entity_id?: string;
 	autofill_entity_id?: boolean;
 	value_attribute?: string;
+	value_from_hass_delay?: boolean;
+	value_template?: string;
 	keypress?: string;
 }
 
@@ -42,12 +45,9 @@ interface IDisplayConfig {
 }
 
 export interface IButtonConfig
-	extends IBaseElementConfig,
-		IBasicActions,
-		IMomentaryActions {}
+	extends IBaseElementConfig, IBasicActions, IMomentaryActions {}
 
 export interface ISliderConfig extends IBaseElementConfig {
-	value_from_hass_delay?: boolean;
 	range?: [number, number];
 	step?: number;
 	vertical?: boolean;
