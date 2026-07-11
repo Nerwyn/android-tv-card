@@ -3281,7 +3281,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 				overflow-x: hidden;
 			}
 			.custom-action-list-container {
-				max-height: 190px;
+				max-height: 200px;
 			}
 			.action-list {
 				columns: 1;
