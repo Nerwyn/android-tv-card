@@ -52,6 +52,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 
 	@state() guiMode: boolean = true;
 	@state() errors?: string[];
+	@state() searchQuery: string = '';
 
 	yamlString?: string;
 	yamlStringsCache: Record<string, string> = {};
@@ -1895,13 +1896,17 @@ export class UniversalRemoteCardEditor extends LitElement {
 			<div class="wrapper">${editor}</div> `;
 	}
 
+	handleSearchQuery(e: Event) {
+		this.searchQuery = e.detail?.value ?? '';
+	}
+
 	buildLayoutEditor() {
 		const customActionNames = Array.from(
 			new Set([
 				...(this.config.custom_actions?.map((entry) => entry.name) ?? []),
 				...(this.customActionsFromFile?.map((entry) => entry.name) ?? []),
 			]),
-		);
+		).filter((name) => !this.searchQuery || name.includes(this.searchQuery));
 		const customActions = customActionNames.map(
 			(name) =>
 				this.config.custom_actions?.find((entry) => entry.name == name) ??
@@ -1910,7 +1915,10 @@ export class UniversalRemoteCardEditor extends LitElement {
 		);
 
 		const defaultKeysList = this.DEFAULT_KEYS.map((entry) => {
-			if (customActionNames.includes(entry.name)) {
+			if (
+				customActionNames.includes(entry.name) ||
+				!entry.name.includes(this.searchQuery)
+			) {
 				return '';
 			}
 
@@ -1928,7 +1936,10 @@ export class UniversalRemoteCardEditor extends LitElement {
 		const defaultSourcesList = this.DEFAULT_SOURCES.length
 			? this.DEFAULT_SOURCES.sort((a, b) => (a.name < b.name ? -1 : 1)).map(
 					(entry) => {
-						if (customActionNames.includes(entry.name)) {
+						if (
+							customActionNames.includes(entry.name) ||
+							!entry.name.includes(this.searchQuery)
+						) {
 							return '';
 						}
 
@@ -1947,6 +1958,14 @@ export class UniversalRemoteCardEditor extends LitElement {
 
 		return html`<div class="gui-editor">
 			${this.buildSelector('', 'rows', { object: {} })}
+			<ha-selector
+				.hass=${this.hass}
+				.selector=${{ text: {} }}
+				.value=${this.searchQuery}
+				.placeholder="${'Search remote elements'}"
+				.required=${false}
+				@value-changed=${this.handleSearchQuery}
+			></ha-selector>
 			<div class="actions-list-container">
 				${customActions?.length
 					? html`<div
@@ -3230,7 +3249,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 			.gui-editor {
 				display: inline-flex;
 				flex-direction: column;
-				gap: 24px;
+				gap: 12px;
 				padding: 8px 0px;
 				width: 100%;
 			}
