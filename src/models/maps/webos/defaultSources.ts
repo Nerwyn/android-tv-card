@@ -16,7 +16,7 @@ export const webosDefaultSources: IElementConfig[] = [
 		name: 'dropout',
 		tap_action: {
 			action: 'source',
-			source: 'Dropout', // UNTESTED
+			source: 'Dropout',
 		},
 		icon: 'dropout',
 	},
@@ -24,7 +24,7 @@ export const webosDefaultSources: IElementConfig[] = [
 		name: 'nebula',
 		tap_action: {
 			action: 'source',
-			source: 'Nebula', // UNTESTED
+			source: 'Nebula',
 		},
 		icon: 'nebula',
 	},
@@ -35,6 +35,14 @@ export const webosDefaultSources: IElementConfig[] = [
 			key: 'NETFLIX',
 		},
 		icon: 'mdi:netflix',
+	},
+	{
+		name: 'nuvio',
+		tap_action: {
+			action: 'source',
+			source: 'Nuvio',
+		},
+		icon: 'nuvio',
 	},
 	{
 		name: 'primevideo',

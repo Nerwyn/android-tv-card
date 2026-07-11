@@ -42,7 +42,7 @@ export const samsungTVDefaultSources: IElementConfig[] = [
 		name: 'dropout',
 		tap_action: {
 			action: 'source',
-			source: 'Dropout', // UNTESTED
+			source: 'Dropout',
 		},
 		icon: 'dropout',
 	},
@@ -55,10 +55,18 @@ export const samsungTVDefaultSources: IElementConfig[] = [
 		icon: 'mdi:hulu',
 	},
 	{
+		name: 'max',
+		tap_action: {
+			action: 'source',
+			source: 'Max',
+		},
+		icon: 'hbomax',
+	},
+	{
 		name: 'nebula',
 		tap_action: {
 			action: 'source',
-			source: 'Nebula', // UNTESTED
+			source: 'Nebula',
 		},
 		icon: 'nebula',
 	},
@@ -71,12 +79,12 @@ export const samsungTVDefaultSources: IElementConfig[] = [
 		icon: 'mdi:netflix',
 	},
 	{
-		name: 'max',
+		name: 'nuvio',
 		tap_action: {
 			action: 'source',
-			source: 'Max',
+			source: 'Nuvio',
 		},
-		icon: 'hbomax',
+		icon: 'nuvio',
 	},
 	{
 		name: 'paramount',

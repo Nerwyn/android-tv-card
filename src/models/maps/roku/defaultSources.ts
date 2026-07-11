@@ -58,7 +58,7 @@ export const rokuDefaultSources: IElementConfig[] = [
 		name: 'dropout',
 		tap_action: {
 			action: 'source',
-			source: 'Dropout', // UNTESTED
+			source: 'Dropout',
 		},
 		icon: 'dropout',
 	},
@@ -130,7 +130,7 @@ export const rokuDefaultSources: IElementConfig[] = [
 		name: 'nebula',
 		tap_action: {
 			action: 'source',
-			source: 'Nebula', // UNTESTED
+			source: 'Nebula',
 		},
 		icon: 'nebula',
 	},

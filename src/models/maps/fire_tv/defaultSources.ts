@@ -56,7 +56,7 @@ export const fireTVDefaultSources: IElementConfig[] = [
 	},
 	{
 		name: 'dropout',
-		tap_action: { action: 'source', source: 'vhxdropout://' }, // UNTESTED
+		tap_action: { action: 'source', source: 'vhxdropout://' },
 		icon: 'dropout',
 	},
 	{
@@ -125,7 +125,7 @@ export const fireTVDefaultSources: IElementConfig[] = [
 	},
 	{
 		name: 'nebula',
-		tap_action: { action: 'source', source: 'https://nebula.tv' }, // UNTESTED
+		tap_action: { action: 'source', source: 'https://nebula.tv' },
 		icon: 'nebula',
 	},
 	{

@@ -18,7 +18,7 @@ export const androidTVDefaultSources: IElementConfig[] = [
 	},
 	{
 		name: 'appletv',
-		tap_action: { action: 'source', source: 'https://tv.apple.com' }, // UNTESTED
+		tap_action: { action: 'source', source: 'https://tv.apple.com' },
 		icon: 'appletv',
 	},
 	{
@@ -28,17 +28,17 @@ export const androidTVDefaultSources: IElementConfig[] = [
 	},
 	{
 		name: 'crunchyroll',
-		tap_action: { action: 'source', source: 'crunchyroll://' }, // UNTESTED
+		tap_action: { action: 'source', source: 'crunchyroll://' },
 		icon: 'crunchyroll',
 	},
 	{
 		name: 'dazn',
-		tap_action: { action: 'source', source: 'https://open.dazn.com/' }, // UNTESTED
+		tap_action: { action: 'source', source: 'https://open.dazn.com/' },
 		icon: 'dazn',
 	},
 	{
 		name: 'discoveryplus',
-		tap_action: { action: 'source', source: 'discoveryplus://' }, // UNTESTED
+		tap_action: { action: 'source', source: 'discoveryplus://' },
 		icon: 'discovery',
 	},
 	{
@@ -48,7 +48,7 @@ export const androidTVDefaultSources: IElementConfig[] = [
 	},
 	{
 		name: 'dropout',
-		tap_action: { action: 'source', source: 'vhxdropout://' }, // UNTESTED
+		tap_action: { action: 'source', source: 'vhxdropout://' },
 		icon: 'dropout',
 	},
 	{
@@ -56,7 +56,7 @@ export const androidTVDefaultSources: IElementConfig[] = [
 		tap_action: {
 			action: 'source',
 			source: 'embyatv://tv.emby.embyatv/startapp',
-		}, // UNTESTED
+		},
 		icon: 'mdi:emby',
 	},
 	{
@@ -64,7 +64,7 @@ export const androidTVDefaultSources: IElementConfig[] = [
 		tap_action: {
 			action: 'source',
 			source: 'com.formulaone.production',
-		}, // UNTESTED
+		},
 		icon: 'f1tv',
 	},
 	{
@@ -77,7 +77,7 @@ export const androidTVDefaultSources: IElementConfig[] = [
 	},
 	{
 		name: 'foxsports',
-		tap_action: { action: 'source', source: 'foxsports://live' }, // UNTESTED
+		tap_action: { action: 'source', source: 'foxsports://live' },
 		icon: 'foxsports',
 	},
 	{
@@ -124,17 +124,17 @@ export const androidTVDefaultSources: IElementConfig[] = [
 	},
 	{
 		name: 'mlbtv',
-		tap_action: { action: 'source', source: 'mlbatbat://' }, // UNTESTED
+		tap_action: { action: 'source', source: 'mlbatbat://' },
 		icon: 'mlbtv',
 	},
 	{
 		name: 'nba',
-		tap_action: { action: 'source', source: 'gametime://' }, // UNTESTED
+		tap_action: { action: 'source', source: 'gametime://' },
 		icon: 'nba',
 	},
 	{
 		name: 'nebula',
-		tap_action: { action: 'source', source: 'https://nebula.tv' }, // UNTESTED
+		tap_action: { action: 'source', source: 'https://nebula.tv' },
 		icon: 'nebula',
 	},
 	{
@@ -166,11 +166,18 @@ export const androidTVDefaultSources: IElementConfig[] = [
 	{
 		name: 'nrktv',
 		tap_action: {
-			// UNTESTED
 			action: 'source',
 			source: 'nrktv://',
 		},
 		icon: 'nrktv',
+	},
+	{
+		name: 'nuvio',
+		tap_action: {
+			action: 'source',
+			source: 'com.nuvio.tv',
+		},
+		icon: 'nuvio',
 	},
 	{
 		name: 'pandora',
@@ -197,7 +204,7 @@ export const androidTVDefaultSources: IElementConfig[] = [
 	},
 	{
 		name: 'pia',
-		tap_action: { action: 'source', source: 'piavpn://' }, // UNTESTED
+		tap_action: { action: 'source', source: 'piavpn://' },
 		icon: 'pia',
 	},
 	{
@@ -217,7 +224,7 @@ export const androidTVDefaultSources: IElementConfig[] = [
 	},
 	{
 		name: 'rakutenviki',
-		tap_action: { action: 'source', source: 'viki://home' }, // UNTESTED
+		tap_action: { action: 'source', source: 'viki://home' },
 		icon: 'rakutenviki',
 	},
 	{
@@ -273,7 +280,7 @@ export const androidTVDefaultSources: IElementConfig[] = [
 		tap_action: {
 			action: 'source',
 			source: 'https://surfshark.com/locations-ul',
-		}, // UNTESTED
+		},
 		icon: 'surfshark',
 	},
 	{
@@ -291,7 +298,7 @@ export const androidTVDefaultSources: IElementConfig[] = [
 		tap_action: {
 			action: 'source',
 			source: 'dk.tv2.tv2playtv://*.tv2.dk/android/dk.tv2.tv2playtv/callback',
-		}, // UNTESTED
+		},
 		icon: 'tv2play',
 	},
 	{
@@ -301,7 +308,7 @@ export const androidTVDefaultSources: IElementConfig[] = [
 	},
 	{
 		name: 'viaplay',
-		tap_action: { action: 'source', source: 'viaplay://deeplink/film' }, // UNTESTED
+		tap_action: { action: 'source', source: 'viaplay://deeplink/film' },
 		icon: 'viaplay',
 	},
 	{
@@ -330,13 +337,18 @@ export const androidTVDefaultSources: IElementConfig[] = [
 		icon: 'wow',
 	},
 	{
+		name: 'wuplay',
+		tap_action: { action: 'source', source: 'app.wuplay.androidtv' },
+		icon: 'wuplay',
+	},
+	{
 		name: 'youtube',
 		tap_action: { action: 'source', source: 'vnd.youtube://' },
 		icon: 'mdi:youtube',
 	},
 	{
 		name: 'youtubetv',
-		tap_action: { action: 'source', source: 'https://tv.youtube.com' }, // UNTESTED
+		tap_action: { action: 'source', source: 'https://tv.youtube.com' },
 		icon: 'mdi:youtube-tv',
 	},
 ];

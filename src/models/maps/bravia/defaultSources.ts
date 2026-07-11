@@ -53,7 +53,7 @@ export const braviaTVDefaultSources: IElementConfig[] = [
 
 		tap_action: {
 			action: 'source',
-			source: 'Dropout', // UNTESTED
+			source: 'Dropout',
 		},
 		icon: 'dropout',
 	},
@@ -142,7 +142,7 @@ export const braviaTVDefaultSources: IElementConfig[] = [
 		name: 'nebula',
 		tap_action: {
 			action: 'source',
-			source: 'Nebula', // UNTESTED
+			source: 'Nebula',
 		},
 		icon: 'nebula',
 	},
