@@ -406,8 +406,6 @@ export class UniversalRemoteCardEditor extends LitElement {
 					);
 				}
 				break;
-			case 1:
-			case 0:
 			default:
 				if (key == 'this') {
 					this.configChanged(value);
@@ -702,7 +700,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 				break;
 		}
 		return html`
-			<div class="content">
+			<div>
 				<div class="title-header">${header}</div>
 				<ha-sortable handle-selector=".handle" @item-moved=${this.moveEntry}>
 					<div class="features">
@@ -721,7 +719,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 							return html`
 								<div class="feature-list-item">
 									<div class="handle">
-										<ha-icon .icon="${'mdi:drag'}"></ha-icon>
+										<ha-icon .icon="${'mdi:drag-horizontal-variant'}"></ha-icon>
 									</div>
 									<div class="feature-list-item-content">
 										${iconElement}
@@ -765,6 +763,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 						})}
 					</div>
 				</ha-sortable>
+				${this.buildAddEntryButton()}
 			</div>
 		`;
 	}
@@ -773,7 +772,12 @@ export class UniversalRemoteCardEditor extends LitElement {
 		switch (this.baseTabIndex) {
 			case 3:
 				return html`
-					<ha-button @click=${this.addEntry} class="add-list-item">
+					<ha-button
+						@click=${this.addEntry}
+						size="s"
+						appearance="filled"
+						class="add-list-item"
+					>
 						<ha-icon .icon=${'mdi:plus'} slot="start"></ha-icon>Add svg
 						icon</ha-button
 					>
@@ -782,7 +786,12 @@ export class UniversalRemoteCardEditor extends LitElement {
 			default:
 				return html`
 					<ha-dropdown @wa-select=${this.addEntry} placement="bottom-end">
-						<ha-button slot="trigger">
+						<ha-button
+							size="s"
+							appearance="filled"
+							slot="trigger"
+							class="add-list-item"
+						>
 							<ha-icon .icon=${'mdi:plus'} slot="start"></ha-icon>Add remote
 							element</ha-button
 						>
@@ -876,8 +885,6 @@ export class UniversalRemoteCardEditor extends LitElement {
 			case 2:
 				value = deepGet(this.activeEntry as object, key);
 				break;
-			case 1:
-			case 0:
 			default:
 				value = this.config[key as keyof IConfig];
 				break;
@@ -1823,7 +1830,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 	}
 
 	buildIconGuiEditor() {
-		return html`<div class="content">
+		return html`<div class="gui-editor">
 			${this.buildAlertBox(
 				html`Icons must be resized to 24x24px to display correctly. Use a tool
 					like
@@ -1938,210 +1945,210 @@ export class UniversalRemoteCardEditor extends LitElement {
 				)
 			: '';
 
-		return html`<div class="content">
-			<div class="layout-editor">
-				${this.buildSelector('', 'rows', { object: {} })}
-				<div class="actions-list-container">
-					${customActions?.length
-						? html`<div
-									class="action-list-container custom-action-list-container"
-								>
-									<div class="title-header">Custom Elements</div>
-									<ul class="action-list two-column-action-list">
-										${customActions.map((entry) => {
-											const context = this.getEntryContext(
-												entry as IElementConfig,
-											);
-											const iconElement = this.buildIconElement(entry, context);
-											return html`<li
-												class="action-list-item"
-												draggable="true"
-												@dragstart=${this.handleLayoutActionListItemDragStart}
-											>
-												${iconElement} ${entry.name}
-											</li>`;
-										})}
+		return html`<div class="gui-editor">
+			${this.buildSelector('', 'rows', { object: {} })}
+			<div class="actions-list-container">
+				${customActions?.length
+					? html`<div
+								class="action-list-container custom-action-list-container"
+							>
+								<div class="title-header">Custom Elements</div>
+								<ul class="action-list two-column-action-list">
+									${customActions.map((entry) => {
+										const context = this.getEntryContext(
+											entry as IElementConfig,
+										);
+										const iconElement = this.buildIconElement(entry, context);
+										return html`<li
+											class="action-list-item"
+											draggable="true"
+											@dragstart=${this.handleLayoutActionListItemDragStart}
+										>
+											${iconElement} ${entry.name}
+										</li>`;
+									})}
+								</ul>
+							</div>
+							<div><hr /></div>`
+					: ''}
+				<div class="default-action-lists-container">
+					${this.DEFAULT_KEYS.length
+						? html`<div class="wrapper">
+								<div class="title-header">Default Keys</div>
+								<div class="action-list-container">
+									<ul
+										class="action-list ${defaultSourcesList.length
+											? ''
+											: 'two-column-action-list'}"
+									>
+										${defaultKeysList}
 									</ul>
 								</div>
-								<div><hr /></div>`
+							</div>`
 						: ''}
-					<div class="default-action-lists-container">
-						${this.DEFAULT_KEYS.length
-							? html`<div class="wrapper">
-									<div class="title-header">Default Keys</div>
-									<div class="action-list-container">
-										<ul
-											class="action-list ${defaultSourcesList.length
-												? ''
-												: 'two-column-action-list'}"
-										>
-											${defaultKeysList}
-										</ul>
-									</div>
-								</div>`
-							: ''}
-						${defaultSourcesList.length
-							? html`<div class="wrapper">
-									<div class="title-header">Default Sources</div>
-									<div class="action-list-container">
-										<ul class="action-list">
-											${defaultSourcesList}
-										</ul>
-									</div>
-								</div>`
-							: ''}
-					</div>
+					${defaultSourcesList.length
+						? html`<div class="wrapper">
+								<div class="title-header">Default Sources</div>
+								<div class="action-list-container">
+									<ul class="action-list">
+										${defaultSourcesList}
+									</ul>
+								</div>
+							</div>`
+						: ''}
 				</div>
 			</div>
-		</div> `;
+		</div>`;
 	}
 
 	buildGeneralEditor(platform: Platform) {
 		return html`
-			<div class="content">
-				<div class="gui-editor">
-					<div class="wrapper">
-						<div class="title-header">Media Platform and Entity IDs</div>
-						<div class="form">
-							${this.buildSelector(
-								'Platform',
-								'platform',
-								{
-									select: {
-										mode: 'dropdown',
-										options: Platforms,
-										reorder: false,
-									},
+			<div class="gui-editor">
+				<div class="wrapper">
+					<div class="title-header">Media Platform and Entity IDs</div>
+					<div class="form">
+						${this.buildSelector(
+							'Platform',
+							'platform',
+							{
+								select: {
+									mode: 'dropdown',
+									options: Platforms,
+									reorder: false,
 								},
-								'Android TV',
-							)}
-							${this.buildSelector('Config Entry', 'config_entry_id', {
-								config_entry: {},
-							})}
-							${PlatformConfig[platform].remote_id
-								? this.buildSelector('Remote ID', 'remote_id', {
-										entity: {
-											filter: {
-												domain: 'remote',
-											},
-										},
-									})
-								: ''}
-							${PlatformConfig[platform].media_player_id
-								? this.buildSelector('Media Player ID', 'media_player_id', {
-										entity: {
-											filter: {
-												domain: 'media_player',
-											},
-										},
-									})
-								: ''}
-							${PlatformConfig[platform].adb
-								? this.buildSelector('Keyboard ID', 'keyboard_id', {
-										entity: {
-											filter: {
-												domain: ['remote', 'media_player'],
-											},
-										},
-									})
-								: ''}
-							${PlatformConfig[platform].device
-								? this.buildSelector('Remote/Device Name', 'device', {
-										text: {},
-									})
-								: ''}
-							${PlatformConfig[platform].mac
-								? this.buildSelector('MAC Address', 'mac', {
-										text: {},
-									})
-								: ''}
-						</div>
-					</div>
-					<div class="wrapper">
-						<div class="title-header">Action Timings</div>
-						<div class="form">
-							${this.buildSelector(
-								'Hold time',
-								'hold_time',
-								{
-									number: {
-										min: 0,
-										step: 0,
-										mode: 'box',
-										unit_of_measurement: 'ms',
-									},
-								},
-								HOLD_TIME,
-							)}
-							${this.buildSelector(
-								'Repeat delay',
-								'repeat_delay',
-								{
-									number: {
-										min: 0,
-										step: 0,
-										mode: 'box',
-										unit_of_measurement: 'ms',
-									},
-								},
-								REPEAT_DELAY,
-							)}
-							${this.buildSelector(
-								'Double tap window',
-								'double_tap_window',
-								{
-									number: {
-										min: 0,
-										step: 0,
-										mode: 'box',
-										unit_of_measurement: 'ms',
-									},
-								},
-								DOUBLE_TAP_WINDOW,
-							)}
-						</div>
-					</div>
-					<div class="wrapper">
-						<div class="title-header">Miscellaneous</div>
-						${this.buildSelector('CSS Styles', 'styles', {
-							template: { preview: false },
+							},
+							'Android TV',
+						)}
+						${this.buildSelector('Config Entry', 'config_entry_id', {
+							config_entry: {},
 						})}
-						<div class="form">
-							${this.buildSelector(
-								'Autofill',
-								'autofill_entity_id',
-								{
-									boolean: {},
-								},
-								AUTOFILL,
-							)}
-							${this.buildSelector(
-								'Haptics',
-								'haptics',
-								{
-									boolean: {},
-								},
-								HAPTICS,
-							)}
-						</div>
-						<div class="selector-margin">
-							${this.buildSelector('Title', 'title', {
-								text: {},
-							})}
-						</div>
-						<div class="selector-margin">
-							${this.buildSelector(
-								'Custom Elements File',
-								'custom_actions_file',
-								{ text: {} },
-							)}
-						</div>
+						${PlatformConfig[platform].remote_id
+							? this.buildSelector('Remote ID', 'remote_id', {
+									entity: {
+										filter: {
+											domain: 'remote',
+										},
+									},
+								})
+							: ''}
+						${PlatformConfig[platform].media_player_id
+							? this.buildSelector('Media Player ID', 'media_player_id', {
+									entity: {
+										filter: {
+											domain: 'media_player',
+										},
+									},
+								})
+							: ''}
+						${PlatformConfig[platform].adb
+							? this.buildSelector('Keyboard ID', 'keyboard_id', {
+									entity: {
+										filter: {
+											domain: ['remote', 'media_player'],
+										},
+									},
+								})
+							: ''}
+						${PlatformConfig[platform].device
+							? this.buildSelector('Remote/Device Name', 'device', {
+									text: {},
+								})
+							: ''}
+						${PlatformConfig[platform].mac
+							? this.buildSelector('MAC Address', 'mac', {
+									text: {},
+								})
+							: ''}
 					</div>
-					<ha-button @click=${this.handleUpdateDeprecatedConfig}>
-						<ha-icon .icon=${'mdi:cog'} slot="start"></ha-icon>Update old
-						config</ha-button
-					>
 				</div>
+				<div class="wrapper">
+					<div class="title-header">Action Timings</div>
+					<div class="form">
+						${this.buildSelector(
+							'Hold time',
+							'hold_time',
+							{
+								number: {
+									min: 0,
+									step: 0,
+									mode: 'box',
+									unit_of_measurement: 'ms',
+								},
+							},
+							HOLD_TIME,
+						)}
+						${this.buildSelector(
+							'Repeat delay',
+							'repeat_delay',
+							{
+								number: {
+									min: 0,
+									step: 0,
+									mode: 'box',
+									unit_of_measurement: 'ms',
+								},
+							},
+							REPEAT_DELAY,
+						)}
+						${this.buildSelector(
+							'Double tap window',
+							'double_tap_window',
+							{
+								number: {
+									min: 0,
+									step: 0,
+									mode: 'box',
+									unit_of_measurement: 'ms',
+								},
+							},
+							DOUBLE_TAP_WINDOW,
+						)}
+					</div>
+				</div>
+				<div class="wrapper">
+					<div class="title-header">Miscellaneous</div>
+					${this.buildSelector('CSS Styles', 'styles', {
+						template: { preview: false },
+					})}
+					<div class="form">
+						${this.buildSelector(
+							'Autofill',
+							'autofill_entity_id',
+							{
+								boolean: {},
+							},
+							AUTOFILL,
+						)}
+						${this.buildSelector(
+							'Haptics',
+							'haptics',
+							{
+								boolean: {},
+							},
+							HAPTICS,
+						)}
+					</div>
+					<div class="selector-margin">
+						${this.buildSelector('Title', 'title', {
+							text: {},
+						})}
+					</div>
+					<div class="selector-margin">
+						${this.buildSelector(
+							'Custom Elements File',
+							'custom_actions_file',
+							{ text: {} },
+						)}
+					</div>
+				</div>
+				<ha-button
+					@click=${this.handleUpdateDeprecatedConfig}
+					size="s"
+					appearance="filled"
+				>
+					<ha-icon .icon=${'mdi:cog'} slot="start"></ha-icon>Update old
+					config</ha-button
+				>
 			</div>
 		`;
 	}
@@ -2261,9 +2268,9 @@ export class UniversalRemoteCardEditor extends LitElement {
 				if (this.entryIndex > -1 && this.activeEntry) {
 					editor = html`${this.buildEntryEditor()}`;
 				} else {
-					editor = html`
-						${this.buildEntryList()}${this.buildAddEntryButton()}
-					`;
+					editor = html`<div class="gui-editor">
+						${this.buildEntryList()}
+					</div> `;
 				}
 				break;
 			case 1:
@@ -3137,12 +3144,8 @@ export class UniversalRemoteCardEditor extends LitElement {
 				--ha-card-border-radius: 6px;
 				--expansion-panel-content-padding: 0;
 			}
-			ha-icon {
-				display: flex;
-				color: var(--secondary-text-color);
-			}
 			.add-list-item {
-				margin: 0 18px 12px;
+				margin-top: 8px;
 			}
 			ha-button {
 				width: fit-content;
@@ -3240,11 +3243,6 @@ export class UniversalRemoteCardEditor extends LitElement {
 			ha-code-editor {
 				--code-mirror-max-height: calc(100vh - 245px);
 			}
-			.layout-editor {
-				display: flex;
-				flex-direction: column;
-				font-weight: 500;
-			}
 			.actions-list-container {
 				background: var(
 					--code-editor-background-color,
@@ -3315,7 +3313,6 @@ export class UniversalRemoteCardEditor extends LitElement {
 			.title-header {
 				font-size: 20px;
 				font-weight: 500;
-				padding: 12px 4px;
 			}
 			.panel-header {
 				display: inline-flex;
