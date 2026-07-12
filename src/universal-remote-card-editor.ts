@@ -2,7 +2,7 @@ import { hasTemplate, renderTemplate } from 'ha-nunjucks';
 import { LitElement, TemplateResult, css, html } from 'lit';
 import { property, state } from 'lit/decorators.js';
 
-import { dump, load } from 'js-yaml';
+import { load } from 'js-yaml';
 import { Action, HomeAssistant } from './models/interfaces';
 
 import {
@@ -26,7 +26,6 @@ import {
 	IAction,
 	IBasicActions,
 	IConfig,
-	IData,
 	IElementConfig,
 	IIconConfig,
 	ITarget,
@@ -54,8 +53,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 	@state() errors?: string[];
 	@state() searchQuery: string = '';
 
-	yamlString?: string;
-	yamlStringsCache: Record<string, string> = {};
+	yamlCache: Record<string, object> = {};
 	people: Record<string, string>[] = [];
 
 	BASE_TABS = ['general', 'layout', 'elements', 'icons'];
@@ -156,7 +154,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 	}
 
 	toggleGuiMode(_e: Event) {
-		this.yamlString = undefined;
+		this.yamlCache = {};
 		this.configChanged(this.config);
 		this.guiMode = !this.guiMode;
 	}
@@ -196,147 +194,8 @@ export class UniversalRemoteCardEditor extends LitElement {
 		}
 	}
 
-	get yaml(): string {
-		if (this.yamlString == undefined) {
-			let yaml = '';
-			switch (this.baseTabIndex) {
-				case 3:
-				case 2:
-					yaml = dump(this.activeEntry);
-					break;
-				case 1:
-					yaml = dump(this.config.rows);
-					break;
-				default:
-					break;
-			}
-			this.yamlString = ['{}', '[]'].includes(yaml.trim()) ? '' : yaml;
-		}
-		return this.yamlString ?? '';
-	}
-
-	set yaml(yaml: string | undefined) {
-		this.yamlString = yaml;
-		try {
-			const yamlObj = load(this.yaml);
-			switch (this.baseTabIndex) {
-				case 3: {
-					const entries = structuredClone(this.config.custom_icons ?? []);
-					entries[this.entryIndex] = yamlObj as IIconConfig;
-					this.entriesChanged(entries);
-					break;
-				}
-				case 2: {
-					const entries = structuredClone(this.config.custom_actions ?? []);
-					switch (
-						this.renderTemplate(
-							entries[this.entryIndex].type || 'button',
-							this.getEntryContext(yamlObj as IElementConfig),
-						)
-					) {
-						case 'touchpad':
-						case 'circlepad':
-							if (this.directionTabIndex != 2) {
-								entries[this.entryIndex] = {
-									...entries[this.entryIndex],
-									[this.DIRECTION_TABS[
-										this.directionTabIndex
-									] as DirectionAction]: yamlObj,
-								};
-								break;
-							}
-						// falls through
-						case 'slider':
-						case 'button':
-						default:
-							entries[this.entryIndex] = yamlObj as IElementConfig;
-					}
-					this.entriesChanged(entries);
-					break;
-				}
-				case 1:
-					this.configChanged({
-						...this.config,
-						rows: yamlObj as Row[],
-					});
-					break;
-				default:
-					break;
-			}
-			this.errors = undefined;
-		} catch (e) {
-			this.errors = [(e as Error).message];
-		}
-	}
-
-	handleYamlCodeChanged(e: Event) {
-		e.stopPropagation();
-		const yaml = e.detail.value;
-		if (yaml != this.yaml) {
-			this.yaml = yaml;
-		}
-	}
-
-	handleStyleCodeChanged(e: Event) {
-		e.stopPropagation();
-		const css = e.detail.value;
-		if (this.entryIndex > -1 && this.activeEntry) {
-			if (css != (this.activeEntry as IElementConfig)?.styles) {
-				this.entryChanged({
-					...this.activeEntry,
-					styles: css,
-				} as IElementConfig);
-			}
-		} else {
-			if (css != this.config.styles) {
-				this.configChanged({
-					...this.config,
-					styles: css,
-				});
-			}
-		}
-	}
-
-	handleActionCodeChanged(e: Event) {
-		e.stopPropagation();
-		const actionType = (e.target as HTMLElement).id as ActionType;
-		const actionYaml = e.detail.value;
-		this.yamlStringsCache[actionType] = actionYaml;
-		if (this.activeEntry) {
-			try {
-				const actionObj = load(actionYaml) as IData;
-				if (JSON.stringify(actionObj ?? {}).includes('null')) {
-					return;
-				}
-				this.entryChanged({
-					...this.activeEntry,
-					[actionType]: actionObj,
-				} as unknown as IElementConfig);
-				this.errors = undefined;
-			} catch (e) {
-				this.errors = [(e as Error).message];
-			}
-		}
-	}
-
-	handleEvalCodeChanged(e: Event) {
-		e.stopPropagation();
-		const actionType = (e.target as HTMLElement).id as ActionType;
-		const evalString = e.detail.value;
-		if (this.activeEntry) {
-			this.entryChanged({
-				...this.activeEntry,
-				[actionType]: {
-					...(this.activeEntry as IElementConfig)[actionType],
-					eval: evalString,
-				},
-			} as IElementConfig);
-		}
-	}
-
 	handleBaseTabSelected(e: Event) {
-		this.yamlStringsCache = {};
-		this.yamlString = undefined;
+		this.yamlCache = {};
 		this.entryIndex = -1;
 		this.guiMode = true;
 		const i = this.BASE_TABS.indexOf(e.detail.name);
@@ -347,7 +206,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 	}
 
 	handleActionsTabSelected(e: Event) {
-		this.yamlStringsCache = {};
+		this.yamlCache = {};
 		const i = this.ACTION_TABS.indexOf(e.detail.name);
 		if (this.actionsTabIndex == i) {
 			return;
@@ -356,8 +215,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 	}
 
 	handleDirectionTabSelected(e: Event) {
-		this.yamlString = undefined;
-		this.yamlStringsCache = {};
+		this.yamlCache = {};
 		const i = this.DIRECTION_TABS.indexOf(e.detail.name);
 		if (this.directionTabIndex == i) {
 			return;
@@ -367,7 +225,6 @@ export class UniversalRemoteCardEditor extends LitElement {
 	}
 
 	handleSelectorChange(e: Event) {
-		this.yamlStringsCache = {};
 		const key = (e.target as HTMLElement).id;
 		let value = e.detail.value;
 		if (key == 'config_entry_id' && this.baseTabIndex == 0) {
@@ -530,8 +387,7 @@ export class UniversalRemoteCardEditor extends LitElement {
 	}
 
 	editEntry(e: Event) {
-		this.yamlStringsCache = {};
-		this.yamlString = undefined;
+		this.yamlCache = {};
 		const i = (e.currentTarget as unknown as Event & Record<'index', number>)
 			.index;
 		switch (this.baseTabIndex) {
@@ -547,12 +403,12 @@ export class UniversalRemoteCardEditor extends LitElement {
 	}
 
 	exitEditEntry(_e: Event) {
-		this.yamlStringsCache = {};
-		this.yamlString = undefined;
+		this.yamlCache = {};
 		this.entryIndex = -1;
 	}
 
 	setActionsTab(i: number) {
+		this.yamlCache = {};
 		let entry = this.config.custom_actions?.[i] ?? {
 			name: '',
 		};
@@ -626,6 +482,8 @@ export class UniversalRemoteCardEditor extends LitElement {
 					) != 'none'
 				) {
 					this.actionsTabIndex = 1;
+				} else {
+					this.actionsTabIndex = 0;
 				}
 				break;
 		}
@@ -896,6 +754,10 @@ export class UniversalRemoteCardEditor extends LitElement {
 			);
 		} else if (key == 'this') {
 			value = this.baseTabIndex > 1 ? this.activeEntry : this.config;
+		}
+		if (Object.keys(selector)[0] == 'object') {
+			this.yamlCache[key] ??= value as object;
+			value = this.yamlCache[key];
 		}
 
 		return html`<ha-selector
