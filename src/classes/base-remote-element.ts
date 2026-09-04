@@ -333,12 +333,14 @@ export class BaseRemoteElement extends LitElement {
 
 		const replace = action.navigation_replace || false;
 		if (replace) {
-			const data: Record<string, unknown> | undefined = window.history.state
-				?.root
-				? { root: true }
-				: undefined;
-			if (data && window.history.state?.from) {
-				data.from = window.history.state.from;
+			let data: Record<string, unknown> | undefined = undefined;
+			const root = window.history.state?.root ? true : undefined;
+			const from = window.history.state?.from;
+			if (root || from) {
+				data = {
+					root,
+					from,
+				};
 			}
 			window.history.replaceState(data, '', path);
 		} else {
