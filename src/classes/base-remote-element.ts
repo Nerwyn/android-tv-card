@@ -324,35 +324,27 @@ export class BaseRemoteElement extends LitElement {
 	}
 
 	navigate(action: IAction) {
-		const path = action.navigation_path as string;
+		const path = action.navigation_path;
 
 		if (!path) {
 			this.showFailureToast(action.action);
 			return;
 		}
 
-		if (path.includes('//')) {
-			console.error(
-				'Protocol detected in navigation path. To navigate to another website use the action "url" with the key "url_path" instead.',
-			);
-			return;
-		}
-
-		const replace = action.navigation_replace ?? false;
-		if (replace == true) {
-			window.history.replaceState(
-				window.history.state?.root ? { root: true } : null,
-				'',
-				path,
-			);
+		const replace = action.navigation_replace || false;
+		if (replace) {
+			const data: Record<string, unknown> | undefined = window.history.state
+				?.root
+				? { root: true }
+				: undefined;
+			if (data && window.history.state?.from) {
+				data.from = window.history.state.from;
+			}
+			window.history.replaceState(data, '', path);
 		} else {
-			window.history.pushState(null, '', path);
+			window.history.pushState({ from: window.location.pathname }, '', path);
 		}
-		const event = new Event('location-changed', {
-			bubbles: false,
-			cancelable: true,
-			composed: false,
-		});
+		const event = new Event('location-changed');
 		event.detail = { replace: replace == true };
 		window.dispatchEvent(event);
 	}
