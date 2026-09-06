@@ -1250,7 +1250,7 @@ styles: |-
 
 ## Example 11
 
-Conditional layouts using templating and an input select.
+Conditional layouts using templating and attributes.
 
 <img src="https://raw.githubusercontent.com/Nerwyn/universal-remote-card/main/assets/conditional_layouts.png" width="500"/>
 
@@ -1260,32 +1260,62 @@ Conditional layouts using templating and an input select.
 
 ```yaml
 type: custom:universal-remote-card
-remote_id: remote.google_tv
-media_player_id: media_player.google_tv
 rows:
-  - - next_thing
-  - |
-    {% if is_state("input_select.select_test", "A") %}
-    - touchpad
-    - - slider
-    {% elif is_state("input_select.select_test", "B") %}
-    - dpad
-    - - volume_buttons
-    {% elif is_state("input_select.select_test", "C") %}
-    - numpad
-    {% endif %}
+  - - previous_thing
+    - next_thing
+  - - touchpad
+  - - sliderDown
+    - slider
+    - sliderUp
+  - - dpad
+  - - volume_buttons
+  - - numpad
 custom_actions:
-  - icon: mdi:skip-next-circle
-    name: next_thing
+  - icon: mdi:skip-previous-circle
     tap_action:
-      data:
-        cycle: true
-      target:
-        entity_id: input_select.select_test
-      action: perform-action
-      perform_action: input_select.select_next
+      action: fire-dom-event
+      event_type: urc-attributes
+      attributes:
+        page:
+          - 3
+          - 2
     type: button
-    entity_id: input_select.select_test
+    name: previous_thing
+    value_attribute: state
+    haptics: true
+  - icon: mdi:skip-next-circle
+    tap_action:
+      action: fire-dom-event
+      event_type: urc-attributes
+      attributes:
+        page:
+          - 2
+          - 3
+    type: button
+    name: next_thing
+    value_attribute: state
+    haptics: true
+styles: |-
+  .row {
+    display: none;
+  }
+  #row-1 {
+    display: flex;
+  }
+
+  :host(:not([page])) #row-2,
+  :host(:not([page])) #row-3 {
+    display: flex;
+  }
+
+  :host([page="2"]) #row-4,
+  :host([page="2"]) #row-5 {
+    display: flex;
+  }
+
+  :host([page="3"]) #row-6 {
+    display: flex;
+  }
 ```
 
 </details>

@@ -686,6 +686,35 @@ class UniversalRemoteCard extends LitElement {
 		dialog.showDialog(e.detail);
 	}
 
+	onAttributeEvent(e: Event) {
+		const attributes = e.detail?.attributes;
+		if (
+			typeof attributes == 'object' &&
+			attributes != null &&
+			!Array.isArray(attributes) &&
+			Object.keys(attributes).length
+		) {
+			for (const [key, values] of Object.entries(attributes)) {
+				let value: string | undefined;
+				if (Array.isArray(values)) {
+					value =
+						values[values.findIndex((v) => v == this.getAttribute(key)) + 1];
+					if (
+						(typeof value != 'string' && !value) ||
+						this.getAttribute(key) == value
+					) {
+						this.removeAttribute(key);
+					} else {
+						this.setAttribute(key, value);
+					}
+				} else {
+					value = values as string;
+					this.setAttribute(key, value);
+				}
+			}
+		}
+	}
+
 	willUpdate() {
 		this.editMode = Boolean(
 			document
@@ -768,6 +797,7 @@ class UniversalRemoteCard extends LitElement {
 
 	firstUpdated() {
 		this.addEventListener('dialog-show', this.showDialog);
+		this.addEventListener('urc-attributes', this.onAttributeEvent);
 	}
 
 	async onKey(e: KeyboardEvent) {
